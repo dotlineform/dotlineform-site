@@ -1,0 +1,8 @@
+title: dotlineform
+url: "https://dotlineform.github.io"
+baseurl: "/dotlineform"
+
+collections:
+  notes:
+    output: true
+    permalink: /notes/:name/
