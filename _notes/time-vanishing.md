@@ -50,5 +50,6 @@ Physicists sometimes literally call time a “vanishing variable” in certain H
   
 Thus **time = memory of change** — an emergent index of correlation stability. This aligns both with Bergson’s *duration* (the felt continuity of change) and with Rovelli’s *relational time* (the network of correlations). In deep physics, time may *vanish* as an independent variable — yet reappear as an emergent rhythm of correlation and memory. What we call “the flow of time” could simply be the way the universe *remembers itself*.  
   
-🔗 The Vanishing of Time  
+{% assign item = page.html_inserts[0] %}
+🔗 <a href="{{ item.path | relative_url }}">{{ item.label | default: 'The Vanishing of Time' }}</a>
   
