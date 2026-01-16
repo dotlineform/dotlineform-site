@@ -4,7 +4,7 @@ title: Notes
 permalink: /notes/
 ---
 
-# Notes
+<h1 class="visually-hidden">Notes</h1>
 
 {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
 <div class="note-index">
