@@ -1,4 +1,4 @@
-<!doctype html>
+<file name=0 path=/Users/dlf/Developer/dotlineform/dotlineform/_layouts/default.html><!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -30,7 +30,11 @@
       </div>
       {% assign is_notes = (page.collection == 'notes') or (page.url == '/notes/') or (page.url == '/notes') or (page.url contains '/notes/') %}
       <nav class="site-nav">
-        <a href="{{ '/notes/' | relative_url }}"{% if is_notes %} class="is-active" aria-current="page" aria-disabled="true" tabindex="-1"{% endif %}>Notes</a>
+        {% if is_notes %}
+          <span class="nav-item is-active" aria-current="page">Notes</span>
+        {% else %}
+          <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
+        {% endif %}
       </nav>
       <div class="site-header-spacer" aria-hidden="true"></div>
     </div>
@@ -79,4 +83,4 @@
     })();
   </script>
 </body>
-</html>
+</html></file>

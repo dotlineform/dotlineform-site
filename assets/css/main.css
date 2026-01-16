@@ -249,10 +249,30 @@ figure.diagram figcaption{
   color: var(--text);
   text-decoration: underline;
   text-underline-offset: 2px;
-  pointer-events: none;
   cursor: default;
 }
+/* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
 .site-nav{ justify-self: center; }
+.site-nav .nav-item{ margin-left: 14px; }
+
+/* Inactive link styling */
+.site-nav a.nav-item:link{ color: var(--link); text-decoration: none; }
+.site-nav a.nav-item:visited{ color: var(--link-visited); text-decoration: none; }
+.site-nav a.nav-item:hover{ color: var(--link-hover); text-decoration: underline; text-underline-offset: 2px; }
+.site-nav a.nav-item:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Active (span) styling */
+.site-nav .nav-item.is-active{
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: default;
+}
 .site-header-spacer{ justify-self: end; }
 .theme-toggle{
   margin-left: 14px;
