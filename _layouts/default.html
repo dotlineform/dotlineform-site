@@ -1,4 +1,4 @@
-<file name=0 path=/Users/dlf/Developer/dotlineform/dotlineform/_layouts/default.html><!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -29,16 +29,16 @@
         <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
       </div>
       <nav class="site-nav">
-+        {% assign is_notes_index = (page.url == '/notes/') or (page.url == '/notes') %}
-+        {% assign is_notes_section = (page.collection == 'notes') or (page.url contains '/notes/') %}
-+
-+        {% if is_notes_index %}
-+          <span class="nav-item is-active" aria-current="page">Notes</span>
-+        {% elsif is_notes_section %}
-+          <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">Notes</a>
-+        {% else %}
-+          <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
-+        {% endif %}
+        {% assign is_notes_index = (page.url == '/notes/') or (page.url == '/notes') %}
+        {% assign is_notes_section = (page.collection == 'notes') or (page.url contains '/notes/') %}
+
+        {% if is_notes_index %}
+          <span class="nav-item is-active" aria-current="page">Notes</span>
+        {% elsif is_notes_section %}
+          <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">Notes</a>
+        {% else %}
+          <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
+        {% endif %}
       </nav>
       <div class="site-header-spacer" aria-hidden="true"></div>
     </div>
@@ -87,4 +87,4 @@
     })();
   </script>
 </body>
-</html></file>
+</html>
