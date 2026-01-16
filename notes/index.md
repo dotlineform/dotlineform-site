@@ -7,8 +7,13 @@ permalink: /notes/
 # Notes
 
 {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
+<div class="note-index">
 
 {% for note in sorted_notes %}
 {% if note.published == false %}{% continue %}{% endif %}
-- [{{ note.title | default: note.slug }}]({{ note.url | relative_url }}) ({{ note.date | date: "%Y-%m-%d" }})
+<div class="note-index-item">
+  <a class="note-index-link" href="{{ note.url | relative_url }}">{{ note.title | default: note.slug }}</a>
+  <span class="note-index-date">{{ note.date | date: "%Y-%m-%d" }}</span>
+</div>
 {% endfor %}
+</div>
