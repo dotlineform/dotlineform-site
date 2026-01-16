@@ -58,9 +58,9 @@ Each demonstrates a trade-off between completeness and adaptability. Memory’s 
   
   
 Evolution optimizes functional plasticity, not perfect fidelity. As Schacter wrote:  
-##   
+ 
 “Memory’s imperfections are the price we pay for the benefits of a system that works not by rote recording but by meaningful construction.”  
-##   
+  
 ### Neurocognitive Foundations  
   
 * **Hippocampus:** pattern separation/completion (context encoding and retrieval).  
@@ -68,13 +68,13 @@ Evolution optimizes functional plasticity, not perfect fidelity. As Schacter wro
 * **Prefrontal cortex:** metacognitive bias, schema integration.  
 * **Posterior parietal cortex:** attentional weighting during recall.  
 * **Reconsolidation network:** hippocampus–amygdala–prefrontal loop modifies old traces on reactivation.  
-##   
+  
 ### Philosophical Implication  
   
 The seven sins show that truth in memory is probabilistic - just as in logic, truth within a system depends on its inferential structure, not external absolutes. Hence:  
-##   
+ 
 Memory is a *generative model* of the past, not a recording device.  
-##   
+
 ### Summary  
   
 
@@ -87,9 +87,3 @@ Memory is a *generative model* of the past, not a recording device.
 | Suggestibility | External contamination | Social learning | Data overwrite |
 | Bias | Reconstruction under priors | Self-consistency | Bayesian update |
 | Persistence | Overconsolidation | Safety, vigilance | Infinite loop warning |
-  
-  
-  
-  
-  
-  
