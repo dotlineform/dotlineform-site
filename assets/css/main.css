@@ -273,9 +273,9 @@ figure.diagram figcaption{
     padding: 8px 0; 
     /* border-bottom: 1px solid var(--border); */
 }
-.note-index-item:last-child{ 
-    /* border-bottom: 0;  */
-}
+/* .note-index-item:last-child{ 
+    border-bottom: 0; 
+} */
 .note-index-link:link,
 .note-index-link:active,
 .note-index-link:focus{
