@@ -230,6 +230,15 @@ figure.diagram figcaption{
 .site-nav a{
   margin-left: 14px;
 }
+.site-nav a.is-active,
+.site-nav a.is-active:link,
+.site-nav a.is-active:visited{
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  pointer-events: none;
+  cursor: default;
+}
 .site-nav{ justify-self: center; }
 .site-header-spacer{ justify-self: end; }
 .theme-toggle{
