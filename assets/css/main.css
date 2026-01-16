@@ -240,20 +240,11 @@ figure.diagram figcaption{
   color: var(--text);
 }
 .site-title{ justify-self: start; }
-.site-nav a{
-  margin-left: 14px;
-}
-.site-nav a.is-active,
-.site-nav a.is-active:link,
-.site-nav a.is-active:visited{
-  color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: default;
-}
+
 /* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
 .site-nav{ justify-self: center; }
 .site-nav .nav-item{ margin-left: 14px; }
+.site-nav .nav-item:first-child{ margin-left: 0; }
 
 /* Inactive link styling */
 .site-nav a.nav-item:link{ color: var(--link); text-decoration: none; }
@@ -273,6 +264,7 @@ figure.diagram figcaption{
   text-underline-offset: 2px;
   cursor: default;
 }
+
 .site-header-spacer{ justify-self: end; }
 .theme-toggle{
   margin-left: 14px;
