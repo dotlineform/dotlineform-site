@@ -28,13 +28,17 @@
       <div class="site-title">
         <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
       </div>
-      {% assign is_notes = (page.collection == 'notes') or (page.url == '/notes/') or (page.url == '/notes') or (page.url contains '/notes/') %}
       <nav class="site-nav">
-        {% if is_notes %}
-          <span class="nav-item is-active" aria-current="page">Notes</span>
-        {% else %}
-          <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
-        {% endif %}
++        {% assign is_notes_index = (page.url == '/notes/') or (page.url == '/notes') %}
++        {% assign is_notes_section = (page.collection == 'notes') or (page.url contains '/notes/') %}
++
++        {% if is_notes_index %}
++          <span class="nav-item is-active" aria-current="page">Notes</span>
++        {% elsif is_notes_section %}
++          <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">Notes</a>
++        {% else %}
++          <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
++        {% endif %}
       </nav>
       <div class="site-header-spacer" aria-hidden="true"></div>
     </div>

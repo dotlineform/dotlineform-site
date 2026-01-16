@@ -244,7 +244,7 @@ figure.diagram figcaption{
 /* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
 .site-nav{ justify-self: center; }
 .site-nav .nav-item{ margin-left: 14px; }
-.site-nav .nav-item:first-child{ margin-left: 0; }
+.site-nav .nav-item:first-child{ margin-left: 0; } /* optional, helps centering */
 
 /* Inactive link styling */
 .site-nav a.nav-item:link{ color: var(--link); text-decoration: none; }
@@ -257,13 +257,14 @@ figure.diagram figcaption{
   text-underline-offset: 2px;
 }
 
-/* Active (span) styling */
+/* Active state for BOTH <span> and <a> */
 .site-nav .nav-item.is-active{
   color: var(--text);
   text-decoration: underline;
   text-underline-offset: 2px;
-  cursor: default;
 }
+.site-nav span.nav-item.is-active{ cursor: default; }
+.site-nav a.nav-item.is-active{ cursor: pointer; }
 
 .site-header-spacer{ justify-self: end; }
 .theme-toggle{
