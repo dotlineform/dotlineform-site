@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hierarchies of Consistency Strength (From Gödel to Feferman)</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.55; margin: 2rem; }
+  h1, h2, h3 { line-height: 1.25; }
+  .shade { background: #f5f7fa; border: 1px solid #e3e8ee; padding: 1rem; border-radius: 8px; }
+  .meta { color: #4a5568; font-size: 0.95rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #e2e8f0; padding: 0.6rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: #f7fafc; }
+  .small { font-size: 0.94rem; }
+  .footnotes li { margin-bottom: 0.4rem; }
+  .pill { display:inline-block; padding:0.1rem 0.5rem; border-radius:999px; background:#edf2f7; border:1px solid #e2e8f0; font-size:0.85rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+</style>
+</head>
+<body>
+
+<h1>Hierarchies of Consistency Strength (From Gödel to Feferman)</h1>
+
+<div class="shade">
+<pre><code>[2025-10-22T16:06:00+01:00] User Prompt
+"hierarchies of consistency strength."</code></pre>
+</div>
+
+<p><strong>Hierarchies of consistency strength</strong> rank formal theories by what they can <em>prove about the consistency</em> of other theories. If a theory <em>A</em> proves <code>Con(B)</code> (“B is consistent”), then <em>A</em> is <em>stronger</em> than <em>B</em>. Gödel’s Second Incompleteness Theorem implies that no sufficiently strong, consistent theory proves its own consistency; hence, foundations unfold as an <span class="pill">unending ladder</span> of stronger systems (Feferman), often measured via <em>proof-theoretic ordinals</em>.</p>
+
+<h2>From Gödel’s Limit to a Ladder</h2>
+<table>
+  <thead><tr><th>Idea</th><th>Formal Content</th><th>Consequence</th></tr></thead>
+  <tbody>
+    <tr><td>Gödel II</td><td>No consistent, arithmetic-capable theory proves <code>Con(T)</code> about itself.</td><td>Self-certification is impossible.</td></tr>
+    <tr><td>Relative consistency</td><td><code>A ⊢ Con(B)</code></td><td><code>A</code> stronger than <code>B</code>.</td></tr>
+    <tr><td>Hierarchy</td><td>Iterate: <code>B &lt; A &lt; A'</code> etc.</td><td>Infinite ascent of strength.</td></tr>
+  </tbody>
+</table>
+
+<h2>Landmarks in the Hierarchy</h2>
+<table>
+  <thead><tr><th>Level</th><th>Representative Theory</th><th>Can Prove Consistency Of</th><th>But Not</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Fragments of arithmetic (IΔ0, EFA)</td><td>Weaker fragments</td><td>Themselves</td></tr>
+    <tr><td>2</td><td><strong>PA</strong> (Peano Arithmetic)</td><td>Fragments; elementary arithmetic</td><td><strong>Con(PA)</strong></td></tr>
+    <tr><td>3</td><td><strong>ZFC</strong> (Zermelo–Fraenkel + Choice)</td><td>PA; many arithmetic theories</td><td><strong>Con(ZFC)</strong></td></tr>
+    <tr><td>4</td><td>ZFC + <em>Inaccessible cardinal</em></td><td>ZFC</td><td>Its own consistency</td></tr>
+    <tr><td>5</td><td>ZFC + <em>Measurable cardinal</em></td><td>ZFC + Inaccessible</td><td>Its own consistency</td></tr>
+    <tr><td>…</td><td>Stronger large-cardinal axioms</td><td>Weaker large-cardinal theories</td><td>Self-consistency</td></tr>
+  </tbody>
+</table>
+
+<h2>Measuring Strength: Proof-Theoretic Ordinals</h2>
+<p>Modern proof theory (Gentzen, Feferman, et al.) assigns <em>ordinals</em> as “coordinates of strength.” Examples:</p>
+<table>
+  <thead><tr><th>Theory</th><th>Approx. Ordinal</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>PA</td><td><code>ε₀</code></td><td>Gentzen’s 1936 proof used transfinite induction up to <code>ε₀</code> to show <em>Con(PA)</em>—but in a stronger meta-theory.</td></tr>
+    <tr><td>Predicative Analysis</td><td><code>Γ₀</code></td><td>Feferman–Schütte analysis of predicative provability.</td></tr>
+    <tr><td>Beyond predicativity</td><td><em>much larger ordinals</em></td><td>Linked to large cardinals; towers of reflection principles.</td></tr>
+  </tbody>
+</table>
+
+<h2>Reflection Principles and Iteration</h2>
+<ul>
+  <li><strong>Reflection:</strong> Add axioms stating, roughly, “If the theory proves φ, then φ is true (in some schema).”</li>
+  <li><strong>Iterated reflection:</strong> Strength increases as you iterate reflection or consistency assertions: <code>T</code>, <code>T + Con(T)</code>, <code>T + Con(T) + Con(T+Con(T))</code>, …</li>
+  <li><strong>Outcome:</strong> A structured, transfinite climb in strength while Gödel’s barrier persists at each step.</li>
+</ul>
+
+<h2>Why It Matters</h2>
+<table>
+  <thead><tr><th>Area</th><th>Relevance</th></tr></thead>
+  <tbody>
+    <tr><td>Foundations</td><td>Replaces the search for “the” foundation with a calibrated <em>hierarchy</em> of stronger frameworks.</td></tr>
+    <tr><td>Set Theory</td><td>Large cardinals organize high-level strength; consequences cascade down to arithmetic.</td></tr>
+    <tr><td>Philosophy</td><td>Epistemic humility: every lens needs a wider lens; no final self-grounding.</td></tr>
+    <tr><td>Computation</td><td>Parallels with hierarchies of computability and oracle strength (Turing jumps).</td></tr>
+  </tbody>
+</table>
+
+<h2>Summary</h2>
+<p>Consistency strength forms an <strong>ascending ladder</strong>: stronger theories verify the safety of weaker ones, yet none verifies itself. Proof-theoretic ordinals and large-cardinal axioms chart this ascent with remarkable precision.</p>
+
+<h2>References</h2>
+<ol class="footnotes">
+  <li>Feferman, S. (1998). <em>In the Light of Logic</em>. Oxford University Press.</li>
+  <li>Gentzen, G. (1936). <em>Die Widerspruchsfreiheit der reinen Zahlentheorie.</em> Mathematische Annalen. </li>
+  <li>Gödel, K. (1931). <em>Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I</em>. Akademische Verlagsgesellschaft. </li>
+  <li>Turing, A. M. (1936). <em>On computable numbers, with an application to the Entscheidungsproblem.</em> Proc. London Mathematical Society, 2(42), 230–265. </li>
+</ol>
+
+</body>
+</html>

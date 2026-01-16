@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Large Cardinal Hypotheses</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 2rem; }
+  h1, h2, h3 { line-height: 1.25; }
+  .shade { background: #f5f7fa; border: 1px solid #e3e8ee; padding: 1rem; border-radius: 8px; }
+  .meta { color: #4a5568; font-size: 0.95rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #e2e8f0; padding: 0.65rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: #f7fafc; }
+  .small { font-size: 0.94rem; }
+  .footnotes li { margin-bottom: 0.4rem; }
+  .pill { display:inline-block; padding:0.1rem 0.5rem; border-radius:999px; background:#edf2f7; border:1px solid #e2e8f0; font-size:0.85rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+</style>
+</head>
+<body>
+
+<h1>Large Cardinal Hypotheses</h1>
+
+<div class="shade">
+<pre><code>[2025-10-22T16:18:00+01:00] User Prompt
+"Large cardinal hypotheses"</code></pre>
+</div>
+
+<h2>Overview</h2>
+<p><strong>Large cardinal hypotheses</strong> are axioms asserting the existence of extremely large infinities with strong structural properties (reflection, measures, embeddings). They are <em>not</em> provable from ZFC (assuming ZFC is consistent), yet they powerfully organize modern set theory, calibrate the <em>consistency strength</em> of many results, and often decide statements independent of ZFC (e.g., regularity of projective sets under determinacy assumptions). </p>
+
+<h2>Motivation: Beyond ZFC</h2>
+<ul>
+  <li><strong>Gödel’s incompleteness:</strong> No single formal system captures all mathematical truth. </li>
+  <li><strong>Cohen’s forcing:</strong> Central questions (e.g., CH) are independent of ZFC, motivating new axioms. </li>
+  <li><strong>Strategy:</strong> Introduce strong <em>infinity axioms</em> that extend ZFC while preserving coherence and yielding deep theorems. </li>
+</ul>
+
+<h2>Core Notions</h2>
+<table>
+  <thead><tr><th>Type</th><th>Idea (gloss)</th><th>Strength</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Inaccessible</strong></td><td>Regular, strong limit; “universe-sized” stage of V</td><td>Entry-level large cardinal</td></tr>
+    <tr><td><strong>Mahlo</strong></td><td>Many inaccessibles below; higher reflection</td><td>Stronger than inaccessible</td></tr>
+    <tr><td><strong>Weakly compact</strong></td><td>Compactness/indescribability properties</td><td>Stronger again</td></tr>
+    <tr><td><strong>Measurable</strong></td><td>κ carries a nontrivial κ-additive 0–1 measure</td><td>Much stronger; ultrafilters/inner models</td></tr>
+    <tr><td><strong>Supercompact</strong></td><td>Elementary embeddings with wide closure</td><td>Among the strongest standard axioms</td></tr>
+  </tbody>
+</table>
+
+<h2>Reflection & Inner Models</h2>
+<p>Large cardinal axioms can be seen as <em>reflection principles</em>: the universe of sets <code>V</code> resembles itself when viewed from certain “high” cardinals. Inner model theory (e.g., <code>L</code>, <code>L[U]</code>, core models) studies canonical subuniverses that reflect large cardinal features and enable fine-structural analysis.</p>
+
+<h2>Consistency Strength & the Ladder</h2>
+<table>
+  <thead><tr><th>Level</th><th>Axiom</th><th>Relative Consistency</th></tr></thead>
+  <tbody>
+    <tr><td>0</td><td>ZFC</td><td>Baseline</td></tr>
+    <tr><td>1</td><td>ZFC + “Inaccessible exists”</td><td>Proves Con(ZFC)</td></tr>
+    <tr><td>2</td><td>ZFC + “Mahlo exists”</td><td>Proves Con(ZFC + inaccessible)</td></tr>
+    <tr><td>3</td><td>ZFC + “Measurable exists”</td><td>Proves Con(ZFC + Mahlo)</td></tr>
+    <tr><td>4</td><td>ZFC + “Supercompact exists”</td><td>Proves consistency of many weaker large-cardinal theories</td></tr>
+  </tbody>
+</table>
+<p>Each step climbs the <em>hierarchies of consistency strength</em>: stronger axioms verify the safety of weaker ones but, by Gödel II, not their own. </p>
+
+<h2>Deciding Independent Statements</h2>
+<ul>
+  <li><strong>Projective Determinacy (PD):</strong> Independent of ZFC; follows from sufficiently strong large cardinals (e.g., infinitely many Woodin cardinals). </li>
+  <li><strong>Regularity properties:</strong> Under PD, all projective sets of reals have Lebesgue measurability, the Baire property, and the perfect set property. </li>
+  <li><strong>Continuum Hypothesis (CH):</strong> Neither provable nor refutable in ZFC; large cardinals interact with proposed axioms (e.g., Ultimate L, forcing axioms) guiding candidates for settling CH. </li>
+</ul>
+
+<h2>Philosophical Stances</h2>
+<table>
+  <thead><tr><th>View</th><th>Claim</th><th>Justification</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Platonist</strong></td><td>Large cardinals <em>exist</em> in the objective set-theoretic universe</td><td>Intrinsic plausibility; reflection as a truth about sets</td></tr>
+    <tr><td><strong>Pragmatic/Formalist</strong></td><td>Adopt them for fruitfulness and unifying power</td><td>They settle questions and organize theory</td></tr>
+    <tr><td><strong>Reflective pluralist</strong></td><td>Use multiple axioms across models/multiverse</td><td>Coherence across frameworks over absolute closure</td></tr>
+  </tbody>
+</table>
+
+<h2>Summary</h2>
+<p>Large cardinal hypotheses are the <strong>north stars of modern set theory</strong>: new infinities that extend ZFC, calibrate strength, and illuminate deep structure. They don’t end incompleteness; they <em>map</em> it.</p>
+
+<h2>References</h2>
+<ol class="footnotes">
+  <li>Cohen, P. J. (1963). <em>The independence of the continuum hypothesis.</em>Proceedings of the National Academy of Sciences.</li>
+  <li>Feferman, S. (1998). <em>In the Light of Logic</em>. Oxford University Press. </li>
+  <li>Gödel, K. (1931). <em>Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I</em>. Akademische Verlagsgesellschaft. </li>
+  <li>Kanamori, A. (2009). <em>The Higher Infinite</em> (2nd ed.). Springer. </li>
+  <li>Woodin, W. H. (2011). <em>The Continuum Hypothesis, the generic-multiverse of sets, and the Ω conjecture.</em>The Bulletin of Symbolic Logic, 17(1), 1–45. </li>
+</ol>
+
+</body>
+</html>

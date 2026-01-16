@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Halting Problem — Computation and the Limits of Knowledge</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 2rem; }
+  h1, h2, h3 { line-height: 1.25; }
+  .shade { background: #f5f7fa; border: 1px solid #e3e8ee; padding: 1rem; border-radius: 8px; }
+  .meta { color: #4a5568; font-size: 0.95rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #e2e8f0; padding: 0.65rem 0.75rem; text-align: left; vertical-align: top; }
+  th { background: #f7fafc; }
+  .small { font-size: 0.94rem; }
+  .footnotes li { margin-bottom: 0.4rem; }
+  .pill { display:inline-block; padding:0.1rem 0.5rem; border-radius:999px; background:#edf2f7; border:1px solid #e2e8f0; font-size:0.85rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+</style>
+</head>
+<body>
+
+<h1>The Halting Problem — Computation and the Limits of Knowledge</h1>
+
+<div class="shade">
+<pre><code>[2025-10-22T16:45:00+01:00] User Prompt
+"What is the halting problem?"</code></pre>
+</div>
+
+<h2>Definition</h2>
+<p>The <strong>Halting Problem</strong> asks whether there exists a single algorithm that, given any program <code>P</code> and input <code>x</code>, can determine whether <code>P(x)</code> will eventually halt or run forever. Alan Turing (1936) proved that such a universal termination-decider does <em>not</em> exist; the problem is <strong>undecidable</strong>. </p>
+
+<h2>Core Idea of the Proof (Diagonalization)</h2>
+<ol>
+  <li>Assume a hypothetical decider <code>H(P, x)</code> returns TRUE if <code>P(x)</code> halts, FALSE otherwise.</li>
+  <li>Build a new program <code>K(Q)</code>: run <code>H(Q, Q)</code>; if TRUE, loop forever; if FALSE, halt.</li>
+  <li>Evaluate <code>K(K)</code>. If <code>H</code> says it halts, <code>K</code> loops; if <code>H</code> says it loops, <code>K</code> halts. Contradiction.</li>
+</ol>
+<p>Therefore, <code>H</code> cannot exist. </p>
+
+<h2>Relation to Gödel’s Incompleteness</h2>
+<table>
+  <thead><tr><th>Gödel (1931)</th><th>Turing (1936)</th></tr></thead>
+  <tbody>
+    <tr><td>True but unprovable statements in arithmetic</td><td>Well-posed problems no algorithm can solve (undecidable)</td></tr>
+    <tr><td>Arithmetization of syntax</td><td>Programs encoded as data; machines as strings</td></tr>
+    <tr><td>Self-reference via diagonalization</td><td>Self-reference via program-on-its-own-code</td></tr>
+  </tbody>
+</table>
+<p>The results are philosophically parallel: both show limits to formal systems and computation. </p>
+
+<h2>Consequences and Limits</h2>
+<table>
+  <thead><tr><th>Area</th><th>Implication</th></tr></thead>
+  <tbody>
+    <tr><td>Software verification</td><td>No tool can decide termination/correctness for <em>all</em> programs.</td></tr>
+    <tr><td>AI predictability</td><td>No algorithm can perfectly predict the behavior of all other algorithms (or itself) in general.</td></tr>
+    <tr><td>Mathematics</td><td>Some mathematical truths are non-computable; echoes of incompleteness.</td></tr>
+    <tr><td>Security analysis</td><td>No universal detector for all infinite loops or malware behaviors.</td></tr>
+  </tbody>
+</table>
+
+<h2>Beyond Decidability: Ω and Randomness</h2>
+<p>Chaitin’s <strong>Ω (Omega)</strong> is the halting probability of a universal prefix-free machine; its binary expansion is algorithmically random and encodes answers to infinitely many halting instances. This links undecidability to <em>algorithmic information theory</em>. </p>
+
+<h2>Intuition</h2>
+<p>A “perfect critic” that reads any book and tells whether it mentions itself creates a paradox when handed its own title. The halting problem is that paradox in code: a procedure that decides termination for all programs generates a program that contradicts it by asking about itself.</p>
+
+<h2>Summary</h2>
+<p>The halting problem shows that computation has <strong>intrinsic limits</strong>: no algorithm solves termination for all programs. This boundary is not a bug but a structural feature of logic and computation.</p>
+
+<h2>References</h2>
+<ol class="footnotes">
+  <li>Chaitin, G. J. (1975). <em>A theory of program size formally identical to information theory.</em> Journal of the ACM 22(3), 329–340.</li>
+  <li>Davis, M. (1958). <em>Computability and Unsolvability</em>. McGraw–Hill. </li>
+  <li>Gödel, K. (1931). <em>Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I</em>. Akademische Verlagsgesellschaft. </li>
+  <li>Turing, A. M. (1936). <em>On computable numbers, with an application to the Entscheidungsproblem.</em> Proceedings of the London Mathematical Society, 2(42), 230–265. </li>
+</ol>
+
+</body>
+</html>

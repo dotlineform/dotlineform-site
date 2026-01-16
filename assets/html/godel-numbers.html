@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Loose Ends — Memory — Gödel Numbers — Definition, Method, Examples, Significance (Explainer + Citations)</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.55; margin: 2rem; }
+  h1, h2, h3 { line-height: 1.25; }
+  .shade { background: #f5f7fa; border: 1px solid #e3e8ee; padding: 1rem; border-radius: 8px; }
+  .meta { color: #4a5568; font-size: 0.95rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #e2e8f0; padding: 0.6rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: #f7fafc; }
+  .small { font-size: 0.94rem; }
+  .footnotes li { margin-bottom: 0.4rem; }
+  .pill { display:inline-block; padding:0.1rem 0.5rem; border-radius:999px; background:#edf2f7; border:1px solid #e2e8f0; font-size:0.85rem; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+</style>
+</head>
+<body>
+
+<h1>Gödel Numbers</h1>
+
+<div class="shade">
+<pre><code>[2025-10-22T15:43:30+01:00] User Prompt
+"What are Gödel numbers?"</code></pre>
+</div>
+
+<h2>Definition</h2>
+<p><strong>Gödel numbers</strong> are a systematic way to encode every symbol, formula, and proof of a formal logical system as a unique <em>natural number</em>. By arithmetizing syntax—assigning numbers to symbols and combining them via prime exponents—Gödel made it possible to express statements <em>about</em> proofs and formulas as statements <em>within</em> arithmetic. This device enabled the self-referential constructions behind the <span class="pill">Incompleteness Theorems</span>.</p>
+
+<h2>Why Gödel Invented Them</h2>
+<ul>
+  <li><strong>Collapse meta-level into object-level:</strong> Let arithmetic “talk about” its own proofs.</li>
+  <li><strong>Enable self-reference:</strong> Build a sentence that asserts something about its own provability.</li>
+  <li><strong>Prove limits of formalism:</strong> Show existence of true but unprovable statements and unprovable consistency.</li>
+</ul>
+
+<h2>How the Numbering Works (Simplified)</h2>
+<table>
+  <thead><tr><th>Step</th><th>Action</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>1. Symbol Codes</td><td>Assign each primitive symbol a unique integer code (e.g., <code>0→1</code>, <code>S→2</code>, <code>+→3</code>, <code>=→4</code>, <code>(→5</code>, <code>)→6</code>, etc.).</td><td>Represent syntax numerically.</td></tr>
+    <tr><td>2. String Encoding</td><td>For a formula with codes <code>a_1,...,a_n</code>, define its Gödel number as <code>2^{a_1}·3^{a_2}·5^{a_3}·7^{a_4}·…</code></td><td>Use unique prime factorization to ensure unique decoding.</td></tr>
+    <tr><td>3. Arithmetic Predicates</td><td>Define predicates like <code>Form(x)</code>, <code>Proof(y,x)</code>, <code>Prov(x)</code> arithmetically (divisibility/exponents).</td><td>Express “x is a formula,” “y proves x,” “x is provable.”</td></tr>
+    <tr><td>4. Self-Reference</td><td>Using diagonalization, construct <code>G</code> ≈ “<code>G</code> is not provable.”</td><td>Derive true-but-unprovable and unprovable-consistency results.</td></tr>
+  </tbody>
+</table>
+
+<h2>Tiny Worked Example</h2>
+<p>Suppose we map <code>S→2</code>, <code>(→5</code>, <code>0→1</code>, <code>)→6</code>. The string <code>S(0)</code> has code sequence [2,5,1,6]. Its Gödel number is <code>2^2 · 3^5 · 5^1 · 7^6</code>. Because prime factorization is unique, we can recover the exact symbol string from the single integer.</p>
+
+<h2>Conceptual Significance</h2>
+<table>
+  <thead><tr><th>Aspect</th><th>What Gödel Numbering Achieves</th></tr></thead>
+  <tbody>
+    <tr><td>Self-reference</td><td>Makes it possible to construct statements that refer to their own provability.</td></tr>
+    <tr><td>Arithmetization of Syntax</td><td>Turns meta-mathematical talk into arithmetic facts.</td></tr>
+    <tr><td>Computability Legacy</td><td>Prefigures code-as-data, compilers, and the Halting Problem (Turing).</td></tr>
+    <tr><td>Foundational Impact</td><td>Enables Incompleteness Theorems; reshapes logic and philosophy of math.</td></tr>
+  </tbody>
+</table>
+
+<h2>Summary</h2>
+<ul>
+  <li><strong>Definition:</strong> A mapping from syntactic items to unique integers.</li>
+  <li><strong>Method:</strong> Number symbols → encode strings via prime exponents → define proof/Prov within arithmetic.</li>
+  <li><strong>Outcome:</strong> Self-reference from inside arithmetic; incompleteness results.</li>
+  <li><strong>Legacy:</strong> Core conceptual precursor to modern computability and programming-language theory.</li>
+</ul>
+
+<h2>References</h2>
+<ol class="footnotes">
+  <li>Davis, M. (Ed.). (1965). <em>The Undecidable</em>. Raven Press.</li>
+  <li>Gödel, K. (1931). <em>Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme I</em>. Akademische Verlagsgesellschaft.</li>
+  <li>Goldstein, R. (2005). <em>Incompleteness: The proof and paradox of Kurt Gödel</em>. W. W. Norton. </li>
+  <li>Hofstadter, D. R. (1979). <em>Gödel, Escher, Bach: An eternal golden braid</em>. Basic Books. </li>
+  <li>Nagel, E., & Newman, J. (1958). <em>Gödel’s proof</em>. New York University Press. </li>
+</ol>
+
+</body>
+</html>
