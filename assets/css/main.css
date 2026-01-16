@@ -216,9 +216,9 @@ figure.diagram figcaption{
 .site-header .container{
   padding-top: 16px;
   padding-bottom: 16px;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: baseline;
-  justify-content: space-between;
   gap: 18px;
 }
 .site-title a{
@@ -226,9 +226,12 @@ figure.diagram figcaption{
   font-weight: 700;
   color: var(--text);
 }
+.site-title{ justify-self: start; }
 .site-nav a{
   margin-left: 14px;
 }
+.site-nav{ justify-self: center; }
+.site-header-spacer{ justify-self: end; }
 .theme-toggle{
   margin-left: 14px;
   font: inherit;

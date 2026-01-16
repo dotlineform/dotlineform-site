@@ -19,6 +19,7 @@
       }
     })();
   </script>
+
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 </head>
 <body>
@@ -30,6 +31,7 @@
       <nav class="site-nav">
         <a href="{{ '/notes/' | relative_url }}">Notes</a>
       </nav>
+      <div class="site-header-spacer" aria-hidden="true"></div>
     </div>
   </header>
 
@@ -43,37 +45,37 @@
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">Theme: auto</button>
     </div>
   </footer>
-<script>
-  (function () {
-    var btn = document.getElementById('themeToggle');
-    if (!btn) return;
 
-    function getTheme() {
-      return document.documentElement.getAttribute('data-theme') || 'auto';
-    }
+  <script>
+    (function () {
+      var btn = document.getElementById('themeToggle');
+      if (!btn) return;
 
-    function setTheme(t) {
-      document.documentElement.setAttribute('data-theme', t);
-      try {
-        if (t === 'auto') localStorage.removeItem('theme');
-        else localStorage.setItem('theme', t);
-      } catch (e) {}
-      btn.textContent = 'Theme: ' + t;
-    }
+      function getTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'auto';
+      }
 
-    function nextTheme(t) {
-      if (t === 'auto') return 'light';
-      if (t === 'light') return 'dark';
-      return 'auto';
-    }
+      function setTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        try {
+          if (t === 'auto') localStorage.removeItem('theme');
+          else localStorage.setItem('theme', t);
+        } catch (e) {}
+        btn.textContent = 'Theme: ' + t;
+      }
 
-    // Initialise label from current attribute
-    setTheme(getTheme());
+      function nextTheme(t) {
+        if (t === 'auto') return 'light';
+        if (t === 'light') return 'dark';
+        return 'auto';
+      }
 
-    btn.addEventListener('click', function () {
-      setTheme(nextTheme(getTheme()));
-    });
-  })();
-</script>
+      setTheme(getTheme());
+
+      btn.addEventListener('click', function () {
+        setTheme(nextTheme(getTheme()));
+      });
+    })();
+  </script>
 </body>
 </html>
