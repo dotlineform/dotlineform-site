@@ -258,6 +258,8 @@ figure.diagram figcaption{
   align-items: center;
   justify-content: space-between;
   gap: 14px;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 /* Notes index list (no bullets, no underline) */
