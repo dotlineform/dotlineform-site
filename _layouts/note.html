@@ -17,12 +17,12 @@ layout: default
   {% if page.html_inserts and page.html_inserts.size > 0 %}
     <hr>
     <section class="note-inserts">
-      <h2>Summaries with References</h2>
-      <ul>
+      <h2>Inserts</h2>
+      <div class="note-insert-links">
         {% for item in page.html_inserts %}
-          <li>🔗 <a href="{{ item.path | relative_url }}">{{ item.label | default: item.path }}</a></li>
+          <p class="note-insert-link">🔗 <a href="{{ item.path | relative_url }}">{{ item.label | default: item.path }}</a></p>
         {% endfor %}
-      </ul>
+      </div>
     </section>
   {% endif %}
 </article>
