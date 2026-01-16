@@ -30,11 +30,11 @@
       </div>
       <nav class="site-nav">
         {% assign is_notes_index = (page.url == '/notes/') or (page.url == '/notes') %}
-        {% assign is_notes_section = (page.collection == 'notes') or (page.url contains '/notes/') %}
+        {% assign is_note = (page.collection == 'notes') %}
 
         {% if is_notes_index %}
           <span class="nav-item is-active" aria-current="page">Notes</span>
-        {% elsif is_notes_section %}
+        {% elsif is_note %}
           <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">Notes</a>
         {% else %}
           <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
