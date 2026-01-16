@@ -6,9 +6,7 @@ tags: [memory, time, methods]
 html_inserts:  
   - path: /assets/html/the-vanishing-of-time.html  
     label: The Vanishing of Time  
---- 
-
-# Time vanishing
+---
   
 In several contemporary physical frameworks, time is treated not as a basic variable but as something that “drops out” or “emerges” from deeper, timeless relations. In general relativity (Einstein, 1915), time is not absolute but part of spacetime: a dynamic geometry shaped by mass–energy. The Einstein field equations don’t privilege a single, universal “now.” The consequence is that there’s no external clock; *time is relational*. Time ceases to be a universal variable and becomes a coordinate within a 4D manifold that can be “sliced” in many ways.  
   
