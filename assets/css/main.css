@@ -115,6 +115,12 @@ a:focus-visible{ outline: 2px solid var(--border-strong); outline-offset: 2px; t
   text-underline-offset: 2px;
 }
 
+.poem-body a:link,
+.poem-body a:visited{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 hr{ border: 0; border-top: 1px solid var(--border); margin: var(--space-5) 0; }
 
 /* Code */
@@ -262,6 +268,8 @@ figure.diagram figcaption{
   outline-offset: 2px;
   background: var(--panel-2);
   border-radius: 999px;
+  text-decoration: none;
+  color: var(--text);
 }
 
 /* Active state: selected pill for the <span> only */

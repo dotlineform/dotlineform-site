@@ -34,6 +34,7 @@
         notes_index={% if page.path == 'notes/index.md' %}true{% else %}false{% endif %}
         is_note={% if page.collection == 'notes' %}true{% else %}false{% endif %}
         -->
+        <!-- Notes nav item -->
         {% if page.path == 'notes/index.md' %}
           <span class="nav-item is-active" aria-current="page">Notes</span>
 
@@ -42,6 +43,17 @@
 
         {% else %}
           <a class="nav-item" href="{{ '/notes/' | relative_url }}">Notes</a>
+        {% endif %}
+        
+        <!-- Poems nav item -->
+        {% if page.path == 'poems/index.md' %}
+          <span class="nav-item is-active" aria-current="page">Poems</span>
+
+        {% elsif page.collection == 'poems' %}
+          <a class="nav-item is-active" href="{{ '/poems/' | relative_url }}" aria-current="page">Poems</a>
+
+        {% else %}
+          <a class="nav-item" href="{{ '/poems/' | relative_url }}">Poems</a>
         {% endif %}
       </nav>
       <div class="site-header-spacer" aria-hidden="true"></div>
