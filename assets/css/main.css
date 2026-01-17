@@ -247,7 +247,7 @@ figure.diagram figcaption{
 .site-nav .nav-item:first-child{ margin-left: 0; } /* optional, helps centering */
 
 /* Inactive link styling */
-..site-nav a.nav-item:link,
+.site-nav a.nav-item:link,
 .site-nav a.nav-item:visited{
   color: var(--text);
   text-decoration: none;
