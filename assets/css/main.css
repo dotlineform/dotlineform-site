@@ -257,14 +257,17 @@ figure.diagram figcaption{
   text-underline-offset: 2px;
 }
 
-/* Active state for BOTH <span> and <a> */
-.site-nav .nav-item.is-active{
+/* Active state: selected pill for the <span> only */
+.site-nav span.nav-item.is-active{
   color: var(--text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  font-weight: 700;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 10px;
+  text-decoration: none;
+  cursor: default;
 }
-.site-nav span.nav-item.is-active{ cursor: default; }
-.site-nav a.nav-item.is-active{ cursor: pointer; }
 
 .site-header-spacer{ justify-self: end; }
 .theme-toggle{
