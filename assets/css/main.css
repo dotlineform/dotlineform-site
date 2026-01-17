@@ -248,17 +248,24 @@ figure.diagram figcaption{
 .site-title{ justify-self: start; }
 
 /* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
-.site-nav{ justify-self: center; }
-.site-nav .nav-item{ margin-left: 14px; }
-.site-nav .nav-item:first-child{ margin-left: 0; } /* optional, helps centering */
-
+.site-nav{ 
+  justify-self: center; 
+}
+.site-nav .nav-item{ 
+  margin-left: 14px;
+  display: inline-block;
+  padding: 2px 10px;
+  border: 1px solid transparent;   /* reserve space to avoid shifting when selected*/
+  border-radius: 999px;
+}
+.site-nav .nav-item:first-child{ 
+  margin-left: 0;  /* optional, helps centering */
+}
 /* Inactive link styling */
 .site-nav a.nav-item:link,
 .site-nav a.nav-item:visited{
   color: var(--text);
   text-decoration: none;
-  padding: 2px 10px;
-  border-radius: 999px;
 }
 .site-nav a.nav-item:hover{
   background: var(--panel-2);
@@ -267,7 +274,6 @@ figure.diagram figcaption{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
   background: var(--panel-2);
-  border-radius: 999px;
   text-decoration: none;
   color: var(--text);
 }
@@ -275,16 +281,16 @@ figure.diagram figcaption{
 /* Active state: selected pill for the <span> only */
 .site-nav span.nav-item.is-active{
   color: var(--text);
-  /* font-weight: 600; */
   background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 2px 10px;
+  border-color: var(--border);
   text-decoration: none;
   cursor: default;
 }
 
-.site-header-spacer{ justify-self: end; }
+.site-header-spacer{ 
+  justify-self: end; 
+}
+
 .theme-toggle{
   margin-left: 14px;
   font: inherit;
