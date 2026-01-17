@@ -378,6 +378,13 @@ pre.poem-text{
   margin: 0 0 var(--space-4);
 }
 
+/* Constrain the poem title to the same measure */
+.poem-header{
+  max-width: var(--poem-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Constrain the poem hero image to the same measure */
 .poem .poem-hero{
   max-width: var(--poem-measure);
