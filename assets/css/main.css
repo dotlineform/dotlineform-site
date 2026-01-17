@@ -31,6 +31,8 @@
   --space-7: 60px;
 
   --line: 1.65;
+
+  --poem-measure: 72ch; /* adjust: 60ch–80ch typical */
 }
 
 /* Optional dark mode */
@@ -359,9 +361,11 @@ figure.diagram figcaption{
 .note-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
 
 /* poem layout specific styles */
-/* default: preserve line breaks in poem body */
 .poem-body{
-  white-space: pre-line;
+  max-width: var(--poem-measure);
+  margin-left: auto;
+  margin-right: auto;
+  white-space: pre-line; /* default: preserve line breaks in poem body */
 }
 
 /* bulletproof poem block, when wrapping markdown poem in <pre class="poem-text">...</pre> */
@@ -372,6 +376,21 @@ pre.poem-text{
   border: 0;
   padding: 0;
   margin: 0 0 var(--space-4);
+}
+
+/* Constrain the poem hero image to the same measure */
+.poem .poem-hero{
+  max-width: var(--poem-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive image within the constrained figure */
+.poem .poem-hero img{
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 @media (max-width: 640px){

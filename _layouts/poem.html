@@ -13,7 +13,7 @@ layout: default
   <!-- make the first image the hero image at the top of page -->
   {% if page.images and page.images.size > 0 %}
   {% assign hero = page.images[0] %}
-  <figure class="diagram">
+  <figure class="poem-hero">
     <img src="{{ '/assets/poems/img/' | append: hero.file | relative_url }}"
          alt="{{ hero.alt | default: page.title }}"
          loading="lazy" decoding="async">
