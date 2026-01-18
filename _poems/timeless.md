@@ -1,7 +1,7 @@
 ---
 title: timeless
 date: 2018-5-1
-date-display: c. 2018
+date_display: c. 2018
 images:
   - file: timeless.webp
     alt: timeless
