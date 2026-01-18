@@ -352,6 +352,9 @@ figure.diagram figcaption{
 /* Home links styled like Notes index links */
 .home-links{
   margin-top: var(--space-5);
+  max-width: 640px;     /* adjust to taste */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* .home-link is for interactive anchors; .home-link-text is for non-interactive fallback text in the same slot. */
@@ -368,14 +371,15 @@ figure.diagram figcaption{
   color: var(--muted);
   white-space: nowrap;
   text-align: right;     /* right-align text inside the prefix */
-  justify-self: end;     /* align the prefix element to the right edge */
+  justify-self: end;     /* push prefix to the right edge of the left column */
 }
 
+/* link stays naturally left-aligned in the right column; no change needed */
 .home-link-item{
   display: grid;
-  grid-template-columns: 140px 1fr;
+  grid-template-columns: 1fr 1fr;  /* split the row around centre */
   align-items: baseline;
-  column-gap: 10px;  /* tweak: 8–14px */
+  column-gap: 10px;  /* “little gap” between prefix + link, 8-14px*/
   padding: 8px 0;
 }
 
@@ -524,5 +528,5 @@ pre.poem-text{
   .poem-index-date{ text-align: left; }
 
   .home-link-item{ grid-template-columns: 1fr; }
-  .home-link-prefix{ text-align: left; }
+  .home-link-prefix{ justify-self: start; text-align: left; }
 }
