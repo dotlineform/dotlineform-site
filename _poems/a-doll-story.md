@@ -6,8 +6,9 @@ images:
     alt: a doll story
 ---
   
-doll was created many years before she came into my carebut we don’t know why or by whom  
-  
+doll was created many years before she came into my care
+but we don’t know why or by whom
+
 she rested for many yearsamongst glass vesselsa bird wing on a shelf aboveand stones on a shelf below  
   
 perhaps some of this is truewe would like to believe so  
