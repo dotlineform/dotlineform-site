@@ -7,7 +7,7 @@
 
   --text: #111;
   --muted: #444;
-  --bg: #fff;
+  --bg: #fbfaf7; /* Slightly warm off-white (nicer for reading) */
 
   --panel: #fafafa;
   --panel-2: #f6f6f6;
