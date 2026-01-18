@@ -349,6 +349,16 @@ figure.diagram figcaption{
   margin-top: var(--space-5);
 }
 
+/* .home-link is for interactive anchors; .home-link-text is for non-interactive fallback text in the same slot. */
+.home-link{
+  font-size: 0.95rem;
+}
+.home-link-text{ 
+  font-size: 0.95rem;
+  font-weight: 600; 
+  color: var(--text); 
+}
+
 .home-link-item{
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -387,11 +397,6 @@ figure.diagram figcaption{
 .home-link:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
-}
-
-.home-link-text{ 
-  font-weight: 600; 
-  color: var(--text); 
 }
 
 /* Notes index list (no bullets, no underline) */
