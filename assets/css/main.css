@@ -349,12 +349,13 @@ figure.diagram figcaption{
   color: var(--muted);
 }
 
-/* Home links styled like Notes index links */
+/* Home links styled similar to Notes index links */
 .home-links{
   margin-top: var(--space-5);
   max-width: 640px;     /* adjust to taste */
   margin-left: auto;
   margin-right: auto;
+  transform: translateX(-4px); /* add a small left nudge (optical correction) - try -2px to -6px */
 }
 
 /* .home-link is for interactive anchors; .home-link-text is for non-interactive fallback text in the same slot. */
