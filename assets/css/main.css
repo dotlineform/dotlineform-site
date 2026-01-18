@@ -486,7 +486,15 @@ figure.diagram figcaption{
   max-width: var(--poem-measure);
   margin-left: auto;
   margin-right: auto;
-  white-space: pre-line; /* default: preserve line breaks in poem body */
+  white-space: normal; /* IMPORTANT: avoid pre-line to prevent double-spacing artefacts */
+}
+
+/* Stanza spacing: paragraphs behave like stanzas */
+.poem-body p{
+  margin: 0;
+}
+.poem-body p + p{
+  margin-top: 1em; /* tune: 0.75em–1.25em */
 }
 
 /* bulletproof poem block, when wrapping markdown poem in <pre class="poem-text">...</pre> */
