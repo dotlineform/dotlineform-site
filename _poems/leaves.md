@@ -29,8 +29,4 @@ soaking up the sun?
 in a field somewhere
 in peace with all the creatures
 all the mice and the birds
- 
-a still breeze
-as gentle as a kiss
-caresses the sun
 </pre>
