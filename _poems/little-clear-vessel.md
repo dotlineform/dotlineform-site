@@ -3,7 +3,7 @@ title: little clear vessel
 date: 1992-1-1
 date_display: c. 1992
 images:
-  - file: little-clear-vessel-2.webp
+  - file: little-clear-vessel.webp
     alt: little clear vessel
 ---
 <pre class="poem-text">
