@@ -1,6 +1,7 @@
 ---
 title: perfection of flowers
-date: 2018-5-6
+date: 2014-1-1
+date_display: c. 2014
 images:
   - file: perfection-of-flowers.webp
     alt: perfection of flowers
