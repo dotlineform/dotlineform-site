@@ -208,9 +208,14 @@ figure.diagram object{
   max-width: 100%;
   height: auto;
 }
+/* Image captions (site-wide) */
+figcaption{
+  font-size: 12px;
+  color: var(--muted);     /* dark grey in light theme; readable in dark theme */
+  font-style: italic;
+  text-align: left;
+}
 figure.diagram figcaption{
-  font-size: 13px;
-  color: var(--muted);
   margin-top: 8px;
 }
 
@@ -345,8 +350,6 @@ figure.diagram figcaption{
   max-width: var(--container);
   margin: 8px auto 0;
   padding: 0 18px;
-  font-size: 13px;
-  color: var(--muted);
 }
 
 /* Home links styled similar to Notes index links */
