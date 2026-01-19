@@ -455,11 +455,7 @@ figure.diagram figcaption{
   align-items: baseline;
   column-gap: 10px;
   padding: 8px 0;
-  /* border-bottom: 1px solid var(--border); */
 }
-/* .poem-index-item:last-child{
-  border-bottom: 0;
-} */
 
 .poem-index-link:link,
 .poem-index-link:active,
@@ -483,6 +479,12 @@ figure.diagram figcaption{
   outline-offset: 2px;
 }
 .poem-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
+
+/* override global h1 */
+.poem-header h1{
+  font-size: 20px;
+  margin-bottom: 6px;
+}
 
 /* poem layout specific styles */
 .poem-body{
