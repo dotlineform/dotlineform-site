@@ -462,12 +462,12 @@ figure.diagram figcaption{
 .poem-index-link:focus{
   text-decoration: none !important;
   color: var(--link);
-  font-weight: 600;
+  font-weight: 500;
 }
 .poem-index-link:visited{
   text-decoration: none !important;
   color: var(--link-visited);
-  font-weight: 600;
+  font-weight: 500;
 }
 .poem-index-link:hover{
   color: var(--link-hover);
