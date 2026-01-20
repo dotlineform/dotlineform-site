@@ -3,7 +3,7 @@ title: compiled
 date: 2019-9-25
 ---
 <pre class="poem-text">
-<em>compiled Sep 2019, all the moments have long since passed</em>
+<em>all the moments have long since passed</em>
  
 sand that is as old as the earth
 water heals
