@@ -1,7 +1,7 @@
 # Site identity
 title: dotlineform
 url: "https://www.dotlineform.com"
-baseurl: "/"  # project site base path - empty on a custom domain
+baseurl: "/"  # project site base path - needs to be empty on a custom domain
 
 collections:
   notes:
