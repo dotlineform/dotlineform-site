@@ -9,7 +9,7 @@ images:
 doll was created many years before she came into my care
 but we don’t know why or by whom
 
-she rested for many yearsamongst glass vessels
+she rested for many years amongst glass vessels
 a bird wing on a shelf above
 and stones on a shelf below  
   
@@ -23,7 +23,7 @@ and her destruction, along with the glass vessels she had unblinkingly watched o
 no particle of falling dust escaped her gaze
 no ticking clock counted her time  
   
-(as it was for the dolls that came beforeand the dolls that will come after)  
+(as it was for the dolls that came before and the dolls that will come after)  
   
 doll lives and dies in a constant unbreakable cycle
 her alchemy has no beginning nor ending
