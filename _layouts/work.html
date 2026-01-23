@@ -1,0 +1,59 @@
+<!-- Layout renders:
+	•	primary image (derived from work_id convention) and clickable open-large
+	•	metadata
+	•	optional embedded images gallery-->
+---
+layout: default
+---
+{% assign base = site.media_base | append: "/works/" %}
+{% assign wid = page.work_id | default: page.slug %}
+{% assign display_url = base | append: wid | append: "-primary-1600.webp" %}
+{% assign full_url = base | append: wid | append: "-primary-2400.webp" %}
+
+<h1>{{ page.title }}</h1>
+
+{% if page.year %}<div>{{ page.year }}</div>{% endif %}
+{% if page.medium %}<div>{{ page.medium }}</div>{% endif %}
+
+<a href="{{ full_url }}" target="_blank" rel="noopener">
+  <img
+    src="{{ display_url }}"
+    alt="{{ page.title | escape }}"
+    loading="lazy"
+    decoding="async"
+    style="width:100%;height:auto;display:block;">
+</a>
+
+{% if page.tags %}
+  <div>
+    {% for t in page.tags %}
+      <span>{{ t }}</span>{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% if page.description_short %}
+  <p>{{ page.description_short }}</p>
+{% endif %}
+
+<!-- supplementary images gallery -->
+{% if page.images %}
+  <h2>Documentation</h2>
+  <ul>
+    {% for img in page.images %}
+      <li>
+        <img
+          src="{{ base }}{{ img.file }}"
+          alt="{{ img.caption | default: page.title | escape }}"
+          loading="lazy"
+          decoding="async"
+          style="max-width:100%;height:auto;display:block;">
+        {% if img.caption %}<div>{{ img.caption }}</div>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<p><a href="/catalogue/works/">Back to works index</a></p>
+<p><a href="/catalogue/">Back to catalogue</a></p>
+    

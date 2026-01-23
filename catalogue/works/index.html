@@ -1,0 +1,14 @@
+---
+layout: default
+title: Works
+permalink: /catalogue/works/
+---
+<!-- Initial behaviour: basic browse list of works. -->
+<ul>
+  {% assign works = site.works | sort: "work_id" %}
+  {% for w in works %}
+    {% if w.public %}
+      <li>{% include work_card.html work=w %}</li>
+    {% endif %}
+  {% endfor %}
+</ul>

@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<h1>{{ page.title }}</h1>
+
+{% if page.description_short %}
+  <p>{{ page.description_short }}</p>
+{% endif %}
+
+{{ content }}
+
+{% if page.works %}
+  <h2>Works in this note</h2>
+  <ul>
+    {% for id in page.works %}
+      {% assign w = site.works | where: "work_id", id | first %}
+      {% if w %}
+        <li>{% include work_card.html work=w %}</li>
+      {% else %}
+        <li>{{ id }} (not found)</li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<p><a href="/catalogue/">Back to catalogue</a></p>

@@ -549,3 +549,9 @@ pre.poem-text{
   .home-link-item{ grid-template-columns: 1fr; }
   .home-link-prefix{ justify-self: start; text-align: left; }
 }
+
+/* _includes  */
+.workCard { display:block; text-decoration:none; }
+.workCard__img { width:240px; height:auto; display:block; }
+.workCard__title { font-weight:600; }
+.workCard__sub { opacity:0.75; font-size:0.95em; }
