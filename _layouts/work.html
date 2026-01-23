@@ -65,7 +65,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
     </a>
   </figure>
 
-  {% if page.description and page.description != blank %}
+  {% if page.description %}
     <section class="work__description">
       {{ page.description | markdownify }}
     </section>
@@ -109,13 +109,17 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
         </div>
       {% endif %}
 
-      {% if page.tags and page.tags.size > 0 %}
+      {% if page.tags %}
         <div class="work__row">
           <dt>Tags</dt>
           <dd>
-            {% for t in page.tags %}
-              <span class="work__tag">{{ t }}</span>{% unless forloop.last %} {% endunless %}
-            {% endfor %}
+            {% if page.tags.first %}
+              {% for t in page.tags %}
+                <span class="work__tag">{{ t }}</span>{% unless forloop.last %} {% endunless %}
+              {% endfor %}
+            {% else %}
+              {{ page.tags }}
+            {% endif %}
           </dd>
         </div>
       {% endif %}
@@ -148,7 +152,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
   </section>
 
   <!-- supplementary images gallery -->
-  {% if page.images and page.images.size > 0 %}
+  {% if page.images %}
     <section class="work__docs">
       <h2>Documentation</h2>
       <ul>
@@ -170,7 +174,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
   {% endif %}
 
   <!-- for other file types (PDFs, text files, etc.) -->
-  {% if page.attachments and page.attachments.size > 0 %}
+  {% if page.attachments %}
     <section class="work__files">
       <h2>Files</h2>
       <ul>
