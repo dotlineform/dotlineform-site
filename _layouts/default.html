@@ -29,15 +29,18 @@
         <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
       </div>
       <nav class="site-nav">
-        <!-- Notes nav item -->
-        {% if page.path == 'notes/index.md' %}
-          <span class="nav-item is-active" aria-current="page">notes</span>
+        <!-- Catalogue nav item -->
+        {% if page.path == 'catalogue/index.md' or page.path == 'catalogue/works/index.md' %}
+          <span class="nav-item is-active" aria-current="page">catalogue</span>
 
-        {% elsif page.collection == 'notes' %}
-          <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">notes</a>
+        {% elsif page.collection == 'works' or page.collection == 'catalogue_notes' %}
+          <a class="nav-item is-active" href="{{ '/catalogue/' | relative_url }}" aria-current="page">catalogue</a>
+
+        {% elsif page.path contains 'catalogue/' %}
+          <a class="nav-item is-active" href="{{ '/catalogue/' | relative_url }}" aria-current="page">catalogue</a>
 
         {% else %}
-          <a class="nav-item" href="{{ '/notes/' | relative_url }}">notes</a>
+          <a class="nav-item" href="{{ '/catalogue/' | relative_url }}">catalogue</a>
         {% endif %}
         
         <!-- Poems nav item -->
@@ -49,6 +52,17 @@
 
         {% else %}
           <a class="nav-item" href="{{ '/poems/' | relative_url }}">poems</a>
+        {% endif %}
+
+         <!-- Notes nav item -->
+        {% if page.path == 'notes/index.md' %}
+          <span class="nav-item is-active" aria-current="page">notes</span>
+
+        {% elsif page.collection == 'notes' %}
+          <a class="nav-item is-active" href="{{ '/notes/' | relative_url }}" aria-current="page">notes</a>
+
+        {% else %}
+          <a class="nav-item" href="{{ '/notes/' | relative_url }}">notes</a>
         {% endif %}
       </nav>
       <div class="site-header-spacer" aria-hidden="true"></div>
