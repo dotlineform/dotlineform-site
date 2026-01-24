@@ -1,7 +1,7 @@
 # Site identity
 title: dotlineform
 url: "https://www.dotlineform.com"
-baseurl: "/"  # project site base path - needs to be empty on a custom domain
+baseurl: ""  # custom domain: leave empty
 media_base: ""
 media_prefix: /assets/works/img
 files_prefix: /assets/works/files
