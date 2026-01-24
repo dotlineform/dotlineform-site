@@ -3,6 +3,9 @@ layout: default
 ---
 
 {% assign wid = page.work_id | default: page.slug %}
+{%- assign title_txt = page.title | default: "" | strip -%}
+{%- capture artist_line -%}{% include artist_line.html page=page %}{%- endcapture -%}
+{%- assign artist_line = artist_line | strip -%}
 
 {%- comment -%}
 Media base: local by default, remote later via _config.yml
@@ -28,23 +31,12 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
 <article class="work">
 
   <header class="work__header">
-    <h1 class="work__title">{{ page.title }}</h1>
-
-    {% if page.subtitle %}
-      <div class="work__subtitle">{{ page.subtitle }}</div>
+    {% if artist_line != "" %}
+      <div class="work__artist">{{ artist_line }}</div>
     {% endif %}
 
-    <div class="work__byline">
-      {% if page.year_display %}
-        <span class="work__year">{{ page.year_display }}</span>
-      {% elsif page.year %}
-        <span class="work__year">{{ page.year }}</span>
-      {% endif %}
+    <h1 class="work__title">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
-      {% if page.series %}
-        <span class="work__series">{% if page.year or page.year_display %} · {% endif %}{{ page.series }}</span>
-      {% endif %}
-    </div>
   </header>
 
   <figure class="work__figure">
@@ -58,18 +50,12 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
           {{ src1600 }} 1600w,
           {{ src2400 }} 2400w"
         sizes="(max-width: 800px) 100vw, 72ch"
-        alt="{{ page.title | escape }}"
+        alt="{{ title_txt | default: 'Artwork' | escape }}"
         loading="lazy"
         decoding="async"
         style="width:100%;height:auto;display:block;">
     </a>
   </figure>
-
-  {% if page.description %}
-    <section class="work__description">
-      {{ page.description | markdownify }}
-    </section>
-  {% endif %}
 
   <section class="work__meta">
     <h2 class="work__metaTitle">Details</h2>
@@ -99,7 +85,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
           <dt>Dimensions</dt>
           <dd>
             {% if page.height_cm and page.width_cm %}
-              {{ page.height_cm }} × {{ page.width_cm }} cm{% if page.depth_cm %} × {{ page.depth_cm }} cm{% endif %}
+              {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
             {% elsif page.height_cm %}
               {{ page.height_cm }} cm
             {% elsif page.width_cm %}
@@ -109,7 +95,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
         </div>
       {% endif %}
 
-      {% if page.tags %}
+      {% if page.tags and page.tags.size > 0 %}
         <div class="work__row">
           <dt>Tags</dt>
           <dd>
@@ -124,35 +110,11 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
         </div>
       {% endif %}
 
-      {% if page.catalogue_date %}
-        <div class="work__row"><dt>Catalogue date</dt><dd>{{ page.catalogue_date }}</dd></div>
-      {% endif %}
-
-      {% if site.show_private_work_fields == true %}
-
-        {% if page.storage_location %}
-          <div class="work__row"><dt>Storage</dt><dd>{{ page.storage_location }}</dd></div>
-        {% endif %}
-
-        {% if page.provenance %}
-          <div class="work__row"><dt>Provenance</dt><dd>{{ page.provenance | markdownify }}</dd></div>
-        {% endif %}
-
-        {% if page.checksum %}
-          <div class="work__row"><dt>Checksum</dt><dd><code>{{ page.checksum }}</code></dd></div>
-        {% endif %}
-
-        {% if page.notes_private %}
-          <div class="work__row"><dt>Private notes</dt><dd>{{ page.notes_private | markdownify }}</dd></div>
-        {% endif %}
-
-      {% endif %}
-
     </dl>
   </section>
 
   <!-- supplementary images gallery -->
-  {% if page.images %}
+  {% if page.images and page.images.size > 0 %}
     <section class="work__docs">
       <h2>Documentation</h2>
       <ul>
@@ -162,7 +124,7 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
             {% unless base contains '://' %}{% assign img_src = img_src | relative_url %}{% endunless %}
             <img
               src="{{ img_src }}"
-              alt="{{ img.caption | default: page.title | escape }}"
+              alt="{{ img.alt | default: img.caption | default: page.title | escape }}"
               loading="lazy"
               decoding="async"
               style="max-width:100%;height:auto;display:block;">
@@ -174,12 +136,14 @@ Remote:        media_base: https://media.dotlineform.com ; media_prefix: /works/
   {% endif %}
 
   <!-- for other file types (PDFs, text files, etc.) -->
-  {% if page.attachments %}
+  {% if page.attachments and page.attachments.size > 0 %}
     <section class="work__files">
       <h2>Files</h2>
       <ul>
         {% for a in page.attachments %}
-          <li><a href="{{ a.file | relative_url }}">{{ a.label }}</a></li>
+          {% if a.file %}
+            <li><a href="{{ a.file | relative_url }}">{{ a.label | default: "Download" }}</a></li>
+          {% endif %}
         {% endfor %}
       </ul>
     </section>

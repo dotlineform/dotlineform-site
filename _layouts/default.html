@@ -29,18 +29,18 @@
         <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
       </div>
       <nav class="site-nav">
-        <!-- Catalogue nav item -->
-        {% if page.path == 'catalogue/index.md' or page.path == 'catalogue/works/index.md' %}
-          <span class="nav-item is-active" aria-current="page">catalogue</span>
+        <!-- Works nav item -->
+        {% if page.path == 'works/index.md' %}
+          <span class="nav-item is-active" aria-current="page">works</span>
 
-        {% elsif page.collection == 'works' or page.collection == 'catalogue_notes' %}
-          <a class="nav-item is-active" href="{{ '/catalogue/' | relative_url }}" aria-current="page">catalogue</a>
+        {% elsif page.collection == 'works' or page.collection == 'works_notes' %}
+          <a class="nav-item is-active" href="{{ '/works/' | relative_url }}" aria-current="page">works</a>
 
-        {% elsif page.path contains 'catalogue/' %}
-          <a class="nav-item is-active" href="{{ '/catalogue/' | relative_url }}" aria-current="page">catalogue</a>
+        {% elsif page.path contains 'works/' %}
+          <a class="nav-item is-active" href="{{ '/works/' | relative_url }}" aria-current="page">works</a>
 
         {% else %}
-          <a class="nav-item" href="{{ '/catalogue/' | relative_url }}">catalogue</a>
+          <a class="nav-item" href="{{ '/works/' | relative_url }}">works</a>
         {% endif %}
         
         <!-- Poems nav item -->

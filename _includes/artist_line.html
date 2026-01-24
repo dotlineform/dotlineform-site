@@ -1,0 +1,33 @@
+{%- comment -%}
+Render the artist/creator line for a work item.
+
+Precedence:
+1) page.artist_display (explicit override)
+2) page.creators (structured list)
+3) page.artist (legacy string fallback, if you ever add it)
+{%- endcomment -%}
+
+{%- assign p = include.page | default: page -%}
+
+{%- assign artist_display = p.artist_display | default: "" | strip -%}
+{%- if artist_display != "" -%}
+  {{ artist_display }}
+{%- elsif p.creators and p.creators.size > 0 -%}
+  {%- assign names = "" -%}
+  {%- for c in p.creators -%}
+    {%- assign n = c.credit_as | default: c.name | default: "" | strip -%}
+    {%- if n != "" -%}
+      {%- if names == "" -%}
+        {%- assign names = n -%}
+      {%- else -%}
+        {%- assign names = names | append: " • " | append: n -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {{ names }}
+{%- else -%}
+  {%- assign legacy_artist = p.artist | default: "" | strip -%}
+  {%- if legacy_artist != "" -%}
+    {{ legacy_artist }}
+  {%- endif -%}
+{%- endif -%}
