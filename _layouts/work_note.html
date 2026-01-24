@@ -1,0 +1,39 @@
+---
+layout: default
+---
+<h1>{{ page.title }}</h1>
+
+<article class="work-note">
+  <header class="work-note-header">
+    <h1>{{ page.title }}</h1>
+    {% if page.date %}
+      <p class="muted small">{{ page.date | date: "%-d %b %Y" }}</p>
+    {% endif %}
+  </header>
+
+  <div class="work-note-body">
+    {{ content }}
+  </div>
+
+  {% if page.html_inserts and page.html_inserts.size > 0 %}
+    <hr>
+    <section class="work-note-inserts">
+      <h2>Supplements</h2>
+      <div class="work-note-insert-links">
+        {% for item in page.html_inserts %}
+          {% if item.path %}
+            {% assign href = item.path %}
+            {% assign text = item.label | default: item.path %}
+          {% elsif item.file %}
+            {% assign href = '/assets/works-notes/html/' | append: item.file %}
+            {% assign text = item.label | default: item.file %}
+          {% else %}
+            {% assign href = '/assets/works-notes/html/' | append: item %}
+            {% assign text = item %}
+          {% endif %}
+          <p class="work-note-insert-link">🔗 <a href="{{ href | relative_url }}">{{ text }}</a></p>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+</article>

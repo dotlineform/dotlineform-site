@@ -110,19 +110,6 @@ a:visited{ color: var(--link-visited); text-decoration: none; }
 a:hover{ color: var(--link-hover); text-decoration: underline; text-underline-offset: 2px; }
 a:focus-visible{ outline: 2px solid var(--border-strong); outline-offset: 2px; text-decoration: underline; text-underline-offset: 2px; }
 
-/* Prose-only: keep links visibly underlined by default */
-.note-body a:link,
-.note-body a:visited{
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.poem-body a:link,
-.poem-body a:visited{
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 hr{ border: 0; border-top: 1px solid var(--border); margin: var(--space-5) 0; }
 
 /* Code */
@@ -411,6 +398,89 @@ figure.diagram figcaption{
   outline-offset: 2px;
 }
 
+/* work */
+
+/* Work index list (no bullets, no underline) */
+.work-index{ margin-top: var(--space-3); }
+.work-index-item{
+    display: grid; 
+    grid-template-columns: 140px 1fr; 
+    align-items: baseline; 
+    column-gap: 10px; 
+    padding: 8px 0; 
+    /* border-bottom: 1px solid var(--border); */
+}
+/* .work-index-item:last-child{ 
+    border-bottom: 0; 
+} */
+.work-index-link:link,
+.work-index-link:active,
+.work-index-link:focus{
+  text-decoration: none !important;
+  color: var(--link);
+  font-weight: 500;
+}
+.work-index-link:visited{
+  text-decoration: none !important;
+  color: var(--link-visited);
+  font-weight: 500;
+}
+.work-index-link:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.work-index-link:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+.work-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
+
+/* Work-note index list (no bullets, no underline) */
+.work-note-index{ margin-top: var(--space-3); }
+.work-note-index-item{
+    display: grid; 
+    grid-template-columns: 140px 1fr; 
+    align-items: baseline; 
+    column-gap: 10px; 
+    padding: 8px 0; 
+    /* border-bottom: 1px solid var(--border); */
+}
+/* .work-note-index-item:last-child{ 
+    border-bottom: 0; 
+} */
+.work-note-index-link:link,
+.work-note-index-link:active,
+.work-note-index-link:focus{
+  text-decoration: none !important;
+  color: var(--link);
+  font-weight: 500;
+}
+.work-note-index-link:visited{
+  text-decoration: none !important;
+  color: var(--link-visited);
+  font-weight: 500;
+}
+.work-note-index-link:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.work-note-index-link:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+.work-note-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
+
+/* Prose-only: keep links visibly underlined by default */
+.work-body a:link,
+.work-body a:visited{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* notes */
+
 /* Notes index list (no bullets, no underline) */
 .note-index{ margin-top: var(--space-3); }
 .note-index-item{
@@ -447,6 +517,15 @@ figure.diagram figcaption{
 }
 .note-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
 
+/* Prose-only: keep links visibly underlined by default */
+.note-body a:link,
+.note-body a:visited{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* poems */
+
 /* Poems index list (separate from notes for future styling differences) */
 .poem-index{ margin-top: var(--space-3); }
 .poem-index-item{
@@ -480,13 +559,8 @@ figure.diagram figcaption{
 }
 .poem-index-date{ font-size: 12px; color: var(--muted); white-space: nowrap; text-align: left; }
 
-/* override global h1 */
-.poem-header h1{
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
 /* poem layout specific styles */
+
 .poem-body{
   max-width: var(--poem-measure);
   margin-left: auto;
@@ -507,6 +581,13 @@ figure.diagram figcaption{
   margin: var(--space-3) auto;               /* Then re-introduce deliberate spacing for poem images */
 }
 
+/* Prose-only: keep links visibly underlined by default */
+.poem-body a:link,
+.poem-body a:visited{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* bulletproof poem block, when wrapping markdown poem in <pre class="poem-text">...</pre> */
 pre.poem-text{
   font-family: inherit;
@@ -522,6 +603,12 @@ pre.poem-text{
   max-width: var(--poem-measure);
   margin-left: auto;
   margin-right: auto;
+}
+
+/* override global h1 */
+.poem-header h1{
+  font-size: 20px;
+  margin-bottom: 6px;
 }
 
 /* Constrain the poem hero image to the same measure */
@@ -540,6 +627,10 @@ pre.poem-text{
 }
 
 @media (max-width: 640px){
+
+  .work-index-item{ grid-template-columns: 1fr; }
+  .work-index-date{ text-align: left; }
+
   .note-index-item{ grid-template-columns: 1fr; }
   .note-index-date{ text-align: left; }
 
