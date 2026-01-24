@@ -25,7 +25,7 @@ collections:
     permalink: /works/:name/
   works_notes:
     output: true
-    permalink: /works_notes/:name/
+    permalink: /works-notes/:name/
 
 defaults:
   - scope:

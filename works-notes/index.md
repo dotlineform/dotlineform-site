@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Works
-permalink: /works/
+title: Curated works
+permalink: /works-notes/
 ---
 
 <h1 class="visually-hidden">Works</h1>
