@@ -646,3 +646,45 @@ pre.poem-text{
 .workCard__img { width:240px; height:auto; display:block; }
 .workCard__title { font-weight:600; }
 .workCard__sub { opacity:0.75; font-size:0.95em; }
+
+
+/* Base components (shared across sections): */
+.page{
+/* generic page wrapper */
+}
+.page__header{
+/* page header wrapper */
+}
+.page__title{
+/* page title */
+}
+.page__meta{
+/* page meta info */
+}
+.content{
+/* generic content wrapper (prose body)*/
+}
+.index{
+/* listing container */
+}
+.index__item{
+/* listing item */
+}
+.index__date{
+/* listing item date */
+}
+.index__link{
+/* listing item link */
+}
+.card{
+/* listing card wrapper */
+}
+.card__title{
+/* card title */
+}
+.card__meta{
+/* card meta info */
+}
+.card__thumb{
+/* card thumbnail image */
+}
