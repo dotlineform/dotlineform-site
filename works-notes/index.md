@@ -4,7 +4,7 @@ title: Curated works
 permalink: /works-notes/
 ---
 
-<h1 class="visually-hidden">Works</h1>
+<h1 class="visually-hidden">Curated works</h1>
 
 {% assign sorted_works_notes = site.works_notes | sort: 'date' | reverse %}
 <div class="note-index">
