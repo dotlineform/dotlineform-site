@@ -3,22 +3,22 @@ layout: default
 ---
 
 <article class="page theme">
-  <header class="theme-header">
-    <h1>{{ page.title }}</h1>
+  <header class="page__header">
+    <h1 class="page__title">{{ page.title }}</h1>
     {% if page.date %}
-      <p class="muted small">{{ page.date | date: "%-d %b %Y" }}</p>
+      <p class="page__meta muted small">{{ page.date | date: "%-d %b %Y" }}</p>
     {% endif %}
   </header>
 
-  <div class="theme-body">
+  <div class="content">
     {{ content }}
   </div>
 
   {% if page.html_inserts and page.html_inserts.size > 0 %}
     <hr>
-    <section class="theme-inserts">
+    <section class="supplements">
       <h2>Supplements</h2>
-      <div class="theme-insert-links">
+      <div class="supplements__links">
         {% for item in page.html_inserts %}
           {% if item.path %}
             {% assign href = item.path %}
@@ -34,7 +34,7 @@ layout: default
           {% unless out_href contains '://' %}
             {% assign out_href = out_href | relative_url %}
           {% endunless %}
-          <p class="theme-insert-link">🔗 <a href="{{ out_href }}">{{ text }}</a></p>
+          <p class="supplements__link">🔗 <a href="{{ out_href }}">{{ text | escape }}</a></p>
         {% endfor %}
       </div>
     </section>
