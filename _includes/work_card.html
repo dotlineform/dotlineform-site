@@ -1,14 +1,14 @@
 {% assign w = include.work %}
 
 {% assign media_base = site.media_base | default: "" %}
-{% assign media_prefix = site.media_prefix | default: "/assets/works" %}
-{% assign base = media_base | append: media_prefix | append: "/" %}
+{% assign media_prefix = site.media_prefix | default: "/assets" %}
+{% assign base = media_base | append: media_prefix | append: "/works/img/" %}
 
 {% assign thumb = base | append: w.work_id | append: "-thumb-480.webp" %}
 {% assign thumb_out = thumb %}
 {% unless base contains '://' %}{% assign thumb_out = thumb | relative_url %}{% endunless %}
 
-<a class="workCard" href="{{ w.url }}">
+<a class="workCard" href="{{ w.url | relative_url }}">
   <img
     class="workCard__img"
     src="{{ thumb_out }}"
@@ -16,8 +16,8 @@
     loading="lazy"
     decoding="async">
   <div class="workCard__meta">
-    <div class="workCard__title">{{ w.title }}</div>
-    {% if w.year %}<div class="workCard__sub">{{ w.year }}</div>{% endif %}
-    {% if w.medium %}<div class="workCard__sub">{{ w.medium }}</div>{% endif %}
+    <div class="workCard__title">{{ w.title | escape }}</div>
+    {% if w.year_display or w.year %}<div class="workCard__sub">{{ w.year_display | default: w.year }}</div>{% endif %}
+    {% if w.medium_caption or w.medium_type %}<div class="workCard__sub">{{ w.medium_caption | default: w.medium_type }}</div>{% endif %}
   </div>
 </a>
