@@ -14,29 +14,67 @@ layout: default
     {{ content }}
   </div>
 
-  {% if page.html_inserts and page.html_inserts.size > 0 %}
+  {% comment %}
+  Supplements are defined in front matter:
+  - html_inserts: list of HTML links (defaults to /assets/research/html/<file>)
+  - pdf_downloads: list of PDF links (defaults to /assets/research/pdf/<file>)
+  Each list item can be:
+  - { path: "https://...", label: "..." } for external/absolute links
+  - { file: "name.ext", label: "..." } for local files under the defaults above
+  - "name.ext" (string) for local files under the defaults above
+  {% endcomment %}
+
+  {% if (page.html_inserts and page.html_inserts.size > 0) or (page.pdf_downloads and page.pdf_downloads.size > 0) %}
     <hr>
     <section class="supplements">
       <h2>Supplements</h2>
-      <div class="supplements__links">
-        {% for item in page.html_inserts %}
-          {% if item.path %}
-            {% assign href = item.path %}
-            {% assign text = item.label | default: item.path %}
-          {% elsif item.file %}
-            {% assign href = '/assets/research/html/' | append: item.file %}
-            {% assign text = item.label | default: item.file %}
-          {% else %}
-            {% assign href = '/assets/research/html/' | append: item %}
-            {% assign text = item %}
-          {% endif %}
-          {% assign out_href = href %}
-          {% unless out_href contains '://' %}
-            {% assign out_href = out_href | relative_url %}
-          {% endunless %}
-          <p class="supplements__link"><a href="{{ out_href }}">{{ text | escape }}</a></p>
-        {% endfor %}
-      </div>
+
+      {% if page.html_inserts and page.html_inserts.size > 0 %}
+        <h3>HTML</h3>
+        <div class="supplements__links">
+          {% for item in page.html_inserts %}
+            {% if item.path %}
+              {% assign href = item.path %}
+              {% assign text = item.label | default: item.path %}
+            {% elsif item.file %}
+              {% assign href = '/assets/research/html/' | append: item.file %}
+              {% assign text = item.label | default: item.file %}
+            {% else %}
+              {% assign href = '/assets/research/html/' | append: item %}
+              {% assign text = item %}
+            {% endif %}
+            {% assign out_href = href %}
+            {% unless out_href contains '://' %}
+              {% assign out_href = out_href | relative_url %}
+            {% endunless %}
+            <p class="supplements__link supplements__link--html"><a href="{{ out_href }}">{{ text | escape }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if page.pdf_downloads and page.pdf_downloads.size > 0 %}
+        <h3>PDF</h3>
+        <div class="supplements__links">
+          {% for item in page.pdf_downloads %}
+            {% if item.path %}
+              {% assign href = item.path %}
+              {% assign text = item.label | default: item.path %}
+            {% elsif item.file %}
+              {% assign href = '/assets/research/pdf/' | append: item.file %}
+              {% assign text = item.label | default: item.file %}
+            {% else %}
+              {% assign href = '/assets/research/pdf/' | append: item %}
+              {% assign text = item %}
+            {% endif %}
+            {% assign out_href = href %}
+            {% unless out_href contains '://' %}
+              {% assign out_href = out_href | relative_url %}
+            {% endunless %}
+            <p class="supplements__link supplements__link--pdf"><a href="{{ out_href }}">{{ text | escape }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
     </section>
   {% endif %}
 </article>
