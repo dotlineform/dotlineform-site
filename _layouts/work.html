@@ -137,7 +137,7 @@ layout: default
             {% assign href = a.file %}
             {% unless href contains '://' %}
               {% assign href_file = href | remove_first: '/' %}
-              {% assign href = '/assets/files/' | append: href_file %}
+              {% assign href = '/assets/work/files/' | append: href_file %}
               {% assign href = href | relative_url %}
             {% endunless %}
             <li class="supplements__item"><a href="{{ href }}">{{ a.label | default: "Download" }}</a></li>
