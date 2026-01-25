@@ -32,8 +32,8 @@
 
   --line: 1.65;
 
-  --poem-measure: 72ch; /* adjust: 60ch–80ch typical */
-  --content-measure: var(--poem-measure); /* shared prose/media measure for new layouts */
+  --moment-measure: 72ch; /* adjust: 60ch–80ch typical */
+  --content-measure: var(--moment-measure); /* shared prose/media measure for new layouts */
 }
 
 /* Optional dark mode */
@@ -414,8 +414,7 @@ figure.diagram figcaption{
 .index,
 .work-index,
 .work-note-index,
-.note-index,
-.poem-index{
+.note-index{
   max-width: var(--content-measure);
   margin-top: var(--space-3);
   margin-left: auto;
@@ -426,8 +425,7 @@ figure.diagram figcaption{
 .index__item,
 .work-index-item,
 .work-note-index-item,
-.note-index-item,
-.poem-index-item{
+.note-index-item{
   display: grid;
   grid-template-columns: 140px 1fr;
   align-items: baseline;
@@ -439,8 +437,7 @@ figure.diagram figcaption{
 .index__date,
 .work-index-date,
 .work-note-index-date,
-.note-index-date,
-.poem-index-date{
+.note-index-date{
   font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
@@ -459,10 +456,7 @@ figure.diagram figcaption{
 .work-note-index-link:focus,
 .note-index-link:link,
 .note-index-link:active,
-.note-index-link:focus,
-.poem-index-link:link,
-.poem-index-link:active,
-.poem-index-link:focus{
+.note-index-link:focus{
   text-decoration: none !important;
   color: var(--link);
   font-weight: 500;
@@ -471,8 +465,7 @@ figure.diagram figcaption{
 .index__link:visited,
 .work-index-link:visited,
 .work-note-index-link:visited,
-.note-index-link:visited,
-.poem-index-link:visited{
+.note-index-link:visited{
   text-decoration: none !important;
   color: var(--link-visited);
   font-weight: 500;
@@ -481,8 +474,7 @@ figure.diagram figcaption{
 .index__link:hover,
 .work-index-link:hover,
 .work-note-index-link:hover,
-.note-index-link:hover,
-.poem-index-link:hover{
+.note-index-link:hover{
   color: var(--link-hover);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -491,37 +483,37 @@ figure.diagram figcaption{
 .index__link:focus-visible,
 .work-index-link:focus-visible,
 .work-note-index-link:focus-visible,
-.note-index-link:focus-visible,
-.poem-index-link:focus-visible{
+.note-index-link:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
 }
 
-/* poem layout specific styles */
+/* moment layout specific styles */
 
-.poem-body{
-  max-width: var(--poem-measure);
+.moment-body{
+  max-width: var(--moment-measure);
   margin-left: auto;
   margin-right: auto;
   white-space: normal; /* IMPORTANT: avoid pre-line to prevent double-spacing artefacts */
 }
 
 /* Stanza spacing: paragraphs behave like stanzas */
-.poem-body p{
+.moment-body p{
   margin: 0;
 }
-.poem-body p + p{
+.moment-body p + p{
   margin-top: 1em; /* tune: 0.75em–1.25em */
 }
-/* Add an explicit margin for poem figures */
-.poem-body figure{ margin: 0; }               /* Reset browser default figure margins inside poems */
-.poem-body figure.poem-hero{
-  margin: var(--space-3) auto;               /* Then re-introduce deliberate spacing for poem images */
+
+/* Add an explicit margin for moment figures */
+.moment-body figure{ margin: 0; }               /* Reset browser default figure margins inside moments */
+.moment-body figure.moment-hero{
+  margin: var(--space-3) auto;               /* Then re-introduce deliberate spacing for moment images */
 }
 
 /* Prose-only: keep links visibly underlined by default */
-.poem-body a:link,
-.poem-body a:visited{
+.moment-body a:link,
+.moment-body a:visited{
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -540,8 +532,8 @@ figure.diagram figcaption{
   text-underline-offset: 2px;
 }
 
-/* bulletproof poem block, when wrapping markdown poem in <pre class="poem-text">...</pre> */
-pre.poem-text{
+/* bulletproof moment block, when wrapping markdown moment text in <pre class="moment-text">...</pre> */
+pre.moment-text{
   font-family: inherit;
   white-space: pre-wrap;
   background: transparent;
@@ -550,28 +542,28 @@ pre.poem-text{
   margin: 0 0 var(--space-4);
 }
 
-/* Constrain the poem title to the same measure */
-.poem-header{
-  max-width: var(--poem-measure);
+/* Constrain the moment title to the same measure */
+.moment-header{
+  max-width: var(--moment-measure);
   margin-left: auto;
   margin-right: auto;
 }
 
 /* override global h1 */
-.poem-header h1{
+.moment-header h1{
   font-size: 20px;
   margin-bottom: 6px;
 }
 
-/* Constrain the poem hero image to the same measure */
-.poem .poem-hero{
-  max-width: var(--poem-measure);
+/* Constrain the moment hero image to the same measure */
+.moment .moment-hero{
+  max-width: var(--moment-measure);
   margin-left: auto;
   margin-right: auto;
 }
 
 /* Responsive image within the constrained figure */
-.poem .poem-hero img{
+.moment .moment-hero img{
   display: block;
   width: 100%;
   max-width: 100%;
@@ -579,8 +571,8 @@ pre.poem-text{
 }
 
 @media (max-width: 640px){
-  .index__item, .work-index-item, .work-note-index-item, .note-index-item, .poem-index-item{ grid-template-columns: 1fr; }
-  .index__date, .work-index-date, .work-note-index-date, .note-index-date, .poem-index-date{ text-align: left; }
+  .index__item, .work-index-item, .work-note-index-item, .note-index-item{ grid-template-columns: 1fr; }
+  .index__date, .work-index-date, .work-note-index-date, .note-index-date{ text-align: left; }
   .page__row{ grid-template-columns: 1fr; }
   .home-link-item{ grid-template-columns: 1fr; }
   .home-link-prefix{ justify-self: start; text-align: left; }
