@@ -53,3 +53,7 @@ defaults:
 timezone: Europe/London
 exclude:
   - scripts
+  - _site
+  - vendor
+  - node_modules
+  - .bundle
