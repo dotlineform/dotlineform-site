@@ -522,6 +522,13 @@ figure.diagram figcaption{
   text-underline-offset: 2px;
 }
 
+/* Supplements: links should read like prose by default */
+.supplements a:link,
+.supplements a:visited{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* bulletproof poem block, when wrapping markdown poem in <pre class="poem-text">...</pre> */
 pre.poem-text{
   font-family: inherit;
@@ -563,6 +570,7 @@ pre.poem-text{
 @media (max-width: 640px){
   .index__item, .work-index-item, .work-note-index-item, .note-index-item, .poem-index-item{ grid-template-columns: 1fr; }
   .index__date, .work-index-date, .work-note-index-date, .note-index-date, .poem-index-date{ text-align: left; }
+  .page__row{ grid-template-columns: 1fr; }
   .home-link-item{ grid-template-columns: 1fr; }
   .home-link-prefix{ justify-self: start; text-align: left; }
 }
