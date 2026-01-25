@@ -3,7 +3,7 @@ layout: default
 ---
 
 <article class="page moment">
-  <header class="poem-header">
+  <header class="moment-header">
     <h1>{{ page.title }}</h1>
 
     {% if page.date_display %}
@@ -13,20 +13,26 @@ layout: default
     {% endif %}
   </header>
 
-  <!-- make the first image the hero image at the top of page -->
+  <!-- render the first image at the top of the page -->
   {% if page.images and page.images.size > 0 %}
   {% assign hero = page.images[0] %}
-  <figure class="poem-hero">
-    <img src="{{ '/assets/moments/img/' | append: hero.file | relative_url }}"
-         alt="{{ hero.alt | default: page.title }}"
-         loading="lazy" decoding="async">
+  <figure class="moment-media">
+    {% assign img_src = hero.file %}
+    {% unless img_src contains '://' %}
+      {% assign img_file = img_src | remove_first: '/' %}
+      {% assign img_src = '/assets/moments/img/' | append: img_file | relative_url %}
+    {% endunless %}
+
+    <img src="{{ img_src }}"
+         alt="{{ hero.alt | default: page.title | escape }}"
+         loading="eager" fetchpriority="high" decoding="async">
     {% if hero.caption %}
       <figcaption>{{ hero.caption }}</figcaption>
     {% endif %}
   </figure>
   {% endif %}
 
-  <div class="poem-body">
+  <div class="moment-body">
     {{ content }}
   </div>
 </article>
