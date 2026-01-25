@@ -1,27 +1,27 @@
 ---
 layout: default
-title: Poems
-permalink: /poems/
+title: Moments
+permalink: /moments/
 ---
 
-<h1 class="visually-hidden">Poems</h1>
+<h1 class="visually-hidden">Moments</h1>
 
-{% assign sorted_poems = site.poems | sort: 'date' | reverse %}
-<div class="poem-index">
+{% assign sorted_moments = site.moments | sort: 'date' | reverse %}
+<div class="moments-index">
 
-{% for poem in sorted_poems %}
-{% if poem.published == false %}{% continue %}{% endif %}
-<div class="poem-index-item">
-  <span class="poem-index-date">
-    {% if poem.date_display %}
-      {{ poem.date_display }}
+{% for moment in sorted_moments %}
+{% if moment.published == false %}{% continue %}{% endif %}
+<div class="moments-index-item">
+  <span class="moments-index-date">
+    {% if moment.date_display %}
+      {{ moment.date_display }}
     {% else %}
-      {{ poem.date | date: "%-d %b %Y" }}
+      {{ moment.date | date: "%-d %b %Y" }}
     {% endif %}
   </span>
 
-  <a class="poem-index-link" href="{{ poem.url | relative_url }}">
-    {{ poem.title | default: poem.slug }}
+  <a class="moments-index-link" href="{{ moment.url | relative_url }}">
+    {{ moment.title | default: moment.slug }}
   </a>
 </div>
 {% endfor %}

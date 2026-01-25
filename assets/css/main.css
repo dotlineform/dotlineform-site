@@ -690,3 +690,43 @@ This gives you shared styling with room for per-section overrides. */
 .card__thumb{
 /* card thumbnail image */
 }
+
+/* Section wrappers (plural, scoped): */
+.works{
+/* works section wrapper */
+}
+.works-index{
+/* works index wrapper */
+}
+.themes{
+/* themes section wrapper */
+}
+.themes-index{
+/* themes index wrapper */
+}
+.moments{
+/* moments section wrapper */
+}
+.moments-index{
+/* moments index wrapper */
+}
+.research{
+/* research section wrapper */
+}
+.research-index{
+/* research index wrapper */
+}
+
+/* Section-specific page components (singular, unambiguous) */
+.work{
+/* work page */
+}
+.theme{
+/* theme page */
+}
+.moment{
+/* moment page */
+}
+.research-note{
+/* research note page */
+}

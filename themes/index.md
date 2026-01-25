@@ -1,24 +1,24 @@
 ---
 layout: default
-title: Curated works
-permalink: /works-notes/
+title: Themes
+permalink: /themes/
 ---
 
-<h1 class="visually-hidden">Curated works</h1>
+<h1 class="visually-hidden">Themes</h1>
 
-{% assign works_notes = site.works_notes %}
+{% assign themes = site.themes %}
 
-{% if works_notes and works_notes != empty %}
-  {% assign sorted_works_notes = works_notes | sort: 'date' | reverse %}
-  <div class="note-index">
-    {% for works_note in sorted_works_notes %}
-      {% if works_note.published == false %}{% continue %}{% endif %}
-      <div class="note-index-item">
-        <span class="note-index-date">{% if works_note.date %}{{ works_note.date | date: "%-d %b %Y" }}{% endif %}</span>
-        <a class="note-index-link" href="{{ works_note.url | relative_url }}">{{ works_note.title | default: works_note.slug }}</a>
+{% if themes and themes != empty %}
+  {% assign sorted_themes = themes | sort: 'date' | reverse %}
+  <div class="themes-index">
+    {% for theme in sorted_themes %}
+      {% if theme.published == false %}{% continue %}{% endif %}
+      <div class="themes-index-item">
+        <span class="themes-index-date">{% if theme.date %}{{ theme.date | date: "%-d %b %Y" }}{% endif %}</span>
+        <a class="themes-index-link" href="{{ themes.url | relative_url }}">{{ theme.title | default: theme.slug }}</a>
       </div>
     {% endfor %}
   </div>
 {% else %}
-  <p>No curated notes yet.</p>
+  <p>No themes yet.</p>
 {% endif %}
