@@ -13,12 +13,12 @@ permalink: /moments/
 
 {% if moments_items and moments_items != empty %}
   {% assign sorted_moments = moments_items | sort: 'date' | reverse %}
-  <div class="moments-index">
+  <div class="index">
 
 {% for moment in sorted_moments %}
 {% if moment.published == false %}{% continue %}{% endif %}
-<div class="moments-index-item">
-  <span class="moments-index-date">
+<div class="index__item">
+  <span class="index__date">
     {% if moment.date_display %}
       {{ moment.date_display }}
     {% else %}
@@ -26,7 +26,7 @@ permalink: /moments/
     {% endif %}
   </span>
 
-  <a class="moments-index-link" href="{{ moment.url | relative_url }}">
+  <a class="index__link" href="{{ moment.url | relative_url }}">
     {{ moment.title | default: moment.slug }}
   </a>
 </div>
