@@ -632,6 +632,7 @@ Use “structure-first” naming and scope section-specific differences via the 
   margin: 0;
 }
 
+/* default page rows include row borders and padding */
 .page__row{
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -643,6 +644,25 @@ Use “structure-first” naming and scope section-specific differences via the 
 
 .page__row:first-child{
   border-top: 0;
+}
+
+/* Caption-style meta (single-column) used by Work “Details” */
+.page__caption{
+  margin: 0;
+}
+
+/* .page__caption rules to override the generic .page__row grid/borders when rows are used as single-column caption lines in Work caption */
+.page__caption .page__row{
+  display: block;            /* override grid rows */
+  grid-template-columns: none;
+  column-gap: 0;
+  padding: 0;
+  border-top: 0;
+  margin: 0 0 calc(var(--space-1) * 0.67); /* reduced row height - better for single rows of text */
+}
+
+.page__caption .page__row:first-child{
+  margin-top: 0;
 }
 
 .page__tag{
@@ -732,28 +752,34 @@ Use “structure-first” naming and scope section-specific differences via the 
 
 /* Note: section index pages use the shared `.index` / `.index__*` component classes. */
 
+/* work page */
 .work{
-  /* work page */
+  font-size: 0.9rem; /* ~10% smaller than the default 1rem */
+}
+
+/* Ensure work-page meta blocks inherit the page font size */
+.work .page__caption,
+.work .supplements{
+  font-size: inherit;
+}
+
+/* Work title row in caption details */
+.work__titleRow{
+  font-weight: 600;
 }
 
 /* Works-only enhancements
    If you want a more minimal aesthetic, comment out this entire block.
    (The shared `.page__row` and `.page__tag` rules will still render cleanly.)
 */
-.work .page__row > :first-child{
-  color: var(--muted);
-  font-size: 13px;
-}
 
-/* Works tags as “pills”
-   To revert to minimal tags, comment out this rule.
+/* Works tags as “pills”: to revert to minimal tags, comment out this rule.
+note: works tags are not currently in use on the work pages themselves.
 */
-
 .work .page__tag{
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 2px 8px;
-  font-size: 13px;
 }
 
 /* Works documentation images
