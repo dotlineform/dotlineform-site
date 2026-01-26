@@ -34,15 +34,16 @@ command -v ffmpeg >/dev/null 2>&1 || {
 # ---------
 make_thumb() {
   local in="$1"
-  local out="$2"
+  local size="$2"
+  local out="$3"
 
   # Centre-crop square thumbnail:
-  # 1) scale so the *shorter* dimension becomes 480
-  # 2) crop 480x480 from the centre
+  # 1) scale so the *shorter* dimension becomes the target size
+  # 2) crop target x target from the centre
   ffmpeg -hide_banner -loglevel error -y \
     -i "$in" \
     -map_metadata -1 \
-    -vf "scale='if(gt(iw,ih),-1,480)':'if(gt(iw,ih),480,-1)':flags=lanczos,crop=480:480" \
+    -vf "scale='if(gt(iw,ih),-1,${size})':'if(gt(iw,ih),${size},-1)':flags=lanczos,crop=${size}:${size}" \
     -c:v libwebp -preset "$WEBP_PRESET" -q:v "$THUMB_Q" -compression_level "$COMPRESSION_LEVEL" \
     "$out"
 }
@@ -74,7 +75,8 @@ for src in "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG "$INPUT_DIR"/*.jpeg "$INPUT_DIR
 
   echo "Processing $fname -> $work_id"
 
-  make_thumb  "$src" "$OUTPUT_DIR/${work_id}-thumb-480.webp"
+  make_thumb  "$src" 96  "$OUTPUT_DIR/${work_id}-thumb-96.webp"
+  make_thumb  "$src" 192 "$OUTPUT_DIR/${work_id}-thumb-192.webp"
   make_primary "$src" 800  "$OUTPUT_DIR/${work_id}-primary-800.webp"
   make_primary "$src" 1200 "$OUTPUT_DIR/${work_id}-primary-1200.webp"
   make_primary "$src" 1600 "$OUTPUT_DIR/${work_id}-primary-1600.webp"
