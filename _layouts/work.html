@@ -129,7 +129,36 @@ layout: default
   {% endif %}
 
   <nav class="page__nav">
-    <a href="{{ '/works/' | relative_url }}">← index</a>
+    <!-- Defaults to works index; upgraded to history-back when appropriate via script below. -->
+    <a class="page__back" href="{{ '/works/' | relative_url }}" data-fallback="{{ '/works/' | relative_url }}">← index</a>
   </nav>
 
 </article>
+
+<!-- Smart back/index:
+     - If the user navigated here from another page (same-origin referrer or non-trivial history), show "← back" and use history.back().
+     - Otherwise keep "← index" linking to /works/. -->
+<script>
+  (function () {
+    var link = document.querySelector('.page__back');
+    if (!link) return;
+
+    var fallback = link.getAttribute('data-fallback') || link.getAttribute('href') || '/works/';
+    var ref = document.referrer || '';
+    var sameOriginReferrer = ref && ref.indexOf(window.location.origin) === 0;
+    var hasHistory = window.history.length > 1;
+
+    if (sameOriginReferrer || hasHistory) {
+      link.textContent = '← back';
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.history.back();
+      });
+      // Keep href as the index fallback (and for copy-link behaviour).
+      link.setAttribute('href', fallback);
+    } else {
+      link.textContent = '← index';
+      link.setAttribute('href', fallback);
+    }
+  })();
+</script>
