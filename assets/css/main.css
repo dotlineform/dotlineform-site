@@ -420,13 +420,10 @@ figure.diagram figcaption{
 
 /* align the index heading to the same measure */
 .index__heading{
-  max-width: var(--content-measure);
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 0 var(--space-3);
   font-size: clamp(1.25rem, 1.5vw, 1.5rem);
   line-height: 1.15;
-  font-weight: 600; /* optional */
-  text-transform: none; /* optional */
+  font-weight: 600;
 }
 
 /* row layout */
