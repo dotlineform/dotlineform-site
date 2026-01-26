@@ -30,26 +30,31 @@
       </div>
       <nav class="site-nav" aria-label="Primary">
         {%- assign u = page.url | default: "" -%}
+        {% assign u = page.url | default: "" %}
+        {% assign u_works = u | slice: 0, 7 %}
+        {% assign u_themes = u | slice: 0, 8 %}
+        {% assign u_moments = u | slice: 0, 9 %}
+        {% assign u_research = u | slice: 0, 10 %}
 
         {%- assign is_works_index = false -%}
         {%- assign is_works_active = false -%}
         {%- if u == '/works/' -%}{%- assign is_works_index = true -%}{%- endif -%}
-        {%- if page.collection == 'works' or (u | slice: 0, 7) == '/works/' -%}{%- assign is_works_active = true -%}{%- endif -%}
+        {%- if page.collection == 'works' or u_works == '/works/' -%}{%- assign is_works_active = true -%}{%- endif -%}
 
         {%- assign is_themes_index = false -%}
         {%- assign is_themes_active = false -%}
         {%- if u == '/themes/' -%}{%- assign is_themes_index = true -%}{%- endif -%}
-        {%- if page.collection == 'themes' or (u | slice: 0, 8) == '/themes/' -%}{%- assign is_themes_active = true -%}{%- endif -%}
+        {%- if page.collection == 'themes' or u_themes == '/themes/' -%}{%- assign is_themes_active = true -%}{%- endif -%}
 
         {%- assign is_moments_index = false -%}
         {%- assign is_moments_active = false -%}
         {%- if u == '/moments/' -%}{%- assign is_moments_index = true -%}{%- endif -%}
-        {%- if page.collection == 'moments' or (u | slice: 0, 9) == '/moments/' -%}{%- assign is_moments_active = true -%}{%- endif -%}
+        {%- if page.collection == 'moments' or U_moments == '/moments/' -%}{%- assign is_moments_active = true -%}{%- endif -%}
 
         {%- assign is_research_index = false -%}
         {%- assign is_research_active = false -%}
         {%- if u == '/research/' -%}{%- assign is_research_index = true -%}{%- endif -%}
-        {%- if page.collection == 'research' or (u | slice: 0, 10) == '/research/' -%}{%- assign is_research_active = true -%}{%- endif -%}
+        {%- if page.collection == 'research' or u_research == '/research/' -%}{%- assign is_research_active = true -%}{%- endif -%}
 
         <!-- works -->
         {% if is_works_index %}
