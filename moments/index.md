@@ -5,9 +5,7 @@ section: moments
 permalink: /moments/
 ---
 
-<h1 class="visually-hidden">Moments</h1>
-
-<h2>Moments</h2>
+<h1 class="index__heading">moments</h1>
 
 {% assign moments_items = site.moments %}
 

@@ -5,7 +5,7 @@ section: research
 permalink: /research/
 ---
 
-<h1 class="visually-hidden">Research</h1>
+<h1 class="index__heading">research notes</h1>
 
 {% assign research_items = site.research | where_exp: "n", "n.published != false" %}
 

@@ -5,9 +5,8 @@ permalink: /works/
 section: works
 ---
 
-<h1 class="visually-hidden">Works</h1>
-
-<h2>Recently added work</h2>
+<!-- when the cataloguing is complete, use 'recent work' and sort by work.date -->
+<h1 class="index__heading">recently added work</h1>
 
 {% assign works_items = site.works %}
 {% if works_items and works_items != empty %}

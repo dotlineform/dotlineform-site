@@ -5,7 +5,7 @@ section: themes
 permalink: /themes/
 ---
 
-<h1 class="visually-hidden">Themes</h1>
+<h1 class="index__heading">themes</h1>
 
 {% assign themes = site.themes | where_exp: "t", "t.published != false" %}
 
