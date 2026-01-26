@@ -408,24 +408,25 @@ figure.diagram figcaption{
 }
 
 
-/* Index lists (shared): supports both new .index__* classes and legacy *-index-* classes */
+/* Index lists (shared) for new .index__* classes */
 
 /* wrappers */
-.index,
-.work-index,
-.work-note-index,
-.note-index{
+.index{
   max-width: var(--content-measure);
   margin-top: var(--space-3);
   margin-left: auto;
   margin-right: auto;
 }
 
+/* align the index heading to the same measure */
+.index__heading{
+  max-width: var(--content-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* row layout */
-.index__item,
-.work-index-item,
-.work-note-index-item,
-.note-index-item{
+.index__item{
   display: grid;
   grid-template-columns: 140px 1fr;
   align-items: baseline;
@@ -434,10 +435,7 @@ figure.diagram figcaption{
 }
 
 /* date/prefix column */
-.index__date,
-.work-index-date,
-.work-note-index-date,
-.note-index-date{
+.index__date{
   font-size: 12px;
   color: var(--muted);
   white-space: nowrap;
@@ -447,43 +445,25 @@ figure.diagram figcaption{
 /* link styling */
 .index__link:link,
 .index__link:active,
-.index__link:focus,
-.work-index-link:link,
-.work-index-link:active,
-.work-index-link:focus,
-.work-note-index-link:link,
-.work-note-index-link:active,
-.work-note-index-link:focus,
-.note-index-link:link,
-.note-index-link:active,
-.note-index-link:focus{
+.index__link:focus{
   text-decoration: none !important;
   color: var(--link);
   font-weight: 500;
 }
 
-.index__link:visited,
-.work-index-link:visited,
-.work-note-index-link:visited,
-.note-index-link:visited{
+.index__link:visited{
   text-decoration: none !important;
   color: var(--link-visited);
   font-weight: 500;
 }
 
-.index__link:hover,
-.work-index-link:hover,
-.work-note-index-link:hover,
-.note-index-link:hover{
+.index__link:hover{
   color: var(--link-hover);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.index__link:focus-visible,
-.work-index-link:focus-visible,
-.work-note-index-link:focus-visible,
-.note-index-link:focus-visible{
+.index__link:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
 }
@@ -581,8 +561,8 @@ pre.theme-text{
 }
 
 @media (max-width: 640px){
-  .index__item, .work-index-item, .work-note-index-item, .note-index-item{ grid-template-columns: 1fr; }
-  .index__date, .work-index-date, .work-note-index-date, .note-index-date{ text-align: left; }
+  .index__item { grid-template-columns: 1fr; }
+  .index__date { text-align: left; }
   .page__row{ grid-template-columns: 1fr; }
   .home-link-item{ grid-template-columns: 1fr; }
   .home-link-prefix{ justify-self: start; text-align: left; }
