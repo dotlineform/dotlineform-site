@@ -2,11 +2,21 @@
 title: dotlineform
 url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
-# when using repo for assets, uncomment and set the following:
-media_base: ""
-media_prefix: "/assets"
+
+# Thumbnail origin (default: local repo)
+thumb_base: ""
+thumb_prefix: "/assets"
+
+# Media origin for large assets (R2):
+media_base: "https://media.dotlineform.com"
+media_prefix: ""
+
+# Local fallback (serve media from this repo):
+# media_base: ""
+# media_prefix: "/assets"
+
 # when using a separate media server, uncomment and set the following:
-# media_base: https://media.dotlineform.com
+# media_base: "https://media.dotlineform.com"
 # media_prefix: ""
 
 collections:

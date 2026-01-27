@@ -22,10 +22,10 @@ layout: default
       <div class="index">
         <h2 class="index__heading">selected work</h2>
 
-        {%- assign media_base = site.media_base | default: "" -%}
-        {%- assign asset_root = site.media_prefix | default: "/assets" -%}
-        {%- assign works_img_prefix = asset_root | append: "/works/img" -%}
-        {%- assign works_img_base = media_base | append: works_img_prefix | append: "/" -%}
+        {%- assign thumb_base = site.thumb_base | default: "" -%}
+        {%- assign thumb_root = site.thumb_prefix | default: "/assets" -%}
+        {%- assign thumbs_prefix = thumb_root | append: "/works/img" -%}
+        {%- assign works_img_base = thumb_base | append: thumbs_prefix | append: "/" -%}
 
         {%- for wid in work_ids -%}
           {%- assign work_doc = site.works | where: 'work_id', wid | first -%}
