@@ -2,11 +2,12 @@
 title: dotlineform
 url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
+# when using repo for assets, uncomment and set the following:
 media_base: ""
 media_prefix: "/assets"
 # when using a separate media server, uncomment and set the following:
 # media_base: https://media.dotlineform.com
-# media_prefix: "/assets"
+# media_prefix: ""
 
 collections:
   works:
