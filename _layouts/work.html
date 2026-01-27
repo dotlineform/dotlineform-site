@@ -121,7 +121,7 @@ layout: default
                 {% assign href = href | relative_url %}
               {% endunless %}
             {% endunless %}
-            <li class="supplements__item"><a href="{{ href }}">{{ a.label | default: "Download" }}</a></li>
+            <li class="supplements__item"><a class="supplements__link supplements__link--pdf" href="{{ href }}">{{ a.label | default: "Download" }}</a></li>
           {% endif %}
         {% endfor %}
       </ul>
