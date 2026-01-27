@@ -10,10 +10,10 @@ section: works
 {% assign works_items = site.works %}
 {% if works_items and works_items != empty %}
   {% assign sorted_works = works_items | sort: 'catalogue_date' | reverse %}
+
   <div class="index">
     <h1 class="index__heading">recently added work</h1>
-    {% for work in sorted_works %}
-    {% if work.published == false %}{% continue %}{% endif %}
+    {% for work in sorted_works limit: 30 %}
     <div class="index__item">
       <span class="index__date">{% if work.catalogue_date %}{{ work.catalogue_date | date: "%-d %b %Y" }}{% endif %}</span>
       <a class="index__link" href="{{ work.url | relative_url }}">{{ work.title | default: work.slug }}</a>
