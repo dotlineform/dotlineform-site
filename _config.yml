@@ -7,17 +7,13 @@ baseurl: ""  # custom domain: leave empty
 thumb_base: ""
 thumb_prefix: "/assets"
 
-# Media origin for large assets (R2):
-media_base: "https://media.dotlineform.com"
-media_prefix: ""
-
-# Local fallback (serve media from this repo):
-# media_base: ""
-# media_prefix: "/assets"
-
-# when using a separate media server, uncomment and set the following:
+# Media origin for larger assets (R2):
 # media_base: "https://media.dotlineform.com"
 # media_prefix: ""
+
+# Local fallback (serve media from this repo):
+media_base: ""
+media_prefix: "/assets"
 
 collections:
   works:
