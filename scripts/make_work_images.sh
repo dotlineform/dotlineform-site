@@ -22,6 +22,7 @@ THUMB_Q=78
 COMPRESSION_LEVEL=6
 
 mkdir -p "$OUTPUT_DIR"
+mkdir -p "$OUTPUT_DIR/thumbs"
 
 # Check ffmpeg exists
 command -v ffmpeg >/dev/null 2>&1 || {
@@ -75,8 +76,8 @@ for src in "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG "$INPUT_DIR"/*.jpeg "$INPUT_DIR
 
   echo "Processing $fname -> $work_id"
 
-  make_thumb  "$src" 96  "$OUTPUT_DIR/${work_id}-thumb-96.webp"
-  make_thumb  "$src" 192 "$OUTPUT_DIR/${work_id}-thumb-192.webp"
+  make_thumb  "$src" 96  "$OUTPUT_DIR/thumbs/${work_id}-thumb-96.webp"
+  make_thumb  "$src" 192 "$OUTPUT_DIR/thumbs/${work_id}-thumb-192.webp"
   make_primary "$src" 800  "$OUTPUT_DIR/${work_id}-primary-800.webp"
   make_primary "$src" 1200 "$OUTPUT_DIR/${work_id}-primary-1200.webp"
   make_primary "$src" 1600 "$OUTPUT_DIR/${work_id}-primary-1600.webp"
@@ -88,4 +89,5 @@ if [[ "$found" -eq 0 ]]; then
   exit 1
 fi
 
-echo "Done. Output written to: $OUTPUT_DIR"
+echo "Done. Primaries written to: $OUTPUT_DIR"
+echo "Done. Thumbnails written to: $OUTPUT_DIR/thumbs"
