@@ -30,6 +30,9 @@ import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import hashlib
+import json
+
 import openpyxl
 
 
@@ -238,7 +241,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("orientation", "orientation", coerce_string),
     ("storage_location", "storage_location", coerce_string),
     ("provenance", "provenance", coerce_string),
-    ("checksum", "checksum", coerce_string),
+    # checksum is always computed, not sourced from Excel
     ("notes_private", "notes_private", coerce_string),
 ]
 
@@ -250,6 +253,84 @@ def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict
         raw = works_row[works_hi[col_name]] if col_name in works_hi else None
         fm[fm_key] = coercer(raw)
     return fm
+
+
+# ----------------------------
+# Checksum helpers
+# ----------------------------
+
+def _sort_key_safe(v: Optional[str]) -> str:
+    return "" if v is None else str(v)
+
+
+def compute_work_checksum(front_matter: Dict[str, Any]) -> str:
+    """Compute a deterministic checksum for a work from its front matter (excluding checksum itself)."""
+    payload = dict(front_matter)
+    payload.pop("checksum", None)
+
+    # Stable sorting for nested lists that represent joined tables
+    creators = payload.get("creators")
+    if isinstance(creators, list):
+        creators_sorted = sorted(
+            creators,
+            key=lambda d: (_sort_key_safe(d.get("name")), _sort_key_safe(d.get("role"))),
+        )
+        payload["creators"] = creators_sorted
+
+    images = payload.get("images")
+    if isinstance(images, list):
+        images_sorted = sorted(
+            images,
+            key=lambda d: (
+                _sort_key_safe(d.get("file")),
+                _sort_key_safe(d.get("caption")),
+                _sort_key_safe(d.get("alt")),
+            ),
+        )
+        payload["images"] = images_sorted
+
+    attachments = payload.get("attachments")
+    if isinstance(attachments, list):
+        attachments_sorted = sorted(
+            attachments,
+            key=lambda d: (_sort_key_safe(d.get("file")), _sort_key_safe(d.get("label"))),
+        )
+        payload["attachments"] = attachments_sorted
+
+    # Canonical JSON for hashing (sorted keys ensures deterministic output)
+    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+    h = hashlib.blake2b(canonical, digest_size=16)
+    return h.hexdigest()
+
+
+def extract_existing_checksum(path: Path) -> Optional[str]:
+    """Extract `checksum` from the YAML front matter of an existing work page."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except Exception:
+        return None
+
+    # Only inspect the first YAML front matter block
+    if not text.startswith("---"):
+        return None
+
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return None
+
+    fm_text = parts[1]
+    for line in fm_text.splitlines():
+        if not line.startswith("checksum:"):
+            continue
+        _, raw = line.split(":", 1)
+        raw = raw.strip()
+        if raw == "null" or raw == "":
+            return None
+        if raw.startswith('"') and raw.endswith('"') and len(raw) >= 2:
+            return raw[1:-1]
+        return raw
+
+    return None
 
 
 # ----------------------------
@@ -410,13 +491,18 @@ def main() -> None:
         if atts:
             fm["attachments"] = atts
 
+        # Compute checksum from the canonical Excel-derived record and write it into front matter.
+        checksum = compute_work_checksum(fm)
+        fm["checksum"] = checksum
+
         content = build_front_matter(fm) + "\n"
 
         out_path = out_dir / f"{wid}.md"
         exists = out_path.exists()
 
-        if exists and not args.force:
-            print(f"{prefix}SKIP (exists): {out_path}")
+        existing_checksum = extract_existing_checksum(out_path) if exists else None
+        if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
+            print(f"{prefix}SKIP (checksum match): {out_path}")
             skipped += 1
             continue
 
