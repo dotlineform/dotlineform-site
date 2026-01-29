@@ -2,18 +2,28 @@
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix | default: "/assets" %}
-{% assign base = media_base | append: media_prefix | append: "/series/img/" %}
+{% assign base = media_base | append: media_prefix | append: "/works/img/" %}
 
-{% assign thumb = base | append: s.series_id | append: "-thumb-96.webp" %}
-{% assign thumb_out = thumb %}
-{% unless base contains '://' %}{% assign thumb_out = thumb | relative_url %}{% endunless %}
+{%- assign series_works = site.works | where: "series_id", s.series_id -%}
+{%- assign last_work = series_works | sort: "work_id" | reverse | first -%}
+
+{% if last_work and last_work.work_id %}
+  {% assign thumb = base | append: last_work.work_id | append: "-thumb-96.webp" %}
+  {% assign thumb_out = thumb %}
+  {% unless base contains '://' %}{% assign thumb_out = thumb | relative_url %}{% endunless %}
+{% else %}
+  {% assign thumb_out = "" %}
+{% endif %}
 
 <a class="seriesCard" href="{{ s.url | relative_url }}">
-  <img
-    class="seriesCard__img"
-    src="{{ thumb_out }}"
-    alt="{{ s.title | escape }}"
-    loading="lazy"
-    decoding="async">
+  {% if thumb_out != "" %}
+    <img
+      class="seriesCard__img"
+      src="{{ thumb_out }}"
+      alt="{{ s.title | escape }}"
+      loading="lazy"
+      decoding="async">
+  {% endif %}
+
   <div class="seriesCard__title">{{ s.title | escape }}</div>
 </a>

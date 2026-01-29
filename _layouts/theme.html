@@ -70,10 +70,15 @@ layout: default
         <h2 class="index__heading">related series of work</h2>
 
         {%- for sid in page.series_ids -%}
-          <div class="index__item">
-            <span class="index__work_id">{{ sid }}</span>
-            <a class="index__link" href="#">View series</a>
-          </div>
+          {%- assign series_doc = site.series | where: 'series_id', sid | first -%}
+          {%- if series_doc -%}
+            {%- include series_card.html series=series_doc -%}
+          {%- else -%}
+            <div class="index__item">
+              <span class="index__work_id">{{ sid }}</span>
+              <a class="index__link" href="#">View series</a>
+            </div>
+          {%- endif -%}
         {%- endfor -%}
       </div>
     </section>

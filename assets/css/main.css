@@ -615,6 +615,55 @@ pre.theme-text{
 }
 
 
+/* Series thumbnail grid (series pages) */
+.seriesGrid{
+  --cell: 72px; /* tune density: 64–96 */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--cell), 1fr));
+  gap: 0.5rem;
+  margin: var(--space-4) auto var(--space-5);
+  max-width: var(--content-measure);
+}
+
+/* Clamp to 10 columns when there is room */
+@media (min-width: 1200px){
+  .seriesGrid{
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+}
+
+.seriesGrid__item{
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.seriesGrid__img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Screen-reader-only helper (alias of .visually-hidden) */
+.sr-only{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.seriesGrid__more{
+  max-width: var(--content-measure);
+  margin: 0 auto;
+}
+
 /* _includes  */
 .workCard,
 .seriesCard{
@@ -635,24 +684,30 @@ pre.theme-text{
 /* link colouring/behaviour (match index links) */
 .workCard:link,
 .workCard:active,
-.workCard:focus{
+.workCard:focus,
+.seriesCard:link,
+.seriesCard:active,
+.seriesCard:focus{
   color: var(--link);
   text-decoration: none !important;
   font-weight: 500;
 }
 
-.workCard:visited{
+.workCard:visited,
+.seriesCard:visited{
   color: var(--link-visited);
   text-decoration: none !important;
   font-weight: 500;
 }
 
-.workCard:hover{
+.workCard:hover,
+.seriesCard:hover{
   color: var(--link-hover);
   text-decoration: none !important;
 }
 
-.workCard:focus-visible{
+.workCard:focus-visible,
+.seriesCard:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
   text-decoration: none !important;

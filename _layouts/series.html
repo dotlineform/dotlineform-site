@@ -11,4 +11,55 @@ layout: default
     {{ content }}
   </div>
 
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_prefix = site.media_prefix | default: "/assets" %}
+{% assign base = media_base | append: media_prefix | append: "/works/img/" %}
+
+{%- if page.series_id -%}
+  {%- assign series_works = site.works | where: "series_id", page.series_id -%}
+  {%- assign series_works_sorted = series_works | sort: "work_id" -%}
+
+  {%- assign max_items = 100 -%}
+  {%- assign items = series_works_sorted | slice: 0, max_items -%}
+
+  {%- if series_works and series_works.size > 0 -%}
+    <div class="seriesGrid" aria-label="works in series">
+      {%- for w in items -%}
+        {%- if w and w.work_id -%}
+          {%- assign id = w.work_id -%}
+
+          {%- assign thumb96  = base | append: id | append: "-thumb-96.webp" -%}
+          {%- assign thumb192 = base | append: id | append: "-thumb-192.webp" -%}
+
+          {%- assign thumb96_out = thumb96 -%}
+          {%- assign thumb192_out = thumb192 -%}
+          {%- unless base contains '://' -%}
+            {%- assign thumb96_out = thumb96 | relative_url -%}
+            {%- assign thumb192_out = thumb192 | relative_url -%}
+          {%- endunless -%}
+
+          <a class="seriesGrid__item" href="{{ w.url | relative_url }}">
+            <img
+              class="seriesGrid__img"
+              src="{{ thumb96_out }}"
+              srcset="{{ thumb96_out }} 96w, {{ thumb192_out }} 192w"
+              sizes="(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw"
+              width="96"
+              height="96"
+              loading="lazy"
+              decoding="async"
+              alt="{{ w.title | default: id | escape }}">
+            <span class="sr-only">{{ w.title | default: id | escape }}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if series_works.size > max_items -%}
+      <p class="seriesGrid__more">
+        <a href="{{ page.url | relative_url }}#all-works">View all works ({{ series_works.size }})</a>
+      </p>
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}
 </article>

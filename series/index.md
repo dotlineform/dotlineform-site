@@ -11,12 +11,7 @@ permalink: /series/
   <div class="index">
     <h1 class="index__heading">series</h1>
     {% for s in sorted_series %}
-      <div class="index__item">
-        <span class="index__date">
-          {% if s.year_display %}{{ s.year_display }}{% elsif s.year %}{{ s.year }}{% endif %}
-        </span>
-        <a class="index__link" href="{{ s.url | relative_url }}">{{ s.title | default: s.series_id }}</a>
-      </div>
+      {% include series_card.html series=s %}
     {% endfor %}
   </div>
 {% else %}
