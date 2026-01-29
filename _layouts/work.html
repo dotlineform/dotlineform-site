@@ -156,7 +156,23 @@ layout: default
     var link = document.querySelector('.page__back');
     if (!link) return;
 
-    var fallback = link.getAttribute('data-fallback') || link.getAttribute('href') || '/works/';
+    // If this work is being viewed in a series context (?series=...), the back link should
+    // return to that series page rather than using history.back().
+    var params = new URLSearchParams(window.location.search);
+    var series = params.get('series');
+
+    var baseurl = "{{ site.baseurl | default: '' }}".replace(/\/$/, '');
+    var worksIndex = link.getAttribute('data-fallback') || link.getAttribute('href') || '/works/';
+
+    if (series) {
+      var seriesHref = baseurl + '/series/' + encodeURIComponent(series) + '/';
+      link.textContent = '← series';
+      link.setAttribute('href', seriesHref);
+      return;
+    }
+
+    // Otherwise: if the user navigated here from another page (same-origin referrer or non-trivial history),
+    // show "← back" and use history.back(). If not, keep "← index" linking to /works/.
     var ref = document.referrer || '';
     var sameOriginReferrer = ref && ref.indexOf(window.location.origin) === 0;
     var hasHistory = window.history.length > 1;
@@ -168,10 +184,10 @@ layout: default
         window.history.back();
       });
       // Keep href as the index fallback (and for copy-link behaviour).
-      link.setAttribute('href', fallback);
+      link.setAttribute('href', worksIndex);
     } else {
       link.textContent = '← index';
-      link.setAttribute('href', fallback);
+      link.setAttribute('href', worksIndex);
     }
   })();
 </script>
