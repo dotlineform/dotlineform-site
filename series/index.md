@@ -10,10 +10,12 @@ permalink: /series/
   {% assign sorted_series = series | sort: 'year' | reverse %}
   <div class="index">
     <h1 class="index__heading">series</h1>
-    {% for theme in sorted_series %}
+    {% for s in sorted_series %}
       <div class="index__item">
-        <span class="index__date">{% if series.year_display %}{{ series.year_display }}{% endif %}</span>
-        <a class="index__link" href="{{ series.url | relative_url }}">{{ series.title | default: series.slug }}</a>
+        <span class="index__date">
+          {% if s.year_display %}{{ s.year_display }}{% elsif s.year %}{{ s.year }}{% endif %}
+        </span>
+        <a class="index__link" href="{{ s.url | relative_url }}">{{ s.title | default: s.series_id }}</a>
       </div>
     {% endfor %}
   </div>

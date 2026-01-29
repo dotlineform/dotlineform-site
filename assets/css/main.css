@@ -616,16 +616,17 @@ pre.theme-text{
 
 
 /* _includes  */
-.workCard{
+.workCard,
+.seriesCard{
   display: grid;
-  grid-template-columns: 48px 1fr;
-  align-items: center;       /* centres the whole text row to the thumbnail */
+  grid-template-columns: 48px 1fr; /* thumb + text area */
+  align-items: center;
   column-gap: 10px;
   padding: 8px 0;
 }
 .workCard__row{
   display: grid;
-  grid-template-columns: 6ch 1fr;
+  grid-template-columns: 6ch 1fr; /* work_id + title */
   align-items: baseline;     /* baseline-align work_id + title */
   column-gap: 10px;
 }
@@ -657,7 +658,8 @@ pre.theme-text{
   text-decoration: none !important;
 }
 
-.workCard__img{
+.workCard__img,
+.seriesCard__img{
   width: 48px;
   height: 48px;
   object-fit: cover;
@@ -674,7 +676,8 @@ pre.theme-text{
   line-height: 1.2;
 }
 
-.workCard__title{
+.workCard__title,
+.seriesCard__title{
   font-weight: 500;
   line-height: 1.2;
 }
