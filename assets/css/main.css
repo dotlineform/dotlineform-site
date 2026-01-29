@@ -1,6 +1,7 @@
 /* assets/css/main.css */
 
-/* Base tokens */
+/* 1.	Tokens and global modes */
+
 :root{
   --font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --font-mono: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
@@ -82,19 +83,15 @@ html[data-theme="dark"]{
 html { color-scheme: light dark; }
 html[data-theme="light"] { color-scheme: light; }
 html[data-theme="dark"] { color-scheme: dark; }
+
+/* 2.	Base styles */
+
 body{
   font-family: var(--font-sans);
   line-height: var(--line);
   color: var(--text);
   background: var(--bg);
   margin: 0;
-}
-
-/* Layout container used by layouts/pages */
-.container{
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: var(--space-6) 18px var(--space-7);
 }
 
 /* Typography */
@@ -167,6 +164,21 @@ th, td{
 th{ background: var(--panel-2); }
 .table-wrap{ overflow-x: auto; }
 
+/* 3. global utilities */
+
+/* This is the standard pattern for keeping semantic headings (e.g., an H1 on the Notes index page) without displaying them visually. */
+.visually-hidden{
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Reuse the HTML-insert components (so Notes can match) */
 .kicker{
   font-weight: 600;
@@ -192,44 +204,22 @@ th{ background: var(--panel-2); }
   margin: var(--space-4) 0 var(--space-3);
 }
 
+[hidden]{ display: none !important; } /* standard hidden attribute */
+
+.muted{ color: var(--muted); }
 .small{ font-size: 13px; opacity: .92; }
 .cite{ font-size: 13px; }
 
-/* Diagrams */
-figure.diagram{ margin: var(--space-4) 0; }
-figure.diagram img,
-figure.diagram svg,
-figure.diagram object{
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-/* Image captions (site-wide) */
-figcaption{
-  font-size: 12px;
-  color: var(--muted);     /* dark grey in light theme; readable in dark theme */
-  font-style: italic;
-  text-align: left;
-}
-figure.diagram figcaption{
-  margin-top: 8px;
+/* 4.	Core layout wrappers */
+
+/* Layout container used by layouts/pages */
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-6) 18px var(--space-7);
 }
 
-/* Small utility */
-.muted{ color: var(--muted); }
-
-/* This is the standard pattern for keeping semantic headings (e.g., an H1 on the Notes index page) without displaying them visually. */
-.visually-hidden{
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
+/* 5.	Site chrome: header, footer, navigation */
 
 .site-header{
   border-bottom: 1px solid var(--border);
@@ -387,6 +377,210 @@ figure.diagram figcaption{
 
 .site-footer .muted{ font-size: 12px; line-height: 1.2; }
 
+/* 6.	Shared content components */
+
+/* Diagrams */
+figure.diagram{ margin: var(--space-4) 0; }
+figure.diagram img,
+figure.diagram svg,
+figure.diagram object{
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+/* Image captions (site-wide) */
+figcaption{
+  font-size: 12px;
+  color: var(--muted);     /* dark grey in light theme; readable in dark theme */
+  font-style: italic;
+  text-align: left;
+}
+figure.diagram figcaption{
+  margin-top: 8px;
+}
+
+/* Index lists (shared) for new .index__* classes */
+
+/* wrappers */
+.index{
+  max-width: var(--content-measure);
+  margin-top: var(--space-3);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* align the index heading to the same measure */
+.index__heading{
+  margin: 0 0 var(--space-3);
+  font-size: clamp(1.125rem, 1.25vw, 1.375rem);
+  line-height: 1.15;
+  font-weight: 600;
+}
+
+/* row layout */
+
+.index__item{
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: baseline;
+  column-gap: 10px;
+  padding: 8px 0;
+}
+
+/* Section-specific index column layouts */
+.works .index__item{ grid-template-columns: 6ch 1fr; }      /* work_id, title */
+.moments .index__item{ grid-template-columns: 12ch 1fr; }   /* date, title */
+.themes .index__item{ grid-template-columns: 12ch 1fr; }    /* date, title */
+.research .index__item{ grid-template-columns: 12ch 1fr; }  /* date, title */
+
+/* Single-column index rows (no date/prefix column) */
+.index__item--single{
+  grid-template-columns: 1fr;
+}
+/* work_id column (used by works indexes) */
+.index__work_id{
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* date/prefix column (used by moments indexes) */
+.index__date{
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* link styling */
+.index__link:link,
+.index__link:active,
+.index__link:focus{
+  text-decoration: none !important;
+  color: var(--link);
+  font-weight: 500;
+}
+
+.index__link:visited{
+  text-decoration: none !important;
+  color: var(--link-visited);
+  font-weight: 500;
+}
+
+.index__link:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+
+.index__link:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+/* Optional thumbnail shown before index links (e.g. Theme selected works) */
+.index__link{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.index__thumb{
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  border-radius: 2px;
+}
+
+/* cards/_includes  */
+.workCard,
+.seriesCard{
+  display: grid;
+  grid-template-columns: 48px 1fr; /* thumb + text area */
+  align-items: center;
+  column-gap: 10px;
+  padding: 8px 0;
+}
+.workCard__row{
+  display: grid;
+  grid-template-columns: 6ch 1fr; /* work_id + title */
+  align-items: baseline;     /* baseline-align work_id + title */
+  column-gap: 10px;
+}
+.workCard + .workCard{ margin-top: 6px; }
+
+/* link colouring/behaviour (match index links) */
+.workCard:link,
+.workCard:active,
+.workCard:focus,
+.seriesCard:link,
+.seriesCard:active,
+.seriesCard:focus{
+  color: var(--link);
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+.workCard:visited,
+.seriesCard:visited{
+  color: var(--link-visited);
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+.workCard:hover,
+.seriesCard:hover{
+  color: var(--link-hover);
+  text-decoration: none !important;
+}
+
+.workCard:focus-visible,
+.seriesCard:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: none !important;
+}
+
+.workCard__img,
+.seriesCard__img{
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  border-radius: 6px;
+  display: block;
+  align-self: center;
+}
+
+.workCard__work_id{
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.workCard__title,
+.seriesCard__title{
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Align the two text columns on the same baseline */
+.workCard__work_id,
+.workCard__title{
+  align-self: baseline;
+}
+
+@media (max-width: 640px){
+  .workCard{ grid-template-columns: 1fr; row-gap: 8px; }
+  .workCard__row{ grid-template-columns: 1fr; row-gap: 2px; }
+}
+
+/* 7.	Page-type sections and overrides */
+
 /* Home page */
 .home-hero{
   width: 100vw;
@@ -466,105 +660,6 @@ figure.diagram figcaption{
 .home-link:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
-}
-
-
-/* Index lists (shared) for new .index__* classes */
-
-/* wrappers */
-.index{
-  max-width: var(--content-measure);
-  margin-top: var(--space-3);
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* align the index heading to the same measure */
-.index__heading{
-  margin: 0 0 var(--space-3);
-  font-size: clamp(1.125rem, 1.25vw, 1.375rem);
-  line-height: 1.15;
-  font-weight: 600;
-}
-
-/* row layout */
-
-.index__item{
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: baseline;
-  column-gap: 10px;
-  padding: 8px 0;
-}
-
-/* Section-specific index column layouts */
-.works .index__item{ grid-template-columns: 6ch 1fr; }      /* work_id, title */
-.moments .index__item{ grid-template-columns: 12ch 1fr; }   /* date, title */
-.themes .index__item{ grid-template-columns: 12ch 1fr; }    /* date, title */
-.research .index__item{ grid-template-columns: 12ch 1fr; }  /* date, title */
-
-/* Single-column index rows (no date/prefix column) */
-.index__item--single{
-  grid-template-columns: 1fr;
-}
-
-/* work_id column */
-/* work_id column */
-.index__work_id{
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  text-align: left;
-}
-
-/* date/prefix column (used by moments indexes) */
-.index__date{
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  text-align: left;
-}
-
-/* link styling */
-.index__link:link,
-.index__link:active,
-.index__link:focus{
-  text-decoration: none !important;
-  color: var(--link);
-  font-weight: 500;
-}
-
-.index__link:visited{
-  text-decoration: none !important;
-  color: var(--link-visited);
-  font-weight: 500;
-}
-
-.index__link:hover{
-  color: var(--link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-
-.index__link:focus-visible{
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-}
-
-/* Optional thumbnail shown before index links (e.g. Theme selected works) */
-.index__link{
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-}
-
-.index__thumb{
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  flex: 0 0 auto;
-  border-radius: 2px;
 }
 
 /* moment layout specific styles */
@@ -725,91 +820,6 @@ pre.theme-text{
   margin: 0 auto;
 }
 
-/* _includes  */
-.workCard,
-.seriesCard{
-  display: grid;
-  grid-template-columns: 48px 1fr; /* thumb + text area */
-  align-items: center;
-  column-gap: 10px;
-  padding: 8px 0;
-}
-.workCard__row{
-  display: grid;
-  grid-template-columns: 6ch 1fr; /* work_id + title */
-  align-items: baseline;     /* baseline-align work_id + title */
-  column-gap: 10px;
-}
-.workCard + .workCard{ margin-top: 6px; }
-
-/* link colouring/behaviour (match index links) */
-.workCard:link,
-.workCard:active,
-.workCard:focus,
-.seriesCard:link,
-.seriesCard:active,
-.seriesCard:focus{
-  color: var(--link);
-  text-decoration: none !important;
-  font-weight: 500;
-}
-
-.workCard:visited,
-.seriesCard:visited{
-  color: var(--link-visited);
-  text-decoration: none !important;
-  font-weight: 500;
-}
-
-.workCard:hover,
-.seriesCard:hover{
-  color: var(--link-hover);
-  text-decoration: none !important;
-}
-
-.workCard:focus-visible,
-.seriesCard:focus-visible{
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-  text-decoration: none !important;
-}
-
-.workCard__img,
-.seriesCard__img{
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  flex: 0 0 auto;
-  border-radius: 6px;
-  display: block;
-  align-self: center;
-}
-
-.workCard__work_id{
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  line-height: 1.2;
-}
-
-.workCard__title,
-.seriesCard__title{
-  font-weight: 500;
-  line-height: 1.2;
-}
-
-/* Align the two text columns on the same baseline */
-.workCard__work_id,
-.workCard__title{
-  align-self: baseline;
-}
-
-@media (max-width: 640px){
-  .workCard{ grid-template-columns: 1fr; row-gap: 8px; }
-  .workCard__row{ grid-template-columns: 1fr; row-gap: 2px; }
-}
-
-
 /* Base components (shared across sections):
 Use “structure-first” naming and scope section-specific differences via the root page class
 (e.g. .work, .theme, .moment, .research-note).
@@ -862,7 +872,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   height: 100%;        /* was auto */
   object-fit: contain; /* or cover */
 }
-}
 
 /* Definition list meta (e.g., Work “Details”) */
 .page__dl{
@@ -913,7 +922,6 @@ Use “structure-first” naming and scope section-specific differences via the 
 }
 
 /* Series navigation (work pages when visited with ?series=<series_id>) */
-[hidden]{ display: none !important; }
 .seriesNav{
   max-width: var(--content-measure);
   margin: var(--space-1) auto 0;
@@ -1090,13 +1098,4 @@ note: works tags are not currently in use on the work pages themselves.
 
 .work .supplements__item + .supplements__item{
   margin-top: var(--space-3);
-}
-.theme{
-/* theme page */
-}
-.moment{
-/* moment page */
-}
-.research-note{
-/* research note page */
 }
