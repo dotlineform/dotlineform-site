@@ -30,8 +30,8 @@
       </div>
       <nav class="site-nav" aria-label="Primary">
         {%- assign u = page.url | default: "" -%}
-        {% assign u = page.url | default: "" %}
         {% assign u_works = u | slice: 0, 7 %}
+        {% assign u_series = u | slice: 0, 8 %}
         {% assign u_themes = u | slice: 0, 8 %}
         {% assign u_moments = u | slice: 0, 9 %}
         {% assign u_research = u | slice: 0, 10 %}
@@ -40,6 +40,11 @@
         {%- assign is_works_active = false -%}
         {%- if u == '/works/' -%}{%- assign is_works_index = true -%}{%- endif -%}
         {%- if page.collection == 'works' or u_works == '/works/' -%}{%- assign is_works_active = true -%}{%- endif -%}
+
+        {%- assign is_series_index = false -%}
+        {%- assign is_series_active = false -%}
+        {%- if u == '/series/' -%}{%- assign is_series_index = true -%}{%- endif -%}
+        {%- if page.collection == 'series' or u_series == '/series/' -%}{%- assign is_series_active = true -%}{%- endif -%}
 
         {%- assign is_themes_index = false -%}
         {%- assign is_themes_active = false -%}
@@ -63,6 +68,15 @@
           <a class="nav-item is-active" href="{{ '/works/' | relative_url }}" aria-current="page">works</a>
         {% else %}
           <a class="nav-item" href="{{ '/works/' | relative_url }}">works</a>
+        {% endif %}
+
+        <!-- series -->
+        {% if is_series_index %}
+          <span class="nav-item is-active" aria-current="page">series</span>
+        {% elsif is_series_active %}
+          <a class="nav-item is-active" href="{{ '/series/' | relative_url }}" aria-current="page">series</a>
+        {% else %}
+          <a class="nav-item" href="{{ '/series/' | relative_url }}">series</a>
         {% endif %}
 
         <!-- themes -->

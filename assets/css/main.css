@@ -560,7 +560,15 @@ pre.moment-text{
   margin: 0 0 var(--space-4);
 }
 
-/* bulletproof theme text block, when wrapping markdown theme text in <pre class="theme-text">...</pre> */
+/* bulletproof text block, when wrapping markdown text e.g. <pre class="theme-text">...</pre> */
+pre.series-text{
+  font-family: inherit;
+  white-space: pre-wrap;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0 0 var(--space-4);
+}
 pre.theme-text{
   font-family: inherit;
   white-space: pre-wrap;

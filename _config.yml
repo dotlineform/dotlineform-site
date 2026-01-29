@@ -19,6 +19,9 @@ collections:
   works:
     output: true
     permalink: /works/:name/
+  series:
+    output: true
+    permalink: /series/:name/
   themes:
     output: true
     permalink: /themes/:name/
@@ -35,6 +38,11 @@ defaults:
       type: works
     values:
       layout: work
+  - scope:
+      path: ""
+      type: series
+    values:
+      layout: series
   - scope:
       path: ""
       type: themes

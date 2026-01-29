@@ -1,0 +1,3 @@
+<pre class="theme-text">
+This theme explores curves...
+</pre>

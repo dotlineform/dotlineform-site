@@ -5,7 +5,7 @@ section: themes
 permalink: /themes/
 ---
 
-{% assign themes = site.themes | where_exp: "t", "t.published != false" %}
+{% assign themes = site.themes %}
 {% if themes and themes != empty %}
   {% assign sorted_themes = themes | sort: 'date' | reverse %}
   <div class="index">

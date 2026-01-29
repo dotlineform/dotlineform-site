@@ -378,6 +378,8 @@ def main() -> None:
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
     ap.add_argument("--themes-output-dir", default="_themes", help="Output folder for generated theme pages")
     ap.add_argument("--theme-prose-dir", default="_includes/theme_prose", help="Folder for manual theme prose includes")
+    ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
+    ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
 
     # Write controls
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
@@ -430,6 +432,12 @@ def main() -> None:
 
     theme_prose_dir = Path(args.theme_prose_dir).expanduser()
     theme_prose_dir.mkdir(parents=True, exist_ok=True)
+
+    series_out_dir = Path(args.series_output_dir).expanduser()
+    series_out_dir.mkdir(parents=True, exist_ok=True)
+
+    series_prose_dir = Path(args.series_prose_dir).expanduser()
+    series_prose_dir.mkdir(parents=True, exist_ok=True)
 
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
@@ -579,12 +587,12 @@ def main() -> None:
     # - theme_title
     # - theme_date
     # theme_id is derived from theme_title via slugify_text().
-    # theme_prose_key defaults to theme_id (manual prose file: _includes/theme_prose/<theme_prose_key>.md)
+    # Theme prose include is derived from theme_id (manual prose file: _includes/theme_prose/<theme_id>.md)
 
     if not themes_rows or len(themes_rows) < 2:
         print("No themes to generate (Themes sheet empty).")
     else:
-        # Build map: theme_id -> {title, date, prose_key}
+        # Build map: theme_id -> {title, date}
         themes_by_id: Dict[str, Dict[str, Any]] = {}
         for tr in themes_rows[1:]:
             title_raw = cell(tr, themes_hi, "theme_title")
@@ -598,13 +606,6 @@ def main() -> None:
             date_raw = cell(tr, themes_hi, "theme_date")
             theme_date = parse_date(date_raw)
 
-            prose_key_raw = cell(tr, themes_hi, "theme_prose_key")
-            theme_prose_key = coerce_string(prose_key_raw) if "theme_prose_key" in themes_hi else None
-            if theme_prose_key is None:
-                theme_prose_key = theme_id
-            # Normalise: allow users to specify either "curve-poems" or "curve-poems.md" in Excel
-            theme_prose_key = re.sub(r"\.md$", "", theme_prose_key.strip())
-
             if theme_id in themes_by_id:
                 raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
 
@@ -612,7 +613,6 @@ def main() -> None:
                 "theme_id": theme_id,
                 "title": theme_title,
                 "date": theme_date,
-                "theme_prose_key": theme_prose_key,
             }
 
         # Build map: theme_id -> ordered list of series_ids (from ThemeSeries)
@@ -669,7 +669,6 @@ def main() -> None:
                 "date": meta["date"],
                 "layout": "theme",
                 "theme_id": theme_id,
-                "theme_prose_key": meta["theme_prose_key"],
             }
 
             sids = series_ids_by_theme.get(theme_id, [])
@@ -682,7 +681,7 @@ def main() -> None:
             theme_checksum = compute_work_checksum(tfm)  # reuse canonical hashing util
             tfm["checksum"] = theme_checksum
 
-            body = f"{{% include theme_prose/{meta['theme_prose_key']}.md %}}\n"
+            body = f"{{% include theme_prose/{theme_id}.md %}}\n"
             theme_content = build_front_matter(tfm) + "\n" + body
 
             theme_path = themes_out_dir / f"{theme_id}.md"
@@ -708,7 +707,7 @@ def main() -> None:
                     themes_written += 1
 
             # Ensure prose include exists (create placeholder if missing; never overwrite)
-            prose_path = theme_prose_dir / f"{meta['theme_prose_key']}.md"
+            prose_path = theme_prose_dir / f"{theme_id}.md"
             if not prose_path.exists():
                 placeholder = (
                     f"<!-- theme prose: {meta['title']} ({theme_id}) -->\n"
@@ -721,6 +720,105 @@ def main() -> None:
                     print(f"{prefix_t}DRY-RUN: would create prose placeholder {prose_path}")
 
         print(f"Themes done. {'Would write' if not args.write else 'Wrote'}: {themes_written}. Skipped: {themes_skipped}.")
+
+
+    # ----------------------------
+    # Series page generation (Series)
+    # ----------------------------
+    # Series worksheet required columns:
+    # - series_id (slug-safe)
+    # - series_title
+    # Optional columns:
+    # - year_display (preferred display value)
+    # - year (fallback display value when year_display column absent)
+    # - series_ids (comma-separated; defaults to [series_id])
+
+    if not series_rows or len(series_rows) < 2:
+        print("No series pages to generate (Series sheet empty).")
+    else:
+        series_written = 0
+        series_skipped = 0
+        s_total = max(len(series_rows) - 1, 0)
+        s_processed = 0
+
+        for sr in series_rows[1:]:
+            s_processed += 1
+            prefix_s = f"[series {s_processed}/{s_total}] "
+
+            sid_raw = cell(sr, series_hi, "series_id")
+            if is_empty(sid_raw):
+                series_skipped += 1
+                continue
+            series_id = require_slug_safe("series_id", sid_raw)
+
+            title_raw = cell(sr, series_hi, "series_title")
+            series_title = coerce_string(title_raw) or series_id
+
+            # year_display handling:
+            # - If Series sheet has a year_display column, use it (may be null).
+            # - If it does NOT have year_display, fall back to year.
+            year_display: Optional[str]
+            if "year_display" in series_hi:
+                year_display = coerce_string(cell(sr, series_hi, "year_display"))
+            else:
+                # Fall back to year (coerce to int -> string)
+                yv = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
+                year_display = str(yv) if yv is not None else None
+
+            ids_raw = cell(sr, series_hi, "series_ids")
+            series_ids = parse_list(ids_raw, sep=",") if "series_ids" in series_hi else []
+            if not series_ids:
+                series_ids = [series_id]
+
+            sfm: Dict[str, Any] = {
+                "title": series_title,
+                "year_display": year_display,
+                "layout": "series",
+                "series_id": series_id,
+                "series_ids": series_ids,
+            }
+
+            s_checksum = compute_work_checksum(sfm)
+            sfm["checksum"] = s_checksum
+
+            body = f"{{% include series_prose/{series_id}.md %}}\n"
+            series_content = build_front_matter(sfm) + "\n" + body
+
+            series_path = series_out_dir / f"{series_id}.md"
+            existing_text = None
+            if series_path.exists():
+                try:
+                    existing_text = series_path.read_text(encoding="utf-8")
+                except Exception:
+                    existing_text = None
+
+            needs_write = (existing_text != series_content)
+            if (not needs_write) and (not args.force):
+                print(f"{prefix_s}SKIP (no change): {series_path}")
+                series_skipped += 1
+            else:
+                if args.write:
+                    series_path.write_text(series_content, encoding="utf-8")
+                    print(f"{prefix_s}WRITE: {series_path}")
+                    series_written += 1
+                else:
+                    print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
+                    series_written += 1
+
+            # Ensure prose include exists (create placeholder if missing; never overwrite)
+            prose_path = series_prose_dir / f"{series_id}.md"
+            if not prose_path.exists():
+                placeholder = (
+                    f"<!-- series prose: {series_title} ({series_id}) -->\n"
+                    "<!-- Replace this placeholder with the series' prose. -->\n"
+                )
+                if args.write:
+                    prose_path.write_text(placeholder, encoding="utf-8")
+                    print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
+                else:
+                    print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
+
+        print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
 
 
 if __name__ == "__main__":
