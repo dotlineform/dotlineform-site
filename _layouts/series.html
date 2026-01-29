@@ -38,7 +38,9 @@ layout: default
             {%- assign thumb192_out = thumb192 | relative_url -%}
           {%- endunless -%}
 
-          <a class="seriesGrid__item" href="{{ w.url | relative_url }}">
+          <!-- include ?series=<series_id> in the url so that the work page can
+          fetch assets/series/index/<series_id>.json, and render Prev/Next navigation within that series. -->
+          <a class="seriesGrid__item" href="{{ w.url | relative_url }}?series={{ page.series_id | uri_escape }}">
             <img
               class="seriesGrid__img"
               src="{{ thumb96_out }}"
