@@ -3,9 +3,10 @@
 Generate Jekyll work pages from an Excel workbook.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
-file per work (e.g. `_works/00286.md`) with YAML front matter populated from three worksheets:
+file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets:
 
 - Works: base work metadata (1 row per work)
+- Series: series master data (1 row per series_id)
 - WorkImages: images joined by work_id (0..n rows per work)
 - WorkAttachments: attachments joined by work_id (0..n rows per work)
 
@@ -52,6 +53,36 @@ def slug_id(raw: Any, width: int = 5) -> str:
     if not s:
         raise ValueError(f"Invalid id value: {raw!r}")
     return s.zfill(width)
+
+
+# ---- Theme/slug helpers ----
+def slugify_text(raw: Any) -> str:
+    """Create a slug-safe id from arbitrary text (lowercase, a-z0-9-, no leading/trailing dashes)."""
+    if raw is None:
+        raise ValueError("Missing text")
+    s = str(raw).strip().lower()
+    # Replace non-alphanumerics with hyphens
+    s = re.sub(r"[^a-z0-9]+", "-", s)
+    s = re.sub(r"-+", "-", s).strip("-")
+    if not s:
+        raise ValueError(f"Invalid slug source: {raw!r}")
+    return s
+
+
+def is_slug_safe(s: str) -> bool:
+    return bool(re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", s))
+
+
+def require_slug_safe(label: str, raw: Any) -> str:
+    """Validate that `raw` is a slug-safe id and return it as a string."""
+    if raw is None:
+        raise ValueError(f"Missing {label}")
+    s = str(raw).strip()
+    if not s:
+        raise ValueError(f"Missing {label}")
+    if not is_slug_safe(s):
+        raise ValueError(f"{label} is not slug-safe: {s!r}")
+    return s
 
 
 def parse_date(raw: Any) -> Optional[str]:
@@ -227,7 +258,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("title", "title", coerce_string),
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
-    ("series", "series", coerce_string),
+    ("series_id", "series_id", coerce_string),
     ("medium_type", "medium_type", coerce_string),
     ("medium_caption", "medium_caption", coerce_string),
     ("duration", "duration", coerce_string),
@@ -337,11 +368,16 @@ def main() -> None:
 
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
+    ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
     ap.add_argument("--images-sheet", default="WorkImages", help="Worksheet name for work images")
     ap.add_argument("--attachments-sheet", default="WorkAttachments", help="Worksheet name for work attachments")
+    ap.add_argument("--themes-sheet", default="Themes", help="Worksheet name for theme master data")
+    ap.add_argument("--theme-series-sheet", default="ThemeSeries", help="Worksheet name for theme->series links")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
+    ap.add_argument("--themes-output-dir", default="_themes", help="Output folder for generated theme pages")
+    ap.add_argument("--theme-prose-dir", default="_includes/theme_prose", help="Folder for manual theme prose includes")
 
     # Write controls
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
@@ -370,7 +406,14 @@ def main() -> None:
         if not rows:
             return {}
         headers = [str(h).strip() if h is not None else "" for h in rows[0]]
-        return {h: i for i, h in enumerate(headers) if h}
+        hi: Dict[str, int] = {}
+        for i, h in enumerate(headers):
+            if not h:
+                continue
+            # Preserve original header and also store a lowercase alias for case-insensitive lookups.
+            hi[h] = i
+            hi[h.lower()] = i
+        return hi
 
     def cell(row: tuple, header_index: Dict[str, int], col_name: str) -> Any:
         i = header_index.get(col_name)
@@ -382,8 +425,17 @@ def main() -> None:
     out_dir = Path(args.output_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    themes_out_dir = Path(args.themes_output_dir).expanduser()
+    themes_out_dir.mkdir(parents=True, exist_ok=True)
+
+    theme_prose_dir = Path(args.theme_prose_dir).expanduser()
+    theme_prose_dir.mkdir(parents=True, exist_ok=True)
+
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
+    series_rows = read_sheet_rows(args.series_sheet)
+    themes_rows = read_sheet_rows(args.themes_sheet)
+    theme_series_rows = read_sheet_rows(args.theme_series_sheet)
     images_rows = read_sheet_rows(args.images_sheet)
     attachments_rows = read_sheet_rows(args.attachments_sheet)
 
@@ -391,8 +443,24 @@ def main() -> None:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
 
     works_hi = build_header_index(works_rows)
+    series_hi = build_header_index(series_rows) if series_rows else {}
+    themes_hi = build_header_index(themes_rows) if themes_rows else {}
+    theme_series_hi = build_header_index(theme_series_rows) if theme_series_rows else {}
     images_hi = build_header_index(images_rows) if images_rows else {}
     attachments_hi = build_header_index(attachments_rows) if attachments_rows else {}
+
+    # Pre-index series titles by series_id
+    series_title_by_id: Dict[str, str] = {}
+    for r in series_rows[1:] if len(series_rows) > 1 else []:
+        sid_raw = cell(r, series_hi, "series_id")
+        if is_empty(sid_raw):
+            continue
+        sid = str(sid_raw).strip()
+        title_raw = cell(r, series_hi, "series_title")
+        title = coerce_string(title_raw)
+        if title is None:
+            continue
+        series_title_by_id[sid] = title
 
     # Pre-index images by work_id
     images_by_work: Dict[str, List[Dict[str, Any]]] = {}
@@ -448,6 +516,26 @@ def main() -> None:
         # Fields in stable order (matches your canonical front matter schema)
         fm: Dict[str, Any] = {"work_id": wid}
         fm.update(build_works_front_matter(r, works_hi))
+
+        # Series title lookup (Works.series_id -> series_id; Series.series_title -> series_title)
+        sid = fm.get("series_id")
+        if isinstance(sid, str) and sid.strip() != "":
+            fm["series_title"] = series_title_by_id.get(sid.strip())
+        else:
+            fm["series_title"] = None
+
+        # Reorder for clarity: ensure series_title immediately follows series_id in YAML
+        if "series_id" in fm and "series_title" in fm:
+            _st = fm.get("series_title")
+            fm_ordered: Dict[str, Any] = {}
+            for k, v in fm.items():
+                if k == "series_title":
+                    continue  # will be inserted right after series_id
+                fm_ordered[k] = v
+                if k == "series_id":
+                    fm_ordered["series_title"] = _st
+            fm = fm_ordered
+
         fm["tags"] = tags
 
         # Join in images/attachments from their respective sheets
@@ -482,6 +570,157 @@ def main() -> None:
             written += 1
 
     print(f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written}. Skipped: {skipped}.")
+
+
+    # ----------------------------
+    # Theme generation (Themes + ThemeSeries)
+    # ----------------------------
+    # Themes worksheet required columns:
+    # - theme_title
+    # - theme_date
+    # theme_id is derived from theme_title via slugify_text().
+    # theme_prose_key defaults to theme_id (manual prose file: _includes/theme_prose/<theme_prose_key>.md)
+
+    if not themes_rows or len(themes_rows) < 2:
+        print("No themes to generate (Themes sheet empty).")
+    else:
+        # Build map: theme_id -> {title, date, prose_key}
+        themes_by_id: Dict[str, Dict[str, Any]] = {}
+        for tr in themes_rows[1:]:
+            title_raw = cell(tr, themes_hi, "theme_title")
+            if is_empty(title_raw):
+                continue
+            theme_title = coerce_string(title_raw)
+            if theme_title is None:
+                continue
+            theme_id = slugify_text(theme_title)
+
+            date_raw = cell(tr, themes_hi, "theme_date")
+            theme_date = parse_date(date_raw)
+
+            prose_key_raw = cell(tr, themes_hi, "theme_prose_key")
+            theme_prose_key = coerce_string(prose_key_raw) if "theme_prose_key" in themes_hi else None
+            if theme_prose_key is None:
+                theme_prose_key = theme_id
+            # Normalise: allow users to specify either "curve-poems" or "curve-poems.md" in Excel
+            theme_prose_key = re.sub(r"\.md$", "", theme_prose_key.strip())
+
+            if theme_id in themes_by_id:
+                raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
+
+            themes_by_id[theme_id] = {
+                "theme_id": theme_id,
+                "title": theme_title,
+                "date": theme_date,
+                "theme_prose_key": theme_prose_key,
+            }
+
+        # Build map: theme_id -> ordered list of series_ids (from ThemeSeries)
+        series_ids_by_theme: Dict[str, List[str]] = {k: [] for k in themes_by_id.keys()}
+        if theme_series_rows and len(theme_series_rows) >= 2:
+            # Collect rows with optional sort_order
+            tmp: Dict[str, List[tuple]] = {k: [] for k in themes_by_id.keys()}
+            for lr in theme_series_rows[1:]:
+                # ThemeSeries may reference the theme either by theme_id (preferred) or theme_title.
+                tid_raw = cell(lr, theme_series_hi, "theme_id")
+                ttitle_raw = cell(lr, theme_series_hi, "theme_title")
+                sid_raw = cell(lr, theme_series_hi, "series_id")
+                if is_empty(sid_raw):
+                    continue
+
+                if not is_empty(tid_raw):
+                    theme_id = require_slug_safe("theme_id", tid_raw)
+                    if theme_id not in themes_by_id:
+                        raise SystemExit(f"ThemeSeries references unknown theme_id: {theme_id}")
+                else:
+                    if is_empty(ttitle_raw):
+                        continue
+                    ttitle = coerce_string(ttitle_raw)
+                    if ttitle is None:
+                        continue
+                    theme_id = slugify_text(ttitle)
+                    if theme_id not in themes_by_id:
+                        raise SystemExit(f"ThemeSeries references unknown theme_title: {ttitle}")
+
+                series_id = require_slug_safe("series_id", sid_raw)
+
+                so_raw = cell(lr, theme_series_hi, "sort_order")
+                so = coerce_int(so_raw) if "sort_order" in theme_series_hi else None
+                sort_key = so if so is not None else 10_000_000
+                tmp[theme_id].append((sort_key, series_id))
+
+            for tid, pairs in tmp.items():
+                pairs_sorted = sorted(pairs, key=lambda x: (x[0], x[1]))
+                series_ids_by_theme[tid] = [p[1] for p in pairs_sorted]
+
+        # Emit one theme page per theme_id
+        themes_written = 0
+        themes_skipped = 0
+        ttotal = len(themes_by_id)
+        tprocessed = 0
+
+        for theme_id, meta in themes_by_id.items():
+            tprocessed += 1
+            prefix_t = f"[themes {tprocessed}/{ttotal}] "
+
+            # Front matter for theme page
+            tfm: Dict[str, Any] = {
+                "title": meta["title"],
+                "date": meta["date"],
+                "layout": "theme",
+                "theme_id": theme_id,
+                "theme_prose_key": meta["theme_prose_key"],
+            }
+
+            sids = series_ids_by_theme.get(theme_id, [])
+            if sids:
+                tfm["series_ids"] = sids
+            else:
+                tfm["series_ids"] = []
+
+            # Optional checksum for stable, skip-friendly writes
+            theme_checksum = compute_work_checksum(tfm)  # reuse canonical hashing util
+            tfm["checksum"] = theme_checksum
+
+            body = f"{{% include theme_prose/{meta['theme_prose_key']}.md %}}\n"
+            theme_content = build_front_matter(tfm) + "\n" + body
+
+            theme_path = themes_out_dir / f"{theme_id}.md"
+            existing_text = None
+            if theme_path.exists():
+                try:
+                    existing_text = theme_path.read_text(encoding="utf-8")
+                except Exception:
+                    existing_text = None
+
+            # Write policy: overwrite if content differs, or if --force; dry-run unless --write
+            needs_write = (existing_text != theme_content)
+            if (not needs_write) and (not args.force):
+                print(f"{prefix_t}SKIP (no change): {theme_path}")
+                themes_skipped += 1
+            else:
+                if args.write:
+                    theme_path.write_text(theme_content, encoding="utf-8")
+                    print(f"{prefix_t}WRITE: {theme_path}")
+                    themes_written += 1
+                else:
+                    print(f"{prefix_t}DRY-RUN: would write {theme_path} (overwrite={theme_path.exists()})")
+                    themes_written += 1
+
+            # Ensure prose include exists (create placeholder if missing; never overwrite)
+            prose_path = theme_prose_dir / f"{meta['theme_prose_key']}.md"
+            if not prose_path.exists():
+                placeholder = (
+                    f"<!-- theme prose: {meta['title']} ({theme_id}) -->\n"
+                    "<!-- Replace this placeholder with the theme's prose. -->\n"
+                )
+                if args.write:
+                    prose_path.write_text(placeholder, encoding="utf-8")
+                    print(f"{prefix_t}WRITE prose placeholder: {prose_path}")
+                else:
+                    print(f"{prefix_t}DRY-RUN: would create prose placeholder {prose_path}")
+
+        print(f"Themes done. {'Would write' if not args.write else 'Wrote'}: {themes_written}. Skipped: {themes_skipped}.")
 
 
 if __name__ == "__main__":

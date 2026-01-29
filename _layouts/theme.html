@@ -40,7 +40,7 @@ layout: default
   {% if page.html_inserts and page.html_inserts.size > 0 %}
     <hr>
     <section class="supplements">
-      <h2>Supplements</h2>
+      <h2>supplements</h2>
       <div class="supplements__links">
         {% for item in page.html_inserts %}
           {% if item.path %}
@@ -62,4 +62,21 @@ layout: default
       </div>
     </section>
   {% endif %}
+
+  {%- if page.series_ids and page.series_ids != empty -%}
+    <hr>
+    <section class="theme__series">
+      <div class="index">
+        <h2 class="index__heading">related series of work</h2>
+
+        {%- for sid in page.series_ids -%}
+          <div class="index__item">
+            <span class="index__work_id">{{ sid }}</span>
+            <a class="index__link" href="#">View series</a>
+          </div>
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+
 </article>
