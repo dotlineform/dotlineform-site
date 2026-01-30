@@ -370,6 +370,9 @@ th{ background: var(--panel-2); }
 .home .site-footer{
   margin-top: 0;
 }
+.home main.container{
+  padding-bottom: 0;
+}
 .site-footer .container{
   padding-top: 18px;
   padding-bottom: 18px;
@@ -593,6 +596,8 @@ figure.diagram figcaption{
 /* Home page */
 .home-hero{
   width: 100vw;
+  margin-top: 0;
+  margin-bottom: 0;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
 }
