@@ -9,8 +9,7 @@ Series JSON index files are written to assets/series/index/<series_id>.json (one
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
-- WorkImages: images joined by work_id (0..n rows per work)
-- WorkAttachments: attachments joined by work_id (0..n rows per work)
+- WorkFiles: files joined by work_id (0..n rows per work)
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
@@ -230,10 +229,8 @@ def build_front_matter(fields: Dict[str, Any]) -> str:
 
             # Detect list of dicts vs list of strings
             if all(isinstance(x, dict) for x in v):
-                if k == "images":
-                    lines.extend(dump_list_of_dicts(k, v, field_order=["file", "caption", "alt"]))
-                elif k == "attachments":
-                    lines.extend(dump_list_of_dicts(k, v, field_order=["file", "label"]))
+                if k == "files":
+                    lines.extend(dump_list_of_dicts(k, v, field_order=["file_id", "file_label"]))
                 else:
                     lines.extend(dump_list_of_dicts(k, v))
             else:
@@ -299,25 +296,13 @@ def compute_work_checksum(front_matter: Dict[str, Any]) -> str:
     payload = dict(front_matter)
     payload.pop("checksum", None)
 
-    images = payload.get("images")
-    if isinstance(images, list):
-        images_sorted = sorted(
-            images,
-            key=lambda d: (
-                _sort_key_safe(d.get("file")),
-                _sort_key_safe(d.get("caption")),
-                _sort_key_safe(d.get("alt")),
-            ),
+    files = payload.get("files")
+    if isinstance(files, list):
+        files_sorted = sorted(
+            files,
+            key=lambda d: (_sort_key_safe(d.get("file_id")), _sort_key_safe(d.get("file_label"))),
         )
-        payload["images"] = images_sorted
-
-    attachments = payload.get("attachments")
-    if isinstance(attachments, list):
-        attachments_sorted = sorted(
-            attachments,
-            key=lambda d: (_sort_key_safe(d.get("file")), _sort_key_safe(d.get("label"))),
-        )
-        payload["attachments"] = attachments_sorted
+        payload["files"] = files_sorted
 
     # Canonical JSON for hashing (sorted keys ensures deterministic output)
     canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
@@ -396,8 +381,7 @@ def main() -> None:
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
     ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
-    ap.add_argument("--images-sheet", default="WorkImages", help="Worksheet name for work images")
-    ap.add_argument("--attachments-sheet", default="WorkAttachments", help="Worksheet name for work attachments")
+    ap.add_argument("--files-sheet", default="WorkFiles", help="Worksheet name for work files")
     ap.add_argument("--themes-sheet", default="Themes", help="Worksheet name for theme master data")
     ap.add_argument("--theme-series-sheet", default="ThemeSeries", help="Worksheet name for theme->series links")
 
@@ -475,8 +459,7 @@ def main() -> None:
     series_rows = read_sheet_rows(args.series_sheet)
     themes_rows = read_sheet_rows(args.themes_sheet)
     theme_series_rows = read_sheet_rows(args.theme_series_sheet)
-    images_rows = read_sheet_rows(args.images_sheet)
-    attachments_rows = read_sheet_rows(args.attachments_sheet)
+    files_rows = read_sheet_rows(args.files_sheet)
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
@@ -485,8 +468,7 @@ def main() -> None:
     series_hi = build_header_index(series_rows) if series_rows else {}
     themes_hi = build_header_index(themes_rows) if themes_rows else {}
     theme_series_hi = build_header_index(theme_series_rows) if theme_series_rows else {}
-    images_hi = build_header_index(images_rows) if images_rows else {}
-    attachments_hi = build_header_index(attachments_rows) if attachments_rows else {}
+    files_hi = build_header_index(files_rows) if files_rows else {}
 
     # Pre-index series titles by series_id
     series_title_by_id: Dict[str, str] = {}
@@ -520,37 +502,20 @@ def main() -> None:
     for sid in list(work_ids_by_series.keys()):
         work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
 
-    # Pre-index images by work_id
-    images_by_work: Dict[str, List[Dict[str, Any]]] = {}
-    for r in images_rows[1:] if len(images_rows) > 1 else []:
-        raw_wid = cell(r, images_hi, "work_id")
+    # Pre-index files by work_id
+    files_by_work: Dict[str, List[Dict[str, Any]]] = {}
+    for r in files_rows[1:] if len(files_rows) > 1 else []:
+        raw_wid = cell(r, files_hi, "work_id")
         if is_empty(raw_wid):
             continue
         wid = slug_id(raw_wid)
-        img = {
-            "file": coerce_string(cell(r, images_hi, "file")),
-            "caption": coerce_string(cell(r, images_hi, "caption")),
-            "alt": coerce_string(cell(r, images_hi, "alt")),
+        item = {
+            "file_id": coerce_string(cell(r, files_hi, "file_id")),
+            "file_label": coerce_string(cell(r, files_hi, "file_label")),
         }
-        # Drop entries with no file
-        if is_empty(img.get("file")):
+        if is_empty(item.get("file_id")):
             continue
-        images_by_work.setdefault(wid, []).append(img)
-
-    # Pre-index attachments by work_id
-    attachments_by_work: Dict[str, List[Dict[str, Any]]] = {}
-    for r in attachments_rows[1:] if len(attachments_rows) > 1 else []:
-        raw_wid = cell(r, attachments_hi, "work_id")
-        if is_empty(raw_wid):
-            continue
-        wid = slug_id(raw_wid)
-        att = {
-            "file": coerce_string(cell(r, attachments_hi, "file")),
-            "label": coerce_string(cell(r, attachments_hi, "label")),
-        }
-        if is_empty(att.get("file")):
-            continue
-        attachments_by_work.setdefault(wid, []).append(att)
+        files_by_work.setdefault(wid, []).append(item)
 
     written = 0
     skipped = 0
@@ -596,13 +561,10 @@ def main() -> None:
 
         fm["tags"] = tags
 
-        # Join in images/attachments from their respective sheets
-        imgs = images_by_work.get(wid, [])
-        atts = attachments_by_work.get(wid, [])
-        if imgs:
-            fm["images"] = imgs
-        if atts:
-            fm["attachments"] = atts
+        # Join in files from the WorkFiles sheet
+        files = files_by_work.get(wid, [])
+        if files:
+            fm["files"] = files
 
         # Compute checksum from the canonical Excel-derived record and write it into front matter.
         checksum = compute_work_checksum(fm)
