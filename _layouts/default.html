@@ -94,8 +94,8 @@
           {%- assign more_active = true -%}
         {%- endif -%}
         <div class="nav-more" data-nav-more>
-          <button class="nav-item nav-more__summary{% if more_active %} is-active{% endif %}" type="button" aria-haspopup="menu" aria-expanded="false">
-            more
+          <button class="nav-item nav-more__summary{% if more_active %} is-active{% endif %}" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="More">
+            &#9776;
           </button>
           <div class="nav-more__panel" role="menu" hidden>
             {% if is_works_index %}
@@ -215,7 +215,6 @@
           });
         })();
       </script>
-      <div class="site-header-spacer" aria-hidden="true"></div>
     </div>
   </header>
 

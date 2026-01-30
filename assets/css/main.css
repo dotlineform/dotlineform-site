@@ -229,7 +229,7 @@ th{ background: var(--panel-2); }
   padding-top: 16px;
   padding-bottom: 16px;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr;
   align-items: baseline;
   gap: 18px;
 }
@@ -242,7 +242,7 @@ th{ background: var(--panel-2); }
 
 /* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
 .site-nav{ 
-  justify-self: center; 
+  justify-self: end; 
 }
 .site-nav .nav-item{ 
   margin-left: 14px;
@@ -342,9 +342,6 @@ th{ background: var(--panel-2); }
   .site-nav .nav-item:first-child{ margin-left: 0; }
 }
 
-.site-header-spacer{ 
-  justify-self: end; 
-}
 
 .theme-toggle{
   margin-left: 14px;
