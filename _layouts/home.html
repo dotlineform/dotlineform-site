@@ -62,34 +62,3 @@ layout: default
     {% endif %}
   </figure>
 {% endif %}
-
-{% if page.links %}
-  <nav class="home-links" aria-label="Site links">
-    {% for item in page.links %}
-      {% assign label = item.label | default: item.url %}
-      {% assign url = item.url | default: '' %}
-      {% assign prefix = item.prefix | default: '' %}
-
-      <div class="home-link-item">
-        <span class="home-link-prefix">{% if prefix != '' %}{{ prefix }}{% endif %}</span>
-
-        {% if url == '' %}
-            <span class="home-link-text">{{ label }}</span>
-        {% elsif url contains '://' %}
-            {% comment %}
-            external links open in new tab with noopener noreferrer
-            to avoid potential security issues with window.opener
-            {% endcomment %}
-            <a class="home-link"
-                href="{{ url }}"
-                target="_blank"
-                rel="noopener noreferrer">
-                {{ label }}
-            </a>
-        {% else %}
-            <a class="home-link" href="{{ url | relative_url }}">{{ label }}</a>
-        {% endif %}
-      </div>
-    {% endfor %}
-  </nav>
-{% endif %}
