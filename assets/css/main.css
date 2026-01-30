@@ -243,6 +243,8 @@ th{ background: var(--panel-2); }
 /* Header nav items (inactive = <a.nav-item>, active = <span.nav-item.is-active>) */
 .site-nav{ 
   justify-self: end; 
+  display: flex;
+  justify-content: flex-end;
 }
 .site-nav .nav-item{ 
   margin-left: 14px;
