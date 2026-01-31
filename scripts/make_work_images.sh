@@ -4,7 +4,7 @@
 # chmod +x scripts/make_work_images.sh
 
 # call the script with two optional arguments:
-# ./scripts/make_work_images.sh path/to/source_jpgs assets/works/img
+# ./scripts/make_work_images.sh path/to/source_images assets/works/img [jobs]   # jobs optional, default 1
 
 #!/usr/bin/env bash
 set -euo pipefail
@@ -14,6 +14,7 @@ set -euo pipefail
 # ---------
 INPUT_DIR="${1:-.}"                 # where {work_id}.jpg lives - default = pwd
 OUTPUT_DIR="${2:-assets/works/img}"     # where the .webp derivatives are written - default = assets/works/img
+JOBS="${3:-1}"                      # number of parallel jobs (default 1 = serial)
 
 # Quality settings (tune if needed)
 WEBP_PRESET="photo"
@@ -39,15 +40,6 @@ fi
 if command -v heif-convert >/dev/null 2>&1; then
   HAS_HEIF_CONVERT=1
 fi
-
-# Temp folder for any HEIC/HEIF conversions (cleaned on exit)
-TMP_DIR=""
-cleanup_tmp() {
-  if [[ -n "${TMP_DIR}" && -d "${TMP_DIR}" ]]; then
-    rm -rf "${TMP_DIR}"
-  fi
-}
-trap cleanup_tmp EXIT
 
 # ---------
 # HELPERS
@@ -82,14 +74,10 @@ make_primary() {
     "$out"
 }
 
-# ---------
-# RUN
-# ---------
-shopt -s nullglob
-found=0
+process_one() {
+  local src="$1"
+  local fname work_id src_use ext ext_lc tmp_dir tmp_jpg
 
-for src in "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG "$INPUT_DIR"/*.jpeg "$INPUT_DIR"/*.JPEG "$INPUT_DIR"/*.heic "$INPUT_DIR"/*.HEIC "$INPUT_DIR"/*.heif "$INPUT_DIR"/*.HEIF "$INPUT_DIR"/*.png "$INPUT_DIR"/*.PNG "$INPUT_DIR"/*.tif "$INPUT_DIR"/*.TIF "$INPUT_DIR"/*.tiff "$INPUT_DIR"/*.TIFF; do
-  found=1
   fname="$(basename "$src")"
   work_id="${fname%.*}"  # {work_id} from {work_id}.ext
 
@@ -100,22 +88,20 @@ for src in "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG "$INPUT_DIR"/*.jpeg "$INPUT_DIR
   ext_lc="$(printf '%s' "$ext" | tr '[:upper:]' '[:lower:]')"
 
   if [[ "$ext_lc" == "heic" || "$ext_lc" == "heif" ]]; then
+    tmp_dir="$(mktemp -d 2>/dev/null || mktemp -d -t dlf_heic)"
+    tmp_jpg="$tmp_dir/${work_id}.jpg"
     if [[ "$HAS_SIPS" -eq 1 ]]; then
-      [[ -n "$TMP_DIR" ]] || TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t dlf_heic)"
-      tmp_jpg="$TMP_DIR/${work_id}.jpg"
       echo "Converting $fname -> $(basename "$tmp_jpg") (sips)"
-      # Convert to JPEG (quality 90). Suppress sips stdout noise.
       sips -s format jpeg -s formatOptions 90 "$src" --out "$tmp_jpg" >/dev/null
       src_use="$tmp_jpg"
     elif [[ "$HAS_HEIF_CONVERT" -eq 1 ]]; then
-      [[ -n "$TMP_DIR" ]] || TMP_DIR="$(mktemp -d 2>/dev/null || mktemp -d -t dlf_heic)"
-      tmp_jpg="$TMP_DIR/${work_id}.jpg"
       echo "Converting $fname -> $(basename "$tmp_jpg") (heif-convert)"
       heif-convert -q 90 "$src" "$tmp_jpg" >/dev/null
       src_use="$tmp_jpg"
     else
       echo "Warning: $fname is HEIC/HEIF but neither 'sips' nor 'heif-convert' is available. Skipping."
-      continue
+      rm -rf "$tmp_dir"
+      return 0
     fi
   fi
 
@@ -127,7 +113,47 @@ for src in "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG "$INPUT_DIR"/*.jpeg "$INPUT_DIR
   make_primary "$src_use" 1200 "$OUTPUT_DIR/${work_id}-primary-1200.webp"
   make_primary "$src_use" 1600 "$OUTPUT_DIR/${work_id}-primary-1600.webp"
   make_primary "$src_use" 2400 "$OUTPUT_DIR/${work_id}-primary-2400.webp"
-done
+
+  if [[ -n "${tmp_dir:-}" && -d "${tmp_dir:-}" ]]; then
+    rm -rf "$tmp_dir"
+  fi
+}
+
+# ---------
+# RUN
+# ---------
+shopt -s nullglob
+found=0
+
+# Collect sources
+sources=(
+  "$INPUT_DIR"/*.jpg "$INPUT_DIR"/*.JPG
+  "$INPUT_DIR"/*.jpeg "$INPUT_DIR"/*.JPEG
+  "$INPUT_DIR"/*.heic "$INPUT_DIR"/*.HEIC
+  "$INPUT_DIR"/*.heif "$INPUT_DIR"/*.HEIF
+  "$INPUT_DIR"/*.png "$INPUT_DIR"/*.PNG
+  "$INPUT_DIR"/*.tif "$INPUT_DIR"/*.TIF
+  "$INPUT_DIR"/*.tiff "$INPUT_DIR"/*.TIFF
+)
+
+if [[ ${#sources[@]} -gt 0 ]]; then
+  found=1
+fi
+
+if [[ "$found" -eq 1 ]]; then
+  if [[ "$JOBS" -le 1 ]]; then
+    for src in "${sources[@]}"; do
+      process_one "$src"
+    done
+  else
+    # Parallel: one source per job
+    export -f process_one make_thumb make_primary
+    export OUTPUT_DIR WEBP_PRESET PRIMARY_Q THUMB_Q COMPRESSION_LEVEL HAS_SIPS HAS_HEIF_CONVERT
+    printf '%s\0' "${sources[@]}" | xargs -0 -n 1 -P "$JOBS" bash -c '
+      process_one "$1"
+    ' _
+  fi
+fi
 
 if [[ "$found" -eq 0 ]]; then
   echo "No supported image files found in: $INPUT_DIR (jpg/jpeg/heic/heif/png/tif/tiff)"
