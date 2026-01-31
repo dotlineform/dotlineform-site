@@ -266,7 +266,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("depth_cm", "depth_cm", coerce_numeric),
     # tags handled separately (csv list)
     ("catalogue_date", "catalogue_date", parse_date),
-    ("orientation", "orientation", coerce_string),
     ("storage_location", "storage_location", coerce_string),
     ("provenance", "provenance", coerce_string),
     # checksum is always computed, not sourced from Excel
