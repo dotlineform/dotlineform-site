@@ -1,10 +1,10 @@
 # Minimal usage
 # From repo root:
 # run this first once to make the script executable:
-# chmod +x scripts/make_work_images.sh
+# chmod +x scripts/make_srcset_images.sh
 
 # call the script with two optional arguments:
-# ./scripts/make_work_images.sh path/to/source_images assets/works/img [jobs]   # jobs optional, default 1
+# ./scripts/make_srcset_images.sh path/to/source_images assets/works/img [jobs]   # jobs optional, default 1
 
 #!/usr/bin/env bash
 set -euo pipefail
