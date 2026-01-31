@@ -70,7 +70,7 @@ layout: default
         {%- for sid in page.series_ids -%}
           {%- assign series_doc = site.series | where: 'series_id', sid | first -%}
           {%- if series_doc -%}
-            {%- include series_card.html series=series_doc -%}
+            {%- include series_index_item.html series=series_doc -%}
           {%- else -%}
             <div class="index__item">
               <span class="index__work_id">{{ sid }}</span>

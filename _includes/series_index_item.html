@@ -15,15 +15,15 @@
   {% assign thumb_out = "" %}
 {% endif %}
 
-<a class="seriesCard" href="{{ s.url | relative_url }}">
+<a class="seriesIndexItem" href="{{ s.url | relative_url }}">
   {% if thumb_out != "" %}
     <img
-      class="seriesCard__img"
+      class="seriesIndexItem__img"
       src="{{ thumb_out }}"
       alt="{{ s.title | escape }}"
       loading="lazy"
       decoding="async">
   {% endif %}
 
-  <div class="seriesCard__title">{{ s.title | escape }}</div>
+  <div class="seriesIndexItem__title">{{ s.title | escape }}</div>
 </a>

@@ -507,7 +507,7 @@ figure.diagram figcaption{
 
 /* cards/_includes  */
 .workIndexItem,
-.seriesCard{
+.seriesIndexItem{
   display: grid;
   grid-template-columns: 48px 1fr; /* thumb + text area */
   align-items: center;
@@ -528,36 +528,36 @@ figure.diagram figcaption{
 .workIndexItem:link,
 .workIndexItem:active,
 .workIndexItem:focus,
-.seriesCard:link,
-.seriesCard:active,
-.seriesCard:focus{
+.seriesIndexItem:link,
+.seriesIndexItem:active,
+.seriesIndexItem:focus{
   color: var(--link);
   text-decoration: none !important;
   font-weight: 500;
 }
 
 .workIndexItem:visited,
-.seriesCard:visited{
+.seriesIndexItem:visited{
   color: var(--link-visited);
   text-decoration: none !important;
   font-weight: 500;
 }
 
 .workIndexItem:hover,
-.seriesCard:hover{
+.seriesIndexItem:hover{
   color: var(--link-hover);
   text-decoration: none !important;
 }
 
 .workIndexItem:focus-visible,
-.seriesCard:focus-visible{
+.seriesIndexItem:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
   text-decoration: none !important;
 }
 
 .workIndexItem__img,
-.seriesCard__img{
+.seriesIndexItem__img{
   width: 48px;
   height: 48px;
   object-fit: cover;
@@ -575,7 +575,7 @@ figure.diagram figcaption{
 }
 
 .workIndexItem__title,
-.seriesCard__title{
+.seriesIndexItem__title{
   font-weight: 500;
   line-height: 1.2;
 }

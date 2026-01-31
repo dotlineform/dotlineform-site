@@ -11,7 +11,7 @@ permalink: /series/
   <div class="index">
     <h1 class="index__heading">series</h1>
     {% for s in sorted_series %}
-      {% include series_card.html series=s %}
+      {% include series_index_item.html series=s %}
     {% endfor %}
   </div>
 {% else %}
