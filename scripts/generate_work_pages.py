@@ -3,7 +3,8 @@
 Generate Jekyll work pages from an Excel workbook.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
-file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets:
+file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
+It can also emit a parallel print collection (e.g. `_works_print/00286.md`) for PDF rendering.
 
 Series JSON index files are written to assets/series/index/<series_id>.json (one per series_id in the Series sheet).
 
@@ -392,6 +393,7 @@ def main() -> None:
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
+    ap.add_argument("--print-output-dir", default="_works_print", help="Output folder for generated print work pages")
     ap.add_argument("--themes-output-dir", default="_themes", help="Output folder for generated theme pages")
     ap.add_argument("--theme-prose-dir", default="_includes/theme_prose", help="Folder for manual theme prose includes")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
@@ -401,6 +403,16 @@ def main() -> None:
     # Write controls
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
     ap.add_argument("--force", action="store_true", help="Overwrite existing files")
+    ap.add_argument(
+        "--work-ids",
+        default="",
+        help="Comma-separated work_ids to process (e.g. 00001,00002). If set, only these IDs are processed.",
+    )
+    ap.add_argument(
+        "--ignore-status",
+        action="store_true",
+        help="Bypass status checks (draft/published/unknown) and process all selected rows.",
+    )
     args = ap.parse_args()
 
     # Resolve the workbook path and fail fast if it is missing.
@@ -447,6 +459,9 @@ def main() -> None:
     # - Use `_works` if you're using a Jekyll collection.
     out_dir = Path(args.output_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    print_out_dir = Path(args.print_output_dir).expanduser()
+    print_out_dir.mkdir(parents=True, exist_ok=True)
 
     themes_out_dir = Path(args.themes_output_dir).expanduser()
     themes_out_dir.mkdir(parents=True, exist_ok=True)
@@ -531,9 +546,14 @@ def main() -> None:
 
     written = 0
     skipped = 0
+    print_written = 0
+    print_skipped = 0
     total = max(len(works_rows) - 1, 0)  # exclude header row
     processed = 0
     status_updated = 0
+
+    # Optional filtering: allow a specific list of work_ids (comma-separated).
+    selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()} if args.work_ids else None
 
     # Iterate each Works row and emit one Markdown file per work.
     for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
@@ -541,24 +561,28 @@ def main() -> None:
         prefix = f"[{processed}/{total}] "
 
         status = normalize_status(cell(r, works_hi, "status"))
-        if status == "draft":
-            skipped += 1
-            continue
-        if status == "published" and not args.force:
-            print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
-            skipped += 1
-            continue
-        if status not in {"ready", "published"}:
-            print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
-            skipped += 1
-            continue
-
         raw_work_id = cell(r, works_hi, "work_id")
         if is_empty(raw_work_id):
             skipped += 1
             continue
-
         wid = slug_id(raw_work_id)
+
+        if selected_ids is not None and wid not in selected_ids:
+            skipped += 1
+            continue
+
+        if not args.ignore_status:
+            if status == "draft":
+                skipped += 1
+                continue
+            if status == "published" and not args.force:
+                print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
+                skipped += 1
+                continue
+            if status not in {"ready", "published"}:
+                print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
+                skipped += 1
+                continue
 
         # Tags: comma-separated in Excel
         tags = parse_list(cell(r, works_hi, "tags"), sep=",")
@@ -600,32 +624,44 @@ def main() -> None:
         content = build_front_matter(fm) + "\n"
 
         out_path = out_dir / f"{wid}.md"
-        exists = out_path.exists()
+        print_path = print_out_dir / f"{wid}.md"
 
-        existing_checksum = extract_existing_checksum(out_path) if exists else None
-        if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
-            print(f"{prefix}SKIP (checksum match): {out_path}")
-            skipped += 1
-        else:
+        def write_page(path: Path, label: str) -> bool:
+            exists = path.exists()
+            existing_checksum = extract_existing_checksum(path) if exists else None
+            if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
+                print(f"{prefix}SKIP ({label}; checksum match): {path}")
+                return False
             if args.write:
-                out_path.write_text(content, encoding="utf-8")
-                print(f"{prefix}WRITE: {out_path}")
-                written += 1
+                path.write_text(content, encoding="utf-8")
+                print(f"{prefix}WRITE ({label}): {path}")
             else:
-                print(f"{prefix}DRY-RUN: would write {out_path} (overwrite={exists})")
-                written += 1
+                print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
+            return True
 
+        if write_page(out_path, "work"):
+            written += 1
             if args.write:
                 status_idx = works_hi["status"]
                 if row_cells[status_idx].value != "published":
                     row_cells[status_idx].value = "published"
                     status_updated += 1
+        else:
+            skipped += 1
+
+        if write_page(print_path, "print"):
+            print_written += 1
+        else:
+            print_skipped += 1
 
     if args.write and status_updated > 0:
         wb.save(xlsx_path)
         print(f"Updated status to 'published' for {status_updated} row(s).")
 
-    print(f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written}. Skipped: {skipped}.")
+    print(
+        f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
+        f" Skipped: {skipped} works, {print_skipped} print."
+    )
 
 
     # ----------------------------

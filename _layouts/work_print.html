@@ -1,0 +1,117 @@
+---
+layout: default
+---
+
+{% assign wid = page.work_id | default: page.slug %}
+{%- assign title_txt = page.title | default: "" | strip -%}
+
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_prefix = site.media_prefix | default: "/assets" %}
+{% assign works_img_prefix = media_prefix | append: "/works/img" %}
+{% assign works_files_prefix = media_prefix | append: "/works/files" %}
+{% assign img_base = media_base | append: works_img_prefix | append: "/" %}
+{% assign files_base = media_base | append: works_files_prefix | append: "/" %}
+
+{%- assign src800  = img_base | append: wid | append: "-primary-800.webp" -%}
+{%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
+{%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
+{%- assign src2400 = img_base | append: wid | append: "-primary-2400.webp" -%}
+
+{%- unless img_base contains '://' -%}
+  {%- assign src800  = src800  | relative_url -%}
+  {%- assign src1200 = src1200 | relative_url -%}
+  {%- assign src1600 = src1600 | relative_url -%}
+  {%- assign src2400 = src2400 | relative_url -%}
+{%- endunless -%}
+
+<article class="page work">
+
+  <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+
+  <figure class="page__media">
+    <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
+    <a class="page__mediaLink"
+      href="{{ src2400 }}" target="_blank" rel="noopener"
+      style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
+      <img
+        class="page__mediaImg"
+        src="{{ src1600 }}"
+        srcset="
+          {{ src800 }} 800w,
+          {{ src1200 }} 1200w,
+          {{ src1600 }} 1600w,
+          {{ src2400 }} 2400w"
+        sizes="(max-width: 800px) 100vw, 72ch"
+        alt="{{ title_txt | default: 'Artwork' | escape }}"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        style="width:100%;height:auto;display:block;">
+    </a>
+  </figure>
+
+  <section class="page__meta page__media">
+    <h2 class="visually-hidden">work details</h2>
+
+    <div class="page__caption">
+      <div class="page__row work__titleRow">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</div>
+
+      {% if page.year_display %}
+        <div class="page__row">{{ page.year_display }}</div>
+      {% endif %}
+
+      {% if page.medium_caption %}
+        <div class="page__row">{{ page.medium_caption }}</div>
+      {% endif %}
+
+      {% if page.duration %}
+        <div class="page__row">{{ page.duration }}</div>
+      {% endif %}
+
+      {% if page.height_cm or page.width_cm or page.depth_cm %}
+        <div class="page__row">
+          {% if page.height_cm and page.width_cm %}
+            {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
+          {% elsif page.height_cm %}
+            {{ page.height_cm }} cm
+          {% elsif page.width_cm %}
+            {{ page.width_cm }} cm
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if page.work_id %}
+        <div class="page__row">
+          cat. {{ page.work_id }}
+          {% if page.series_id %}
+            {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
+            {% assign series_label = page.series_title | default: page.series_id %}
+            | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- for other file types (PDFs, text files, etc.) -->
+  {% if page.files and page.files.size > 0 %}
+    <section class="supplements">
+      <ul class="supplements__list">
+        {% for a in page.files %}
+          {% if a.file_id %}
+            {% assign href = a.file_id %}
+            {% unless href contains '://' %}
+              {% assign href_file = href | remove_first: '/' %}
+              {% assign href = files_base | append: href_file %}
+              {% unless files_base contains '://' %}
+                {% assign href = href | relative_url %}
+              {% endunless %}
+            {% endunless %}
+            <li class="supplements__item"><a class="supplements__link supplements__link--pdf" href="{{ href }}" target="_blank" rel="noopener noreferrer">{{ a.file_label | default: "Download" }}</a></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+</article>
