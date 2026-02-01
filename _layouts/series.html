@@ -10,10 +10,6 @@ layout: default
     {% endif %}
   </header>
 
-  <div class="content">
-    {{ content }}
-  </div>
-
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix | default: "/assets" %}
 {% assign base = media_base | append: media_prefix | append: "/works/img/" %}
@@ -67,4 +63,9 @@ layout: default
     {%- endif -%}
   {%- endif -%}
 {%- endif -%}
+
+  <div class="content">
+    {{ content }}
+  </div>
+  
 </article>
