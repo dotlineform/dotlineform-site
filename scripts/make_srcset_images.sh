@@ -4,7 +4,10 @@
 # chmod +x scripts/make_srcset_images.sh
 
 # call the script with two optional arguments:
-# ./scripts/make_srcset_images.sh path/to/source_images assets/works/img [jobs]   # jobs optional, default 1
+# ./scripts/make_srcset_images.sh "/in" "/out" [jobs]   # jobs optional, default 1
+#
+# to set jobs only (keep default folders), use the env var:
+# MAKE_SRCSET_JOBS=6 ./scripts/make_srcset_images.sh
 
 #!/usr/bin/env bash
 set -euo pipefail
@@ -12,9 +15,10 @@ set -euo pipefail
 # ---------
 # CONFIG
 # ---------
-INPUT_DIR="${1:-.}"                 # where {work_id}.jpg lives - default = pwd
-OUTPUT_DIR="${2:-assets/works/img}"     # where the .webp derivatives are written - default = assets/works/img
-JOBS="${3:-1}"                      # number of parallel jobs (default 1 = serial)
+BASE_DIR="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform"
+INPUT_DIR="${1:-$BASE_DIR/works/make_srcset_images}" # where {work_id}.jpg lives
+OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # where the .webp derivatives are written
+JOBS="${3:-${MAKE_SRCSET_JOBS:-1}}" # number of parallel jobs (default 1 = serial)
 
 # Quality settings (tune if needed)
 WEBP_PRESET="photo"
