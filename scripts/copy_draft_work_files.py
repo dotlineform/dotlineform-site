@@ -65,6 +65,7 @@ def main() -> int:
     ws = wb[SHEET_NAME]
     cols = header_map(ws)
 
+    # status drives the pipeline: "draft" rows are copied, then flipped to "ready" after success.
     required = ["work_id", "status", "project_folder", "project_filename"]
     missing = [c for c in required if c not in cols]
     if missing:
