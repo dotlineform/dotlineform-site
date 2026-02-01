@@ -662,6 +662,9 @@ def main() -> None:
         f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
         f" Skipped: {skipped} works, {print_skipped} print."
     )
+    print(f"Workbook: {xlsx_path}")
+    if args.write:
+        print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
 
 
     # ----------------------------
