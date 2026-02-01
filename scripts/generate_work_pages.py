@@ -113,6 +113,12 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
     return [item.strip() for item in s.split(sep) if item.strip()]
 
 
+def normalize_status(value: Any) -> str:
+    if value is None:
+        return ""
+    return str(value).strip().lower()
+
+
 def yaml_quote(s: str) -> str:
     """Quote a string safely for YAML."""
     s = s.replace("\\", "\\\\").replace('"', '\\"')
@@ -406,6 +412,10 @@ def main() -> None:
     # If your sheet relies on formulas that haven't been calculated/saved, values may be None.
     wb = openpyxl.load_workbook(xlsx_path, data_only=True)
 
+    if args.works_sheet not in wb.sheetnames:
+        raise SystemExit(f"Sheet not found in workbook: {args.works_sheet}")
+    works_ws = wb[args.works_sheet]
+
     def read_sheet_rows(sheet_name: str) -> List[tuple]:
         if sheet_name not in wb.sheetnames:
             raise SystemExit(f"Sheet not found in workbook: {sheet_name}")
@@ -469,6 +479,9 @@ def main() -> None:
     theme_series_hi = build_header_index(theme_series_rows) if theme_series_rows else {}
     files_hi = build_header_index(files_rows) if files_rows else {}
 
+    if "status" not in works_hi:
+        raise SystemExit("Works sheet missing required column: status")
+
     # Pre-index series titles by series_id
     series_title_by_id: Dict[str, str] = {}
     for r in series_rows[1:] if len(series_rows) > 1 else []:
@@ -520,11 +533,26 @@ def main() -> None:
     skipped = 0
     total = max(len(works_rows) - 1, 0)  # exclude header row
     processed = 0
+    status_updated = 0
 
     # Iterate each Works row and emit one Markdown file per work.
-    for r in works_rows[1:]:
+    for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
         processed += 1
         prefix = f"[{processed}/{total}] "
+
+        status = normalize_status(cell(r, works_hi, "status"))
+        if status == "draft":
+            skipped += 1
+            continue
+        if status == "published" and not args.force:
+            print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
+            skipped += 1
+            continue
+        if status not in {"ready", "published"}:
+            print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
+            skipped += 1
+            continue
+
         raw_work_id = cell(r, works_hi, "work_id")
         if is_empty(raw_work_id):
             skipped += 1
@@ -578,15 +606,24 @@ def main() -> None:
         if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
             print(f"{prefix}SKIP (checksum match): {out_path}")
             skipped += 1
-            continue
-
-        if args.write:
-            out_path.write_text(content, encoding="utf-8")
-            print(f"{prefix}WRITE: {out_path}")
-            written += 1
         else:
-            print(f"{prefix}DRY-RUN: would write {out_path} (overwrite={exists})")
-            written += 1
+            if args.write:
+                out_path.write_text(content, encoding="utf-8")
+                print(f"{prefix}WRITE: {out_path}")
+                written += 1
+            else:
+                print(f"{prefix}DRY-RUN: would write {out_path} (overwrite={exists})")
+                written += 1
+
+            if args.write:
+                status_idx = works_hi["status"]
+                if row_cells[status_idx].value != "published":
+                    row_cells[status_idx].value = "published"
+                    status_updated += 1
+
+    if args.write and status_updated > 0:
+        wb.save(xlsx_path)
+        print(f"Updated status to 'published' for {status_updated} row(s).")
 
     print(f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written}. Skipped: {skipped}.")
 
