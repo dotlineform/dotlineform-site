@@ -35,13 +35,7 @@ layout: default
       style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
       <img
         class="page__mediaImg"
-        src="{{ src1600 }}"
-        srcset="
-          {{ src800 }} 800w,
-          {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w,
-          {{ src2400 }} 2400w"
-        sizes="(max-width: 800px) 100vw, 72ch"
+        src="{{ src2400 }}"
         alt="{{ title_txt | default: 'Artwork' | escape }}"
         loading="eager"
         fetchpriority="high"
@@ -92,26 +86,5 @@ layout: default
       {% endif %}
     </div>
   </section>
-
-  <!-- for other file types (PDFs, text files, etc.) -->
-  {% if page.files and page.files.size > 0 %}
-    <section class="supplements">
-      <ul class="supplements__list">
-        {% for a in page.files %}
-          {% if a.file_id %}
-            {% assign href = a.file_id %}
-            {% unless href contains '://' %}
-              {% assign href_file = href | remove_first: '/' %}
-              {% assign href = files_base | append: href_file %}
-              {% unless files_base contains '://' %}
-                {% assign href = href | relative_url %}
-              {% endunless %}
-            {% endunless %}
-            <li class="supplements__item"><a class="supplements__link supplements__link--pdf" href="{{ href }}" target="_blank" rel="noopener noreferrer">{{ a.file_label | default: "Download" }}</a></li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </section>
-  {% endif %}
 
 </article>
