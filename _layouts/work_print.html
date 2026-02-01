@@ -5,6 +5,7 @@ layout: default
 {% assign wid = page.work_id | default: page.slug %}
 {%- assign title_txt = page.title | default: "" | strip -%}
 
+{% assign live_url = site.live_url | default: site.url | default: "" %}
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix | default: "/assets" %}
 {% assign works_img_prefix = media_prefix | append: "/works/img" %}
@@ -22,26 +23,27 @@ layout: default
   {%- assign src1200 = src1200 | relative_url -%}
   {%- assign src1600 = src1600 | relative_url -%}
   {%- assign src2400 = src2400 | relative_url -%}
+  {%- if live_url != "" -%}
+    {%- assign src800  = live_url | append: src800 -%}
+    {%- assign src1200 = live_url | append: src1200 -%}
+    {%- assign src1600 = live_url | append: src1600 -%}
+    {%- assign src2400 = live_url | append: src2400 -%}
+  {%- endif -%}
 {%- endunless -%}
 
 <article class="page work">
 
   <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
-  <figure class="page__media">
-    <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
-    <a class="page__mediaLink"
-      href="{{ src2400 }}" target="_blank" rel="noopener"
-      style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
-      <img
-        class="page__mediaImg"
-        src="{{ src2400 }}"
-        alt="{{ title_txt | default: 'Artwork' | escape }}"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        style="width:100%;height:auto;display:block;">
-    </a>
+  <figure class="page__media" style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
+    <img
+      class="page__mediaImg"
+      src="{{ src2400 }}"
+      alt="{{ title_txt | default: 'Artwork' | escape }}"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      style="width:100%;height:auto;display:block;">
   </figure>
 
   <section class="page__meta page__media">
@@ -79,6 +81,11 @@ layout: default
           cat. {{ page.work_id }}
           {% if page.series_id %}
             {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
+            {% if live_url != "" %}
+              {% assign series_href = live_url | append: series_href %}
+            {% else %}
+              {% assign series_href = series_href | absolute_url %}
+            {% endif %}
             {% assign series_label = page.series_title | default: page.series_id %}
             | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
           {% endif %}
@@ -86,5 +93,15 @@ layout: default
       {% endif %}
     </div>
   </section>
+
+  <nav class="page__nav">
+    {% assign home_href = "/" %}
+    {% if live_url != "" %}
+      {% assign home_href = live_url | append: home_href %}
+    {% else %}
+      {% assign home_href = home_href | absolute_url %}
+    {% endif %}
+    <a class="page__back" href="{{ home_href }}">dotlineform.com</a>
+  </nav>
 
 </article>

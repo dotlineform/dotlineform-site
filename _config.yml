@@ -2,6 +2,7 @@
 title: dotlineform
 url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
+live_url: "https://www.dotlineform.com"
 
 # Thumbnail origin (default: local repo)
 thumb_base: ""
