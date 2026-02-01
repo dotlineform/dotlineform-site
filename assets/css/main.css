@@ -782,6 +782,12 @@ pre.theme-text{
   height: auto;
 }
 
+/* Moments don't have work aspect ratios; avoid forcing a box that centers the image. */
+.moment .page__mediaImg{
+  aspect-ratio: auto;
+  object-fit: initial;
+}
+
 @media (max-width: 640px){
   .index__item { grid-template-columns: 1fr; }
   .index__work_id, .index__date { text-align: left; }
