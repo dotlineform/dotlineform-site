@@ -27,8 +27,12 @@ Safe by default:
   - when writing with --write: set status=published; set published_date=today if status changed or --force
 - draft works are deleted from _works and _works_print when --write is set (dry-run reports)
 
-Example:
-  python3 scripts/generate_work_pages.py data/works.xlsx --write
+specify work_ids to process with --work-ids (comma-separated list)
+  - Only those IDs are processed; others are skipped early.
+  - Status filtering still applies to the selected IDs unless you also pass --force.
+Usage:
+    python3 scripts/generate_work_pages.py data/works.xlsx --work-ids 00001,00002 --write
+
 """
 
 from __future__ import annotations
