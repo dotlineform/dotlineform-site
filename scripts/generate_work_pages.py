@@ -625,6 +625,11 @@ def main() -> None:
 
         out_path = out_dir / f"{wid}.md"
         print_path = print_out_dir / f"{wid}.md"
+        works_print_idx = works_hi.get("works_print")
+        works_print_value = None
+        if works_print_idx is not None and works_print_idx < len(r):
+            works_print_value = r[works_print_idx]
+        works_print = normalize_status(works_print_value) == "yes"
 
         def write_page(path: Path, label: str) -> bool:
             exists = path.exists()
@@ -655,10 +660,11 @@ def main() -> None:
         else:
             skipped += 1
 
-        if write_page(print_path, "print"):
-            print_written += 1
-        else:
-            print_skipped += 1
+        if works_print:
+            if write_page(print_path, "print"):
+                print_written += 1
+            else:
+                print_skipped += 1
 
     if args.write and status_updated > 0:
         wb.save(xlsx_path)
