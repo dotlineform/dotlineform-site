@@ -1001,6 +1001,30 @@ def main() -> None:
         sj_total = max(len(series_rows) - 1, 0)
         sj_processed = 0
 
+        # Build published work_id lists by series_id (from Works sheet, after any status updates)
+        work_ids_by_series: Dict[str, List[str]] = {}
+        status_idx = works_hi.get("status")
+        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+            status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
+            if normalize_status(status_val) != "published":
+                continue
+
+            sid_raw = cell(wr, works_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = require_slug_safe("series_id", sid_raw)
+
+            wid_raw = cell(wr, works_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            wid = slug_id(wid_raw)
+
+            work_ids_by_series.setdefault(sid, []).append(wid)
+
+        # Ensure deterministic ordering (alpha) for each series' work_ids
+        for sid in list(work_ids_by_series.keys()):
+            work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
+
         for sr in series_rows[1:]:
             sj_processed += 1
             prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
@@ -1054,26 +1078,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-        # Build published work_id lists by series_id (from Works sheet, after any status updates)
-        work_ids_by_series: Dict[str, List[str]] = {}
-        status_idx = works_hi.get("status")
-        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
-            status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
-            if normalize_status(status_val) != "published":
-                continue
-
-            sid_raw = cell(wr, works_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = require_slug_safe("series_id", sid_raw)
-
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            wid = slug_id(wid_raw)
-
-            work_ids_by_series.setdefault(sid, []).append(wid)
-
-        # Ensure deterministic ordering (alpha) for each series' work_ids
-        for sid in list(work_ids_by_series.keys()):
-            work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
