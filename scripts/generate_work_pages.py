@@ -25,6 +25,7 @@ Safe by default:
   - published -> skip unless --force
   - unknown -> skip
   - when writing with --write: set status=published; set published_date=today if status changed or --force
+- draft works are deleted from _works and _works_print when --write is set (dry-run reports)
 
 Example:
   python3 scripts/generate_work_pages.py data/works.xlsx --write
@@ -545,6 +546,8 @@ def main() -> None:
     processed = 0
     status_updated = 0
     published_date_updated = 0
+    deleted_draft_work = 0
+    deleted_draft_print = 0
     published_date_idx = works_hi.get("published_date")
     published_date_missing_warned = False
     today = dt.date.today()
@@ -569,6 +572,28 @@ def main() -> None:
             continue
 
         if status == "draft":
+            if args.write:
+                out_path = out_dir / f"{wid}.md"
+                if out_path.exists():
+                    out_path.unlink()
+                    deleted_draft_work += 1
+                    print(f"{prefix}DELETE (draft): {out_path}")
+
+                print_path = print_out_dir / f"{wid}.md"
+                if print_path.exists():
+                    print_path.unlink()
+                    deleted_draft_print += 1
+                    print(f"{prefix}DELETE (draft print): {print_path}")
+            else:
+                out_path = out_dir / f"{wid}.md"
+                if out_path.exists():
+                    deleted_draft_work += 1
+                    print(f"{prefix}DRY-RUN: would delete {out_path}")
+
+                print_path = print_out_dir / f"{wid}.md"
+                if print_path.exists():
+                    deleted_draft_print += 1
+                    print(f"{prefix}DRY-RUN: would delete {print_path}")
             skipped += 1
             continue
         if status == "published" and not args.force:
@@ -682,6 +707,13 @@ def main() -> None:
         f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
         f" Skipped: {skipped} works, {print_skipped} print."
     )
+    if deleted_draft_work > 0 or deleted_draft_print > 0:
+        label = "Deleted draft files" if args.write else "Would delete draft files"
+        total_draft = deleted_draft_work + deleted_draft_print
+        print(
+            f"{label}: works={deleted_draft_work}, works_print={deleted_draft_print}. "
+            f"Total draft deletions={total_draft}."
+        )
     print(f"Workbook: {xlsx_path}")
     if args.write:
         print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
