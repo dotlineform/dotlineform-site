@@ -8,12 +8,12 @@ section: works
 {% assign works_items = site.works %}
 {% if works_items and works_items != empty %}
 
-  {% assign sorted_works = works_items | sort: 'work_id' | reverse %}
+  {% assign random_works = works_items | sample: 6 %}
 
   <div class="index">
-    <h1 class="index__heading">recent work</h1>
+    <h1 class="index__heading">sample</h1>
 
-    {% for w in sorted_works limit: 6 %}
+    {% for w in random_works %}
       {% include work_index_item.html work=w %}
     {% endfor %}
   </div>
