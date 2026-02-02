@@ -550,6 +550,10 @@ def main() -> None:
     total = max(len(works_rows) - 1, 0)  # exclude header row
     processed = 0
     status_updated = 0
+    published_date_updated = 0
+    published_date_idx = works_hi.get("published_date")
+    published_date_missing_warned = False
+    today = dt.date.today()
 
     # Optional filtering: allow a specific list of work_ids (comma-separated).
     selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()} if args.work_ids else None
@@ -645,6 +649,12 @@ def main() -> None:
                 if row_cells[status_idx].value != "published":
                     row_cells[status_idx].value = "published"
                     status_updated += 1
+                    if published_date_idx is not None:
+                        row_cells[published_date_idx].value = today
+                        published_date_updated += 1
+                    elif not published_date_missing_warned:
+                        print("Warning: Works sheet missing published_date column; skipping date updates.")
+                        published_date_missing_warned = True
         else:
             skipped += 1
 
@@ -656,6 +666,8 @@ def main() -> None:
     if args.write and status_updated > 0:
         wb.save(xlsx_path)
         print(f"Updated status to 'published' for {status_updated} row(s).")
+        if published_date_updated > 0:
+            print(f"Set published_date for {published_date_updated} row(s).")
 
     print(
         f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
