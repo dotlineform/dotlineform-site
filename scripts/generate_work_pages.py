@@ -47,7 +47,7 @@ import openpyxl
 def slug_id(raw: Any, width: int = 5) -> str:
     if raw is None:
         raise ValueError("Missing id")
-    s = str(raw).strip()
+    s = normalize_text(raw)
     # Handle numeric IDs like 361.0 from Excel
     s = re.sub(r"\.0$", "", s)
     # NOTE: This strips ALL non-digits. If your IDs ever include prefixes/suffixes, change this logic.
@@ -62,7 +62,7 @@ def slugify_text(raw: Any) -> str:
     """Create a slug-safe id from arbitrary text (lowercase, a-z0-9-, no leading/trailing dashes)."""
     if raw is None:
         raise ValueError("Missing text")
-    s = str(raw).strip().lower()
+    s = normalize_text(raw).lower()
     # Replace non-alphanumerics with hyphens
     s = re.sub(r"[^a-z0-9]+", "-", s)
     s = re.sub(r"-+", "-", s).strip("-")
@@ -79,7 +79,7 @@ def require_slug_safe(label: str, raw: Any) -> str:
     """Validate that `raw` is a slug-safe id and return it as a string."""
     if raw is None:
         raise ValueError(f"Missing {label}")
-    s = str(raw).strip()
+    s = normalize_text(raw)
     if not s:
         raise ValueError(f"Missing {label}")
     if not is_slug_safe(s):
@@ -94,7 +94,7 @@ def parse_date(raw: Any) -> Optional[str]:
         return raw.date().isoformat()
     if isinstance(raw, dt.date):
         return raw.isoformat()
-    s = str(raw).strip()
+    s = normalize_text(raw)
     # NOTE: Prefer real Excel date cells or ISO strings in the workbook; anything else may pass through unchanged.
     # Accept YYYY-M-D and normalise to YYYY-MM-DD if possible
     m = re.match(r"^(\d{4})-(\d{1,2})-(\d{1,2})$", s)
@@ -108,7 +108,7 @@ def parse_date(raw: Any) -> Optional[str]:
 def parse_list(raw: Any, sep: str = ",") -> List[str]:
     if raw is None:
         return []
-    s = str(raw).strip()
+    s = normalize_text(raw)
     if not s:
         return []
     return [item.strip() for item in s.split(sep) if item.strip()]
@@ -117,7 +117,17 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
 def normalize_status(value: Any) -> str:
     if value is None:
         return ""
-    return str(value).strip().lower()
+    return normalize_text(value).lower()
+
+
+def normalize_text(value: Any) -> str:
+    """Normalize Excel text by trimming and stripping a leading apostrophe prefix."""
+    if value is None:
+        return ""
+    s = str(value).strip()
+    if s.startswith("'") and len(s) > 1:
+        s = s[1:]
+    return s
 
 
 def yaml_quote(s: str) -> str:
@@ -167,7 +177,8 @@ def coerce_string(value: Any) -> Optional[str]:
     """Coerce any non-empty value to a trimmed string (for quoted YAML output)."""
     if is_empty(value):
         return None
-    return str(value).strip()
+    s = normalize_text(value)
+    return s if s != "" else None
 
 
 def dump_scalar(key: str, value: Any) -> str:
@@ -688,7 +699,7 @@ def main() -> None:
     # Theme generation (Themes + ThemeSeries)
     # ----------------------------
     # Themes worksheet required columns:
-    # - theme_title
+    # - title
     # - theme_id
     # Theme prose include is derived from theme_id (manual prose file: _includes/theme_prose/<theme_id>.md)
 
@@ -697,17 +708,18 @@ def main() -> None:
     else:
         # Build map: theme_id -> {title}
         themes_by_id: Dict[str, Dict[str, Any]] = {}
-        for tr in themes_rows[1:]:
-            title_raw = cell(tr, themes_hi, "theme_title")
-            if is_empty(title_raw):
-                continue
-            theme_title = coerce_string(title_raw)
-            if theme_title is None:
-                continue
+        for row_idx, tr in enumerate(themes_rows[1:], start=2):
             theme_id_raw = cell(tr, themes_hi, "theme_id")
             if is_empty(theme_id_raw):
-                raise SystemExit("Themes sheet missing required value: theme_id")
+                raise SystemExit(f"Themes sheet missing required value: theme_id (row {row_idx})")
             theme_id = require_slug_safe("theme_id", theme_id_raw)
+
+            title_raw = cell(tr, themes_hi, "title")
+            if is_empty(title_raw):
+                raise SystemExit(f"Themes sheet missing required value: title (row {row_idx}, theme_id={theme_id})")
+            theme_title = coerce_string(title_raw)
+            if theme_title is None:
+                raise SystemExit(f"Themes sheet missing required value: title (row {row_idx}, theme_id={theme_id})")
 
             if theme_id in themes_by_id:
                 raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
@@ -733,7 +745,11 @@ def main() -> None:
                     continue
                 theme_id = require_slug_safe("theme_id", tid_raw)
                 if theme_id not in themes_by_id:
-                    raise SystemExit(f"ThemeSeries references unknown theme_id: {theme_id}")
+                    sample = ", ".join(sorted(themes_by_id.keys())[:10])
+                    raise SystemExit(
+                        f"ThemeSeries references unknown theme_id: {theme_id} "
+                        f"(known theme_ids: {sample or 'none'})"
+                    )
 
                 series_id = require_slug_safe("series_id", sid_raw)
 
