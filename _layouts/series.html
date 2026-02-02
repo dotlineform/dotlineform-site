@@ -16,7 +16,7 @@ layout: default
 
 {%- if page.series_id -%}
   {%- assign series_works = site.works | where: "series_id", page.series_id -%}
-  {%- assign series_works_sorted = series_works | sort: "work_id" | sort: "year" -%}
+  {%- assign series_works_sorted = series_works | sort: "series_sort" -%}
 
   {%- assign max_items = 100 -%}
   {%- assign items = series_works_sorted | slice: 0, max_items -%}

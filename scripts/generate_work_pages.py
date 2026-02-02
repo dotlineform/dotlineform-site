@@ -608,6 +608,14 @@ def main() -> None:
 
         fm["tags"] = tags
 
+        # Stable series ordering: oldest first, then work_id within year.
+        year_val = fm.get("year")
+        if isinstance(year_val, int):
+            sort_year = f"{year_val:04d}"
+        else:
+            sort_year = "9999"
+        fm["series_sort"] = f"{sort_year}-{wid}"
+
         # Join in files from the WorkFiles sheet
         files = files_by_work.get(wid, [])
         if files:
