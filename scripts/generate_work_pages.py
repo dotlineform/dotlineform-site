@@ -662,9 +662,11 @@ def main() -> None:
             written += 1
             if args.write:
                 status_idx = works_hi["status"]
-                if row_cells[status_idx].value != "published":
+                status_was = normalize_status(row_cells[status_idx].value)
+                if status_was != "published":
                     row_cells[status_idx].value = "published"
                     status_updated += 1
+                if (status_was != "published") or args.force:
                     if published_date_idx is not None:
                         row_cells[published_date_idx].value = today
                         published_date_updated += 1
