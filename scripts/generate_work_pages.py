@@ -720,37 +720,24 @@ def main() -> None:
             # Collect rows with optional sort_order
             tmp: Dict[str, List[tuple]] = {k: [] for k in themes_by_id.keys()}
             for lr in theme_series_rows[1:]:
-                # ThemeSeries may reference the theme either by theme_id (preferred) or theme_title.
+                # ThemeSeries references the theme by theme_id.
                 tid_raw = cell(lr, theme_series_hi, "theme_id")
-                ttitle_raw = cell(lr, theme_series_hi, "theme_title")
                 sid_raw = cell(lr, theme_series_hi, "series_id")
                 if is_empty(sid_raw):
                     continue
 
-                if not is_empty(tid_raw):
-                    theme_id = require_slug_safe("theme_id", tid_raw)
-                    if theme_id not in themes_by_id:
-                        raise SystemExit(f"ThemeSeries references unknown theme_id: {theme_id}")
-                else:
-                    if is_empty(ttitle_raw):
-                        continue
-                    ttitle = coerce_string(ttitle_raw)
-                    if ttitle is None:
-                        continue
-                    theme_id = slugify_text(ttitle)
-                    if theme_id not in themes_by_id:
-                        raise SystemExit(f"ThemeSeries references unknown theme_title: {ttitle}")
+                if is_empty(tid_raw):
+                    continue
+                theme_id = require_slug_safe("theme_id", tid_raw)
+                if theme_id not in themes_by_id:
+                    raise SystemExit(f"ThemeSeries references unknown theme_id: {theme_id}")
 
                 series_id = require_slug_safe("series_id", sid_raw)
 
-                so_raw = cell(lr, theme_series_hi, "sort_order")
-                so = coerce_int(so_raw) if "sort_order" in theme_series_hi else None
-                sort_key = so if so is not None else 10_000_000
-                tmp[theme_id].append((sort_key, series_id))
+                tmp[theme_id].append(series_id)
 
             for tid, pairs in tmp.items():
-                pairs_sorted = sorted(pairs, key=lambda x: (x[0], x[1]))
-                series_ids_by_theme[tid] = [p[1] for p in pairs_sorted]
+                series_ids_by_theme[tid] = sorted(pairs)
 
         # Emit one theme page per theme_id
         themes_written = 0
