@@ -438,7 +438,7 @@ figure.diagram figcaption{
 /* Section-specific index column layouts */
 .works .index__item{ grid-template-columns: 6ch 1fr; }      /* work_id, title */
 .moments .index__item{ grid-template-columns: 12ch 1fr; }   /* date, title */
-.themes .index__item{ grid-template-columns: 12ch 1fr; }    /* date, title */
+.themes .index__item{ grid-template-columns: 1fr; }         /* title only */
 .research .index__item{ grid-template-columns: 12ch 1fr; }  /* date, title */
 
 /* Single-column index rows (no date/prefix column) */
