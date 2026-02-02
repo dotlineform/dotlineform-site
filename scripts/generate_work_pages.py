@@ -20,6 +20,11 @@ YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 Safe by default:
 - dry-run unless you pass --write
 - will not overwrite unless --force
+- status gating (Works/Series/Themes):
+  - draft -> skip
+  - published -> skip unless --force
+  - unknown -> skip
+  - when writing with --write: set status=published; set published_date=today if status changed or --force
 
 Example:
   python3 scripts/generate_work_pages.py data/works.xlsx --write
@@ -418,11 +423,6 @@ def main() -> None:
         default="",
         help="Comma-separated work_ids to process (e.g. 00001,00002). If set, only these IDs are processed.",
     )
-    ap.add_argument(
-        "--ignore-status",
-        action="store_true",
-        help="Bypass status checks (draft/published/unknown) and process all selected rows.",
-    )
     args = ap.parse_args()
 
     # Resolve the workbook path and fail fast if it is missing.
@@ -494,6 +494,8 @@ def main() -> None:
     themes_rows = read_sheet_rows(args.themes_sheet)
     theme_series_rows = read_sheet_rows(args.theme_series_sheet)
     files_rows = read_sheet_rows(args.files_sheet)
+    series_ws = wb[args.series_sheet]
+    themes_ws = wb[args.themes_sheet]
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
@@ -519,25 +521,6 @@ def main() -> None:
         if title is None:
             continue
         series_title_by_id[sid] = title
-
-    # Pre-index work_ids by series_id (from Works sheet)
-    work_ids_by_series: Dict[str, List[str]] = {}
-    for wr in works_rows[1:]:
-        sid_raw = cell(wr, works_hi, "series_id")
-        if is_empty(sid_raw):
-            continue
-        sid = require_slug_safe("series_id", sid_raw)
-
-        wid_raw = cell(wr, works_hi, "work_id")
-        if is_empty(wid_raw):
-            continue
-        wid = slug_id(wid_raw)
-
-        work_ids_by_series.setdefault(sid, []).append(wid)
-
-    # Ensure deterministic ordering (alpha) for each series' work_ids
-    for sid in list(work_ids_by_series.keys()):
-        work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
 
     # Pre-index files by work_id
     files_by_work: Dict[str, List[Dict[str, Any]]] = {}
@@ -585,18 +568,17 @@ def main() -> None:
             skipped += 1
             continue
 
-        if not args.ignore_status:
-            if status == "draft":
-                skipped += 1
-                continue
-            if status == "published" and not args.force:
-                print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
-                skipped += 1
-                continue
-            if status not in {"ready", "published"}:
-                print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
-                skipped += 1
-                continue
+        if status == "draft":
+            skipped += 1
+            continue
+        if status == "published" and not args.force:
+            print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
+            skipped += 1
+            continue
+        if status not in {"ready", "published"}:
+            print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
+            skipped += 1
+            continue
 
         # Tags: comma-separated in Excel
         tags = parse_list(cell(r, works_hi, "tags"), sep=",")
@@ -710,7 +692,10 @@ def main() -> None:
     else:
         # Build map: theme_id -> {title}
         themes_by_id: Dict[str, Dict[str, Any]] = {}
-        for row_idx, tr in enumerate(themes_rows[1:], start=2):
+        theme_rows_by_id: Dict[str, Any] = {}
+        for row_idx, (tr, tr_cells) in enumerate(
+            zip(themes_rows[1:], themes_ws.iter_rows(min_row=2), strict=False), start=2
+        ):
             theme_id_raw = cell(tr, themes_hi, "theme_id")
             if is_empty(theme_id_raw):
                 raise SystemExit(f"Themes sheet missing required value: theme_id (row {row_idx})")
@@ -722,6 +707,7 @@ def main() -> None:
             theme_title = coerce_string(title_raw)
             if theme_title is None:
                 raise SystemExit(f"Themes sheet missing required value: title (row {row_idx}, theme_id={theme_id})")
+            theme_status = normalize_status(cell(tr, themes_hi, "status"))
 
             if theme_id in themes_by_id:
                 raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
@@ -729,7 +715,9 @@ def main() -> None:
             themes_by_id[theme_id] = {
                 "theme_id": theme_id,
                 "title": theme_title,
+                "status": theme_status,
             }
+            theme_rows_by_id[theme_id] = tr_cells
 
         # Build map: theme_id -> ordered list of series_ids (from ThemeSeries)
         series_ids_by_theme: Dict[str, List[str]] = {k: [] for k in themes_by_id.keys()}
@@ -763,12 +751,29 @@ def main() -> None:
         # Emit one theme page per theme_id
         themes_written = 0
         themes_skipped = 0
+        themes_status_updated = 0
+        themes_published_date_updated = 0
+        themes_published_date_idx = themes_hi.get("published_date")
+        themes_published_date_missing_warned = False
         ttotal = len(themes_by_id)
         tprocessed = 0
 
         for theme_id, meta in themes_by_id.items():
             tprocessed += 1
             prefix_t = f"[themes {tprocessed}/{ttotal}] "
+            status = normalize_status(meta.get("status"))
+            if status == "draft":
+                print(f"{prefix_t}SKIP (draft)")
+                themes_skipped += 1
+                continue
+            if status == "published" and not args.force:
+                print(f"{prefix_t}SKIP (published; use --force)")
+                themes_skipped += 1
+                continue
+            if status not in {"ready", "published"}:
+                print(f"{prefix_t}SKIP (unknown status '{status}')")
+                themes_skipped += 1
+                continue
 
             # Front matter for theme page
             tfm: Dict[str, Any] = {
@@ -808,6 +813,21 @@ def main() -> None:
                     theme_path.write_text(theme_content, encoding="utf-8")
                     print(f"{prefix_t}WRITE: {theme_path}")
                     themes_written += 1
+                    row_cells = theme_rows_by_id.get(theme_id)
+                    if row_cells is not None:
+                        status_idx = themes_hi.get("status")
+                        if status_idx is not None:
+                            status_was = normalize_status(row_cells[status_idx].value)
+                            if status_was != "published":
+                                row_cells[status_idx].value = "published"
+                                themes_status_updated += 1
+                            if (status_was != "published") or args.force:
+                                if themes_published_date_idx is not None:
+                                    row_cells[themes_published_date_idx].value = today
+                                    themes_published_date_updated += 1
+                                elif not themes_published_date_missing_warned:
+                                    print("Warning: Themes sheet missing published_date column; skipping date updates.")
+                                    themes_published_date_missing_warned = True
                 else:
                     print(f"{prefix_t}DRY-RUN: would write {theme_path} (overwrite={theme_path.exists()})")
                     themes_written += 1
@@ -825,6 +845,12 @@ def main() -> None:
                 else:
                     print(f"{prefix_t}DRY-RUN: would create prose placeholder {prose_path}")
 
+        if args.write and (themes_status_updated > 0 or themes_published_date_updated > 0):
+            wb.save(xlsx_path)
+            if themes_status_updated > 0:
+                print(f"Updated themes status to 'published' for {themes_status_updated} row(s).")
+            if themes_published_date_updated > 0:
+                print(f"Set themes published_date for {themes_published_date_updated} row(s).")
         print(f"Themes done. {'Would write' if not args.write else 'Wrote'}: {themes_written}. Skipped: {themes_skipped}.")
 
 
@@ -843,10 +869,14 @@ def main() -> None:
     else:
         series_written = 0
         series_skipped = 0
+        series_status_updated = 0
+        series_published_date_updated = 0
+        series_published_date_idx = series_hi.get("published_date")
+        series_published_date_missing_warned = False
         s_total = max(len(series_rows) - 1, 0)
         s_processed = 0
 
-        for sr in series_rows[1:]:
+        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
             s_processed += 1
             prefix_s = f"[series {s_processed}/{s_total}] "
 
@@ -855,6 +885,20 @@ def main() -> None:
                 series_skipped += 1
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
+
+            status = normalize_status(cell(sr, series_hi, "status"))
+            if status == "draft":
+                print(f"{prefix_s}SKIP (draft)")
+                series_skipped += 1
+                continue
+            if status == "published" and not args.force:
+                print(f"{prefix_s}SKIP (published; use --force)")
+                series_skipped += 1
+                continue
+            if status not in {"ready", "published"}:
+                print(f"{prefix_s}SKIP (unknown status '{status}')")
+                series_skipped += 1
+                continue
 
             title_raw = cell(sr, series_hi, "title")
             series_title = coerce_string(title_raw) or series_id
@@ -903,6 +947,19 @@ def main() -> None:
                     series_path.write_text(series_content, encoding="utf-8")
                     print(f"{prefix_s}WRITE: {series_path}")
                     series_written += 1
+                    status_idx = series_hi.get("status")
+                    if status_idx is not None:
+                        status_was = normalize_status(sr_cells[status_idx].value)
+                        if status_was != "published":
+                            sr_cells[status_idx].value = "published"
+                            series_status_updated += 1
+                        if (status_was != "published") or args.force:
+                            if series_published_date_idx is not None:
+                                sr_cells[series_published_date_idx].value = today
+                                series_published_date_updated += 1
+                            elif not series_published_date_missing_warned:
+                                print("Warning: Series sheet missing published_date column; skipping date updates.")
+                                series_published_date_missing_warned = True
                 else:
                     print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
                     series_written += 1
@@ -920,6 +977,12 @@ def main() -> None:
                 else:
                     print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
 
+        if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
+            wb.save(xlsx_path)
+            if series_status_updated > 0:
+                print(f"Updated series status to 'published' for {series_status_updated} row(s).")
+            if series_published_date_updated > 0:
+                print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
 
         # ----------------------------
@@ -947,6 +1010,11 @@ def main() -> None:
                 sj_skipped += 1
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
+            status = normalize_status(cell(sr, series_hi, "status"))
+            if status == "draft":
+                print(f"{prefix_j}SKIP (draft)")
+                sj_skipped += 1
+                continue
 
             work_ids = work_ids_by_series.get(series_id, [])
             series_hash = compute_series_hash(series_id, work_ids)
@@ -986,3 +1054,26 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+        # Build published work_id lists by series_id (from Works sheet, after any status updates)
+        work_ids_by_series: Dict[str, List[str]] = {}
+        status_idx = works_hi.get("status")
+        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+            status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
+            if normalize_status(status_val) != "published":
+                continue
+
+            sid_raw = cell(wr, works_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = require_slug_safe("series_id", sid_raw)
+
+            wid_raw = cell(wr, works_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            wid = slug_id(wid_raw)
+
+            work_ids_by_series.setdefault(sid, []).append(wid)
+
+        # Ensure deterministic ordering (alpha) for each series' work_ids
+        for sid in list(work_ids_by_series.keys()):
+            work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
