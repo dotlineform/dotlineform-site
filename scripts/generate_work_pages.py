@@ -14,7 +14,7 @@ Series JSON index files are written to assets/series/index/<series_id>.json (one
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
-- Everything else is emitted as a quoted string (including dates like catalogue_date and fields like year_display)
+- Everything else is emitted as a quoted string (including fields like year_display)
 - Empty cells become YAML null
 
 Safe by default:
@@ -272,7 +272,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("width_cm", "width_cm", coerce_numeric),
     ("depth_cm", "depth_cm", coerce_numeric),
     # tags handled separately (csv list)
-    ("catalogue_date", "catalogue_date", parse_date),
     ("storage_location", "storage_location", coerce_string),
     ("provenance", "provenance", coerce_string),
     # checksum is always computed, not sourced from Excel
