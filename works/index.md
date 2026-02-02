@@ -11,7 +11,7 @@ section: works
   {% assign random_works = works_items | sample: 6 %}
 
   <div class="index">
-    <h1 class="index__heading">sample</h1>
+    <h1 class="index__heading">selected</h1>
 
     {% for w in random_works %}
       {% include work_index_item.html work=w %}
