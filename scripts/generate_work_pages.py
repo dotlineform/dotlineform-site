@@ -672,14 +672,13 @@ def main() -> None:
     # ----------------------------
     # Themes worksheet required columns:
     # - theme_title
-    # - theme_date
     # theme_id is derived from theme_title via slugify_text().
     # Theme prose include is derived from theme_id (manual prose file: _includes/theme_prose/<theme_id>.md)
 
     if not themes_rows or len(themes_rows) < 2:
         print("No themes to generate (Themes sheet empty).")
     else:
-        # Build map: theme_id -> {title, date}
+        # Build map: theme_id -> {title}
         themes_by_id: Dict[str, Dict[str, Any]] = {}
         for tr in themes_rows[1:]:
             title_raw = cell(tr, themes_hi, "theme_title")
@@ -690,16 +689,12 @@ def main() -> None:
                 continue
             theme_id = slugify_text(theme_title)
 
-            date_raw = cell(tr, themes_hi, "theme_date")
-            theme_date = parse_date(date_raw)
-
             if theme_id in themes_by_id:
                 raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
 
             themes_by_id[theme_id] = {
                 "theme_id": theme_id,
                 "title": theme_title,
-                "date": theme_date,
             }
 
         # Build map: theme_id -> ordered list of series_ids (from ThemeSeries)
@@ -753,7 +748,6 @@ def main() -> None:
             # Front matter for theme page
             tfm: Dict[str, Any] = {
                 "title": meta["title"],
-                "date": meta["date"],
                 "layout": "theme",
                 "theme_id": theme_id,
             }

@@ -1,6 +1,5 @@
 ---
 title: "curves"
-date: "2026-01-29"
 layout: "theme"
 theme_id: "curves"
 series_ids:
