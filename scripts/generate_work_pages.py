@@ -514,7 +514,7 @@ def main() -> None:
         if is_empty(sid_raw):
             continue
         sid = str(sid_raw).strip()
-        title_raw = cell(r, series_hi, "series_title")
+        title_raw = cell(r, series_hi, "title")
         title = coerce_string(title_raw)
         if title is None:
             continue
@@ -833,7 +833,7 @@ def main() -> None:
     # ----------------------------
     # Series worksheet required columns:
     # - series_id (slug-safe)
-    # - series_title
+    # - title
     # Optional columns:
     # - year_display (preferred display value)
     # - year (numeric; also fallback for display when year_display column absent)
@@ -856,7 +856,7 @@ def main() -> None:
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
 
-            title_raw = cell(sr, series_hi, "series_title")
+            title_raw = cell(sr, series_hi, "title")
             series_title = coerce_string(title_raw) or series_id
 
             # Numeric year (optional)
