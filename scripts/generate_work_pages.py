@@ -689,7 +689,7 @@ def main() -> None:
     # ----------------------------
     # Themes worksheet required columns:
     # - theme_title
-    # theme_id is derived from theme_title via slugify_text().
+    # - theme_id
     # Theme prose include is derived from theme_id (manual prose file: _includes/theme_prose/<theme_id>.md)
 
     if not themes_rows or len(themes_rows) < 2:
@@ -704,7 +704,10 @@ def main() -> None:
             theme_title = coerce_string(title_raw)
             if theme_title is None:
                 continue
-            theme_id = slugify_text(theme_title)
+            theme_id_raw = cell(tr, themes_hi, "theme_id")
+            if is_empty(theme_id_raw):
+                raise SystemExit("Themes sheet missing required value: theme_id")
+            theme_id = require_slug_safe("theme_id", theme_id_raw)
 
             if theme_id in themes_by_id:
                 raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
