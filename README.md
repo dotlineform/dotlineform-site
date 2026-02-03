@@ -5,32 +5,11 @@ This repository is the source for the dotlineform website, built with Jekyll and
 Primary goals:
 - Publish a browsable catalogue of works (stable work IDs, consistent URLs).
 - Keep media handling predictable (primaries, thumbnails, attachments).
-- Keep catalogue metadata reproducible (generated from a canonical spreadsheet where appropriate).
-
-## Repo structure
-
-- `_works/`  
-  Work records (one Markdown file per work ID). Front matter is the canonical metadata for each work page.
-
-- `assets/works/`  
-  Site media. Conventionally split by purpose (e.g., images vs files).
-
-- `_layouts/`, `_includes/`, `assets/`  
-  Jekyll layouts, includes, and styling.
-
-- `scripts/`  
-  Local helper scripts to generate/update catalogue content and derived images.
+- Keep catalogue metadata reproducible (generated from a canonical spreadsheet).
 
 ## Local development
 
-Requirements:
 - Ruby + Bundler (standard Jekyll toolchain)
-
-Install dependencies:
-
-```bash
-bundle install
-```
 
 Run the site locally:
 
@@ -58,7 +37,7 @@ The scripts below are intended to be run locally from the repo root. They are de
 - Avoid unnecessary rewrites by computing a deterministic checksum of each work record and skipping unchanged works.
 - `scripts/scripts/generate_work_pages.py`
 
-Typical behaviour:
+Example behaviour:
 - DRY-RUN mode (show what would change without writing)
 - SKIP unchanged works when checksum matches
 - WRITE only when a work is new or its checksum differs
@@ -71,7 +50,7 @@ Typical behaviour:
 
 ## Working on this repo
 
-Suggested workflow:
+Workflow:
 
 1) Update canonical metadata (spreadsheet)
 2) Run the works generator script (dry-run first)
