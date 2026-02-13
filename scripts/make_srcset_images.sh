@@ -8,6 +8,12 @@
 #
 # to set jobs only (keep default folders), use the env var:
 # MAKE_SRCSET_JOBS=6 ./scripts/make_srcset_images.sh
+#
+# optional: generate 2400px primaries only for selected work IDs:
+# MAKE_SRCSET_2400_IDS_FILE=./data/srcset_2400_ids.txt ./scripts/make_srcset_images.sh
+# file format: one work_id per line (exact match), e.g.:
+#   00361
+#   00405
 
 #!/usr/bin/env bash
 set -euo pipefail
@@ -19,6 +25,7 @@ BASE_DIR="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform"
 INPUT_DIR="${1:-$BASE_DIR/works/make_srcset_images}" # where {work_id}.jpg lives
 OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # base output folder for derivative subfolders
 JOBS="${3:-${MAKE_SRCSET_JOBS:-1}}" # number of parallel jobs (default 1 = serial)
+INCLUDE_2400_IDS_FILE="${MAKE_SRCSET_2400_IDS_FILE:-}"
 
 # Quality settings (tune if needed)
 WEBP_PRESET="photo"
@@ -78,6 +85,14 @@ make_primary() {
     "$out"
 }
 
+should_make_2400() {
+  local work_id="$1"
+  if [[ -z "$INCLUDE_2400_IDS_FILE" ]]; then
+    return 0
+  fi
+  grep -Fxq "$work_id" "$INCLUDE_2400_IDS_FILE"
+}
+
 process_one() {
   local src="$1"
   local fname work_id src_use ext ext_lc tmp_dir tmp_jpg
@@ -116,7 +131,11 @@ process_one() {
   make_primary "$src_use" 800  "$OUTPUT_DIR/primary/${work_id}-primary-800.webp"
   make_primary "$src_use" 1200 "$OUTPUT_DIR/primary/${work_id}-primary-1200.webp"
   make_primary "$src_use" 1600 "$OUTPUT_DIR/primary/${work_id}-primary-1600.webp"
-  make_primary "$src_use" 2400 "$OUTPUT_DIR/primary/${work_id}-primary-2400.webp"
+  if should_make_2400 "$work_id"; then
+    make_primary "$src_use" 2400 "$OUTPUT_DIR/primary/${work_id}-primary-2400.webp"
+  else
+    echo "Skipping 2400px primary for $work_id (not listed in MAKE_SRCSET_2400_IDS_FILE)"
+  fi
 
   if [[ -n "${tmp_dir:-}" && -d "${tmp_dir:-}" ]]; then
     rm -rf "$tmp_dir"
@@ -145,14 +164,18 @@ if [[ ${#sources[@]} -gt 0 ]]; then
 fi
 
 if [[ "$found" -eq 1 ]]; then
+  if [[ -n "$INCLUDE_2400_IDS_FILE" && ! -f "$INCLUDE_2400_IDS_FILE" ]]; then
+    echo "Error: MAKE_SRCSET_2400_IDS_FILE not found: $INCLUDE_2400_IDS_FILE"
+    exit 1
+  fi
   if [[ "$JOBS" -le 1 ]]; then
     for src in "${sources[@]}"; do
       process_one "$src"
     done
   else
     # Parallel: one source per job
-    export -f process_one make_thumb make_primary
-    export OUTPUT_DIR WEBP_PRESET PRIMARY_Q THUMB_Q COMPRESSION_LEVEL HAS_SIPS HAS_HEIF_CONVERT
+    export -f process_one make_thumb make_primary should_make_2400
+    export OUTPUT_DIR WEBP_PRESET PRIMARY_Q THUMB_Q COMPRESSION_LEVEL HAS_SIPS HAS_HEIF_CONVERT INCLUDE_2400_IDS_FILE
     printf '%s\0' "${sources[@]}" | xargs -0 -n 1 -P "$JOBS" bash -c '
       process_one "$1"
     ' _
