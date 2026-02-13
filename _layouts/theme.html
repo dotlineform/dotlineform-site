@@ -2,9 +2,9 @@
 layout: default
 ---
 
-<article class="page theme">
+<article class="page research-note">
   <header class="page__header">
-    <h1 class="page__title">{{ page.title }}</h1>
+    <h1 class="page__title">{{ page.title | escape }}</h1>
     {% if page.date %}
       <p class="page__meta muted small">{{ page.date | date: "%-d %b %Y" }}</p>
     {% endif %}
@@ -14,72 +14,69 @@ layout: default
     {{ content }}
   </div>
 
-  {%- assign work_ids = page.work_ids | default: page.works -%}
+  {% comment %}
+  Theme links are defined in front matter:
+  - series: list of series references (string series_id/slug, or object with series_id + optional label)
+  - research-notes: list of research note references (string slug, or object with research_id + optional label)
+  {% endcomment %}
 
-  {%- if work_ids and work_ids != empty -%}
-    <hr>
-    <section class="theme__works">
-      <div class="index">
-        <h2 class="index__heading">selected work</h2>
+  {%- assign has_series = false -%}
+  {%- assign has_research = false -%}
 
-        {%- for wid in work_ids -%}
-          {%- assign work_doc = site.works | where: 'work_id', wid | first -%}
-          {%- if work_doc -%}
-            {%- include work_index_item.html work=work_doc -%}
-          {%- else -%}
-            <div class="index__item">
-              <span class="index__work_id">{{ wid }}</span>
-              <a class="index__link" href="{{ '/works/' | append: wid | append: '/' | relative_url }}">Untitled</a>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    </section>
+  {%- if page.series and page.series != empty -%}
+    {%- assign has_series = true -%}
   {%- endif -%}
 
-  {% if page.html_inserts and page.html_inserts.size > 0 %}
+  {%- if page["research-notes"] and page["research-notes"] != empty -%}
+    {%- assign has_research = true -%}
+  {%- endif -%}
+  {% if has_series or has_research %}    <!-- only show section if there are supplements -->
     <hr>
     <section class="supplements">
-      <h2>supplements</h2>
-      <div class="supplements__links">
-        {% for item in page.html_inserts %}
-          {% if item.path %}
-            {% assign href = item.path %}
-            {% assign text = item.label | default: item.path %}
-          {% elsif item.file %}
-            {% assign href = '/assets/themes/html/' | append: item.file %}
-            {% assign text = item.label | default: item.file %}
-          {% else %}
-            {% assign href = '/assets/themes/html/' | append: item %}
-            {% assign text = item %}
-          {% endif %}
-          {% assign out_href = href %}
-          {% unless out_href contains '://' %}
-            {% assign out_href = out_href | relative_url %}
-          {% endunless %}
-          <p class="supplements__link">🔗 <a href="{{ out_href }}">{{ text | escape }}</a></p>
-        {% endfor %}
-      </div>
+      <h2>Supplements</h2>
+
+      {%- if has_series -%}
+        <div class="supplements__links">
+          <h3>Series</h3>
+          {% for item in page.series %}
+            {% assign series_ref = item.series_id | default: item %}
+            {% assign series_doc = site.series | where: "series_id", series_ref | first %}
+            {% if series_doc == nil %}
+              {% assign series_doc = site.series | where: "slug", series_ref | first %}
+            {% endif %}
+            {% if series_doc %}
+              {% assign out_href = series_doc.url | relative_url %}
+              {% assign text = item.label | default: series_doc.title | default: series_ref %}
+            {% else %}
+              {% assign out_href = '#' %}
+              {% assign text = item.label | default: series_ref %}
+            {% endif %}
+            <p class="supplements__link supplements__link--html"><a href="{{ out_href }}" target="_blank" rel="noopener noreferrer">{{ text | escape }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {%- if has_research -%}
+        <div class="supplements__links">
+          <h3>Research Notes</h3>
+          {% for item in page["research-notes"] %}
+            {% assign note_ref = item.research_id | default: item.slug | default: item %}
+            {% assign note_doc = site.research | where: "slug", note_ref | first %}
+            {% if note_doc == nil %}
+              {% assign note_doc = site.research | where: "research_id", note_ref | first %}
+            {% endif %}
+            {% if note_doc %}
+              {% assign out_href = note_doc.url | relative_url %}
+              {% assign text = item.label | default: note_doc.title | default: note_ref %}
+            {% else %}
+              {% assign out_href = '#' %}
+              {% assign text = item.label | default: note_ref %}
+            {% endif %}
+            <p class="supplements__link supplements__link--pdf"><a href="{{ out_href }}" target="_blank" rel="noopener noreferrer">{{ text | escape }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
     </section>
   {% endif %}
-
-  {%- if page.series_ids and page.series_ids != empty -%}
-    <hr>
-    <section class="theme__series">
-      <div class="index">
-        {%- for sid in page.series_ids -%}
-          {%- assign series_doc = site.series | where: 'series_id', sid | first -%}
-          {%- if series_doc -%}
-            {%- include series_index_item.html series=series_doc -%}
-          {%- else -%}
-            <div class="index__item">
-              <span class="index__work_id">{{ sid }}</span>
-              <a class="index__link" href="#">View series</a>
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
-      </div>
-    </section>
-  {%- endif -%}
-
 </article>
