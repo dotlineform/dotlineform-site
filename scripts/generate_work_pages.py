@@ -14,6 +14,7 @@ Series JSON index files are written to assets/series/index/<series_id>.json (one
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
+- Booleans are emitted unquoted for: has_primary_2400
 - Everything else is emitted as a quoted string (including fields like year_display)
 - Empty cells become YAML null
 
@@ -133,6 +134,7 @@ def yaml_quote(s: str) -> str:
 
 
 NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm"}
+BOOLEAN_KEYS = {"has_primary_2400"}
 
 
 def is_empty(value: Any) -> bool:
@@ -177,10 +179,20 @@ def coerce_string(value: Any) -> Optional[str]:
     return s if s != "" else None
 
 
+def coerce_presence_bool(value: Any) -> bool:
+    """Map Excel presence to bool: empty -> False, non-empty -> True."""
+    return not is_empty(value)
+
+
 def dump_scalar(key: str, value: Any) -> str:
     """Dump a scalar YAML key/value with typing rules."""
     if value is None:
+        if key in BOOLEAN_KEYS:
+            return f"{key}: false"
         return f"{key}: null"
+
+    if key in BOOLEAN_KEYS:
+        return f"{key}: {'true' if bool(value) else 'false'}"
 
     if key in NUMERIC_KEYS:
         # year is an int; dimensions are floats but we render ints without .0
@@ -281,6 +293,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("height_cm", "height_cm", coerce_numeric),
     ("width_cm", "width_cm", coerce_numeric),
     ("depth_cm", "depth_cm", coerce_numeric),
+    ("has_primary_2400", "has_primary_2400", coerce_presence_bool),
     # tags handled separately (csv list)
     # checksum is always computed, not sourced from Excel
 ]
