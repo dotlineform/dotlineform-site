@@ -10,7 +10,6 @@ Series JSON index files are written to assets/series/index/<series_id>.json (one
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
-- WorkFiles: files joined by work_id (0..n rows per work)
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
@@ -255,10 +254,7 @@ def build_front_matter(fields: Dict[str, Any]) -> str:
 
             # Detect list of dicts vs list of strings
             if all(isinstance(x, dict) for x in v):
-                if k == "files":
-                    lines.extend(dump_list_of_dicts(k, v, field_order=["file_id", "file_label"]))
-                else:
-                    lines.extend(dump_list_of_dicts(k, v))
+                lines.extend(dump_list_of_dicts(k, v))
             else:
                 # List of scalars -> strings
                 lines.extend(dump_list_of_strings(k, [str(x) for x in v if not is_empty(x)]))
@@ -312,22 +308,10 @@ def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict
 # Checksum helpers
 # ----------------------------
 
-def _sort_key_safe(v: Optional[str]) -> str:
-    return "" if v is None else str(v)
-
-
 def compute_work_checksum(front_matter: Dict[str, Any]) -> str:
     """Compute a deterministic checksum for a work from its front matter (excluding checksum itself)."""
     payload = dict(front_matter)
     payload.pop("checksum", None)
-
-    files = payload.get("files")
-    if isinstance(files, list):
-        files_sorted = sorted(
-            files,
-            key=lambda d: (_sort_key_safe(d.get("file_id")), _sort_key_safe(d.get("file_label"))),
-        )
-        payload["files"] = files_sorted
 
     # Canonical JSON for hashing (sorted keys ensures deterministic output)
     canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
@@ -406,7 +390,6 @@ def main() -> None:
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
     ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
-    ap.add_argument("--files-sheet", default="WorkFiles", help="Worksheet name for work files")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
@@ -489,7 +472,6 @@ def main() -> None:
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
-    files_rows = read_sheet_rows(args.files_sheet)
     series_ws = wb[args.series_sheet]
 
     if not works_rows:
@@ -497,7 +479,6 @@ def main() -> None:
 
     works_hi = build_header_index(works_rows)
     series_hi = build_header_index(series_rows) if series_rows else {}
-    files_hi = build_header_index(files_rows) if files_rows else {}
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
@@ -514,21 +495,6 @@ def main() -> None:
         if title is None:
             continue
         series_title_by_id[sid] = title
-
-    # Pre-index files by work_id
-    files_by_work: Dict[str, List[Dict[str, Any]]] = {}
-    for r in files_rows[1:] if len(files_rows) > 1 else []:
-        raw_wid = cell(r, files_hi, "work_id")
-        if is_empty(raw_wid):
-            continue
-        wid = slug_id(raw_wid)
-        item = {
-            "file_id": coerce_string(cell(r, files_hi, "file_id")),
-            "file_label": coerce_string(cell(r, files_hi, "file_label")),
-        }
-        if is_empty(item.get("file_id")):
-            continue
-        files_by_work.setdefault(wid, []).append(item)
 
     written = 0
     skipped = 0
@@ -632,11 +598,6 @@ def main() -> None:
         else:
             sort_year = "9999"
         fm["series_sort"] = f"{sort_year}-{wid}"
-
-        # Join in files from the WorkFiles sheet
-        files = files_by_work.get(wid, [])
-        if files:
-            fm["files"] = files
 
         # Compute checksum from the canonical Excel-derived record and write it into front matter.
         checksum = compute_work_checksum(fm)
