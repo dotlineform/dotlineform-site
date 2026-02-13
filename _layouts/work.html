@@ -24,8 +24,13 @@ If you later serve images only from external media_base (CDN/R2), this check won
 {%- if maybe_2400 -%}
   {%- assign has_local_2400 = true -%}
 {%- endif -%}
+{%- assign has_2400 = has_local_2400 -%}
+<!-- external-hosted 2400 images can be enabled via front matter even when local existence check is false. -->
+{%- if page.has_primary_2400 == true -%}
+  {%- assign has_2400 = true -%}
+{%- endif -%}
 {%- assign full_src = src1600 -%}
-{%- if has_local_2400 -%}
+{%- if has_2400 -%}
   {%- assign full_src = src2400 -%}
 {%- endif -%}
 
@@ -65,7 +70,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w{% if has_local_2400 %},
+          {{ src1600 }} 1600w{% if has_2400 %},
           {{ src2400 }} 2400w{% endif %}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: 'Artwork' | escape }}"
