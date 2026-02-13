@@ -231,6 +231,10 @@ fi
 
 if [[ "$found" -eq 0 ]]; then
   echo "No supported image files found in: $INPUT_DIR (jpg/jpeg/heic/heif/png/tif/tiff)"
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "Dry-run: no source images found; skipping derivative simulation."
+    exit 0
+  fi
   exit 1
 fi
 
