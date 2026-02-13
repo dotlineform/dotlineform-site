@@ -4,16 +4,15 @@ Run the draft publish pipeline end-to-end (fail-fast):
 
 1) copy_draft_work_files.py --write
 2) make_srcset_images.sh
-3) mark successfully processed draft works as ready
-4) generate_work_pages.py data/works.xlsx --write
+3) generate_work_pages.py data/works.xlsx --write (for successful IDs only)
 
 The 2400px derivative selection is driven from Works.has_primary_2400:
 - empty cell -> do not request 2400
 - non-empty cell -> request 2400
 
 Dry-run mode:
-- copy + generate run in preview mode
-- srcset generation and status updates are skipped (to avoid writes/deletes)
+- copy + srcset + generate run in preview mode
+- no workbook writes/deletes are performed
 """
 
 from __future__ import annotations
@@ -102,7 +101,7 @@ def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     ws = wb["Works"]
     hi = header_map(ws)
 
-    required = ["work_id", "status"]
+    required = ["work_id"]
     missing = [c for c in required if c not in hi]
     if missing:
         raise SystemExit(f"Works sheet missing required columns: {', '.join(missing)}")
@@ -114,13 +113,10 @@ def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     want_2400: Set[str] = set()
     for row in ws.iter_rows(min_row=2, values_only=True):
         work_id = row[hi["work_id"]]
-        status = row[hi["status"]]
         if is_empty(work_id):
             continue
         wid = slug_id(work_id)
         if wid not in copied:
-            continue
-        if normalize_status(status) != "draft":
             continue
         raw = row[has_col] if has_col < len(row) else None
         if not is_empty(raw):
@@ -128,11 +124,8 @@ def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     return want_2400
 
 
-def mark_ready(xlsx_path: Path, success_ids: Set[str]) -> int:
-    if not success_ids:
-        return 0
-
-    wb = openpyxl.load_workbook(xlsx_path, read_only=False, data_only=False)
+def collect_draft_ids(xlsx_path: Path) -> Set[str]:
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "Works" not in wb.sheetnames:
         raise SystemExit("Worksheet not found: 'Works'")
     ws = wb["Works"]
@@ -143,26 +136,21 @@ def mark_ready(xlsx_path: Path, success_ids: Set[str]) -> int:
     if missing:
         raise SystemExit(f"Works sheet missing required columns: {', '.join(missing)}")
 
-    updated = 0
-    for row_cells in ws.iter_rows(min_row=2):
-        raw_work_id = row_cells[hi["work_id"]].value
+    out: Set[str] = set()
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        raw_work_id = row[hi["work_id"]]
         if is_empty(raw_work_id):
             continue
         wid = slug_id(raw_work_id)
-        if wid not in success_ids:
+        status = normalize_status(row[hi["status"]])
+        if status != "draft":
             continue
-        status = normalize_status(row_cells[hi["status"]].value)
-        if status == "draft":
-            row_cells[hi["status"]].value = "ready"
-            updated += 1
-
-    if updated > 0:
-        wb.save(xlsx_path)
-    return updated
+        out.add(wid)
+    return out
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> ready-update -> generate pipeline.")
+    ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> generate pipeline.")
     ap.add_argument("--xlsx", default="data/works.xlsx", help="Path to workbook")
     ap.add_argument(
         "--input-dir",
@@ -190,15 +178,26 @@ def main() -> int:
 
     with tempfile.TemporaryDirectory(prefix="draft-pipeline-") as tmp:
         tmp_dir = Path(tmp)
+        draft_ids_file = tmp_dir / "draft_ids.txt"
         copied_ids_file = tmp_dir / "copied_ids.txt"
         ids_2400_file = tmp_dir / "ids_2400.txt"
         success_ids_file = tmp_dir / "success_ids.txt"
+        generate_ids_file = tmp_dir / "generate_ids.txt"
+
+        draft_ids = collect_draft_ids(xlsx_path)
+        draft_ids_file.write_text(
+            "\n".join(sorted(draft_ids)) + ("\n" if draft_ids else ""),
+            encoding="utf-8",
+        )
+        print(f"Draft candidates: {len(draft_ids)}")
 
         run_step(
             "Copy Draft Work Files",
             [
                 "python3",
                 str(copy_script),
+                "--work-ids-file",
+                str(draft_ids_file),
                 "--copied-ids-file",
                 str(copied_ids_file),
             ]
@@ -216,6 +215,7 @@ def main() -> int:
 
             env = os.environ.copy()
             env["MAKE_SRCSET_2400_IDS_FILE"] = str(ids_2400_file)
+            env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
             env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(success_ids_file)
 
             run_step(
@@ -233,15 +233,20 @@ def main() -> int:
             )
 
             if args.dry_run:
-                print("\n==> Skip Ready Update\nDry-run mode: status updates are skipped.")
+                generate_ids = copied_ids
             else:
-                success_ids = read_ids(success_ids_file)
-                updated = mark_ready(xlsx_path, success_ids)
-                print(f"\n==> Mark Ready\nUpdated Works.status draft->ready for {updated} row(s).")
+                generate_ids = read_ids(success_ids_file)
         else:
-            print("\n==> Skip Srcset + Ready Update\nNo copied draft files in this run.")
+            print("\n==> Skip Srcset\nNo copied draft files in this run.")
+            generate_ids = set()
+
+        generate_ids_file.write_text(
+            "\n".join(sorted(generate_ids)) + ("\n" if generate_ids else ""),
+            encoding="utf-8",
+        )
 
         generate_cmd = ["python3", str(generate_script), str(xlsx_path)]
+        generate_cmd += ["--work-ids-file", str(generate_ids_file)]
         if not args.dry_run:
             generate_cmd.append("--write")
         if args.force_generate:

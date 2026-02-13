@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Copy and rename draft work files based on data/works.xlsx (Works sheet).
+Copy and rename work files based on data/works.xlsx (Works sheet).
 
 Source:  [PROJECTS_BASE_DIR]/projects/[project_folder]/[project_filename]
 Target:  [WORKS_BASE_DIR]/works/make_srcset_images/[work_id][.ext]
 
-Only rows with status == "draft" are processed.
+Use --work-ids-file to limit processing to selected work_ids (one per line).
 
 Usage:
   python3 scripts/copy_draft_work_files.py --write
@@ -18,7 +18,7 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Set
 
 import openpyxl
 
@@ -35,10 +35,14 @@ SHEET_NAME = "Works"
 DEST_RELATIVE = Path("works/make_srcset_images")
 
 
-def normalize_status(value: Any) -> str:
+def normalize_work_id(value: Any) -> str:
     if value is None:
         return ""
-    return str(value).strip().lower()
+    s = str(value).strip()
+    # Handle numeric-like IDs from Excel, e.g. 455.0
+    if s.endswith(".0"):
+        s = s[:-2]
+    return s.zfill(5) if s.isdigit() else s
 
 
 def header_map(ws) -> Dict[str, int]:
@@ -51,6 +55,11 @@ def main() -> int:
     parser.add_argument("--write", action="store_true", help="Actually copy files (default: dry-run)")
     parser.add_argument("--keep-ext", action="store_true", help="Keep source file extension on target (default)")
     parser.add_argument("--no-ext", action="store_true", help="Strip extension on target filename")
+    parser.add_argument(
+        "--work-ids-file",
+        default="",
+        help="Optional path to work_ids file (one id per line). Only those rows are processed.",
+    )
     parser.add_argument(
         "--copied-ids-file",
         default="",
@@ -71,12 +80,21 @@ def main() -> int:
     ws = wb[SHEET_NAME]
     cols = header_map(ws)
 
-    # status drives selection: only "draft" rows are copied.
-    # readiness is set later by the orchestrator after derivative generation succeeds.
-    required = ["work_id", "status", "project_folder", "project_filename"]
+    required = ["work_id", "project_folder", "project_filename"]
     missing = [c for c in required if c not in cols]
     if missing:
         raise SystemExit(f"Missing required columns in Works sheet: {', '.join(missing)}")
+
+    selected_ids: Optional[Set[str]] = None
+    if args.work_ids_file:
+        ids_path = Path(args.work_ids_file).expanduser()
+        if not ids_path.exists():
+            raise SystemExit(f"work_ids file not found: {ids_path}")
+        selected_ids = set()
+        for line in ids_path.read_text(encoding="utf-8").splitlines():
+            s = normalize_work_id(line)
+            if s:
+                selected_ids.add(s)
 
     dest_dir = WORKS_BASE_DIR / DEST_RELATIVE
     if args.write:
@@ -89,10 +107,6 @@ def main() -> int:
 
     for row_cells in ws.iter_rows(min_row=2):
         row = [cell.value for cell in row_cells]
-        status = normalize_status(row[cols["status"]])
-        if status != "draft":
-            continue
-
         work_id = row[cols["work_id"]]
         project_folder = row[cols["project_folder"]]
         project_filename = row[cols["project_filename"]]
@@ -100,7 +114,9 @@ def main() -> int:
         if not (work_id and project_folder and project_filename):
             continue
 
-        work_id_str = str(work_id).strip()
+        work_id_str = normalize_work_id(work_id)
+        if selected_ids is not None and work_id_str not in selected_ids:
+            continue
         src = PROJECTS_BASE_DIR / "projects" / str(project_folder).strip() / str(project_filename).strip()
 
         if keep_ext:

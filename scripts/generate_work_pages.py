@@ -21,17 +21,17 @@ Safe by default:
 - dry-run unless you pass --write
 - will not overwrite unless --force
 - status gating (Works/Series):
-  - draft -> skip
+  - draft -> process (candidate to publish)
   - published -> skip unless --force
   - unknown -> skip
   - when writing with --write: set status=published; set published_date=today if status changed or --force
-- draft works are deleted from _works and _works_print when --write is set (dry-run reports)
 
 specify work_ids to process with --work-ids (comma-separated list)
   - Only those IDs are processed; others are skipped early.
   - Status filtering still applies to the selected IDs unless you also pass --force.
 Usage:
     python3 scripts/generate_work_pages.py data/works.xlsx --work-ids 00001,00002 --write
+    python3 scripts/generate_work_pages.py data/works.xlsx --work-ids-file tmp/work_ids.txt --write
 
 """
 
@@ -407,6 +407,11 @@ def main() -> None:
         default="",
         help="Comma-separated work_ids to process (e.g. 00001,00002). If set, only these IDs are processed.",
     )
+    ap.add_argument(
+        "--work-ids-file",
+        default="",
+        help="Path to work_ids file (one id per line). If set, only these IDs are processed.",
+    )
     args = ap.parse_args()
 
     # Resolve the workbook path and fail fast if it is missing.
@@ -500,24 +505,44 @@ def main() -> None:
     skipped = 0
     print_written = 0
     print_skipped = 0
-    total = max(len(works_rows) - 1, 0)  # exclude header row
+    def is_actionable_status(status_value: str) -> bool:
+        if status_value == "draft":
+            return True
+        if status_value == "published" and args.force:
+            return True
+        return False
+
+    # Optional filtering: allow a specific list of work_ids (from file or comma-separated arg).
+    selected_ids = None
+    if args.work_ids_file:
+        ids_path = Path(args.work_ids_file).expanduser()
+        if not ids_path.exists():
+            raise SystemExit(f"work_ids file not found: {ids_path}")
+        selected_ids = {slug_id(line.strip()) for line in ids_path.read_text(encoding="utf-8").splitlines() if line.strip()}
+    elif args.work_ids:
+        selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()}
+
+    total = 0
+    for r in works_rows[1:]:
+        raw_work_id = cell(r, works_hi, "work_id")
+        if is_empty(raw_work_id):
+            continue
+        wid = slug_id(raw_work_id)
+        if selected_ids is not None and wid not in selected_ids:
+            continue
+        status = normalize_status(cell(r, works_hi, "status"))
+        if is_actionable_status(status):
+            total += 1
+
     processed = 0
     status_updated = 0
     published_date_updated = 0
-    deleted_draft_work = 0
-    deleted_draft_print = 0
     published_date_idx = works_hi.get("published_date")
     published_date_missing_warned = False
     today = dt.date.today()
 
-    # Optional filtering: allow a specific list of work_ids (comma-separated).
-    selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()} if args.work_ids else None
-
     # Iterate each Works row and emit one Markdown file per work.
     for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
-        processed += 1
-        prefix = f"[{processed}/{total}] "
-
         status = normalize_status(cell(r, works_hi, "status"))
         raw_work_id = cell(r, works_hi, "work_id")
         if is_empty(raw_work_id):
@@ -529,40 +554,12 @@ def main() -> None:
             skipped += 1
             continue
 
-        if status == "draft":
-            if args.write:
-                out_path = out_dir / f"{wid}.md"
-                if out_path.exists():
-                    out_path.unlink()
-                    deleted_draft_work += 1
-                    print(f"{prefix}DELETE (draft): {out_path}")
-
-                print_path = print_out_dir / f"{wid}.md"
-                if print_path.exists():
-                    print_path.unlink()
-                    deleted_draft_print += 1
-                    print(f"{prefix}DELETE (draft print): {print_path}")
-            else:
-                out_path = out_dir / f"{wid}.md"
-                if out_path.exists():
-                    deleted_draft_work += 1
-                    print(f"{prefix}DRY-RUN: would delete {out_path}")
-
-                print_path = print_out_dir / f"{wid}.md"
-                if print_path.exists():
-                    deleted_draft_print += 1
-                    print(f"{prefix}DRY-RUN: would delete {print_path}")
-            skipped += 1
-            continue
-        if status == "published" and not args.force:
-            print(f"{prefix}SKIP (published; use --force): {cell(r, works_hi, 'work_id')}")
-            skipped += 1
-            continue
-        if status not in {"ready", "published"}:
-            print(f"{prefix}SKIP (unknown status '{status}'): {cell(r, works_hi, 'work_id')}")
+        if not is_actionable_status(status):
             skipped += 1
             continue
 
+        processed += 1
+        prefix = f"[{processed}/{total}] "
         # Tags: comma-separated in Excel
         tags = parse_list(cell(r, works_hi, "tags"), sep=",")
 
@@ -665,13 +662,6 @@ def main() -> None:
         f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
         f" Skipped: {skipped} works, {print_skipped} print."
     )
-    if deleted_draft_work > 0 or deleted_draft_print > 0:
-        label = "Deleted draft files" if args.write else "Would delete draft files"
-        total_draft = deleted_draft_work + deleted_draft_print
-        print(
-            f"{label}: works={deleted_draft_work}, works_print={deleted_draft_print}. "
-            f"Total draft deletions={total_draft}."
-        )
     print(f"Workbook: {xlsx_path}")
     if args.write:
         print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
@@ -689,19 +679,30 @@ def main() -> None:
     if not series_rows or len(series_rows) < 2:
         print("No series pages to generate (Series sheet empty).")
     else:
+        def is_actionable_series_status(status_value: str) -> bool:
+            if status_value == "draft":
+                return True
+            if status_value == "published" and args.force:
+                return True
+            return False
+
         series_written = 0
         series_skipped = 0
         series_status_updated = 0
         series_published_date_updated = 0
         series_published_date_idx = series_hi.get("published_date")
         series_published_date_missing_warned = False
-        s_total = max(len(series_rows) - 1, 0)
+        s_total = 0
+        for sr in series_rows[1:]:
+            sid_raw = cell(sr, series_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            status = normalize_status(cell(sr, series_hi, "status"))
+            if is_actionable_series_status(status):
+                s_total += 1
         s_processed = 0
 
         for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-            s_processed += 1
-            prefix_s = f"[series {s_processed}/{s_total}] "
-
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 series_skipped += 1
@@ -709,18 +710,12 @@ def main() -> None:
             series_id = require_slug_safe("series_id", sid_raw)
 
             status = normalize_status(cell(sr, series_hi, "status"))
-            if status == "draft":
-                print(f"{prefix_s}SKIP (draft)")
+            if not is_actionable_series_status(status):
                 series_skipped += 1
                 continue
-            if status == "published" and not args.force:
-                print(f"{prefix_s}SKIP (published; use --force)")
-                series_skipped += 1
-                continue
-            if status not in {"ready", "published"}:
-                print(f"{prefix_s}SKIP (unknown status '{status}')")
-                series_skipped += 1
-                continue
+
+            s_processed += 1
+            prefix_s = f"[series {s_processed}/{s_total}] "
 
             title_raw = cell(sr, series_hi, "title")
             series_title = coerce_string(title_raw) or series_id
@@ -820,7 +815,14 @@ def main() -> None:
 
         sj_written = 0
         sj_skipped = 0
-        sj_total = max(len(series_rows) - 1, 0)
+        sj_total = 0
+        for sr in series_rows[1:]:
+            sid_raw = cell(sr, series_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            status = normalize_status(cell(sr, series_hi, "status"))
+            if status != "draft":
+                sj_total += 1
         sj_processed = 0
 
         # Build published work_id lists by series_id (from Works sheet, after any status updates)
@@ -848,9 +850,6 @@ def main() -> None:
             work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
 
         for sr in series_rows[1:]:
-            sj_processed += 1
-            prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
-
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 sj_skipped += 1
@@ -858,9 +857,11 @@ def main() -> None:
             series_id = require_slug_safe("series_id", sid_raw)
             status = normalize_status(cell(sr, series_hi, "status"))
             if status == "draft":
-                print(f"{prefix_j}SKIP (draft)")
                 sj_skipped += 1
                 continue
+
+            sj_processed += 1
+            prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
 
             work_ids = work_ids_by_series.get(series_id, [])
             series_hash = compute_series_hash(series_id, work_ids)
@@ -879,7 +880,6 @@ def main() -> None:
 
             existing_hash = extract_existing_series_hash(out_json_path) if exists else None
             if (existing_hash is not None) and (existing_hash == series_hash) and (not args.force):
-                print(f"{prefix_j}SKIP (hash match): {out_json_path}")
                 sj_skipped += 1
                 continue
 

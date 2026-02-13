@@ -15,6 +15,10 @@
 #   00361
 #   00405
 #
+# optional: process only selected work IDs:
+# MAKE_SRCSET_WORK_IDS_FILE=./tmp/work_ids.txt ./scripts/make_srcset_images.sh
+# file format: one work_id per line (exact match).
+#
 # optional: write successfully processed work IDs (one per line):
 # MAKE_SRCSET_SUCCESS_IDS_FILE=./tmp/srcset_success_ids.txt ./scripts/make_srcset_images.sh
 
@@ -43,8 +47,10 @@ INPUT_DIR="${1:-$BASE_DIR/works/make_srcset_images}" # where {work_id}.jpg lives
 OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # base output folder for derivative subfolders
 JOBS="${3:-${MAKE_SRCSET_JOBS:-1}}" # number of parallel jobs (default 1 = serial)
 INCLUDE_2400_IDS_FILE="${MAKE_SRCSET_2400_IDS_FILE:-}"
+WORK_IDS_FILE="${MAKE_SRCSET_WORK_IDS_FILE:-}"
 SUCCESS_IDS_FILE="${MAKE_SRCSET_SUCCESS_IDS_FILE:-}"
 REPORT_FILE="$(mktemp -t make_srcset_report.XXXXXX)"
+PROCESSED_SOURCES_FILE="$(mktemp -t make_srcset_processed_sources.XXXXXX)"
 
 # Quality settings (tune if needed)
 WEBP_PRESET="photo"
@@ -128,11 +134,24 @@ should_make_2400() {
   grep -Fxq "$work_id" "$INCLUDE_2400_IDS_FILE"
 }
 
+should_process_work_id() {
+  local work_id="$1"
+  if [[ -z "$WORK_IDS_FILE" ]]; then
+    return 0
+  fi
+  grep -Fxq "$work_id" "$WORK_IDS_FILE"
+}
+
 record_success_id() {
   local work_id="$1"
   if [[ "$DRY_RUN" -eq 0 && -n "$SUCCESS_IDS_FILE" ]]; then
     printf '%s\n' "$work_id" >> "$SUCCESS_IDS_FILE"
   fi
+}
+
+record_processed_source() {
+  local src="$1"
+  printf '%s\n' "$src" >> "$PROCESSED_SOURCES_FILE"
 }
 
 process_one() {
@@ -141,6 +160,11 @@ process_one() {
 
   fname="$(basename "$src")"
   work_id="${fname%.*}"  # {work_id} from {work_id}.ext
+
+  if ! should_process_work_id "$work_id"; then
+    echo "Skipping $fname (work_id not listed in MAKE_SRCSET_WORK_IDS_FILE)"
+    return 0
+  fi
 
   # Use original source by default; for HEIC/HEIF we convert first due to FFmpeg limitations
   src_use="$src"
@@ -179,6 +203,7 @@ process_one() {
     echo "Skipping 2400px primary for $work_id (not listed in MAKE_SRCSET_2400_IDS_FILE)"
   fi
   record_success_id "$work_id"
+  record_processed_source "$src"
 
   if [[ -n "${tmp_dir:-}" && -d "${tmp_dir:-}" ]]; then
     rm -rf "$tmp_dir"
@@ -211,6 +236,10 @@ if [[ "$found" -eq 1 ]]; then
     echo "Error: MAKE_SRCSET_2400_IDS_FILE not found: $INCLUDE_2400_IDS_FILE"
     exit 1
   fi
+  if [[ -n "$WORK_IDS_FILE" && ! -f "$WORK_IDS_FILE" ]]; then
+    echo "Error: MAKE_SRCSET_WORK_IDS_FILE not found: $WORK_IDS_FILE"
+    exit 1
+  fi
   if [[ -n "$SUCCESS_IDS_FILE" ]]; then
     mkdir -p "$(dirname "$SUCCESS_IDS_FILE")"
     : > "$SUCCESS_IDS_FILE"
@@ -221,8 +250,8 @@ if [[ "$found" -eq 1 ]]; then
     done
   else
     # Parallel: one source per job
-    export -f process_one make_thumb make_primary should_make_2400 record_success_id
-    export OUTPUT_DIR WEBP_PRESET PRIMARY_Q THUMB_Q COMPRESSION_LEVEL HAS_SIPS HAS_HEIF_CONVERT INCLUDE_2400_IDS_FILE SUCCESS_IDS_FILE DRY_RUN REPORT_FILE
+    export -f process_one make_thumb make_primary should_make_2400 should_process_work_id record_success_id record_processed_source
+    export OUTPUT_DIR WEBP_PRESET PRIMARY_Q THUMB_Q COMPRESSION_LEVEL HAS_SIPS HAS_HEIF_CONVERT INCLUDE_2400_IDS_FILE WORK_IDS_FILE SUCCESS_IDS_FILE DRY_RUN REPORT_FILE PROCESSED_SOURCES_FILE
     printf '%s\0' "${sources[@]}" | xargs -0 -n 1 -P "$JOBS" bash -c '
       process_one "$1"
     ' _
@@ -238,14 +267,18 @@ if [[ "$found" -eq 0 ]]; then
   exit 1
 fi
 
-# Cleanup originals only after successful derivative generation.
-# With `set -e`, this block is skipped automatically if any prior processing step fails.
-deleted_count="${#sources[@]}"
+# Cleanup only the sources successfully processed in this run.
+processed_count="$(wc -l < "$PROCESSED_SOURCES_FILE" | tr -d ' ')"
 if [[ "$DRY_RUN" -eq 1 ]]; then
-  echo "DRY-RUN delete source file(s): $deleted_count from: $INPUT_DIR"
+  echo "DRY-RUN delete source file(s): $processed_count from: $INPUT_DIR"
 else
-  rm -f -- "${sources[@]}"
-  echo "Deleted $deleted_count source file(s) from: $INPUT_DIR"
+  if [[ "$processed_count" -gt 0 ]]; then
+    while IFS= read -r src_path; do
+      [[ -n "$src_path" ]] || continue
+      rm -f -- "$src_path"
+    done < "$PROCESSED_SOURCES_FILE"
+  fi
+  echo "Deleted $processed_count source file(s) from: $INPUT_DIR"
 fi
 
 echo "Done. Primaries written to: $OUTPUT_DIR/primary"
@@ -270,3 +303,4 @@ echo "  written total: $written_total (thumb=$written_thumbs, p800=$written_p800
 echo "  dry-run total: $dry_total (thumb=$dry_thumbs, p800=$dry_p800, p1200=$dry_p1200, p1600=$dry_p1600, p2400=$dry_p2400)"
 
 rm -f "$REPORT_FILE"
+rm -f "$PROCESSED_SOURCES_FILE"
