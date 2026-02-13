@@ -2,8 +2,8 @@
 """
 Copy and rename draft work files based on data/works.xlsx (Works sheet).
 
-Source:  [BASE_DIR]/projects/[project_folder]/[project_filename]
-Target:  [BASE_DIR]/works/make_srcset_images/[work_id][.ext]
+Source:  [PROJECTS_BASE_DIR]/projects/[project_folder]/[project_filename]
+Target:  [WORKS_BASE_DIR]/works/make_srcset_images/[work_id][.ext]
 
 Only rows with status == "draft" are processed.
 
@@ -25,8 +25,9 @@ import openpyxl
 # ---------
 # CONFIG
 # ---------
-# Hard-coded base folder (edit this to your real base path)
-BASE_DIR = Path("/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform")
+# Hard-coded base folders
+PROJECTS_BASE_DIR = Path("/Users/dlf/Library/CloudStorage/OneDrive-Personal/dotlineform")
+WORKS_BASE_DIR = Path("/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform")
 
 WORKBOOK_PATH = Path("data/works.xlsx")
 SHEET_NAME = "Works"
@@ -71,7 +72,7 @@ def main() -> int:
     if missing:
         raise SystemExit(f"Missing required columns in Works sheet: {', '.join(missing)}")
 
-    dest_dir = BASE_DIR / DEST_RELATIVE
+    dest_dir = WORKS_BASE_DIR / DEST_RELATIVE
     if args.write:
         dest_dir.mkdir(parents=True, exist_ok=True)
 
@@ -93,7 +94,7 @@ def main() -> int:
             continue
 
         work_id_str = str(work_id).strip()
-        src = BASE_DIR / "projects" / str(project_folder).strip() / str(project_filename).strip()
+        src = PROJECTS_BASE_DIR / "projects" / str(project_folder).strip() / str(project_filename).strip()
 
         if keep_ext:
             ext = Path(str(project_filename).strip()).suffix
