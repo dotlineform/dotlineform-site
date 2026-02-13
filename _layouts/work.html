@@ -16,6 +16,18 @@ layout: default
 {%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
 {%- assign src2400 = img_base | append: wid | append: "-primary-2400.webp" -%}
+{%- assign src2400_path = "/assets/works/img/" | append: wid | append: "-primary-2400.webp" -%}
+{%- assign has_local_2400 = false -%}
+<!-- this existence check is local to Jekyll’s static files (/assets/...).
+If you later serve images only from external media_base (CDN/R2), this check won’t know what exists remotely. -->
+{%- assign maybe_2400 = site.static_files | where: "path", src2400_path | first -%}
+{%- if maybe_2400 -%}
+  {%- assign has_local_2400 = true -%}
+{%- endif -%}
+{%- assign full_src = src1600 -%}
+{%- if has_local_2400 -%}
+  {%- assign full_src = src2400 -%}
+{%- endif -%}
 
 {%- unless img_base contains '://' -%}
   {%- assign src800  = src800  | relative_url -%}
@@ -45,7 +57,7 @@ layout: default
   <figure class="page__media">
     <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
     <a class="page__mediaLink"
-      href="{{ src2400 }}" target="_blank" rel="noopener"
+      href="{{ full_src }}" target="_blank" rel="noopener"
       style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
       <img
         class="page__mediaImg"
@@ -53,8 +65,8 @@ layout: default
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w,
-          {{ src2400 }} 2400w"
+          {{ src1600 }} 1600w{% if has_local_2400 %},
+          {{ src2400 }} 2400w{% endif %}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: 'Artwork' | escape }}"
         loading="eager"
