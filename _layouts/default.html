@@ -30,16 +30,10 @@
       </div>
       <nav class="site-nav" aria-label="Primary">
         {%- assign u = page.url | default: "" -%}
-        {% assign u_works = u | slice: 0, 7 %}
         {% assign u_series = u | slice: 0, 8 %}
         {% assign u_themes = u | slice: 0, 8 %}
         {% assign u_moments = u | slice: 0, 9 %}
         {% assign u_research = u | slice: 0, 10 %}
-
-        {%- assign is_works_index = false -%}
-        {%- assign is_works_active = false -%}
-        {%- if u == '/works/' -%}{%- assign is_works_index = true -%}{%- endif -%}
-        {%- if page.collection == 'works' or u_works == '/works/' -%}{%- assign is_works_active = true -%}{%- endif -%}
 
         {%- assign is_series_index = false -%}
         {%- assign is_series_active = false -%}
@@ -61,22 +55,13 @@
         {%- if u == '/research/' -%}{%- assign is_research_index = true -%}{%- endif -%}
         {%- if page.collection == 'research' or u_research == '/research/' -%}{%- assign is_research_active = true -%}{%- endif -%}
 
-        <!-- works -->
-        {% if is_works_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">works</span>
-        {% elsif is_works_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/works/' | relative_url }}" aria-current="page">works</a>
-        {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/works/' | relative_url }}">works</a>
-        {% endif %}
-
         <!-- series -->
         {% if is_series_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">series</span>
+          <span class="nav-item nav-item--overflow is-active" aria-current="page">works</span>
         {% elsif is_series_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/series/' | relative_url }}" aria-current="page">series</a>
+          <a class="nav-item nav-item--overflow is-active" href="{{ '/series/' | relative_url }}" aria-current="page">works</a>
         {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/series/' | relative_url }}">series</a>
+          <a class="nav-item nav-item--overflow" href="{{ '/series/' | relative_url }}">works</a>
         {% endif %}
 
         <!-- themes -->
@@ -90,7 +75,7 @@
 
          <!-- more (mobile overflow) -->
         {%- assign more_active = false -%}
-        {%- if is_works_active or is_works_index or is_series_active or is_series_index or is_themes_active or is_themes_index or is_moments_active or is_moments_index or is_research_active or is_research_index -%}
+        {%- if is_series_active or is_series_index or is_themes_active or is_themes_index or is_moments_active or is_moments_index or is_research_active or is_research_index -%}
           {%- assign more_active = true -%}
         {%- endif -%}
         <div class="nav-more" data-nav-more>
@@ -98,19 +83,12 @@
             &#9776;
           </button>
           <div class="nav-more__panel" role="menu" hidden>
-            {% if is_works_index %}
-              <span class="nav-more__item is-active" aria-current="page">works</span>
-            {% elsif is_works_active %}
-              <a class="nav-more__item is-active" href="{{ '/works/' | relative_url }}" aria-current="page">works</a>
-            {% else %}
-              <a class="nav-more__item" href="{{ '/works/' | relative_url }}">works</a>
-            {% endif %}
             {% if is_series_index %}
-              <span class="nav-more__item is-active" aria-current="page">series</span>
+              <span class="nav-more__item is-active" aria-current="page">works</span>
             {% elsif is_series_active %}
-              <a class="nav-more__item is-active" href="{{ '/series/' | relative_url }}" aria-current="page">series</a>
+              <a class="nav-more__item is-active" href="{{ '/series/' | relative_url }}" aria-current="page">works</a>
             {% else %}
-              <a class="nav-more__item" href="{{ '/series/' | relative_url }}">series</a>
+              <a class="nav-more__item" href="{{ '/series/' | relative_url }}">works</a>
             {% endif %}
             {% if is_themes_index %}
               <span class="nav-more__item is-active" aria-current="page">themes</span>
