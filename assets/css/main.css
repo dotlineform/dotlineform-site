@@ -413,13 +413,13 @@ figure.diagram figcaption{
 /* wrappers */
 .index{
   max-width: var(--content-measure);
-  margin-top: var(--space-3);
+  margin-top: 0;
   margin-left: auto;
   margin-right: auto;
 }
 
 .index__heading{
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-2);
   font-size: clamp(1.125rem, 1.25vw, 1.375rem);
   line-height: 1.15;
   font-weight: 600;
