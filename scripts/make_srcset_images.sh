@@ -17,7 +17,7 @@ set -euo pipefail
 # ---------
 BASE_DIR="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform"
 INPUT_DIR="${1:-$BASE_DIR/works/make_srcset_images}" # where {work_id}.jpg lives
-OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # where the .webp derivatives are written
+OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # base output folder for derivative subfolders
 JOBS="${3:-${MAKE_SRCSET_JOBS:-1}}" # number of parallel jobs (default 1 = serial)
 
 # Quality settings (tune if needed)
@@ -26,8 +26,8 @@ PRIMARY_Q=82
 THUMB_Q=78
 COMPRESSION_LEVEL=6
 
-mkdir -p "$OUTPUT_DIR"
-mkdir -p "$OUTPUT_DIR/thumbs"
+mkdir -p "$OUTPUT_DIR/primary"
+mkdir -p "$OUTPUT_DIR/thumb"
 
 # Check ffmpeg exists
 command -v ffmpeg >/dev/null 2>&1 || {
@@ -111,12 +111,12 @@ process_one() {
 
   echo "Processing $fname -> $work_id"
 
-  make_thumb  "$src_use" 96  "$OUTPUT_DIR/thumbs/${work_id}-thumb-96.webp"
-  make_thumb  "$src_use" 192 "$OUTPUT_DIR/thumbs/${work_id}-thumb-192.webp"
-  make_primary "$src_use" 800  "$OUTPUT_DIR/${work_id}-primary-800.webp"
-  make_primary "$src_use" 1200 "$OUTPUT_DIR/${work_id}-primary-1200.webp"
-  make_primary "$src_use" 1600 "$OUTPUT_DIR/${work_id}-primary-1600.webp"
-  make_primary "$src_use" 2400 "$OUTPUT_DIR/${work_id}-primary-2400.webp"
+  make_thumb  "$src_use" 96  "$OUTPUT_DIR/thumb/${work_id}-thumb-96.webp"
+  make_thumb  "$src_use" 192 "$OUTPUT_DIR/thumb/${work_id}-thumb-192.webp"
+  make_primary "$src_use" 800  "$OUTPUT_DIR/primary/${work_id}-primary-800.webp"
+  make_primary "$src_use" 1200 "$OUTPUT_DIR/primary/${work_id}-primary-1200.webp"
+  make_primary "$src_use" 1600 "$OUTPUT_DIR/primary/${work_id}-primary-1600.webp"
+  make_primary "$src_use" 2400 "$OUTPUT_DIR/primary/${work_id}-primary-2400.webp"
 
   if [[ -n "${tmp_dir:-}" && -d "${tmp_dir:-}" ]]; then
     rm -rf "$tmp_dir"
@@ -170,5 +170,5 @@ deleted_count="${#sources[@]}"
 rm -f -- "${sources[@]}"
 echo "Deleted $deleted_count source file(s) from: $INPUT_DIR"
 
-echo "Done. Primaries written to: $OUTPUT_DIR"
-echo "Done. Thumbnails written to: $OUTPUT_DIR/thumbs"
+echo "Done. Primaries written to: $OUTPUT_DIR/primary"
+echo "Done. Thumbnails written to: $OUTPUT_DIR/thumb"
