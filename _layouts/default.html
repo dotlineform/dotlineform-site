@@ -64,6 +64,15 @@
           <a class="nav-item nav-item--overflow" href="{{ '/series/' | relative_url }}">works</a>
         {% endif %}
 
+        <!-- moments -->
+        {% if is_moments_index %}
+          <span class="nav-item nav-item--overflow is-active" aria-current="page">moments</span>
+        {% elsif is_moments_active %}
+          <a class="nav-item nav-item--overflow is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
+        {% else %}
+          <a class="nav-item nav-item--overflow" href="{{ '/moments/' | relative_url }}">moments</a>
+        {% endif %}
+
         <!-- themes -->
         {% if is_themes_index %}
           <span class="nav-item nav-item--overflow is-active" aria-current="page">themes</span>
@@ -71,6 +80,15 @@
           <a class="nav-item nav-item--overflow is-active" href="{{ '/themes/' | relative_url }}" aria-current="page">themes</a>
         {% else %}
           <a class="nav-item nav-item--overflow" href="{{ '/themes/' | relative_url }}">themes</a>
+        {% endif %}
+
+        <!-- research -->
+        {% if is_research_index %}
+          <span class="nav-item nav-item--overflow is-active" aria-current="page">research</span>
+        {% elsif is_research_active %}
+          <a class="nav-item nav-item--overflow is-active" href="{{ '/research/' | relative_url }}" aria-current="page">research</a>
+        {% else %}
+          <a class="nav-item nav-item--overflow" href="{{ '/research/' | relative_url }}">research</a>
         {% endif %}
 
          <!-- more (mobile overflow) -->
@@ -90,19 +108,19 @@
             {% else %}
               <a class="nav-more__item" href="{{ '/series/' | relative_url }}">works</a>
             {% endif %}
-            {% if is_themes_index %}
-              <span class="nav-more__item is-active" aria-current="page">themes</span>
-            {% elsif is_themes_active %}
-              <a class="nav-more__item is-active" href="{{ '/themes/' | relative_url }}" aria-current="page">themes</a>
-            {% else %}
-              <a class="nav-more__item" href="{{ '/themes/' | relative_url }}">themes</a>
-            {% endif %}
             {% if is_moments_index %}
               <span class="nav-more__item is-active" aria-current="page">moments</span>
             {% elsif is_moments_active %}
               <a class="nav-more__item is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
             {% else %}
               <a class="nav-more__item" href="{{ '/moments/' | relative_url }}">moments</a>
+            {% endif %}
+            {% if is_themes_index %}
+              <span class="nav-more__item is-active" aria-current="page">themes</span>
+            {% elsif is_themes_active %}
+              <a class="nav-more__item is-active" href="{{ '/themes/' | relative_url }}" aria-current="page">themes</a>
+            {% else %}
+              <a class="nav-more__item" href="{{ '/themes/' | relative_url }}">themes</a>
             {% endif %}
             {% if is_research_index %}
               <span class="nav-more__item is-active" aria-current="page">research</span>
@@ -114,23 +132,6 @@
           </div>
         </div>
 
-        <!-- moments -->
-        {% if is_moments_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">moments</span>
-        {% elsif is_moments_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
-        {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/moments/' | relative_url }}">moments</a>
-        {% endif %}
-
-        <!-- research -->
-        {% if is_research_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">research</span>
-        {% elsif is_research_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/research/' | relative_url }}" aria-current="page">research</a>
-        {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/research/' | relative_url }}">research</a>
-        {% endif %}
       </nav>
       <script>
         (function () {
