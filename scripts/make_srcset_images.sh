@@ -164,5 +164,11 @@ if [[ "$found" -eq 0 ]]; then
   exit 1
 fi
 
+# Cleanup originals only after successful derivative generation.
+# With `set -e`, this block is skipped automatically if any prior processing step fails.
+deleted_count="${#sources[@]}"
+rm -f -- "${sources[@]}"
+echo "Deleted $deleted_count source file(s) from: $INPUT_DIR"
+
 echo "Done. Primaries written to: $OUTPUT_DIR"
 echo "Done. Thumbnails written to: $OUTPUT_DIR/thumbs"
