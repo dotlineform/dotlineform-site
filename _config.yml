@@ -36,6 +36,9 @@ collections:
     output: true
     permalink: /research/:name/
 
+# Any document can set published: false in its front matter to hide it from site.<collection> output/build.
+# no default has been set, so all documents are published by default.
+# This allows us to control visibility on a per-document basis without needing to set published: true for every document.
 defaults:
   - scope:
       path: ""
