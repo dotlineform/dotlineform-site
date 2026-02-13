@@ -20,7 +20,7 @@ YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 Safe by default:
 - dry-run unless you pass --write
 - will not overwrite unless --force
-- status gating (Works/Series/Themes):
+- status gating (Works/Series):
   - draft -> skip
   - published -> skip unless --force
   - unknown -> skip
@@ -65,20 +65,6 @@ def slug_id(raw: Any, width: int = 5) -> str:
     if not s:
         raise ValueError(f"Invalid id value: {raw!r}")
     return s.zfill(width)
-
-
-# ---- Theme/slug helpers ----
-def slugify_text(raw: Any) -> str:
-    """Create a slug-safe id from arbitrary text (lowercase, a-z0-9-, no leading/trailing dashes)."""
-    if raw is None:
-        raise ValueError("Missing text")
-    s = normalize_text(raw).lower()
-    # Replace non-alphanumerics with hyphens
-    s = re.sub(r"[^a-z0-9]+", "-", s)
-    s = re.sub(r"-+", "-", s).strip("-")
-    if not s:
-        raise ValueError(f"Invalid slug source: {raw!r}")
-    return s
 
 
 def is_slug_safe(s: str) -> bool:
@@ -408,14 +394,10 @@ def main() -> None:
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
     ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
     ap.add_argument("--files-sheet", default="WorkFiles", help="Worksheet name for work files")
-    ap.add_argument("--themes-sheet", default="Themes", help="Worksheet name for theme master data")
-    ap.add_argument("--theme-series-sheet", default="ThemeSeries", help="Worksheet name for theme->series links")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
     ap.add_argument("--print-output-dir", default="_works_print", help="Output folder for generated print work pages")
-    ap.add_argument("--themes-output-dir", default="_themes", help="Output folder for generated theme pages")
-    ap.add_argument("--theme-prose-dir", default="_includes/theme_prose", help="Folder for manual theme prose includes")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
@@ -478,12 +460,6 @@ def main() -> None:
     print_out_dir = Path(args.print_output_dir).expanduser()
     print_out_dir.mkdir(parents=True, exist_ok=True)
 
-    themes_out_dir = Path(args.themes_output_dir).expanduser()
-    themes_out_dir.mkdir(parents=True, exist_ok=True)
-
-    theme_prose_dir = Path(args.theme_prose_dir).expanduser()
-    theme_prose_dir.mkdir(parents=True, exist_ok=True)
-
     series_out_dir = Path(args.series_output_dir).expanduser()
     series_out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -496,19 +472,14 @@ def main() -> None:
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
-    themes_rows = read_sheet_rows(args.themes_sheet)
-    theme_series_rows = read_sheet_rows(args.theme_series_sheet)
     files_rows = read_sheet_rows(args.files_sheet)
     series_ws = wb[args.series_sheet]
-    themes_ws = wb[args.themes_sheet]
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
 
     works_hi = build_header_index(works_rows)
     series_hi = build_header_index(series_rows) if series_rows else {}
-    themes_hi = build_header_index(themes_rows) if themes_rows else {}
-    theme_series_hi = build_header_index(theme_series_rows) if theme_series_rows else {}
     files_hi = build_header_index(files_rows) if files_rows else {}
 
     if "status" not in works_hi:
@@ -721,182 +692,6 @@ def main() -> None:
     print(f"Workbook: {xlsx_path}")
     if args.write:
         print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
-
-
-    # ----------------------------
-    # Theme generation (Themes + ThemeSeries)
-    # ----------------------------
-    # Themes worksheet required columns:
-    # - title
-    # - theme_id
-    # Theme prose include is derived from theme_id (manual prose file: _includes/theme_prose/<theme_id>.md)
-
-    if not themes_rows or len(themes_rows) < 2:
-        print("No themes to generate (Themes sheet empty).")
-    else:
-        # Build map: theme_id -> {title}
-        themes_by_id: Dict[str, Dict[str, Any]] = {}
-        theme_rows_by_id: Dict[str, Any] = {}
-        for row_idx, (tr, tr_cells) in enumerate(
-            zip(themes_rows[1:], themes_ws.iter_rows(min_row=2), strict=False), start=2
-        ):
-            theme_id_raw = cell(tr, themes_hi, "theme_id")
-            if is_empty(theme_id_raw):
-                raise SystemExit(f"Themes sheet missing required value: theme_id (row {row_idx})")
-            theme_id = require_slug_safe("theme_id", theme_id_raw)
-
-            title_raw = cell(tr, themes_hi, "title")
-            if is_empty(title_raw):
-                raise SystemExit(f"Themes sheet missing required value: title (row {row_idx}, theme_id={theme_id})")
-            theme_title = coerce_string(title_raw)
-            if theme_title is None:
-                raise SystemExit(f"Themes sheet missing required value: title (row {row_idx}, theme_id={theme_id})")
-            theme_status = normalize_status(cell(tr, themes_hi, "status"))
-
-            if theme_id in themes_by_id:
-                raise SystemExit(f"Duplicate theme_id derived from theme_title: {theme_id} ({theme_title})")
-
-            themes_by_id[theme_id] = {
-                "theme_id": theme_id,
-                "title": theme_title,
-                "status": theme_status,
-            }
-            theme_rows_by_id[theme_id] = tr_cells
-
-        # Build map: theme_id -> ordered list of series_ids (from ThemeSeries)
-        series_ids_by_theme: Dict[str, List[str]] = {k: [] for k in themes_by_id.keys()}
-        if theme_series_rows and len(theme_series_rows) >= 2:
-            # Collect rows with optional sort_order
-            tmp: Dict[str, List[tuple]] = {k: [] for k in themes_by_id.keys()}
-            for lr in theme_series_rows[1:]:
-                # ThemeSeries references the theme by theme_id.
-                tid_raw = cell(lr, theme_series_hi, "theme_id")
-                sid_raw = cell(lr, theme_series_hi, "series_id")
-                if is_empty(sid_raw):
-                    continue
-
-                if is_empty(tid_raw):
-                    continue
-                theme_id = require_slug_safe("theme_id", tid_raw)
-                if theme_id not in themes_by_id:
-                    sample = ", ".join(sorted(themes_by_id.keys())[:10])
-                    raise SystemExit(
-                        f"ThemeSeries references unknown theme_id: {theme_id} "
-                        f"(known theme_ids: {sample or 'none'})"
-                    )
-
-                series_id = require_slug_safe("series_id", sid_raw)
-
-                tmp[theme_id].append(series_id)
-
-            for tid, pairs in tmp.items():
-                series_ids_by_theme[tid] = sorted(pairs)
-
-        # Emit one theme page per theme_id
-        themes_written = 0
-        themes_skipped = 0
-        themes_status_updated = 0
-        themes_published_date_updated = 0
-        themes_published_date_idx = themes_hi.get("published_date")
-        themes_published_date_missing_warned = False
-        ttotal = len(themes_by_id)
-        tprocessed = 0
-
-        for theme_id, meta in themes_by_id.items():
-            tprocessed += 1
-            prefix_t = f"[themes {tprocessed}/{ttotal}] "
-            status = normalize_status(meta.get("status"))
-            if status == "draft":
-                print(f"{prefix_t}SKIP (draft)")
-                themes_skipped += 1
-                continue
-            if status == "published" and not args.force:
-                print(f"{prefix_t}SKIP (published; use --force)")
-                themes_skipped += 1
-                continue
-            if status not in {"ready", "published"}:
-                print(f"{prefix_t}SKIP (unknown status '{status}')")
-                themes_skipped += 1
-                continue
-
-            # Front matter for theme page
-            tfm: Dict[str, Any] = {
-                "title": meta["title"],
-                "layout": "theme",
-                "theme_id": theme_id,
-            }
-
-            sids = series_ids_by_theme.get(theme_id, [])
-            if sids:
-                tfm["series_ids"] = sids
-            else:
-                tfm["series_ids"] = []
-
-            # Optional checksum for stable, skip-friendly writes
-            theme_checksum = compute_work_checksum(tfm)  # reuse canonical hashing util
-            tfm["checksum"] = theme_checksum
-
-            body = f"{{% include theme_prose/{theme_id}.md %}}\n"
-            theme_content = build_front_matter(tfm) + "\n" + body
-
-            theme_path = themes_out_dir / f"{theme_id}.md"
-            existing_text = None
-            if theme_path.exists():
-                try:
-                    existing_text = theme_path.read_text(encoding="utf-8")
-                except Exception:
-                    existing_text = None
-
-            # Write policy: overwrite if content differs, or if --force; dry-run unless --write
-            needs_write = (existing_text != theme_content)
-            if (not needs_write) and (not args.force):
-                print(f"{prefix_t}SKIP (no change): {theme_path}")
-                themes_skipped += 1
-            else:
-                if args.write:
-                    theme_path.write_text(theme_content, encoding="utf-8")
-                    print(f"{prefix_t}WRITE: {theme_path}")
-                    themes_written += 1
-                    row_cells = theme_rows_by_id.get(theme_id)
-                    if row_cells is not None:
-                        status_idx = themes_hi.get("status")
-                        if status_idx is not None:
-                            status_was = normalize_status(row_cells[status_idx].value)
-                            if status_was != "published":
-                                row_cells[status_idx].value = "published"
-                                themes_status_updated += 1
-                            if (status_was != "published") or args.force:
-                                if themes_published_date_idx is not None:
-                                    row_cells[themes_published_date_idx].value = today
-                                    themes_published_date_updated += 1
-                                elif not themes_published_date_missing_warned:
-                                    print("Warning: Themes sheet missing published_date column; skipping date updates.")
-                                    themes_published_date_missing_warned = True
-                else:
-                    print(f"{prefix_t}DRY-RUN: would write {theme_path} (overwrite={theme_path.exists()})")
-                    themes_written += 1
-
-            # Ensure prose include exists (create placeholder if missing; never overwrite)
-            prose_path = theme_prose_dir / f"{theme_id}.md"
-            if not prose_path.exists():
-                placeholder = (
-                    f"<!-- theme prose: {meta['title']} ({theme_id}) -->\n"
-                    "<!-- Replace this placeholder with the theme's prose. -->\n"
-                )
-                if args.write:
-                    prose_path.write_text(placeholder, encoding="utf-8")
-                    print(f"{prefix_t}WRITE prose placeholder: {prose_path}")
-                else:
-                    print(f"{prefix_t}DRY-RUN: would create prose placeholder {prose_path}")
-
-        if args.write and (themes_status_updated > 0 or themes_published_date_updated > 0):
-            wb.save(xlsx_path)
-            if themes_status_updated > 0:
-                print(f"Updated themes status to 'published' for {themes_status_updated} row(s).")
-            if themes_published_date_updated > 0:
-                print(f"Set themes published_date for {themes_published_date_updated} row(s).")
-        print(f"Themes done. {'Would write' if not args.write else 'Wrote'}: {themes_written}. Skipped: {themes_skipped}.")
-
 
     # ----------------------------
     # Series page generation (Series)
