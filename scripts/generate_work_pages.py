@@ -411,6 +411,7 @@ def main() -> None:
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
     ap.add_argument("--print-output-dir", default="_works_print", help="Output folder for generated print work pages")
+    ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Folder for optional manual work prose includes")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
@@ -472,6 +473,9 @@ def main() -> None:
 
     print_out_dir = Path(args.print_output_dir).expanduser()
     print_out_dir.mkdir(parents=True, exist_ok=True)
+
+    work_prose_dir = Path(args.work_prose_dir).expanduser()
+    work_prose_dir.mkdir(parents=True, exist_ok=True)
 
     series_out_dir = Path(args.series_output_dir).expanduser()
     series_out_dir.mkdir(parents=True, exist_ok=True)
@@ -638,7 +642,12 @@ def main() -> None:
         checksum = compute_work_checksum(fm)
         fm["checksum"] = checksum
 
-        content = build_front_matter(fm) + "\n"
+        prose_path = work_prose_dir / f"{wid}.md"
+        work_body = ""
+        if prose_path.exists():
+            work_body = f"{{% include work_prose/{wid}.md %}}\n"
+
+        content = build_front_matter(fm) + "\n" + work_body
 
         out_path = out_dir / f"{wid}.md"
         print_path = print_out_dir / f"{wid}.md"
