@@ -125,6 +125,19 @@ If you later serve images only from external media_base (CDN/R2), this check won
     </div>
   </section>
 
+  <section
+    id="workDetailsSection"
+    class="workDetails"
+    data-work-id="{{ wid | escape }}"
+    data-baseurl="{{ site.baseurl | default: '' }}"
+    data-media-base="{{ site.media_base | default: '' }}"
+    data-media-prefix="{{ site.media_prefix | default: '/assets' }}"
+    hidden
+  >
+    <h2 class="visually-hidden">Additional details</h2>
+    <div id="workDetailsContent"></div>
+  </section>
+
   <nav class="page__nav">
     {% assign back_series_label = page.series_title | default: page.series_id | default: "series" %}
     <a
@@ -157,6 +170,80 @@ If you later serve images only from external media_base (CDN/R2), this check won
       link.textContent = '← works';
       link.setAttribute('href', fallback);
     }
+  })();
+</script>
+<script>
+  (function () {
+    var section = document.getElementById('workDetailsSection');
+    var content = document.getElementById('workDetailsContent');
+    if (!section || !content) return;
+
+    var workId = String(section.getAttribute('data-work-id') || '').trim();
+    if (!workId) return;
+
+    var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var mediaBase = String(section.getAttribute('data-media-base') || '').replace(/\/$/, '');
+    var mediaPrefix = String(section.getAttribute('data-media-prefix') || '/assets').replace(/\/$/, '');
+    var detailsImgBase = mediaBase ? (mediaBase + mediaPrefix + '/work_details/img/') : (baseurl + mediaPrefix + '/work_details/img/');
+    var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function slug(s) {
+      return String(s || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    fetch(jsonUrl, { cache: 'default' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
+        if (!sections.length) return;
+
+        var html = '';
+        sections.forEach(function (sec) {
+          var label = String((sec && sec.project_subfolder) || '').trim();
+          var secId = slug(label || 'details');
+          var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
+          if (!details.length) return;
+
+          html += '<section class=\"workDetails__group\" id=\"details-' + esc(secId) + '\">';
+          html += '<h3 class=\"workDetails__title\">' + esc(label || 'Details') + '</h3>';
+          html += '<div class=\"seriesGrid\" aria-label=\"details for ' + esc(label || 'details') + '\">';
+          details.forEach(function (d) {
+            var uid = String((d && d.detail_uid) || '').trim();
+            if (!uid) return;
+            var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
+            var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
+            var title = String((d && d.title) || uid).trim();
+            var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&section=' + encodeURIComponent(secId);
+            html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\" target=\"_blank\" rel=\"noopener\">';
+            html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
+            html += '<span class=\"sr-only\">' + esc(title) + '</span></a>';
+          });
+          html += '</div></section>';
+        });
+
+        if (html) {
+          content.innerHTML = html;
+          section.hidden = false;
+        }
+      })
+      .catch(function () {
+        section.hidden = true;
+      });
   })();
 </script>
 <script src="{{ '/assets/js/work.js' | relative_url }}"></script>

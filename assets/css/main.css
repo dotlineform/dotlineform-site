@@ -846,6 +846,21 @@ pre.theme-text{
   margin: 0 auto;
 }
 
+.workDetails{
+  max-width: var(--content-measure);
+  margin: var(--space-5) auto 0;
+}
+
+.workDetails__group{
+  margin: 0 0 var(--space-5);
+}
+
+.workDetails__title{
+  margin: 0 0 var(--space-2);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
 /* Base components (shared across sections):
 Use “structure-first” naming and scope section-specific differences via the root page class
 (e.g. .work, .theme, .moment, .research-note).
