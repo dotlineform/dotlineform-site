@@ -37,7 +37,8 @@ layout: default
 
       {%- if has_series -%}
         <div class="supplements__links">
-          <h3>Series</h3>
+          <h3>works</h3>
+          <div class="index">
           {% for item in page.series %}
             {% assign series_ref = item.series_id | default: item %}
             {% assign series_doc = site.series | where: "series_id", series_ref | first %}
@@ -45,20 +46,19 @@ layout: default
               {% assign series_doc = site.series | where: "slug", series_ref | first %}
             {% endif %}
             {% if series_doc %}
-              {% assign out_href = series_doc.url | relative_url %}
-              {% assign text = item.label | default: series_doc.title | default: series_ref %}
+              {% include series_index_item.html series=series_doc %}
             {% else %}
-              {% assign out_href = '#' %}
               {% assign text = item.label | default: series_ref %}
+              <p class="supplements__link supplements__link--html">{{ text | escape }}</p>
             {% endif %}
-            <p class="supplements__link supplements__link--html"><a href="{{ out_href }}" target="_blank" rel="noopener noreferrer">{{ text | escape }}</a></p>
           {% endfor %}
+          </div>
         </div>
       {% endif %}
 
       {%- if has_research -%}
         <div class="supplements__links">
-          <h3>Research Notes</h3>
+          <h3>research</h3>
           {% for item in page["research-notes"] %}
             {% assign note_ref = item.research_id | default: item.slug | default: item %}
             {% assign note_doc = site.research | where: "slug", note_ref | first %}
