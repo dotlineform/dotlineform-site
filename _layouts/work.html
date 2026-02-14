@@ -180,6 +180,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     if (!section || !content) return;
 
     var workId = String(section.getAttribute('data-work-id') || '').trim();
+    var workTitle = {{ title_txt | jsonify }};
     if (!workId) return;
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
@@ -244,8 +245,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
             var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
             var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
             var title = String((d && d.title) || uid).trim();
-            var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&section=' + encodeURIComponent(secId);
-            html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\" target=\"_blank\" rel=\"noopener\">';
+            var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId);
+            html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
             html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
             html += '<span class=\"sr-only\">' + esc(title) + '</span></a>';
           });

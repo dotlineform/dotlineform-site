@@ -6,6 +6,8 @@ layout: default
 {% assign title_txt = page.title | default: "" | strip %}
 {% assign fallback_work_id = page.work_id | default: "" %}
 {% assign fallback_section = page.project_subfolder | default: "details" | slugify %}
+{% assign fallback_work_doc = site.works | where: "work_id", fallback_work_id | first %}
+{% assign fallback_work_title = fallback_work_doc.title | default: fallback_work_id %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix | default: "/assets" %}
@@ -40,6 +42,18 @@ layout: default
 
 <article class="page work">
   <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+
+  <nav class="seriesNav" id="detailNav"
+      aria-label="Detail navigation"
+      data-detail-uid="{{ detail_uid | escape }}"
+      data-work-id="{{ fallback_work_id | escape }}"
+      data-work-title="{{ fallback_work_title | escape }}"
+      data-baseurl="{{ site.baseurl | default: '' }}"
+      data-default-section="{{ fallback_section | escape }}"
+      hidden>
+    <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
+    <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
+  </nav>
 
   <figure class="page__media">
     <a
@@ -80,6 +94,7 @@ layout: default
       href="{{ '/works/' | append: fallback_work_id | append: '/' | relative_url }}#details-{{ fallback_section }}"
       data-baseurl="{{ site.baseurl | default: '' }}"
       data-fallback-work-id="{{ fallback_work_id | escape }}"
+      data-fallback-work-title="{{ fallback_work_title | escape }}"
       data-fallback-section="{{ fallback_section | escape }}"
     >← work</a>
   </nav>
@@ -92,10 +107,12 @@ layout: default
 
     var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
     var fallbackWorkId = String(link.getAttribute('data-fallback-work-id') || '').trim();
+    var fallbackWorkTitle = String(link.getAttribute('data-fallback-work-title') || '').trim();
     var fallbackSection = String(link.getAttribute('data-fallback-section') || '').trim();
     var params = new URLSearchParams(window.location.search);
 
     var fromWork = (params.get('from_work') || fallbackWorkId || '').trim();
+    var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
     var section = (params.get('section') || fallbackSection || '').trim();
 
     if (!fromWork) {
@@ -108,7 +125,88 @@ layout: default
     if (section) {
       href += '#details-' + encodeURIComponent(section);
     }
-    link.textContent = '← work ' + fromWork;
+    link.textContent = '← ' + fromWorkTitle;
     link.setAttribute('href', href);
+  })();
+</script>
+<script>
+  (function () {
+    var nav = document.getElementById('detailNav');
+    if (!nav) return;
+    var prevA = document.getElementById('detailNavPrev');
+    var nextA = document.getElementById('detailNavNext');
+    if (!prevA || !nextA) return;
+
+    var baseurl = String(nav.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var detailUid = String(nav.getAttribute('data-detail-uid') || '').trim();
+    var fallbackWorkId = String(nav.getAttribute('data-work-id') || '').trim();
+    var fallbackWorkTitle = String(nav.getAttribute('data-work-title') || '').trim();
+    var fallbackSection = String(nav.getAttribute('data-default-section') || '').trim();
+
+    var params = new URLSearchParams(window.location.search);
+    var fromWork = (params.get('from_work') || fallbackWorkId).trim();
+    var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
+    var section = (params.get('section') || fallbackSection).trim();
+    if (!fromWork) return;
+
+    var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(fromWork) + '.json';
+
+    function buildHref(uid) {
+      var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(fromWork);
+      if (fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(fromWorkTitle);
+      if (section) href += '&section=' + encodeURIComponent(section);
+      return href;
+    }
+
+    fetch(jsonUrl, { cache: 'default' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
+        if (!sections.length) return;
+
+        var details = [];
+        if (section) {
+          for (var i = 0; i < sections.length; i += 1) {
+            var sec = sections[i] || {};
+            var subfolder = String(sec.project_subfolder || '')
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '');
+            if (subfolder === section) {
+              details = Array.isArray(sec.details) ? sec.details : [];
+              break;
+            }
+          }
+        }
+
+        // Fallback: if section is missing/unmatched, cycle through all details.
+        if (!details.length) {
+          for (var s = 0; s < sections.length; s += 1) {
+            var secAll = sections[s] || {};
+            var list = Array.isArray(secAll.details) ? secAll.details : [];
+            for (var d = 0; d < list.length; d += 1) details.push(list[d]);
+          }
+        }
+
+        var ids = details
+          .map(function (d) { return d && d.detail_uid ? String(d.detail_uid) : ''; })
+          .filter(Boolean);
+
+        if (ids.length < 2) return;
+        var idx = ids.indexOf(detailUid);
+        if (idx === -1) return;
+
+        var prevId = ids[(idx - 1 + ids.length) % ids.length];
+        var nextId = ids[(idx + 1) % ids.length];
+        prevA.href = buildHref(prevId);
+        nextA.href = buildHref(nextId);
+        nav.hidden = false;
+      })
+      .catch(function () {
+        nav.hidden = true;
+      });
   })();
 </script>
