@@ -103,17 +103,37 @@ If you later serve images only from external media_base (CDN/R2), this check won
         <div class="page__row">{{ page.duration }}</div>
       {% endif %}
 
-      {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
-      {% if medium_type_norm != "music" and (page.height_cm or page.width_cm or page.depth_cm) %}
+      {% if page.vimeo_url or page.youtube_url or page.bandcamp_url %}
         <div class="page__row">
-          {% if page.height_cm and page.width_cm %}
-            {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
-          {% elsif page.height_cm %}
-            {{ page.height_cm }} cm
-          {% elsif page.width_cm %}
-            {{ page.width_cm }} cm
+          published on
+          {% assign published_sep = "" %}
+          {% if page.vimeo_url %}
+            {{ published_sep }}<a href="{{ page.vimeo_url }}" target="_blank" rel="noopener">Vimeo</a>
+            {% assign published_sep = ", " %}
+          {% endif %}
+          {% if page.youtube_url %}
+            {{ published_sep }}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener">YouTube</a>
+            {% assign published_sep = ", " %}
+          {% endif %}
+          {% if page.bandcamp_url %}
+            {{ published_sep }}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener">Bandcamp</a>
           {% endif %}
         </div>
+      {% endif %}
+
+      {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
+      {% if medium_type_norm != "music" %}
+        {% if page.height_cm or page.width_cm or page.depth_cm %}
+          <div class="page__row">
+            {% if page.height_cm and page.width_cm %}
+              {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
+            {% elsif page.height_cm %}
+              {{ page.height_cm }} cm
+            {% elsif page.width_cm %}
+              {{ page.width_cm }} cm
+            {% endif %}
+          </div>
+        {% endif %}
       {% endif %}
 
       {% if page.work_id %}
