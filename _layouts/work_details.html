@@ -42,7 +42,12 @@ layout: default
   <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
   <figure class="page__media">
-    <a class="page__mediaLink" href="{{ full_src }}" target="_blank" rel="noopener">
+    <a
+      class="page__mediaLink"
+      href="{{ full_src }}"
+      target="_blank"
+      rel="noopener"
+      style="--work-ar: {{ page.width_px | default: 4 }} / {{ page.height_px | default: 3 }};">
       <img
         class="page__mediaImg"
         src="{{ src1600 }}"

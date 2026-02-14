@@ -43,6 +43,8 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -135,7 +137,7 @@ def yaml_quote(s: str) -> str:
     return f'"{s}"'
 
 
-NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm"}
+NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm", "width_px", "height_px"}
 BOOLEAN_KEYS = {"has_primary_2400"}
 
 
@@ -384,6 +386,36 @@ def extract_existing_series_hash(path: Path) -> Optional[str]:
     s = str(hv).strip()
     return s or None
 
+
+def parse_sips_pixel_dims(output: str) -> tuple[Optional[int], Optional[int]]:
+    width = None
+    height = None
+    for line in output.splitlines():
+        m_w = re.search(r"pixelWidth:\s*([0-9]+)", line)
+        if m_w:
+            width = int(m_w.group(1))
+        m_h = re.search(r"pixelHeight:\s*([0-9]+)", line)
+        if m_h:
+            height = int(m_h.group(1))
+    return width, height
+
+
+def read_image_dims_px(path: Path) -> tuple[Optional[int], Optional[int]]:
+    """Read pixel dimensions from an image file using macOS `sips` when available."""
+    if not path.exists():
+        return None, None
+    if shutil.which("sips") is None:
+        return None, None
+    proc = subprocess.run(
+        ["sips", "-g", "pixelWidth", "-g", "pixelHeight", str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        return None, None
+    return parse_sips_pixel_dims(proc.stdout)
+
 # ----------------------------
 # Main program
 # ----------------------------
@@ -411,6 +443,11 @@ def main() -> None:
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
+    ap.add_argument(
+        "--projects-base-dir",
+        default="/Users/dlf/Library/CloudStorage/OneDrive-Personal/dotlineform",
+        help="Base folder containing the projects directory used to resolve WorkDetails source images",
+    )
 
     # Write controls
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
@@ -532,6 +569,17 @@ def main() -> None:
         if title is None:
             continue
         series_title_by_id[sid] = title
+
+    # Pre-index project folder by work_id (for WorkDetails source image lookup).
+    work_project_folder_by_id: Dict[str, str] = {}
+    has_project_folder_col = "project_folder" in works_hi
+    if has_project_folder_col:
+        for wr in works_rows[1:]:
+            wid_raw = cell(wr, works_hi, "work_id")
+            pf_raw = cell(wr, works_hi, "project_folder")
+            if is_empty(wid_raw) or is_empty(pf_raw):
+                continue
+            work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
 
     written = 0
     skipped = 0
@@ -975,10 +1023,26 @@ def main() -> None:
     if not work_details_rows or len(work_details_rows) < 2 or work_details_ws is None:
         print("No work detail pages to generate (WorkDetails sheet empty or missing).")
     else:
-        required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "has_primary_2400"]
+        required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "project_filename", "has_primary_2400"]
         missing_details = [c for c in required_details if c not in work_details_hi]
         if missing_details:
             raise SystemExit(f"WorkDetails sheet missing required columns: {', '.join(missing_details)}")
+
+        projects_base_dir = Path(args.projects_base_dir).expanduser()
+        projects_root = projects_base_dir / "projects"
+
+        # Ensure width/height columns exist when writing so dimensions persist in the sheet.
+        width_px_idx = work_details_hi.get("width_px")
+        height_px_idx = work_details_hi.get("height_px")
+        if args.write:
+            if width_px_idx is None:
+                width_px_idx = work_details_ws.max_column
+                work_details_ws.cell(row=1, column=width_px_idx + 1, value="width_px")
+                work_details_hi["width_px"] = width_px_idx
+            if height_px_idx is None:
+                height_px_idx = work_details_ws.max_column
+                work_details_ws.cell(row=1, column=height_px_idx + 1, value="height_px")
+                work_details_hi["height_px"] = height_px_idx
 
         # Build known works from the Works sheet to validate foreign-key references.
         known_work_ids: set[str] = set()
@@ -999,8 +1063,10 @@ def main() -> None:
         details_skipped = 0
         details_status_updated = 0
         details_published_date_updated = 0
+        details_dimensions_updated = 0
         details_published_date_idx = work_details_hi.get("published_date")
         details_published_date_missing_warned = False
+        project_folder_missing_warned = False
         details_total = 0
 
         for dr in work_details_rows[1:]:
@@ -1045,6 +1111,41 @@ def main() -> None:
             title = coerce_string(cell(dr, work_details_hi, "title"))
             has_primary_2400 = coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400"))
             project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder"))
+            project_filename = coerce_string(cell(dr, work_details_hi, "project_filename"))
+            width_px = coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None
+            height_px = coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None
+
+            # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
+            project_folder = work_project_folder_by_id.get(wid)
+            src_path: Optional[Path] = None
+            if project_folder and project_filename:
+                src_path = projects_root / project_folder
+                if project_subfolder:
+                    src_path = src_path / project_subfolder
+                src_path = src_path / project_filename
+            elif not project_folder_missing_warned:
+                if not has_project_folder_col:
+                    print("Warning: Works sheet has no project_folder column; cannot persist WorkDetails image dimensions.")
+                else:
+                    print("Warning: missing Works.project_folder for one or more WorkDetails rows; cannot persist those image dimensions.")
+                project_folder_missing_warned = True
+
+            if src_path is not None:
+                src_w, src_h = read_image_dims_px(src_path)
+                if src_w is not None and src_h is not None:
+                    width_px = src_w
+                    height_px = src_h
+                    if args.write and width_px_idx is not None and height_px_idx is not None:
+                        prev_w = dr_cells[width_px_idx].value if width_px_idx < len(dr_cells) else None
+                        prev_h = dr_cells[height_px_idx].value if height_px_idx < len(dr_cells) else None
+                        if prev_w != src_w or prev_h != src_h:
+                            dr_cells[width_px_idx].value = src_w
+                            dr_cells[height_px_idx].value = src_h
+                            details_dimensions_updated += 1
+                else:
+                    print(f"Warning: could not read dimensions for detail source image: {src_path}")
+            elif project_filename:
+                print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
             dfm: Dict[str, Any] = {
                 "work_id": wid,
@@ -1052,6 +1153,8 @@ def main() -> None:
                 "detail_uid": detail_uid,
                 "title": title,
                 "project_subfolder": project_subfolder,
+                "width_px": width_px,
+                "height_px": height_px,
                 "has_primary_2400": has_primary_2400,
                 "layout": "work_details",
             }
@@ -1089,12 +1192,14 @@ def main() -> None:
                 print(f"{prefix_d}DRY-RUN: would write {d_path} (overwrite={d_exists})")
                 details_written += 1
 
-        if args.write and (details_status_updated > 0 or details_published_date_updated > 0):
+        if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
             wb.save(xlsx_path)
             if details_status_updated > 0:
                 print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
             if details_published_date_updated > 0:
                 print(f"Set work detail published_date for {details_published_date_updated} row(s).")
+            if details_dimensions_updated > 0:
+                print(f"Updated work detail width_px/height_px for {details_dimensions_updated} row(s).")
 
         print(
             f"Work detail pages done. {'Would write' if not args.write else 'Wrote'}: {details_written}. Skipped: {details_skipped}."
