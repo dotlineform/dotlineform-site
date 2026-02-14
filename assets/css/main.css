@@ -419,7 +419,7 @@ figure.diagram figcaption{
 }
 
 .index__heading{
-  margin: 0 0 var(--space-2);
+  margin: 0 0 calc(var(--space-2) + 2px);
   font-size: clamp(1.125rem, 1.25vw, 1.375rem);
   line-height: 1.15;
   font-weight: 600;
@@ -862,7 +862,7 @@ Use “structure-first” naming and scope section-specific differences via the 
 }
 
 .page__title{
-  margin: 0 0 var(--space-2);
+  margin: 0 0 calc(var(--space-2) + 2px);
   font-size: clamp(1.125rem, 1.25vw, 1.375rem);
   line-height: 1.15;
   font-weight: 600;
@@ -883,9 +883,9 @@ Use “structure-first” naming and scope section-specific differences via the 
   white-space: normal;
 }
 
-/* Series page: add breathing room between header and content */
+/* Keep heading-to-content spacing aligned across index and content pages. */
 .series .content{
-  margin-top: var(--space-3);
+  margin-top: 0;
 }
 
 /* Primary/top media on a page */
