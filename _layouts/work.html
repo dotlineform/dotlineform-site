@@ -14,6 +14,12 @@ layout: default
 {%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
 {%- assign src2400 = img_base | append: wid | append: "-primary-2400.webp" -%}
+{%- assign work_details_json_path = "/assets/works/index/" | append: wid | append: ".json" -%}
+{%- assign work_details_json_file = site.static_files | where: "path", work_details_json_path | first -%}
+{%- assign has_work_details_json = false -%}
+{%- if work_details_json_file -%}
+  {%- assign has_work_details_json = true -%}
+{%- endif -%}
 {%- assign src2400_path = "/assets/works/img/" | append: wid | append: "-primary-2400.webp" -%}
 {%- assign has_local_2400 = false -%}
 <!-- this existence check is local to Jekyll’s static files (/assets/...).
@@ -133,6 +139,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     data-media-base="{{ site.media_base | default: '' }}"
     data-media-prefix="{{ site.media_prefix | default: '/assets' }}"
     data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
+    data-has-details-json="{{ has_work_details_json }}"
     hidden
   >
     <h2 class="visually-hidden">Additional details</h2>
@@ -187,6 +194,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var mediaBase = String(section.getAttribute('data-media-base') || '').replace(/\/$/, '');
     var mediaPrefix = String(section.getAttribute('data-media-prefix') || '/assets').replace(/\/$/, '');
     var detailsImgBase = mediaBase ? (mediaBase + mediaPrefix + '/work_details/img/') : (baseurl + mediaPrefix + '/work_details/img/');
+    var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
+    if (!hasDetailsJson) return;
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
     // Site-level toggle: when true, hash-based back-links from detail pages scroll
     // to the corresponding details section after async JSON content is inserted.
