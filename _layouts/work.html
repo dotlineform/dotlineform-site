@@ -103,7 +103,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
         <div class="page__row">{{ page.duration }}</div>
       {% endif %}
 
-      {% if page.height_cm or page.width_cm or page.depth_cm %}
+      {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
+      {% if medium_type_norm != "music" and (page.height_cm or page.width_cm or page.depth_cm) %}
         <div class="page__row">
           {% if page.height_cm and page.width_cm %}
             {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
