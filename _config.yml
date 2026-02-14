@@ -15,6 +15,9 @@ thumb_prefix: "/assets"
 # Local fallback (serve media from this repo):
 media_base: ""
 media_prefix: "/assets"
+# Re-apply hash-anchor scrolling on work pages after async detail sections render.
+# Keep true unless you explicitly want to suppress jump-to-section on return from detail pages.
+enable_details_hash_scroll: true
 
 collections:
   works:

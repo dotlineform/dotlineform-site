@@ -132,6 +132,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     data-baseurl="{{ site.baseurl | default: '' }}"
     data-media-base="{{ site.media_base | default: '' }}"
     data-media-prefix="{{ site.media_prefix | default: '/assets' }}"
+    data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
     hidden
   >
     <h2 class="visually-hidden">Additional details</h2>
@@ -186,6 +187,9 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var mediaPrefix = String(section.getAttribute('data-media-prefix') || '/assets').replace(/\/$/, '');
     var detailsImgBase = mediaBase ? (mediaBase + mediaPrefix + '/work_details/img/') : (baseurl + mediaPrefix + '/work_details/img/');
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
+    // Site-level toggle: when true, hash-based back-links from detail pages scroll
+    // to the corresponding details section after async JSON content is inserted.
+    var enableHashScroll = String(section.getAttribute('data-enable-hash-scroll') || 'true') !== 'false';
 
     function esc(s) {
       return String(s == null ? '' : s)
@@ -201,6 +205,18 @@ If you later serve images only from external media_base (CDN/R2), this check won
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
+    }
+
+    function scrollToHashTarget() {
+      if (!enableHashScroll) return;
+      var raw = window.location.hash || '';
+      if (!raw || raw.length < 2) return;
+      var id = decodeURIComponent(raw.slice(1));
+      var target = document.getElementById(id);
+      if (!target) return;
+      requestAnimationFrame(function () {
+        target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      });
     }
 
     fetch(jsonUrl, { cache: 'default' })
@@ -239,6 +255,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         if (html) {
           content.innerHTML = html;
           section.hidden = false;
+          scrollToHashTarget();
         }
       })
       .catch(function () {
