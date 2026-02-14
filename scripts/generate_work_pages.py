@@ -769,6 +769,31 @@ def main() -> None:
     if args.write:
         print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
 
+    # Determine series scope for this run:
+    # - If caller explicitly scoped series via --series-ids, honor that for both pages and JSON.
+    # - If caller scoped only works (--work-ids/--work-ids-file), skip series pages by default,
+    #   but still regenerate series JSON for affected series IDs so work prev/next nav stays fresh.
+    run_series_pages = True
+    series_page_selected_ids = selected_series_ids
+    series_json_selected_ids = selected_series_ids
+    if explicit_work_filter and selected_series_ids is None:
+        run_series_pages = False
+        affected_series_ids: set[str] = set()
+        for wr in works_rows[1:]:
+            wid_raw = cell(wr, works_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            wid = slug_id(wid_raw)
+            if selected_ids is None or wid not in selected_ids:
+                continue
+            sid_raw = cell(wr, works_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = normalize_text(sid_raw)
+            if is_slug_safe(sid):
+                affected_series_ids.add(sid)
+        series_json_selected_ids = affected_series_ids
+
     # ----------------------------
     # Series page generation (Series)
     # ----------------------------
@@ -801,107 +826,110 @@ def main() -> None:
             if is_empty(sid_raw):
                 continue
             sid = require_slug_safe("series_id", sid_raw)
-            if selected_series_ids is not None and sid not in selected_series_ids:
+            if series_page_selected_ids is not None and sid not in series_page_selected_ids:
                 continue
             status = normalize_status(cell(sr, series_hi, "status"))
             if is_actionable_series_status(status):
                 s_total += 1
         s_processed = 0
 
-        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-            sid_raw = cell(sr, series_hi, "series_id")
-            if is_empty(sid_raw):
-                series_skipped += 1
-                continue
-            series_id = require_slug_safe("series_id", sid_raw)
-            if selected_series_ids is not None and series_id not in selected_series_ids:
-                series_skipped += 1
-                continue
+        if run_series_pages:
+            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
+                sid_raw = cell(sr, series_hi, "series_id")
+                if is_empty(sid_raw):
+                    series_skipped += 1
+                    continue
+                series_id = require_slug_safe("series_id", sid_raw)
+                if series_page_selected_ids is not None and series_id not in series_page_selected_ids:
+                    series_skipped += 1
+                    continue
 
-            status = normalize_status(cell(sr, series_hi, "status"))
-            if not is_actionable_series_status(status):
-                series_skipped += 1
-                continue
+                status = normalize_status(cell(sr, series_hi, "status"))
+                if not is_actionable_series_status(status):
+                    series_skipped += 1
+                    continue
 
-            s_processed += 1
-            prefix_s = f"[series {s_processed}/{s_total}] "
+                s_processed += 1
+                prefix_s = f"[series {s_processed}/{s_total}] "
 
-            title_raw = cell(sr, series_hi, "title")
-            series_title = coerce_string(title_raw) or series_id
+                title_raw = cell(sr, series_hi, "title")
+                series_title = coerce_string(title_raw) or series_id
 
-            # Numeric year (optional)
-            year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
+                # Numeric year (optional)
+                year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
 
-            # year_display handling:
-            # - If Series sheet has a year_display column, use it (may be null).
-            # - If it does NOT have year_display, fall back to numeric year rendered as text
-            year_display: Optional[str]
-            if "year_display" in series_hi:
-                year_display = coerce_string(cell(sr, series_hi, "year_display"))
-            else:
-                # Fall back to numeric year rendered as text
-                year_display = str(year) if year is not None else None
-
-            sfm: Dict[str, Any] = {
-                "series_id": series_id,
-                "title": series_title,
-                "year": year,
-                "year_display": year_display,
-                "layout": "series",
-            }
-
-            s_checksum = compute_work_checksum(sfm)
-            sfm["checksum"] = s_checksum
-
-            body = f"{{% include series_prose/{series_id}.md %}}\n"
-            series_content = build_front_matter(sfm) + "\n" + body
-
-            series_path = series_out_dir / f"{series_id}.md"
-            existing_text = None
-            if series_path.exists():
-                try:
-                    existing_text = series_path.read_text(encoding="utf-8")
-                except Exception:
-                    existing_text = None
-
-            needs_write = (existing_text != series_content)
-            if (not needs_write) and (not args.force):
-                print(f"{prefix_s}SKIP (no change): {series_path}")
-                series_skipped += 1
-            else:
-                if args.write:
-                    series_path.write_text(series_content, encoding="utf-8")
-                    print(f"{prefix_s}WRITE: {series_path}")
-                    series_written += 1
-                    status_idx = series_hi.get("status")
-                    if status_idx is not None:
-                        status_was = normalize_status(sr_cells[status_idx].value)
-                        if status_was != "published":
-                            sr_cells[status_idx].value = "published"
-                            series_status_updated += 1
-                        if (status_was != "published") or args.force:
-                            if series_published_date_idx is not None:
-                                sr_cells[series_published_date_idx].value = today
-                                series_published_date_updated += 1
-                            elif not series_published_date_missing_warned:
-                                print("Warning: Series sheet missing published_date column; skipping date updates.")
-                                series_published_date_missing_warned = True
+                # year_display handling:
+                # - If Series sheet has a year_display column, use it (may be null).
+                # - If it does NOT have year_display, fall back to numeric year rendered as text
+                year_display: Optional[str]
+                if "year_display" in series_hi:
+                    year_display = coerce_string(cell(sr, series_hi, "year_display"))
                 else:
-                    print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
-                    series_written += 1
+                    # Fall back to numeric year rendered as text
+                    year_display = str(year) if year is not None else None
 
-            # Ensure prose include exists (create placeholder if missing; never overwrite)
-            prose_path = series_prose_dir / f"{series_id}.md"
-            if not prose_path.exists():
-                placeholder = (
-                    f"<!-- series prose: {series_title} ({series_id}) -->\n"
-                    "<!-- Replace this placeholder with the series' prose. -->\n"
-                )
-                if args.write:
-                    prose_path.write_text(placeholder, encoding="utf-8")
-                    print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
+                sfm: Dict[str, Any] = {
+                    "series_id": series_id,
+                    "title": series_title,
+                    "year": year,
+                    "year_display": year_display,
+                    "layout": "series",
+                }
+
+                s_checksum = compute_work_checksum(sfm)
+                sfm["checksum"] = s_checksum
+
+                body = f"{{% include series_prose/{series_id}.md %}}\n"
+                series_content = build_front_matter(sfm) + "\n" + body
+
+                series_path = series_out_dir / f"{series_id}.md"
+                existing_text = None
+                if series_path.exists():
+                    try:
+                        existing_text = series_path.read_text(encoding="utf-8")
+                    except Exception:
+                        existing_text = None
+
+                needs_write = (existing_text != series_content)
+                if (not needs_write) and (not args.force):
+                    print(f"{prefix_s}SKIP (no change): {series_path}")
+                    series_skipped += 1
                 else:
-                    print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
+                    if args.write:
+                        series_path.write_text(series_content, encoding="utf-8")
+                        print(f"{prefix_s}WRITE: {series_path}")
+                        series_written += 1
+                        status_idx = series_hi.get("status")
+                        if status_idx is not None:
+                            status_was = normalize_status(sr_cells[status_idx].value)
+                            if status_was != "published":
+                                sr_cells[status_idx].value = "published"
+                                series_status_updated += 1
+                            if (status_was != "published") or args.force:
+                                if series_published_date_idx is not None:
+                                    sr_cells[series_published_date_idx].value = today
+                                    series_published_date_updated += 1
+                                elif not series_published_date_missing_warned:
+                                    print("Warning: Series sheet missing published_date column; skipping date updates.")
+                                    series_published_date_missing_warned = True
+                    else:
+                        print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
+                        series_written += 1
+
+                # Ensure prose include exists (create placeholder if missing; never overwrite)
+                prose_path = series_prose_dir / f"{series_id}.md"
+                if not prose_path.exists():
+                    placeholder = (
+                        f"<!-- series prose: {series_title} ({series_id}) -->\n"
+                        "<!-- Replace this placeholder with the series' prose. -->\n"
+                    )
+                    if args.write:
+                        prose_path.write_text(placeholder, encoding="utf-8")
+                        print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
+                    else:
+                        print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
+        else:
+            print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
             wb.save(xlsx_path)
@@ -930,7 +958,7 @@ def main() -> None:
             if is_empty(sid_raw):
                 continue
             sid = require_slug_safe("series_id", sid_raw)
-            if selected_series_ids is not None and sid not in selected_series_ids:
+            if series_json_selected_ids is not None and sid not in series_json_selected_ids:
                 continue
             status_idx = series_hi.get("status")
             status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
@@ -969,7 +997,7 @@ def main() -> None:
                 sj_skipped += 1
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
-            if selected_series_ids is not None and series_id not in selected_series_ids:
+            if series_json_selected_ids is not None and series_id not in series_json_selected_ids:
                 sj_skipped += 1
                 continue
             status_idx = series_hi.get("status")
