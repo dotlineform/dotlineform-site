@@ -1,0 +1,44 @@
+{
+  "header": {
+    "work_id": "00456",
+    "count": 5,
+    "hash": "ea54147a6aa53167d172e2858240a893"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00456-001",
+          "title": "dots [detail 1]",
+          "has_primary_2400": false
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00456-002",
+          "title": "dots [detail 2]",
+          "has_primary_2400": false
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00456-003",
+          "title": "dots [detail 3]",
+          "has_primary_2400": false
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00456-004",
+          "title": "dots [detail 4]",
+          "has_primary_2400": false
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00456-005",
+          "title": "dots [detail 5]",
+          "has_primary_2400": false
+        }
+      ]
+    }
+  ]
+}
