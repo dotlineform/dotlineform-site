@@ -30,8 +30,9 @@ specify work_ids to process with --work-ids (comma-separated list)
   - Only those IDs are processed; others are skipped early.
   - Status filtering still applies to the selected IDs unless you also pass --force.
 Usage:
-    python3 scripts/generate_work_pages.py data/works.xlsx --work-ids 00001,00002 --write
-    python3 scripts/generate_work_pages.py data/works.xlsx --work-ids-file tmp/work_ids.txt --write
+    python3 scripts/generate_work_pages.py --work-ids 00001,00002 --write
+    python3 scripts/generate_work_pages.py --work-ids-file tmp/work_ids.txt --write
+    python3 scripts/generate_work_pages.py --series-ids curve-poems,dots --write
 
 """
 
@@ -385,7 +386,7 @@ def extract_existing_series_hash(path: Path) -> Optional[str]:
 def main() -> None:
     # CLI arguments define how we map Excel columns to front matter fields, and where output files go.
     ap = argparse.ArgumentParser()
-    ap.add_argument("xlsx", help="Path to Excel workbook (.xlsx)")
+    ap.add_argument("xlsx", nargs="?", default="data/works.xlsx", help="Path to Excel workbook (.xlsx)")
 
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
@@ -411,6 +412,16 @@ def main() -> None:
         "--work-ids-file",
         default="",
         help="Path to work_ids file (one id per line). If set, only these IDs are processed.",
+    )
+    ap.add_argument(
+        "--series-ids",
+        default="",
+        help="Comma-separated series_ids to process for series page/JSON generation.",
+    )
+    ap.add_argument(
+        "--series-ids-file",
+        default="",
+        help="Path to series_ids file (one id per line). If set, only these series are processed.",
     )
     args = ap.parse_args()
 
@@ -514,6 +525,7 @@ def main() -> None:
 
     # Optional filtering: allow a specific list of work_ids (from file or comma-separated arg).
     selected_ids = None
+    explicit_work_filter = bool(args.work_ids_file or args.work_ids)
     if args.work_ids_file:
         ids_path = Path(args.work_ids_file).expanduser()
         if not ids_path.exists():
@@ -521,6 +533,28 @@ def main() -> None:
         selected_ids = {slug_id(line.strip()) for line in ids_path.read_text(encoding="utf-8").splitlines() if line.strip()}
     elif args.work_ids:
         selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()}
+
+    selected_series_ids = None
+    if args.series_ids_file:
+        sids_path = Path(args.series_ids_file).expanduser()
+        if not sids_path.exists():
+            raise SystemExit(f"series_ids file not found: {sids_path}")
+        selected_series_ids = {
+            require_slug_safe("series_id", line.strip())
+            for line in sids_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+    elif args.series_ids:
+        selected_series_ids = {
+            require_slug_safe("series_id", sid.strip())
+            for sid in args.series_ids.split(",")
+            if sid.strip()
+        }
+
+    # If caller scopes by series but does not provide an explicit work filter,
+    # skip work-page processing by default.
+    if selected_series_ids is not None and not explicit_work_filter:
+        selected_ids = set()
 
     total = 0
     for r in works_rows[1:]:
@@ -697,6 +731,9 @@ def main() -> None:
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 continue
+            sid = require_slug_safe("series_id", sid_raw)
+            if selected_series_ids is not None and sid not in selected_series_ids:
+                continue
             status = normalize_status(cell(sr, series_hi, "status"))
             if is_actionable_series_status(status):
                 s_total += 1
@@ -708,6 +745,9 @@ def main() -> None:
                 series_skipped += 1
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
+            if selected_series_ids is not None and series_id not in selected_series_ids:
+                series_skipped += 1
+                continue
 
             status = normalize_status(cell(sr, series_hi, "status"))
             if not is_actionable_series_status(status):
@@ -816,11 +856,16 @@ def main() -> None:
         sj_written = 0
         sj_skipped = 0
         sj_total = 0
-        for sr in series_rows[1:]:
+        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 continue
-            status = normalize_status(cell(sr, series_hi, "status"))
+            sid = require_slug_safe("series_id", sid_raw)
+            if selected_series_ids is not None and sid not in selected_series_ids:
+                continue
+            status_idx = series_hi.get("status")
+            status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
+            status = normalize_status(status_val)
             if status != "draft":
                 sj_total += 1
         sj_processed = 0
@@ -849,13 +894,18 @@ def main() -> None:
         for sid in list(work_ids_by_series.keys()):
             work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
 
-        for sr in series_rows[1:]:
+        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 sj_skipped += 1
                 continue
             series_id = require_slug_safe("series_id", sid_raw)
-            status = normalize_status(cell(sr, series_hi, "status"))
+            if selected_series_ids is not None and series_id not in selected_series_ids:
+                sj_skipped += 1
+                continue
+            status_idx = series_hi.get("status")
+            status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
+            status = normalize_status(status_val)
             if status == "draft":
                 sj_skipped += 1
                 continue
