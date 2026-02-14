@@ -9,7 +9,7 @@ permalink: /series/
 {% if series and series != empty %}
   {% assign sorted_series = series | sort: 'year' | reverse %}
   <div class="index">
-    <h1 class="index__heading">works</h1>
+    <h1 class="index__heading visually-hidden">works</h1>
     {% for s in sorted_series %}
       {% include series_index_item.html series=s %}
     {% endfor %}

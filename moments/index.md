@@ -9,7 +9,7 @@ permalink: /moments/
 {% if moments_items and moments_items != empty %}
   {% assign sorted_moments = moments_items | sort: 'date' | reverse %}
   <div class="index">
-    <h1 class="index__heading">moments</h1>
+    <h1 class="index__heading visually-hidden">moments</h1>
     {% for moment in sorted_moments %}
       {% if moment.published == false %}{% continue %}{% endif %}
       <div class="index__item">

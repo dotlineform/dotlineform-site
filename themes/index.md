@@ -9,7 +9,7 @@ permalink: /themes/
 {% if theme_items and theme_items != empty %}
   {% assign sorted_themes = theme_items | sort: 'date' | reverse %}
   <div class="index">
-    <h1 class="index__heading">themes</h1>
+    <h1 class="index__heading visually-hidden">themes</h1>
     {% for theme in sorted_themes %}
       <div class="index__item">
         <span class="index__date">{% if theme.date %}{{ theme.date | date: "%-d %b %Y" }}{% endif %}</span>

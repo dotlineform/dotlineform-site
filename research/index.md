@@ -9,7 +9,7 @@ permalink: /research/
 {% if research_items and research_items != empty %}
   {% assign sorted_research = research_items | sort: 'date' | reverse %}
   <div class="index">
-    <h1 class="index__heading">research notes</h1>
+    <h1 class="index__heading visually-hidden">research notes</h1>
     {% for note in sorted_research %}
       <div class="index__item">
         <span class="index__date">{% if note.date %}{{ note.date | date: "%-d %b %Y" }}{% endif %}</span>
