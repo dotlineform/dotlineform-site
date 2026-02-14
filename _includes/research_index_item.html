@@ -1,0 +1,6 @@
+{% assign note = include.note %}
+
+<div class="index__item">
+  <span class="index__date">{% if note.date %}{{ note.date | date: "%-d %b %Y" }}{% endif %}</span>
+  <a class="index__link" href="{{ note.url | relative_url }}">{{ note.title | default: note.slug }}</a>
+</div>

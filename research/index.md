@@ -11,10 +11,7 @@ permalink: /research/
   <div class="index">
     <h1 class="index__heading visually-hidden">research notes</h1>
     {% for note in sorted_research %}
-      <div class="index__item">
-        <span class="index__date">{% if note.date %}{{ note.date | date: "%-d %b %Y" }}{% endif %}</span>
-        <a class="index__link" href="{{ note.url | relative_url }}">{{ note.title | default: note.slug }}</a>
-      </div>
+      {% include research_index_item.html note=note %}
     {% endfor %}
   </div>
 {% else %}
