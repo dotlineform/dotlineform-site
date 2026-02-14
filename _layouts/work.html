@@ -115,7 +115,10 @@ If you later serve images only from external media_base (CDN/R2), this check won
           {% if page.series_id %}
             {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
             {% assign series_label = page.series_title | default: page.series_id %}
-            | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
+            {% assign works_in_series = site.works | where: "series_id", page.series_id %}
+            {% if works_in_series.size > 1 %}
+              | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
+            {% endif %}
           {% endif %}
         </div>
       {% endif %}
@@ -123,10 +126,37 @@ If you later serve images only from external media_base (CDN/R2), this check won
   </section>
 
   <nav class="page__nav">
-    <!-- Defaults to works index; upgraded to history-back when appropriate via script below. -->
-    <a class="page__back" href="{{ '/works/' | relative_url }}" data-fallback="{{ '/works/' | relative_url }}">← index</a>
+    {% assign back_series_label = page.series_title | default: page.series_id | default: "series" %}
+    <a
+      id="pageBackLink"
+      class="page__back"
+      href="{{ '/series/' | relative_url }}"
+      data-fallback="{{ '/series/' | relative_url }}"
+      data-baseurl="{{ site.baseurl | default: '' }}"
+      data-series-label="{{ back_series_label | escape }}"
+    >← index</a>
   </nav>
 
 </article>
 
+<script>
+  (function () {
+    var link = document.getElementById('pageBackLink');
+    if (!link) return;
+
+    var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var fallback = link.getAttribute('data-fallback') || (baseurl + '/series/');
+    var seriesLabel = (link.getAttribute('data-series-label') || 'series').trim();
+    var params = new URLSearchParams(window.location.search);
+    var series = (params.get('series') || '').trim();
+
+    if (series) {
+      link.textContent = '← ' + seriesLabel;
+      link.setAttribute('href', baseurl + '/series/' + encodeURIComponent(series) + '/');
+    } else {
+      link.textContent = '← works';
+      link.setAttribute('href', fallback);
+    }
+  })();
+</script>
 <script src="{{ '/assets/js/work.js' | relative_url }}"></script>

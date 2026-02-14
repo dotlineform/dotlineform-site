@@ -10,8 +10,7 @@
 
 {%- assign target_url = s.url | relative_url -%}
 {%- if series_works.size == 1 and single_work and single_work.url -%}
-  {%- assign series_param = s.series_id | uri_escape -%}
-  {%- assign target_url = single_work.url | append: "?series=" | append: series_param | relative_url -%}
+  {%- assign target_url = single_work.url | append: "#from-series-index" | relative_url -%}
 {%- endif -%}
 
 {% if last_work and last_work.work_id %}
