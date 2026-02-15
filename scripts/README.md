@@ -40,6 +40,8 @@ Mode examples:
 /Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode work --work-ids 00456 --dry-run
 ```
 
+Note: when `--mode work` is used and no `--series-ids*` are provided, draft series are auto-included in generation.
+
 ## Individual Scripts
 
 ### 1) Copy draft source images from workbook
@@ -107,7 +109,21 @@ Useful flags:
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
 - `--moment-ids`, `--moment-ids-file`
+- `--works-files-dir` (default `assets/works/files`)
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
+
+### Works download files
+
+If `Works.download` is set, generation also copies that file and links it on the work page.
+
+- Source path:
+  - `[projects-base-dir]/projects/[project_folder]/[download]`
+- Destination path:
+  - `assets/works/files/[work_id]-[filename.ext]`
+- Work page link:
+  - Label: `download`
+  - Link text: `filename.ext`
+  - Rendered before `cat. <work_id>`

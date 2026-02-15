@@ -29,6 +29,10 @@ Flag usage summary:
 - --series-ids / --series-ids-file: pass series filter into generation
 - --moment-ids / --moment-ids-file: limit moment processing scope
 
+Behavior note:
+- When mode includes `work` and no explicit `--series-ids*` are provided,
+  draft series IDs are auto-included for generation.
+
 Manifest files (created in a temporary directory):
 - draft_*: candidates from workbook (status=draft)
 - copied_*: successfully copied source IDs (input to srcset step)
@@ -261,6 +265,36 @@ def collect_draft_moment_ids(
     return out
 
 
+def collect_draft_series_ids(xlsx_path: Path, allowed_ids: Set[str] | None = None) -> Set[str]:
+    """Collect draft series_ids from Series.status."""
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
+    if "Series" not in wb.sheetnames:
+        return set()
+    ws = wb["Series"]
+    hi = header_map(ws)
+
+    required = ["series_id", "status"]
+    missing = [c for c in required if c not in hi]
+    if missing:
+        raise SystemExit(f"Series sheet missing required columns: {', '.join(missing)}")
+
+    out: Set[str] = set()
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        raw_series_id = row[hi["series_id"]]
+        if is_empty(raw_series_id):
+            continue
+        sid = normalize_text(raw_series_id)
+        if not sid:
+            continue
+        if allowed_ids is not None and sid not in allowed_ids:
+            continue
+        status = normalize_status(row[hi["status"]])
+        if status != "draft":
+            continue
+        out.add(sid)
+    return out
+
+
 def collect_detail_2400_uids(xlsx_path: Path, copied_uids: Iterable[str]) -> Set[str]:
     """Select detail_uids that require 2400 derivatives based on WorkDetails.has_primary_2400."""
     copied = set(copied_uids)
@@ -370,6 +404,7 @@ def main() -> int:
     if args.series_ids:
         explicit_series_ids.update({normalize_text(s.strip()) for s in args.series_ids.split(",") if s.strip()})
     series_filter = explicit_series_ids if explicit_series_ids else None
+    auto_series_filter = None
 
     explicit_moment_ids = read_optional_ids_file(args.moment_ids_file)
     if args.moment_ids:
@@ -380,6 +415,8 @@ def main() -> int:
     xlsx_path = (repo_root / args.xlsx).resolve()
     if not xlsx_path.exists():
         raise SystemExit(f"Workbook not found: {xlsx_path}")
+    if series_filter is None and "work" in selected_modes:
+        auto_series_filter = collect_draft_series_ids(xlsx_path=xlsx_path)
 
     copy_script = repo_root / "scripts/copy_draft_media_files.py"
     make_script = repo_root / "scripts/make_srcset_images.sh"
@@ -627,8 +664,9 @@ def main() -> int:
         generate_cmd = [py, str(generate_script), str(xlsx_path)]
         generate_cmd += ["--work-ids-file", str(generate_ids_file)]
         generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
-        if series_filter is not None:
-            generate_cmd += ["--series-ids", ",".join(sorted(series_filter))]
+        selected_series_for_generate = series_filter if series_filter is not None else auto_series_filter
+        if selected_series_for_generate:
+            generate_cmd += ["--series-ids", ",".join(sorted(selected_series_for_generate))]
         if not args.dry_run:
             generate_cmd.append("--write")
         if args.force_generate:

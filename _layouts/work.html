@@ -154,6 +154,12 @@ If you later serve images only from external media_base (CDN/R2), this check won
       {% endif %}
 
       {% if page.work_id %}
+        {% if page.download %}
+          {% assign download_href = '/assets/works/files/' | append: page.work_id | append: '-' | append: page.download %}
+          <div class="page__row">
+            download <a href="{{ download_href | relative_url }}" target="_blank" rel="noopener">{{ page.download }}</a>
+          </div>
+        {% endif %}
         <div class="page__row">
           cat. {{ page.work_id }}
           {% if page.series_id %}

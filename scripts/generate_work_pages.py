@@ -310,6 +310,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("height_cm", "height_cm", coerce_numeric),
     ("width_cm", "width_cm", coerce_numeric),
     ("depth_cm", "depth_cm", coerce_numeric),
+    ("download", "download", coerce_string),
     ("has_primary_2400", "has_primary_2400", coerce_presence_bool),
     # tags handled separately (csv list)
     # checksum is always computed, not sourced from Excel
@@ -460,6 +461,7 @@ def main() -> None:
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
+    ap.add_argument("--works-files-dir", default="assets/works/files", help="Output folder for copied work download files")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
     ap.add_argument(
@@ -572,10 +574,14 @@ def main() -> None:
     work_details_out_dir.mkdir(parents=True, exist_ok=True)
     works_json_dir = Path(args.works_json_dir).expanduser()
     works_json_dir.mkdir(parents=True, exist_ok=True)
+    works_files_dir = Path(args.works_files_dir).expanduser()
+    works_files_dir.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_prose_dir = Path(args.moments_prose_dir).expanduser()
     moments_prose_dir.mkdir(parents=True, exist_ok=True)
+    projects_base_dir = Path(args.projects_base_dir).expanduser()
+    projects_root = projects_base_dir / "projects"
 
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
@@ -629,6 +635,8 @@ def main() -> None:
     skipped = 0
     print_written = 0
     print_skipped = 0
+    downloads_copied = 0
+    downloads_missing = 0
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
             return True
@@ -680,11 +688,17 @@ def main() -> None:
             for mid in args.moment_ids.split(",")
             if mid.strip()
         }
+    explicit_moment_filter = bool(args.moment_ids_file or args.moment_ids)
 
     # If caller scopes by series but does not provide an explicit work filter,
     # skip work-page processing by default.
     if selected_series_ids is not None and not explicit_work_filter:
         selected_ids = set()
+    # If caller scopes by work/series and does not provide an explicit moments filter,
+    # skip moments generation by default.
+    run_moments = True
+    if (explicit_work_filter or selected_series_ids is not None) and not explicit_moment_filter:
+        run_moments = False
 
     total = 0
     for r in works_rows[1:]:
@@ -730,6 +744,10 @@ def main() -> None:
         # Fields in stable order (matches your canonical front matter schema)
         fm: Dict[str, Any] = {"work_id": wid}
         fm.update(build_works_front_matter(r, works_hi))
+        # Normalise download to a filename (basename only) for front matter/link text.
+        download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
+        if download_rel is not None:
+            fm["download"] = Path(download_rel).name
 
         # Series title lookup (Works.series_id -> series_id; Series.series_title -> series_title)
         sid = fm.get("series_id")
@@ -816,6 +834,34 @@ def main() -> None:
             else:
                 print_skipped += 1
 
+        if download_rel is not None:
+            project_folder = work_project_folder_by_id.get(wid)
+            if Path(download_rel).is_absolute():
+                download_src = Path(download_rel)
+            elif project_folder:
+                download_src = projects_root / project_folder / download_rel
+            else:
+                download_src = None
+
+            download_name = Path(download_rel).name
+            download_dest = works_files_dir / f"{wid}-{download_name}"
+
+            if download_src is None:
+                print(f"{prefix}Warning: cannot resolve download source for {wid} ({download_rel})")
+                downloads_missing += 1
+            elif not download_src.exists():
+                print(f"{prefix}Warning: missing download source: {download_src}")
+                downloads_missing += 1
+            else:
+                if args.write:
+                    download_dest.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(download_src, download_dest)
+                    print(f"{prefix}COPY download: {download_src} -> {download_dest}")
+                    downloads_copied += 1
+                else:
+                    print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
+                    downloads_copied += 1
+
     if args.write and status_updated > 0:
         wb.save(xlsx_path)
         print(f"Updated status to 'published' for {status_updated} row(s).")
@@ -825,6 +871,10 @@ def main() -> None:
     print(
         f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
         f" Skipped: {skipped} works, {print_skipped} print."
+    )
+    print(
+        f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
+        f" Missing/unresolved: {downloads_missing}."
     )
     print(f"Workbook: {xlsx_path}")
     if args.write:
@@ -1401,7 +1451,9 @@ def main() -> None:
     # - image_alt
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
-    if not moments_rows or len(moments_rows) < 2 or moments_ws is None:
+    if not run_moments:
+        print("Moment pages skipped: scoped run without --moment-ids/--moment-ids-file.")
+    elif not moments_rows or len(moments_rows) < 2 or moments_ws is None:
         print("No moment pages to generate (Moments sheet empty or missing).")
     else:
         required_moments = [
