@@ -1475,9 +1475,7 @@ def main() -> None:
             image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
             if image_file is None and project_filename is not None:
                 image_file = f"{Path(project_filename).stem}.webp"
-            if image_file is None:
-                image_file = f"{moment_id}.webp"
-            if image_alt is None:
+            if image_file is not None and image_alt is None:
                 image_alt = title or moment_id
 
             # Resolve source image for dimensions when possible.
@@ -1512,17 +1510,21 @@ def main() -> None:
                             mr_cells[moments_height_px_idx].value = src_h
                             moments_dimensions_updated += 1
 
+            images_list: List[Dict[str, Any]] = []
+            if image_file is not None:
+                images_list.append(
+                    {
+                        "file": image_file,
+                        "alt": image_alt,
+                    }
+                )
+
             mfm: Dict[str, Any] = {
                 "moment_id": moment_id,
                 "title": title or moment_id,
                 "date": date_value,
                 "date_display": date_display,
-                "images": [
-                    {
-                        "file": image_file,
-                        "alt": image_alt,
-                    }
-                ],
+                "images": images_list,
                 "width_px": width_px,
                 "height_px": height_px,
                 "layout": "moment",
