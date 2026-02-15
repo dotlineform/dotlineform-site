@@ -1131,6 +1131,33 @@ Use “structure-first” naming and scope section-specific differences via the 
 /* Work title row in caption details */
 .work__titleRow{
   font-weight: 600;
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.work__titleMain{
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.work__counter{
+  margin-left: 0.45em;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.work__titleNav.seriesNav{
+  max-width: none;
+  margin: 0;
+  margin-bottom: 0;
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px; /* intentionally tighter gap for paired prev/next buttons */
+  flex: 0 0 auto;
 }
 
 /* Works-only enhancements

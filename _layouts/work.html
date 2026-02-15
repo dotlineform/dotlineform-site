@@ -4,6 +4,17 @@ layout: default
 
 {% assign wid = page.work_id | default: page.slug %}
 {%- assign title_txt = page.title | default: "" | strip -%}
+{% assign series_works = site.works | where: "series_id", page.series_id | sort: "work_id" %}
+{% assign series_total = series_works.size %}
+{% assign series_index = 0 %}
+{% if series_total > 1 %}
+  {% for w in series_works %}
+    {% if w.work_id == page.work_id %}
+      {% assign series_index = forloop.index %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix | default: "/assets" %}
@@ -49,20 +60,6 @@ If you later serve images only from external media_base (CDN/R2), this check won
 
   <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
-  <!-- Series navigation:
-     - If URL has ?series=series_id, try to load that series' work IDs from JSON.
-     - If successful, show Prev/Next links for navigating within that series.
-     - Otherwise hide the nav. -->
-  <nav class="seriesNav" id="seriesNav"
-      aria-label="Series navigation"
-      data-work-id="{{ page.work_id | escape }}"
-      data-series="{{ page.series_id | default: '' | escape }}"
-      data-baseurl="{{ site.baseurl | default: '' }}"
-      hidden>
-    <a class="seriesNav__prev" id="seriesNavPrev" href="#">←</a>
-    <a class="seriesNav__next" id="seriesNavNext" href="#">→</a>
-  </nav>
-
   <figure class="page__media">
     <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
     <a class="page__mediaLink"
@@ -89,7 +86,27 @@ If you later serve images only from external media_base (CDN/R2), this check won
     <h2 class="visually-hidden">work details</h2>
 
     <div class="page__caption">
-      <div class="page__row work__titleRow">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</div>
+      <div class="page__row work__titleRow">
+        <span class="work__titleMain">
+          <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          {% if series_total > 1 and series_index > 0 %}
+            <span class="work__counter">{{ series_index }}/{{ series_total }}</span>
+          {% endif %}
+        </span>
+        <!-- Series navigation:
+          - If URL has ?series=series_id, try to load that series' work IDs from JSON.
+          - If successful, show Prev/Next links for navigating within that series.
+          - Otherwise hide the nav. -->
+        <nav class="seriesNav work__titleNav" id="seriesNav"
+            aria-label="Series navigation"
+            data-work-id="{{ page.work_id | escape }}"
+            data-series="{{ page.series_id | default: '' | escape }}"
+            data-baseurl="{{ site.baseurl | default: '' }}"
+            hidden>
+          <a class="seriesNav__prev" id="seriesNavPrev" href="#">←</a>
+          <a class="seriesNav__next" id="seriesNavNext" href="#">→</a>
+        </nav>
+      </div>
 
       {% if page.year_display %}
         <div class="page__row">{{ page.year_display }}</div>

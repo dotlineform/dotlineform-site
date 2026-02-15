@@ -54,3 +54,51 @@
       nav.hidden = true;
     });
 })();
+
+(function () {
+  // Keyboard navigation bootstrap for work + work detail pages.
+  // How it is called:
+  // - This file is loaded by the page layout via:
+  //   <script src="/assets/js/work.js"></script>
+  // - On load, this IIFE attaches one keydown listener to `document`.
+  // - The listener checks for the visible Prev/Next nav links and routes
+  //   ArrowLeft/ArrowRight to those URLs.
+
+  function isTypingTarget(el) {
+    if (!el) return false;
+    var tag = (el.tagName || '').toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+  }
+
+  function firstUsableLink(ids) {
+    for (var i = 0; i < ids.length; i += 1) {
+      var a = document.getElementById(ids[i]);
+      if (!a) continue;
+      if (a.hidden) continue;
+      var href = String(a.getAttribute('href') || '').trim();
+      if (!href || href === '#') continue;
+      return a;
+    }
+    return null;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.defaultPrevented) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (isTypingTarget(document.activeElement)) return;
+
+    // Prefer detail nav when present; otherwise fall back to series/work nav.
+    var prev = firstUsableLink(['detailNavPrev', 'seriesNavPrev']);
+    var next = firstUsableLink(['detailNavNext', 'seriesNavNext']);
+
+    if (e.key === 'ArrowLeft' && prev) {
+      e.preventDefault();
+      window.location.href = prev.href;
+      return;
+    }
+    if (e.key === 'ArrowRight' && next) {
+      e.preventDefault();
+      window.location.href = next.href;
+    }
+  });
+})();

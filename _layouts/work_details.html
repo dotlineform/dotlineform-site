@@ -43,18 +43,6 @@ layout: default
 <article class="page work">
   <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
-  <nav class="seriesNav" id="detailNav"
-      aria-label="Detail navigation"
-      data-detail-uid="{{ detail_uid | escape }}"
-      data-work-id="{{ fallback_work_id | escape }}"
-      data-work-title="{{ fallback_work_title | escape }}"
-      data-baseurl="{{ site.baseurl | default: '' }}"
-      data-default-section="{{ fallback_section | escape }}"
-      hidden>
-    <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
-    <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
-  </nav>
-
   <figure class="page__media">
     <a
       class="page__mediaLink"
@@ -82,7 +70,23 @@ layout: default
   <section class="page__meta page__media">
     <h2 class="visually-hidden">work detail metadata</h2>
     <div class="page__caption">
-      <div class="page__row work__titleRow">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</div>
+      <div class="page__row work__titleRow">
+        <span class="work__titleMain">
+          <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          <span class="work__counter" id="detailTitleCounter" hidden></span>
+        </span>
+        <nav class="seriesNav work__titleNav" id="detailNav"
+            aria-label="Detail navigation"
+            data-detail-uid="{{ detail_uid | escape }}"
+            data-work-id="{{ fallback_work_id | escape }}"
+            data-work-title="{{ fallback_work_title | escape }}"
+            data-baseurl="{{ site.baseurl | default: '' }}"
+            data-default-section="{{ fallback_section | escape }}"
+            hidden>
+          <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
+          <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
+        </nav>
+      </div>
       <div class="page__row">cat. {{ detail_uid }}</div>
     </div>
   </section>
@@ -132,6 +136,7 @@ layout: default
 <script>
   (function () {
     var nav = document.getElementById('detailNav');
+    var titleCounter = document.getElementById('detailTitleCounter');
     if (!nav) return;
     var prevA = document.getElementById('detailNavPrev');
     var nextA = document.getElementById('detailNavNext');
@@ -198,6 +203,10 @@ layout: default
         if (ids.length < 2) return;
         var idx = ids.indexOf(detailUid);
         if (idx === -1) return;
+        if (titleCounter) {
+          titleCounter.textContent = String(idx + 1) + '/' + String(ids.length);
+          titleCounter.hidden = false;
+        }
 
         var prevId = ids[(idx - 1 + ids.length) % ids.length];
         var nextId = ids[(idx + 1) % ids.length];
@@ -210,3 +219,4 @@ layout: default
       });
   })();
 </script>
+<script src="{{ '/assets/js/work.js' | relative_url }}"></script>
