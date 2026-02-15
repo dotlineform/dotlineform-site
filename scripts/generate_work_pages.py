@@ -1516,8 +1516,10 @@ def main() -> None:
             project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
             image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
             image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
+            # Srcset derivatives are keyed by moment_id because copy_draft_media_files.py
+            # renames source images to <moment_id>.<ext> before derivative generation.
             if image_file is None and project_filename is not None:
-                image_file = f"{Path(project_filename).stem}.webp"
+                image_file = f"{moment_id}.webp"
             if image_file is not None and image_alt is None:
                 image_alt = title or moment_id
 

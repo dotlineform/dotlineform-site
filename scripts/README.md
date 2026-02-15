@@ -22,10 +22,23 @@ Useful flags:
 - `--dry-run`: preview only (no workbook writes/deletes)
 - `--force-generate`: pass `--force` through to `generate_work_pages.py`
 - `--jobs N`: srcset parallel jobs
+- `--mode work|work_details|moment`: run only selected flow(s). Repeat flag to run multiple.
+- `--work-ids`, `--work-ids-file`: limit work + work_details scope
+- `--series-ids`, `--series-ids-file`: pass series scope to generation
+- `--moment-ids`, `--moment-ids-file`: limit moment scope
 - `--xlsx PATH`: workbook path override
 - `--input-dir`, `--output-dir`: works source/derivative dirs
 - `--detail-input-dir`, `--detail-output-dir`: work_details source/derivative dirs
 - `--moment-input-dir`, `--moment-output-dir`: moments source/derivative dirs
+
+Mode examples:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode moment --dry-run
+/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode work --mode work_details --dry-run
+/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode moment --moment-ids blue-sky,compiled --dry-run
+/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode work --work-ids 00456 --dry-run
+```
 
 ## Individual Scripts
 
@@ -93,6 +106,7 @@ Useful flags:
 - `--force`: regenerate even when checksums match
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
+- `--moment-ids`, `--moment-ids-file`
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)

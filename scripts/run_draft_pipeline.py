@@ -408,7 +408,7 @@ def main() -> int:
             draft_ids = collect_draft_ids(
                 xlsx_path,
                 allowed_ids=work_filter,
-                include_published=bool(args.force_generate and work_filter is not None),
+                include_published=bool(work_filter is not None),
             )
         draft_ids_file.write_text(
             "\n".join(sorted(draft_ids)) + ("\n" if draft_ids else ""),
@@ -422,7 +422,7 @@ def main() -> int:
                 xlsx_path,
                 allowed_uids=None,
                 allowed_work_ids=work_filter,
-                include_published=bool(args.force_generate and work_filter is not None),
+                include_published=bool(work_filter is not None),
             )
         draft_detail_uids_file.write_text(
             "\n".join(sorted(draft_detail_uids)) + ("\n" if draft_detail_uids else ""),
@@ -435,7 +435,7 @@ def main() -> int:
             draft_moment_ids = collect_draft_moment_ids(
                 xlsx_path,
                 allowed_ids=moment_filter,
-                include_published=bool(args.force_generate and moment_filter is not None),
+                include_published=bool(moment_filter is not None),
             )
         draft_moment_ids_file.write_text(
             "\n".join(sorted(draft_moment_ids)) + ("\n" if draft_moment_ids else ""),
