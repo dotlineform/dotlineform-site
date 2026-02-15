@@ -40,6 +40,10 @@ WORKS_BASE_DIR = Path("/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/d
 WORKBOOK_PATH = Path("data/works.xlsx")
 
 
+def print_transfer(prefix: str, src: Path, dest: Path) -> None:
+    print(f"{prefix}:\n{src}\n-> {dest}")
+
+
 def normalize_text(value: Any) -> str:
     if value is None:
         return ""
@@ -141,10 +145,10 @@ def copy_work(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write:
             from shutil import copy2
 
             copy2(src, dest)
-            print(f"Copied: {src} -> {dest}")
+            print_transfer("Copied", src, dest)
             copied += 1
         else:
-            print(f"Dry-run: {src} -> {dest}")
+            print_transfer("Dry-run", src, dest)
     return total, copied, missing_src
 
 
@@ -217,10 +221,10 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
             from shutil import copy2
 
             copy2(src, dest)
-            print(f"Copied: {src} -> {dest}")
+            print_transfer("Copied", src, dest)
             copied += 1
         else:
-            print(f"Dry-run: {src} -> {dest}")
+            print_transfer("Dry-run", src, dest)
     return total, copied, missing_src
 
 
@@ -260,10 +264,10 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
             from shutil import copy2
 
             copy2(src, dest)
-            print(f"Copied: {src} -> {dest}")
+            print_transfer("Copied", src, dest)
             copied += 1
         else:
-            print(f"Dry-run: {src} -> {dest}")
+            print_transfer("Dry-run", src, dest)
     return total, copied, missing_src
 
 
