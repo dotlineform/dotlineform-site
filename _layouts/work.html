@@ -93,10 +93,12 @@ If you later serve images only from external media_base (CDN/R2), this check won
             <span class="work__counter">{{ series_index }}/{{ series_total }}</span>
           {% endif %}
         </span>
-        <!-- Series navigation:
-          - If URL has ?series=series_id, try to load that series' work IDs from JSON.
-          - If successful, show Prev/Next links for navigating within that series.
-          - Otherwise hide the nav. -->
+        {% comment %}
+        Series navigation:
+        - If URL has ?series=series_id, try to load that series' work IDs from JSON.
+        - If successful, show Prev/Next links for navigating within that series.
+        - Otherwise hide the nav.
+        {% endcomment %}
         <nav class="seriesNav work__titleNav" id="seriesNav"
             aria-label="Series navigation"
             data-work-id="{{ page.work_id | escape }}"
@@ -305,7 +307,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
             var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId);
             html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
             html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
-            html += '<span class=\"sr-only\">' + esc(title) + '</span></a>';
+            html += '</a>';
           });
           html += '</div></section>';
         });

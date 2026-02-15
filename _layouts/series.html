@@ -22,6 +22,10 @@ layout: default
   {%- assign items = series_works_sorted | slice: 0, max_items -%}
 
   {%- if series_works and series_works.size > 0 -%}
+    {% comment %}
+    Include ?series=<series_id> in work links so the work page can fetch
+    assets/series/index/<series_id>.json and render Prev/Next navigation.
+    {% endcomment %}
     <div class="seriesGrid" aria-label="works in series">
       {%- for w in items -%}
         {%- if w and w.work_id -%}
@@ -37,8 +41,6 @@ layout: default
             {%- assign thumb192_out = thumb192 | relative_url -%}
           {%- endunless -%}
 
-          <!-- include ?series=<series_id> in the url so that the work page can
-          fetch assets/series/index/<series_id>.json, and render Prev/Next navigation within that series. -->
           <a class="seriesGrid__item" href="{{ w.url | relative_url }}?series={{ page.series_id | uri_escape }}">
             <img
               class="seriesGrid__img"
@@ -50,7 +52,6 @@ layout: default
               loading="lazy"
               decoding="async"
               alt="{{ w.title | default: id | escape }}">
-            <span class="sr-only">{{ w.title | default: id | escape }}</span>
           </a>
         {%- endif -%}
       {%- endfor -%}
