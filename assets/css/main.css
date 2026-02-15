@@ -1185,3 +1185,7 @@ note: works tags are not currently in use on the work pages themselves.
 .work .supplements__item + .supplements__item{
   margin-top: var(--space-3);
 }
+
+.work__prose{
+  margin-top: var(--space-6);
+}
