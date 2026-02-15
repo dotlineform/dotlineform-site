@@ -25,7 +25,7 @@ layout: default
     {% assign img_src = hero.file %}
     {% unless img_src contains '://' %}
       {% assign img_file = img_src | remove_first: '/' %}
-      {% assign img_stem = img_file | split: '.' | first %}
+      {% assign img_stem = page.moment_id | default: img_file | split: '.' | first %}
       {% assign src800 = img_base | append: img_stem | append: "-primary-800.webp" %}
       {% assign src1200 = img_base | append: img_stem | append: "-primary-1200.webp" %}
       {% assign src1600 = img_base | append: img_stem | append: "-primary-1600.webp" %}
