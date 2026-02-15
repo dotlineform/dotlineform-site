@@ -2,6 +2,11 @@
 layout: default
 ---
 
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_prefix = site.media_prefix | default: "/assets" %}
+{% assign moments_img_prefix = media_prefix | append: "/moments/img" %}
+{% assign img_base = media_base | append: moments_img_prefix | append: "/" %}
+
 <article class="page moment">
   <header class="page__header moment-header">
     <h1 class="page__title">{{ page.title }}</h1>
@@ -20,10 +25,25 @@ layout: default
     {% assign img_src = hero.file %}
     {% unless img_src contains '://' %}
       {% assign img_file = img_src | remove_first: '/' %}
-      {% assign img_src = '/assets/moments/img/' | append: img_file | relative_url %}
+      {% assign img_stem = img_file | split: '.' | first %}
+      {% assign src800 = img_base | append: img_stem | append: "-primary-800.webp" %}
+      {% assign src1200 = img_base | append: img_stem | append: "-primary-1200.webp" %}
+      {% assign src1600 = img_base | append: img_stem | append: "-primary-1600.webp" %}
+      {% unless img_base contains '://' %}
+        {% assign src800 = src800 | relative_url %}
+        {% assign src1200 = src1200 | relative_url %}
+        {% assign src1600 = src1600 | relative_url %}
+      {% endunless %}
+      {% assign img_src = src1600 %}
     {% endunless %}
 
     <img class="page__mediaImg" src="{{ img_src }}"
+         {% unless hero.file contains '://' %}
+         srcset="{{ src800 }} 800w, {{ src1200 }} 1200w, {{ src1600 }} 1600w"
+         sizes="(max-width: 800px) 100vw, 72ch"
+         {% endunless %}
+         width="{{ page.width_px | default: hero.width_px | default: 1600 }}"
+         height="{{ page.height_px | default: hero.height_px | default: 1200 }}"
          alt="{{ hero.alt | default: page.title | escape }}"
          loading="eager" fetchpriority="high" decoding="async">
     {% if hero.caption %}

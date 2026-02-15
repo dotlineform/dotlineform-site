@@ -1,26 +1,20 @@
-# Minimal usage
-# From repo root:
-# run this first once to make the script executable:
-# chmod +x scripts/make_srcset_images.sh
-
-# call the script with two optional arguments:
-# ./scripts/make_srcset_images.sh "/in" "/out" [jobs] [--dry-run]
+# Usage:
+#   ./scripts/make_srcset_images.sh [INPUT_DIR] [OUTPUT_DIR] [JOBS] [--dry-run]
 #
-# to set jobs only (keep default folders), use the env var:
-# MAKE_SRCSET_JOBS=6 ./scripts/make_srcset_images.sh
+# Positional args:
+# - INPUT_DIR: source images folder (defaults to $BASE_DIR/works/make_srcset_images)
+# - OUTPUT_DIR: derivative root folder (defaults to $BASE_DIR/works/srcset_images)
+# - JOBS: parallel workers (defaults to $MAKE_SRCSET_JOBS or 1)
 #
-# optional: generate 2400px primaries only for selected work IDs:
-# MAKE_SRCSET_2400_IDS_FILE=./data/srcset_2400_ids.txt ./scripts/make_srcset_images.sh
-# file format: one work_id per line (exact match), e.g.:
-#   00361
-#   00405
+# Environment variables:
+# - MAKE_SRCSET_WORK_IDS_FILE: process only IDs listed in this file (one per line)
+# - MAKE_SRCSET_2400_IDS_FILE: generate 2400 only for IDs listed in this file
+# - MAKE_SRCSET_SUCCESS_IDS_FILE: write successfully processed IDs (one per line)
 #
-# optional: process only selected work IDs:
-# MAKE_SRCSET_WORK_IDS_FILE=./tmp/work_ids.txt ./scripts/make_srcset_images.sh
-# file format: one work_id per line (exact match).
-#
-# optional: write successfully processed work IDs (one per line):
-# MAKE_SRCSET_SUCCESS_IDS_FILE=./tmp/srcset_success_ids.txt ./scripts/make_srcset_images.sh
+# Notes:
+# - The script derives ID from source filename stem (`basename without extension`).
+# - The same script is reused for works, work_details, and moments.
+# - For moments, pass an empty MAKE_SRCSET_2400_IDS_FILE so 2400 is skipped.
 
 #!/usr/bin/env bash
 set -euo pipefail

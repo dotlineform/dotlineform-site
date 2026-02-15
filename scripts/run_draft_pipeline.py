@@ -2,11 +2,13 @@
 """
 Run the draft publish pipeline end-to-end (fail-fast):
 
-1) copy_draft_work_files.py --write
+1) copy_draft_media_files.py --mode work --write
 2) make_srcset_images.sh
-3) copy_draft_work_detail_files.py --write
+3) copy_draft_media_files.py --mode work_details --write
 4) make_srcset_images.sh (for work details)
-5) generate_work_pages.py data/works.xlsx --write (for affected work IDs only)
+5) copy_draft_media_files.py --mode moment --write
+6) make_srcset_images.sh (for moments)
+7) generate_work_pages.py data/works.xlsx --write (for affected work IDs only)
 
 The 2400px derivative selection is driven from Works.has_primary_2400:
 - empty cell -> do not request 2400
@@ -15,6 +17,19 @@ The 2400px derivative selection is driven from Works.has_primary_2400:
 Dry-run mode:
 - copy + srcset + generate run in preview mode
 - no workbook writes/deletes are performed
+
+Flag usage summary:
+- --xlsx: workbook path (repo-relative by default)
+- --dry-run: preview-only mode for all steps
+- --force-generate: pass --force to generate_work_pages.py
+- --jobs: parallelism for make_srcset_images.sh
+- --*-input-dir / --*-output-dir: source/derivative directories for each media type
+
+Manifest files (created in a temporary directory):
+- draft_*: candidates from workbook (status=draft)
+- copied_*: successfully copied source IDs (input to srcset step)
+- *_success_ids: srcset-success IDs returned by make_srcset_images.sh
+- generate_ids.txt: work IDs to regenerate (works + any work_details parents)
 """
 
 from __future__ import annotations
@@ -76,12 +91,14 @@ def header_map(ws) -> Dict[str, int]:
 
 
 def run_step(label: str, cmd: list[str], cwd: Path, env: Dict[str, str] | None = None) -> None:
+    """Run one pipeline step and fail fast on non-zero exit."""
     print(f"\n==> {label}")
     print("+", " ".join(cmd))
     subprocess.run(cmd, cwd=str(cwd), env=env, check=True)
 
 
 def read_ids(path: Path) -> Set[str]:
+    """Read newline-delimited IDs from a manifest file."""
     if not path.exists():
         return set()
     out: Set[str] = set()
@@ -93,6 +110,7 @@ def read_ids(path: Path) -> Set[str]:
 
 
 def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
+    """Select work IDs that require 2400 derivatives based on Works.has_primary_2400."""
     copied = set(copied_ids)
     if not copied:
         return set()
@@ -127,6 +145,7 @@ def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
 
 
 def collect_draft_ids(xlsx_path: Path) -> Set[str]:
+    """Collect draft work_ids from Works.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "Works" not in wb.sheetnames:
         raise SystemExit("Worksheet not found: 'Works'")
@@ -152,6 +171,7 @@ def collect_draft_ids(xlsx_path: Path) -> Set[str]:
 
 
 def collect_draft_detail_uids(xlsx_path: Path) -> Set[str]:
+    """Collect draft detail_uids from WorkDetails.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "WorkDetails" not in wb.sheetnames:
         return set()
@@ -178,7 +198,36 @@ def collect_draft_detail_uids(xlsx_path: Path) -> Set[str]:
     return out
 
 
+def collect_draft_moment_ids(xlsx_path: Path) -> Set[str]:
+    """Collect draft moment_ids from Moments.status."""
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
+    if "Moments" not in wb.sheetnames:
+        return set()
+    ws = wb["Moments"]
+    hi = header_map(ws)
+
+    required = ["moment_id", "status"]
+    missing = [c for c in required if c not in hi]
+    if missing:
+        raise SystemExit(f"Moments sheet missing required columns: {', '.join(missing)}")
+
+    out: Set[str] = set()
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        raw_moment_id = row[hi["moment_id"]]
+        if is_empty(raw_moment_id):
+            continue
+        mid = normalize_text(raw_moment_id).lower()
+        if not mid:
+            continue
+        status = normalize_status(row[hi["status"]])
+        if status != "draft":
+            continue
+        out.add(mid)
+    return out
+
+
 def collect_detail_2400_uids(xlsx_path: Path, copied_uids: Iterable[str]) -> Set[str]:
+    """Select detail_uids that require 2400 derivatives based on WorkDetails.has_primary_2400."""
     copied = set(copied_uids)
     if not copied:
         return set()
@@ -216,6 +265,7 @@ def collect_detail_2400_uids(xlsx_path: Path, copied_uids: Iterable[str]) -> Set
 
 
 def work_ids_from_detail_uids(detail_uids: Iterable[str]) -> Set[str]:
+    """Map detail_uids (work_id-detail_id) to parent work_ids."""
     out: Set[str] = set()
     for uid in detail_uids:
         s = str(uid).strip()
@@ -248,6 +298,16 @@ def main() -> int:
         default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/work_details/srcset_images",
         help="Output directory for work detail srcset derivatives",
     )
+    ap.add_argument(
+        "--moment-input-dir",
+        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/make_srcset_images",
+        help="Input directory for moment source images",
+    )
+    ap.add_argument(
+        "--moment-output-dir",
+        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/srcset_images",
+        help="Output directory for moment srcset derivatives",
+    )
     ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "1")), help="Parallel jobs")
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
@@ -258,10 +318,10 @@ def main() -> int:
     if not xlsx_path.exists():
         raise SystemExit(f"Workbook not found: {xlsx_path}")
 
-    copy_script = repo_root / "scripts/copy_draft_work_files.py"
-    copy_detail_script = repo_root / "scripts/copy_draft_work_detail_files.py"
+    copy_script = repo_root / "scripts/copy_draft_media_files.py"
     make_script = repo_root / "scripts/make_srcset_images.sh"
     generate_script = repo_root / "scripts/generate_work_pages.py"
+    py = sys.executable
 
     with tempfile.TemporaryDirectory(prefix="draft-pipeline-") as tmp:
         tmp_dir = Path(tmp)
@@ -271,8 +331,12 @@ def main() -> int:
         copied_detail_uids_file = tmp_dir / "copied_detail_uids.txt"
         ids_2400_file = tmp_dir / "ids_2400.txt"
         detail_ids_2400_file = tmp_dir / "detail_ids_2400.txt"
+        moment_ids_2400_file = tmp_dir / "moment_ids_2400.txt"
         success_ids_file = tmp_dir / "success_ids.txt"
         detail_success_ids_file = tmp_dir / "detail_success_ids.txt"
+        moment_success_ids_file = tmp_dir / "moment_success_ids.txt"
+        draft_moment_ids_file = tmp_dir / "draft_moment_ids.txt"
+        copied_moment_ids_file = tmp_dir / "copied_moment_ids.txt"
         generate_ids_file = tmp_dir / "generate_ids.txt"
 
         draft_ids = collect_draft_ids(xlsx_path)
@@ -289,12 +353,21 @@ def main() -> int:
         )
         print(f"Draft detail candidates: {len(draft_detail_uids)}")
 
+        draft_moment_ids = collect_draft_moment_ids(xlsx_path)
+        draft_moment_ids_file.write_text(
+            "\n".join(sorted(draft_moment_ids)) + ("\n" if draft_moment_ids else ""),
+            encoding="utf-8",
+        )
+        print(f"Draft moment candidates: {len(draft_moment_ids)}")
+
         run_step(
             "Copy Draft Work Files",
             [
-                "python3",
+                py,
                 str(copy_script),
-                "--work-ids-file",
+                "--mode",
+                "work",
+                "--ids-file",
                 str(draft_ids_file),
                 "--copied-ids-file",
                 str(copied_ids_file),
@@ -312,6 +385,7 @@ def main() -> int:
                 encoding="utf-8",
             )
 
+            # make_srcset_images.sh controls selection via environment variables.
             env = os.environ.copy()
             env["MAKE_SRCSET_2400_IDS_FILE"] = str(ids_2400_file)
             env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
@@ -342,11 +416,13 @@ def main() -> int:
         run_step(
             "Copy Draft Work Detail Files",
             [
-                "python3",
-                str(copy_detail_script),
-                "--detail-uids-file",
+                py,
+                str(copy_script),
+                "--mode",
+                "work_details",
+                "--ids-file",
                 str(draft_detail_uids_file),
-                "--copied-detail-uids-file",
+                "--copied-ids-file",
                 str(copied_detail_uids_file),
             ]
             + ([] if args.dry_run else ["--write"]),
@@ -355,6 +431,7 @@ def main() -> int:
 
         copied_detail_uids = read_ids(copied_detail_uids_file)
         generated_detail_uids = set()
+
         if copied_detail_uids:
             detail_2400_ids = collect_detail_2400_uids(xlsx_path, copied_detail_uids)
             detail_ids_2400_file.write_text(
@@ -362,6 +439,7 @@ def main() -> int:
                 encoding="utf-8",
             )
 
+            # Restrict run to copied detail_uids and track success IDs.
             env = os.environ.copy()
             env["MAKE_SRCSET_2400_IDS_FILE"] = str(detail_ids_2400_file)
             env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_detail_uids_file)
@@ -389,6 +467,55 @@ def main() -> int:
             print("\n==> Skip Work Detail Srcset\nNo copied detail files in this run.")
             generated_detail_uids = set()
 
+        run_step(
+            "Copy Draft Moment Files",
+            [
+                py,
+                str(copy_script),
+                "--mode",
+                "moment",
+                "--ids-file",
+                str(draft_moment_ids_file),
+                "--copied-ids-file",
+                str(copied_moment_ids_file),
+            ]
+            + ([] if args.dry_run else ["--write"]),
+            cwd=repo_root,
+        )
+
+        copied_moment_ids = read_ids(copied_moment_ids_file)
+        generated_moment_ids = set()
+        if copied_moment_ids:
+            # Moments never request 2400 derivatives: set an explicit empty allow-list.
+            moment_ids_2400_file.write_text("", encoding="utf-8")
+            # Restrict run to copied moment_ids and track success IDs.
+            env = os.environ.copy()
+            env["MAKE_SRCSET_2400_IDS_FILE"] = str(moment_ids_2400_file)
+            env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_moment_ids_file)
+            env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(moment_success_ids_file)
+
+            run_step(
+                "Generate Moment Srcset Derivatives",
+                [
+                    "bash",
+                    str(make_script),
+                    str(args.moment_input_dir),
+                    str(args.moment_output_dir),
+                    str(args.jobs),
+                ]
+                + (["--dry-run"] if args.dry_run else []),
+                cwd=repo_root,
+                env=env,
+            )
+
+            if args.dry_run:
+                generated_moment_ids = copied_moment_ids
+            else:
+                generated_moment_ids = read_ids(moment_success_ids_file)
+        else:
+            print("\n==> Skip Moment Srcset\nNo copied moment files in this run.")
+            generated_moment_ids = set()
+
         generate_ids = set(generated_work_ids)
         generate_ids.update(work_ids_from_detail_uids(generated_detail_uids))
 
@@ -397,7 +524,7 @@ def main() -> int:
             encoding="utf-8",
         )
 
-        generate_cmd = ["python3", str(generate_script), str(xlsx_path)]
+        generate_cmd = [py, str(generate_script), str(xlsx_path)]
         generate_cmd += ["--work-ids-file", str(generate_ids_file)]
         if not args.dry_run:
             generate_cmd.append("--write")
