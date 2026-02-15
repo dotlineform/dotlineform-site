@@ -24,6 +24,10 @@ Flag usage summary:
 - --force-generate: pass --force to generate_work_pages.py
 - --jobs: parallelism for make_srcset_images.sh
 - --*-input-dir / --*-output-dir: source/derivative directories for each media type
+- --mode: select one or more flows: work, work_details, moment (repeatable)
+- --work-ids / --work-ids-file: limit work + work_details processing scope
+- --series-ids / --series-ids-file: pass series filter into generation
+- --moment-ids / --moment-ids-file: limit moment processing scope
 
 Manifest files (created in a temporary directory):
 - draft_*: candidates from workbook (status=draft)
@@ -109,6 +113,15 @@ def read_ids(path: Path) -> Set[str]:
     return out
 
 
+def read_optional_ids_file(path: str) -> Set[str]:
+    if not path:
+        return set()
+    ids_path = Path(path).expanduser()
+    if not ids_path.exists():
+        raise SystemExit(f"IDs file not found: {ids_path}")
+    return read_ids(ids_path)
+
+
 def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     """Select work IDs that require 2400 derivatives based on Works.has_primary_2400."""
     copied = set(copied_ids)
@@ -144,7 +157,11 @@ def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     return want_2400
 
 
-def collect_draft_ids(xlsx_path: Path) -> Set[str]:
+def collect_draft_ids(
+    xlsx_path: Path,
+    allowed_ids: Set[str] | None = None,
+    include_published: bool = False,
+) -> Set[str]:
     """Collect draft work_ids from Works.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "Works" not in wb.sheetnames:
@@ -163,14 +180,21 @@ def collect_draft_ids(xlsx_path: Path) -> Set[str]:
         if is_empty(raw_work_id):
             continue
         wid = slug_id(raw_work_id)
+        if allowed_ids is not None and wid not in allowed_ids:
+            continue
         status = normalize_status(row[hi["status"]])
-        if status != "draft":
+        if status != "draft" and not (include_published and status == "published"):
             continue
         out.add(wid)
     return out
 
 
-def collect_draft_detail_uids(xlsx_path: Path) -> Set[str]:
+def collect_draft_detail_uids(
+    xlsx_path: Path,
+    allowed_uids: Set[str] | None = None,
+    allowed_work_ids: Set[str] | None = None,
+    include_published: bool = False,
+) -> Set[str]:
     """Collect draft detail_uids from WorkDetails.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "WorkDetails" not in wb.sheetnames:
@@ -191,14 +215,23 @@ def collect_draft_detail_uids(xlsx_path: Path) -> Set[str]:
             continue
         wid = slug_id(raw_work_id)
         did = slug_id(raw_detail_id, width=3)
-        status = normalize_status(row[hi["status"]])
-        if status != "draft":
+        uid = f"{wid}-{did}"
+        if allowed_uids is not None and uid not in allowed_uids:
             continue
-        out.add(f"{wid}-{did}")
+        if allowed_work_ids is not None and wid not in allowed_work_ids:
+            continue
+        status = normalize_status(row[hi["status"]])
+        if status != "draft" and not (include_published and status == "published"):
+            continue
+        out.add(uid)
     return out
 
 
-def collect_draft_moment_ids(xlsx_path: Path) -> Set[str]:
+def collect_draft_moment_ids(
+    xlsx_path: Path,
+    allowed_ids: Set[str] | None = None,
+    include_published: bool = False,
+) -> Set[str]:
     """Collect draft moment_ids from Moments.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     if "Moments" not in wb.sheetnames:
@@ -219,8 +252,10 @@ def collect_draft_moment_ids(xlsx_path: Path) -> Set[str]:
         mid = normalize_text(raw_moment_id).lower()
         if not mid:
             continue
+        if allowed_ids is not None and mid not in allowed_ids:
+            continue
         status = normalize_status(row[hi["status"]])
-        if status != "draft":
+        if status != "draft" and not (include_published and status == "published"):
             continue
         out.add(mid)
     return out
@@ -279,6 +314,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> generate pipeline.")
     ap.add_argument("--xlsx", default="data/works.xlsx", help="Path to workbook")
     ap.add_argument(
+        "--mode",
+        action="append",
+        choices=["work", "work_details", "moment"],
+        help="Flow(s) to run. Repeat to run multiple modes. Default: all.",
+    )
+    ap.add_argument(
         "--input-dir",
         default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/works/make_srcset_images",
         help="Input directory for source images",
@@ -311,7 +352,29 @@ def main() -> int:
     ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "1")), help="Parallel jobs")
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
+    ap.add_argument("--work-ids", default="", help="Comma-separated work_ids filter for this run.")
+    ap.add_argument("--work-ids-file", default="", help="Path to work_ids file (one id per line).")
+    ap.add_argument("--series-ids", default="", help="Comma-separated series_ids passed to generation.")
+    ap.add_argument("--series-ids-file", default="", help="Path to series_ids file (one id per line).")
+    ap.add_argument("--moment-ids", default="", help="Comma-separated moment_ids filter for this run.")
+    ap.add_argument("--moment-ids-file", default="", help="Path to moment_ids file (one id per line).")
     args = ap.parse_args()
+    selected_modes = set(args.mode or ["work", "work_details", "moment"])
+
+    explicit_work_ids = read_optional_ids_file(args.work_ids_file)
+    if args.work_ids:
+        explicit_work_ids.update({slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()})
+    work_filter = explicit_work_ids if explicit_work_ids else None
+
+    explicit_series_ids = read_optional_ids_file(args.series_ids_file)
+    if args.series_ids:
+        explicit_series_ids.update({normalize_text(s.strip()) for s in args.series_ids.split(",") if s.strip()})
+    series_filter = explicit_series_ids if explicit_series_ids else None
+
+    explicit_moment_ids = read_optional_ids_file(args.moment_ids_file)
+    if args.moment_ids:
+        explicit_moment_ids.update({normalize_text(m.strip()).lower() for m in args.moment_ids.split(",") if m.strip()})
+    moment_filter = explicit_moment_ids if explicit_moment_ids else None
 
     repo_root = Path(__file__).resolve().parents[1]
     xlsx_path = (repo_root / args.xlsx).resolve()
@@ -337,183 +400,214 @@ def main() -> int:
         moment_success_ids_file = tmp_dir / "moment_success_ids.txt"
         draft_moment_ids_file = tmp_dir / "draft_moment_ids.txt"
         copied_moment_ids_file = tmp_dir / "copied_moment_ids.txt"
+        generate_moment_ids_file = tmp_dir / "generate_moment_ids.txt"
         generate_ids_file = tmp_dir / "generate_ids.txt"
 
-        draft_ids = collect_draft_ids(xlsx_path)
+        draft_ids = set()
+        if "work" in selected_modes:
+            draft_ids = collect_draft_ids(
+                xlsx_path,
+                allowed_ids=work_filter,
+                include_published=bool(args.force_generate and work_filter is not None),
+            )
         draft_ids_file.write_text(
             "\n".join(sorted(draft_ids)) + ("\n" if draft_ids else ""),
             encoding="utf-8",
         )
-        print(f"Draft candidates: {len(draft_ids)}")
+        print(f"Draft candidates (work): {len(draft_ids)}")
 
-        draft_detail_uids = collect_draft_detail_uids(xlsx_path)
+        draft_detail_uids = set()
+        if "work_details" in selected_modes:
+            draft_detail_uids = collect_draft_detail_uids(
+                xlsx_path,
+                allowed_uids=None,
+                allowed_work_ids=work_filter,
+                include_published=bool(args.force_generate and work_filter is not None),
+            )
         draft_detail_uids_file.write_text(
             "\n".join(sorted(draft_detail_uids)) + ("\n" if draft_detail_uids else ""),
             encoding="utf-8",
         )
-        print(f"Draft detail candidates: {len(draft_detail_uids)}")
+        print(f"Draft detail candidates (work_details): {len(draft_detail_uids)}")
 
-        draft_moment_ids = collect_draft_moment_ids(xlsx_path)
+        draft_moment_ids = set()
+        if "moment" in selected_modes:
+            draft_moment_ids = collect_draft_moment_ids(
+                xlsx_path,
+                allowed_ids=moment_filter,
+                include_published=bool(args.force_generate and moment_filter is not None),
+            )
         draft_moment_ids_file.write_text(
             "\n".join(sorted(draft_moment_ids)) + ("\n" if draft_moment_ids else ""),
             encoding="utf-8",
         )
-        print(f"Draft moment candidates: {len(draft_moment_ids)}")
-
-        run_step(
-            "Copy Draft Work Files",
-            [
-                py,
-                str(copy_script),
-                "--mode",
-                "work",
-                "--ids-file",
-                str(draft_ids_file),
-                "--copied-ids-file",
-                str(copied_ids_file),
-            ]
-            + ([] if args.dry_run else ["--write"]),
-            cwd=repo_root,
-        )
+        print(f"Draft moment candidates (moment): {len(draft_moment_ids)}")
 
         copied_ids = read_ids(copied_ids_file)
         generated_work_ids = set()
-        if copied_ids:
-            ids_2400 = collect_2400_ids(xlsx_path, copied_ids)
-            ids_2400_file.write_text(
-                "\n".join(sorted(ids_2400)) + ("\n" if ids_2400 else ""),
-                encoding="utf-8",
-            )
-
-            # make_srcset_images.sh controls selection via environment variables.
-            env = os.environ.copy()
-            env["MAKE_SRCSET_2400_IDS_FILE"] = str(ids_2400_file)
-            env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
-            env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(success_ids_file)
-
+        if "work" in selected_modes:
             run_step(
-                "Generate Srcset Derivatives",
+                "Copy Draft Work Files",
                 [
-                    "bash",
-                    str(make_script),
-                    str(args.input_dir),
-                    str(args.output_dir),
-                    str(args.jobs),
+                    py,
+                    str(copy_script),
+                    "--mode",
+                    "work",
+                    "--ids-file",
+                    str(draft_ids_file),
+                    "--copied-ids-file",
+                    str(copied_ids_file),
                 ]
-                + (["--dry-run"] if args.dry_run else []),
+                + ([] if args.dry_run else ["--write"]),
                 cwd=repo_root,
-                env=env,
             )
 
-            if args.dry_run:
-                generated_work_ids = copied_ids
-            else:
-                generated_work_ids = read_ids(success_ids_file)
-        else:
-            print("\n==> Skip Srcset\nNo copied draft files in this run.")
-            generated_work_ids = set()
+            copied_ids = read_ids(copied_ids_file)
+            if copied_ids:
+                ids_2400 = collect_2400_ids(xlsx_path, copied_ids)
+                ids_2400_file.write_text(
+                    "\n".join(sorted(ids_2400)) + ("\n" if ids_2400 else ""),
+                    encoding="utf-8",
+                )
 
-        run_step(
-            "Copy Draft Work Detail Files",
-            [
-                py,
-                str(copy_script),
-                "--mode",
-                "work_details",
-                "--ids-file",
-                str(draft_detail_uids_file),
-                "--copied-ids-file",
-                str(copied_detail_uids_file),
-            ]
-            + ([] if args.dry_run else ["--write"]),
-            cwd=repo_root,
-        )
+                # make_srcset_images.sh controls selection via environment variables.
+                env = os.environ.copy()
+                env["MAKE_SRCSET_2400_IDS_FILE"] = str(ids_2400_file)
+                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
+                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(success_ids_file)
+
+                run_step(
+                    "Generate Srcset Derivatives",
+                    [
+                        "bash",
+                        str(make_script),
+                        str(args.input_dir),
+                        str(args.output_dir),
+                        str(args.jobs),
+                    ]
+                    + (["--dry-run"] if args.dry_run else []),
+                    cwd=repo_root,
+                    env=env,
+                )
+
+                if args.dry_run:
+                    generated_work_ids = copied_ids
+                else:
+                    generated_work_ids = read_ids(success_ids_file)
+            else:
+                print("\n==> Skip Srcset\nNo copied draft files in this run.")
+        else:
+            print("\n==> Skip Work\nMode not selected.")
+            generated_work_ids = set()
 
         copied_detail_uids = read_ids(copied_detail_uids_file)
         generated_detail_uids = set()
-
-        if copied_detail_uids:
-            detail_2400_ids = collect_detail_2400_uids(xlsx_path, copied_detail_uids)
-            detail_ids_2400_file.write_text(
-                "\n".join(sorted(detail_2400_ids)) + ("\n" if detail_2400_ids else ""),
-                encoding="utf-8",
-            )
-
-            # Restrict run to copied detail_uids and track success IDs.
-            env = os.environ.copy()
-            env["MAKE_SRCSET_2400_IDS_FILE"] = str(detail_ids_2400_file)
-            env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_detail_uids_file)
-            env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(detail_success_ids_file)
-
+        if "work_details" in selected_modes:
             run_step(
-                "Generate Work Detail Srcset Derivatives",
+                "Copy Draft Work Detail Files",
                 [
-                    "bash",
-                    str(make_script),
-                    str(args.detail_input_dir),
-                    str(args.detail_output_dir),
-                    str(args.jobs),
+                    py,
+                    str(copy_script),
+                    "--mode",
+                    "work_details",
+                    "--ids-file",
+                    str(draft_detail_uids_file),
+                    "--copied-ids-file",
+                    str(copied_detail_uids_file),
                 ]
-                + (["--dry-run"] if args.dry_run else []),
+                + ([] if args.dry_run else ["--write"]),
                 cwd=repo_root,
-                env=env,
             )
 
-            if args.dry_run:
-                generated_detail_uids = copied_detail_uids
-            else:
-                generated_detail_uids = read_ids(detail_success_ids_file)
-        else:
-            print("\n==> Skip Work Detail Srcset\nNo copied detail files in this run.")
-            generated_detail_uids = set()
+            copied_detail_uids = read_ids(copied_detail_uids_file)
+            if copied_detail_uids:
+                detail_2400_ids = collect_detail_2400_uids(xlsx_path, copied_detail_uids)
+                detail_ids_2400_file.write_text(
+                    "\n".join(sorted(detail_2400_ids)) + ("\n" if detail_2400_ids else ""),
+                    encoding="utf-8",
+                )
 
-        run_step(
-            "Copy Draft Moment Files",
-            [
-                py,
-                str(copy_script),
-                "--mode",
-                "moment",
-                "--ids-file",
-                str(draft_moment_ids_file),
-                "--copied-ids-file",
-                str(copied_moment_ids_file),
-            ]
-            + ([] if args.dry_run else ["--write"]),
-            cwd=repo_root,
-        )
+                # Restrict run to copied detail_uids and track success IDs.
+                env = os.environ.copy()
+                env["MAKE_SRCSET_2400_IDS_FILE"] = str(detail_ids_2400_file)
+                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_detail_uids_file)
+                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(detail_success_ids_file)
+
+                run_step(
+                    "Generate Work Detail Srcset Derivatives",
+                    [
+                        "bash",
+                        str(make_script),
+                        str(args.detail_input_dir),
+                        str(args.detail_output_dir),
+                        str(args.jobs),
+                    ]
+                    + (["--dry-run"] if args.dry_run else []),
+                    cwd=repo_root,
+                    env=env,
+                )
+
+                if args.dry_run:
+                    generated_detail_uids = copied_detail_uids
+                else:
+                    generated_detail_uids = read_ids(detail_success_ids_file)
+            else:
+                print("\n==> Skip Work Detail Srcset\nNo copied detail files in this run.")
+        else:
+            print("\n==> Skip Work Details\nMode not selected.")
+            generated_detail_uids = set()
 
         copied_moment_ids = read_ids(copied_moment_ids_file)
         generated_moment_ids = set()
-        if copied_moment_ids:
-            # Moments never request 2400 derivatives: set an explicit empty allow-list.
-            moment_ids_2400_file.write_text("", encoding="utf-8")
-            # Restrict run to copied moment_ids and track success IDs.
-            env = os.environ.copy()
-            env["MAKE_SRCSET_2400_IDS_FILE"] = str(moment_ids_2400_file)
-            env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_moment_ids_file)
-            env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(moment_success_ids_file)
-
+        if "moment" in selected_modes:
             run_step(
-                "Generate Moment Srcset Derivatives",
+                "Copy Draft Moment Files",
                 [
-                    "bash",
-                    str(make_script),
-                    str(args.moment_input_dir),
-                    str(args.moment_output_dir),
-                    str(args.jobs),
+                    py,
+                    str(copy_script),
+                    "--mode",
+                    "moment",
+                    "--ids-file",
+                    str(draft_moment_ids_file),
+                    "--copied-ids-file",
+                    str(copied_moment_ids_file),
                 ]
-                + (["--dry-run"] if args.dry_run else []),
+                + ([] if args.dry_run else ["--write"]),
                 cwd=repo_root,
-                env=env,
             )
 
-            if args.dry_run:
-                generated_moment_ids = copied_moment_ids
+            copied_moment_ids = read_ids(copied_moment_ids_file)
+            if copied_moment_ids:
+                # Moments never request 2400 derivatives: set an explicit empty allow-list.
+                moment_ids_2400_file.write_text("", encoding="utf-8")
+                # Restrict run to copied moment_ids and track success IDs.
+                env = os.environ.copy()
+                env["MAKE_SRCSET_2400_IDS_FILE"] = str(moment_ids_2400_file)
+                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_moment_ids_file)
+                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(moment_success_ids_file)
+
+                run_step(
+                    "Generate Moment Srcset Derivatives",
+                    [
+                        "bash",
+                        str(make_script),
+                        str(args.moment_input_dir),
+                        str(args.moment_output_dir),
+                        str(args.jobs),
+                    ]
+                    + (["--dry-run"] if args.dry_run else []),
+                    cwd=repo_root,
+                    env=env,
+                )
+
+                if args.dry_run:
+                    generated_moment_ids = copied_moment_ids
+                else:
+                    generated_moment_ids = read_ids(moment_success_ids_file)
             else:
-                generated_moment_ids = read_ids(moment_success_ids_file)
+                print("\n==> Skip Moment Srcset\nNo copied moment files in this run.")
         else:
-            print("\n==> Skip Moment Srcset\nNo copied moment files in this run.")
+            print("\n==> Skip Moments\nMode not selected.")
             generated_moment_ids = set()
 
         generate_ids = set(generated_work_ids)
@@ -523,9 +617,18 @@ def main() -> int:
             "\n".join(sorted(generate_ids)) + ("\n" if generate_ids else ""),
             encoding="utf-8",
         )
+        # Moment generation should be driven by selected draft moments, not copied image IDs.
+        # This ensures moments without images are still generated.
+        generate_moment_ids_file.write_text(
+            "\n".join(sorted(draft_moment_ids)) + ("\n" if draft_moment_ids else ""),
+            encoding="utf-8",
+        )
 
         generate_cmd = [py, str(generate_script), str(xlsx_path)]
         generate_cmd += ["--work-ids-file", str(generate_ids_file)]
+        generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
+        if series_filter is not None:
+            generate_cmd += ["--series-ids", ",".join(sorted(series_filter))]
         if not args.dry_run:
             generate_cmd.append("--write")
         if args.force_generate:

@@ -36,12 +36,14 @@ Usage:
     python3 scripts/generate_work_pages.py --work-ids 00001,00002 --write
     python3 scripts/generate_work_pages.py --work-ids-file tmp/work_ids.txt --write
     python3 scripts/generate_work_pages.py --series-ids curve-poems,dots --write
+    python3 scripts/generate_work_pages.py --moment-ids blue-sky,compiled --write
 
 Common flags:
 - --write: persist generated files + workbook status/date updates
 - --force: regenerate even when checksum/hash matches existing output
 - --work-ids / --work-ids-file: limit work/work_details generation scope
 - --series-ids / --series-ids-file: limit series page/JSON scope
+- --moment-ids / --moment-ids-file: limit moments generation scope
 - --moments-sheet: worksheet name for moments (default: Moments)
 - --moments-output-dir / --moments-prose-dir: moment page/prose destinations
 - --projects-base-dir: base path used for dimension lookups in WorkDetails/Moments
@@ -489,6 +491,16 @@ def main() -> None:
         default="",
         help="Path to series_ids file (one id per line). If set, only these series are processed.",
     )
+    ap.add_argument(
+        "--moment-ids",
+        default="",
+        help="Comma-separated moment_ids to process.",
+    )
+    ap.add_argument(
+        "--moment-ids-file",
+        default="",
+        help="Path to moment_ids file (one id per line). If set, only these moments are processed.",
+    )
     args = ap.parse_args()
 
     # Resolve the workbook path and fail fast if it is missing.
@@ -650,6 +662,23 @@ def main() -> None:
             require_slug_safe("series_id", sid.strip())
             for sid in args.series_ids.split(",")
             if sid.strip()
+        }
+
+    selected_moment_ids = None
+    if args.moment_ids_file:
+        mids_path = Path(args.moment_ids_file).expanduser()
+        if not mids_path.exists():
+            raise SystemExit(f"moment_ids file not found: {mids_path}")
+        selected_moment_ids = {
+            require_slug_safe("moment_id", normalize_text(line).lower())
+            for line in mids_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+    elif args.moment_ids:
+        selected_moment_ids = {
+            require_slug_safe("moment_id", normalize_text(mid).lower())
+            for mid in args.moment_ids.split(",")
+            if mid.strip()
         }
 
     # If caller scopes by series but does not provide an explicit work filter,
@@ -1430,6 +1459,12 @@ def main() -> None:
 
         moments_total = 0
         for mr in moments_rows[1:]:
+            mid_raw = cell(mr, moments_hi, "moment_id")
+            if is_empty(mid_raw):
+                continue
+            mid = normalize_text(mid_raw).lower()
+            if selected_moment_ids is not None and mid not in selected_moment_ids:
+                continue
             status = normalize_status(cell(mr, moments_hi, "status"))
             if is_actionable_moment_status(status):
                 moments_total += 1
@@ -1443,6 +1478,14 @@ def main() -> None:
         moments_processed = 0
 
         for mr, mr_cells in zip(moments_rows[1:], moments_ws.iter_rows(min_row=2), strict=False):
+            mid_raw = cell(mr, moments_hi, "moment_id")
+            if is_empty(mid_raw):
+                moments_skipped += 1
+                continue
+            mid = normalize_text(mid_raw).lower()
+            if selected_moment_ids is not None and mid not in selected_moment_ids:
+                moments_skipped += 1
+                continue
             status = normalize_status(cell(mr, moments_hi, "status"))
             if not is_actionable_moment_status(status):
                 moments_skipped += 1
