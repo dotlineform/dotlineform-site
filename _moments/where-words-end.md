@@ -1,37 +1,16 @@
 ---
-title: where words end
-date: 2018-5-6
+moment_id: "where-words-end"
+title: "where words end"
+date: "2018-05-06"
+date_display: null
 images:
-  - file: where-words-end.webp
-    alt: where words end
+  -
+    file: "where-words-end.jpg"
+    alt: "where words end"
+width_px: 1600
+height_px: 1600
+layout: "moment"
+checksum: "7f2af01fdfa5a23b8ac4aa4184fa7d3a"
 ---
-<pre class="moment-text">
-love shines where words end
 
-what is a stone?
-it carries within it memories
-in crystalline maps that trace particles from stars to our bodies
-from before life existed
-
-what is a heart?
-it beats from when we are born in the womb
-and keeps beating, relentlessly, without any reflection
-for as long as it can do, as long as it needs to
-
-what is a soul?
-it is life and love, but neither of these things
-it means something and nothing
-a leaf floating on water
-
-and so here we are, there is only one question remaining
-we don't need to answer it, there is no doubt
-love is what keeps the stone, heart and soul in balance
-
-we find it in the sleepy night, eyelids close slowly like blossom falling from a tree
-we smell it in the warm sheets, wrapping gently around us
-we feel it in all the little moments we happilly fall into
-
-a still moment in a forest
-so peaceful
-so in love
-</pre>
+{% include moments_prose/where-words-end.md %}

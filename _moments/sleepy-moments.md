@@ -1,26 +1,16 @@
 ---
-title: sleepy moments
-date: 2019-4-2
+moment_id: "sleepy-moments"
+title: "sleepy moments"
+date: "2019-04-02"
+date_display: null
 images:
-  - file: sleepy-moments.webp
-    alt: sleepy moments
+  -
+    file: "sleepy-moments.jpg"
+    alt: "sleepy moments"
+width_px: 2000
+height_px: 2000
+layout: "moment"
+checksum: "c111e1a1c76232523c0d6c39a51cff71"
 ---
-<pre class="moment-text">
-warm breath in my ear
- 
-your whispers become part of me
- 
-when you say forever
- 
-do you mean this moment
- 
-has escaped time?
- 
-the clocks stopped a long time ago
- 
-they are just gathering dust
- 
-whilst we embrace our moments
- 
-and fall into sleep with them
-</pre>
+
+{% include moments_prose/sleepy-moments.md %}

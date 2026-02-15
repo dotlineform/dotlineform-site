@@ -1,38 +1,16 @@
 ---
-title: we make ghosts
-date: 2014-1-1
-date_display: c. 2014
+moment_id: "we-make-ghosts"
+title: "we make ghosts"
+date: "2014-01-01"
+date_display: "c. 2014"
 images:
-  - file: we-make-ghosts.webp
-    alt: we make ghosts
+  -
+    file: "we-make-ghosts.jpg"
+    alt: "we make ghosts"
+width_px: 2448
+height_px: 3264
+layout: "moment"
+checksum: "af8a84d6759349e574699d5dda54d5c9"
 ---
-<pre class="moment-text">
-ghosts pass through us all the time
-like subatomic particles which only rarely hit one of our particles
-(from their perspective, we are only slightly less empty than the night air)
- 
-as some stones crumble under the weight of the stones they support
-eventually new stones appear to replace them
-a wall of memories
- 
-a wall being built with every thought
-even dream thoughts
- 
-in this space behind closed eyes
-I recall it all like I would remember taking a photograph
- 
-a memory of memories
-layers, sediments, residues, fossils
-the existence of life in thoughts
- 
-a door opens
- 
-and then it ends
- 
-there are no more details, everything that is able to be unhidden has been released
- 
-the fog is thickening
-in the forest, everything goes back to sleep
- 
-where do they dream?
-</pre>
+
+{% include moments_prose/we-make-ghosts.md %}

@@ -1,32 +1,16 @@
 ---
-title: keys
-date: 2019-7-1
+moment_id: "keys"
+title: "keys"
+date: "2019-07-01"
+date_display: null
 images:
-  - file: keys.webp
-    alt: keys
+  -
+    file: "keys.jpg"
+    alt: "keys"
+width_px: 3024
+height_px: 4032
+layout: "moment"
+checksum: "7d428be68ec7ba02ff731873ebe898d1"
 ---
-<pre class="moment-text">
-they say that the loops go on forever
- 
-in that sense we are caught
- 
-is it possible to be open?
- 
-like a key hanging on a chain
- 
-next to the locked door
- 
-but the key has rusted beyond repair
- 
-do our keys also corrode
- 
-when left alone
- 
-in damp tunnels where our demons prowl in darkness
- 
-reach in hold them
- 
-they will float to the surface
- 
-cleanse in the sun
-</pre>
+
+{% include moments_prose/keys.md %}

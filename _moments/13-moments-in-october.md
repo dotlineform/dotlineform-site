@@ -1,18 +1,16 @@
 ---
-title: 13 moments in October
-date: 2024-10-23
+moment_id: "13-moments-in-october"
+title: "13 moments in October"
+date: "2024-10-23"
+date_display: null
 images:
-  - file: 13-moments-in-october.webp
-    alt: 13 moments in October
+  -
+    file: "13-moments-in-october.jpg"
+    alt: "13 moments in October"
+width_px: 1430
+height_px: 1430
+layout: "moment"
+checksum: "1a51eb1f9a52a1d14176887b2c9d35d8"
 ---
-<pre class="moment-text">
-we should be sleeping
-allow the winter to heal
-but instead we see everything falling apart in clear sight
- 
-there is an internal swell
-when everything on the outside is turning cold
-shivers
- 
-always fighting doubt until the light goes out
-</pre>
+
+{% include moments_prose/13-moments-in-october.md %}

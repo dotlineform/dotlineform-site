@@ -1,20 +1,16 @@
 ---
-title: particles
-date: 2013-1-1
-date_display: c. 2013
+moment_id: "particles"
+title: "particles"
+date: "2013-01-01"
+date_display: "c. 2013"
 images:
-  - file: particles.webp
-    alt: particles
+  -
+    file: "particles.jpg"
+    alt: "particles"
+width_px: 1600
+height_px: 1600
+layout: "moment"
+checksum: "4d672781c92a7ec0cb3d67de1fdf4eaa"
 ---
-<pre class="moment-text">
-it is very quiet
-a stillness that is only possible when all around are sleeping
- 
-the night allows lights to unhide themselves
-some are close, others are very far away
- 
-there is just this, perhaps there is nothing more
-beyond things that are visible
- 
-and things that are hidden
-</pre>
+
+{% include moments_prose/particles.md %}

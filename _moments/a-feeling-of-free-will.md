@@ -1,86 +1,16 @@
 ---
-title: a feeling of free will
-date: 2024-10-23
+moment_id: "a-feeling-of-free-will"
+title: "a feeling of free will"
+date: "2024-10-23"
+date_display: null
 images:
-  - file: a-feeling-of-free-will.webp
-    alt: a feeling of free will
+  -
+    file: "a-feeling-of-free-will.jpg"
+    alt: "a feeling of free will"
+width_px: 1600
+height_px: 998
+layout: "moment"
+checksum: "38060c4c6291884a0304524c4a27756b"
 ---
-<pre class="moment-text">
-an
-unrealisable
-feeling
-of
-free
-will
-that
-stretches
-for
-hours
-and
-years
-before
-being
-crushed
-under
-its
-own
-weight
-of
-expectation
-which
-it
-had
-failed
-to
-properly
-understand
-and
-so
-consequently
-was
-unprepared
-for
-when
-a
-previously
-unknowable
-influence
-appeared
-as
-an
-uncertainty
-that
-i
-found
-impossible
-to
-reconcile
-leading
-to
-a
-condition
-of
-exponentially
-increasing
-doubt
-that
-ultimately
-made
-the
-whole
-concept
-meaningless
-resulting
-in
-an
-unresolvable
-feeling
-of
-free
-will
-that
-may
-possibly
-last
-forever
-</pre>
+
+{% include moments_prose/a-feeling-of-free-will.md %}

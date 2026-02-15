@@ -1,25 +1,16 @@
 ---
-title: warmth
-date: 2018-11-25
+moment_id: "warmth"
+title: "warmth"
+date: "2018-11-25"
+date_display: null
 images:
-  - file: warmth.webp
-    alt: warmth
+  -
+    file: "warmth.jpg"
+    alt: "warmth"
+width_px: 1600
+height_px: 1600
+layout: "moment"
+checksum: "4486b56092e02349a6065951536c9a8b"
 ---
-<pre class="moment-text">
-her smile is a heart
-and everyone who knows her feels it
- 
-when she is sleeping eyes closed
-and I can feel her warm breath
- 
-her lips naturally relax into a smile
-that makes me feel so at peace and in love
- 
-and I feel her beautiful heart
-with every embrace
- 
-she couldn’t possibly know
-(like the sun doesn’t know)
- 
-how it’s warmth keeps us alive
-</pre>
+
+{% include moments_prose/warmth.md %}

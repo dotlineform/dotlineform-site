@@ -1,30 +1,13 @@
 ---
-title: where?
-date: 2019-7-2
+moment_id: "where"
+title: "where?"
+date: "2019-07-02"
+date_display: null
+images: []
+width_px: null
+height_px: null
+layout: "moment"
+checksum: "2ddd59d35cce7fc35610a07d8075b1fb"
 ---
-<pre class="moment-text">
-where are we from?
-our particles are from stars
-all the basic components
-enough to make a rock
-or even a plant
-we could trace the history of our particles
-to the beginning of time
-I’m sure some of them
-have travelled further than we could ever comprehend
- 
-the question still remains…
- 
-and now we are here
-(carrying our bodies, particles, without thinking)
- 
-there is something else
- 
-this feeling of love
-and all our emotions
-they are not the same as our cells, our atoms
-they’re not explained by mathematics
-so where do they come from?
- 
-where?
-</pre>
+
+{% include moments_prose/where.md %}

@@ -1,22 +1,13 @@
 ---
-title: circle
-date: 2019-1-1
-date_display: c. 2019
+moment_id: "circle"
+title: "circle"
+date: "2019-01-01"
+date_display: "c. 2019"
+images: []
+width_px: null
+height_px: null
+layout: "moment"
+checksum: "e779006128df4bfac6a5c0e02385f56a"
 ---
-<pre class="moment-text">
-and when we sit in a circle
- 
-the space in the middle is where all our thoughts and feelings meet
- 
-and we are comfortable with silence
- 
-we understand that silence
- 
-is an inferno of thoughts and feelings
- 
-see the sparks
- 
-we can help them
- 
-with a deep caring and empathy
-</pre>
+
+{% include moments_prose/circle.md %}

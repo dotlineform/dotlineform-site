@@ -1,30 +1,16 @@
 ---
-title: winter
-date: 2018-5-16
+moment_id: "winter"
+title: "winter"
+date: "2018-05-16"
+date_display: null
 images:
-  - file: winter.webp
-    alt: winter
+  -
+    file: "winter.jpg"
+    alt: "winter"
+width_px: 1600
+height_px: 1600
+layout: "moment"
+checksum: "c2654c99e9125e3ea9bbd5101d7a2522"
 ---
-<pre class="moment-text">
-before you know it
-years will pass
- 
-and all the daily decisions
-that seem so important at the time
-will be forgotten
- 
-we’ll see that ‘living in the present’
-was like watching grains of salt
- 
-as they melt and then crystallise
-only to dissolve again
- 
-cold has arrived
-many winter months ahead
- 
-the sunlight is so beautiful even when grey
-it never stops, even in the darkest nights
- 
-all the flowers and animals are prepared
-as is in their nature
-</pre>
+
+{% include moments_prose/winter.md %}

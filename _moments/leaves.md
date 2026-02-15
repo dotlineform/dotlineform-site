@@ -1,32 +1,16 @@
 ---
-title: leaves
-date: 2019-4-22
+moment_id: "leaves"
+title: "leaves"
+date: "2019-04-22"
+date_display: null
 images:
-  - file: leaves.webp
-    alt: leaves
+  -
+    file: "leaves.jpg"
+    alt: "leaves"
+width_px: 4032
+height_px: 3024
+layout: "moment"
+checksum: "ff23ed1210907b1d30c87a36bcbf036a"
 ---
-<pre class="moment-text">
-leaves float on silky stems
-flowers float just above the ground
-light infuses everything
- 
-is love really like this?
-does it sometimes feel like nature
-limitless and free
- 
-or does it constrict
-by circumstance and rules
-our paths, like a twisting thread
- 
-is it possible to unravel
-the curls of our thoughts
-and what will happen if we do?
- 
-will i dissolve into wine
-and be reborn a grape
-soaking up the sun?
- 
-in a field somewhere
-in peace with all the creatures
-all the mice and the birds
-</pre>
+
+{% include moments_prose/leaves.md %}

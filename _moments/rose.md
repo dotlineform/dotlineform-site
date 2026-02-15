@@ -1,18 +1,13 @@
 ---
-title: rose
-date: 2019-2-19
+moment_id: "rose"
+title: "rose"
+date: "2019-02-19"
+date_display: null
+images: []
+width_px: null
+height_px: null
+layout: "moment"
+checksum: "1fea0290c2d7c2f2bc4a237db5ee7963"
 ---
-<pre class="moment-text">
-alive
-breathing
-it knows nothing
-only water and sun
-and so much more…
-in its teardrop-glass home
-i see you wrapped in warmth
-a soul of rose perfume
-light flowing petals
-silky kisses
-joyfully
-love
-</pre>
+
+{% include moments_prose/rose.md %}
