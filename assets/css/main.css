@@ -861,6 +861,32 @@ pre.theme-text{
   font-weight: 500;
 }
 
+.workDetails__pager{
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  justify-content: flex-end;
+  width: 100%;
+  margin: 0.35rem 0 0;
+}
+
+.workDetails__pagerBtn{
+  appearance: none;
+  font: inherit;
+  line-height: 1.2;
+}
+
+.workDetails__pagerBtn[disabled]{
+  opacity: 0.5;
+  cursor: default;
+}
+
+.workDetails__pagerStatus{
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-right: 6px;
+}
+
 /* Base components (shared across sections):
 Use “structure-first” naming and scope section-specific differences via the root page class
 (e.g. .work, .theme, .moment, .research-note).

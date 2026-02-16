@@ -245,7 +245,15 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var thumbBase = String(section.getAttribute('data-thumb-base') || '').replace(/\/$/, '');
     var thumbPrefix = String(section.getAttribute('data-thumb-prefix') || '/assets').replace(/\/$/, '');
     var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
-    var maxGridItems = 60;
+    var pageSize = 60;
+    var query = new URLSearchParams(window.location.search);
+    var requestedDetailsSection = String(query.get('details_section') || '').trim();
+    var requestedDetailsPage = Number(query.get('details_page') || '0');
+    if (!Number.isFinite(requestedDetailsPage) || requestedDetailsPage < 1) {
+      requestedDetailsPage = 1;
+    } else {
+      requestedDetailsPage = Math.floor(requestedDetailsPage);
+    }
     var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
     if (!hasDetailsJson) return;
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
@@ -281,6 +289,48 @@ If you later serve images only from external media_base (CDN/R2), this check won
       });
     }
 
+    function renderDetailsGrid(details, secId, currentPage) {
+      var html = '<div class=\"seriesGrid\" aria-label=\"details for ' + esc(secId) + '\">';
+      details.forEach(function (d) {
+        var uid = String((d && d.detail_uid) || '').trim();
+        if (!uid) return;
+        var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
+        var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
+        var title = String((d && d.title) || uid).trim();
+        var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
+        html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
+        html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
+        html += '</a>';
+      });
+      html += '</div>';
+      return html;
+    }
+
+    function renderDetailsGroup(group) {
+      var total = group.details.length;
+      var pageCount = Math.max(1, Math.ceil(total / pageSize));
+      if (group.page < 1) group.page = pageCount;
+      if (group.page > pageCount) group.page = 1;
+
+      var start = (group.page - 1) * pageSize;
+      var end = Math.min(start + pageSize, total);
+      var pageItems = group.details.slice(start, end);
+
+      var html = '';
+      html += '<h3 class=\"workDetails__title\">' + esc(group.label || 'Details') + '</h3>';
+      html += renderDetailsGrid(pageItems, group.secId, group.page);
+
+      if (pageCount > 1) {
+        html += '<nav class=\"workDetails__pager\" aria-label=\"details pagination\">';
+        html += '<span class=\"workDetails__pagerStatus work__counter\">' + group.page + '/' + pageCount + '</span>';
+        html += '<button class=\"seriesNav__prev workDetails__pagerBtn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"-1\" aria-label=\"Previous page\">←</button>';
+        html += '<button class=\"seriesNav__next workDetails__pagerBtn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"1\" aria-label=\"Next page\">→</button>';
+        html += '</nav>';
+      }
+
+      group.el.innerHTML = html;
+    }
+
     fetch(jsonUrl, { cache: 'default' })
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -290,32 +340,48 @@ If you later serve images only from external media_base (CDN/R2), this check won
         var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
         if (!sections.length) return;
 
-        var html = '';
+        var groups = [];
+        var groupsByKey = {};
+        content.innerHTML = '';
+
         sections.forEach(function (sec) {
           var label = String((sec && sec.project_subfolder) || '').trim();
           var secId = slug(label || 'details');
-          var details = (sec && Array.isArray(sec.details)) ? sec.details.slice(0, maxGridItems) : [];
+          var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
           if (!details.length) return;
 
-          html += '<section class=\"workDetails__group\" id=\"details-' + esc(secId) + '\">';
-          html += '<h3 class=\"workDetails__title\">' + esc(label || 'Details') + '</h3>';
-          html += '<div class=\"seriesGrid\" aria-label=\"details for ' + esc(label || 'details') + '\">';
-          details.forEach(function (d) {
-            var uid = String((d && d.detail_uid) || '').trim();
-            if (!uid) return;
-            var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
-            var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
-            var title = String((d && d.title) || uid).trim();
-            var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId);
-            html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
-            html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
-            html += '</a>';
-          });
-          html += '</div></section>';
+          var groupEl = document.createElement('section');
+          groupEl.className = 'workDetails__group';
+          groupEl.id = 'details-' + secId;
+          content.appendChild(groupEl);
+
+          var group = {
+            key: 'g' + String(groups.length + 1),
+            secId: secId,
+            label: label || 'Details',
+            details: details,
+            page: (requestedDetailsSection && requestedDetailsSection === secId) ? requestedDetailsPage : 1,
+            el: groupEl
+          };
+          groups.push(group);
+          groupsByKey[group.key] = group;
+          renderDetailsGroup(group);
         });
 
-        if (html) {
-          content.innerHTML = html;
+        if (groups.length) {
+          content.addEventListener('click', function (ev) {
+            var target = ev.target;
+            if (!target) return;
+            var btn = target.closest('[data-pager-key]');
+            if (!btn) return;
+            var key = String(btn.getAttribute('data-pager-key') || '').trim();
+            var delta = Number(btn.getAttribute('data-pager-delta') || '0');
+            if (!key || !delta) return;
+            var group = groupsByKey[key];
+            if (!group) return;
+            group.page += delta;
+            renderDetailsGroup(group);
+          });
           section.hidden = false;
           scrollToHashTarget();
         }

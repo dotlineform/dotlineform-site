@@ -74,7 +74,6 @@ layout: default
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
           <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
-          <span class="work__counter" id="detailTitleCounter" hidden></span>
         </span>
         <nav class="seriesNav work__titleNav" id="detailNav"
             aria-label="Detail navigation"
@@ -84,6 +83,7 @@ layout: default
             data-baseurl="{{ site.baseurl | default: '' }}"
             data-default-section="{{ fallback_section | escape }}"
             hidden>
+          <span class="workDetails__pagerStatus work__counter" id="detailTitleCounter" hidden></span>
           <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
           <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
         </nav>
@@ -119,6 +119,9 @@ layout: default
     var fromWork = (params.get('from_work') || fallbackWorkId || '').trim();
     var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
     var section = (params.get('section') || fallbackSection || '').trim();
+    var detailsSection = (params.get('details_section') || section || '').trim();
+    var detailsPageRaw = Number(params.get('details_page') || '0');
+    var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
 
     if (!fromWork) {
       link.textContent = '← works';
@@ -127,6 +130,10 @@ layout: default
     }
 
     var href = baseurl + '/works/' + encodeURIComponent(fromWork) + '/';
+    var query = [];
+    if (detailsSection) query.push('details_section=' + encodeURIComponent(detailsSection));
+    if (detailsPage > 0) query.push('details_page=' + encodeURIComponent(String(detailsPage)));
+    if (query.length) href += '?' + query.join('&');
     if (section) {
       href += '#details-' + encodeURIComponent(section);
     }
@@ -153,6 +160,9 @@ layout: default
     var fromWork = (params.get('from_work') || fallbackWorkId).trim();
     var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
     var section = (params.get('section') || fallbackSection).trim();
+    var detailsSection = (params.get('details_section') || section).trim();
+    var detailsPageRaw = Number(params.get('details_page') || '0');
+    var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
     if (!fromWork) return;
 
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(fromWork) + '.json';
@@ -161,6 +171,8 @@ layout: default
       var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(fromWork);
       if (fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(fromWorkTitle);
       if (section) href += '&section=' + encodeURIComponent(section);
+      if (detailsSection) href += '&details_section=' + encodeURIComponent(detailsSection);
+      if (detailsPage > 0) href += '&details_page=' + encodeURIComponent(String(detailsPage));
       return href;
     }
 
