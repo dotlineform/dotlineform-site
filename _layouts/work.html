@@ -247,6 +247,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
     var pageSize = 60;
     var query = new URLSearchParams(window.location.search);
+    var currentSeries = String(query.get('series') || '').trim();
     var requestedDetailsSection = String(query.get('details_section') || '').trim();
     var requestedDetailsPage = Number(query.get('details_page') || '0');
     if (!Number.isFinite(requestedDetailsPage) || requestedDetailsPage < 1) {
@@ -298,6 +299,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
         var title = String((d && d.title) || uid).trim();
         var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
+        if (currentSeries) href += '&series=' + encodeURIComponent(currentSeries);
         html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
         html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
         html += '</a>';
