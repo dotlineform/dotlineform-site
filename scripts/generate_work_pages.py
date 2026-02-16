@@ -984,6 +984,7 @@ def main() -> None:
                     "title": series_title,
                     "year": year,
                     "year_display": year_display,
+                    "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
                     "layout": "series",
                 }
 
