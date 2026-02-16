@@ -186,8 +186,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
     class="workDetails"
     data-work-id="{{ wid | escape }}"
     data-baseurl="{{ site.baseurl | default: '' }}"
-    data-media-base="{{ site.media_base | default: '' }}"
-    data-media-prefix="{{ site.media_prefix | default: '/assets' }}"
+    data-thumb-base="{{ site.thumb_base | default: '' }}"
+    data-thumb-prefix="{{ site.thumb_prefix | default: '/assets' }}"
     data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
     data-has-details-json="{{ has_work_details_json }}"
     hidden
@@ -241,9 +241,9 @@ If you later serve images only from external media_base (CDN/R2), this check won
     if (!workId) return;
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var mediaBase = String(section.getAttribute('data-media-base') || '').replace(/\/$/, '');
-    var mediaPrefix = String(section.getAttribute('data-media-prefix') || '/assets').replace(/\/$/, '');
-    var detailsImgBase = mediaBase ? (mediaBase + mediaPrefix + '/work_details/img/') : (baseurl + mediaPrefix + '/work_details/img/');
+    var thumbBase = String(section.getAttribute('data-thumb-base') || '').replace(/\/$/, '');
+    var thumbPrefix = String(section.getAttribute('data-thumb-prefix') || '/assets').replace(/\/$/, '');
+    var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
     var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
     if (!hasDetailsJson) return;
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';

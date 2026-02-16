@@ -9,12 +9,13 @@ thumb_base: ""
 thumb_prefix: "/assets"
 
 # Media origin for larger assets (R2):
-# media_base: "https://media.dotlineform.com"
-# media_prefix: ""
+media_base: "https://media.dotlineform.com"
+media_prefix: ""
 
 # Local fallback (serve media from this repo):
-media_base: ""
-media_prefix: "/assets"
+# media_base: ""
+# media_prefix: "/assets"
+
 # Re-apply hash-anchor scrolling on work pages after async detail sections render.
 # Keep true unless you explicitly want to suppress jump-to-section on return from detail pages.
 enable_details_hash_scroll: true
