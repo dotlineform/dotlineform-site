@@ -1390,14 +1390,14 @@ def main() -> None:
                 )
 
             section_idx = section_index_by_work[wid][project_subfolder]
-            sections_by_work[wid][section_idx]["details"].append(
-                {
-                    "detail_id": did,
-                    "detail_uid": detail_uid,
-                    "title": coerce_string(cell(dr, work_details_hi, "title")),
-                    "has_primary_2400": coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
-                }
-            )
+            detail_entry = {
+                "detail_id": did,
+                "detail_uid": detail_uid,
+                "title": coerce_string(cell(dr, work_details_hi, "title")),
+            }
+            if coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")):
+                detail_entry["has_primary_2400"] = True
+            sections_by_work[wid][section_idx]["details"].append(detail_entry)
 
         wj_written = 0
         wj_skipped = 0

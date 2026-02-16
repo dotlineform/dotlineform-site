@@ -193,8 +193,6 @@ process_one() {
   make_primary "$src_use" 1600 "$OUTPUT_DIR/primary/${work_id}-primary-1600.webp"
   if should_make_2400 "$work_id"; then
     make_primary "$src_use" 2400 "$OUTPUT_DIR/primary/${work_id}-primary-2400.webp"
-  else
-    echo "Skipping 2400px primary for $work_id (not listed in MAKE_SRCSET_2400_IDS_FILE)"
   fi
   record_success_id "$work_id"
   record_processed_source "$src"
