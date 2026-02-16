@@ -245,6 +245,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var thumbBase = String(section.getAttribute('data-thumb-base') || '').replace(/\/$/, '');
     var thumbPrefix = String(section.getAttribute('data-thumb-prefix') || '/assets').replace(/\/$/, '');
     var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
+    var maxGridItems = 60;
     var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
     if (!hasDetailsJson) return;
     var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
@@ -293,7 +294,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         sections.forEach(function (sec) {
           var label = String((sec && sec.project_subfolder) || '').trim();
           var secId = slug(label || 'details');
-          var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
+          var details = (sec && Array.isArray(sec.details)) ? sec.details.slice(0, maxGridItems) : [];
           if (!details.length) return;
 
           html += '<section class=\"workDetails__group\" id=\"details-' + esc(secId) + '\">';
