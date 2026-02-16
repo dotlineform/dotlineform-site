@@ -7,7 +7,8 @@ layout: default
 
 {% assign live_url = site.live_url | default: site.url | default: "" %}
 {% assign media_base = site.media_base | default: "" %}
-{% assign media_prefix = site.media_prefix | default: "/assets" %}
+{% assign media_prefix = site.media_prefix %}
+{% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
 {% assign works_img_prefix = media_prefix | append: "/works/img" %}
 {% assign img_base = media_base | append: works_img_prefix | append: "/" %}
 
