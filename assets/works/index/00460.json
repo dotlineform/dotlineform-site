@@ -1,0 +1,119 @@
+{
+  "header": {
+    "work_id": "00460",
+    "count": 20,
+    "hash": "58728cba3a9440da23d79b7a8628fa36"
+  },
+  "sections": [
+    {
+      "project_subfolder": "versions",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00460-001",
+          "title": "molecules (positive)"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00460-002",
+          "title": "molecules (negative)"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00460-003",
+          "title": "molecules mist (positive)"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00460-004",
+          "title": "molecules mist (negative)"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "005",
+          "detail_uid": "00460-005",
+          "title": "molecules (detail 1)"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00460-006",
+          "title": "molecules (detail 2)"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00460-007",
+          "title": "molecules (detail 3)"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00460-008",
+          "title": "molecules (detail 4)"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00460-009",
+          "title": "molecules (detail 5)"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00460-010",
+          "title": "molecules (detail 6)"
+        },
+        {
+          "detail_id": "011",
+          "detail_uid": "00460-011",
+          "title": "molecules (detail 7)"
+        },
+        {
+          "detail_id": "012",
+          "detail_uid": "00460-012",
+          "title": "molecules (detail 8)"
+        },
+        {
+          "detail_id": "013",
+          "detail_uid": "00460-013",
+          "title": "molecules (detail 9)"
+        },
+        {
+          "detail_id": "014",
+          "detail_uid": "00460-014",
+          "title": "molecules (detail 10)"
+        },
+        {
+          "detail_id": "015",
+          "detail_uid": "00460-015",
+          "title": "molecules (detail 11)"
+        },
+        {
+          "detail_id": "016",
+          "detail_uid": "00460-016",
+          "title": "molecules (detail 12)"
+        },
+        {
+          "detail_id": "017",
+          "detail_uid": "00460-017",
+          "title": "molecules (detail 13)"
+        },
+        {
+          "detail_id": "018",
+          "detail_uid": "00460-018",
+          "title": "molecules (detail 14)"
+        },
+        {
+          "detail_id": "019",
+          "detail_uid": "00460-019",
+          "title": "molecules (detail 15)"
+        },
+        {
+          "detail_id": "020",
+          "detail_uid": "00460-020",
+          "title": "molecules (detail 16)"
+        }
+      ]
+    }
+  ]
+}
