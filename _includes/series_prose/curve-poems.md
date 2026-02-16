@@ -1,3 +1,1 @@
-<pre class="series-text">
-This series explores how a line becomes a form...
-</pre>
+<!-- Replace this placeholder with the series' prose. -->
