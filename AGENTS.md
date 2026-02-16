@@ -1,3 +1,8 @@
+## General behaviour
+
+- do not make code changes without first confirming what will be changed.
+- instructions like 'check' and 'confirm' DO NOT imply you carry out code changes
+
 ## Runtime and Paths
 
 - Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
