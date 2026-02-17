@@ -1,0 +1,66 @@
+items:
+  -
+    id: "--text"
+    usage: "body, .site-title a, .site-nav a.nav-item:link, .site-nav a.nav-item:visited, .site-nav a.nav-item:focus-visible (+5 more)"
+    light_hex: "#111"
+    dark_hex: "#f2f2f2"
+  -
+    id: "--muted"
+    usage: ".kicker, .muted, figcaption, .index__work_id, .index__date (+3 more)"
+    light_hex: "#444"
+    dark_hex: "#c7c7c7"
+  -
+    id: "--bg"
+    usage: "body, .site-header"
+    light_hex: "#fff"
+    dark_hex: "#0f0f10"
+  -
+    id: "--panel"
+    usage: "code, pre, .box, .nav-more.is-open .nav-more__panel, .theme-toggle (+2 more)"
+    light_hex: "#fafafa"
+    dark_hex: "#161618"
+  -
+    id: "--panel-2"
+    usage: "blockquote, th, .prompt, .site-nav a.nav-item:hover, .site-nav a.nav-item:focus-visible (+6 more)"
+    light_hex: "#f6f6f6"
+    dark_hex: "#1c1c1f"
+  -
+    id: "--border"
+    usage: "hr, code, pre, th, td (+13 more)"
+    light_hex: "#e6e6e6"
+    dark_hex: "#2b2b30"
+  -
+    id: "--border-strong"
+    usage: "a:focus-visible, blockquote, .prompt, .site-nav a.nav-item:focus-visible, .theme-toggle:hover (+8 more)"
+    light_hex: "#cfcfcf"
+    dark_hex: "#3a3a40"
+  -
+    id: "--link"
+    usage: "a:link, .index__link:link, .index__link:active, .index__link:focus, .workIndexItem:link (+10 more)"
+    light_hex: "#3f3f3f"
+    dark_hex: "#7bb0ff"
+  -
+    id: "--link-hover"
+    usage: "a:hover, .index__link:hover, .workIndexItem:hover, .seriesIndexItem:hover, .home-link:hover (+2 more)"
+    light_hex: "#1e1e1e"
+    dark_hex: "#a7c9ff"
+  -
+    id: "--link-visited"
+    usage: "a:visited, .index__link:visited, .workIndexItem:visited, .seriesIndexItem:visited, .home-link:visited (+2 more)"
+    light_hex: "#5b2aa6"
+    dark_hex: "#c39bff"
+  -
+    id: "direct #777"
+    usage: ".workIndexItem__year, .seriesIndexItem__year"
+    light_hex: "#777"
+    dark_hex: "#777"
+  -
+    id: "direct #d11"
+    usage: ".debug-media-boxes .page__mediaLink"
+    light_hex: "#d11"
+    dark_hex: "#d11"
+  -
+    id: "direct #1166cc"
+    usage: ".debug-media-boxes .page__mediaImg"
+    light_hex: "#1166cc"
+    dark_hex: "#1166cc"

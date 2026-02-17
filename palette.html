@@ -28,6 +28,11 @@ permalink: /palette/
   .palette__id{
     font-family: var(--font-mono);
     font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .palette__table th:first-child,
+  .palette__table td:first-child{
+    min-width: 18ch;
   }
   .palette__hex{
     font-family: var(--font-mono);
@@ -45,116 +50,50 @@ permalink: /palette/
     color: var(--muted);
     font-size: 0.95rem;
   }
+  .palette__sectionTitle{
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
 </style>
 
 <div class="palette">
   <h1>Palette</h1>
-  <p class="palette__note">Site UI colors from <code>assets/css/main.css</code>.</p>
+  <p class="palette__note">Generated from <code>assets/css/main.css</code> via <code>scripts/build_palette_data.py</code>.</p>
 
-  <table class="palette__table">
-    <thead>
-      <tr>
-        <th>Identifier</th>
-        <th>Light Hex</th>
-        <th>Light Swatch</th>
-        <th>Dark Hex</th>
-        <th>Dark Swatch</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="palette__id">--text (body, headings)</td>
-        <td class="palette__hex">#111 / #fff*</td>
-        <td><span class="palette__swatch" style="background:#111;"></span></td>
-        <td class="palette__hex">#f2f2f2</td>
-        <td><span class="palette__swatch" style="background:#f2f2f2;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--muted (meta, secondary text)</td>
-        <td class="palette__hex">#444</td>
-        <td><span class="palette__swatch" style="background:#444;"></span></td>
-        <td class="palette__hex">#c7c7c7</td>
-        <td><span class="palette__swatch" style="background:#c7c7c7;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--bg (page background)</td>
-        <td class="palette__hex">#fbfaf7 / #fff*</td>
-        <td><span class="palette__swatch" style="background:#fbfaf7;"></span></td>
-        <td class="palette__hex">#0f0f10</td>
-        <td><span class="palette__swatch" style="background:#0f0f10;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--panel</td>
-        <td class="palette__hex">#fafafa</td>
-        <td><span class="palette__swatch" style="background:#fafafa;"></span></td>
-        <td class="palette__hex">#161618</td>
-        <td><span class="palette__swatch" style="background:#161618;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--panel-2</td>
-        <td class="palette__hex">#f6f6f6</td>
-        <td><span class="palette__swatch" style="background:#f6f6f6;"></span></td>
-        <td class="palette__hex">#1c1c1f</td>
-        <td><span class="palette__swatch" style="background:#1c1c1f;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--border</td>
-        <td class="palette__hex">#e6e6e6</td>
-        <td><span class="palette__swatch" style="background:#e6e6e6;"></span></td>
-        <td class="palette__hex">#2b2b30</td>
-        <td><span class="palette__swatch" style="background:#2b2b30;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--border-strong</td>
-        <td class="palette__hex">#cfcfcf</td>
-        <td><span class="palette__swatch" style="background:#cfcfcf;"></span></td>
-        <td class="palette__hex">#3a3a40</td>
-        <td><span class="palette__swatch" style="background:#3a3a40;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--link</td>
-        <td class="palette__hex">#3f3f3f</td>
-        <td><span class="palette__swatch" style="background:#3f3f3f;"></span></td>
-        <td class="palette__hex">#7bb0ff</td>
-        <td><span class="palette__swatch" style="background:#7bb0ff;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--link-hover</td>
-        <td class="palette__hex">#1e1e1e</td>
-        <td><span class="palette__swatch" style="background:#1e1e1e;"></span></td>
-        <td class="palette__hex">#a7c9ff</td>
-        <td><span class="palette__swatch" style="background:#a7c9ff;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">--link-visited</td>
-        <td class="palette__hex">#5b2aa6</td>
-        <td><span class="palette__swatch" style="background:#5b2aa6;"></span></td>
-        <td class="palette__hex">#c39bff</td>
-        <td><span class="palette__swatch" style="background:#c39bff;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">work/series year label</td>
-        <td class="palette__hex">#777</td>
-        <td><span class="palette__swatch" style="background:#777;"></span></td>
-        <td class="palette__hex">#777</td>
-        <td><span class="palette__swatch" style="background:#777;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">debug media link outline</td>
-        <td class="palette__hex">#d11</td>
-        <td><span class="palette__swatch" style="background:#d11;"></span></td>
-        <td class="palette__hex">#d11</td>
-        <td><span class="palette__swatch" style="background:#d11;"></span></td>
-      </tr>
-      <tr>
-        <td class="palette__id">debug media image outline</td>
-        <td class="palette__hex">#1166cc</td>
-        <td><span class="palette__swatch" style="background:#1166cc;"></span></td>
-        <td class="palette__hex">#1166cc</td>
-        <td><span class="palette__swatch" style="background:#1166cc;"></span></td>
-      </tr>
-    </tbody>
-  </table>
+  <h2 class="palette__sectionTitle">How “identifier / usage” is derived</h2>
+  <ul>
+    <li><code>identifier</code>: CSS variable name (for token colors) or <code>direct #hex</code> (for non-token literals).</li>
+    <li><code>usage</code>: selectors where <code>var(--token)</code> is referenced, or selectors where the direct hex appears.</li>
+    <li>Selector lists are truncated for readability when there are many matches.</li>
+  </ul>
 
-  <p class="palette__note">* Light mode has both default root values and explicit <code>html[data-theme="light"]</code> overrides.</p>
+  {% assign palette_items = site.data.palette.items %}
+  {% if palette_items and palette_items.size > 0 %}
+    <table class="palette__table">
+      <thead>
+        <tr>
+          <th>Identifier</th>
+          <th>Usage</th>
+          <th>Light Hex</th>
+          <th>Light Swatch</th>
+          <th>Dark Hex</th>
+          <th>Dark Swatch</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in palette_items %}
+          <tr>
+            <td class="palette__id">{{ item.id }}</td>
+            <td>{{ item.usage }}</td>
+            <td class="palette__hex">{{ item.light_hex }}</td>
+            <td><span class="palette__swatch" style="background:{{ item.light_hex }};"></span></td>
+            <td class="palette__hex">{{ item.dark_hex }}</td>
+            <td><span class="palette__swatch" style="background:{{ item.dark_hex }};"></span></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="palette__note">No palette data found. Run <code>/Users/dlf/miniconda3/bin/python3 scripts/build_palette_data.py --write</code>.</p>
+  {% endif %}
 </div>
