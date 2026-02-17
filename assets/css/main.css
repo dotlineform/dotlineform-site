@@ -1228,3 +1228,129 @@ note: works tags are not currently in use on the work pages themselves.
 .work__prose{
   margin-top: var(--space-6);
 }
+
+/* Works index (isolated compact list view) */
+.worksList__list{
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.worksList__count{
+  margin: 0 0 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.worksList__head{
+  display: grid;
+  grid-template-columns: 7ch minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 8px;
+  margin: 12px 0 2px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.worksList__sortBtn{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  width: fit-content;
+  font-family: inherit;
+}
+
+.worksList__sortBtn.is-active{
+  color: var(--text);
+}
+
+.worksList__sortIcon{
+  display: inline-block;
+  min-width: 1em;
+  margin-left: 0.1em;
+  color: var(--muted);
+}
+
+.worksList__item{
+  display: grid;
+  grid-template-columns: 7ch minmax(0, 1fr) minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 8px;
+  padding: 3px 0;
+}
+
+.worksList__year,
+.worksList__title,
+.worksList__series{
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.worksList__year{
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.worksList__title{
+  display: inline-block;
+  justify-self: start;
+  width: fit-content;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.worksList__series{
+  display: inline-block;
+  justify-self: start;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.worksList__title:link,
+.worksList__title:visited,
+.worksList__title:active,
+.worksList__title:focus{
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.worksList__title:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.worksList__series:link,
+.worksList__series:visited,
+.worksList__series:active,
+.worksList__series:focus{
+  color: var(--link);
+  font-weight: 400;
+  text-decoration: none !important;
+}
+
+.worksList__series:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (max-width: 720px){
+  .worksList__head{
+    grid-template-columns: 1fr;
+    row-gap: 2px;
+  }
+  .worksList__item{
+    grid-template-columns: 1fr;
+    row-gap: 2px;
+  }
+}
