@@ -1148,11 +1148,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   font-size: 0.9rem; /* ~10% smaller than the default 1rem */
 }
 
-/* series page */
-.series{
-  font-size: 0.9rem; /* match work-page scale */
-}
-
 /* Ensure work-page meta blocks inherit the page font size */
 .work .page__caption,
 .work .supplements{
