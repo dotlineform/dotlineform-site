@@ -1,0 +1,54 @@
+{
+  "header": {
+    "work_id": "00469",
+    "count": 8,
+    "hash": "dcf45f0c4e80faf5ec2c16a30d7aeb03"
+  },
+  "sections": [
+    {
+      "project_subfolder": "water series",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00469-001",
+          "title": "water colour series"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00469-002",
+          "title": "water blue"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00469-003",
+          "title": "water green"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00469-004",
+          "title": "water cyan"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00469-005",
+          "title": "water grey series"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00469-006",
+          "title": "water grey 1"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00469-007",
+          "title": "water grey 2"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00469-008",
+          "title": "water grey 3"
+        }
+      ]
+    }
+  ]
+}
