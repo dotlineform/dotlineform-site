@@ -1,0 +1,54 @@
+{
+  "header": {
+    "work_id": "00463",
+    "count": 7,
+    "hash": "72bca4f2348ce814def078dcb2fc97ed"
+  },
+  "sections": [
+    {
+      "project_subfolder": "original painting",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00463-001",
+          "title": "living surface hand form (original painting, 1989)"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "versions",
+      "details": [
+        {
+          "detail_id": "002",
+          "detail_uid": "00463-002",
+          "title": "living surface (version 1)"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00463-003",
+          "title": "living surface (version 2)"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00463-004",
+          "title": "living surface (version 3)"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00463-005",
+          "title": "living surface (version 3) detail"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00463-006",
+          "title": "living surface (version 4)"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00463-007",
+          "title": "living surface (version 4) detail"
+        }
+      ]
+    }
+  ]
+}
