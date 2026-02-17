@@ -1,6 +1,6 @@
 ---
 layout: about
-title: dotlineform
+title: about
 permalink: /about/
 images:
   - file: forest-4.webp

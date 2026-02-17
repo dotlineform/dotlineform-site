@@ -1,0 +1,71 @@
+---
+layout: default
+title: Site Map
+permalink: /site_map/
+---
+
+<style>
+  .sitemap{
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .sitemap__section{
+    margin-top: 1.5rem;
+  }
+  .sitemap__section--core{
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 2rem;
+  }
+  .sitemap__list{
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+  }
+  .sitemap__item{
+    margin: 0 0 0.45rem;
+  }
+  .sitemap__path{
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .sitemap__path--index{
+    font-weight: 700;
+  }
+  .sitemap__arrow{
+    color: var(--muted);
+    margin-right: 0.4em;
+  }
+</style>
+
+<div class="sitemap">
+  <h2>Site Map</h2>
+
+  {% assign sections = site.data.sitemap.sections %}
+  {% if sections and sections.size > 0 %}
+    {% for section in sections %}
+      <section class="sitemap__section{% if section.key == 'core' %} sitemap__section--core{% endif %}">
+        <ul class="sitemap__list">
+          {% for item in section.items %}
+            {% assign is_pattern = false %}
+            {% if item.url contains '*' or item.url contains ':id' %}
+              {% assign is_pattern = true %}
+            {% endif %}
+            <li class="sitemap__item" style="padding-left: {{ item.depth | times: 1.4 | plus: 0.7 }}rem;">
+              <span class="sitemap__path{% if item.node_type == 'index' %} sitemap__path--index{% endif %}">
+                {% if item.depth > 0 %}<span class="sitemap__arrow">↳</span>{% endif %}
+                {% if is_pattern %}
+                  { {{ item.title }} }
+                {% else %}
+                  <a href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                {% endif %}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endfor %}
+  {% else %}
+    <p>No sitemap data found. Run <code>/Users/dlf/miniconda3/bin/python3 scripts/build_sitemap_data.py --write</code>.</p>
+  {% endif %}
+</div>

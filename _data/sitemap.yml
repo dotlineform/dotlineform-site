@@ -1,0 +1,93 @@
+sections:
+  -
+    key: "works"
+    label: "Works"
+    items:
+      -
+        title: "works index"
+        url: "/works/"
+        source: "works/index.md"
+        depth: 0
+        node_type: "index"
+      -
+        title: "series"
+        url: "/series/"
+        source: "_series/*.md"
+        depth: 0
+        node_type: "index"
+      -
+        title: "works in series"
+        url: "/works/:id/"
+        source: "_works/*.md"
+        depth: 1
+        node_type: "work"
+      -
+        title: "work details"
+        url: "/work_details/:id/"
+        source: "_work_details/*.md"
+        depth: 2
+        node_type: "detail"
+  -
+    key: "moments"
+    label: "Moments"
+    items:
+      -
+        title: "moments index"
+        url: "/moments/"
+        source: "moments/index.md"
+        depth: 0
+        node_type: "index"
+      -
+        title: "moment pages"
+        url: "/moments/:id/"
+        source: "_moments/*.md"
+        depth: 1
+        node_type: "moment"
+  -
+    key: "themes"
+    label: "Themes"
+    items:
+      -
+        title: "themes index"
+        url: "/themes/"
+        source: "themes/index.md"
+        depth: 0
+        node_type: "index"
+      -
+        title: "theme pages"
+        url: "/themes/:id/"
+        source: "_themes/*.md"
+        depth: 1
+        node_type: "theme"
+  -
+    key: "research"
+    label: "Research"
+    items:
+      -
+        title: "research index"
+        url: "/research/"
+        source: "research/index.md"
+        depth: 0
+        node_type: "index"
+      -
+        title: "research pages"
+        url: "/research/:id/"
+        source: "_research/*.md"
+        depth: 1
+        node_type: "research"
+  -
+    key: "core"
+    label: "Core Pages"
+    items:
+      -
+        title: "about"
+        url: "/about/"
+        source: "about.md"
+        depth: 0
+        node_type: "core"
+      -
+        title: "Palette"
+        url: "/palette/"
+        source: "palette.html"
+        depth: 0
+        node_type: "tooling"
