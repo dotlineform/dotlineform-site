@@ -1,0 +1,160 @@
+---
+layout: default
+title: Palette
+permalink: /palette/
+---
+
+<style>
+  .palette{
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .palette__table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  .palette__table th,
+  .palette__table td{
+    border: 1px solid var(--border);
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+  }
+  .palette__table th{
+    background: var(--panel-2);
+    white-space: nowrap;
+  }
+  .palette__id{
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .palette__hex{
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .palette__swatch{
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    display: inline-block;
+    box-sizing: border-box;
+  }
+  .palette__note{
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>
+
+<div class="palette">
+  <h1>Palette</h1>
+  <p class="palette__note">Site UI colors from <code>assets/css/main.css</code>.</p>
+
+  <table class="palette__table">
+    <thead>
+      <tr>
+        <th>Identifier</th>
+        <th>Light Hex</th>
+        <th>Light Swatch</th>
+        <th>Dark Hex</th>
+        <th>Dark Swatch</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="palette__id">--text (body, headings)</td>
+        <td class="palette__hex">#111 / #fff*</td>
+        <td><span class="palette__swatch" style="background:#111;"></span></td>
+        <td class="palette__hex">#f2f2f2</td>
+        <td><span class="palette__swatch" style="background:#f2f2f2;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--muted (meta, secondary text)</td>
+        <td class="palette__hex">#444</td>
+        <td><span class="palette__swatch" style="background:#444;"></span></td>
+        <td class="palette__hex">#c7c7c7</td>
+        <td><span class="palette__swatch" style="background:#c7c7c7;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--bg (page background)</td>
+        <td class="palette__hex">#fbfaf7 / #fff*</td>
+        <td><span class="palette__swatch" style="background:#fbfaf7;"></span></td>
+        <td class="palette__hex">#0f0f10</td>
+        <td><span class="palette__swatch" style="background:#0f0f10;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--panel</td>
+        <td class="palette__hex">#fafafa</td>
+        <td><span class="palette__swatch" style="background:#fafafa;"></span></td>
+        <td class="palette__hex">#161618</td>
+        <td><span class="palette__swatch" style="background:#161618;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--panel-2</td>
+        <td class="palette__hex">#f6f6f6</td>
+        <td><span class="palette__swatch" style="background:#f6f6f6;"></span></td>
+        <td class="palette__hex">#1c1c1f</td>
+        <td><span class="palette__swatch" style="background:#1c1c1f;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--border</td>
+        <td class="palette__hex">#e6e6e6</td>
+        <td><span class="palette__swatch" style="background:#e6e6e6;"></span></td>
+        <td class="palette__hex">#2b2b30</td>
+        <td><span class="palette__swatch" style="background:#2b2b30;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--border-strong</td>
+        <td class="palette__hex">#cfcfcf</td>
+        <td><span class="palette__swatch" style="background:#cfcfcf;"></span></td>
+        <td class="palette__hex">#3a3a40</td>
+        <td><span class="palette__swatch" style="background:#3a3a40;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--link</td>
+        <td class="palette__hex">#3f3f3f</td>
+        <td><span class="palette__swatch" style="background:#3f3f3f;"></span></td>
+        <td class="palette__hex">#7bb0ff</td>
+        <td><span class="palette__swatch" style="background:#7bb0ff;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--link-hover</td>
+        <td class="palette__hex">#1e1e1e</td>
+        <td><span class="palette__swatch" style="background:#1e1e1e;"></span></td>
+        <td class="palette__hex">#a7c9ff</td>
+        <td><span class="palette__swatch" style="background:#a7c9ff;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">--link-visited</td>
+        <td class="palette__hex">#5b2aa6</td>
+        <td><span class="palette__swatch" style="background:#5b2aa6;"></span></td>
+        <td class="palette__hex">#c39bff</td>
+        <td><span class="palette__swatch" style="background:#c39bff;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">work/series year label</td>
+        <td class="palette__hex">#777</td>
+        <td><span class="palette__swatch" style="background:#777;"></span></td>
+        <td class="palette__hex">#777</td>
+        <td><span class="palette__swatch" style="background:#777;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">debug media link outline</td>
+        <td class="palette__hex">#d11</td>
+        <td><span class="palette__swatch" style="background:#d11;"></span></td>
+        <td class="palette__hex">#d11</td>
+        <td><span class="palette__swatch" style="background:#d11;"></span></td>
+      </tr>
+      <tr>
+        <td class="palette__id">debug media image outline</td>
+        <td class="palette__hex">#1166cc</td>
+        <td><span class="palette__swatch" style="background:#1166cc;"></span></td>
+        <td class="palette__hex">#1166cc</td>
+        <td><span class="palette__swatch" style="background:#1166cc;"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="palette__note">* Light mode has both default root values and explicit <code>html[data-theme="light"]</code> overrides.</p>
+</div>
