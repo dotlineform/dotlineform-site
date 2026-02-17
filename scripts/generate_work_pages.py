@@ -738,9 +738,6 @@ def main() -> None:
 
         processed += 1
         prefix = f"[{processed}/{total}] "
-        # Tags: comma-separated in Excel
-        tags = parse_list(cell(r, works_hi, "tags"), sep=",")
-
         # Fields in stable order (matches your canonical front matter schema)
         fm: Dict[str, Any] = {"work_id": wid}
         fm.update(build_works_front_matter(r, works_hi))
@@ -767,8 +764,6 @@ def main() -> None:
                 if k == "series_id":
                     fm_ordered["series_title"] = _st
             fm = fm_ordered
-
-        fm["tags"] = tags
 
         # Stable series ordering: oldest first, then work_id within year.
         year_val = fm.get("year")
@@ -984,6 +979,7 @@ def main() -> None:
                     "title": series_title,
                     "year": year,
                     "year_display": year_display,
+                    "tags": parse_list(cell(sr, series_hi, "tags"), sep=","),
                     "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
                     "layout": "series",
                 }
