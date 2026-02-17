@@ -1,0 +1,29 @@
+{
+  "header": {
+    "work_id": "00465",
+    "count": 3,
+    "hash": "40ce0e94bd3559fe723f65c112d1b24f"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00465-001",
+          "title": "forests (2023) - forest 1 - detail 1"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00465-002",
+          "title": "forests (2023) - forest 1 - detail 2"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00465-003",
+          "title": "forests (2023) - forest 1 - detail 3"
+        }
+      ]
+    }
+  ]
+}
