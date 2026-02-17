@@ -12,6 +12,10 @@ thumb_prefix: "/assets"
 media_base: "https://media.dotlineform.com"
 media_prefix: ""
 
+# Home hero media origin/prefix (served remotely, no /assets segment):
+home_media_base: "https://media.dotlineform.com"
+home_media_prefix: "/home/img"
+
 # Local fallback (serve media from this repo):
 # media_base: ""
 # media_prefix: "/assets"
