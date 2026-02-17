@@ -37,5 +37,8 @@
       decoding="async">
   {% endif %}
 
-  <div class="seriesIndexItem__title">{{ s.title | escape }}</div>
+  <div class="seriesIndexItem__meta">
+    <div class="seriesIndexItem__title">{{ s.title | escape }}</div>
+    <div class="seriesIndexItem__year">{{ s.year_display | default: s.year }}</div>
+  </div>
 </a>

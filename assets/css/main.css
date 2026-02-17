@@ -518,9 +518,22 @@ figure.diagram figcaption{
 }
 .workIndexItem__row{
   display: grid;
-  grid-template-columns: 6ch 1fr; /* work_id + title */
-  align-items: baseline;     /* baseline-align work_id + title */
-  column-gap: 10px;
+  grid-template-columns: 1fr;
+  align-items: center; /* center text block against thumbnail */
+}
+.workIndexItem__meta{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+}
+.seriesIndexItem__meta{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
 }
 .workIndexItem + .workIndexItem{ margin-top: 6px; }
 
@@ -567,28 +580,28 @@ figure.diagram figcaption{
   align-self: center;
 }
 
-.workIndexItem__work_id{
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  line-height: 1.2;
-}
-
 .workIndexItem__title,
 .seriesIndexItem__title{
   font-weight: 500;
   line-height: 1.2;
 }
 
-/* Align the two text columns on the same baseline */
-.workIndexItem__work_id,
-.workIndexItem__title{
-  align-self: baseline;
+.workIndexItem__year{
+  font-size: 12px;
+  color: #777;
+  line-height: 1.2;
+}
+.seriesIndexItem__year{
+  font-size: 12px;
+  color: #777;
+  line-height: 1.2;
 }
 
 @media (max-width: 640px){
   .workIndexItem{ grid-template-columns: 1fr; row-gap: 8px; }
   .workIndexItem__row{ grid-template-columns: 1fr; row-gap: 2px; }
+  .workIndexItem__meta{ min-height: 0; }
+  .seriesIndexItem__meta{ min-height: 0; }
 }
 
 /* 7.	Page-type sections and overrides */

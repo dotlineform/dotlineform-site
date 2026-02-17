@@ -17,7 +17,9 @@
     loading="lazy"
     decoding="async">
   <div class="workIndexItem__row">
-    <div class="workIndexItem__work_id">{{ w.work_id }}</div>
-    <div class="workIndexItem__title">{{ w.title | escape }}</div>
+    <div class="workIndexItem__meta">
+      <div class="workIndexItem__title">{{ w.title | escape }}</div>
+      <div class="workIndexItem__year">{{ w.year_display | default: w.year }}</div>
+    </div>
   </div>
 </a>
