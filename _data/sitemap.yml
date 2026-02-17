@@ -86,7 +86,7 @@ sections:
         depth: 0
         node_type: "core"
       -
-        title: "Palette"
+        title: "palette"
         url: "/palette/"
         source: "palette.html"
         depth: 0
