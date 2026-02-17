@@ -383,7 +383,7 @@ def main() -> int:
         default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/srcset_images",
         help="Output directory for moment srcset derivatives",
     )
-    ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "1")), help="Parallel jobs")
+    ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "4")), help="Parallel jobs")
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
     ap.add_argument("--work-ids", default="", help="Comma-separated work_ids filter for this run.")

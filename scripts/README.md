@@ -21,7 +21,7 @@ Useful flags:
 
 - `--dry-run`: preview only (no workbook writes/deletes)
 - `--force-generate`: pass `--force` through to `generate_work_pages.py`
-- `--jobs N`: srcset parallel jobs
+- `--jobs N`: srcset parallel jobs (default: `4`, or `MAKE_SRCSET_JOBS` env var)
 - `--mode work|work_details|moment`: run only selected flow(s). Repeat flag to run multiple.
 - `--work-ids`, `--work-ids-file`: limit work + work_details scope
 - `--series-ids`, `--series-ids-file`: pass series scope to generation
