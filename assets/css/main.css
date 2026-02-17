@@ -1248,8 +1248,8 @@ note: works tags are not currently in use on the work pages themselves.
   grid-template-columns: 7ch minmax(0, 1fr) minmax(0, 1fr);
   align-items: baseline;
   column-gap: 8px;
-  margin: 12px 0 2px;
-  padding-bottom: 4px;
+  margin: 24px 0 4px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
 }
 
