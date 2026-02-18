@@ -323,6 +323,8 @@ def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict
     for fm_key, col_name, coercer in WORKS_SCHEMA:
         raw = works_row[works_hi[col_name]] if col_name in works_hi else None
         fm[fm_key] = coercer(raw)
+    if fm.get("artist") is None:
+        fm["artist"] = "Michael Davies"
     return fm
 
 
