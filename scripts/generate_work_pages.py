@@ -1075,8 +1075,9 @@ def main() -> None:
                 sj_total += 1
         sj_processed = 0
 
-        # Build published work_id lists by series_id (from Works sheet, after any status updates)
-        work_ids_by_series: Dict[str, List[str]] = {}
+        # Build published work lists by series_id (from Works sheet, after any status updates).
+        # Keep a tuple so JSON order can match series-page grid order (series_sort asc, then work_id).
+        work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
         status_idx = works_hi.get("status")
         for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
             status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
@@ -1093,11 +1094,19 @@ def main() -> None:
                 continue
             wid = slug_id(wid_raw)
 
-            work_ids_by_series.setdefault(sid, []).append(wid)
+            series_sort_raw = cell(wr, works_hi, "series_sort")
+            series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
+            if not series_sort:
+                # Keep legacy fallback deterministic and aligned with previous behavior.
+                series_sort = f"9999-{wid}"
 
-        # Ensure deterministic ordering (alpha) for each series' work_ids
-        for sid in list(work_ids_by_series.keys()):
-            work_ids_by_series[sid] = sorted(work_ids_by_series[sid])
+            work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
+
+        # Ensure deterministic ordering matching series-page grid: series_sort asc, then work_id asc.
+        work_ids_by_series: Dict[str, List[str]] = {}
+        for sid, rows in work_rows_by_series.items():
+            rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
+            work_ids_by_series[sid] = [wid for _, wid in rows_sorted]
 
         for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
             sid_raw = cell(sr, series_hi, "series_id")
