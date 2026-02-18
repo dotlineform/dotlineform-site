@@ -4,7 +4,7 @@ layout: default
 
 {% assign wid = page.work_id | default: page.slug %}
 {%- assign title_txt = page.title | default: "" | strip -%}
-{% assign series_works = site.works | where: "series_id", page.series_id | sort: "work_id" %}
+{% assign series_works = site.works | where: "series_id", page.series_id | sort: "series_sort" %}
 {% assign series_total = series_works.size %}
 {% assign series_index = 0 %}
 {% if series_total > 1 %}
