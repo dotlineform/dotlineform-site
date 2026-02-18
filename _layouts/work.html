@@ -221,10 +221,24 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var seriesLabel = (link.getAttribute('data-series-label') || 'series').trim();
     var params = new URLSearchParams(window.location.search);
     var series = (params.get('series') || '').trim();
+    var from = (params.get('from') || '').trim().toLowerCase();
+    var returnSort = (params.get('return_sort') || '').trim().toLowerCase();
+    var returnDir = (params.get('return_dir') || '').trim().toLowerCase();
 
     if (series) {
       link.textContent = '← ' + seriesLabel;
       link.setAttribute('href', baseurl + '/series/' + encodeURIComponent(series) + '/');
+    } else if (from === 'works_index') {
+      var worksUrl = baseurl + '/works/';
+      var q = new URLSearchParams();
+      if (returnSort === 'year' || returnSort === 'title' || returnSort === 'series') {
+        q.set('sort', returnSort);
+      }
+      if (returnDir === 'asc' || returnDir === 'desc') {
+        q.set('dir', returnDir);
+      }
+      link.textContent = '← work index';
+      link.setAttribute('href', worksUrl + (q.toString() ? ('?' + q.toString()) : ''));
     } else {
       link.textContent = '← works';
       link.setAttribute('href', fallback);

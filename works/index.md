@@ -60,7 +60,7 @@ section: works
           data-series="{{ series_label | downcase | strip | escape }}"
         >
           <span class="worksList__year">{{ w.year }}</span>
-          <a class="worksList__title" href="{{ w.url | relative_url }}">{{ w.title }}</a>
+          <a class="worksList__title" href="{{ w.url | relative_url }}?from=works_index">{{ w.title }}</a>
           <a class="worksList__series" href="{{ series_href | relative_url }}">{{ series_label }}</a>
         </li>
       {% endfor %}
@@ -103,6 +103,29 @@ section: works
           return compareValues(a, b, 'series');
         });
         rows.forEach(function (row) { list.appendChild(row); });
+        updateRowLinks(key, dir);
+      }
+
+      function updateRowLinks(key, dir) {
+        var rows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item'));
+        rows.forEach(function (row) {
+          var titleLink = row.querySelector('.worksList__title');
+          if (!titleLink) return;
+          var href = String(titleLink.getAttribute('href') || '');
+          var hashIndex = href.indexOf('#');
+          var hash = '';
+          if (hashIndex >= 0) {
+            hash = href.slice(hashIndex);
+            href = href.slice(0, hashIndex);
+          }
+          var qIndex = href.indexOf('?');
+          var base = qIndex >= 0 ? href.slice(0, qIndex) : href;
+          var query = new URLSearchParams(qIndex >= 0 ? href.slice(qIndex + 1) : '');
+          query.set('from', 'works_index');
+          query.set('return_sort', key);
+          query.set('return_dir', dir);
+          titleLink.setAttribute('href', base + '?' + query.toString() + hash);
+        });
       }
 
       function updateHeaderState(key, dir) {
