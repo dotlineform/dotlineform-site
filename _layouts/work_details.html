@@ -75,7 +75,7 @@ layout: default
         <span class="work__titleMain">
           <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
         </span>
-        <nav class="seriesNav work__titleNav" id="detailNav"
+        <nav class="seriesNav seriesNav--title" id="detailNav"
             aria-label="Detail navigation"
             data-detail-uid="{{ detail_uid | escape }}"
             data-work-id="{{ fallback_work_id | escape }}"
@@ -83,7 +83,7 @@ layout: default
             data-baseurl="{{ site.baseurl | default: '' }}"
             data-default-section="{{ fallback_section | escape }}"
             hidden>
-          <span class="workDetails__pagerStatus work__counter" id="detailTitleCounter" hidden></span>
+          <span class="navCounter" id="detailTitleCounter" hidden></span>
           <a class="seriesNav__prev" id="detailNavPrev" href="#">←</a>
           <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
         </nav>
@@ -120,6 +120,8 @@ layout: default
     var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
     var section = (params.get('section') || fallbackSection || '').trim();
     var series = (params.get('series') || '').trim();
+    var seriesPageRaw = Number(params.get('series_page') || '0');
+    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
     var detailsSection = (params.get('details_section') || section || '').trim();
     var detailsPageRaw = Number(params.get('details_page') || '0');
     var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
@@ -133,6 +135,7 @@ layout: default
     var href = baseurl + '/works/' + encodeURIComponent(fromWork) + '/';
     var query = [];
     if (series) query.push('series=' + encodeURIComponent(series));
+    if (seriesPage > 0) query.push('series_page=' + encodeURIComponent(String(seriesPage)));
     if (detailsSection) query.push('details_section=' + encodeURIComponent(detailsSection));
     if (detailsPage > 0) query.push('details_page=' + encodeURIComponent(String(detailsPage)));
     if (query.length) href += '?' + query.join('&');
@@ -163,6 +166,8 @@ layout: default
     var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
     var section = (params.get('section') || fallbackSection).trim();
     var series = (params.get('series') || '').trim();
+    var seriesPageRaw = Number(params.get('series_page') || '0');
+    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
     var detailsSection = (params.get('details_section') || section).trim();
     var detailsPageRaw = Number(params.get('details_page') || '0');
     var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
@@ -175,6 +180,7 @@ layout: default
       if (fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(fromWorkTitle);
       if (section) href += '&section=' + encodeURIComponent(section);
       if (series) href += '&series=' + encodeURIComponent(series);
+      if (seriesPage > 0) href += '&series_page=' + encodeURIComponent(String(seriesPage));
       if (detailsSection) href += '&details_section=' + encodeURIComponent(detailsSection);
       if (detailsPage > 0) href += '&details_page=' + encodeURIComponent(String(detailsPage));
       return href;

@@ -18,50 +18,127 @@ layout: default
   {%- assign series_works = site.works | where: "series_id", page.series_id -%}
   {%- assign series_works_sorted = series_works | sort: "series_sort" -%}
 
-  {%- assign max_items = 60 -%}
-  {%- assign items = series_works_sorted | slice: 0, max_items -%}
-
   {%- if series_works and series_works.size > 0 -%}
     {% comment %}
     Include ?series=<series_id> in work links so the work page can fetch
     assets/series/index/<series_id>.json and render Prev/Next navigation.
     {% endcomment %}
-    <div class="seriesGrid" aria-label="works in series">
-      {%- for w in items -%}
+    <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
+    <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
+      <span class="gridPager__status" id="seriesGridPagerStatus"></span>
+      <button class="gridPager__btn" type="button" id="seriesGridPrev" aria-label="Previous page">←</button>
+      <button class="gridPager__btn" type="button" id="seriesGridNext" aria-label="Next page">→</button>
+    </nav>
+
+    <script type="application/json" id="seriesGridData">
+      [
+      {%- for w in series_works_sorted -%}
         {%- if w and w.work_id -%}
           {%- assign id = w.work_id -%}
-
           {%- assign thumb96  = base | append: id | append: "-thumb-96.webp" -%}
           {%- assign thumb192 = base | append: id | append: "-thumb-192.webp" -%}
-
           {%- assign thumb96_out = thumb96 -%}
           {%- assign thumb192_out = thumb192 -%}
           {%- unless base contains '://' -%}
             {%- assign thumb96_out = thumb96 | relative_url -%}
             {%- assign thumb192_out = thumb192 | relative_url -%}
           {%- endunless -%}
-
-          <a class="seriesGrid__item" href="{{ w.url | relative_url }}?series={{ page.series_id | uri_escape }}">
-            <img
-              class="seriesGrid__img"
-              src="{{ thumb96_out }}"
-              srcset="{{ thumb96_out }} 96w, {{ thumb192_out }} 192w"
-              sizes="(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw"
-              width="96"
-              height="96"
-              loading="lazy"
-              decoding="async"
-              alt="{{ w.title | default: id | escape }}">
-          </a>
+          {
+            "work_id": {{ id | jsonify }},
+            "title": {{ w.title | default: id | jsonify }},
+            "work_url": {{ w.url | relative_url | jsonify }},
+            "thumb_96": {{ thumb96_out | jsonify }},
+            "thumb_192": {{ thumb192_out | jsonify }}
+          }{% unless forloop.last %},{% endunless %}
         {%- endif -%}
       {%- endfor -%}
-    </div>
+      ]
+    </script>
 
-    {%- if series_works.size > max_items -%}
-      <p class="seriesGrid__more">
-        <a href="{{ page.url | relative_url }}#all-works">View all works ({{ series_works.size }})</a>
-      </p>
-    {%- endif -%}
+    <script>
+      (function () {
+        var grid = document.getElementById('seriesGrid');
+        var dataEl = document.getElementById('seriesGridData');
+        var pager = document.getElementById('seriesGridPager');
+        var statusEl = document.getElementById('seriesGridPagerStatus');
+        var prevBtn = document.getElementById('seriesGridPrev');
+        var nextBtn = document.getElementById('seriesGridNext');
+        if (!grid || !dataEl || !pager || !statusEl || !prevBtn || !nextBtn) return;
+
+        var items = [];
+        try {
+          items = JSON.parse(dataEl.textContent || '[]');
+        } catch (e) {
+          items = [];
+        }
+        if (!Array.isArray(items) || !items.length) return;
+
+        var pageSize = 60;
+        var seriesId = {{ page.series_id | jsonify }};
+        var params = new URLSearchParams(window.location.search);
+        var rawPage = Number(params.get('series_page') || '0');
+        var pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+        var currentPage = (Number.isFinite(rawPage) && rawPage > 0) ? Math.floor(rawPage) : 1;
+        if (currentPage > pageCount) currentPage = pageCount;
+
+        function updateUrl(page) {
+          var next = new URLSearchParams(window.location.search);
+          next.set('series_page', String(page));
+          var qs = next.toString();
+          var nextUrl = window.location.pathname + (qs ? ('?' + qs) : '') + window.location.hash;
+          window.history.replaceState({}, '', nextUrl);
+        }
+
+        function withQuery(url, page) {
+          var join = (url.indexOf('?') === -1) ? '?' : '&';
+          return url + join + 'series=' + encodeURIComponent(seriesId) + '&series_page=' + encodeURIComponent(String(page));
+        }
+
+        function render(page) {
+          currentPage = page;
+          var start = (page - 1) * pageSize;
+          var end = Math.min(start + pageSize, items.length);
+          grid.innerHTML = '';
+
+          for (var i = start; i < end; i += 1) {
+            var it = items[i] || {};
+            var href = withQuery(String(it.work_url || ''), page);
+            var a = document.createElement('a');
+            a.className = 'seriesGrid__item';
+            a.href = href;
+
+            var img = document.createElement('img');
+            img.className = 'seriesGrid__img';
+            img.src = String(it.thumb_96 || '');
+            img.srcset = String(it.thumb_96 || '') + ' 96w, ' + String(it.thumb_192 || '') + ' 192w';
+            img.sizes = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
+            img.width = 96;
+            img.height = 96;
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            img.alt = String(it.title || it.work_id || '');
+
+            a.appendChild(img);
+            grid.appendChild(a);
+          }
+
+          statusEl.textContent = String(page) + '/' + String(pageCount);
+          pager.hidden = pageCount < 2;
+          updateUrl(page);
+        }
+
+        prevBtn.addEventListener('click', function () {
+          var prev = (currentPage - 1 + pageCount - 1) % pageCount + 1;
+          render(prev);
+        });
+        nextBtn.addEventListener('click', function () {
+          var next = (currentPage % pageCount) + 1;
+          render(next);
+        });
+
+        render(currentPage);
+      })();
+    </script>
   {%- endif -%}
 {%- endif -%}
 

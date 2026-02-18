@@ -35,6 +35,14 @@
 
   --moment-measure: 72ch; /* adjust: 60ch–80ch typical */
   --content-measure: var(--moment-measure); /* shared prose/media measure for new layouts */
+
+  /* Navigation spacing tokens */
+  --nav-gap-grid: 4px;
+  --nav-gap-title: 6px;
+  --nav-counter-gap: 6px;
+  --nav-series-grid-margin-top: -0.25rem;
+  --nav-series-grid-margin-bottom: var(--space-4);
+  --nav-grid-margin-top: 0.35rem;
 }
 
 /* Optional dark mode */
@@ -718,13 +726,6 @@ figure.diagram figcaption{
   margin: var(--space-3) auto;               /* Then re-introduce deliberate spacing for moment images */
 }
 
-/* Prose-only: keep links visibly underlined by default */
-.moment-body a:link,
-.moment-body a:visited{
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
 /* Prose-only (new structural wrapper): keep links visibly underlined by default */
 .content a:link,
 .content a:visited{
@@ -854,11 +855,6 @@ pre.theme-text{
   border: 0;
 }
 
-.seriesGrid__more{
-  max-width: var(--content-measure);
-  margin: 0 auto;
-}
-
 .workDetails{
   max-width: var(--content-measure);
   margin: var(--space-5) auto 0;
@@ -874,30 +870,67 @@ pre.theme-text{
   font-weight: 500;
 }
 
-.workDetails__pager{
+/* Shared pager for grid pagination (series grid + work-details grids) */
+.gridPager{
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  gap: var(--nav-gap-grid);
   justify-content: flex-end;
   width: 100%;
-  margin: 0.35rem 0 0;
+  margin: var(--nav-grid-margin-top) 0 0;
 }
 
-.workDetails__pagerBtn{
+.gridPager--series{
+  max-width: var(--content-measure);
+  margin: var(--nav-series-grid-margin-top) auto var(--nav-series-grid-margin-bottom);
+}
+
+.gridPager__btn{
   appearance: none;
   font: inherit;
   line-height: 1.2;
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
 }
 
-.workDetails__pagerBtn[disabled]{
+.gridPager__btn:hover{
+  color: var(--link-hover);
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.gridPager__btn:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.gridPager__btn[disabled]{
   opacity: 0.5;
   cursor: default;
 }
 
-.workDetails__pagerStatus{
+.gridPager__status{
   font-size: 0.88rem;
   color: var(--muted);
-  margin-right: 6px;
+  margin-left: 0.45em;
+  margin-right: var(--nav-counter-gap);
+  font-weight: 400;
+}
+
+/* Counter used in title-row prev/next navs (work + work detail). */
+.navCounter{
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin-left: 0.45em;
+  margin-right: var(--nav-counter-gap);
+  font-weight: 400;
 }
 
 /* Base components (shared across sections):
@@ -935,11 +968,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   margin-left: auto;
   margin-right: auto;
   white-space: normal;
-}
-
-/* Keep heading-to-content spacing aligned across index and content pages. */
-.series .content{
-  margin-top: 0;
 }
 
 /* Primary/top media on a page */
@@ -1017,6 +1045,31 @@ Use “structure-first” naming and scope section-specific differences via the 
 .page__nav{
   max-width: var(--content-measure);
   margin: var(--space-6) auto 0;
+}
+
+.page__back{
+  display: inline-block;
+  color: var(--link);
+  text-decoration: none;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.page__back:visited{
+  color: var(--link-visited);
+}
+
+.page__back:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page__back:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 /* Series navigation (work pages when visited with ?series=<series_id>) */
@@ -1157,10 +1210,6 @@ Use “structure-first” naming and scope section-specific differences via the 
 /* Note: section index pages use the shared `.index` / `.index__*` component classes. */
 
 /* work page */
-.work{
-  font-size: 0.9rem; /* ~10% smaller than the default 1rem */
-}
-
 /* Ensure work-page meta blocks inherit the page font size */
 .work .page__caption,
 .work .supplements{
@@ -1182,20 +1231,14 @@ Use “structure-first” naming and scope section-specific differences via the 
   min-width: 0;
 }
 
-.work__counter{
-  margin-left: 0.45em;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-.work__titleNav.seriesNav{
+.seriesNav--title{
   max-width: none;
   margin: 0;
   margin-bottom: 0;
   display: inline-flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 6px; /* intentionally tighter gap for paired prev/next buttons */
+  gap: var(--nav-gap-title);
   flex: 0 0 auto;
 }
 

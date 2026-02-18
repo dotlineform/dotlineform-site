@@ -11,6 +11,8 @@
 
   var params = new URLSearchParams(window.location.search); // parsed query string
   var seriesFromQuery = (params.get('series') || '').trim(); // series context only when explicitly present
+  var seriesPageRaw = Number(params.get('series_page') || '0');
+  var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
 
   if (!nav || !seriesFromQuery) {
     if (nav) nav.hidden = true;
@@ -45,6 +47,7 @@
       var nextId = ids[(i + 1) % ids.length];
 
       var qs = '?series=' + encodeURIComponent(seriesFromQuery);
+      if (seriesPage > 0) qs += '&series_page=' + encodeURIComponent(String(seriesPage));
       prevA.href = baseurl + '/works/' + prevId + '/' + qs;
       nextA.href = baseurl + '/works/' + nextId + '/' + qs;
 

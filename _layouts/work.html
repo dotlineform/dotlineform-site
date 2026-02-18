@@ -97,14 +97,14 @@ If you later serve images only from external media_base (CDN/R2), this check won
         - If successful, show Prev/Next links for navigating within that series.
         - Otherwise hide the nav.
         {% endcomment %}
-        <nav class="seriesNav work__titleNav" id="seriesNav"
+        <nav class="seriesNav seriesNav--title" id="seriesNav"
             aria-label="Series navigation"
             data-work-id="{{ page.work_id | escape }}"
             data-series="{{ page.series_id | default: '' | escape }}"
             data-baseurl="{{ site.baseurl | default: '' }}"
             hidden>
           {% if series_total > 1 and series_index > 0 %}
-            <span class="workDetails__pagerStatus work__counter">{{ series_index }}/{{ series_total }}</span>
+            <span class="navCounter">{{ series_index }}/{{ series_total }}</span>
           {% endif %}
           <a class="seriesNav__prev" id="seriesNavPrev" href="#">←</a>
           <a class="seriesNav__next" id="seriesNavNext" href="#">→</a>
@@ -221,13 +221,17 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var seriesLabel = (link.getAttribute('data-series-label') || 'series').trim();
     var params = new URLSearchParams(window.location.search);
     var series = (params.get('series') || '').trim();
+    var seriesPageRaw = Number(params.get('series_page') || '0');
+    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
     var from = (params.get('from') || '').trim().toLowerCase();
     var returnSort = (params.get('return_sort') || '').trim().toLowerCase();
     var returnDir = (params.get('return_dir') || '').trim().toLowerCase();
 
     if (series) {
       link.textContent = '← ' + seriesLabel;
-      link.setAttribute('href', baseurl + '/series/' + encodeURIComponent(series) + '/');
+      var href = baseurl + '/series/' + encodeURIComponent(series) + '/';
+      if (seriesPage > 0) href += '?series_page=' + encodeURIComponent(String(seriesPage));
+      link.setAttribute('href', href);
     } else if (from === 'works_index') {
       var worksUrl = baseurl + '/works/';
       var q = new URLSearchParams();
@@ -262,6 +266,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var pageSize = 60;
     var query = new URLSearchParams(window.location.search);
     var currentSeries = String(query.get('series') || '').trim();
+    var currentSeriesPageRaw = Number(query.get('series_page') || '0');
+    var currentSeriesPage = (Number.isFinite(currentSeriesPageRaw) && currentSeriesPageRaw > 0) ? Math.floor(currentSeriesPageRaw) : 0;
     var requestedDetailsSection = String(query.get('details_section') || '').trim();
     var requestedDetailsPage = Number(query.get('details_page') || '0');
     if (!Number.isFinite(requestedDetailsPage) || requestedDetailsPage < 1) {
@@ -314,6 +320,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         var title = String((d && d.title) || uid).trim();
         var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
         if (currentSeries) href += '&series=' + encodeURIComponent(currentSeries);
+        if (currentSeriesPage > 0) href += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
         html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
         html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
         html += '</a>';
@@ -337,10 +344,10 @@ If you later serve images only from external media_base (CDN/R2), this check won
       html += renderDetailsGrid(pageItems, group.secId, group.page);
 
       if (pageCount > 1) {
-        html += '<nav class=\"workDetails__pager\" aria-label=\"details pagination\">';
-        html += '<span class=\"workDetails__pagerStatus work__counter\">' + group.page + '/' + pageCount + '</span>';
-        html += '<button class=\"seriesNav__prev workDetails__pagerBtn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"-1\" aria-label=\"Previous page\">←</button>';
-        html += '<button class=\"seriesNav__next workDetails__pagerBtn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"1\" aria-label=\"Next page\">→</button>';
+        html += '<nav class=\"gridPager\" aria-label=\"details pagination\">';
+        html += '<span class=\"gridPager__status\">' + group.page + '/' + pageCount + '</span>';
+        html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"-1\" aria-label=\"Previous page\">←</button>';
+        html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"1\" aria-label=\"Next page\">→</button>';
         html += '</nav>';
       }
 
