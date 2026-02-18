@@ -1,0 +1,44 @@
+{
+  "header": {
+    "work_id": "00521",
+    "count": 6,
+    "hash": "dd56fb3d3785edafe2e46c2310333726"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "007",
+          "detail_uid": "00521-007",
+          "title": "kylie structure 2.1"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00521-008",
+          "title": "kylie structure 2.2"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00521-009",
+          "title": "kylie structure 2.3"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00521-010",
+          "title": "kylie structure 2.4"
+        },
+        {
+          "detail_id": "011",
+          "detail_uid": "00521-011",
+          "title": "kylie structure 2.5"
+        },
+        {
+          "detail_id": "012",
+          "detail_uid": "00521-012",
+          "title": "kylie structure 2.6"
+        }
+      ]
+    }
+  ]
+}

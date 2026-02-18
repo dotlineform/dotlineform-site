@@ -1,0 +1,24 @@
+{
+  "header": {
+    "work_id": "00523",
+    "count": 2,
+    "hash": "5bc99a8250efb597da13cd6e8e3eabfb"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "015",
+          "detail_uid": "00523-015",
+          "title": "kylie structure 4.1"
+        },
+        {
+          "detail_id": "016",
+          "detail_uid": "00523-016",
+          "title": "kylie structure 4.2"
+        }
+      ]
+    }
+  ]
+}
