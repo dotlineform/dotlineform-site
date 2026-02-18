@@ -1,0 +1,99 @@
+{
+  "header": {
+    "work_id": "00001",
+    "count": 17,
+    "hash": "cb3e46e82c1104fc969743109cab26cb"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00001-001",
+          "title": "a poem divided into 4 parts - end 1"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00001-002",
+          "title": "a poem divided into 4 parts - end 2"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00001-003",
+          "title": "a poem divided into 4 parts - end 3"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00001-004",
+          "title": "a poem divided into 4 parts - end 4"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00001-005",
+          "title": "a poem divided into 4 parts - end 5"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00001-006",
+          "title": "a poem divided into 4 parts - end 6"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00001-007",
+          "title": "a poem divided into 4 parts - end 7"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00001-008",
+          "title": "a poem divided into 4 parts - end 8"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00001-009",
+          "title": "a poem divided into 4 parts - end 9"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00001-010",
+          "title": "a poem divided into 4 parts - end 10"
+        },
+        {
+          "detail_id": "011",
+          "detail_uid": "00001-011",
+          "title": "a poem divided into 4 parts - end 11"
+        },
+        {
+          "detail_id": "012",
+          "detail_uid": "00001-012",
+          "title": "a poem divided into 4 parts - end 12"
+        },
+        {
+          "detail_id": "013",
+          "detail_uid": "00001-013",
+          "title": "a poem divided into 4 parts - end 13"
+        },
+        {
+          "detail_id": "014",
+          "detail_uid": "00001-014",
+          "title": "a poem divided into 4 parts - end 14"
+        },
+        {
+          "detail_id": "015",
+          "detail_uid": "00001-015",
+          "title": "a poem divided into 4 parts - end 15"
+        },
+        {
+          "detail_id": "016",
+          "detail_uid": "00001-016",
+          "title": "a poem divided into 4 parts - end 16"
+        },
+        {
+          "detail_id": "017",
+          "detail_uid": "00001-017",
+          "title": "a poem divided into 4 parts - end 17"
+        }
+      ]
+    }
+  ]
+}
