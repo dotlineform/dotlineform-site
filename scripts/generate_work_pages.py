@@ -1097,8 +1097,14 @@ def main() -> None:
             series_sort_raw = cell(wr, works_hi, "series_sort")
             series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
             if not series_sort:
-                # Keep legacy fallback deterministic and aligned with previous behavior.
-                series_sort = f"9999-{wid}"
+                # Default fallback when Works.series_sort is absent:
+                # compute from year + work_id so JSON order matches series grid ordering.
+                year_raw = cell(wr, works_hi, "year")
+                year_val = coerce_int(year_raw)
+                if year_val is not None:
+                    series_sort = f"{year_val:04d}-{wid}"
+                else:
+                    series_sort = f"9999-{wid}"
 
             work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
 
