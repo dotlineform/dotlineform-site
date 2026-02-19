@@ -1331,12 +1331,18 @@ note: works tags are not currently in use on the work pages themselves.
 
 .worksList__head{
   display: grid;
-  grid-template-columns: 7ch minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 7ch 7ch minmax(0, 1fr) minmax(0, 1fr);
   align-items: baseline;
   column-gap: 8px;
   margin: 24px 0 4px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
+}
+
+.worksList__headLabel{
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--muted);
 }
 
 .worksList__sortBtn{
@@ -1367,17 +1373,25 @@ note: works tags are not currently in use on the work pages themselves.
 
 .worksList__item{
   display: grid;
-  grid-template-columns: 7ch minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: 7ch 7ch minmax(0, 1fr) minmax(0, 1fr);
   align-items: baseline;
   column-gap: 8px;
   padding: 3px 0;
 }
 
+.worksList__cat,
 .worksList__year,
 .worksList__title,
 .worksList__series{
   font-size: 12px;
   line-height: 1.2;
+}
+
+.worksList__cat{
+  display: inline-block;
+  justify-self: start;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .worksList__year{
@@ -1415,6 +1429,21 @@ note: works tags are not currently in use on the work pages themselves.
   text-underline-offset: 2px;
 }
 
+.worksList__cat:link,
+.worksList__cat:visited,
+.worksList__cat:active,
+.worksList__cat:focus{
+  color: var(--link);
+  font-weight: 400;
+  text-decoration: none !important;
+}
+
+.worksList__cat:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .worksList__series:link,
 .worksList__series:visited,
 .worksList__series:active,
@@ -1431,11 +1460,11 @@ note: works tags are not currently in use on the work pages themselves.
 }
 
 .worksList--singleSeries .worksList__head{
-  grid-template-columns: 7ch minmax(0, 1fr);
+  grid-template-columns: 7ch 7ch minmax(0, 1fr);
 }
 
 .worksList--singleSeries .worksList__item{
-  grid-template-columns: 7ch minmax(0, 1fr);
+  grid-template-columns: 7ch 7ch minmax(0, 1fr);
 }
 
 .worksList--singleSeries .worksList__head [data-sort-key="series"],

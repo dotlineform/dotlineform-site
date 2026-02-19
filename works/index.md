@@ -38,6 +38,9 @@ section: works
     <p class="worksList__count" id="worksListCount">{{ works_count }} {{ work_label }} in {{ series_count }} {{ series_label }}</p>
 
     <div class="worksList__head" role="group" aria-label="Sort works">
+      <button class="worksList__sortBtn" type="button" data-sort-key="cat">
+        cat <span class="worksList__sortIcon" aria-hidden="true"></span>
+      </button>
       <button class="worksList__sortBtn" type="button" data-sort-key="year">
         year <span class="worksList__sortIcon" aria-hidden="true"></span>
       </button>
@@ -55,12 +58,14 @@ section: works
         {% assign series_href = "/series/" | append: w.series_id | append: "/" %}
         <li
           class="worksList__item"
+          data-cat="{{ w.work_id | default: '' | downcase | strip | escape }}"
           data-year="{{ w.year | default: 0 }}"
           data-title="{{ w.title | downcase | strip | escape }}"
           data-series="{{ series_label | downcase | strip | escape }}"
           data-series-id="{{ w.series_id | default: '' | downcase | strip | escape }}"
           data-series-label="{{ series_label | strip | escape }}"
         >
+          <a class="worksList__cat" href="{{ w.url | relative_url }}?from=works_index">{{ w.work_id }}</a>
           <span class="worksList__year">{{ w.year }}</span>
           <a class="worksList__title" href="{{ w.url | relative_url }}?from=works_index">{{ w.title }}</a>
           <a class="worksList__series" href="{{ series_href | relative_url }}">{{ series_label }}</a>
@@ -84,7 +89,7 @@ section: works
       var buttons = Array.prototype.slice.call(document.querySelectorAll('.worksList__sortBtn'));
       if (!buttons.length) return;
 
-      var validKeys = { year: true, title: true, series: true };
+      var validKeys = { cat: true, year: true, title: true, series: true };
       var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
       var sortKey = String(params.get('sort') || 'title').toLowerCase();
@@ -155,6 +160,8 @@ section: works
 
           var tieTitle = compareValues(a, b, 'title');
           if (tieTitle !== 0) return tieTitle;
+          var tieCat = compareValues(a, b, 'cat');
+          if (tieCat !== 0) return tieCat;
           return compareValues(a, b, 'series');
         });
         visibleRows.forEach(function (row) { list.appendChild(row); });
