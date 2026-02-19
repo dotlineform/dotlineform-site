@@ -123,6 +123,7 @@ section: works
       var backNav = document.getElementById('worksIndexBackNav');
       var backLink = document.getElementById('worksIndexBackLink');
       var worksListRoot = document.querySelector('.worksList');
+      var visualSortKey = sortKey;
       if (!hasExplicitSort) sortKey = hasSeriesFilter ? 'seriessort' : 'cat';
       if (!validKeys[sortKey]) sortKey = hasSeriesFilter ? 'seriessort' : 'cat';
       if (!validKeys[sortKey]) sortKey = 'cat';
@@ -267,22 +268,25 @@ section: works
         btn.addEventListener('click', function () {
           var key = String(btn.getAttribute('data-sort-key') || '').toLowerCase();
           if (!validKeys[key]) return;
-          if (key === sortKey) {
+          if (key === visualSortKey) {
             sortDir = (sortDir === 'asc') ? 'desc' : 'asc';
           } else {
             sortKey = key;
             sortDir = 'asc';
           }
+          sortKey = key;
           applySort(sortKey, sortDir);
           var rows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item')).filter(rowMatchesSeries);
-          updateHeaderState(visualSortKeyFor(rows, sortKey), sortDir);
+          visualSortKey = visualSortKeyFor(rows, sortKey);
+          updateHeaderState(visualSortKey, sortDir);
           persist(sortKey, sortDir);
         });
       });
 
       applySort(sortKey, sortDir);
       var initialRows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item')).filter(rowMatchesSeries);
-      updateHeaderState(visualSortKeyFor(initialRows, sortKey), sortDir);
+      visualSortKey = visualSortKeyFor(initialRows, sortKey);
+      updateHeaderState(visualSortKey, sortDir);
       persist(sortKey, sortDir);
     })();
   </script>
