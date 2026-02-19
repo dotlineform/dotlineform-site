@@ -147,6 +147,17 @@ def normalize_text(value: Any) -> str:
     return s
 
 
+def numeric_aware_sort_key(value: Any, width: int = 3) -> str:
+    """
+    Build a numeric-aware string sort key by left-padding each run of digits.
+    Example (width=3): "test 2.10" -> "test 002.010"
+    """
+    s = normalize_text(value)
+    if not s:
+        return ""
+    return re.sub(r"\d+", lambda m: m.group(0).zfill(width), s)
+
+
 def yaml_quote(s: str) -> str:
     """Quote a string safely for YAML."""
     s = s.replace("\\", "\\\\").replace('"', '\\"')
@@ -825,6 +836,7 @@ def main() -> None:
 
             # Canonical per-series ordering key. Default ordering is work_id ascending.
             fm["series_sort"] = wid
+            fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
 
             # Compute checksum from the canonical Excel-derived record and write it into front matter.
             checksum = compute_work_checksum(fm)
@@ -1034,6 +1046,7 @@ def main() -> None:
                 sfm: Dict[str, Any] = {
                     "series_id": series_id,
                     "title": series_title,
+                    "title_sort": numeric_aware_sort_key(series_title),
                     "year": year,
                     "year_display": year_display,
                     "tags": parse_list(cell(sr, series_hi, "tags"), sep=","),
@@ -1363,6 +1376,7 @@ def main() -> None:
                     "detail_id": did,
                     "detail_uid": detail_uid,
                     "title": title,
+                    "title_sort": numeric_aware_sort_key(title),
                     "project_subfolder": project_subfolder,
                     "width_px": width_px,
                     "height_px": height_px,
@@ -1706,6 +1720,7 @@ def main() -> None:
             mfm: Dict[str, Any] = {
                 "moment_id": moment_id,
                 "title": title or moment_id,
+                "title_sort": numeric_aware_sort_key(title or moment_id),
                 "date": date_value,
                 "date_display": date_display,
                 "images": images_list,
