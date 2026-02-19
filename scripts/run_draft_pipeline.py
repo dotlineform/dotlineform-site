@@ -126,6 +126,28 @@ def read_optional_ids_file(path: str) -> Set[str]:
     return read_ids(ids_path)
 
 
+def parse_work_id_selection(raw: str) -> Set[str]:
+    """
+    Parse comma-separated work-id selectors supporting individual IDs and ranges.
+    Examples:
+      "66,74" -> {"00066", "00074"}
+      "66-74,38-40,12" -> {"00012", "00038", ..., "00074"}
+    """
+    selected: Set[str] = set()
+    for token in (part.strip() for part in str(raw).split(",") if part.strip()):
+        m = re.match(r"^(\d+)\s*-\s*(\d+)$", token)
+        if m:
+            start = int(m.group(1))
+            end = int(m.group(2))
+            if start > end:
+                start, end = end, start
+            for n in range(start, end + 1):
+                selected.add(slug_id(n))
+        else:
+            selected.add(slug_id(token))
+    return selected
+
+
 def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
     """Select work IDs that require 2400 derivatives based on Works.has_primary_2400."""
     copied = set(copied_ids)
@@ -386,7 +408,11 @@ def main() -> int:
     ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "4")), help="Parallel jobs")
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
-    ap.add_argument("--work-ids", default="", help="Comma-separated work_ids filter for this run.")
+    ap.add_argument(
+        "--work-ids",
+        default="",
+        help="Comma-separated work_ids/ranges filter for this run (e.g. 66-74,38-40,1).",
+    )
     ap.add_argument("--work-ids-file", default="", help="Path to work_ids file (one id per line).")
     ap.add_argument("--series-ids", default="", help="Comma-separated series_ids passed to generation.")
     ap.add_argument("--series-ids-file", default="", help="Path to series_ids file (one id per line).")
@@ -397,7 +423,7 @@ def main() -> int:
 
     explicit_work_ids = read_optional_ids_file(args.work_ids_file)
     if args.work_ids:
-        explicit_work_ids.update({slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()})
+        explicit_work_ids.update(parse_work_id_selection(args.work_ids))
     work_filter = explicit_work_ids if explicit_work_ids else None
 
     explicit_series_ids = read_optional_ids_file(args.series_ids_file)

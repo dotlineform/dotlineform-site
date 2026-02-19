@@ -131,6 +131,28 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
     return [item.strip() for item in s.split(sep) if item.strip()]
 
 
+def parse_work_id_selection(raw: str) -> set[str]:
+    """
+    Parse comma-separated work-id selectors supporting individual IDs and ranges.
+    Examples:
+      "66,74" -> {"00066", "00074"}
+      "66-74,38-40,12" -> {"00012", "00038", ..., "00074"}
+    """
+    selected: set[str] = set()
+    for token in (part.strip() for part in str(raw).split(",") if part.strip()):
+        m = re.match(r"^(\d+)\s*-\s*(\d+)$", token)
+        if m:
+            start = int(m.group(1))
+            end = int(m.group(2))
+            if start > end:
+                start, end = end, start
+            for n in range(start, end + 1):
+                selected.add(slug_id(n))
+        else:
+            selected.add(slug_id(token))
+    return selected
+
+
 def normalize_status(value: Any) -> str:
     if value is None:
         return ""
@@ -489,7 +511,10 @@ def main() -> None:
     ap.add_argument(
         "--work-ids",
         default="",
-        help="Comma-separated work_ids to process (e.g. 00001,00002). If set, only these IDs are processed.",
+        help=(
+            "Comma-separated work_ids/ranges to process "
+            "(e.g. 00001,00002 or 66-74,38-40). If set, only these IDs are processed."
+        ),
     )
     ap.add_argument(
         "--work-ids-file",
@@ -716,7 +741,7 @@ def main() -> None:
             raise SystemExit(f"work_ids file not found: {ids_path}")
         selected_ids = {slug_id(line.strip()) for line in ids_path.read_text(encoding="utf-8").splitlines() if line.strip()}
     elif args.work_ids:
-        selected_ids = {slug_id(w.strip()) for w in args.work_ids.split(",") if w.strip()}
+        selected_ids = parse_work_id_selection(args.work_ids)
 
     selected_series_ids = None
     if args.series_ids_file:
