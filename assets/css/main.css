@@ -43,6 +43,8 @@
   --nav-series-grid-margin-top: -0.25rem;
   --nav-series-grid-margin-bottom: var(--space-4);
   --nav-grid-margin-top: 0.35rem;
+  --meta-small-size: 0.88rem;
+  --meta-small-line: 1.2;
 }
 
 /* Optional dark mode */
@@ -852,8 +854,8 @@ pre.theme-text{
 }
 
 .seriesGridFooter__indexLink{
-  font-size: 0.88rem;
-  line-height: 1.2;
+  font-size: var(--meta-small-size);
+  line-height: var(--meta-small-line);
   display: inline;
   max-width: min(50%, 40ch);
   flex-shrink: 0;
@@ -1242,8 +1244,15 @@ Use “structure-first” naming and scope section-specific differences via the 
   font-size: inherit;
 }
 
+.work .page__caption .page__row{
+  font-size: var(--meta-small-size);
+  line-height: var(--meta-small-line);
+}
+
 /* Work title row in caption details */
 .work__titleRow{
+  font-size: inherit;
+  line-height: inherit;
   font-weight: 600;
   display: flex !important;
   justify-content: space-between;
