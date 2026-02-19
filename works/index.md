@@ -56,9 +56,29 @@ section: works
       {% for w in works_sorted %}
         {% assign series_label = w.series_title | default: w.series_id %}
         {% assign series_href = "/series/" | append: w.series_id | append: "/" %}
+        {% assign series_doc = site.series | where: "series_id", w.series_id | first %}
+        {% assign series_primary_sort = "" %}
+        {% if series_doc and series_doc.sort_fields %}
+          {% assign sort_token = series_doc.sort_fields | split: "," | first | strip | downcase %}
+          {% assign sort_token_first_char = sort_token | slice: 0, 1 %}
+          {% if sort_token != "" and sort_token_first_char == "-" %}
+            {% assign sort_token = sort_token | slice: 1, 999 %}
+          {% endif %}
+          {% if sort_token == "work_id" %}
+            {% assign series_primary_sort = "cat" %}
+          {% elsif sort_token == "year" %}
+            {% assign series_primary_sort = "year" %}
+          {% elsif sort_token == "title" or sort_token == "title_sort" %}
+            {% assign series_primary_sort = "title" %}
+          {% elsif sort_token == "series" or sort_token == "series_title" %}
+            {% assign series_primary_sort = "series" %}
+          {% endif %}
+        {% endif %}
         <li
           class="worksList__item"
           data-cat="{{ w.work_id | default: '' | downcase | strip | escape }}"
+          data-series-sort="{{ w.series_sort | default: w.work_id | downcase | strip | escape }}"
+          data-series-primary-sort="{{ series_primary_sort | default: '' | downcase | strip | escape }}"
           data-year="{{ w.year | default: 0 }}"
           data-title="{{ w.title | downcase | strip | escape }}"
           data-series="{{ series_label | downcase | strip | escape }}"
@@ -89,10 +109,12 @@ section: works
       var buttons = Array.prototype.slice.call(document.querySelectorAll('.worksList__sortBtn'));
       if (!buttons.length) return;
 
-      var validKeys = { cat: true, year: true, title: true, series: true };
+      var validKeys = { cat: true, year: true, title: true, series: true, seriessort: true };
       var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
-      var sortKey = String(params.get('sort') || 'cat').toLowerCase();
+      var sortParam = params.get('sort');
+      var hasExplicitSort = !(sortParam == null || String(sortParam).trim() === '');
+      var sortKey = String(sortParam || '').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
       var seriesFilter = String(params.get('series') || '').trim().toLowerCase();
       var hasSeriesFilter = seriesFilter.length > 0;
@@ -101,7 +123,9 @@ section: works
       var backNav = document.getElementById('worksIndexBackNav');
       var backLink = document.getElementById('worksIndexBackLink');
       var worksListRoot = document.querySelector('.worksList');
-      if (!validKeys[sortKey]) sortKey = 'title';
+      if (!hasExplicitSort) sortKey = hasSeriesFilter ? 'seriessort' : 'cat';
+      if (!validKeys[sortKey]) sortKey = hasSeriesFilter ? 'seriessort' : 'cat';
+      if (!validKeys[sortKey]) sortKey = 'cat';
       if (sortDir !== 'asc' && sortDir !== 'desc') sortDir = 'asc';
       if (hasSeriesFilter && worksListRoot) {
         worksListRoot.classList.add('worksList--singleSeries');
@@ -144,6 +168,11 @@ section: works
           var av = Number(a.getAttribute('data-year') || '0');
           var bv = Number(b.getAttribute('data-year') || '0');
           return av - bv;
+        }
+        if (key === 'seriessort') {
+          var aSeriesSort = String(a.getAttribute('data-series-sort') || '');
+          var bSeriesSort = String(b.getAttribute('data-series-sort') || '');
+          return collator.compare(aSeriesSort, bSeriesSort);
         }
         var as = String(a.getAttribute('data-' + key) || '');
         var bs = String(b.getAttribute('data-' + key) || '');
@@ -207,6 +236,24 @@ section: works
         });
       }
 
+      function visualSortKeyFor(rows, key) {
+        if (key !== 'seriessort') return key;
+        if (!hasSeriesFilter) return 'cat';
+
+        var sameAsCat = rows.length > 0 && rows.every(function (row) {
+          var a = String(row.getAttribute('data-series-sort') || '');
+          var b = String(row.getAttribute('data-cat') || '');
+          return a === b;
+        });
+        if (sameAsCat) return 'cat';
+
+        for (var i = 0; i < rows.length; i += 1) {
+          var hint = String(rows[i].getAttribute('data-series-primary-sort') || '').toLowerCase();
+          if (validKeys[hint] && hint !== 'seriessort') return hint;
+        }
+        return 'cat';
+      }
+
       function persist(key, dir) {
         var next = new URLSearchParams(window.location.search);
         next.set('sort', key);
@@ -227,13 +274,15 @@ section: works
             sortDir = 'asc';
           }
           applySort(sortKey, sortDir);
-          updateHeaderState(sortKey, sortDir);
+          var rows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item')).filter(rowMatchesSeries);
+          updateHeaderState(visualSortKeyFor(rows, sortKey), sortDir);
           persist(sortKey, sortDir);
         });
       });
 
       applySort(sortKey, sortDir);
-      updateHeaderState(sortKey, sortDir);
+      var initialRows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item')).filter(rowMatchesSeries);
+      updateHeaderState(visualSortKeyFor(initialRows, sortKey), sortDir);
       persist(sortKey, sortDir);
     })();
   </script>

@@ -409,9 +409,9 @@ def extract_existing_checksum(path: Path) -> Optional[str]:
 # Series JSON helpers
 # ----------------------------
 
-def compute_series_hash(series_id: str, work_ids: List[str]) -> str:
+def compute_series_hash(series_id: str, work_ids: List[str], sort_fields: str) -> str:
     """Compute deterministic hash for a series JSON payload."""
-    payload = {"series_id": series_id, "work_ids": list(work_ids)}
+    payload = {"series_id": series_id, "work_ids": list(work_ids), "sort_fields": sort_fields}
     canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
     return hashlib.blake2b(canonical, digest_size=16).hexdigest()
 
@@ -744,6 +744,11 @@ def main() -> None:
             work_ids_by_series_all.setdefault(sid, []).append(wid)
 
     series_sort_by_work_id: Dict[str, str] = {wid: wid for wid in work_meta_by_id.keys()}
+    # Effective per-series sort_fields in user-facing terms (e.g. "title,work_id").
+    # Defaults to work_id when no custom SeriesSort row exists.
+    series_sort_fields_by_series_id: Dict[str, List[str]] = {
+        sid: ["work_id"] for sid in work_ids_by_series_all.keys()
+    }
 
     if series_sort_rows and len(series_sort_rows) > 1:
         seen_series_ids: set[str] = set()
@@ -761,6 +766,7 @@ def main() -> None:
                 raise SystemExit(f"{args.series_sort_sheet} has empty sort_fields for series_id: {sid}")
 
             parsed_fields: List[tuple[str, bool]] = []
+            display_fields: List[str] = []
             for raw_token in sort_fields_raw.split(","):
                 token = normalize_text(raw_token)
                 if token == "":
@@ -768,8 +774,12 @@ def main() -> None:
                 desc = token.startswith("-")
                 field = token[1:] if desc else token
                 field = normalize_text(field).lower()
+                display_field = field
                 if field == "title":
                     field = "title_sort"
+                    display_field = "title"
+                elif field == "title_sort":
+                    display_field = "title"
                 if field not in works_sortable_fields:
                     raise SystemExit(
                         f"{args.series_sort_sheet} has unknown sort field '{field}' for series_id '{sid}'"
@@ -777,8 +787,11 @@ def main() -> None:
                 if field == "work_id":
                     continue
                 parsed_fields.append((field, desc))
+                display_fields.append(f"-{display_field}" if desc else display_field)
 
             parsed_fields.append(("work_id", False))
+            display_fields.append("work_id")
+            series_sort_fields_by_series_id[sid] = display_fields
             series_work_ids = list(work_ids_by_series_all.get(sid, []))
             if not series_work_ids:
                 continue
@@ -1187,6 +1200,7 @@ def main() -> None:
                     "series_id": series_id,
                     "title": series_title,
                     "title_sort": numeric_aware_sort_key(series_title),
+                    "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                     "year": year,
                     "year_display": year_display,
                     "tags": parse_list(cell(sr, series_hi, "tags"), sep=","),
@@ -1338,12 +1352,14 @@ def main() -> None:
                 prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
 
                 work_ids = work_ids_by_series.get(series_id, [])
-                series_hash = compute_series_hash(series_id, work_ids)
+                sort_fields = ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"]))
+                series_hash = compute_series_hash(series_id, work_ids, sort_fields)
 
                 payload = {
                     "header": {
                         "series_id": series_id,
                         "count": len(work_ids),
+                        "sort_fields": sort_fields,
                         "hash": series_hash,
                     },
                     "work_ids": work_ids,
