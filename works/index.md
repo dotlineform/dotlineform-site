@@ -92,7 +92,7 @@ section: works
       var validKeys = { cat: true, year: true, title: true, series: true };
       var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
-      var sortKey = String(params.get('sort') || 'title').toLowerCase();
+      var sortKey = String(params.get('sort') || 'cat').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
       var seriesFilter = String(params.get('series') || '').trim().toLowerCase();
       var hasSeriesFilter = seriesFilter.length > 0;
