@@ -67,7 +67,7 @@
 html[data-theme="light"]{
   --text: #111;
   --muted: #444;
-  --bg: #fff;
+  --bg: #fbfaf7;
   --panel: #fafafa;
   --panel-2: #f6f6f6;
   --border: #e6e6e6;
@@ -1316,9 +1316,14 @@ note: works tags are not currently in use on the work pages themselves.
 
 .worksList__count{
   margin: 0 0 4px;
-  font-size: 12px;
-  line-height: 1.2;
+  font-size: var(--meta-small-size);
+  line-height: var(--meta-small-line);
   color: var(--muted);
+}
+
+.worksList .page__back{
+  font-size: var(--meta-small-size);
+  line-height: var(--meta-small-line);
 }
 
 .worksList__countSeriesLink{
