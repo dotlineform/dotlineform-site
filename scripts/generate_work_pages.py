@@ -847,21 +847,41 @@ def main() -> None:
             else:
                 fm["series_title"] = None
 
-            # Reorder for clarity: ensure series_title immediately follows series_id in YAML
-            if "series_id" in fm and "series_title" in fm:
-                _st = fm.get("series_title")
-                fm_ordered: Dict[str, Any] = {}
-                for k, v in fm.items():
-                    if k == "series_title":
-                        continue  # will be inserted right after series_id
-                    fm_ordered[k] = v
-                    if k == "series_id":
-                        fm_ordered["series_title"] = _st
-                fm = fm_ordered
-
             # Canonical per-series ordering key. Default ordering is work_id ascending.
             fm["series_sort"] = wid
             fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
+
+            # Canonical works front-matter ordering.
+            works_field_order = [
+                "work_id",
+                "title",
+                "title_sort",
+                "year",
+                "year_display",
+                "series_id",
+                "series_title",
+                "series_sort",
+                "medium_type",
+                "medium_caption",
+                "duration",
+                "vimeo_url",
+                "youtube_url",
+                "bandcamp_url",
+                "height_cm",
+                "width_cm",
+                "depth_cm",
+                "download",
+                "has_primary_2400",
+                "artist",
+            ]
+            fm_ordered: Dict[str, Any] = {}
+            for key in works_field_order:
+                if key in fm:
+                    fm_ordered[key] = fm[key]
+            for key, value in fm.items():
+                if key not in fm_ordered:
+                    fm_ordered[key] = value
+            fm = fm_ordered
 
             # Compute checksum from the canonical Excel-derived record and write it into front matter.
             checksum = compute_work_checksum(fm)
