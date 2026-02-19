@@ -1472,6 +1472,14 @@ note: works tags are not currently in use on the work pages themselves.
   display: none;
 }
 
+.detailsList .worksList__head{
+  grid-template-columns: 12ch minmax(0, 1fr);
+}
+
+.detailsList .worksList__item{
+  grid-template-columns: 12ch minmax(0, 1fr);
+}
+
 @media (max-width: 720px){
   .worksList__head{
     grid-template-columns: 1fr;
