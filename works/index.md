@@ -85,6 +85,7 @@ section: works
       if (!buttons.length) return;
 
       var validKeys = { year: true, title: true, series: true };
+      var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
       var sortKey = String(params.get('sort') || 'title').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
@@ -141,7 +142,7 @@ section: works
         }
         var as = String(a.getAttribute('data-' + key) || '');
         var bs = String(b.getAttribute('data-' + key) || '');
-        return as.localeCompare(bs);
+        return collator.compare(as, bs);
       }
 
       function applySort(key, dir) {
