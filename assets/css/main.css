@@ -854,6 +854,11 @@ pre.theme-text{
 .seriesGridFooter__indexLink{
   font-size: 0.88rem;
   line-height: 1.2;
+  display: inline;
+  max-width: min(50%, 40ch);
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 /* Screen-reader-only helper (alias of .visually-hidden) */
@@ -903,6 +908,7 @@ pre.theme-text{
   margin: 0;
   max-width: none;
   width: auto;
+  flex: 0 0 auto;
 }
 
 .gridPager__btn{
