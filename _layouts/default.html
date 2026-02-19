@@ -13,9 +13,9 @@
     (function () {
       try {
         var t = localStorage.getItem('theme');
-        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'auto');
+        document.documentElement.setAttribute('data-theme', (t === 'light' || t === 'dark') ? t : 'light');
       } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'auto');
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     })();
   </script>
@@ -204,7 +204,7 @@
   <footer class="site-footer">
     <div class="container">
       <span class="muted">© {{ site.time | date: "%Y" }} {{ site.title }} · <a href="{{ '/about/' | relative_url }}">about</a> · <a href="{{ '/site_map/' | relative_url }}">site map</a></span>
-      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">appearance: auto</button>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">light</button>
     </div>
   </footer>
 
@@ -214,7 +214,7 @@
       if (!btn) return;
 
       function getTheme() {
-        return document.documentElement.getAttribute('data-theme') || 'auto';
+        return document.documentElement.getAttribute('data-theme') || 'light';
       }
 
       function setTheme(t) {
