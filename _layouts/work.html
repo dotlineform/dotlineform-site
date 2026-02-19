@@ -353,7 +353,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
       if (currentSeries) idxHref += '&series=' + encodeURIComponent(currentSeries);
       if (currentSeriesPage > 0) idxHref += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
       html += '<div class=\"seriesGridFooter\">';
-      html += '<a class=\"seriesGridFooter__indexLink\" href=\"' + esc(idxHref) + '\">' + esc(group.label || 'details') + ' index</a>';
+      html += '<a class=\"seriesGridFooter__indexLink\" href=\"' + esc(idxHref) + '\">index</a>';
       if (pageCount > 1) {
         html += '<nav class=\"gridPager\" aria-label=\"details pagination\">';
         html += '<span class=\"gridPager__status\">' + group.page + '/' + pageCount + '</span>';

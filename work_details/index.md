@@ -8,15 +8,10 @@ section: works
 {% assign details_items = site.work_details %}
 {% if details_items and details_items != empty %}
   {% assign details_sorted = details_items | sort_natural: "title" %}
-  {% assign details_count = details_sorted.size %}
-  {% assign detail_label = "details" %}
-  {% if details_count == 1 %}
-    {% assign detail_label = "detail" %}
-  {% endif %}
 
   <div class="index worksList detailsList">
     <h1 class="index__heading visually-hidden">work details</h1>
-    <p class="worksList__count" id="workDetailsListCount">{{ details_count }} {{ detail_label }}</p>
+    <p class="worksList__count" id="workDetailsListContext" hidden></p>
 
     <div class="worksList__head" role="group" aria-label="Sort work details">
       <button class="worksList__sortBtn" type="button" data-sort-key="cat">
@@ -74,7 +69,7 @@ section: works
       var seriesParam = String(params.get('series') || '').trim().toLowerCase();
       var seriesPageRaw = Number(params.get('series_page') || '0');
       var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
-      var countEl = document.getElementById('workDetailsListCount');
+      var contextEl = document.getElementById('workDetailsListContext');
       var backNav = document.getElementById('workDetailsIndexBackNav');
       var backLink = document.getElementById('workDetailsIndexBackLink');
       var hasWorkFilter = fromWork.length > 0;
@@ -114,42 +109,53 @@ section: works
           return compareValues(a, b, 'cat');
         });
         visibleRows.forEach(function (row) { list.appendChild(row); });
-        updateCountAndBack(visibleRows);
+        updateContextAndBack(visibleRows);
         updateRowLinks();
       }
 
-      function updateCountAndBack(visibleRows) {
-        if (!countEl) return;
-        var count = visibleRows.length;
-        var word = count === 1 ? 'detail' : 'details';
-        countEl.textContent = '';
-        countEl.appendChild(document.createTextNode(String(count) + ' ' + word));
+      function updateContextAndBack(visibleRows) {
         var sectionLabel = sectionLabelParam;
         if (!sectionLabel && visibleRows.length) {
           sectionLabel = String(visibleRows[0].getAttribute('data-section-label') || '').trim();
+        }
+        var sectionId = sectionFilter;
+        if (!sectionId && visibleRows.length) {
+          sectionId = String(visibleRows[0].getAttribute('data-section-id') || '').trim().toLowerCase();
         }
         var href = baseurl + '/works/' + encodeURIComponent(fromWork) + '/';
         var q = [];
         if (seriesParam) q.push('series=' + encodeURIComponent(seriesParam));
         if (seriesPage > 0) q.push('series_page=' + encodeURIComponent(String(seriesPage)));
         if (q.length) href += '?' + q.join('&');
-        if (sectionFilter) href += '#details-' + encodeURIComponent(sectionFilter);
+        var sectionHref = href;
+        if (sectionId) sectionHref += '#details-' + encodeURIComponent(sectionId);
         if (hasWorkFilter) {
-          countEl.appendChild(document.createTextNode(' in '));
-          var targetLabel = sectionLabel || fromWorkTitle || fromWork;
-          var countLink = document.createElement('a');
-          countLink.className = 'worksList__countSeriesLink';
-          countLink.href = href;
-          countLink.textContent = targetLabel;
-          countEl.appendChild(countLink);
-        } else if (sectionLabel) {
-          countEl.appendChild(document.createTextNode(' in ' + sectionLabel));
+          if (contextEl) {
+            contextEl.textContent = '';
+            var workLink = document.createElement('a');
+            workLink.className = 'worksList__countSeriesLink';
+            workLink.href = href;
+            workLink.textContent = fromWorkTitle || fromWork;
+            contextEl.appendChild(workLink);
+            if (sectionLabel) {
+              contextEl.appendChild(document.createTextNode(' > '));
+              var sectionLink = document.createElement('a');
+              sectionLink.className = 'worksList__countSeriesLink';
+              sectionLink.href = sectionHref;
+              sectionLink.textContent = sectionLabel;
+              contextEl.appendChild(sectionLink);
+            }
+            contextEl.hidden = false;
+          }
+        } else if (contextEl) {
+          contextEl.hidden = true;
+          contextEl.textContent = '';
         }
 
         if (!backNav || !backLink || !hasWorkFilter) return;
         var label = fromWorkTitle || fromWork;
         backLink.textContent = '← ' + label;
-        backLink.setAttribute('href', href);
+        backLink.setAttribute('href', sectionHref);
         backNav.hidden = false;
       }
 
