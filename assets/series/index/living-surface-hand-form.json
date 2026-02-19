@@ -2,7 +2,8 @@
   "header": {
     "series_id": "living-surface-hand-form",
     "count": 1,
-    "hash": "9be42a87a7989d80df2c6d01096c98bf"
+    "sort_fields": "work_id",
+    "hash": "5bf24b714ce8706bee75fb4d1295f1bb"
   },
   "work_ids": [
     "00463"

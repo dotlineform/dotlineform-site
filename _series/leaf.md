@@ -1,6 +1,8 @@
 ---
 series_id: "leaf"
 title: "leaf"
+title_sort: "leaf"
+sort_fields: "work_id"
 year: 2016
 year_display: "2016"
 tags:
@@ -8,7 +10,7 @@ tags:
   - "nature"
 thumb_work_id: null
 layout: "series"
-checksum: "e51ef11c04babd46724968b217d54487"
+checksum: "dd0a9a24eb3de260dcf80efbd7374ee1"
 ---
 
 {% include series_prose/leaf.md %}

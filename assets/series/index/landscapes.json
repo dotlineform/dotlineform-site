@@ -2,7 +2,8 @@
   "header": {
     "series_id": "landscapes",
     "count": 3,
-    "hash": "02f081f68603e1d2b02d42bb63db6026"
+    "sort_fields": "work_id",
+    "hash": "2a7cd19350cfd84d1e28102f42670720"
   },
   "work_ids": [
     "00516",

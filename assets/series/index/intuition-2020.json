@@ -2,7 +2,8 @@
   "header": {
     "series_id": "intuition-2020",
     "count": 1,
-    "hash": "a54c1005dc144b23c98bba3767138220"
+    "sort_fields": "work_id",
+    "hash": "c1ce90caebb0878f3e7030a7ba01e49c"
   },
   "work_ids": [
     "00457"

@@ -2,7 +2,8 @@
   "header": {
     "series_id": "collected-1989-1998",
     "count": 108,
-    "hash": "099f8a3e1c56ba3d5ae5dd5fcbb52162"
+    "sort_fields": "title,work_id",
+    "hash": "da5f3df0e97efcdee9d24f3e07e77a87"
   },
   "work_ids": [
     "00093",

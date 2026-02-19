@@ -1,6 +1,8 @@
 ---
 series_id: "dots"
 title: "dots"
+title_sort: "dots"
+sort_fields: "work_id"
 year: 2010
 year_display: "2010"
 tags:
@@ -9,7 +11,7 @@ tags:
   - "composite"
 thumb_work_id: null
 layout: "series"
-checksum: "adab190b7aa82b894ba49f4e8df69f37"
+checksum: "0593a7c70d582bc91955044db825f82d"
 ---
 
 {% include series_prose/dots.md %}

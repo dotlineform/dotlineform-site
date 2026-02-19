@@ -1,6 +1,8 @@
 ---
 series_id: "living-surface-hand-form"
 title: "living surface hand form"
+title_sort: "living surface hand form"
+sort_fields: "work_id"
 year: 2004
 year_display: "1989, 2004"
 tags:
@@ -9,7 +11,7 @@ tags:
   - "hand"
 thumb_work_id: null
 layout: "series"
-checksum: "36c605734802f35c335b33eee74e9d1c"
+checksum: "aaf18427ec2778fb8cd794c2d6943dfd"
 ---
 
 {% include series_prose/living-surface-hand-form.md %}

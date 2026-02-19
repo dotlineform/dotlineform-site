@@ -1,6 +1,8 @@
 ---
 series_id: "intuition-2020"
 title: "intuition (2020)"
+title_sort: "intuition (2020)"
+sort_fields: "work_id"
 year: 2020
 year_display: "recorded c. 2001-11"
 tags:
@@ -8,7 +10,7 @@ tags:
   - "intuition"
 thumb_work_id: null
 layout: "series"
-checksum: "19c829eb198bc114f8c7a6bf1abdbaeb"
+checksum: "b230e313d11d568c6031dd50a7fe8997"
 ---
 
 {% include series_prose/intuition-2020.md %}

@@ -2,7 +2,8 @@
   "header": {
     "series_id": "a-poem-divided-into-4-parts",
     "count": 4,
-    "hash": "cbd17f5cc93e557567e82ce49e8e189a"
+    "sort_fields": "work_id",
+    "hash": "713130099f216657f65d731a825e1991"
   },
   "work_ids": [
     "00001",

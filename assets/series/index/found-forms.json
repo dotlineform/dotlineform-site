@@ -2,7 +2,8 @@
   "header": {
     "series_id": "found-forms",
     "count": 51,
-    "hash": "b71f1dc93b38ad6d1a8128a5d57db47c"
+    "sort_fields": "work_id",
+    "hash": "84dcca3a5d69b96c69aded24c1290000"
   },
   "work_ids": [
     "00403",

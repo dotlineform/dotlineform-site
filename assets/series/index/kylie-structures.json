@@ -2,7 +2,8 @@
   "header": {
     "series_id": "kylie-structures",
     "count": 4,
-    "hash": "a10a6f045a759d678942a3d4a202f631"
+    "sort_fields": "work_id",
+    "hash": "6a935882094c6855a2f84e516d475b11"
   },
   "work_ids": [
     "00520",

@@ -2,7 +2,8 @@
   "header": {
     "series_id": "learning-to-draw-landscapes",
     "count": 17,
-    "hash": "a592a86688da198f007d9b301ca88b47"
+    "sort_fields": "work_id",
+    "hash": "468719469611e40d9089eb010b6294af"
   },
   "work_ids": [
     "00114",

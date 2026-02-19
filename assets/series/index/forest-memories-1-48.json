@@ -2,7 +2,8 @@
   "header": {
     "series_id": "forest-memories-1-48",
     "count": 1,
-    "hash": "d232bb43eda0b1e64c062ff4dd6a3d4b"
+    "sort_fields": "work_id",
+    "hash": "2eff953a5c77ea4425f25b9aaf94e89a"
   },
   "work_ids": [
     "00464"

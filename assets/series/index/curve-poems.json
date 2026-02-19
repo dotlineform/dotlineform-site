@@ -2,7 +2,8 @@
   "header": {
     "series_id": "curve-poems",
     "count": 56,
-    "hash": "596c0875b67c8b5cda09ad45fbbe3a0d"
+    "sort_fields": "work_id",
+    "hash": "cd09d11230ab3b14c61284ee06942047"
   },
   "work_ids": [
     "00286",

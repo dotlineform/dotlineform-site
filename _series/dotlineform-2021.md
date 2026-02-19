@@ -1,6 +1,8 @@
 ---
 series_id: "dotlineform-2021"
 title: "dotlineform (2021)"
+title_sort: "dotlineform (2021)"
+sort_fields: "work_id"
 year: 2021
 year_display: "2021"
 tags:
@@ -9,7 +11,7 @@ tags:
   - "form"
 thumb_work_id: null
 layout: "series"
-checksum: "3a94432388be32b75543da09f5b53862"
+checksum: "821ac1b6e9a559c5788783a05a953da3"
 ---
 
 {% include series_prose/dotlineform-2021.md %}

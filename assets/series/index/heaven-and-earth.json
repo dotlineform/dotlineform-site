@@ -2,7 +2,8 @@
   "header": {
     "series_id": "heaven-and-earth",
     "count": 1,
-    "hash": "4817267ceef2c6609792a0c7102870d6"
+    "sort_fields": "work_id",
+    "hash": "c3c2f0dfe0250d29fd6d59878e044515"
   },
   "work_ids": [
     "00469"

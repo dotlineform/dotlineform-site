@@ -1,6 +1,8 @@
 ---
 series_id: "kylie-structures"
 title: "kylie structures"
+title_sort: "kylie structures"
+sort_fields: "work_id"
 year: 2023
 year_display: "2023"
 tags:
@@ -8,7 +10,7 @@ tags:
   - "composite"
 thumb_work_id: "00520"
 layout: "series"
-checksum: "7d6af8e202bff8421bd458b5a4ad7878"
+checksum: "f692629022efed77d2ed161b3cc050ba"
 ---
 
 {% include series_prose/kylie-structures.md %}
