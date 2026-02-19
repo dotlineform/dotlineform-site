@@ -484,6 +484,7 @@ def main() -> None:
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
     ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
+    ap.add_argument("--series-sort-sheet", default="SeriesSort", help="Worksheet name for custom per-series sorting rules")
     ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
     ap.add_argument("--moments-sheet", default="Moments", help="Worksheet name for moment metadata")
 
@@ -673,6 +674,7 @@ def main() -> None:
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
+    series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb.sheetnames else []
     work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb.sheetnames else []
     moments_rows = read_sheet_rows(args.moments_sheet)
     series_ws = wb[args.series_sheet]
@@ -684,11 +686,17 @@ def main() -> None:
 
     works_hi = build_header_index(works_rows)
     series_hi = build_header_index(series_rows) if series_rows else {}
+    series_sort_hi = build_header_index(series_sort_rows) if series_sort_rows else {}
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
     moments_hi = build_header_index(moments_rows) if moments_rows else {}
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
+    if series_sort_rows:
+        required_series_sort = ["series_id", "sort_fields"]
+        missing_series_sort = [c for c in required_series_sort if c not in series_sort_hi]
+        if missing_series_sort:
+            raise SystemExit(f"{args.series_sort_sheet} sheet missing required columns: {', '.join(missing_series_sort)}")
     if work_details_rows and "status" not in work_details_hi:
         raise SystemExit("WorkDetails sheet missing required column: status")
     if moments_rows and "status" not in moments_hi:
@@ -706,6 +714,93 @@ def main() -> None:
         if title is None:
             continue
         series_title_by_id[sid] = title
+
+    # Compile canonical series_sort per work:
+    # - default is work_id
+    # - optional custom per-series rules come from SeriesSort(series_id, sort_fields)
+    # - sort_fields supports comma-separated keys and optional '-' prefix for descending
+    # - 'title' aliases to 'title_sort' for numeric-aware ordering
+    # - work_id is always appended as final ascending tiebreaker
+    works_sortable_fields = {fm_key for fm_key, _, _ in WORKS_SCHEMA}
+    works_sortable_fields.update({"work_id", "series_title", "title_sort"})
+    numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
+    bool_sort_fields = {"has_primary_2400"}
+
+    work_meta_by_id: Dict[str, Dict[str, Any]] = {}
+    work_ids_by_series_all: Dict[str, List[str]] = {}
+    for wr in works_rows[1:]:
+        wid_raw = cell(wr, works_hi, "work_id")
+        if is_empty(wid_raw):
+            continue
+        wid = slug_id(wid_raw)
+        meta = build_works_front_matter(wr, works_hi)
+        sid = coerce_string(cell(wr, works_hi, "series_id")) or ""
+        meta["work_id"] = wid
+        meta["series_id"] = sid
+        meta["series_title"] = series_title_by_id.get(sid) if sid else None
+        meta["title_sort"] = numeric_aware_sort_key(meta.get("title"))
+        work_meta_by_id[wid] = meta
+        if sid:
+            work_ids_by_series_all.setdefault(sid, []).append(wid)
+
+    series_sort_by_work_id: Dict[str, str] = {wid: wid for wid in work_meta_by_id.keys()}
+
+    if series_sort_rows and len(series_sort_rows) > 1:
+        seen_series_ids: set[str] = set()
+        for sr in series_sort_rows[1:]:
+            sid_raw = cell(sr, series_sort_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = require_slug_safe("series_id", sid_raw)
+            if sid in seen_series_ids:
+                raise SystemExit(f"{args.series_sort_sheet} has duplicate series_id: {sid}")
+            seen_series_ids.add(sid)
+
+            sort_fields_raw = coerce_string(cell(sr, series_sort_hi, "sort_fields"))
+            if sort_fields_raw is None or sort_fields_raw.strip() == "":
+                raise SystemExit(f"{args.series_sort_sheet} has empty sort_fields for series_id: {sid}")
+
+            parsed_fields: List[tuple[str, bool]] = []
+            for raw_token in sort_fields_raw.split(","):
+                token = normalize_text(raw_token)
+                if token == "":
+                    continue
+                desc = token.startswith("-")
+                field = token[1:] if desc else token
+                field = normalize_text(field).lower()
+                if field == "title":
+                    field = "title_sort"
+                if field not in works_sortable_fields:
+                    raise SystemExit(
+                        f"{args.series_sort_sheet} has unknown sort field '{field}' for series_id '{sid}'"
+                    )
+                if field == "work_id":
+                    continue
+                parsed_fields.append((field, desc))
+
+            parsed_fields.append(("work_id", False))
+            series_work_ids = list(work_ids_by_series_all.get(sid, []))
+            if not series_work_ids:
+                continue
+
+            def sortable_value(wid: str, field: str) -> Any:
+                value = work_meta_by_id[wid].get(field)
+                if field in numeric_sort_fields:
+                    nv = coerce_numeric(value)
+                    return float("-inf") if nv is None else nv
+                if field in bool_sort_fields:
+                    return 1 if bool(value) else 0
+                return normalize_text(value).lower()
+
+            for field, desc in reversed(parsed_fields):
+                series_work_ids.sort(
+                    key=lambda current_wid, current_field=field: sortable_value(current_wid, current_field),
+                    reverse=desc,
+                )
+
+            rank_width = max(3, len(str(len(series_work_ids))))
+            for idx, wid in enumerate(series_work_ids, start=1):
+                series_sort_by_work_id[wid] = f"{idx:0{rank_width}d}-{wid}"
 
     # Pre-index project folder by work_id (for WorkDetails source image lookup).
     work_project_folder_by_id: Dict[str, str] = {}
@@ -848,7 +943,7 @@ def main() -> None:
                 fm["series_title"] = None
 
             # Canonical per-series ordering key. Default ordering is work_id ascending.
-            fm["series_sort"] = wid
+            fm["series_sort"] = series_sort_by_work_id.get(wid, wid)
             fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
 
             # Canonical works front-matter ordering.
@@ -1213,10 +1308,7 @@ def main() -> None:
                     continue
                 wid = slug_id(wid_raw)
 
-                series_sort_raw = cell(wr, works_hi, "series_sort")
-                series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
-                if not series_sort:
-                    series_sort = wid
+                series_sort = series_sort_by_work_id.get(wid, wid)
 
                 work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
 
