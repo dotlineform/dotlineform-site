@@ -505,7 +505,56 @@ def main() -> None:
         default="",
         help="Path to moment_ids file (one id per line). If set, only these moments are processed.",
     )
+    ap.add_argument(
+        "--only",
+        action="append",
+        default=[],
+        help=(
+            "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
+            "Allowed: work-pages,work-files,series-pages,series-json,work-details-pages,work-json,moments"
+        ),
+    )
     args = ap.parse_args()
+
+    valid_artifacts = {
+        "work-pages",
+        "work-files",
+        "series-pages",
+        "series-json",
+        "work-details-pages",
+        "work-json",
+        "moments",
+    }
+    selected_artifacts: Optional[set[str]] = None
+    if args.only:
+        requested: set[str] = set()
+        for raw in args.only:
+            for part in str(raw).split(","):
+                item = part.strip().lower()
+                if item:
+                    requested.add(item)
+        invalid = sorted(item for item in requested if item not in valid_artifacts)
+        if invalid:
+            raise SystemExit(
+                "Invalid --only value(s): "
+                + ", ".join(invalid)
+                + ". Allowed: "
+                + ", ".join(sorted(valid_artifacts))
+            )
+        selected_artifacts = requested
+
+    def artifact_enabled(name: str) -> bool:
+        if selected_artifacts is None:
+            return True
+        return name in selected_artifacts
+
+    run_work_pages = artifact_enabled("work-pages")
+    run_work_files = artifact_enabled("work-files")
+    run_series_pages = artifact_enabled("series-pages")
+    run_series_json = artifact_enabled("series-json")
+    run_work_details_pages = artifact_enabled("work-details-pages")
+    run_work_json = artifact_enabled("work-json")
+    run_moments_artifact = artifact_enabled("moments")
 
     # Resolve the workbook path and fail fast if it is missing.
     xlsx_path = Path(args.xlsx).expanduser()
@@ -639,6 +688,7 @@ def main() -> None:
     print_skipped = 0
     downloads_copied = 0
     downloads_missing = 0
+    run_works_loop = run_work_pages or run_work_files
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
             return True
@@ -697,22 +747,27 @@ def main() -> None:
     if selected_series_ids is not None and not explicit_work_filter:
         selected_ids = set()
     # If caller scopes by work/series and does not provide an explicit moments filter,
-    # skip moments generation by default.
-    run_moments = True
-    if (explicit_work_filter or selected_series_ids is not None) and not explicit_moment_filter:
+    # skip moments generation by default (unless moments was explicitly selected via --only).
+    run_moments = run_moments_artifact
+    if (
+        selected_artifacts is None
+        and (explicit_work_filter or selected_series_ids is not None)
+        and not explicit_moment_filter
+    ):
         run_moments = False
 
     total = 0
-    for r in works_rows[1:]:
-        raw_work_id = cell(r, works_hi, "work_id")
-        if is_empty(raw_work_id):
-            continue
-        wid = slug_id(raw_work_id)
-        if selected_ids is not None and wid not in selected_ids:
-            continue
-        status = normalize_status(cell(r, works_hi, "status"))
-        if is_actionable_status(status):
-            total += 1
+    if run_works_loop:
+        for r in works_rows[1:]:
+            raw_work_id = cell(r, works_hi, "work_id")
+            if is_empty(raw_work_id):
+                continue
+            wid = slug_id(raw_work_id)
+            if selected_ids is not None and wid not in selected_ids:
+                continue
+            status = normalize_status(cell(r, works_hi, "status"))
+            if is_actionable_status(status):
+                total += 1
 
     processed = 0
     status_updated = 0
@@ -722,165 +777,167 @@ def main() -> None:
     today = dt.date.today()
 
     # Iterate each Works row and emit one Markdown file per work.
-    for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
-        status = normalize_status(cell(r, works_hi, "status"))
-        raw_work_id = cell(r, works_hi, "work_id")
-        if is_empty(raw_work_id):
-            skipped += 1
-            continue
-        wid = slug_id(raw_work_id)
+    if run_works_loop:
+        for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+            status = normalize_status(cell(r, works_hi, "status"))
+            raw_work_id = cell(r, works_hi, "work_id")
+            if is_empty(raw_work_id):
+                skipped += 1
+                continue
+            wid = slug_id(raw_work_id)
 
-        if selected_ids is not None and wid not in selected_ids:
-            skipped += 1
-            continue
+            if selected_ids is not None and wid not in selected_ids:
+                skipped += 1
+                continue
 
-        if not is_actionable_status(status):
-            skipped += 1
-            continue
+            if not is_actionable_status(status):
+                skipped += 1
+                continue
 
-        processed += 1
-        prefix = f"[{processed}/{total}] "
-        # Fields in stable order (matches your canonical front matter schema)
-        fm: Dict[str, Any] = {"work_id": wid}
-        fm.update(build_works_front_matter(r, works_hi))
-        # Normalise download to a filename (basename only) for front matter/link text.
-        download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
-        if download_rel is not None:
-            fm["download"] = Path(download_rel).name
+            processed += 1
+            prefix = f"[{processed}/{total}] "
+            # Fields in stable order (matches your canonical front matter schema)
+            fm: Dict[str, Any] = {"work_id": wid}
+            fm.update(build_works_front_matter(r, works_hi))
+            # Normalise download to a filename (basename only) for front matter/link text.
+            download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
+            if download_rel is not None:
+                fm["download"] = Path(download_rel).name
 
-        # Series title lookup (Works.series_id -> series_id; Series.series_title -> series_title)
-        sid = fm.get("series_id")
-        if isinstance(sid, str) and sid.strip() != "":
-            fm["series_title"] = series_title_by_id.get(sid.strip())
-        else:
-            fm["series_title"] = None
-
-        # Reorder for clarity: ensure series_title immediately follows series_id in YAML
-        if "series_id" in fm and "series_title" in fm:
-            _st = fm.get("series_title")
-            fm_ordered: Dict[str, Any] = {}
-            for k, v in fm.items():
-                if k == "series_title":
-                    continue  # will be inserted right after series_id
-                fm_ordered[k] = v
-                if k == "series_id":
-                    fm_ordered["series_title"] = _st
-            fm = fm_ordered
-
-        # Canonical per-series ordering key. Default ordering is work_id ascending.
-        fm["series_sort"] = wid
-
-        # Compute checksum from the canonical Excel-derived record and write it into front matter.
-        checksum = compute_work_checksum(fm)
-        fm["checksum"] = checksum
-
-        prose_path = work_prose_dir / f"{wid}.md"
-        work_body = ""
-        if prose_path.exists():
-            work_body = f"{{% include work_prose/{wid}.md %}}\n"
-
-        content = build_front_matter(fm) + "\n" + work_body
-
-        out_path = out_dir / f"{wid}.md"
-        print_path = print_out_dir / f"{wid}.md"
-        works_print_idx = works_hi.get("works_print")
-        works_print_value = None
-        if works_print_idx is not None and works_print_idx < len(r):
-            works_print_value = r[works_print_idx]
-        works_print = normalize_status(works_print_value) == "yes"
-
-        def write_page(path: Path, label: str) -> bool:
-            exists = path.exists()
-            existing_checksum = extract_existing_checksum(path) if exists else None
-            if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
-                print(f"{prefix}SKIP ({label}; checksum match): {path}")
-                return False
-            if args.write:
-                path.write_text(content, encoding="utf-8")
-                print(f"{prefix}WRITE ({label}): {path}")
+            # Series title lookup (Works.series_id -> series_id; Series.series_title -> series_title)
+            sid = fm.get("series_id")
+            if isinstance(sid, str) and sid.strip() != "":
+                fm["series_title"] = series_title_by_id.get(sid.strip())
             else:
-                print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
-            return True
+                fm["series_title"] = None
 
-        if write_page(out_path, "work"):
-            written += 1
-            if args.write:
-                status_idx = works_hi["status"]
-                status_was = normalize_status(row_cells[status_idx].value)
-                if status_was != "published":
-                    row_cells[status_idx].value = "published"
-                    status_updated += 1
-                if (status_was != "published") or args.force:
-                    if published_date_idx is not None:
-                        row_cells[published_date_idx].value = today
-                        published_date_updated += 1
-                    elif not published_date_missing_warned:
-                        print("Warning: Works sheet missing published_date column; skipping date updates.")
-                        published_date_missing_warned = True
-        else:
-            skipped += 1
+            # Reorder for clarity: ensure series_title immediately follows series_id in YAML
+            if "series_id" in fm and "series_title" in fm:
+                _st = fm.get("series_title")
+                fm_ordered: Dict[str, Any] = {}
+                for k, v in fm.items():
+                    if k == "series_title":
+                        continue  # will be inserted right after series_id
+                    fm_ordered[k] = v
+                    if k == "series_id":
+                        fm_ordered["series_title"] = _st
+                fm = fm_ordered
 
-        if works_print:
-            if write_page(print_path, "print"):
-                print_written += 1
-            else:
-                print_skipped += 1
+            # Canonical per-series ordering key. Default ordering is work_id ascending.
+            fm["series_sort"] = wid
 
-        if download_rel is not None:
-            project_folder = work_project_folder_by_id.get(wid)
-            if Path(download_rel).is_absolute():
-                download_src = Path(download_rel)
-            elif project_folder:
-                download_src = projects_root / project_folder / download_rel
-            else:
-                download_src = None
+            # Compute checksum from the canonical Excel-derived record and write it into front matter.
+            checksum = compute_work_checksum(fm)
+            fm["checksum"] = checksum
 
-            download_name = Path(download_rel).name
-            download_dest = works_files_dir / f"{wid}-{download_name}"
+            prose_path = work_prose_dir / f"{wid}.md"
+            work_body = ""
+            if prose_path.exists():
+                work_body = f"{{% include work_prose/{wid}.md %}}\n"
 
-            if download_src is None:
-                print(f"{prefix}Warning: cannot resolve download source for {wid} ({download_rel})")
-                downloads_missing += 1
-            elif not download_src.exists():
-                print(f"{prefix}Warning: missing download source: {download_src}")
-                downloads_missing += 1
-            else:
+            content = build_front_matter(fm) + "\n" + work_body
+
+            out_path = out_dir / f"{wid}.md"
+            print_path = print_out_dir / f"{wid}.md"
+            works_print_idx = works_hi.get("works_print")
+            works_print_value = None
+            if works_print_idx is not None and works_print_idx < len(r):
+                works_print_value = r[works_print_idx]
+            works_print = normalize_status(works_print_value) == "yes"
+
+            def write_page(path: Path, label: str) -> bool:
+                exists = path.exists()
+                existing_checksum = extract_existing_checksum(path) if exists else None
+                if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
+                    print(f"{prefix}SKIP ({label}; checksum match): {path}")
+                    return False
                 if args.write:
-                    download_dest.parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(download_src, download_dest)
-                    print(f"{prefix}COPY download: {download_src} -> {download_dest}")
-                    downloads_copied += 1
+                    path.write_text(content, encoding="utf-8")
+                    print(f"{prefix}WRITE ({label}): {path}")
                 else:
-                    print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
-                    downloads_copied += 1
+                    print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
+                return True
 
-    if args.write and status_updated > 0:
+            if run_work_pages:
+                if write_page(out_path, "work"):
+                    written += 1
+                    if args.write:
+                        status_idx = works_hi["status"]
+                        status_was = normalize_status(row_cells[status_idx].value)
+                        if status_was != "published":
+                            row_cells[status_idx].value = "published"
+                            status_updated += 1
+                        if (status_was != "published") or args.force:
+                            if published_date_idx is not None:
+                                row_cells[published_date_idx].value = today
+                                published_date_updated += 1
+                            elif not published_date_missing_warned:
+                                print("Warning: Works sheet missing published_date column; skipping date updates.")
+                                published_date_missing_warned = True
+                else:
+                    skipped += 1
+
+                if works_print:
+                    if write_page(print_path, "print"):
+                        print_written += 1
+                    else:
+                        print_skipped += 1
+
+            if run_work_files and download_rel is not None:
+                project_folder = work_project_folder_by_id.get(wid)
+                if Path(download_rel).is_absolute():
+                    download_src = Path(download_rel)
+                elif project_folder:
+                    download_src = projects_root / project_folder / download_rel
+                else:
+                    download_src = None
+
+                download_name = Path(download_rel).name
+                download_dest = works_files_dir / f"{wid}-{download_name}"
+
+                if download_src is None:
+                    print(f"{prefix}Warning: cannot resolve download source for {wid} ({download_rel})")
+                    downloads_missing += 1
+                elif not download_src.exists():
+                    print(f"{prefix}Warning: missing download source: {download_src}")
+                    downloads_missing += 1
+                else:
+                    if args.write:
+                        download_dest.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(download_src, download_dest)
+                        print(f"{prefix}COPY download: {download_src} -> {download_dest}")
+                        downloads_copied += 1
+                    else:
+                        print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
+                        downloads_copied += 1
+
+    if run_work_pages and args.write and status_updated > 0:
         wb.save(xlsx_path)
         print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
             print(f"Set published_date for {published_date_updated} row(s).")
-
-    print(
-        f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
-        f" Skipped: {skipped} works, {print_skipped} print."
-    )
-    print(
-        f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
-        f" Missing/unresolved: {downloads_missing}."
-    )
-    print(f"Workbook: {xlsx_path}")
-    if args.write:
-        print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
+    if run_works_loop:
+        print(
+            f"\nDone. {'Would write' if not args.write else 'Wrote'}: {written} works, {print_written} print."
+            f" Skipped: {skipped} works, {print_skipped} print."
+        )
+        print(
+            f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
+            f" Missing/unresolved: {downloads_missing}."
+        )
+        print(f"Workbook: {xlsx_path}")
+        if args.write:
+            print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
+    else:
+        print("Work pages/files skipped: not selected by --only.")
 
     # Determine series scope for this run:
     # - If caller explicitly scoped series via --series-ids, honor that for both pages and JSON.
     # - If caller scoped only works (--work-ids/--work-ids-file), skip series pages by default,
     #   but still regenerate series JSON for affected series IDs so work prev/next nav stays fresh.
-    run_series_pages = True
     series_page_selected_ids = selected_series_ids
     series_json_selected_ids = selected_series_ids
     if explicit_work_filter and selected_series_ids is None:
-        run_series_pages = False
         affected_series_ids: set[str] = set()
         for wr in works_rows[1:]:
             wid_raw = cell(wr, works_hi, "work_id")
@@ -895,7 +952,10 @@ def main() -> None:
             sid = normalize_text(sid_raw)
             if is_slug_safe(sid):
                 affected_series_ids.add(sid)
-        series_json_selected_ids = affected_series_ids
+        if run_series_json:
+            series_json_selected_ids = affected_series_ids
+        if selected_artifacts is None:
+            run_series_pages = False
 
     # ----------------------------
     # Series page generation (Series)
@@ -1034,7 +1094,10 @@ def main() -> None:
                     else:
                         print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
         else:
-            print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
+            if selected_artifacts is not None and not artifact_enabled("series-pages"):
+                print("Series pages skipped: not selected by --only.")
+            else:
+                print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
             wb.save(xlsx_path)
@@ -1055,114 +1118,120 @@ def main() -> None:
         #   "work_ids": ["00286", "00361", ...]
         # }
 
-        sj_written = 0
-        sj_skipped = 0
-        sj_total = 0
-        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-            sid_raw = cell(sr, series_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = require_slug_safe("series_id", sid_raw)
-            if series_json_selected_ids is not None and sid not in series_json_selected_ids:
-                continue
-            status_idx = series_hi.get("status")
-            status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
-            status = normalize_status(status_val)
-            if status != "draft":
-                sj_total += 1
-        sj_processed = 0
+        if run_series_json:
+            sj_written = 0
+            sj_skipped = 0
+            sj_total = 0
+            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
+                sid_raw = cell(sr, series_hi, "series_id")
+                if is_empty(sid_raw):
+                    continue
+                sid = require_slug_safe("series_id", sid_raw)
+                if series_json_selected_ids is not None and sid not in series_json_selected_ids:
+                    continue
+                status_idx = series_hi.get("status")
+                status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
+                status = normalize_status(status_val)
+                if status != "draft":
+                    sj_total += 1
+            sj_processed = 0
 
-        # Build published work lists by series_id (from Works sheet, after any status updates).
-        # JSON order follows series_sort asc, then work_id asc for stability.
-        work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
-        status_idx = works_hi.get("status")
-        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
-            status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
-            if normalize_status(status_val) != "published":
-                continue
+            # Build published work lists by series_id (from Works sheet, after any status updates).
+            # JSON order follows series_sort asc, then work_id asc for stability.
+            work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
+            status_idx = works_hi.get("status")
+            for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+                status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
+                if normalize_status(status_val) != "published":
+                    continue
 
-            sid_raw = cell(wr, works_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = require_slug_safe("series_id", sid_raw)
+                sid_raw = cell(wr, works_hi, "series_id")
+                if is_empty(sid_raw):
+                    continue
+                sid = require_slug_safe("series_id", sid_raw)
 
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            wid = slug_id(wid_raw)
+                wid_raw = cell(wr, works_hi, "work_id")
+                if is_empty(wid_raw):
+                    continue
+                wid = slug_id(wid_raw)
 
-            series_sort_raw = cell(wr, works_hi, "series_sort")
-            series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
-            if not series_sort:
-                series_sort = wid
+                series_sort_raw = cell(wr, works_hi, "series_sort")
+                series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
+                if not series_sort:
+                    series_sort = wid
 
-            work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
+                work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
 
-        # Ensure deterministic ordering matching series-page grid.
-        work_ids_by_series: Dict[str, List[str]] = {}
-        for sid, rows in work_rows_by_series.items():
-            rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
-            work_ids_by_series[sid] = [wid for _, wid in rows_sorted]
+            # Ensure deterministic ordering matching series-page grid.
+            work_ids_by_series: Dict[str, List[str]] = {}
+            for sid, rows in work_rows_by_series.items():
+                rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
+                work_ids_by_series[sid] = [wid for _, wid in rows_sorted]
 
-        for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-            sid_raw = cell(sr, series_hi, "series_id")
-            if is_empty(sid_raw):
-                sj_skipped += 1
-                continue
-            series_id = require_slug_safe("series_id", sid_raw)
-            if series_json_selected_ids is not None and series_id not in series_json_selected_ids:
-                sj_skipped += 1
-                continue
-            status_idx = series_hi.get("status")
-            status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
-            status = normalize_status(status_val)
-            if status == "draft":
-                sj_skipped += 1
-                continue
+            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
+                sid_raw = cell(sr, series_hi, "series_id")
+                if is_empty(sid_raw):
+                    sj_skipped += 1
+                    continue
+                series_id = require_slug_safe("series_id", sid_raw)
+                if series_json_selected_ids is not None and series_id not in series_json_selected_ids:
+                    sj_skipped += 1
+                    continue
+                status_idx = series_hi.get("status")
+                status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
+                status = normalize_status(status_val)
+                if status == "draft":
+                    sj_skipped += 1
+                    continue
 
-            sj_processed += 1
-            prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
+                sj_processed += 1
+                prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
 
-            work_ids = work_ids_by_series.get(series_id, [])
-            series_hash = compute_series_hash(series_id, work_ids)
+                work_ids = work_ids_by_series.get(series_id, [])
+                series_hash = compute_series_hash(series_id, work_ids)
 
-            payload = {
-                "header": {
-                    "series_id": series_id,
-                    "count": len(work_ids),
-                    "hash": series_hash,
-                },
-                "work_ids": work_ids,
-            }
+                payload = {
+                    "header": {
+                        "series_id": series_id,
+                        "count": len(work_ids),
+                        "hash": series_hash,
+                    },
+                    "work_ids": work_ids,
+                }
 
-            out_json_path = series_json_dir / f"{series_id}.json"
-            exists = out_json_path.exists()
+                out_json_path = series_json_dir / f"{series_id}.json"
+                exists = out_json_path.exists()
 
-            existing_hash = extract_existing_series_hash(out_json_path) if exists else None
-            if (existing_hash is not None) and (existing_hash == series_hash) and (not args.force):
-                sj_skipped += 1
-                continue
+                existing_hash = extract_existing_series_hash(out_json_path) if exists else None
+                if (existing_hash is not None) and (existing_hash == series_hash) and (not args.force):
+                    sj_skipped += 1
+                    continue
 
-            if args.write:
-                out_json_path.write_text(
-                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"{prefix_j}WRITE: {out_json_path}")
-                sj_written += 1
-            else:
-                print(f"{prefix_j}DRY-RUN: would write {out_json_path} (overwrite={exists})")
-                sj_written += 1
+                if args.write:
+                    out_json_path.write_text(
+                        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8",
+                    )
+                    print(f"{prefix_j}WRITE: {out_json_path}")
+                    sj_written += 1
+                else:
+                    print(f"{prefix_j}DRY-RUN: would write {out_json_path} (overwrite={exists})")
+                    sj_written += 1
 
-        print(
-            f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: {sj_written}. Skipped: {sj_skipped}."
-        )
+            print(
+                f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: {sj_written}. Skipped: {sj_skipped}."
+            )
+        else:
+            print("Series JSON skipped: not selected by --only.")
 
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
     if not work_details_rows or len(work_details_rows) < 2 or work_details_ws is None:
-        print("No work detail pages to generate (WorkDetails sheet empty or missing).")
+        if run_work_details_pages or run_work_json:
+            print("No work detail pages/JSON to generate (WorkDetails sheet empty or missing).")
+        else:
+            print("Work detail pages/JSON skipped: not selected by --only.")
     else:
         required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "project_filename", "has_primary_2400"]
         missing_details = [c for c in required_details if c not in work_details_hi]
@@ -1175,7 +1244,7 @@ def main() -> None:
         # Ensure width/height columns exist when writing so dimensions persist in the sheet.
         width_px_idx = work_details_hi.get("width_px")
         height_px_idx = work_details_hi.get("height_px")
-        if args.write:
+        if args.write and run_work_details_pages:
             if width_px_idx is None:
                 width_px_idx = work_details_ws.max_column
                 work_details_ws.cell(row=1, column=width_px_idx + 1, value="width_px")
@@ -1200,252 +1269,258 @@ def main() -> None:
                 return True
             return False
 
-        details_written = 0
-        details_skipped = 0
-        details_status_updated = 0
-        details_published_date_updated = 0
-        details_dimensions_updated = 0
-        details_published_date_idx = work_details_hi.get("published_date")
-        details_published_date_missing_warned = False
-        project_folder_missing_warned = False
-        details_total = 0
+        if run_work_details_pages:
+            details_written = 0
+            details_skipped = 0
+            details_status_updated = 0
+            details_published_date_updated = 0
+            details_dimensions_updated = 0
+            details_published_date_idx = work_details_hi.get("published_date")
+            details_published_date_missing_warned = False
+            project_folder_missing_warned = False
+            details_total = 0
 
-        for dr in work_details_rows[1:]:
-            wid_raw = cell(dr, work_details_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            wid = slug_id(wid_raw)
-            if selected_ids is not None and wid not in selected_ids:
-                continue
-            status = normalize_status(cell(dr, work_details_hi, "status"))
-            if is_actionable_detail_status(status):
-                details_total += 1
+            for dr in work_details_rows[1:]:
+                wid_raw = cell(dr, work_details_hi, "work_id")
+                if is_empty(wid_raw):
+                    continue
+                wid = slug_id(wid_raw)
+                if selected_ids is not None and wid not in selected_ids:
+                    continue
+                status = normalize_status(cell(dr, work_details_hi, "status"))
+                if is_actionable_detail_status(status):
+                    details_total += 1
 
-        details_processed = 0
-        for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
-            wid_raw = cell(dr, work_details_hi, "work_id")
-            did_raw = cell(dr, work_details_hi, "detail_id")
-            if is_empty(wid_raw) or is_empty(did_raw):
-                details_skipped += 1
-                continue
+            details_processed = 0
+            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+                wid_raw = cell(dr, work_details_hi, "work_id")
+                did_raw = cell(dr, work_details_hi, "detail_id")
+                if is_empty(wid_raw) or is_empty(did_raw):
+                    details_skipped += 1
+                    continue
 
-            wid = slug_id(wid_raw)
-            if selected_ids is not None and wid not in selected_ids:
-                details_skipped += 1
-                continue
+                wid = slug_id(wid_raw)
+                if selected_ids is not None and wid not in selected_ids:
+                    details_skipped += 1
+                    continue
 
-            if wid not in known_work_ids:
-                print(f"Warning: skipping work detail for unknown work_id {wid}: detail_id={did_raw}")
-                details_skipped += 1
-                continue
+                if wid not in known_work_ids:
+                    print(f"Warning: skipping work detail for unknown work_id {wid}: detail_id={did_raw}")
+                    details_skipped += 1
+                    continue
 
-            status = normalize_status(cell(dr, work_details_hi, "status"))
-            if not is_actionable_detail_status(status):
-                details_skipped += 1
-                continue
+                status = normalize_status(cell(dr, work_details_hi, "status"))
+                if not is_actionable_detail_status(status):
+                    details_skipped += 1
+                    continue
 
-            details_processed += 1
-            prefix_d = f"[details {details_processed}/{details_total}] "
+                details_processed += 1
+                prefix_d = f"[details {details_processed}/{details_total}] "
 
-            did = slug_id(did_raw, width=3)
-            detail_uid = f"{wid}-{did}"
-            title = coerce_string(cell(dr, work_details_hi, "title"))
-            has_primary_2400 = coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400"))
-            project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder"))
-            project_filename = coerce_string(cell(dr, work_details_hi, "project_filename"))
-            width_px = coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None
-            height_px = coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None
+                did = slug_id(did_raw, width=3)
+                detail_uid = f"{wid}-{did}"
+                title = coerce_string(cell(dr, work_details_hi, "title"))
+                has_primary_2400 = coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400"))
+                project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder"))
+                project_filename = coerce_string(cell(dr, work_details_hi, "project_filename"))
+                width_px = coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None
+                height_px = coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None
 
-            # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
-            project_folder = work_project_folder_by_id.get(wid)
-            src_path: Optional[Path] = None
-            if project_folder and project_filename:
-                src_path = projects_root / project_folder
-                if project_subfolder:
-                    src_path = src_path / project_subfolder
-                src_path = src_path / project_filename
-            elif not project_folder_missing_warned:
-                if not has_project_folder_col:
-                    print("Warning: Works sheet has no project_folder column; cannot persist WorkDetails image dimensions.")
-                else:
-                    print("Warning: missing Works.project_folder for one or more WorkDetails rows; cannot persist those image dimensions.")
-                project_folder_missing_warned = True
+                # Resolve source image and persist dimensions back to WorkDetails for stable future rebuilds.
+                project_folder = work_project_folder_by_id.get(wid)
+                src_path: Optional[Path] = None
+                if project_folder and project_filename:
+                    src_path = projects_root / project_folder
+                    if project_subfolder:
+                        src_path = src_path / project_subfolder
+                    src_path = src_path / project_filename
+                elif not project_folder_missing_warned:
+                    if not has_project_folder_col:
+                        print("Warning: Works sheet has no project_folder column; cannot persist WorkDetails image dimensions.")
+                    else:
+                        print("Warning: missing Works.project_folder for one or more WorkDetails rows; cannot persist those image dimensions.")
+                    project_folder_missing_warned = True
 
-            if src_path is not None:
-                src_w, src_h = read_image_dims_px(src_path)
-                if src_w is not None and src_h is not None:
-                    width_px = src_w
-                    height_px = src_h
-                    if args.write and width_px_idx is not None and height_px_idx is not None:
-                        prev_w = dr_cells[width_px_idx].value if width_px_idx < len(dr_cells) else None
-                        prev_h = dr_cells[height_px_idx].value if height_px_idx < len(dr_cells) else None
-                        if prev_w != src_w or prev_h != src_h:
-                            dr_cells[width_px_idx].value = src_w
-                            dr_cells[height_px_idx].value = src_h
-                            details_dimensions_updated += 1
-                else:
-                    print(f"Warning: could not read dimensions for detail source image: {src_path}")
-            elif project_filename:
-                print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
+                if src_path is not None:
+                    src_w, src_h = read_image_dims_px(src_path)
+                    if src_w is not None and src_h is not None:
+                        width_px = src_w
+                        height_px = src_h
+                        if args.write and width_px_idx is not None and height_px_idx is not None:
+                            prev_w = dr_cells[width_px_idx].value if width_px_idx < len(dr_cells) else None
+                            prev_h = dr_cells[height_px_idx].value if height_px_idx < len(dr_cells) else None
+                            if prev_w != src_w or prev_h != src_h:
+                                dr_cells[width_px_idx].value = src_w
+                                dr_cells[height_px_idx].value = src_h
+                                details_dimensions_updated += 1
+                    else:
+                        print(f"Warning: could not read dimensions for detail source image: {src_path}")
+                elif project_filename:
+                    print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
-            dfm: Dict[str, Any] = {
-                "work_id": wid,
-                "detail_id": did,
-                "detail_uid": detail_uid,
-                "title": title,
-                "project_subfolder": project_subfolder,
-                "width_px": width_px,
-                "height_px": height_px,
-                "has_primary_2400": has_primary_2400,
-                "layout": "work_details",
-            }
-            d_checksum = compute_work_checksum(dfm)
-            dfm["checksum"] = d_checksum
-
-            d_content = build_front_matter(dfm)
-            d_path = work_details_out_dir / f"{detail_uid}.md"
-            d_exists = d_path.exists()
-            existing_checksum = extract_existing_checksum(d_path) if d_exists else None
-
-            if (existing_checksum is not None) and (existing_checksum == d_checksum) and (not args.force):
-                details_skipped += 1
-                continue
-
-            if args.write:
-                d_path.write_text(d_content, encoding="utf-8")
-                print(f"{prefix_d}WRITE: {d_path}")
-                details_written += 1
-
-                status_idx = work_details_hi.get("status")
-                if status_idx is not None:
-                    status_was = normalize_status(dr_cells[status_idx].value)
-                    if status_was != "published":
-                        dr_cells[status_idx].value = "published"
-                        details_status_updated += 1
-                    if (status_was != "published") or args.force:
-                        if details_published_date_idx is not None:
-                            dr_cells[details_published_date_idx].value = today
-                            details_published_date_updated += 1
-                        elif not details_published_date_missing_warned:
-                            print("Warning: WorkDetails sheet missing published_date column; skipping date updates.")
-                            details_published_date_missing_warned = True
-            else:
-                print(f"{prefix_d}DRY-RUN: would write {d_path} (overwrite={d_exists})")
-                details_written += 1
-
-        if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
-            wb.save(xlsx_path)
-            if details_status_updated > 0:
-                print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
-            if details_published_date_updated > 0:
-                print(f"Set work detail published_date for {details_published_date_updated} row(s).")
-            if details_dimensions_updated > 0:
-                print(f"Updated work detail width_px/height_px for {details_dimensions_updated} row(s).")
-
-        print(
-            f"Work detail pages done. {'Would write' if not args.write else 'Wrote'}: {details_written}. Skipped: {details_skipped}."
-        )
-
-        # Build per-work detail JSON from currently published detail rows only.
-        # Keep worksheet order for section order.
-        encountered_work_ids: List[str] = []
-        encountered_work_id_set: set[str] = set()
-        sections_by_work: Dict[str, List[Dict[str, Any]]] = {}
-        section_index_by_work: Dict[str, Dict[str, int]] = {}
-        detail_status_idx = work_details_hi.get("status")
-
-        for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
-            wid_raw = cell(dr, work_details_hi, "work_id")
-            did_raw = cell(dr, work_details_hi, "detail_id")
-            if is_empty(wid_raw) or is_empty(did_raw):
-                continue
-
-            wid = slug_id(wid_raw)
-            if selected_ids is not None and wid not in selected_ids:
-                continue
-            if wid not in known_work_ids:
-                continue
-
-            if wid not in encountered_work_id_set:
-                encountered_work_ids.append(wid)
-                encountered_work_id_set.add(wid)
-
-            status_val = dr_cells[detail_status_idx].value if detail_status_idx is not None else cell(dr, work_details_hi, "status")
-            if normalize_status(status_val) != "published":
-                continue
-
-            did = slug_id(did_raw, width=3)
-            detail_uid = f"{wid}-{did}"
-            project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder")) or ""
-
-            if wid not in sections_by_work:
-                sections_by_work[wid] = []
-                section_index_by_work[wid] = {}
-
-            if project_subfolder not in section_index_by_work[wid]:
-                section_index_by_work[wid][project_subfolder] = len(sections_by_work[wid])
-                sections_by_work[wid].append(
-                    {
-                        "project_subfolder": project_subfolder,
-                        "details": [],
-                    }
-                )
-
-            section_idx = section_index_by_work[wid][project_subfolder]
-            detail_entry = {
-                "detail_id": did,
-                "detail_uid": detail_uid,
-                "title": coerce_string(cell(dr, work_details_hi, "title")),
-            }
-            if coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")):
-                detail_entry["has_primary_2400"] = True
-            sections_by_work[wid][section_idx]["details"].append(detail_entry)
-
-        # Ensure deterministic detail ordering by detail_id ascending within each section.
-        for sections in sections_by_work.values():
-            for sec in sections:
-                details = sec.get("details")
-                if isinstance(details, list):
-                    details.sort(key=lambda item: str(item.get("detail_id", "")))
-
-        wj_written = 0
-        wj_skipped = 0
-        wj_total = len(encountered_work_ids)
-        wj_processed = 0
-
-        for wid in encountered_work_ids:
-            wj_processed += 1
-            prefix_wj = f"[workjson {wj_processed}/{wj_total}] "
-
-            sections = sections_by_work.get(wid, [])
-            payload = {
-                "header": {
+                dfm: Dict[str, Any] = {
                     "work_id": wid,
-                    "count": sum(len(s.get("details", [])) for s in sections),
-                    "hash": compute_work_details_hash(wid, sections),
-                },
-                "sections": sections,
-            }
-            out_json_path = works_json_dir / f"{wid}.json"
-            exists = out_json_path.exists()
-            existing_hash = extract_existing_series_hash(out_json_path) if exists else None
-            payload_hash = payload["header"]["hash"]
+                    "detail_id": did,
+                    "detail_uid": detail_uid,
+                    "title": title,
+                    "project_subfolder": project_subfolder,
+                    "width_px": width_px,
+                    "height_px": height_px,
+                    "has_primary_2400": has_primary_2400,
+                    "layout": "work_details",
+                }
+                d_checksum = compute_work_checksum(dfm)
+                dfm["checksum"] = d_checksum
 
-            if (existing_hash is not None) and (existing_hash == payload_hash) and (not args.force):
-                wj_skipped += 1
-                continue
+                d_content = build_front_matter(dfm)
+                d_path = work_details_out_dir / f"{detail_uid}.md"
+                d_exists = d_path.exists()
+                existing_checksum = extract_existing_checksum(d_path) if d_exists else None
 
-            if args.write:
-                out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                print(f"{prefix_wj}WRITE: {out_json_path}")
-                wj_written += 1
-            else:
-                print(f"{prefix_wj}DRY-RUN: would write {out_json_path} (overwrite={exists})")
-                wj_written += 1
+                if (existing_checksum is not None) and (existing_checksum == d_checksum) and (not args.force):
+                    details_skipped += 1
+                    continue
 
-        print(
-            f"Work detail JSON done. {'Would write' if not args.write else 'Wrote'}: {wj_written}. Skipped: {wj_skipped}."
-        )
+                if args.write:
+                    d_path.write_text(d_content, encoding="utf-8")
+                    print(f"{prefix_d}WRITE: {d_path}")
+                    details_written += 1
+
+                    status_idx = work_details_hi.get("status")
+                    if status_idx is not None:
+                        status_was = normalize_status(dr_cells[status_idx].value)
+                        if status_was != "published":
+                            dr_cells[status_idx].value = "published"
+                            details_status_updated += 1
+                        if (status_was != "published") or args.force:
+                            if details_published_date_idx is not None:
+                                dr_cells[details_published_date_idx].value = today
+                                details_published_date_updated += 1
+                            elif not details_published_date_missing_warned:
+                                print("Warning: WorkDetails sheet missing published_date column; skipping date updates.")
+                                details_published_date_missing_warned = True
+                else:
+                    print(f"{prefix_d}DRY-RUN: would write {d_path} (overwrite={d_exists})")
+                    details_written += 1
+
+            if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
+                wb.save(xlsx_path)
+                if details_status_updated > 0:
+                    print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
+                if details_published_date_updated > 0:
+                    print(f"Set work detail published_date for {details_published_date_updated} row(s).")
+                if details_dimensions_updated > 0:
+                    print(f"Updated work detail width_px/height_px for {details_dimensions_updated} row(s).")
+
+            print(
+                f"Work detail pages done. {'Would write' if not args.write else 'Wrote'}: {details_written}. Skipped: {details_skipped}."
+            )
+        else:
+            print("Work detail pages skipped: not selected by --only.")
+
+        if run_work_json:
+            # Build per-work detail JSON from currently published detail rows only.
+            # Keep worksheet order for section order.
+            encountered_work_ids: List[str] = []
+            encountered_work_id_set: set[str] = set()
+            sections_by_work: Dict[str, List[Dict[str, Any]]] = {}
+            section_index_by_work: Dict[str, Dict[str, int]] = {}
+            detail_status_idx = work_details_hi.get("status")
+
+            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+                wid_raw = cell(dr, work_details_hi, "work_id")
+                did_raw = cell(dr, work_details_hi, "detail_id")
+                if is_empty(wid_raw) or is_empty(did_raw):
+                    continue
+
+                wid = slug_id(wid_raw)
+                if selected_ids is not None and wid not in selected_ids:
+                    continue
+                if wid not in known_work_ids:
+                    continue
+
+                if wid not in encountered_work_id_set:
+                    encountered_work_ids.append(wid)
+                    encountered_work_id_set.add(wid)
+
+                status_val = dr_cells[detail_status_idx].value if detail_status_idx is not None else cell(dr, work_details_hi, "status")
+                if normalize_status(status_val) != "published":
+                    continue
+
+                did = slug_id(did_raw, width=3)
+                detail_uid = f"{wid}-{did}"
+                project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder")) or ""
+
+                if wid not in sections_by_work:
+                    sections_by_work[wid] = []
+                    section_index_by_work[wid] = {}
+
+                if project_subfolder not in section_index_by_work[wid]:
+                    section_index_by_work[wid][project_subfolder] = len(sections_by_work[wid])
+                    sections_by_work[wid].append(
+                        {
+                            "project_subfolder": project_subfolder,
+                            "details": [],
+                        }
+                    )
+
+                section_idx = section_index_by_work[wid][project_subfolder]
+                detail_entry = {
+                    "detail_id": did,
+                    "detail_uid": detail_uid,
+                    "title": coerce_string(cell(dr, work_details_hi, "title")),
+                }
+                if coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")):
+                    detail_entry["has_primary_2400"] = True
+                sections_by_work[wid][section_idx]["details"].append(detail_entry)
+
+            # Ensure deterministic detail ordering by detail_id ascending within each section.
+            for sections in sections_by_work.values():
+                for sec in sections:
+                    details = sec.get("details")
+                    if isinstance(details, list):
+                        details.sort(key=lambda item: str(item.get("detail_id", "")))
+
+            wj_written = 0
+            wj_skipped = 0
+            wj_total = len(encountered_work_ids)
+            wj_processed = 0
+
+            for wid in encountered_work_ids:
+                wj_processed += 1
+                prefix_wj = f"[workjson {wj_processed}/{wj_total}] "
+
+                sections = sections_by_work.get(wid, [])
+                payload = {
+                    "header": {
+                        "work_id": wid,
+                        "count": sum(len(s.get("details", [])) for s in sections),
+                        "hash": compute_work_details_hash(wid, sections),
+                    },
+                    "sections": sections,
+                }
+                out_json_path = works_json_dir / f"{wid}.json"
+                exists = out_json_path.exists()
+                existing_hash = extract_existing_series_hash(out_json_path) if exists else None
+                payload_hash = payload["header"]["hash"]
+
+                if (existing_hash is not None) and (existing_hash == payload_hash) and (not args.force):
+                    wj_skipped += 1
+                    continue
+
+                if args.write:
+                    out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                    print(f"{prefix_wj}WRITE: {out_json_path}")
+                    wj_written += 1
+                else:
+                    print(f"{prefix_wj}DRY-RUN: would write {out_json_path} (overwrite={exists})")
+                    wj_written += 1
+
+            print(
+                f"Work detail JSON done. {'Would write' if not args.write else 'Wrote'}: {wj_written}. Skipped: {wj_skipped}."
+            )
+        else:
+            print("Work detail JSON skipped: not selected by --only.")
 
     # ----------------------------
     # Moment page generation (Moments)
@@ -1461,7 +1536,10 @@ def main() -> None:
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
     if not run_moments:
-        print("Moment pages skipped: scoped run without --moment-ids/--moment-ids-file.")
+        if selected_artifacts is not None and not run_moments_artifact:
+            print("Moment pages skipped: not selected by --only.")
+        else:
+            print("Moment pages skipped: scoped run without --moment-ids/--moment-ids-file.")
     elif not moments_rows or len(moments_rows) < 2 or moments_ws is None:
         print("No moment pages to generate (Moments sheet empty or missing).")
     else:
