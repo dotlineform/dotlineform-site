@@ -767,13 +767,8 @@ def main() -> None:
                     fm_ordered["series_title"] = _st
             fm = fm_ordered
 
-        # Stable series ordering: oldest first, then work_id within year.
-        year_val = fm.get("year")
-        if isinstance(year_val, int):
-            sort_year = f"{year_val:04d}"
-        else:
-            sort_year = "9999"
-        fm["series_sort"] = f"{sort_year}-{wid}"
+        # Canonical per-series ordering key. Default ordering is work_id ascending.
+        fm["series_sort"] = wid
 
         # Compute checksum from the canonical Excel-derived record and write it into front matter.
         checksum = compute_work_checksum(fm)
@@ -1078,7 +1073,7 @@ def main() -> None:
         sj_processed = 0
 
         # Build published work lists by series_id (from Works sheet, after any status updates).
-        # Keep a tuple so JSON order can match series-page grid order (series_sort asc, then work_id).
+        # JSON order follows series_sort asc, then work_id asc for stability.
         work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
         status_idx = works_hi.get("status")
         for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
@@ -1099,18 +1094,11 @@ def main() -> None:
             series_sort_raw = cell(wr, works_hi, "series_sort")
             series_sort = normalize_text(series_sort_raw) if not is_empty(series_sort_raw) else ""
             if not series_sort:
-                # Default fallback when Works.series_sort is absent:
-                # compute from year + work_id so JSON order matches series grid ordering.
-                year_raw = cell(wr, works_hi, "year")
-                year_val = coerce_int(year_raw)
-                if year_val is not None:
-                    series_sort = f"{year_val:04d}-{wid}"
-                else:
-                    series_sort = f"9999-{wid}"
+                series_sort = wid
 
             work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
 
-        # Ensure deterministic ordering matching series-page grid: series_sort asc, then work_id asc.
+        # Ensure deterministic ordering matching series-page grid.
         work_ids_by_series: Dict[str, List[str]] = {}
         for sid, rows in work_rows_by_series.items():
             rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
@@ -1359,7 +1347,7 @@ def main() -> None:
         )
 
         # Build per-work detail JSON from currently published detail rows only.
-        # Keep worksheet order for both section order and detail order.
+        # Keep worksheet order for section order.
         encountered_work_ids: List[str] = []
         encountered_work_id_set: set[str] = set()
         sections_by_work: Dict[str, List[Dict[str, Any]]] = {}
@@ -1412,6 +1400,13 @@ def main() -> None:
             if coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")):
                 detail_entry["has_primary_2400"] = True
             sections_by_work[wid][section_idx]["details"].append(detail_entry)
+
+        # Ensure deterministic detail ordering by detail_id ascending within each section.
+        for sections in sections_by_work.values():
+            for sec in sections:
+                details = sec.get("details")
+                if isinstance(details, list):
+                    details.sort(key=lambda item: str(item.get("detail_id", "")))
 
         wj_written = 0
         wj_skipped = 0
