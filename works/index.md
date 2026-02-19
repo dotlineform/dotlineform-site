@@ -35,7 +35,7 @@ section: works
 
   <div class="index worksList">
     <h1 class="index__heading visually-hidden">works</h1>
-    <p class="worksList__count">{{ works_count }} {{ work_label }} in {{ series_count }} {{ series_label }}</p>
+    <p class="worksList__count" id="worksListCount">{{ works_count }} {{ work_label }} in {{ series_count }} {{ series_label }}</p>
 
     <div class="worksList__head" role="group" aria-label="Sort works">
       <button class="worksList__sortBtn" type="button" data-sort-key="year">
@@ -58,6 +58,8 @@ section: works
           data-year="{{ w.year | default: 0 }}"
           data-title="{{ w.title | downcase | strip | escape }}"
           data-series="{{ series_label | downcase | strip | escape }}"
+          data-series-id="{{ w.series_id | default: '' | downcase | strip | escape }}"
+          data-series-label="{{ series_label | strip | escape }}"
         >
           <span class="worksList__year">{{ w.year }}</span>
           <a class="worksList__title" href="{{ w.url | relative_url }}?from=works_index">{{ w.title }}</a>
@@ -65,6 +67,14 @@ section: works
         </li>
       {% endfor %}
     </ul>
+
+    <nav class="page__nav" id="worksIndexBackNav" hidden>
+      <a
+        class="page__back"
+        id="worksIndexBackLink"
+        href="{{ '/series/' | relative_url }}"
+      >← series</a>
+    </nav>
   </div>
 
   <script>
@@ -78,8 +88,50 @@ section: works
       var params = new URLSearchParams(window.location.search);
       var sortKey = String(params.get('sort') || 'title').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
+      var seriesFilter = String(params.get('series') || '').trim().toLowerCase();
+      var hasSeriesFilter = seriesFilter.length > 0;
+      var seriesBaseHref = '{{ "/series/" | relative_url }}';
+      var countEl = document.getElementById('worksListCount');
+      var backNav = document.getElementById('worksIndexBackNav');
+      var backLink = document.getElementById('worksIndexBackLink');
+      var worksListRoot = document.querySelector('.worksList');
       if (!validKeys[sortKey]) sortKey = 'title';
       if (sortDir !== 'asc' && sortDir !== 'desc') sortDir = 'asc';
+      if (hasSeriesFilter && worksListRoot) {
+        worksListRoot.classList.add('worksList--singleSeries');
+      }
+
+      function rowMatchesSeries(row) {
+        if (!hasSeriesFilter) return true;
+        var rowSeriesId = String(row.getAttribute('data-series-id') || '').trim().toLowerCase();
+        return rowSeriesId === seriesFilter;
+      }
+
+      function updateCount(visibleRows) {
+        if (!countEl || !hasSeriesFilter) return;
+        var workCount = visibleRows.length;
+        var workWord = workCount === 1 ? 'work' : 'works';
+        var seriesLabel = '';
+        if (visibleRows.length) {
+          seriesLabel = String(visibleRows[0].getAttribute('data-series-label') || '').trim();
+        }
+        countEl.textContent = '';
+        countEl.appendChild(document.createTextNode(String(workCount) + ' ' + workWord));
+        if (seriesLabel) {
+          countEl.appendChild(document.createTextNode(' in '));
+          var seriesLink = document.createElement('a');
+          seriesLink.className = 'worksList__countSeriesLink';
+          seriesLink.href = seriesBaseHref + encodeURIComponent(seriesFilter) + '/';
+          seriesLink.textContent = seriesLabel;
+          countEl.appendChild(seriesLink);
+        }
+
+        if (backNav && backLink) {
+          backNav.hidden = false;
+          backLink.setAttribute('href', seriesBaseHref + encodeURIComponent(seriesFilter) + '/');
+          backLink.textContent = seriesLabel ? ('← ' + seriesLabel) : '← series';
+        }
+      }
 
       function compareValues(a, b, key) {
         if (key === 'year') {
@@ -94,7 +146,9 @@ section: works
 
       function applySort(key, dir) {
         var rows = Array.prototype.slice.call(list.querySelectorAll('.worksList__item'));
-        rows.sort(function (a, b) {
+        var visibleRows = rows.filter(rowMatchesSeries);
+        if (hasSeriesFilter) list.innerHTML = '';
+        visibleRows.sort(function (a, b) {
           var primary = compareValues(a, b, key);
           if (primary !== 0) return dir === 'asc' ? primary : -primary;
 
@@ -102,7 +156,8 @@ section: works
           if (tieTitle !== 0) return tieTitle;
           return compareValues(a, b, 'series');
         });
-        rows.forEach(function (row) { list.appendChild(row); });
+        visibleRows.forEach(function (row) { list.appendChild(row); });
+        updateCount(visibleRows);
         updateRowLinks(key, dir);
       }
 
@@ -124,6 +179,11 @@ section: works
           query.set('from', 'works_index');
           query.set('return_sort', key);
           query.set('return_dir', dir);
+          if (hasSeriesFilter) {
+            query.set('return_series', seriesFilter);
+          } else {
+            query.delete('return_series');
+          }
           titleLink.setAttribute('href', base + '?' + query.toString() + hash);
         });
       }

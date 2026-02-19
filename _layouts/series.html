@@ -24,11 +24,17 @@ layout: default
     assets/series/index/<series_id>.json and render Prev/Next navigation.
     {% endcomment %}
     <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
-    <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
-      <span class="gridPager__status" id="seriesGridPagerStatus"></span>
-      <button class="gridPager__btn" type="button" id="seriesGridPrev" aria-label="Previous page">←</button>
-      <button class="gridPager__btn" type="button" id="seriesGridNext" aria-label="Next page">→</button>
-    </nav>
+    <div class="seriesGridFooter">
+      <a
+        class="seriesGridFooter__indexLink"
+        href="{{ '/works/' | relative_url }}?series={{ page.series_id | url_encode }}"
+      >series index</a>
+      <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
+        <span class="gridPager__status" id="seriesGridPagerStatus"></span>
+        <button class="gridPager__btn" type="button" id="seriesGridPrev" aria-label="Previous page">←</button>
+        <button class="gridPager__btn" type="button" id="seriesGridNext" aria-label="Next page">→</button>
+      </nav>
+    </div>
 
     <script type="application/json" id="seriesGridData">
       [

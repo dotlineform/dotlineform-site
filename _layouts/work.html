@@ -226,6 +226,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var from = (params.get('from') || '').trim().toLowerCase();
     var returnSort = (params.get('return_sort') || '').trim().toLowerCase();
     var returnDir = (params.get('return_dir') || '').trim().toLowerCase();
+    var returnSeries = (params.get('return_series') || '').trim().toLowerCase();
 
     if (series) {
       link.textContent = '← ' + seriesLabel;
@@ -240,6 +241,9 @@ If you later serve images only from external media_base (CDN/R2), this check won
       }
       if (returnDir === 'asc' || returnDir === 'desc') {
         q.set('dir', returnDir);
+      }
+      if (returnSeries) {
+        q.set('series', returnSeries);
       }
       link.textContent = '← work index';
       link.setAttribute('href', worksUrl + (q.toString() ? ('?' + q.toString()) : ''));
