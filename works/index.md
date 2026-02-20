@@ -86,7 +86,7 @@ section: works
           data-series-label="{{ series_label | strip | escape }}"
         >
           <a class="worksList__cat" href="{{ w.url | relative_url }}?from=works_index">{{ w.work_id }}</a>
-          <span class="worksList__year">{{ w.year }}</span>
+          <span class="worksList__year">{{ w.year_display | default: w.year }}</span>
           <a class="worksList__title" href="{{ w.url | relative_url }}?from=works_index">{{ w.title }}</a>
           <a class="worksList__series" href="{{ series_href | relative_url }}">{{ series_label }}</a>
         </li>
