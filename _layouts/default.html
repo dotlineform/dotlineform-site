@@ -31,29 +31,17 @@
       <nav class="site-nav" aria-label="Primary">
         {%- assign u = page.url | default: "" -%}
         {% assign u_series = u | slice: 0, 8 %}
-        {% assign u_themes = u | slice: 0, 8 %}
         {% assign u_moments = u | slice: 0, 9 %}
-        {% assign u_research = u | slice: 0, 10 %}
 
         {%- assign is_series_index = false -%}
         {%- assign is_series_active = false -%}
         {%- if u == '/series/' -%}{%- assign is_series_index = true -%}{%- endif -%}
         {%- if page.collection == 'series' or u_series == '/series/' -%}{%- assign is_series_active = true -%}{%- endif -%}
 
-        {%- assign is_themes_index = false -%}
-        {%- assign is_themes_active = false -%}
-        {%- if u == '/themes/' -%}{%- assign is_themes_index = true -%}{%- endif -%}
-        {%- if page.collection == 'themes' or u_themes == '/themes/' -%}{%- assign is_themes_active = true -%}{%- endif -%}
-
         {%- assign is_moments_index = false -%}
         {%- assign is_moments_active = false -%}
         {%- if u == '/moments/' -%}{%- assign is_moments_index = true -%}{%- endif -%}
         {%- if page.collection == 'moments' or u_moments == '/moments/' -%}{%- assign is_moments_active = true -%}{%- endif -%}
-
-        {%- assign is_research_index = false -%}
-        {%- assign is_research_active = false -%}
-        {%- if u == '/research/' -%}{%- assign is_research_index = true -%}{%- endif -%}
-        {%- if page.collection == 'research' or u_research == '/research/' -%}{%- assign is_research_active = true -%}{%- endif -%}
 
         <!-- series -->
         {% if is_series_index %}
@@ -73,27 +61,9 @@
           <a class="nav-item nav-item--overflow" href="{{ '/moments/' | relative_url }}">moments</a>
         {% endif %}
 
-        <!-- themes -->
-        {% if is_themes_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">themes</span>
-        {% elsif is_themes_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/themes/' | relative_url }}" aria-current="page">themes</a>
-        {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/themes/' | relative_url }}">themes</a>
-        {% endif %}
-
-        <!-- research -->
-        {% if is_research_index %}
-          <span class="nav-item nav-item--overflow is-active" aria-current="page">research</span>
-        {% elsif is_research_active %}
-          <a class="nav-item nav-item--overflow is-active" href="{{ '/research/' | relative_url }}" aria-current="page">research</a>
-        {% else %}
-          <a class="nav-item nav-item--overflow" href="{{ '/research/' | relative_url }}">research</a>
-        {% endif %}
-
          <!-- more (mobile overflow) -->
         {%- assign more_active = false -%}
-        {%- if is_series_active or is_series_index or is_themes_active or is_themes_index or is_moments_active or is_moments_index or is_research_active or is_research_index -%}
+        {%- if is_series_active or is_series_index or is_moments_active or is_moments_index -%}
           {%- assign more_active = true -%}
         {%- endif -%}
         <div class="nav-more" data-nav-more>
@@ -114,20 +84,6 @@
               <a class="nav-more__item is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
             {% else %}
               <a class="nav-more__item" href="{{ '/moments/' | relative_url }}">moments</a>
-            {% endif %}
-            {% if is_themes_index %}
-              <span class="nav-more__item is-active" aria-current="page">themes</span>
-            {% elsif is_themes_active %}
-              <a class="nav-more__item is-active" href="{{ '/themes/' | relative_url }}" aria-current="page">themes</a>
-            {% else %}
-              <a class="nav-more__item" href="{{ '/themes/' | relative_url }}">themes</a>
-            {% endif %}
-            {% if is_research_index %}
-              <span class="nav-more__item is-active" aria-current="page">research</span>
-            {% elsif is_research_active %}
-              <a class="nav-more__item is-active" href="{{ '/research/' | relative_url }}" aria-current="page">research</a>
-            {% else %}
-              <a class="nav-more__item" href="{{ '/research/' | relative_url }}">research</a>
             {% endif %}
           </div>
         </div>
@@ -203,7 +159,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <span class="muted">© {{ site.time | date: "%Y" }} {{ site.title }} · <a href="{{ '/about/' | relative_url }}">about</a> · <a href="{{ '/site_map/' | relative_url }}">site map</a></span>
+      <span class="muted">© {{ site.time | date: "%Y" }} {{ site.title }} · <a href="{{ '/about/' | relative_url }}">about</a></span>
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle theme">light</button>
     </div>
   </footer>
