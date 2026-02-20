@@ -13,6 +13,56 @@ layout: default
   </div>
 {% endif %}
 
+{% if page.images and page.images.size > 0 %}
+  {% assign hero = page.images[0] %}
+  {% assign hero_file = hero.file | default: '' %}
+  {% assign hero_filename = hero_file | split: '/' | last %}
+  {% assign home_media_base = site.home_media_base | default: site.media_base | default: '' %}
+  {% assign home_media_prefix = site.home_media_prefix | default: '/assets/home/img' %}
+  {% assign home_base = home_media_base | append: home_media_prefix | append: '/' %}
+
+  {% if hero_file contains '/' %}
+    {% assign hero_src = hero_file %}
+    {% assign emit_srcset = false %}
+  {% else %}
+    {% assign hero_src = home_base | append: hero_file %}
+    {% assign emit_srcset = true %}
+  {% endif %}
+
+  {% assign hero_base = hero_filename | replace: '.webp', '' %}
+  {% assign hero_base = hero_base | replace: '-1280', '' %}
+  {% assign hero_base = hero_base | replace: '-2560', '' %}
+  {% assign hero_base = hero_base | replace: '-3840', '' %}
+
+  <figure class="home-hero{% if home_body == '' %} home-hero--flush{% endif %}">
+    <img
+      {% assign hero_src_out = hero_src %}
+      {% unless hero_src contains '://' %}{% assign hero_src_out = hero_src | relative_url %}{% endunless %}
+      src="{{ hero_src_out }}"
+      {% if emit_srcset and hero_filename contains '.webp' %}
+      {% assign s1280 = home_base | append: hero_base | append: '-1280.webp' %}
+      {% assign s2560 = home_base | append: hero_base | append: '-2560.webp' %}
+      {% assign s3840 = home_base | append: hero_base | append: '-3840.webp' %}
+      {% unless home_base contains '://' %}
+        {% assign s1280 = s1280 | relative_url %}
+        {% assign s2560 = s2560 | relative_url %}
+        {% assign s3840 = s3840 | relative_url %}
+      {% endunless %}
+      srcset="{{ s1280 }} 1280w,
+              {{ s2560 }} 2560w,
+              {{ s3840 }} 3840w"
+      sizes="100vw"
+      {% endif %}
+      alt="{{ hero.alt | default: page.title }}"
+      loading="lazy"
+      decoding="async"
+    >
+    {% if hero.caption %}
+      <figcaption class="home-hero-caption">{{ hero.caption }}</figcaption>
+    {% endif %}
+  </figure>
+{% endif %}
+
 {% if page.links %}
   <nav class="home-links" aria-label="Site links">
     {% for item in page.links %}

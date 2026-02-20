@@ -1,9 +1,8 @@
 ---
-layout: home
+layout: default
 title: dotlineform
 permalink: /
-section: home
-images:
-  - file: forest-4.webp
-    alt: forest [4]
+section: series
 ---
+
+<meta http-equiv="refresh" content="0; url={{ '/series/' | relative_url }}">
