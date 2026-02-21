@@ -13,7 +13,7 @@ import re
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 
 def is_empty(value: Any) -> bool:
@@ -77,6 +77,10 @@ def parse_front_matter(path: Path) -> Dict[str, Any]:
     return fm
 
 
+def is_slug_safe(s: str) -> bool:
+    return re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", s or "") is not None
+
+
 def load_collection(path_glob: str, id_field: str) -> Tuple[Dict[str, Dict[str, Any]], List[str]]:
     rows: Dict[str, Dict[str, Any]] = {}
     dups: List[str] = []
@@ -96,6 +100,44 @@ def load_collection(path_glob: str, id_field: str) -> Tuple[Dict[str, Dict[str, 
 def add_sample(samples: List[Dict[str, Any]], item: Dict[str, Any], max_samples: int) -> None:
     if len(samples) < max_samples:
         samples.append(item)
+
+
+def normalize_url(url: str) -> str:
+    s = normalize_text(url)
+    if s == "":
+        return "/"
+    if s.startswith(("http://", "https://")):
+        return s
+    if not s.startswith("/"):
+        s = "/" + s
+    if not s.endswith("/"):
+        s = s + "/"
+    return s
+
+
+def parse_sitemap_rows(path: Path) -> List[Dict[str, str]]:
+    rows: List[Dict[str, str]] = []
+    if not path.exists():
+        return rows
+    current: Dict[str, str] = {}
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if line.startswith("url:"):
+            current["url"] = normalize_url(str(parse_scalar_from_fm_line(line.split(":", 1)[1]) or ""))
+        elif line.startswith("source:"):
+            current["source"] = normalize_text(parse_scalar_from_fm_line(line.split(":", 1)[1]) or "")
+        elif line.startswith("title:"):
+            current["title"] = normalize_text(parse_scalar_from_fm_line(line.split(":", 1)[1]) or "")
+        if "url" in current and "source" in current:
+            rows.append(
+                {
+                    "url": current.get("url", ""),
+                    "source": current.get("source", ""),
+                    "title": current.get("title", ""),
+                }
+            )
+            current = {}
+    return rows
 
 
 def check_sort_drift(
@@ -269,6 +311,543 @@ def check_cross_refs(
     return {"name": "cross_refs", "error_count": errors, "warning_count": warnings, "samples": samples}
 
 
+def check_schema(
+    works: Dict[str, Dict[str, Any]],
+    series: Dict[str, Dict[str, Any]],
+    work_details: Dict[str, Dict[str, Any]],
+    moments: Dict[str, Dict[str, Any]],
+    series_ids_scope: Optional[set[str]],
+    work_ids_scope: Optional[set[str]],
+    max_samples: int,
+) -> Dict[str, Any]:
+    errors = 0
+    warnings = 0
+    samples: List[Dict[str, Any]] = []
+
+    re_work_id = re.compile(r"^\d{5}$")
+    re_detail_uid = re.compile(r"^\d{5}-\d{3}$")
+    re_series_sort = re.compile(r"^(?:\d{5}|\d{3,}-\d{5})$")
+    allowed_sort_fields = {"title", "year", "work_id", "title_sort"}
+
+    # Parse/validate series sort_fields once for downstream work-level checks.
+    sort_fields_by_series: Dict[str, List[str]] = {}
+    for sid, row in series.items():
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        fm = row["fm"]
+        raw = normalize_text(fm.get("sort_fields"))
+        if raw == "":
+            continue
+        parsed: List[str] = []
+        bad = False
+        for token in raw.split(","):
+            t = normalize_text(token)
+            if t == "":
+                continue
+            if t.startswith("-"):
+                t = t[1:]
+            t = t.lower()
+            if t == "title_sort":
+                t = "title"
+            if t not in allowed_sort_fields:
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": f"sort_fields has unsupported token '{t}'"}, max_samples)
+                bad = True
+                continue
+            parsed.append(t)
+        if bad:
+            continue
+        if not parsed:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields resolves to empty token list"}, max_samples)
+            continue
+        if parsed[-1] != "work_id":
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields must end with work_id"}, max_samples)
+        if parsed.count("work_id") != 1:
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields must include work_id exactly once"}, max_samples)
+        sort_fields_by_series[sid] = parsed
+
+    # _works
+    works_required = ["work_id", "title", "series_id", "series_sort"]
+    for wid, row in works.items():
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        fm = row["fm"]
+        sid = normalize_text(fm.get("series_id"))
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        for field in works_required:
+            if is_empty(fm.get(field)):
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": f"missing required works field '{field}'"}, max_samples)
+        if not re_work_id.fullmatch(normalize_text(fm.get("work_id"))):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid work_id format (expected 5 digits)"}, max_samples)
+        if sid != "" and not is_slug_safe(sid):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
+        if not re_series_sort.fullmatch(normalize_text(fm.get("series_sort"))):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_sort format"}, max_samples)
+        series_sort_value = normalize_text(fm.get("series_sort"))
+        sf = sort_fields_by_series.get(sid, ["work_id"])
+        if sf == ["work_id"]:
+            if series_sort_value != wid:
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "series_sort should equal work_id for default sort_fields"}, max_samples)
+        else:
+            if not series_sort_value.endswith(f"-{wid}"):
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "series_sort should end with '-<work_id>' for custom sort_fields"}, max_samples)
+        title = normalize_text(fm.get("title"))
+        title_sort = normalize_text(fm.get("title_sort"))
+        if re.search(r"\d", title) and title_sort == "":
+            warnings += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "missing title_sort for numeric title"}, max_samples)
+
+    # _series
+    series_required = ["series_id", "title", "title_sort", "sort_fields"]
+    for sid, row in series.items():
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        fm = row["fm"]
+        for field in series_required:
+            if is_empty(fm.get(field)):
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": f"missing required series field '{field}'"}, max_samples)
+        if not is_slug_safe(normalize_text(fm.get("series_id"))):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
+
+    # _work_details
+    detail_required = ["work_id", "detail_id", "detail_uid", "title"]
+    for duid, row in work_details.items():
+        fm = row["fm"]
+        wid = normalize_text(fm.get("work_id"))
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        sid = ""
+        if wid in works:
+            sid = normalize_text(works[wid]["fm"].get("series_id"))
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        for field in detail_required:
+            if is_empty(fm.get(field)):
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": f"missing required work_detail field '{field}'"}, max_samples)
+        if not re_work_id.fullmatch(wid):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "invalid work_detail work_id format"}, max_samples)
+        if not re_detail_uid.fullmatch(normalize_text(fm.get("detail_uid"))):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "invalid detail_uid format (expected 00000-000)"}, max_samples)
+        detail_uid = normalize_text(fm.get("detail_uid"))
+        if re_detail_uid.fullmatch(detail_uid):
+            detail_work_id = detail_uid.split("-", 1)[0]
+            if detail_work_id != wid:
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": duid, "path": row["path"], "message": "detail_uid prefix must match work_id"}, max_samples)
+
+    # _moments (basic)
+    moment_required = ["moment_id", "title"]
+    for mid, row in moments.items():
+        fm = row["fm"]
+        for field in moment_required:
+            if is_empty(fm.get(field)):
+                errors += 1
+                add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": f"missing required moment field '{field}'"}, max_samples)
+        if not is_slug_safe(normalize_text(fm.get("moment_id"))):
+            errors += 1
+            add_sample(samples, {"check": "schema", "id": mid, "path": row["path"], "message": "invalid moment_id slug format"}, max_samples)
+
+    return {"name": "schema", "error_count": errors, "warning_count": warnings, "samples": samples}
+
+
+def check_json_schema(
+    site_root: Path,
+    series_ids_scope: Optional[set[str]],
+    work_ids_scope: Optional[set[str]],
+    max_samples: int,
+) -> Dict[str, Any]:
+    errors = 0
+    warnings = 0
+    samples: List[Dict[str, Any]] = []
+
+    # Series JSON
+    for p in sorted((site_root / "assets/series/index").glob("*.json")):
+        sid = p.stem
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        try:
+            obj = json.loads(p.read_text(encoding="utf-8"))
+        except Exception as e:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": f"invalid json: {e}"}, max_samples)
+            continue
+        if not isinstance(obj, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": "series json root must be object"}, max_samples)
+            continue
+        header = obj.get("header")
+        work_ids = obj.get("work_ids")
+        if not isinstance(header, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": "missing/invalid header object"}, max_samples)
+            continue
+        for key in ("series_id", "count", "sort_fields", "hash"):
+            if key not in header:
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": f"series header missing '{key}'"}, max_samples)
+        if not isinstance(work_ids, list):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": "series work_ids must be list"}, max_samples)
+            continue
+        if isinstance(header.get("count"), int) and header["count"] != len(work_ids):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": sid, "path": str(p), "message": "series header.count does not match work_ids length"}, max_samples)
+
+    # Work detail JSON
+    for p in sorted((site_root / "assets/works/index").glob("*.json")):
+        wid = p.stem
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        try:
+            obj = json.loads(p.read_text(encoding="utf-8"))
+        except Exception as e:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"invalid json: {e}"}, max_samples)
+            continue
+        if not isinstance(obj, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work json root must be object"}, max_samples)
+            continue
+        header = obj.get("header")
+        sections = obj.get("sections")
+        if not isinstance(header, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "missing/invalid header object"}, max_samples)
+            continue
+        for key in ("work_id", "count", "hash"):
+            if key not in header:
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
+        if not isinstance(sections, list):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work sections must be list"}, max_samples)
+            continue
+        details_total = 0
+        for sec in sections:
+            if not isinstance(sec, dict):
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section item must be object"}, max_samples)
+                continue
+            if "project_subfolder" not in sec:
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section missing project_subfolder"}, max_samples)
+            details = sec.get("details")
+            if not isinstance(details, list):
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "section.details must be list"}, max_samples)
+                continue
+            details_total += len(details)
+            for d in details:
+                if not isinstance(d, dict):
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "detail item must be object"}, max_samples)
+                    continue
+                for key in ("detail_id", "detail_uid", "title"):
+                    if key not in d:
+                        errors += 1
+                        add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"detail missing '{key}'"}, max_samples)
+        if isinstance(header.get("count"), int) and header["count"] != details_total:
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work header.count does not match total details"}, max_samples)
+
+    return {"name": "json_schema", "error_count": errors, "warning_count": warnings, "samples": samples}
+
+
+def check_links(
+    site_root: Path,
+    works: Dict[str, Dict[str, Any]],
+    series: Dict[str, Dict[str, Any]],
+    work_details: Dict[str, Dict[str, Any]],
+    moments: Dict[str, Dict[str, Any]],
+    series_ids_scope: Optional[set[str]],
+    work_ids_scope: Optional[set[str]],
+    max_samples: int,
+) -> Dict[str, Any]:
+    errors = 0
+    warnings = 0
+    samples: List[Dict[str, Any]] = []
+
+    # Sitemap target existence (source file/glob + canonical route sanity).
+    sitemap_rows = parse_sitemap_rows(site_root / "_data/sitemap.yml")
+    pattern_source_to_count = {
+        "_works/*.md": len(works),
+        "_series/*.md": len(series),
+        "_work_details/*.md": len(work_details),
+        "_moments/*.md": len(moments),
+    }
+    static_target_urls: Set[str] = set()
+    static_candidates = [
+        ("index.md", "/"),
+        ("about.md", "/about/"),
+        ("works/index.md", "/works/"),
+        ("work_details/index.md", "/work_details/"),
+        ("series/index.md", "/series/"),
+        ("moments/index.md", "/moments/"),
+        ("themes/index.md", "/themes/"),
+        ("research/index.md", "/research/"),
+        ("palette.html", "/palette/"),
+    ]
+    for rel, default_url in static_candidates:
+        path = site_root / rel
+        if not path.exists():
+            continue
+        fm = parse_front_matter(path)
+        static_target_urls.add(normalize_url(normalize_text(fm.get("permalink")) or default_url))
+
+    for row in sitemap_rows:
+        source = row["source"]
+        url = row["url"]
+        title = row.get("title", "") or url
+        if "*" in source:
+            if source in pattern_source_to_count:
+                if pattern_source_to_count[source] == 0:
+                    errors += 1
+                    add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source glob has no matches: {source}"}, max_samples)
+            else:
+                if len(list(site_root.glob(source))) == 0:
+                    errors += 1
+                    add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source glob has no matches: {source}"}, max_samples)
+        else:
+            if not (site_root / source).exists():
+                errors += 1
+                add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap source file missing: {source}"}, max_samples)
+        if ":id" not in url and not url.startswith(("http://", "https://")) and url not in static_target_urls:
+            warnings += 1
+            add_sample(samples, {"check": "links", "id": title, "path": "_data/sitemap.yml", "message": f"sitemap url has no known static target: {url}"}, max_samples)
+
+    # Generated link target existence.
+    for wid, row in works.items():
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        sid = normalize_text(row["fm"].get("series_id"))
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        if sid != "" and sid not in series:
+            errors += 1
+            add_sample(samples, {"check": "links", "id": wid, "path": row["path"], "message": f"work links to missing series target '/series/{sid}/'"}, max_samples)
+
+    for duid, row in work_details.items():
+        wid = normalize_text(row["fm"].get("work_id"))
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        if wid in works:
+            sid = normalize_text(works[wid]["fm"].get("series_id"))
+            if series_ids_scope is not None and sid not in series_ids_scope:
+                continue
+        if wid not in works:
+            errors += 1
+            add_sample(samples, {"check": "links", "id": duid, "path": row["path"], "message": f"work detail links to missing work target '/works/{wid}/'"}, max_samples)
+
+    # Query-contract sanity: producer keys should be accepted by destination pages.
+    work_page_accepts = {"series", "series_page", "from", "return_sort", "return_dir", "return_series", "details_section", "details_page"}
+    details_index_accepts = {"sort", "dir", "from_work", "from_work_title", "section", "section_label", "series", "series_page"}
+    details_page_accepts = {"from_work", "from_work_title", "section", "series", "series_page", "details_section", "details_page", "section_label"}
+
+    producers = [
+        ("series->work", {"series", "series_page"}, work_page_accepts),
+        ("works-index->work", {"from", "return_sort", "return_dir", "return_series"}, work_page_accepts),
+        ("work->details-index", {"from_work", "from_work_title", "section", "details_section", "details_page", "series", "series_page"}, details_index_accepts),
+        ("work->details-page", {"from_work", "from_work_title", "section", "details_section", "details_page", "series", "series_page"}, details_page_accepts),
+        ("details-page->work", {"series", "series_page", "details_section", "details_page"}, work_page_accepts),
+    ]
+    for label, produced, accepted in producers:
+        extra = sorted(produced - accepted)
+        if extra:
+            warnings += 1
+            add_sample(samples, {"check": "links", "id": label, "message": f"query contract mismatch; unsupported keys: {', '.join(extra)}"}, max_samples)
+
+    return {"name": "links", "error_count": errors, "warning_count": warnings, "samples": samples}
+
+
+def check_media(
+    site_root: Path,
+    works: Dict[str, Dict[str, Any]],
+    work_details: Dict[str, Dict[str, Any]],
+    series_ids_scope: Optional[set[str]],
+    work_ids_scope: Optional[set[str]],
+    max_samples: int,
+) -> Dict[str, Any]:
+    errors = 0
+    warnings = 0
+    samples: List[Dict[str, Any]] = []
+    works_img_dir = site_root / "assets/works/img"
+    details_img_dir = site_root / "assets/work_details/img"
+    works_files_dir = site_root / "assets/works/files"
+
+    for wid, row in works.items():
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        sid = normalize_text(row["fm"].get("series_id"))
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        fm = row["fm"]
+        expected = [
+            f"{wid}-thumb-96.webp",
+            f"{wid}-thumb-192.webp",
+            f"{wid}-primary-800.webp",
+            f"{wid}-primary-1200.webp",
+            f"{wid}-primary-1600.webp",
+        ]
+        for name in expected:
+            p = works_img_dir / name
+            if not p.exists():
+                errors += 1
+                add_sample(samples, {"check": "media", "id": wid, "path": str(p), "message": f"missing expected work media file: {name}"}, max_samples)
+        has_primary_2400 = str(fm.get("has_primary_2400")).lower() == "true"
+        p2400 = works_img_dir / f"{wid}-primary-2400.webp"
+        if has_primary_2400 and not p2400.exists():
+            errors += 1
+            add_sample(samples, {"check": "media", "id": wid, "path": str(p2400), "message": "has_primary_2400=true but 2400 file is missing"}, max_samples)
+        if (not has_primary_2400) and p2400.exists():
+            warnings += 1
+            add_sample(samples, {"check": "media", "id": wid, "path": str(p2400), "message": "2400 file exists but has_primary_2400 is not true"}, max_samples)
+
+        download = normalize_text(fm.get("download"))
+        if download != "":
+            expected_download = works_files_dir / f"{wid}-{Path(download).name}"
+            if not expected_download.exists():
+                errors += 1
+                add_sample(samples, {"check": "media", "id": wid, "path": str(expected_download), "message": "download declared but file missing in assets/works/files"}, max_samples)
+
+    for duid, row in work_details.items():
+        fm = row["fm"]
+        wid = normalize_text(fm.get("work_id"))
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        sid = ""
+        if wid in works:
+            sid = normalize_text(works[wid]["fm"].get("series_id"))
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        expected = [
+            f"{duid}-thumb-96.webp",
+            f"{duid}-thumb-192.webp",
+            f"{duid}-primary-800.webp",
+            f"{duid}-primary-1200.webp",
+            f"{duid}-primary-1600.webp",
+        ]
+        for name in expected:
+            p = details_img_dir / name
+            if not p.exists():
+                errors += 1
+                add_sample(samples, {"check": "media", "id": duid, "path": str(p), "message": f"missing expected detail media file: {name}"}, max_samples)
+        has_primary_2400 = str(fm.get("has_primary_2400")).lower() == "true"
+        p2400 = details_img_dir / f"{duid}-primary-2400.webp"
+        if has_primary_2400 and not p2400.exists():
+            errors += 1
+            add_sample(samples, {"check": "media", "id": duid, "path": str(p2400), "message": "has_primary_2400=true but 2400 file is missing"}, max_samples)
+        if (not has_primary_2400) and p2400.exists():
+            warnings += 1
+            add_sample(samples, {"check": "media", "id": duid, "path": str(p2400), "message": "2400 file exists but has_primary_2400 is not true"}, max_samples)
+
+    return {"name": "media", "error_count": errors, "warning_count": warnings, "samples": samples}
+
+
+def check_orphans(
+    site_root: Path,
+    works: Dict[str, Dict[str, Any]],
+    series: Dict[str, Dict[str, Any]],
+    work_details: Dict[str, Dict[str, Any]],
+    series_ids_scope: Optional[set[str]],
+    work_ids_scope: Optional[set[str]],
+    include_media_scan: bool,
+    max_samples: int,
+) -> Dict[str, Any]:
+    errors = 0
+    warnings = 0
+    samples: List[Dict[str, Any]] = []
+
+    work_ids = set(works.keys())
+    series_ids = set(series.keys())
+    detail_ids = set(work_details.keys())
+    works_by_series: Dict[str, int] = {}
+    for wid, row in works.items():
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        sid = normalize_text(row["fm"].get("series_id"))
+        if sid == "":
+            continue
+        works_by_series[sid] = works_by_series.get(sid, 0) + 1
+
+    for sid, row in series.items():
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        if works_by_series.get(sid, 0) == 0:
+            warnings += 1
+            add_sample(samples, {"check": "orphans", "id": sid, "path": row["path"], "message": "series page has no works"}, max_samples)
+
+    for p in sorted((site_root / "assets/series/index").glob("*.json")):
+        sid = p.stem
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        if sid not in series_ids:
+            warnings += 1
+            add_sample(samples, {"check": "orphans", "id": sid, "path": str(p), "message": "series JSON has no matching series page"}, max_samples)
+
+    for p in sorted((site_root / "assets/works/index").glob("*.json")):
+        wid = p.stem
+        if work_ids_scope is not None and wid not in work_ids_scope:
+            continue
+        if wid not in work_ids:
+            warnings += 1
+            add_sample(samples, {"check": "orphans", "id": wid, "path": str(p), "message": "work details JSON has no matching work page"}, max_samples)
+
+    if include_media_scan:
+        works_img_dir = site_root / "assets/works/img"
+        details_img_dir = site_root / "assets/work_details/img"
+        works_files_dir = site_root / "assets/works/files"
+
+        for p in sorted(works_img_dir.glob("*.webp")):
+            m = re.match(r"^(\d{5})-(?:thumb-(?:96|192)|primary-(?:800|1200|1600|2400))\.webp$", p.name)
+            if not m:
+                continue
+            wid = m.group(1)
+            if work_ids_scope is not None and wid not in work_ids_scope:
+                continue
+            if wid not in work_ids:
+                warnings += 1
+                add_sample(samples, {"check": "orphans", "id": wid, "path": str(p), "message": "orphan work image file (no matching work page)"}, max_samples)
+
+        for p in sorted(details_img_dir.glob("*.webp")):
+            m = re.match(r"^(\d{5}-\d{3})-(?:thumb-(?:96|192)|primary-(?:800|1200|1600|2400))\.webp$", p.name)
+            if not m:
+                continue
+            duid = m.group(1)
+            if duid not in detail_ids:
+                warnings += 1
+                add_sample(samples, {"check": "orphans", "id": duid, "path": str(p), "message": "orphan detail image file (no matching detail page)"}, max_samples)
+
+        for p in sorted(works_files_dir.glob("*")):
+            if not p.is_file():
+                continue
+            m = re.match(r"^(\d{5})-.+$", p.name)
+            if not m:
+                continue
+            wid = m.group(1)
+            if work_ids_scope is not None and wid not in work_ids_scope:
+                continue
+            if wid not in work_ids:
+                warnings += 1
+                add_sample(samples, {"check": "orphans", "id": wid, "path": str(p), "message": "orphan work download file (no matching work page)"}, max_samples)
+
+    return {"name": "orphans", "error_count": errors, "warning_count": warnings, "samples": samples}
+
+
 def main() -> None:
     t0 = time.time()
     ap = argparse.ArgumentParser()
@@ -289,6 +868,7 @@ def main() -> None:
     ap.add_argument("--strict", action="store_true", help="Exit non-zero when errors are found")
     ap.add_argument("--json-out", default="", help="Optional path to write JSON report")
     ap.add_argument("--max-samples", type=int, default=20, help="Max sample findings per check")
+    ap.add_argument("--orphans-media", action="store_true", help="Include orphan media-file scan in the orphans check")
     args = ap.parse_args()
 
     site_root = Path(args.site_root).expanduser().resolve()
@@ -301,7 +881,7 @@ def main() -> None:
         }
     else:
         checks_requested = {normalize_text(c).lower() for c in args.checks.split(",") if normalize_text(c) != ""}
-    valid_checks = {"sort_drift", "cross_refs"}
+    valid_checks = {"sort_drift", "cross_refs", "schema", "json_schema", "links", "media", "orphans"}
     invalid = sorted(checks_requested - valid_checks)
     if invalid:
         raise SystemExit(f"Invalid --checks value(s): {', '.join(invalid)}. Allowed: {', '.join(sorted(valid_checks))}")
@@ -318,6 +898,7 @@ def main() -> None:
         works, works_dups = load_collection("_works/*.md", "work_id")
         series, series_dups = load_collection("_series/*.md", "series_id")
         work_details, detail_dups = load_collection("_work_details/*.md", "detail_uid")
+        moments, _moment_dups = load_collection("_moments/*.md", "moment_id")
 
         checks: List[Dict[str, Any]] = []
         if "sort_drift" in checks_requested:
@@ -342,6 +923,64 @@ def main() -> None:
                     detail_dups=detail_dups,
                     series_ids_scope=series_ids_scope,
                     work_ids_scope=work_ids_scope,
+                    max_samples=args.max_samples,
+                )
+            )
+        if "schema" in checks_requested:
+            checks.append(
+                check_schema(
+                    works=works,
+                    series=series,
+                    work_details=work_details,
+                    moments=moments,
+                    series_ids_scope=series_ids_scope,
+                    work_ids_scope=work_ids_scope,
+                    max_samples=args.max_samples,
+                )
+            )
+        if "json_schema" in checks_requested:
+            checks.append(
+                check_json_schema(
+                    site_root=site_root,
+                    series_ids_scope=series_ids_scope,
+                    work_ids_scope=work_ids_scope,
+                    max_samples=args.max_samples,
+                )
+            )
+        if "links" in checks_requested:
+            checks.append(
+                check_links(
+                    site_root=site_root,
+                    works=works,
+                    series=series,
+                    work_details=work_details,
+                    moments=moments,
+                    series_ids_scope=series_ids_scope,
+                    work_ids_scope=work_ids_scope,
+                    max_samples=args.max_samples,
+                )
+            )
+        if "media" in checks_requested:
+            checks.append(
+                check_media(
+                    site_root=site_root,
+                    works=works,
+                    work_details=work_details,
+                    series_ids_scope=series_ids_scope,
+                    work_ids_scope=work_ids_scope,
+                    max_samples=args.max_samples,
+                )
+            )
+        if "orphans" in checks_requested:
+            checks.append(
+                check_orphans(
+                    site_root=site_root,
+                    works=works,
+                    series=series,
+                    work_details=work_details,
+                    series_ids_scope=series_ids_scope,
+                    work_ids_scope=work_ids_scope,
+                    include_media_scan=args.orphans_media,
                     max_samples=args.max_samples,
                 )
             )

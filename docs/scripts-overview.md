@@ -132,7 +132,7 @@ Scope and output options:
 
 ```bash
 /Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
-  --checks sort_drift,cross_refs \
+  --checks sort_drift,cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
   --strict
@@ -142,7 +142,16 @@ Run a single check with the convenience alias:
 
 ```bash
 /Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+  --check-only schema \
+  --max-samples 10
+```
+
+Or run multiple checks with repeated `--check-only`:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
   --check-only sort_drift \
+  --check-only json_schema \
   --series-ids collected-1989-1998
 ```
 
@@ -150,6 +159,46 @@ Current checks:
 
 - `sort_drift`: compares `assets/series/index/<series_id>.json` `work_ids` order to `_works/*.md` `series_sort`-derived order
 - `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, and series JSON (including duplicate IDs)
+- `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last, and `detail_uid` prefix matching `work_id`)
+- `json_schema`: validates generated JSON structure and count consistency for `assets/series/index/*.json` and `assets/works/index/*.json`
+- `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
+- `media`: validates expected image/download files for published `_works` and `_work_details`, including `has_primary_2400` consistency
+- `orphans`: reports orphan pages/JSON; optionally include orphan media files with `--orphans-media`
+
+Orphan media scan (optional):
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+  --check-only orphans \
+  --orphans-media
+```
+
+Warning policy:
+
+- Treat schema warnings as backlog by default.
+- Current warning rule: `_works.title_sort` is only warned when `title` contains digits and `title_sort` is missing.
+
+### 5) Autofix missing numeric `title_sort` on works
+
+Dry-run:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py
+```
+
+Write changes:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py --write
+```
+
+Scope to selected IDs/ranges:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py \
+  --work-ids 66-74,38,40 \
+  --write
+```
 
 ### Works download files
 
