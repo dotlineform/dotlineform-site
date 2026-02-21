@@ -2,9 +2,14 @@
 """
 Audit generated site consistency (read-only).
 
-Initial checks:
+Checks:
 - sort_drift: compare per-series JSON order vs _works front-matter series_sort order
 - cross_refs: validate key cross-artifact references and duplicate IDs
+- schema: front matter required fields + format/consistency rules
+- json_schema: generated JSON shape and count checks
+- links: sitemap/link target existence + query-contract sanity
+- media: expected media/download file presence checks
+- orphans: orphan pages/JSON (and optional media scan)
 """
 
 import argparse
@@ -699,23 +704,14 @@ def check_media(
         expected = [
             f"{wid}-thumb-96.webp",
             f"{wid}-thumb-192.webp",
-            f"{wid}-primary-800.webp",
-            f"{wid}-primary-1200.webp",
-            f"{wid}-primary-1600.webp",
         ]
         for name in expected:
             p = works_img_dir / name
             if not p.exists():
                 errors += 1
                 add_sample(samples, {"check": "media", "id": wid, "path": str(p), "message": f"missing expected work media file: {name}"}, max_samples)
-        has_primary_2400 = str(fm.get("has_primary_2400")).lower() == "true"
-        p2400 = works_img_dir / f"{wid}-primary-2400.webp"
-        if has_primary_2400 and not p2400.exists():
-            errors += 1
-            add_sample(samples, {"check": "media", "id": wid, "path": str(p2400), "message": "has_primary_2400=true but 2400 file is missing"}, max_samples)
-        if (not has_primary_2400) and p2400.exists():
-            warnings += 1
-            add_sample(samples, {"check": "media", "id": wid, "path": str(p2400), "message": "2400 file exists but has_primary_2400 is not true"}, max_samples)
+        # Primary files are intentionally remote-hosted in this project.
+        # Do not assert local primary-* presence, including primary-2400.
 
         download = normalize_text(fm.get("download"))
         if download != "":
@@ -737,23 +733,14 @@ def check_media(
         expected = [
             f"{duid}-thumb-96.webp",
             f"{duid}-thumb-192.webp",
-            f"{duid}-primary-800.webp",
-            f"{duid}-primary-1200.webp",
-            f"{duid}-primary-1600.webp",
         ]
         for name in expected:
             p = details_img_dir / name
             if not p.exists():
                 errors += 1
                 add_sample(samples, {"check": "media", "id": duid, "path": str(p), "message": f"missing expected detail media file: {name}"}, max_samples)
-        has_primary_2400 = str(fm.get("has_primary_2400")).lower() == "true"
-        p2400 = details_img_dir / f"{duid}-primary-2400.webp"
-        if has_primary_2400 and not p2400.exists():
-            errors += 1
-            add_sample(samples, {"check": "media", "id": duid, "path": str(p2400), "message": "has_primary_2400=true but 2400 file is missing"}, max_samples)
-        if (not has_primary_2400) and p2400.exists():
-            warnings += 1
-            add_sample(samples, {"check": "media", "id": duid, "path": str(p2400), "message": "2400 file exists but has_primary_2400 is not true"}, max_samples)
+        # Primary files are intentionally remote-hosted in this project.
+        # Do not assert local primary-* presence, including primary-2400.
 
     return {"name": "media", "error_count": errors, "warning_count": warnings, "samples": samples}
 

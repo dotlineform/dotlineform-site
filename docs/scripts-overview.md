@@ -162,7 +162,7 @@ Current checks:
 - `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last, and `detail_uid` prefix matching `work_id`)
 - `json_schema`: validates generated JSON structure and count consistency for `assets/series/index/*.json` and `assets/works/index/*.json`
 - `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
-- `media`: validates expected image/download files for published `_works` and `_work_details`, including `has_primary_2400` consistency
+- `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)
 - `orphans`: reports orphan pages/JSON; optionally include orphan media files with `--orphans-media`
 
 Orphan media scan (optional):
@@ -172,6 +172,13 @@ Orphan media scan (optional):
   --check-only orphans \
   --orphans-media
 ```
+
+Known limits:
+
+- `media` assumes primaries are remote-hosted and checks local thumbs/downloads only.
+- `json_schema` validates structure/counts, not recomputed payload hash integrity.
+- `links` query-contract checks are static sanity checks; they do not execute browser flows.
+- Orphan checks currently focus on works/series/work_details artifacts.
 
 Warning policy:
 
