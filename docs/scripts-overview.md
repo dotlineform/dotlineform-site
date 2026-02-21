@@ -15,6 +15,7 @@ Sorting behavior and consistency contract:
 Deferred improvements and follow-up items:
 
 - `docs/backlog.md`
+- `docs/css-audit-spec.md`
 
 ## Main Pipeline
 

@@ -12,6 +12,7 @@ This file tracks deferred improvements and follow-up work.
 - Add CI job(s) to run `scripts/audit_site_consistency.py` on pull requests.
 - Decide CI policy for warnings vs errors (`--strict` currently errors-only).
 - Add a short contributor checklist for when to run scoped vs full audit checks.
+- Implement CSS audit script v1 from spec: `docs/css-audit-spec.md`.
 
 ## Later
 
