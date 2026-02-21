@@ -120,6 +120,37 @@ Useful flags:
 - `--projects-base-dir`: base path used for source-image dimension reads
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
 
+### 4) Audit site consistency (read-only)
+
+Run an audit across generated pages and JSON:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py --strict
+```
+
+Scope and output options:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+  --checks sort_drift,cross_refs \
+  --series-ids collected-1989-1998 \
+  --json-out /tmp/site-audit.json \
+  --strict
+```
+
+Run a single check with the convenience alias:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+  --check-only sort_drift \
+  --series-ids collected-1989-1998
+```
+
+Current checks:
+
+- `sort_drift`: compares `assets/series/index/<series_id>.json` `work_ids` order to `_works/*.md` `series_sort`-derived order
+- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, and series JSON (including duplicate IDs)
+
 ### Works download files
 
 If `Works.download` is set, generation also copies that file and links it on the work page.
