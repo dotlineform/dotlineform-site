@@ -1,9 +1,9 @@
 {
   "header": {
     "series_id": "collected-1989-1998",
-    "count": 163,
+    "count": 166,
     "sort_fields": "title,work_id",
-    "hash": "54b8544cad39a37ca8443ee1f0455ff1"
+    "hash": "ad4ac9cec78c4534b633322e542052d3"
   },
   "work_ids": [
     "00164",
@@ -168,6 +168,9 @@
     "00033",
     "00034",
     "00105",
+    "00233",
+    "00234",
+    "00247",
     "00005"
   ]
 }
