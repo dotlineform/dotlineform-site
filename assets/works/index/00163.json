@@ -1,0 +1,64 @@
+{
+  "header": {
+    "work_id": "00163",
+    "count": 10,
+    "hash": "5c281f87b8cff89f948458789700890e"
+  },
+  "sections": [
+    {
+      "project_subfolder": "pages",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00163-001",
+          "title": "nerve (abattoir) - front cover"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00163-002",
+          "title": "nerve (abattoir) - inside cover"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00163-003",
+          "title": "nerve (abattoir) - 1"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00163-004",
+          "title": "nerve (abattoir) - 2"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00163-005",
+          "title": "nerve (abattoir) - 3"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00163-006",
+          "title": "nerve (abattoir) - 4"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00163-007",
+          "title": "nerve (abattoir) - 5"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00163-008",
+          "title": "nerve (abattoir) - 6"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00163-009",
+          "title": "nerve (abattoir) - 7"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00163-010",
+          "title": "nerve (abattoir) - back cover"
+        }
+      ]
+    }
+  ]
+}

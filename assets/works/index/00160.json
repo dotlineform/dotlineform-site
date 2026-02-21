@@ -1,0 +1,69 @@
+{
+  "header": {
+    "work_id": "00160",
+    "count": 10,
+    "hash": "43c16a6f435ce8a44c5a12b1302d21bf"
+  },
+  "sections": [
+    {
+      "project_subfolder": "pages",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00160-001",
+          "title": "mouse story - 1"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00160-002",
+          "title": "mouse story - 2"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00160-003",
+          "title": "mouse story - 3"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00160-004",
+          "title": "mouse story - 4"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00160-005",
+          "title": "mouse story - 5"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "006",
+          "detail_uid": "00160-006",
+          "title": "mouse story - detail 1"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00160-007",
+          "title": "mouse story - detail 2"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00160-008",
+          "title": "mouse story - detail 3"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00160-009",
+          "title": "mouse story - detail 4"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00160-010",
+          "title": "mouse story - detail 5"
+        }
+      ]
+    }
+  ]
+}

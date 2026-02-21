@@ -1,0 +1,109 @@
+{
+  "header": {
+    "work_id": "00166",
+    "count": 19,
+    "hash": "b9e808fb92f1f55c203bd7259648f335"
+  },
+  "sections": [
+    {
+      "project_subfolder": "pages",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00166-001",
+          "title": "nerve (formaldehyde form) - front cover"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00166-002",
+          "title": "nerve (formaldehyde form) - 1"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00166-003",
+          "title": "nerve (formaldehyde form) - 2"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00166-004",
+          "title": "nerve (formaldehyde form) - 3"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00166-005",
+          "title": "nerve (formaldehyde form) - 4"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00166-006",
+          "title": "nerve (formaldehyde form) - 5"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00166-007",
+          "title": "nerve (formaldehyde form) - 6"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00166-008",
+          "title": "nerve (formaldehyde form) - 7"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00166-009",
+          "title": "nerve (formaldehyde form) - 8"
+        },
+        {
+          "detail_id": "010",
+          "detail_uid": "00166-010",
+          "title": "nerve (formaldehyde form) - 9"
+        },
+        {
+          "detail_id": "011",
+          "detail_uid": "00166-011",
+          "title": "nerve (formaldehyde form) - 10"
+        },
+        {
+          "detail_id": "012",
+          "detail_uid": "00166-012",
+          "title": "nerve (formaldehyde form) - 11"
+        },
+        {
+          "detail_id": "013",
+          "detail_uid": "00166-013",
+          "title": "nerve (formaldehyde form) - 12"
+        },
+        {
+          "detail_id": "014",
+          "detail_uid": "00166-014",
+          "title": "nerve (formaldehyde form) - 13"
+        },
+        {
+          "detail_id": "015",
+          "detail_uid": "00166-015",
+          "title": "nerve (formaldehyde form) - 14"
+        },
+        {
+          "detail_id": "016",
+          "detail_uid": "00166-016",
+          "title": "nerve (formaldehyde form) - 15"
+        },
+        {
+          "detail_id": "017",
+          "detail_uid": "00166-017",
+          "title": "nerve (formaldehyde form) - 16"
+        },
+        {
+          "detail_id": "018",
+          "detail_uid": "00166-018",
+          "title": "nerve (formaldehyde form) - 17"
+        },
+        {
+          "detail_id": "019",
+          "detail_uid": "00166-019",
+          "title": "nerve (formaldehyde form) - back cover"
+        }
+      ]
+    }
+  ]
+}

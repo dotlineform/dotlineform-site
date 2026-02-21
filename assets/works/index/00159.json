@@ -1,0 +1,24 @@
+{
+  "header": {
+    "work_id": "00159",
+    "count": 2,
+    "hash": "4ecd4323cfb9395f8ad081954278a9ff"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00159-001",
+          "title": "Michelle Pfeiffer - page 1"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00159-002",
+          "title": "Michelle Pfeiffer - pages 2-3"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "header": {
+    "work_id": "00158",
+    "count": 9,
+    "hash": "986d3936d17ceef957b8134f426b9427"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00158-001",
+          "title": "grid dissection - cover"
+        },
+        {
+          "detail_id": "002",
+          "detail_uid": "00158-002",
+          "title": "grid dissection - detail 1"
+        },
+        {
+          "detail_id": "003",
+          "detail_uid": "00158-003",
+          "title": "grid dissection - detail 2"
+        },
+        {
+          "detail_id": "004",
+          "detail_uid": "00158-004",
+          "title": "grid dissection - detail 3"
+        },
+        {
+          "detail_id": "005",
+          "detail_uid": "00158-005",
+          "title": "grid dissection - detail 4"
+        },
+        {
+          "detail_id": "006",
+          "detail_uid": "00158-006",
+          "title": "grid dissection - detail 5"
+        },
+        {
+          "detail_id": "007",
+          "detail_uid": "00158-007",
+          "title": "grid dissection - detail 6"
+        },
+        {
+          "detail_id": "008",
+          "detail_uid": "00158-008",
+          "title": "grid dissection - detail 7"
+        },
+        {
+          "detail_id": "009",
+          "detail_uid": "00158-009",
+          "title": "grid dissection - detail 8"
+        }
+      ]
+    }
+  ]
+}
