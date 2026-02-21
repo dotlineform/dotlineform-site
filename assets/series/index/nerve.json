@@ -1,11 +1,13 @@
 {
   "header": {
     "series_id": "nerve",
-    "count": 1,
+    "count": 3,
     "sort_fields": "work_id",
-    "hash": "8917310c2f635dc62d2838e31df38b49"
+    "hash": "023148c93b7d242c7bd2c2ee5edaf9b3"
   },
   "work_ids": [
-    "00008"
+    "00008",
+    "00163",
+    "00166"
   ]
 }
