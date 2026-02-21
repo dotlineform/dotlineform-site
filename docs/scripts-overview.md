@@ -12,6 +12,10 @@ Sorting behavior and consistency contract:
 
 - `docs/sorting-architecture.md`
 
+Deferred improvements and follow-up items:
+
+- `docs/backlog.md`
+
 ## Main Pipeline
 
 Run everything (copy -> srcset -> page generation):

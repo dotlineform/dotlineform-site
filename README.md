@@ -36,6 +36,8 @@ Quick audit command:
 
 Sorting architecture and consistency contract are documented in [`docs/sorting-architecture.md`](docs/sorting-architecture.md)
 
+Deferred improvements and follow-up tasks are tracked in [`docs/backlog.md`](docs/backlog.md)
+
 ## Working on this repo
 
 Basic workflow:
