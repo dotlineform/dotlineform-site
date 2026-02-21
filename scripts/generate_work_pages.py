@@ -1211,7 +1211,12 @@ def main() -> None:
             )
             # In dry-run mode with work-pages selected, keep momentum by warning only.
             if (not args.write) and run_work_pages:
-                print(f"Warning: {msg}")
+                print(
+                    "Warning: "
+                    + msg
+                    + "\nNote: in dry-run, this is expected when workbook changes affect ordering but "
+                    + "_works files have not been rewritten yet."
+                )
             else:
                 raise SystemExit(msg)
 

@@ -124,6 +124,7 @@ Useful flags:
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
+  - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
 
 ### 4) Audit site consistency (read-only)
 
