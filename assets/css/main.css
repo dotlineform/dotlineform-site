@@ -616,8 +616,8 @@ figure.diagram figcaption{
 
 /* 7.	Page-type sections and overrides */
 
-/* Home page */
-.home-hero{
+/* About page hero + links */
+.about-hero{
   width: 100vw;
   margin-top: 0;
   margin-bottom: 0;
@@ -625,23 +625,23 @@ figure.diagram figcaption{
   margin-right: calc(50% - 50vw);
 }
 
-.home-hero--flush{
+.about-hero--flush{
   margin-top: calc(-1 * var(--space-6));
 }
 
-.home-hero img{
+.about-hero img{
   display: block;
   width: 100%;
   height: auto;
 }
-.home-hero-caption{
+.about-hero-caption{
   max-width: var(--container);
   margin: 8px auto 0;
   padding: 0 18px;
 }
 
-/* Home links styled similar to Notes index links */
-.home-links{
+/* About links styled similar to Notes index links */
+.about-links{
   margin-top: var(--space-5);
   max-width: 640px;     /* adjust to taste */
   margin-left: auto;
@@ -649,14 +649,14 @@ figure.diagram figcaption{
   transform: translateX(-6px); /* add a small left nudge (optical correction) - try -2px to -6px */
 }
 
-/* .home-link is for interactive anchors; .home-link-text is for non-interactive fallback text in the same slot. */
-.home-link{
+/* .about-link is for interactive anchors; .about-link-text is for non-interactive fallback text in the same slot. */
+.about-link{
   font-size: 0.95rem;
   display: inline-block;
   justify-self: start;
   width: fit-content;
 }
-.home-link-text{ 
+.about-link-text{
   font-size: 0.9rem;
   font-weight: 600; 
   color: var(--text); 
@@ -664,7 +664,7 @@ figure.diagram figcaption{
   justify-self: start;
   width: fit-content;
 }
-.home-link-prefix{
+.about-link-prefix{
   font-size: 0.9rem; /* original smaller 12px ≈ 0.75rem (assuming the default root is 16px) */
   color: var(--muted);
   white-space: nowrap;
@@ -673,7 +673,7 @@ figure.diagram figcaption{
 }
 
 /* link stays naturally left-aligned in the right column; no change needed */
-.home-link-item{
+.about-link-item{
   display: grid;
   grid-template-columns: 1fr 1fr;  /* split the row around centre */
   align-items: baseline;
@@ -681,26 +681,26 @@ figure.diagram figcaption{
   padding: 8px 0;
 }
 
-.home-link:link,
-.home-link:active,
-.home-link:focus{
+.about-link:link,
+.about-link:active,
+.about-link:focus{
   text-decoration: none !important;
   color: var(--link);
   font-weight: 500;
 }
-.home-link:visited{
+.about-link:visited{
   text-decoration: none !important;
   color: var(--link-visited);
   font-weight: 500;
 }
 
-.home-link:hover{
+.about-link:hover{
   color: var(--link-hover);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 
-.home-link:focus-visible{
+.about-link:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
 }
@@ -808,8 +808,8 @@ pre.theme-text{
   .index__item { grid-template-columns: 1fr; }
   .index__work_id, .index__date { text-align: left; }
   .page__row{ grid-template-columns: 1fr; }
-  .home-link-item{ grid-template-columns: 1fr; }
-  .home-link-prefix{ justify-self: start; text-align: left; }
+  .about-link-item{ grid-template-columns: 1fr; }
+  .about-link-prefix{ justify-self: start; text-align: left; }
 }
 
 

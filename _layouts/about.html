@@ -2,13 +2,13 @@
 layout: default
 ---
 
-<header class="home-header visually-hidden">
+<header class="about-header visually-hidden">
   <h1>{{ page.title }}</h1>
 </header>
 
 {% capture home_body %}{{ content | strip }}{% endcapture %}
 {% if home_body != '' %}
-  <div class="home-body">
+  <div class="about-body">
     {{ content }}
   </div>
 {% endif %}
@@ -34,7 +34,7 @@ layout: default
   {% assign hero_base = hero_base | replace: '-2560', '' %}
   {% assign hero_base = hero_base | replace: '-3840', '' %}
 
-  <figure class="home-hero{% if home_body == '' %} home-hero--flush{% endif %}">
+  <figure class="about-hero{% if home_body == '' %} about-hero--flush{% endif %}">
     <img
       {% assign hero_src_out = hero_src %}
       {% unless hero_src contains '://' %}{% assign hero_src_out = hero_src | relative_url %}{% endunless %}
@@ -58,36 +58,36 @@ layout: default
       decoding="async"
     >
     {% if hero.caption %}
-      <figcaption class="home-hero-caption">{{ hero.caption }}</figcaption>
+      <figcaption class="about-hero-caption">{{ hero.caption }}</figcaption>
     {% endif %}
   </figure>
 {% endif %}
 
 {% if page.links %}
-  <nav class="home-links" aria-label="Site links">
+  <nav class="about-links" aria-label="Site links">
     {% for item in page.links %}
       {% assign label = item.label | default: item.url %}
       {% assign url = item.url | default: '' %}
       {% assign prefix = item.prefix | default: '' %}
 
-      <div class="home-link-item">
-        <span class="home-link-prefix">{% if prefix != '' %}{{ prefix }}{% endif %}</span>
+      <div class="about-link-item">
+        <span class="about-link-prefix">{% if prefix != '' %}{{ prefix }}{% endif %}</span>
 
         {% if url == '' %}
-            <span class="home-link-text">{{ label }}</span>
+            <span class="about-link-text">{{ label }}</span>
         {% elsif url contains '://' %}
             {% comment %}
             external links open in new tab with noopener noreferrer
             to avoid potential security issues with window.opener
             {% endcomment %}
-            <a class="home-link"
+            <a class="about-link"
                 href="{{ url }}"
                 target="_blank"
                 rel="noopener noreferrer">
                 {{ label }}
             </a>
         {% else %}
-            <a class="home-link" href="{{ url | relative_url }}">{{ label }}</a>
+            <a class="about-link" href="{{ url | relative_url }}">{{ label }}</a>
         {% endif %}
       </div>
     {% endfor %}
