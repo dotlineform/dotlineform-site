@@ -817,7 +817,8 @@ pre.theme-text{
 .seriesGrid{
   --cell: 72px; /* tune density: 64–96 */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--cell), 1fr));
+  grid-template-columns: repeat(auto-fill, var(--cell));
+  justify-content: start;
   gap: 0.5rem;
   margin: var(--space-4) auto var(--space-5);
   max-width: var(--content-measure);
