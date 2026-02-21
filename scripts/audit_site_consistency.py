@@ -667,7 +667,7 @@ def check_links(
     producers = [
         ("series->work", {"series", "series_page"}, work_page_accepts),
         ("works-index->work", {"from", "return_sort", "return_dir", "return_series"}, work_page_accepts),
-        ("work->details-index", {"from_work", "from_work_title", "section", "details_section", "details_page", "series", "series_page"}, details_index_accepts),
+        ("work->details-index", {"from_work", "from_work_title", "section", "section_label", "series", "series_page"}, details_index_accepts),
         ("work->details-page", {"from_work", "from_work_title", "section", "details_section", "details_page", "series", "series_page"}, details_page_accepts),
         ("details-page->work", {"series", "series_page", "details_section", "details_page"}, work_page_accepts),
     ]

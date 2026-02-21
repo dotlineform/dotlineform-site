@@ -1,10 +1,10 @@
 # Audit Report
 
-- Run at: `2026-02-21T11:48:40+00:00`
-- Duration: `47ms`
+- Run at: `2026-02-21T11:58:51+00:00`
+- Duration: `55ms`
 - Checks: `links`
 - Errors: `0`
-- Warnings: `1`
+- Warnings: `0`
 
 ## Flags
 
@@ -18,15 +18,15 @@
 | `--strict` | `False` | `yes` |
 | `--json-out` | `(empty)` | `yes` |
 | `--md-out` | `docs/audit-latest.md` | `yes` |
-| `--max-samples` | `2` | `no` |
+| `--max-samples` | `5` | `no` |
 | `--orphans-media` | `False` | `yes` |
 
 ## Check Summary
 
-- `links`: errors=0 warnings=1
+- `links`: errors=0 warnings=0
 
 ## Findings
 
 ### links
 
-- `work->details-index`: query contract mismatch; unsupported keys: details_page, details_section
+- none
