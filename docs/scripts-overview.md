@@ -8,6 +8,10 @@ Use this interpreter for all commands:
 
 All commands below assume you are in `dotlineform-site/`.
 
+Sorting behavior and consistency contract:
+
+- `docs/sorting-architecture.md`
+
 ## Main Pipeline
 
 Run everything (copy -> srcset -> page generation):
@@ -114,6 +118,7 @@ Useful flags:
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
+- `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
 
 ### Works download files
 

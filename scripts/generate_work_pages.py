@@ -405,6 +405,35 @@ def extract_existing_checksum(path: Path) -> Optional[str]:
 
     return None
 
+
+def extract_existing_front_matter_scalar(path: Path, key: str) -> Optional[str]:
+    """Extract a scalar front-matter value by key from an existing Markdown file."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except Exception:
+        return None
+
+    if not text.startswith("---"):
+        return None
+
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return None
+
+    prefix = f"{key}:"
+    for line in parts[1].splitlines():
+        if not line.startswith(prefix):
+            continue
+        _, raw = line.split(":", 1)
+        raw = raw.strip()
+        if raw == "" or raw == "null":
+            return None
+        if raw.startswith('"') and raw.endswith('"') and len(raw) >= 2:
+            return raw[1:-1]
+        return raw
+
+    return None
+
 # ----------------------------
 # Series JSON helpers
 # ----------------------------
@@ -509,6 +538,14 @@ def main() -> None:
     # Write controls
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
     ap.add_argument("--force", action="store_true", help="Overwrite existing files")
+    ap.add_argument(
+        "--no-series-sort-drift-guard",
+        action="store_true",
+        help=(
+            "Disable consistency guard that checks _works front-matter series_sort against "
+            "generator-computed canonical ordering before writing series JSON."
+        ),
+    )
     ap.add_argument(
         "--work-ids",
         default="",
@@ -1136,6 +1173,47 @@ def main() -> None:
             series_json_selected_ids = affected_series_ids
         if selected_artifacts is None:
             run_series_pages = False
+
+    # Guard against stale _works series_sort values when generating series JSON.
+    # Canonical order is computed in-memory above (series_sort_by_work_id) and written to series JSON.
+    # If _works/*.md series_sort drifts, pages that still read front matter can show different ordering.
+    if run_series_json and not args.no_series_sort_drift_guard:
+        guard_work_ids: set[str] = set()
+        if series_json_selected_ids is None:
+            guard_work_ids = set(work_meta_by_id.keys())
+        else:
+            for sid in series_json_selected_ids:
+                guard_work_ids.update(work_ids_by_series_all.get(sid, []))
+
+        mismatches: List[tuple[str, Optional[str], str]] = []
+        for wid in sorted(guard_work_ids):
+            expected = series_sort_by_work_id.get(wid, wid)
+            existing = extract_existing_front_matter_scalar(out_dir / f"{wid}.md", "series_sort")
+            if existing != expected:
+                mismatches.append((wid, existing, expected))
+
+        if mismatches:
+            sample = ", ".join(
+                f"{wid} (existing={repr(existing)}, expected={repr(expected)})"
+                for wid, existing, expected in mismatches[:8]
+            )
+            scope_hint = ""
+            if series_json_selected_ids:
+                scope_hint = " --series-ids " + ",".join(sorted(series_json_selected_ids))
+            suggested = (
+                f"./scripts/generate_work_pages.py --only work-pages,series-json{scope_hint} --force --write"
+            )
+            msg = (
+                f"series_sort drift detected for {len(mismatches)} work page(s); sample: {sample}. "
+                f"Canonical order (series JSON) and _works front matter are out of sync.\n"
+                f"Regenerate both artifacts together, e.g.: {suggested}\n"
+                f"Use --no-series-sort-drift-guard to bypass this check."
+            )
+            # In dry-run mode with work-pages selected, keep momentum by warning only.
+            if (not args.write) and run_work_pages:
+                print(f"Warning: {msg}")
+            else:
+                raise SystemExit(msg)
 
     # ----------------------------
     # Series page generation (Series)
