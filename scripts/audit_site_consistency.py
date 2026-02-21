@@ -836,7 +836,7 @@ def check_orphans(
     return {"name": "orphans", "error_count": errors, "warning_count": warnings, "samples": samples}
 
 
-def render_markdown_report(report: Dict[str, Any]) -> str:
+def render_markdown_report(report: Dict[str, Any], flag_rows: List[Dict[str, str]]) -> str:
     summary = report.get("summary", {})
     checks = report.get("checks", [])
     ts = datetime.now().astimezone().isoformat(timespec="seconds")
@@ -848,6 +848,13 @@ def render_markdown_report(report: Dict[str, Any]) -> str:
     lines.append(f"- Checks: `{', '.join(summary.get('checks_run', []))}`")
     lines.append(f"- Errors: `{summary.get('errors', 0)}`")
     lines.append(f"- Warnings: `{summary.get('warnings', 0)}`")
+    lines.append("")
+    lines.append("## Flags")
+    lines.append("")
+    lines.append("| flag | value | default? |")
+    lines.append("| --- | --- | --- |")
+    for row in flag_rows:
+        lines.append(f"| `{row['flag']}` | `{row['value']}` | `{row['is_default']}` |")
     lines.append("")
     lines.append("## Check Summary")
     lines.append("")
@@ -896,7 +903,7 @@ def main() -> None:
     ap.add_argument("--work-ids", default="", help="Comma-separated work_ids/ranges scope (e.g. 66-74,38-40)")
     ap.add_argument("--strict", action="store_true", help="Exit non-zero when errors are found")
     ap.add_argument("--json-out", default="", help="Optional path to write JSON report")
-    ap.add_argument("--md-out", default="", help="Optional path to write Markdown report (overwrites on each run)")
+    ap.add_argument("--md-out", default="docs/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
     ap.add_argument("--max-samples", type=int, default=20, help="Max sample findings per check")
     ap.add_argument("--orphans-media", action="store_true", help="Include orphan media-file scan in the orphans check")
     args = ap.parse_args()
@@ -1048,11 +1055,44 @@ def main() -> None:
         out.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"Wrote JSON report: {out}")
 
-    if args.md_out:
-        md_out = Path(args.md_out).expanduser()
-        md_out.parent.mkdir(parents=True, exist_ok=True)
-        md_out.write_text(render_markdown_report(report), encoding="utf-8")
-        print(f"Wrote Markdown report: {md_out}")
+    default_map: Dict[str, Any] = {
+        "site_root": ".",
+        "checks": "sort_drift,cross_refs",
+        "check_only": [],
+        "series_ids": "",
+        "work_ids": "",
+        "strict": False,
+        "json_out": "",
+        "md_out": "docs/audit-latest.md",
+        "max_samples": 20,
+        "orphans_media": False,
+    }
+    flag_rows: List[Dict[str, str]] = []
+    for key in [
+        "site_root",
+        "checks",
+        "check_only",
+        "series_ids",
+        "work_ids",
+        "strict",
+        "json_out",
+        "md_out",
+        "max_samples",
+        "orphans_media",
+    ]:
+        value = getattr(args, key)
+        if isinstance(value, list):
+            shown_value = ",".join(str(v) for v in value) if value else "(none)"
+            is_default = "yes" if value == default_map[key] else "no"
+        else:
+            shown_value = str(value) if str(value) != "" else "(empty)"
+            is_default = "yes" if value == default_map[key] else "no"
+        flag_rows.append({"flag": "--" + key.replace("_", "-"), "value": shown_value, "is_default": is_default})
+
+    md_out = Path(args.md_out).expanduser()
+    md_out.parent.mkdir(parents=True, exist_ok=True)
+    md_out.write_text(render_markdown_report(report, flag_rows), encoding="utf-8")
+    print(f"Wrote Markdown report: {md_out}")
 
     if args.strict and total_errors > 0:
         sys.exit(1)

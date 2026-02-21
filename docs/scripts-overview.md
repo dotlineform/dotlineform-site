@@ -178,11 +178,13 @@ Orphan media scan (optional):
   --orphans-media
 ```
 
-Write a Markdown report (overwrites each run):
+Markdown report is written by default to `docs/audit-latest.md` (overwrites each run).
+
+To write to a different path:
 
 ```bash
 /Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
-  --md-out docs/audit-latest.md
+  --md-out /tmp/site-audit.md
 ```
 
 Known limits:
