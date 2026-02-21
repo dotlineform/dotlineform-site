@@ -886,10 +886,25 @@ def main() -> None:
         }
     explicit_moment_filter = bool(args.moment_ids_file or args.moment_ids)
 
-    # If caller scopes by series but does not provide an explicit work filter,
-    # skip work-page processing by default.
+    # If caller scopes by series but does not provide an explicit work filter:
+    # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
+    # - otherwise skip work-page processing by default (backward compatible behavior)
     if selected_series_ids is not None and not explicit_work_filter:
-        selected_ids = set()
+        if selected_artifacts is not None and run_works_loop:
+            selected_ids = set()
+            for r in works_rows[1:]:
+                raw_work_id = cell(r, works_hi, "work_id")
+                if is_empty(raw_work_id):
+                    continue
+                wid = slug_id(raw_work_id)
+                sid_raw = cell(r, works_hi, "series_id")
+                if is_empty(sid_raw):
+                    continue
+                sid = normalize_text(sid_raw).lower()
+                if sid in selected_series_ids:
+                    selected_ids.add(wid)
+        else:
+            selected_ids = set()
     # If caller scopes by work/series and does not provide an explicit moments filter,
     # skip moments generation by default (unless moments was explicitly selected via --only).
     run_moments = run_moments_artifact

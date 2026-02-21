@@ -80,7 +80,7 @@ section: works
           data-series-sort="{{ w.series_sort | default: w.work_id | downcase | strip | escape }}"
           data-series-primary-sort="{{ series_primary_sort | default: '' | downcase | strip | escape }}"
           data-year="{{ w.year | default: 0 }}"
-          data-title="{{ w.title | downcase | strip | escape }}"
+          data-title="{{ w.title_sort | default: w.title | downcase | strip | escape }}"
           data-series="{{ series_label | downcase | strip | escape }}"
           data-series-id="{{ w.series_id | default: '' | downcase | strip | escape }}"
           data-series-label="{{ series_label | strip | escape }}"
