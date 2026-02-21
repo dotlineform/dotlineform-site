@@ -139,6 +139,7 @@ Scope and output options:
   --checks sort_drift,cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
+  --md-out docs/audit-latest.md \
   --strict
 ```
 
@@ -175,6 +176,13 @@ Orphan media scan (optional):
 /Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
   --check-only orphans \
   --orphans-media
+```
+
+Write a Markdown report (overwrites each run):
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+  --md-out docs/audit-latest.md
 ```
 
 Known limits:
