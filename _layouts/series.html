@@ -15,92 +15,91 @@ layout: default
 {% assign base = thumb_base | append: thumb_prefix | append: "/works/img/" %}
 
 {%- if page.series_id -%}
-  {%- assign series_works = site.works | where: "series_id", page.series_id -%}
-  {%- assign series_works_sorted = series_works | sort: "series_sort" -%}
+  {% comment %}
+  Include ?series=<series_id> in work links so the work page can fetch
+  assets/series/index/<series_id>.json and render Prev/Next navigation.
+  {% endcomment %}
+  <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
+  <div class="seriesGridFooter">
+    <a
+      class="seriesGridFooter__indexLink"
+      href="{{ '/works/' | relative_url }}?series={{ page.series_id | url_encode }}"
+    >series index</a>
+    <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
+      <span class="gridPager__status" id="seriesGridPagerStatus"></span>
+      <button class="gridPager__btn" type="button" id="seriesGridPrev" aria-label="Previous page">←</button>
+      <button class="gridPager__btn" type="button" id="seriesGridNext" aria-label="Next page">→</button>
+    </nav>
+  </div>
 
-  {%- if series_works and series_works.size > 0 -%}
-    {% comment %}
-    Include ?series=<series_id> in work links so the work page can fetch
-    assets/series/index/<series_id>.json and render Prev/Next navigation.
-    {% endcomment %}
-    <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
-    <div class="seriesGridFooter">
-      <a
-        class="seriesGridFooter__indexLink"
-        href="{{ '/works/' | relative_url }}?series={{ page.series_id | url_encode }}"
-      >series index</a>
-      <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
-        <span class="gridPager__status" id="seriesGridPagerStatus"></span>
-        <button class="gridPager__btn" type="button" id="seriesGridPrev" aria-label="Previous page">←</button>
-        <button class="gridPager__btn" type="button" id="seriesGridNext" aria-label="Next page">→</button>
-      </nav>
-    </div>
+  {%- assign thumb_base_out = base -%}
+  {%- unless base contains '://' -%}
+    {%- assign thumb_base_out = base | relative_url -%}
+  {%- endunless -%}
+  <script type="application/json" id="seriesWorkTitleMap">
+    {
+    {%- assign series_title_items = site.works | where: "series_id", page.series_id -%}
+    {%- for w in series_title_items -%}
+      {%- if w and w.work_id -%}
+        {{ w.work_id | jsonify }}: {{ w.title | default: w.work_id | jsonify }}{% unless forloop.last %},{% endunless %}
+      {%- endif -%}
+    {%- endfor -%}
+    }
+  </script>
 
-    <script type="application/json" id="seriesGridData">
-      [
-      {%- for w in series_works_sorted -%}
-        {%- if w and w.work_id -%}
-          {%- assign id = w.work_id -%}
-          {%- assign thumb96  = base | append: id | append: "-thumb-96.webp" -%}
-          {%- assign thumb192 = base | append: id | append: "-thumb-192.webp" -%}
-          {%- assign thumb96_out = thumb96 -%}
-          {%- assign thumb192_out = thumb192 -%}
-          {%- unless base contains '://' -%}
-            {%- assign thumb96_out = thumb96 | relative_url -%}
-            {%- assign thumb192_out = thumb192 | relative_url -%}
-          {%- endunless -%}
-          {
-            "work_id": {{ id | jsonify }},
-            "title": {{ w.title | default: id | jsonify }},
-            "work_url": {{ w.url | relative_url | jsonify }},
-            "thumb_96": {{ thumb96_out | jsonify }},
-            "thumb_192": {{ thumb192_out | jsonify }}
-          }{% unless forloop.last %},{% endunless %}
-        {%- endif -%}
-      {%- endfor -%}
-      ]
-    </script>
+  <script>
+    (function () {
+      var grid = document.getElementById('seriesGrid');
+      var pager = document.getElementById('seriesGridPager');
+      var statusEl = document.getElementById('seriesGridPagerStatus');
+      var prevBtn = document.getElementById('seriesGridPrev');
+      var nextBtn = document.getElementById('seriesGridNext');
+      var titleMapEl = document.getElementById('seriesWorkTitleMap');
+      if (!grid || !pager || !statusEl || !prevBtn || !nextBtn || !titleMapEl) return;
 
-    <script>
-      (function () {
-        var grid = document.getElementById('seriesGrid');
-        var dataEl = document.getElementById('seriesGridData');
-        var pager = document.getElementById('seriesGridPager');
-        var statusEl = document.getElementById('seriesGridPagerStatus');
-        var prevBtn = document.getElementById('seriesGridPrev');
-        var nextBtn = document.getElementById('seriesGridNext');
-        if (!grid || !dataEl || !pager || !statusEl || !prevBtn || !nextBtn) return;
+      var titleMap = {};
+      try {
+        titleMap = JSON.parse(titleMapEl.textContent || '{}');
+      } catch (e) {
+        titleMap = {};
+      }
 
-        var items = [];
-        try {
-          items = JSON.parse(dataEl.textContent || '[]');
-        } catch (e) {
-          items = [];
-        }
+      var baseurl = {{ site.baseurl | default: '' | jsonify }};
+      var seriesId = {{ page.series_id | jsonify }};
+      var thumbBase = {{ thumb_base_out | jsonify }};
+      var pageSize = 60;
+      var params = new URLSearchParams(window.location.search);
+      var rawPage = Number(params.get('series_page') || '0');
+      var jsonUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json';
+
+      function workUrl(id) {
+        return baseurl + '/works/' + encodeURIComponent(id) + '/';
+      }
+
+      function thumbUrl(id, size) {
+        return String(thumbBase || '') + id + '-thumb-' + size + '.webp';
+      }
+
+      function updateUrl(page) {
+        var next = new URLSearchParams(window.location.search);
+        next.set('series_page', String(page));
+        var qs = next.toString();
+        var nextUrl = window.location.pathname + (qs ? ('?' + qs) : '') + window.location.hash;
+        window.history.replaceState({}, '', nextUrl);
+      }
+
+      function withQuery(url, page) {
+        var join = (url.indexOf('?') === -1) ? '?' : '&';
+        return url + join + 'series=' + encodeURIComponent(seriesId) + '&series_page=' + encodeURIComponent(String(page));
+      }
+
+      function render(items) {
         if (!Array.isArray(items) || !items.length) return;
-
-        var pageSize = 60;
-        var seriesId = {{ page.series_id | jsonify }};
-        var params = new URLSearchParams(window.location.search);
-        var rawPage = Number(params.get('series_page') || '0');
         var pageCount = Math.max(1, Math.ceil(items.length / pageSize));
         var currentPage = (Number.isFinite(rawPage) && rawPage > 0) ? Math.floor(rawPage) : 1;
         if (currentPage > pageCount) currentPage = pageCount;
 
-        function updateUrl(page) {
-          var next = new URLSearchParams(window.location.search);
-          next.set('series_page', String(page));
-          var qs = next.toString();
-          var nextUrl = window.location.pathname + (qs ? ('?' + qs) : '') + window.location.hash;
-          window.history.replaceState({}, '', nextUrl);
-        }
-
-        function withQuery(url, page) {
-          var join = (url.indexOf('?') === -1) ? '?' : '&';
-          return url + join + 'series=' + encodeURIComponent(seriesId) + '&series_page=' + encodeURIComponent(String(page));
-        }
-
-        function render(page) {
+        function renderPage(page) {
           currentPage = page;
           var start = (page - 1) * pageSize;
           var end = Math.min(start + pageSize, items.length);
@@ -135,17 +134,41 @@ layout: default
 
         prevBtn.addEventListener('click', function () {
           var prev = (currentPage - 1 + pageCount - 1) % pageCount + 1;
-          render(prev);
+          renderPage(prev);
         });
         nextBtn.addEventListener('click', function () {
           var next = (currentPage % pageCount) + 1;
-          render(next);
+          renderPage(next);
         });
 
-        render(currentPage);
-      })();
-    </script>
-  {%- endif -%}
+        renderPage(currentPage);
+      }
+
+      fetch(jsonUrl, { cache: 'default' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .then(function (data) {
+          var workIds = (data && Array.isArray(data.work_ids)) ? data.work_ids : [];
+          var items = workIds.map(function (rawId) {
+            var id = String(rawId || '').trim();
+            return {
+              work_id: id,
+              title: String(titleMap[id] || id),
+              work_url: workUrl(id),
+              thumb_96: thumbUrl(id, '96'),
+              thumb_192: thumbUrl(id, '192')
+            };
+          }).filter(function (it) { return it.work_id.length > 0; });
+          render(items);
+        })
+        .catch(function () {
+          pager.hidden = true;
+          grid.innerHTML = '';
+        });
+    })();
+  </script>
 {%- endif -%}
 
   <div class="content">

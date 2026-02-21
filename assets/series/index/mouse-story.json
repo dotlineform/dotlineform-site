@@ -1,0 +1,13 @@
+{
+  "header": {
+    "series_id": "mouse-story",
+    "count": 3,
+    "sort_fields": "work_id",
+    "hash": "0ad8d37cb8e7b9605c3d500722a15234"
+  },
+  "work_ids": [
+    "00160",
+    "00161",
+    "00162"
+  ]
+}
