@@ -1,0 +1,19 @@
+{
+  "header": {
+    "work_id": "00227",
+    "count": 1,
+    "hash": "4cf0c2cce66abea794d399d208f7190c"
+  },
+  "sections": [
+    {
+      "project_subfolder": "reverse",
+      "details": [
+        {
+          "detail_id": "001",
+          "detail_uid": "00227-001",
+          "title": "untitled [227] reverse"
+        }
+      ]
+    }
+  ]
+}
