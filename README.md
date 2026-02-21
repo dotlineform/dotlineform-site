@@ -31,7 +31,7 @@ Scripts are run locally from the repo root. They are designed to keep the catalo
 Quick audit command:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py --strict
+./scripts/audit_site_consistency.py --strict
 ```
 
 Sorting architecture and consistency contract are documented in [`docs/sorting-architecture.md`](docs/sorting-architecture.md)

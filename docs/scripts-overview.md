@@ -1,9 +1,9 @@
 # Scripts Overview
 
-Use this interpreter for all commands:
+Use this command prefix for all script commands:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3
+./
 ```
 
 All commands below assume you are in `dotlineform-site/`.
@@ -21,8 +21,8 @@ Deferred improvements and follow-up items:
 Run everything (copy -> srcset -> page generation):
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --dry-run
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py
+./scripts/run_draft_pipeline.py --dry-run
+./scripts/run_draft_pipeline.py
 ```
 
 Useful flags:
@@ -42,10 +42,10 @@ Useful flags:
 Mode examples:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode moment --dry-run
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode work --mode work_details --dry-run
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode moment --moment-ids blue-sky,compiled --dry-run
-/Users/dlf/miniconda3/bin/python3 scripts/run_draft_pipeline.py --mode work --work-ids 00456 --dry-run
+./scripts/run_draft_pipeline.py --mode moment --dry-run
+./scripts/run_draft_pipeline.py --mode work --mode work_details --dry-run
+./scripts/run_draft_pipeline.py --mode moment --moment-ids blue-sky,compiled --dry-run
+./scripts/run_draft_pipeline.py --mode work --work-ids 00456 --dry-run
 ```
 
 Note: when `--mode work` is used and no `--series-ids*` are provided, draft series are auto-included in generation.
@@ -57,9 +57,9 @@ Note: when `--mode work` is used and no `--series-ids*` are provided, draft seri
 Unified script with mode flags:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/copy_draft_media_files.py --mode work --ids-file /tmp/work_ids.txt --copied-ids-file /tmp/copied_work_ids.txt --write
-/Users/dlf/miniconda3/bin/python3 scripts/copy_draft_media_files.py --mode work_details --ids-file /tmp/detail_uids.txt --copied-ids-file /tmp/copied_detail_uids.txt --write
-/Users/dlf/miniconda3/bin/python3 scripts/copy_draft_media_files.py --mode moment --ids-file /tmp/moment_ids.txt --copied-ids-file /tmp/copied_moment_ids.txt --write
+./scripts/copy_draft_media_files.py --mode work --ids-file /tmp/work_ids.txt --copied-ids-file /tmp/copied_work_ids.txt --write
+./scripts/copy_draft_media_files.py --mode work_details --ids-file /tmp/detail_uids.txt --copied-ids-file /tmp/copied_detail_uids.txt --write
+./scripts/copy_draft_media_files.py --mode moment --ids-file /tmp/moment_ids.txt --copied-ids-file /tmp/copied_moment_ids.txt --write
 ```
 
 Flags:
@@ -98,16 +98,16 @@ bash scripts/make_srcset_images.sh \
 ### 3) Generate Jekyll pages from workbook
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/generate_work_pages.py data/works.xlsx
-/Users/dlf/miniconda3/bin/python3 scripts/generate_work_pages.py data/works.xlsx --write
+./scripts/generate_work_pages.py data/works.xlsx
+./scripts/generate_work_pages.py data/works.xlsx --write
 ```
 
 Common scoped runs:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/generate_work_pages.py data/works.xlsx --work-ids 00456 --write
-/Users/dlf/miniconda3/bin/python3 scripts/generate_work_pages.py data/works.xlsx --work-ids-file /tmp/work_ids.txt --write
-/Users/dlf/miniconda3/bin/python3 scripts/generate_work_pages.py data/works.xlsx --series-ids curve-poems,dots --write
+./scripts/generate_work_pages.py data/works.xlsx --work-ids 00456 --write
+./scripts/generate_work_pages.py data/works.xlsx --work-ids-file /tmp/work_ids.txt --write
+./scripts/generate_work_pages.py data/works.xlsx --series-ids curve-poems,dots --write
 ```
 
 Useful flags:
@@ -129,13 +129,13 @@ Useful flags:
 Run an audit across generated pages and JSON:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py --strict
+./scripts/audit_site_consistency.py --strict
 ```
 
 Scope and output options:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+./scripts/audit_site_consistency.py \
   --checks sort_drift,cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
@@ -146,7 +146,7 @@ Scope and output options:
 Run a single check with the convenience alias:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+./scripts/audit_site_consistency.py \
   --check-only schema \
   --max-samples 10
 ```
@@ -154,7 +154,7 @@ Run a single check with the convenience alias:
 Or run multiple checks with repeated `--check-only`:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+./scripts/audit_site_consistency.py \
   --check-only sort_drift \
   --check-only json_schema \
   --series-ids collected-1989-1998
@@ -170,6 +170,12 @@ Current checks:
 - `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)
 - `orphans`: reports orphan pages/JSON; optionally include orphan media files with `--orphans-media`
 
+`--strict` behavior and value:
+
+- `--strict` exits non-zero when audit errors are found (`errors > 0`), so scripts/CI can fail fast.
+- Warnings do not fail the run under `--strict`.
+- Without `--strict`, the audit is informational and exits zero.
+
 Query contract map used by `links` check:
 
 | flow | produced query keys | destination accepts |
@@ -183,7 +189,7 @@ Query contract map used by `links` check:
 Orphan media scan (optional):
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+./scripts/audit_site_consistency.py \
   --check-only orphans \
   --orphans-media
 ```
@@ -193,7 +199,7 @@ Markdown report is written by default to `docs/audit-latest.md` (overwrites each
 To write to a different path:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/audit_site_consistency.py \
+./scripts/audit_site_consistency.py \
   --md-out /tmp/site-audit.md
 ```
 
@@ -214,19 +220,19 @@ Warning policy:
 Dry-run:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py
+./scripts/fix_missing_title_sort.py
 ```
 
 Write changes:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py --write
+./scripts/fix_missing_title_sort.py --write
 ```
 
 Scope to selected IDs/ranges:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/fix_missing_title_sort.py \
+./scripts/fix_missing_title_sort.py \
   --work-ids 66-74,38,40 \
   --write
 ```
