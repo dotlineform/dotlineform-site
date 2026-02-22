@@ -586,7 +586,8 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,moments"
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,moments. "
+            "Note: selecting work-pages also includes works-curator-pages."
         ),
     )
     args = ap.parse_args()
@@ -625,7 +626,7 @@ def main() -> None:
         return name in selected_artifacts
 
     run_work_pages = artifact_enabled("work-pages")
-    run_works_curator_pages = artifact_enabled("works-curator-pages")
+    run_works_curator_pages = artifact_enabled("works-curator-pages") or run_work_pages
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
     run_series_json = artifact_enabled("series-json")
