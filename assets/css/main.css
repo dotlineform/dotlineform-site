@@ -1416,10 +1416,19 @@ note: works tags are not currently in use on the work pages themselves.
   padding: 3px 0;
 }
 
+.worksList--curator .worksList__head{
+  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
+}
+
+.worksList--curator .worksList__item{
+  grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
+}
+
 .worksList__cat,
 .worksList__year,
 .worksList__title,
-.worksList__series{
+.worksList__series,
+.worksList__storage{
   font-size: 12px;
   line-height: 1.2;
 }
@@ -1450,6 +1459,11 @@ note: works tags are not currently in use on the work pages themselves.
   justify-self: start;
   width: fit-content;
   white-space: nowrap;
+}
+
+.worksList__storage{
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .worksList__title:link,
@@ -1503,6 +1517,14 @@ note: works tags are not currently in use on the work pages themselves.
 
 .worksList--singleSeries .worksList__item{
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr);
+}
+
+.worksList--curator.worksList--singleSeries .worksList__head{
+  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
+}
+
+.worksList--curator.worksList--singleSeries .worksList__item{
+  grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
 }
 
 .worksList--singleSeries .worksList__head [data-sort-key="series"],
