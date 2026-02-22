@@ -7,6 +7,7 @@
 # - JOBS: parallel workers (defaults to $MAKE_SRCSET_JOBS or 1)
 #
 # Environment variables:
+# - DOTLINEFORM_MEDIA_BASE_DIR: base folder used when INPUT_DIR/OUTPUT_DIR are omitted
 # - MAKE_SRCSET_WORK_IDS_FILE: process only IDs listed in this file (one per line)
 # - MAKE_SRCSET_2400_IDS_FILE: generate 2400 only for IDs listed in this file
 # - MAKE_SRCSET_SUCCESS_IDS_FILE: write successfully processed IDs (one per line)
@@ -34,10 +35,22 @@ for arg in "$@"; do
       ;;
   esac
 done
-set -- "${POSITIONAL[@]}"
+if [[ ${#POSITIONAL[@]} -gt 0 ]]; then
+  set -- "${POSITIONAL[@]}"
+else
+  set --
+fi
 
-BASE_DIR="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform"
+BASE_DIR="${DOTLINEFORM_MEDIA_BASE_DIR:-}"
+if [[ -z "${1:-}" && -z "$BASE_DIR" ]]; then
+  echo "Error: missing media base directory. Set DOTLINEFORM_MEDIA_BASE_DIR or pass INPUT_DIR."
+  exit 1
+fi
 INPUT_DIR="${1:-$BASE_DIR/works/make_srcset_images}" # where {work_id}.jpg lives
+if [[ -z "${2:-}" && -z "$BASE_DIR" ]]; then
+  echo "Error: missing output directory. Set DOTLINEFORM_MEDIA_BASE_DIR or pass OUTPUT_DIR."
+  exit 1
+fi
 OUTPUT_DIR="${2:-$BASE_DIR/works/srcset_images}"     # base output folder for derivative subfolders
 JOBS="${3:-${MAKE_SRCSET_JOBS:-1}}" # number of parallel jobs (default 1 = serial)
 INCLUDE_2400_IDS_FILE="${MAKE_SRCSET_2400_IDS_FILE:-}"

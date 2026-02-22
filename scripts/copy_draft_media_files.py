@@ -14,6 +14,10 @@ Use --ids-file to limit processing to selected IDs (one per line):
 
 Defaults to dry-run. Pass --write to actually copy files.
 
+Required local environment:
+- DOTLINEFORM_PROJECTS_BASE_DIR: base path containing projects/ and moments/ sources
+- DOTLINEFORM_MEDIA_BASE_DIR: base path containing works/work_details/moments make_srcset_images folders
+
 Flag behavior:
 - --mode: selects worksheet mapping and source/target paths.
 - --ids-file: optional manifest to restrict rows processed in this run.
@@ -25,6 +29,7 @@ Flag behavior:
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -34,9 +39,11 @@ import openpyxl
 # Source roots:
 # - projects/ for works + work_details
 # - moments/ for moments
-PROJECTS_BASE_DIR = Path("/Users/dlf/Library/CloudStorage/OneDrive-Personal/dotlineform")
+PROJECTS_BASE_DIR_ENV = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR", "").strip()
+PROJECTS_BASE_DIR = Path(PROJECTS_BASE_DIR_ENV).expanduser() if PROJECTS_BASE_DIR_ENV else Path(".")
 # Destination root where make_srcset_images.sh picks up copied source files.
-WORKS_BASE_DIR = Path("/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform")
+WORKS_BASE_DIR_ENV = os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip()
+WORKS_BASE_DIR = Path(WORKS_BASE_DIR_ENV).expanduser() if WORKS_BASE_DIR_ENV else Path(".")
 WORKBOOK_PATH = Path("data/works.xlsx")
 
 
@@ -301,6 +308,11 @@ def main() -> int:
         help="Optional output manifest of copied IDs (one ID per line).",
     )
     args = parser.parse_args()
+
+    if PROJECTS_BASE_DIR_ENV == "":
+        raise SystemExit("Missing DOTLINEFORM_PROJECTS_BASE_DIR. Set it in your local environment.")
+    if WORKS_BASE_DIR_ENV == "":
+        raise SystemExit("Missing DOTLINEFORM_MEDIA_BASE_DIR. Set it in your local environment.")
 
     keep_ext = not args.no_ext
     if args.keep_ext:

@@ -29,6 +29,10 @@ Flag usage summary:
 - --series-ids / --series-ids-file: pass series filter into generation
 - --moment-ids / --moment-ids-file: limit moment processing scope
 
+Required local environment (when path flags are not passed):
+- DOTLINEFORM_MEDIA_BASE_DIR
+- DOTLINEFORM_PROJECTS_BASE_DIR
+
 Behavior note:
 - When mode includes `work` and no explicit `--series-ids*` are provided,
   draft series IDs are auto-included for generation.
@@ -367,6 +371,14 @@ def work_ids_from_detail_uids(detail_uids: Iterable[str]) -> Set[str]:
 
 
 def main() -> int:
+    media_base = os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip()
+    default_work_input = f"{media_base}/works/make_srcset_images" if media_base else ""
+    default_work_output = f"{media_base}/works/srcset_images" if media_base else ""
+    default_detail_input = f"{media_base}/work_details/make_srcset_images" if media_base else ""
+    default_detail_output = f"{media_base}/work_details/srcset_images" if media_base else ""
+    default_moment_input = f"{media_base}/moments/make_srcset_images" if media_base else ""
+    default_moment_output = f"{media_base}/moments/srcset_images" if media_base else ""
+
     ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> generate pipeline.")
     ap.add_argument("--xlsx", default="data/works.xlsx", help="Path to workbook")
     ap.add_argument(
@@ -377,32 +389,32 @@ def main() -> int:
     )
     ap.add_argument(
         "--input-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/works/make_srcset_images",
+        default=default_work_input,
         help="Input directory for source images",
     )
     ap.add_argument(
         "--output-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/works/srcset_images",
+        default=default_work_output,
         help="Output directory for srcset derivatives",
     )
     ap.add_argument(
         "--detail-input-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/work_details/make_srcset_images",
+        default=default_detail_input,
         help="Input directory for work detail source images",
     )
     ap.add_argument(
         "--detail-output-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/work_details/srcset_images",
+        default=default_detail_output,
         help="Output directory for work detail srcset derivatives",
     )
     ap.add_argument(
         "--moment-input-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/make_srcset_images",
+        default=default_moment_input,
         help="Input directory for moment source images",
     )
     ap.add_argument(
         "--moment-output-dir",
-        default="/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/srcset_images",
+        default=default_moment_output,
         help="Output directory for moment srcset derivatives",
     )
     ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "4")), help="Parallel jobs")
@@ -420,6 +432,22 @@ def main() -> int:
     ap.add_argument("--moment-ids-file", default="", help="Path to moment_ids file (one id per line).")
     args = ap.parse_args()
     selected_modes = set(args.mode or ["work", "work_details", "moment"])
+
+    def require_non_empty(label: str, value: str, flag: str) -> None:
+        if normalize_text(value) == "":
+            raise SystemExit(
+                f"Missing {label}. Set DOTLINEFORM_MEDIA_BASE_DIR or pass {flag}."
+            )
+
+    if "work" in selected_modes:
+        require_non_empty("work input dir", args.input_dir, "--input-dir")
+        require_non_empty("work output dir", args.output_dir, "--output-dir")
+    if "work_details" in selected_modes:
+        require_non_empty("work_details input dir", args.detail_input_dir, "--detail-input-dir")
+        require_non_empty("work_details output dir", args.detail_output_dir, "--detail-output-dir")
+    if "moment" in selected_modes:
+        require_non_empty("moment input dir", args.moment_input_dir, "--moment-input-dir")
+        require_non_empty("moment output dir", args.moment_output_dir, "--moment-output-dir")
 
     explicit_work_ids = read_optional_ids_file(args.work_ids_file)
     if args.work_ids:

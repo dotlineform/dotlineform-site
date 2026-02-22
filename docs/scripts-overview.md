@@ -8,6 +8,13 @@ Use this command prefix for all script commands:
 
 All commands below assume you are in `dotlineform-site/`.
 
+Local environment variables (required for media/generation scripts):
+
+```bash
+export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
+export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
+```
+
 Sorting behavior and consistency contract:
 
 - `docs/sorting-architecture.md`
@@ -78,8 +85,8 @@ MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_work_ids.txt \
 MAKE_SRCSET_2400_IDS_FILE=/tmp/work_2400_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/work_success_ids.txt \
 bash scripts/make_srcset_images.sh \
-  "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/works/make_srcset_images" \
-  "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/works/srcset_images" \
+  "$DOTLINEFORM_MEDIA_BASE_DIR/works/make_srcset_images" \
+  "$DOTLINEFORM_MEDIA_BASE_DIR/works/srcset_images" \
   4
 ```
 
@@ -91,8 +98,8 @@ MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_moment_ids.txt \
 MAKE_SRCSET_2400_IDS_FILE=/tmp/empty_2400_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/moment_success_ids.txt \
 bash scripts/make_srcset_images.sh \
-  "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/make_srcset_images" \
-  "/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/moments/srcset_images" \
+  "$DOTLINEFORM_MEDIA_BASE_DIR/moments/make_srcset_images" \
+  "$DOTLINEFORM_MEDIA_BASE_DIR/moments/srcset_images" \
   4
 ```
 
@@ -123,6 +130,7 @@ Useful flags:
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
+  - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
   - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
 - `--only`: limit generation to selected artifacts

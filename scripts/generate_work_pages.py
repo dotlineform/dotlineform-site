@@ -58,6 +58,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import os
 import re
 import shutil
 import subprocess
@@ -531,7 +532,7 @@ def main() -> None:
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
     ap.add_argument(
         "--projects-base-dir",
-        default="/Users/dlf/Library/CloudStorage/OneDrive-Personal/dotlineform",
+        default=os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR", "").strip(),
         help="Base folder containing the projects directory used to resolve WorkDetails source images",
     )
 
@@ -632,6 +633,13 @@ def main() -> None:
     run_work_json = artifact_enabled("work-json")
     run_moments_artifact = artifact_enabled("moments")
 
+    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
+    if needs_projects_base and normalize_text(args.projects_base_dir) == "":
+        raise SystemExit(
+            "Missing projects base directory. Set DOTLINEFORM_PROJECTS_BASE_DIR "
+            "or pass --projects-base-dir."
+        )
+
     # Resolve the workbook path and fail fast if it is missing.
     xlsx_path = Path(args.xlsx).expanduser()
     if not xlsx_path.exists():
@@ -709,7 +717,7 @@ def main() -> None:
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_prose_dir = Path(args.moments_prose_dir).expanduser()
     moments_prose_dir.mkdir(parents=True, exist_ok=True)
-    projects_base_dir = Path(args.projects_base_dir).expanduser()
+    projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / "projects"
 
     # Load all worksheets up-front.

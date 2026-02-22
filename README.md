@@ -28,6 +28,13 @@ Works are identified by a stable ID (e.g. `00361`). The site expects as a minimu
 
 Scripts are run locally from the repo root. They are designed to keep the catalogue consistent and reduce manual work. See [`/docs/scripts-overview.md`](docs/scripts-overview.md) for details.
 
+Before running media/generation scripts, set local environment variables:
+
+```bash
+export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
+export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
+```
+
 Quick audit command:
 
 ```bash
