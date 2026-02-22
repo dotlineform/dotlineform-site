@@ -1274,6 +1274,15 @@ Use “structure-first” naming and scope section-specific differences via the 
   min-width: 0;
 }
 
+/* Curator page: keep label column compact so value column can use available measure */
+.workCurator__rows .page__row{
+  grid-template-columns: 18ch minmax(0, 1fr);
+}
+
+.workCurator__rows .page__row > span{
+  overflow-wrap: anywhere;
+}
+
 .seriesNav--title{
   max-width: none;
   margin: 0;

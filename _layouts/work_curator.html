@@ -3,19 +3,6 @@ layout: default
 ---
 
 {% assign wid = page.work_id | default: page.slug %}
-{%- assign title_txt = page.title | default: "" | strip -%}
-{% assign series_works = site.works | where: "series_id", page.series_id | sort: "series_sort" %}
-{% assign series_total = series_works.size %}
-{% assign series_index = 0 %}
-{% if series_total > 1 %}
-  {% for w in series_works %}
-    {% if w.work_id == page.work_id %}
-      {% assign series_index = forloop.index %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix %}
 {% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
@@ -26,22 +13,13 @@ layout: default
 {%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
 {%- assign src2400 = img_base | append: wid | append: "-primary-2400.webp" -%}
-{%- assign work_details_json_path = "/assets/works/index/" | append: wid | append: ".json" -%}
-{%- assign work_details_json_file = site.static_files | where: "path", work_details_json_path | first -%}
-{%- assign has_work_details_json = false -%}
-{%- if work_details_json_file -%}
-  {%- assign has_work_details_json = true -%}
-{%- endif -%}
 {%- assign src2400_path = "/assets/works/img/" | append: wid | append: "-primary-2400.webp" -%}
 {%- assign has_local_2400 = false -%}
-<!-- this existence check is local to Jekyll’s static files (/assets/...).
-If you later serve images only from external media_base (CDN/R2), this check won’t know what exists remotely. -->
 {%- assign maybe_2400 = site.static_files | where: "path", src2400_path | first -%}
 {%- if maybe_2400 -%}
   {%- assign has_local_2400 = true -%}
 {%- endif -%}
 {%- assign has_2400 = has_local_2400 -%}
-<!-- external-hosted 2400 images can be enabled via front matter even when local existence check is false. -->
 {%- if page.has_primary_2400 == true -%}
   {%- assign has_2400 = true -%}
 {%- endif -%}
@@ -58,372 +36,119 @@ If you later serve images only from external media_base (CDN/R2), this check won
 {%- endunless -%}
 
 <article class="page work">
+  <h1 class="visually-hidden">{{ page.title | default: "Untitled" }}</h1>
 
-  <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+  <div style="max-width:var(--content-measure);margin:0 auto;">
+    <figure class="page__media" style="max-width:30%;margin-left:0;margin-right:auto;">
+      <a
+        class="page__mediaLink"
+        href="{{ full_src }}"
+        target="_blank"
+        rel="noopener"
+        style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
+        <img
+          class="page__mediaImg"
+          src="{{ src1600 }}"
+          srcset="
+            {{ src800 }} 800w,
+            {{ src1200 }} 1200w,
+            {{ src1600 }} 1600w{% if has_2400 %},
+            {{ src2400 }} 2400w{% endif %}"
+          sizes="(max-width: 800px) 100vw, 72ch"
+          alt="{{ page.title | default: wid | escape }}"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          style="width:100%;height:auto;display:block;">
+      </a>
+    </figure>
 
-  <figure class="page__media">
-    <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
-    <a class="page__mediaLink"
-      href="{{ full_src }}" target="_blank" rel="noopener"
-      style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
-      <img
-        class="page__mediaImg"
-        src="{{ src1600 }}"
-        srcset="
-          {{ src800 }} 800w,
-          {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w{% if has_2400 %},
-          {{ src2400 }} 2400w{% endif %}"
-        sizes="(max-width: 800px) 100vw, 72ch"
-        alt="{{ title_txt | default: 'Artwork' | escape }}"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-        style="width:100%;height:auto;display:block;">
-    </a>
-  </figure>
-
-  <section class="page__meta page__media">
-    <h2 class="visually-hidden">work details</h2>
-
-    <div class="page__caption">
-      <div class="page__row work__titleRow">
-        <span class="work__titleMain">
-          <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
-        </span>
-        {% comment %}
-        Series navigation:
-        - If URL has ?series=series_id, try to load that series' work IDs from JSON.
-        - If successful, show Prev/Next links for navigating within that series.
-        - Otherwise hide the nav.
-        {% endcomment %}
-        <nav class="seriesNav seriesNav--title" id="seriesNav"
-            aria-label="Series navigation"
-            data-work-id="{{ page.work_id | escape }}"
-            data-series="{{ page.series_id | default: '' | escape }}"
-            data-baseurl="{{ site.baseurl | default: '' }}"
-            hidden>
-          {% if series_total > 1 and series_index > 0 %}
-            <span class="navCounter">{{ series_index }}/{{ series_total }}</span>
-          {% endif %}
-          <a class="seriesNav__prev" id="seriesNavPrev" href="#">←</a>
-          <a class="seriesNav__next" id="seriesNavNext" href="#">→</a>
-        </nav>
-      </div>
-
-      {% if page.year_display %}
-        <div class="page__row">{{ page.year_display }}</div>
-      {% endif %}
-
-      {% if page.medium_caption %}
-        <div class="page__row">{{ page.medium_caption }}</div>
-      {% endif %}
-
-      {% if page.duration %}
-        <div class="page__row">{{ page.duration }}</div>
-      {% endif %}
-
-      {% if page.vimeo_url or page.youtube_url or page.bandcamp_url %}
+    <section class="page__meta page__media">
+      <h2 class="visually-hidden">curator fields</h2>
+      <div style="margin:0 0 var(--space-2);"><strong>{{ page.title | default: "—" }}</strong></div>
+      <div class="workCurator__rows" style="font-size:var(--meta-small-size);line-height:var(--meta-small-line);">
         <div class="page__row">
-          published on
-          {% assign published_sep = "" %}
-          {% if page.vimeo_url %}
-            {{ published_sep }}<a href="{{ page.vimeo_url }}" target="_blank" rel="noopener">Vimeo</a>
-            {% assign published_sep = ", " %}
-          {% endif %}
-          {% if page.youtube_url %}
-            {{ published_sep }}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener">YouTube</a>
-            {% assign published_sep = ", " %}
-          {% endif %}
-          {% if page.bandcamp_url %}
-            {{ published_sep }}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener">Bandcamp</a>
-          {% endif %}
-        </div>
-      {% endif %}
-
-      {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
-      {% if medium_type_norm != "music" %}
-        {% if page.height_cm or page.width_cm or page.depth_cm %}
-          <div class="page__row">
-            {% if page.height_cm and page.width_cm %}
-              {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
-            {% elsif page.height_cm %}
-              {{ page.height_cm }} cm
-            {% elsif page.width_cm %}
-              {{ page.width_cm }} cm
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endif %}
-
-      {% if page.work_id %}
-        {% if page.download %}
-          {% assign download_href = '/assets/works/files/' | append: page.work_id | append: '-' | append: page.download %}
-          <div class="page__row">
-            download <a href="{{ download_href | relative_url }}" target="_blank" rel="noopener">{{ page.download }}</a>
-          </div>
-        {% endif %}
-        <div class="page__row">
-          cat. {{ page.work_id }}
+        series
+        <span>
           {% if page.series_id %}
-            {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
-            {% assign series_label = page.series_title | default: page.series_id %}
-            {% assign works_in_series = site.works | where: "series_id", page.series_id %}
-            {% if works_in_series.size > 1 %}
-              | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
-            {% endif %}
+            <a href="{{ '/series/' | append: page.series_id | append: '/' | relative_url }}">{{ page.series_id }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+      <div class="page__row">
+        cat
+        <span>
+          {% if page.work_id %}
+            <a href="{{ '/works/' | append: page.work_id | append: '/' | relative_url }}">{{ page.work_id }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+      <div class="page__row">storage <span>{{ page.storage_location | default: "—" }}</span></div>
+      <div class="page__row">base folder <span>{{ page.project_base_folder | default: "—" }}</span></div>
+      <div class="page__row">folder <span>{{ page.project_folder | default: "—" }}</span></div>
+      <div class="page__row">file <span>{{ page.project_filename | default: "—" }}</span></div>
+      <div class="page__row">
+        height x width cm
+        <span>
+          {% if page.height_cm and page.width_cm %}
+            {{ page.height_cm }} x {{ page.width_cm }}
+          {% elsif page.height_cm %}
+            {{ page.height_cm }} x —
+          {% elsif page.width_cm %}
+            — x {{ page.width_cm }}
+          {% else %}
+            —
           {% endif %}
-        </div>
-      {% endif %}
-    </div>
-  </section>
-
-  <section class="content work__prose">
-    {{ content }}
-  </section>
-
-  <section
-    id="workDetailsSection"
-    class="workDetails"
-    data-work-id="{{ wid | escape }}"
-    data-baseurl="{{ site.baseurl | default: '' }}"
-    data-thumb-base="{{ site.thumb_base | default: '' }}"
-    data-thumb-prefix="{{ site.thumb_prefix | default: '/assets' }}"
-    data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
-    data-has-details-json="{{ has_work_details_json }}"
-    hidden
-  >
-    <h2 class="visually-hidden">Additional details</h2>
-    <div id="workDetailsContent"></div>
-  </section>
+        </span>
+      </div>
+      <div class="page__row">year <span>{{ page.year | default: "—" }}</span></div>
+      <div class="page__row">year display <span>{{ page.year_display | default: "—" }}</span></div>
+      <div class="page__row">medium type <span>{{ page.medium_type | default: "—" }}</span></div>
+      <div class="page__row">medium caption <span>{{ page.medium_caption | default: "—" }}</span></div>
+      <div class="page__row">duration <span>{{ page.duration | default: "—" }}</span></div>
+      <div class="page__row">depth <span>{{ page.depth_cm | default: "—" }}</span></div>
+      <div class="page__row">print version <span>{{ page.works_print | default: "—" }}</span></div>
+      <div class="page__row">has 2400px <span>{{ page.has_primary_2400 | default: "—" }}</span></div>
+      <div class="page__row">
+        download
+        <span>
+          {% if page.work_id and page.download %}
+            {% assign download_href = '/assets/works/files/' | append: page.work_id | append: '-' | append: page.download %}
+            <a href="{{ download_href | relative_url }}" target="_blank" rel="noopener">{{ page.download }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+      <div class="page__row">provenance <span>{{ page.provenance | default: "—" }}</span></div>
+      <div class="page__row">
+        Vimeo
+        <span>
+          {% if page.Vimeo_url %}
+            <a href="{{ page.Vimeo_url }}" target="_blank" rel="noopener">{{ page.Vimeo_url }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+      <div class="page__row">
+        YouTube
+        <span>
+          {% if page.YouTube_url %}
+            <a href="{{ page.YouTube_url }}" target="_blank" rel="noopener">{{ page.YouTube_url }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+      <div class="page__row">
+        Bandcamp
+        <span>
+          {% if page.Bandcamp_url %}
+            <a href="{{ page.Bandcamp_url }}" target="_blank" rel="noopener">{{ page.Bandcamp_url }}</a>
+          {% else %}—{% endif %}
+        </span>
+      </div>
+        <div class="page__row">notes <span>{{ page.notes | default: "—" }}</span></div>
+      </div>
+    </section>
+  </div>
 
   <nav class="page__nav">
-    {% assign back_series_label = page.series_title | default: page.series_id | default: "series" %}
-    <a
-      id="pageBackLink"
-      class="page__back"
-      href="{{ '/series/' | relative_url }}"
-      data-fallback="{{ '/series/' | relative_url }}"
-      data-baseurl="{{ site.baseurl | default: '' }}"
-      data-series-label="{{ back_series_label | escape }}"
-    >← index</a>
+    <a class="page__back" href="{{ '/works_curator/' | relative_url }}">← works curator index</a>
   </nav>
-
 </article>
-
-<script>
-  (function () {
-    var link = document.getElementById('pageBackLink');
-    if (!link) return;
-
-    var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var fallback = link.getAttribute('data-fallback') || (baseurl + '/series/');
-    var seriesLabel = (link.getAttribute('data-series-label') || 'series').trim();
-    var params = new URLSearchParams(window.location.search);
-    var series = (params.get('series') || '').trim();
-    var seriesPageRaw = Number(params.get('series_page') || '0');
-    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
-    var from = (params.get('from') || '').trim().toLowerCase();
-    var returnSort = (params.get('return_sort') || '').trim().toLowerCase();
-    var returnDir = (params.get('return_dir') || '').trim().toLowerCase();
-    var returnSeries = (params.get('return_series') || '').trim().toLowerCase();
-
-    if (series) {
-      link.textContent = '← ' + seriesLabel;
-      var href = baseurl + '/series/' + encodeURIComponent(series) + '/';
-      if (seriesPage > 0) href += '?series_page=' + encodeURIComponent(String(seriesPage));
-      link.setAttribute('href', href);
-    } else if (from === 'works_index') {
-      var worksUrl = baseurl + '/works/';
-      var q = new URLSearchParams();
-      if (returnSort === 'cat' || returnSort === 'year' || returnSort === 'title' || returnSort === 'series') {
-        q.set('sort', returnSort);
-      }
-      if (returnDir === 'asc' || returnDir === 'desc') {
-        q.set('dir', returnDir);
-      }
-      if (returnSeries) {
-        q.set('series', returnSeries);
-      }
-      link.textContent = '← work index';
-      link.setAttribute('href', worksUrl + (q.toString() ? ('?' + q.toString()) : ''));
-    } else {
-      link.textContent = '← works';
-      link.setAttribute('href', fallback);
-    }
-  })();
-</script>
-<script>
-  (function () {
-    var section = document.getElementById('workDetailsSection');
-    var content = document.getElementById('workDetailsContent');
-    if (!section || !content) return;
-
-    var workId = String(section.getAttribute('data-work-id') || '').trim();
-    var workTitle = {{ title_txt | jsonify }};
-    if (!workId) return;
-
-    var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var thumbBase = String(section.getAttribute('data-thumb-base') || '').replace(/\/$/, '');
-    var thumbPrefix = String(section.getAttribute('data-thumb-prefix') || '/assets').replace(/\/$/, '');
-    var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
-    var pageSize = 60;
-    var query = new URLSearchParams(window.location.search);
-    var currentSeries = String(query.get('series') || '').trim();
-    var currentSeriesPageRaw = Number(query.get('series_page') || '0');
-    var currentSeriesPage = (Number.isFinite(currentSeriesPageRaw) && currentSeriesPageRaw > 0) ? Math.floor(currentSeriesPageRaw) : 0;
-    var requestedDetailsSection = String(query.get('details_section') || '').trim();
-    var requestedDetailsPage = Number(query.get('details_page') || '0');
-    if (!Number.isFinite(requestedDetailsPage) || requestedDetailsPage < 1) {
-      requestedDetailsPage = 1;
-    } else {
-      requestedDetailsPage = Math.floor(requestedDetailsPage);
-    }
-    var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
-    if (!hasDetailsJson) return;
-    var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
-    // Site-level toggle: when true, hash-based back-links from detail pages scroll
-    // to the corresponding details section after async JSON content is inserted.
-    var enableHashScroll = String(section.getAttribute('data-enable-hash-scroll') || 'true') !== 'false';
-
-    function esc(s) {
-      return String(s == null ? '' : s)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function slug(s) {
-      return String(s || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function scrollToHashTarget() {
-      if (!enableHashScroll) return;
-      var raw = window.location.hash || '';
-      if (!raw || raw.length < 2) return;
-      var id = decodeURIComponent(raw.slice(1));
-      var target = document.getElementById(id);
-      if (!target) return;
-      requestAnimationFrame(function () {
-        target.scrollIntoView({ behavior: 'auto', block: 'start' });
-      });
-    }
-
-    function renderDetailsGrid(details, secId, currentPage) {
-      var html = '<div class=\"seriesGrid\" aria-label=\"details for ' + esc(secId) + '\">';
-      details.forEach(function (d) {
-        var uid = String((d && d.detail_uid) || '').trim();
-        if (!uid) return;
-        var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
-        var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
-        var title = String((d && d.title) || uid).trim();
-        var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
-        if (currentSeries) href += '&series=' + encodeURIComponent(currentSeries);
-        if (currentSeriesPage > 0) href += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
-        html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\">';
-        html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
-        html += '</a>';
-      });
-      html += '</div>';
-      return html;
-    }
-
-    function renderDetailsGroup(group) {
-      var total = group.details.length;
-      var pageCount = Math.max(1, Math.ceil(total / pageSize));
-      if (group.page < 1) group.page = pageCount;
-      if (group.page > pageCount) group.page = 1;
-
-      var start = (group.page - 1) * pageSize;
-      var end = Math.min(start + pageSize, total);
-      var pageItems = group.details.slice(start, end);
-
-      var html = '';
-      html += '<h3 class=\"workDetails__title\">' + esc(group.label || 'Details') + '</h3>';
-      html += renderDetailsGrid(pageItems, group.secId, group.page);
-      var idxHref = baseurl + '/work_details/?from_work=' + encodeURIComponent(workId);
-      if (workTitle) idxHref += '&from_work_title=' + encodeURIComponent(workTitle);
-      idxHref += '&section=' + encodeURIComponent(group.secId);
-      if (group.label) idxHref += '&section_label=' + encodeURIComponent(group.label);
-      if (currentSeries) idxHref += '&series=' + encodeURIComponent(currentSeries);
-      if (currentSeriesPage > 0) idxHref += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
-      html += '<div class=\"seriesGridFooter\">';
-      html += '<a class=\"seriesGridFooter__indexLink\" href=\"' + esc(idxHref) + '\">index</a>';
-      if (pageCount > 1) {
-        html += '<nav class=\"gridPager\" aria-label=\"details pagination\">';
-        html += '<span class=\"gridPager__status\">' + group.page + '/' + pageCount + '</span>';
-        html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"-1\" aria-label=\"Previous page\">←</button>';
-        html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"1\" aria-label=\"Next page\">→</button>';
-        html += '</nav>';
-      }
-      html += '</div>';
-
-      group.el.innerHTML = html;
-    }
-
-    fetch(jsonUrl, { cache: 'default' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
-        if (!sections.length) return;
-
-        var groups = [];
-        var groupsByKey = {};
-        content.innerHTML = '';
-
-        sections.forEach(function (sec) {
-          var label = String((sec && sec.project_subfolder) || '').trim();
-          var secId = slug(label || 'details');
-          var details = (sec && Array.isArray(sec.details)) ? sec.details : [];
-          if (!details.length) return;
-
-          var groupEl = document.createElement('section');
-          groupEl.className = 'workDetails__group';
-          groupEl.id = 'details-' + secId;
-          content.appendChild(groupEl);
-
-          var group = {
-            key: 'g' + String(groups.length + 1),
-            secId: secId,
-            label: label || 'Details',
-            details: details,
-            page: (requestedDetailsSection && requestedDetailsSection === secId) ? requestedDetailsPage : 1,
-            el: groupEl
-          };
-          groups.push(group);
-          groupsByKey[group.key] = group;
-          renderDetailsGroup(group);
-        });
-
-        if (groups.length) {
-          content.addEventListener('click', function (ev) {
-            var target = ev.target;
-            if (!target) return;
-            var btn = target.closest('[data-pager-key]');
-            if (!btn) return;
-            var key = String(btn.getAttribute('data-pager-key') || '').trim();
-            var delta = Number(btn.getAttribute('data-pager-delta') || '0');
-            if (!key || !delta) return;
-            var group = groupsByKey[key];
-            if (!group) return;
-            group.page += delta;
-            renderDetailsGroup(group);
-          });
-          section.hidden = false;
-          scrollToHashTarget();
-        }
-      })
-      .catch(function () {
-        section.hidden = true;
-      });
-  })();
-</script>
-<script src="{{ '/assets/js/work.js' | relative_url }}"></script>
