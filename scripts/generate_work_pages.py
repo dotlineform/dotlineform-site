@@ -1152,6 +1152,7 @@ def main() -> None:
                 cfm: Dict[str, Any] = {
                     "layout": "work_curator",
                     "work_id": wid,
+                    "project_base_folder": str(projects_root),
                 }
                 for out_key, aliases, coercer in curator_field_defs:
                     col_name = first_present_col(works_hi, aliases)
@@ -1163,6 +1164,7 @@ def main() -> None:
                     "work_id",
                     "title",
                     "storage_location",
+                    "project_base_folder",
                     "project_folder",
                     "project_filename",
                     "height_cm",
