@@ -125,6 +125,8 @@ Useful flags:
 - `--projects-base-dir`: base path used for source-image dimension reads
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
   - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
+- `--only`: limit generation to selected artifacts
+  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-json`, `work-details-pages`, `work-json`, `moments`
 
 ### 4) Audit site consistency (read-only)
 
