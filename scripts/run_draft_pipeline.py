@@ -321,6 +321,36 @@ def collect_draft_series_ids(xlsx_path: Path, allowed_ids: Set[str] | None = Non
     return out
 
 
+def collect_series_ids_for_work_ids(xlsx_path: Path, work_ids: Set[str]) -> Set[str]:
+    """Map work_ids to series_ids using Works sheet rows."""
+    if not work_ids:
+        return set()
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
+    if "Works" not in wb.sheetnames:
+        raise SystemExit("Worksheet not found: 'Works'")
+    ws = wb["Works"]
+    hi = header_map(ws)
+
+    required = ["work_id", "series_id"]
+    missing = [c for c in required if c not in hi]
+    if missing:
+        raise SystemExit(f"Works sheet missing required columns: {', '.join(missing)}")
+
+    out: Set[str] = set()
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        raw_work_id = row[hi["work_id"]]
+        if is_empty(raw_work_id):
+            continue
+        wid = slug_id(raw_work_id)
+        if wid not in work_ids:
+            continue
+        raw_series_id = row[hi["series_id"]]
+        sid = normalize_text(raw_series_id)
+        if sid:
+            out.add(sid)
+    return out
+
+
 def collect_detail_2400_uids(xlsx_path: Path, copied_uids: Iterable[str]) -> Set[str]:
     """Select detail_uids that require 2400 derivatives based on WorkDetails.has_primary_2400."""
     copied = set(copied_uids)
@@ -718,7 +748,12 @@ def main() -> int:
         generate_cmd = [py, str(generate_script), str(xlsx_path)]
         generate_cmd += ["--work-ids-file", str(generate_ids_file)]
         generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
-        selected_series_for_generate = series_filter if series_filter is not None else auto_series_filter
+        selected_series_for_generate = series_filter
+        if selected_series_for_generate is None:
+            selected_series_for_generate = set(auto_series_filter or set())
+            selected_series_for_generate.update(
+                collect_series_ids_for_work_ids(xlsx_path=xlsx_path, work_ids=generate_ids)
+            )
         if selected_series_for_generate:
             generate_cmd += ["--series-ids", ",".join(sorted(selected_series_for_generate))]
         if not args.dry_run:
