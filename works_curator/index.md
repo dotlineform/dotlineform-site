@@ -35,7 +35,10 @@ section: works
 
   <div class="index worksList worksList--curator">
     <h1 class="index__heading visually-hidden">works curator</h1>
-    <p class="worksList__count" id="worksListCount">{{ works_count }} {{ work_label }} in {{ series_count }} {{ series_label }}</p>
+    <div class="worksList__metaRow">
+      <p class="worksList__count" id="worksListCount">{{ works_count }} {{ work_label }} in {{ series_count }} {{ series_label }}</p>
+      <a class="worksList__metaLink" href="{{ '/site_map/' | relative_url }}">site map</a>
+    </div>
 
     <div class="worksList__head" role="group" aria-label="Sort works curator">
       <button class="worksList__sortBtn" type="button" data-sort-key="cat">

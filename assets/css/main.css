@@ -1338,6 +1338,19 @@ note: works tags are not currently in use on the work pages themselves.
   color: var(--muted);
 }
 
+.worksList__metaRow{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 12px;
+}
+
+.worksList__metaLink{
+  font-size: var(--meta-small-size);
+  line-height: var(--meta-small-line);
+  white-space: nowrap;
+}
+
 .worksList .page__back{
   font-size: var(--meta-small-size);
   line-height: var(--meta-small-line);
