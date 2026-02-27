@@ -8,6 +8,19 @@
 - Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
 
+## Ruby / Jekyll Toolchain
+
+- This repo expects:
+  - `.ruby-version` = `3.1.6`
+  - Bundler = `2.6.9`
+- In Codex/sandbox runs, do not rely on system `ruby`/`bundle` (`/usr/bin/*`), which can cause false failures.
+- Use rbenv shims explicitly for verification commands:
+  - `/Users/dlf/.rbenv/shims/ruby -v`
+  - `/Users/dlf/.rbenv/shims/bundle -v`
+  - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet`
+- If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
+- Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
+
 ## Safety Defaults
 
 - Prefer dry-run behavior for generators unless explicitly asked to write.
