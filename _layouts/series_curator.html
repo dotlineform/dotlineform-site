@@ -3,20 +3,27 @@ layout: default
 ---
 
 {% assign sid = page.series_id | default: page.slug %}
-{% assign thumb_work_id = page.thumb_work_id | default: "" %}
+{% assign thumb_work_id = page.thumb_work_id | default: "" | strip %}
+{% assign series_works = site.works | where: "series_id", sid %}
+{% assign last_work = series_works | sort: "work_id" | reverse | first %}
+{% assign effective_thumb_work_id = thumb_work_id %}
+{% if effective_thumb_work_id == "" and last_work and last_work.work_id %}
+  {% assign effective_thumb_work_id = last_work.work_id %}
+{% endif %}
+{% assign thumb_work_doc = site.works | where: "work_id", effective_thumb_work_id | first %}
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix %}
 {% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
 {% assign works_img_prefix = media_prefix | append: "/works/img" %}
 {% assign img_base = media_base | append: works_img_prefix | append: "/" %}
 
-{%- assign src800  = img_base | append: thumb_work_id | append: "-primary-800.webp" -%}
-{%- assign src1200 = img_base | append: thumb_work_id | append: "-primary-1200.webp" -%}
-{%- assign src1600 = img_base | append: thumb_work_id | append: "-primary-1600.webp" -%}
-{%- assign src2400 = img_base | append: thumb_work_id | append: "-primary-2400.webp" -%}
-{%- assign src2400_path = "/assets/works/img/" | append: thumb_work_id | append: "-primary-2400.webp" -%}
+{%- assign src800  = img_base | append: effective_thumb_work_id | append: "-primary-800.webp" -%}
+{%- assign src1200 = img_base | append: effective_thumb_work_id | append: "-primary-1200.webp" -%}
+{%- assign src1600 = img_base | append: effective_thumb_work_id | append: "-primary-1600.webp" -%}
+{%- assign src2400 = img_base | append: effective_thumb_work_id | append: "-primary-2400.webp" -%}
+{%- assign src2400_path = "/assets/works/img/" | append: effective_thumb_work_id | append: "-primary-2400.webp" -%}
 {%- assign has_2400 = false -%}
-{%- if thumb_work_id != "" -%}
+{%- if effective_thumb_work_id != "" -%}
   {%- assign maybe_2400 = site.static_files | where: "path", src2400_path | first -%}
   {%- if maybe_2400 -%}
     {%- assign has_2400 = true -%}
@@ -38,9 +45,9 @@ layout: default
   <h1 class="visually-hidden">{{ page.title | default: "Untitled" }}</h1>
 
   <div style="max-width:var(--content-measure);margin:0 auto;">
-    {% if thumb_work_id != "" %}
+    {% if effective_thumb_work_id != "" %}
     <figure class="page__media" style="max-width:30%;margin-left:0;margin-right:auto;">
-      <a class="page__mediaLink" href="{{ full_src }}" target="_blank" rel="noopener">
+      <a class="page__mediaLink" href="{{ full_src }}" target="_blank" rel="noopener" style="--work-ar: {{ thumb_work_doc.width_cm | default: 4 }} / {{ thumb_work_doc.height_cm | default: 3 }};">
         <img
           class="page__mediaImg"
           src="{{ src1600 }}"
@@ -77,8 +84,8 @@ layout: default
         <div class="page__row">
           thumb work
           <span>
-            {% if page.thumb_work_id %}
-              <a href="{{ '/works/' | append: page.thumb_work_id | append: '/' | relative_url }}">{{ page.thumb_work_id }}</a>
+            {% if effective_thumb_work_id %}
+              <a href="{{ '/works/' | append: effective_thumb_work_id | append: '/' | relative_url }}">{{ effective_thumb_work_id }}</a>
             {% else %}—{% endif %}
           </span>
         </div>
