@@ -28,6 +28,12 @@ sections:
         depth: 0
         node_type: "index"
       -
+        title: "series curator index"
+        url: "/series_curator/"
+        source: "series_curator/index.html"
+        depth: 1
+        node_type: "index"
+      -
         title: "works in series"
         url: "/works/:id/"
         source: "_works/*.md"

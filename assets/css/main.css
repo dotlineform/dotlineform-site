@@ -1437,11 +1437,20 @@ note: works tags are not currently in use on the work pages themselves.
   grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
 }
 
+.seriesCuratorList .worksList__head{
+  grid-template-columns: 10.5ch minmax(0, 1.2fr) minmax(0, 1fr);
+}
+
+.seriesCuratorList .worksList__item{
+  grid-template-columns: 10.5ch minmax(0, 1.2fr) minmax(0, 1fr);
+}
+
 .worksList__cat,
 .worksList__year,
 .worksList__title,
 .worksList__series,
-.worksList__storage{
+.worksList__storage,
+.worksList__tags{
   font-size: 12px;
   line-height: 1.2;
 }
@@ -1475,6 +1484,11 @@ note: works tags are not currently in use on the work pages themselves.
 }
 
 .worksList__storage{
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.worksList__tags{
   white-space: normal;
   overflow-wrap: anywhere;
 }

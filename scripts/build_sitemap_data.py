@@ -101,6 +101,7 @@ def build_works_section(root: Path) -> Dict[str, Any]:
     items.append(make_item("work details index", "/work_details/", "work_details/index.md", 1, "index"))
     items.append(make_item("works curator index", "/works_curator/", "works_curator/index.md", 0, "index"))
     items.append(make_item("series", "/series/", "_series/*.md", 0, "index"))
+    items.append(make_item("series curator index", "/series_curator/", "series_curator/index.html", 1, "index"))
     items.append(make_item("works in series", "/works/:id/", "_works/*.md", 1, "work"))
     items.append(make_item("work details", "/work_details/:id/", "_work_details/*.md", 2, "detail"))
     return {"key": "works", "label": "Works", "items": items}

@@ -134,7 +134,19 @@ Useful flags:
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
   - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-json`, `work-details-pages`, `work-json`, `moments`
+  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-curator-pages`, `series-json`, `work-details-pages`, `work-json`, `moments`
+  - coupling:
+    - selecting `work-pages` also includes `works-curator-pages`
+    - selecting `series-pages` also includes `series-curator-pages`
+
+Example (`series-pages` includes `series-curator-pages`):
+
+```bash
+./scripts/generate_work_pages.py data/works.xlsx \
+  --only series-pages \
+  --series-ids curve-poems \
+  --force
+```
 
 ### 4) Audit site consistency (read-only)
 
