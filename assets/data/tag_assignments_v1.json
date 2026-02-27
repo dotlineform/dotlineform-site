@@ -1,0 +1,14 @@
+{
+  "tag_assignments_version": "tag_assignments_v1",
+  "updated_at_utc": "2026-02-27T00:00:00Z",
+  "series": {
+    "curve-poems": {
+      "tags": [
+        "form:line",
+        "form:curvilinear",
+        "theme:emergence"
+      ],
+      "updated_at_utc": "2026-02-27T00:00:00Z"
+    }
+  }
+}

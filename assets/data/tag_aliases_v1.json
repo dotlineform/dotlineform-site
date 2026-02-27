@@ -1,0 +1,11 @@
+{
+  "tag_aliases_version": "tag_aliases_v1",
+  "updated_at_utc": "2026-02-27T00:00:00Z",
+  "aliases": {
+    "floral": "subject:flower",
+    "branches": "subject:branch",
+    "curves": "form:curvilinear",
+    "radial-form": "form:radial",
+    "signal-noise": "domain:signal"
+  }
+}
