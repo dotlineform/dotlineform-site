@@ -60,7 +60,7 @@ section: works
       var validKeys = { year: true, title: true, tags: true };
       var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
-      var sortKey = String(params.get('sort') || 'year').toLowerCase();
+      var sortKey = String(params.get('sort') || 'title').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
       if (!validKeys[sortKey]) sortKey = 'year';
       if (sortDir !== 'asc' && sortDir !== 'desc') sortDir = 'asc';
