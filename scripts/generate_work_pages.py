@@ -498,6 +498,40 @@ def read_image_dims_px(path: Path) -> tuple[Optional[int], Optional[int]]:
         return None, None
     return parse_sips_pixel_dims(proc.stdout)
 
+
+def utc_timestamp_now() -> str:
+    """Return current UTC timestamp formatted as YYYY-MM-DDTHH:MM:SSZ."""
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
+    """
+    Load tag assignments JSON payload.
+    If file is missing, return a default payload shape.
+    """
+    if not path.exists():
+        return {
+            "tag_assignments_version": "tag_assignments_v1",
+            "updated_at_utc": utc_timestamp_now(),
+            "series": {},
+        }
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise SystemExit(f"Failed to parse tag assignments JSON: {path} ({exc})")
+
+    if not isinstance(payload, dict):
+        raise SystemExit(f"Invalid tag assignments payload (expected object): {path}")
+
+    if not isinstance(payload.get("series"), dict):
+        payload["series"] = {}
+    if not coerce_string(payload.get("tag_assignments_version")):
+        payload["tag_assignments_version"] = "tag_assignments_v1"
+    if not coerce_string(payload.get("updated_at_utc")):
+        payload["updated_at_utc"] = utc_timestamp_now()
+    return payload
+
 # ----------------------------
 # Main program
 # ----------------------------
@@ -706,9 +740,13 @@ def main() -> None:
     series_out_dir.mkdir(parents=True, exist_ok=True)
     series_curator_out_dir = Path("_series_curator").expanduser()
     series_curator_out_dir.mkdir(parents=True, exist_ok=True)
+    tag_studio_out_dir = Path("_tag_studio").expanduser()
+    tag_studio_out_dir.mkdir(parents=True, exist_ok=True)
 
     series_prose_dir = Path(args.series_prose_dir).expanduser()
     series_prose_dir.mkdir(parents=True, exist_ok=True)
+    tag_assignments_path = Path("assets/data/tag_assignments_v1.json").expanduser()
+    tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
 
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
@@ -1374,6 +1412,12 @@ def main() -> None:
         series_published_date_updated = 0
         series_published_date_idx = series_hi.get("published_date")
         series_published_date_missing_warned = False
+        tag_studio_written = 0
+        tag_studio_skipped = 0
+        tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
+        tag_assignments_series = tag_assignments_payload.get("series", {})
+        tag_assignments_changed = False
+        tag_assignments_added = 0
         s_total = 0
         for sr in series_rows[1:]:
             sid_raw = cell(sr, series_hi, "series_id")
@@ -1485,11 +1529,79 @@ def main() -> None:
                         print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
                     else:
                         print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
+
+                thumb_work_id = coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None
+                primary_work_id = thumb_work_id
+                if primary_work_id is None:
+                    series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
+                    if series_work_ids_sorted:
+                        primary_work_id = series_work_ids_sorted[-1]
+
+                tsm: Dict[str, Any] = {
+                    "layout": "tag_studio",
+                    "series_id": series_id,
+                    "title": series_title,
+                    "year_display": year_display,
+                    "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                    "primary_work_id": primary_work_id,
+                }
+                tag_studio_content = build_front_matter(tsm) + "\n"
+                tag_studio_path = tag_studio_out_dir / f"{series_id}.md"
+
+                existing_tag_studio_text = None
+                if tag_studio_path.exists():
+                    try:
+                        existing_tag_studio_text = tag_studio_path.read_text(encoding="utf-8")
+                    except Exception:
+                        existing_tag_studio_text = None
+
+                tag_studio_needs_write = (existing_tag_studio_text != tag_studio_content)
+                prefix_ts = f"[tag-studio {s_processed}/{s_total}] "
+                if (not tag_studio_needs_write) and (not args.force):
+                    print(f"{prefix_ts}SKIP (no change): {tag_studio_path}")
+                    tag_studio_skipped += 1
+                else:
+                    if args.write:
+                        tag_studio_path.write_text(tag_studio_content, encoding="utf-8")
+                        print(f"{prefix_ts}WRITE: {tag_studio_path}")
+                        tag_studio_written += 1
+                    else:
+                        print(f"{prefix_ts}DRY-RUN: would write {tag_studio_path} (overwrite={tag_studio_path.exists()})")
+                        tag_studio_written += 1
+
+                if series_id not in tag_assignments_series:
+                    tag_assignments_series[series_id] = {
+                        "tags": [],
+                        "updated_at_utc": utc_timestamp_now(),
+                    }
+                    tag_assignments_changed = True
+                    tag_assignments_added += 1
         else:
             if selected_artifacts is not None and not artifact_enabled("series-pages"):
                 print("Series pages skipped: not selected by --only.")
             else:
                 print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
+            print("Tag studio pages skipped: follows series-pages selection.")
+            print("Tag assignments sync skipped: follows series-pages selection.")
+
+        if run_series_pages:
+            if tag_assignments_changed:
+                tag_assignments_payload["series"] = tag_assignments_series
+                tag_assignments_payload["updated_at_utc"] = utc_timestamp_now()
+                tag_assignments_text = json.dumps(tag_assignments_payload, indent=2, ensure_ascii=False) + "\n"
+                if args.write:
+                    tag_assignments_path.write_text(tag_assignments_text, encoding="utf-8")
+                    print(
+                        f"Tag assignments sync: WRITE {tag_assignments_path} "
+                        f"(added missing entries: {tag_assignments_added})."
+                    )
+                else:
+                    print(
+                        f"Tag assignments sync: DRY-RUN would write {tag_assignments_path} "
+                        f"(added missing entries: {tag_assignments_added})."
+                    )
+            else:
+                print("Tag assignments sync: no missing series entries.")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
             wb.save(xlsx_path)
@@ -1498,6 +1610,10 @@ def main() -> None:
             if series_published_date_updated > 0:
                 print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
+        print(
+            f"Tag studio pages done. {'Would write' if not args.write else 'Wrote'}: "
+            f"{tag_studio_written}. Skipped: {tag_studio_skipped}."
+        )
 
         series_curator_written = 0
         series_curator_skipped = 0
