@@ -28,23 +28,17 @@ section: works
       <button class="worksList__sortBtn" type="button" data-sort-key="title">
         title <span class="worksList__sortIcon" aria-hidden="true"></span>
       </button>
-      <button class="worksList__sortBtn" type="button" data-sort-key="tags">
-        tags <span class="worksList__sortIcon" aria-hidden="true"></span>
-      </button>
     </div>
 
     <ul class="worksList__list" id="seriesCuratorList">
       {% for s in series_sorted %}
-        {% assign tags_csv = s.tags | join: ", " %}
         <li
           class="worksList__item"
           data-year="{{ s.year | default: 0 }}"
           data-title="{{ s.title_sort | default: s.title | downcase | strip | escape }}"
-          data-tags="{{ tags_csv | downcase | strip | escape }}"
         >
           <span class="worksList__year">{{ s.year_display | default: s.year }}</span>
           <a class="worksList__title" href="{{ s.url | relative_url }}">{{ s.title }}</a>
-          <span class="worksList__tags">{{ tags_csv | default: "—" }}</span>
         </li>
       {% endfor %}
     </ul>
@@ -57,12 +51,12 @@ section: works
       var buttons = Array.prototype.slice.call(document.querySelectorAll('.worksList__sortBtn'));
       if (!buttons.length) return;
 
-      var validKeys = { year: true, title: true, tags: true };
+      var validKeys = { year: true, title: true };
       var collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
       var params = new URLSearchParams(window.location.search);
       var sortKey = String(params.get('sort') || 'title').toLowerCase();
       var sortDir = String(params.get('dir') || 'asc').toLowerCase();
-      if (!validKeys[sortKey]) sortKey = 'year';
+      if (!validKeys[sortKey]) sortKey = 'title';
       if (sortDir !== 'asc' && sortDir !== 'desc') sortDir = 'asc';
 
       function compareValues(a, b, key) {
@@ -81,9 +75,7 @@ section: works
         rows.sort(function (a, b) {
           var primary = compareValues(a, b, key);
           if (primary !== 0) return dir === 'asc' ? primary : -primary;
-          var tieTitle = compareValues(a, b, 'title');
-          if (tieTitle !== 0) return tieTitle;
-          return compareValues(a, b, 'tags');
+          return compareValues(a, b, 'title');
         });
         list.innerHTML = '';
         rows.forEach(function (row) { list.appendChild(row); });

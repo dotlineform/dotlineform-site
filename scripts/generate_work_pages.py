@@ -1429,7 +1429,6 @@ def main() -> None:
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                     "year": year,
                     "year_display": year_display,
-                    "tags": parse_list(cell(sr, series_hi, "tags"), sep=","),
                     "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
                     "layout": "series",
                 }
@@ -1550,7 +1549,6 @@ def main() -> None:
                     "year": year,
                     "year_display": year_display,
                     "project_folders": series_project_folders_by_id.get(series_id, []),
-                    "tags": parse_list(cell(sr, series_hi, "tags"), sep=","),
                     "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
                     "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                 }
