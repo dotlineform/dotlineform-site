@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-02-28T23:19:30Z",
+  "updated_at_utc": "2026-02-28T21:49:45Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -27,15 +27,13 @@
       "updated_at_utc": "2026-02-28T21:49:45Z"
     },
     "dotlineform-2021": {
-      "tags": [
-        "domain:memory"
-      ],
-      "updated_at_utc": "2026-02-28T23:19:30Z"
+      "tags": [],
+      "updated_at_utc": "2026-02-28T21:49:45Z"
     },
     "dots": {
       "tags": [
-        "form:curvilinear"
-      ],
+          "form:curvilinear"
+        ],
       "updated_at_utc": "2026-02-28T21:56:56Z"
     },
     "for-david-lynch": {
