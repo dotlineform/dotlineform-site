@@ -10,6 +10,6 @@ project_folders:
   - "intuition (2020)"
 thumb_work_id: null
 notes: "put track listing in work_prose"
-checksum: "e69d5f83b9363a5fe61cf02f9e206ae4"
+checksum: "592c4be19f4c85105e1e24b8947e7a30"
 ---
 

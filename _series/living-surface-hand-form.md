@@ -7,7 +7,7 @@ year: 2004
 year_display: "1989, 2004"
 thumb_work_id: null
 layout: "series"
-checksum: "aaf18427ec2778fb8cd794c2d6943dfd"
+checksum: "028e807c83a24b4e4b6e807d6c299c9f"
 ---
 
 {% include series_prose/living-surface-hand-form.md %}

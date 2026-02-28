@@ -7,7 +7,7 @@ year: 2010
 year_display: "2010"
 thumb_work_id: null
 layout: "series"
-checksum: "0593a7c70d582bc91955044db825f82d"
+checksum: "dae4139a26b2d5c26dec54e5ba732e9f"
 ---
 
 {% include series_prose/dots.md %}

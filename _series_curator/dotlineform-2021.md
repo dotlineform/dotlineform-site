@@ -10,6 +10,6 @@ project_folders:
   - "dotlineform (2021)"
 thumb_work_id: null
 notes: "details to publish"
-checksum: "6a96621783d098c8e55d0a56897abb99"
+checksum: "959072fce54ad3a312a50835f62f4c3e"
 ---
 

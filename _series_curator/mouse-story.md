@@ -10,6 +10,6 @@ project_folders:
   - "mouse story"
 thumb_work_id: "00160"
 notes: null
-checksum: "49b246a45fe36b00e2727e96742f6cb5"
+checksum: "dfc35e5b34268447756202e61454cd86"
 ---
 

@@ -10,6 +10,6 @@ project_folders:
   - "a poem divided into 4 parts"
 thumb_work_id: "00001"
 notes: "details attached to 00001"
-checksum: "c483cec3d831fe44a839e2cb185e5f35"
+checksum: "62616b605fffaaec669bb29b6251d25f"
 ---
 

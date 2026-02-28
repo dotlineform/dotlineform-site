@@ -10,6 +10,6 @@ project_folders:
   - "mm"
 thumb_work_id: "00477"
 notes: "add dall-e versions"
-checksum: "0023e09ae53dc9c4afd026f4e2542ece"
+checksum: "991c87e5cee0ac8579ee39a48ac7624f"
 ---
 

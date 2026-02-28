@@ -7,7 +7,7 @@ year: 2023
 year_display: "2023"
 thumb_work_id: null
 layout: "series"
-checksum: "276de06036e7dbb69799813550e88bab"
+checksum: "334a153ec74b807611bed8306efd1d6c"
 ---
 
 {% include series_prose/forest-memories-1-48.md %}

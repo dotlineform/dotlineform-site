@@ -10,6 +10,6 @@ project_folders:
   - "dots"
 thumb_work_id: null
 notes: "more works and details to publish"
-checksum: "4b014f509ba2474260199e5511b19743"
+checksum: "1701d6a77863c05050645c9779ca9736"
 ---
 

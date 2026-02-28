@@ -7,7 +7,7 @@ year: 2023
 year_display: "2023"
 thumb_work_id: "00468"
 layout: "series"
-checksum: "249f491dc0aaaef186aaead674ad3c9d"
+checksum: "a095f218a68e6bcadeb42bab098ea39e"
 ---
 
 {% include series_prose/forests-2023.md %}

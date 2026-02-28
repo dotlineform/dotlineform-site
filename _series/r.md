@@ -7,7 +7,7 @@ year: 2001
 year_display: "2001"
 thumb_work_id: "00142"
 layout: "series"
-checksum: "5e1f05c4cdb6741ef7ddd7204e75ba75"
+checksum: "eb2c504e0942e94509a60c4b4b7c8c6b"
 ---
 
 {% include series_prose/r.md %}

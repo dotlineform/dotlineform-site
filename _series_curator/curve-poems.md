@@ -10,6 +10,6 @@ project_folders:
   - "curve poems (2025)"
 thumb_work_id: "00361"
 notes: "more works to publish"
-checksum: "df8511d96af90e21ad4a1602e92c54cd"
+checksum: "65331ff5e305cc2744d17dc2ba326b71"
 ---
 

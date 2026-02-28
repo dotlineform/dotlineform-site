@@ -10,6 +10,6 @@ project_folders:
   - "collected 1989-1998"
 thumb_work_id: "00049"
 notes: null
-checksum: "a4d04734986b04caab2819a2b9522211"
+checksum: "210fbb5b02cc60bfce21e5595625e0fc"
 ---
 

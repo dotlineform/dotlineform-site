@@ -7,7 +7,7 @@ year: 2021
 year_display: "2021"
 thumb_work_id: null
 layout: "series"
-checksum: "821ac1b6e9a559c5788783a05a953da3"
+checksum: "51f5229337017aef1d1241e6eed89527"
 ---
 
 {% include series_prose/dotlineform-2021.md %}

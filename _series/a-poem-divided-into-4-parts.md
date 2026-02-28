@@ -7,7 +7,7 @@ year: 2025
 year_display: "2025"
 thumb_work_id: "00001"
 layout: "series"
-checksum: "0a7f54a6e2b261526d8172078db69b49"
+checksum: "6f64f7431787204f866b0e1a8fc8406c"
 ---
 
 {% include series_prose/a-poem-divided-into-4-parts.md %}

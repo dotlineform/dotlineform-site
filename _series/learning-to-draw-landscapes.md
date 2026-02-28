@@ -7,7 +7,7 @@ year: 2010
 year_display: "c. 2010?, 2022"
 thumb_work_id: "00127"
 layout: "series"
-checksum: "e0d520ef34d9f5cc80635cc592351515"
+checksum: "c9933fb5b01bdcef33094862de04a516"
 ---
 
 {% include series_prose/learning-to-draw-landscapes.md %}

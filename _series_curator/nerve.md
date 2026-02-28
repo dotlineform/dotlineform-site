@@ -12,6 +12,6 @@ project_folders:
   - "nerve (formaldehyde form)"
 thumb_work_id: null
 notes: "works and details to publish"
-checksum: "5a22345d2542ca43322248f149a3ff07"
+checksum: "e568f40704ca4cfd3e43c61327f9d7ab"
 ---
 

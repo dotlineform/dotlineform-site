@@ -7,7 +7,7 @@ year: 2025
 year_display: "2025"
 thumb_work_id: null
 layout: "series"
-checksum: "01fe01752df56b100938b906e5589ebe"
+checksum: "0433464d42d50093306af128c435d67d"
 ---
 
 {% include series_prose/for-david-lynch.md %}

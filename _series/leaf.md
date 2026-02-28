@@ -7,7 +7,7 @@ year: 2016
 year_display: "2016"
 thumb_work_id: null
 layout: "series"
-checksum: "dd0a9a24eb3de260dcf80efbd7374ee1"
+checksum: "08faf5e1efb13f1079cd128ace31e102"
 ---
 
 {% include series_prose/leaf.md %}

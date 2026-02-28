@@ -7,7 +7,7 @@ year: 1994
 year_display: "1994"
 thumb_work_id: null
 layout: "series"
-checksum: "0d50030f32e845c4b27c36525806f291"
+checksum: "ad481f4a3d1975bb74d05b05e7b381b7"
 ---
 
 {% include series_prose/models.md %}

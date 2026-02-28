@@ -10,6 +10,6 @@ project_folders:
   - "learning to draw landscapes"
 thumb_work_id: "00127"
 notes: null
-checksum: "54844209284b37685684c9d0cc7e8985"
+checksum: "0e7538ba27f75535f672665f9559ef7d"
 ---
 

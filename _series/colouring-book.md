@@ -7,7 +7,7 @@ year: 1996
 year_display: "1996"
 thumb_work_id: "00219"
 layout: "series"
-checksum: "ffa4a86bb5ccaaff13352788d8d48b22"
+checksum: "7b7645b5187d215de309cf4ed608d3f0"
 ---
 
 {% include series_prose/colouring-book.md %}
