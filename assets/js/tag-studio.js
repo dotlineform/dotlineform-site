@@ -544,8 +544,7 @@ function renderGroups(state) {
             .map((entry) => {
               return `
                 <li class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}">
-                  <span class="tagStudio__chipTag">${escapeHtml(entry.canonicalId)}</span>
-                  <small class="tagStudio__chipLabel">${escapeHtml(entry.label)}</small>
+                  <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
                   <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
                 </li>
               `;
@@ -617,7 +616,7 @@ function renderSuggestions(state) {
       const buttons = examples.length
         ? examples
             .map((tag) => {
-              return `<button type="button" class="tagStudio__exampleBtn" data-tag-id="${escapeHtml(tag.tag_id)}">${escapeHtml(tag.tag_id)}</button>`;
+              return `<button type="button" class="tagStudio__exampleBtn" data-tag-id="${escapeHtml(tag.tag_id)}" title="${escapeHtml(tag.tag_id)}">${escapeHtml(tag.label)}</button>`;
             })
             .join("")
         : '<span class="tagStudio__empty">no active examples</span>';
