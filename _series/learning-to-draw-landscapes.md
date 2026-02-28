@@ -5,9 +5,6 @@ title_sort: "learning to draw landscapes"
 sort_fields: "work_id"
 year: 2010
 year_display: "c. 2010?, 2022"
-tags:
-  - "landscape"
-  - "drawing"
 thumb_work_id: "00127"
 layout: "series"
 checksum: "e0d520ef34d9f5cc80635cc592351515"

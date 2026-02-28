@@ -8,10 +8,6 @@ year: 2004
 year_display: "1989, 2004"
 project_folders:
   - "living surface hand form"
-tags:
-  - "living surface"
-  - "forms"
-  - "hand"
 thumb_work_id: null
 notes: null
 checksum: "ace6f7d6e908706c310acb80835a6961"

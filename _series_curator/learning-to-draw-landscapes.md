@@ -8,9 +8,6 @@ year: 2010
 year_display: "c. 2010?, 2022"
 project_folders:
   - "learning to draw landscapes"
-tags:
-  - "landscape"
-  - "drawing"
 thumb_work_id: "00127"
 notes: null
 checksum: "54844209284b37685684c9d0cc7e8985"

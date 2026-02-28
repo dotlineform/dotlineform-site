@@ -8,9 +8,6 @@ year: 1993
 year_display: "1991-93"
 project_folders:
   - "mouse story"
-tags:
-  - "mouse"
-  - "writing"
 thumb_work_id: "00160"
 notes: null
 checksum: "49b246a45fe36b00e2727e96742f6cb5"

@@ -8,8 +8,6 @@ year: 1994
 year_display: "1994"
 project_folders:
   - "models"
-tags:
-  - "models"
 thumb_work_id: null
 notes: null
 checksum: "69cda3980baf52fe47dc45f55606421d"

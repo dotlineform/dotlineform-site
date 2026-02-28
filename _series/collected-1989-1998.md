@@ -5,8 +5,6 @@ title_sort: "collected 1989-1998"
 sort_fields: "title,work_id"
 year: 1998
 year_display: "c. 1989-98"
-tags:
-  - "collected"
 thumb_work_id: "00049"
 layout: "series"
 checksum: "006007d1584a8f47155b14c18846ab57"

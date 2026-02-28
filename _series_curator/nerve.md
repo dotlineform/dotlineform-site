@@ -10,9 +10,6 @@ project_folders:
   - "nerve"
   - "nerve (abattoir)"
   - "nerve (formaldehyde form)"
-tags:
-  - "nerve"
-  - "text"
 thumb_work_id: null
 notes: "works and details to publish"
 checksum: "5a22345d2542ca43322248f149a3ff07"
