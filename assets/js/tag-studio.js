@@ -1,5 +1,7 @@
 const GROUPS = ["subject", "domain", "form", "theme"];
 const GROUP_INDEX = new Map(GROUPS.map((group, index) => [group, index]));
+const POST_ENDPOINT = "http://127.0.0.1:8787/save-tags";
+const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagStudio);
@@ -28,6 +30,7 @@ async function initTagStudio() {
     renderShell(state);
     wireEvents(state);
     renderAll(state);
+    void probeSaveMode(state);
   } catch (error) {
     renderFatalError(
       mount,
@@ -112,7 +115,8 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
     statusKind: "",
     pendingChooserRaw: "",
     refs: null,
-    modalSnippet: ""
+    modalSnippet: "",
+    saveMode: "patch"
   };
 }
 
@@ -188,8 +192,10 @@ function renderShell(state) {
 
       <div class="tagStudio__actions">
         <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
+        <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
         <span class="tagStudio__saveWarning" data-role="save-warning"></span>
       </div>
+      <p class="tagStudio__saveResult" data-role="save-result"></p>
     </div>
 
     <div class="tagStudioModal" data-role="modal" hidden>
@@ -218,7 +224,9 @@ function renderShell(state) {
     metrics: state.mount.querySelector('[data-role="metrics"]'),
     suggestions: state.mount.querySelector('[data-role="suggestions"]'),
     saveButton: state.mount.querySelector('[data-role="save"]'),
+    saveMode: state.mount.querySelector('[data-role="save-mode"]'),
     saveWarning: state.mount.querySelector('[data-role="save-warning"]'),
+    saveResult: state.mount.querySelector('[data-role="save-result"]'),
     modal: state.mount.querySelector('[data-role="modal"]'),
     modalTags: state.mount.querySelector('[data-role="modal-tags"]'),
     modalSnippet: state.mount.querySelector('[data-role="modal-snippet"]'),
@@ -299,7 +307,7 @@ function wireEvents(state) {
   });
 
   state.refs.saveButton.addEventListener("click", () => {
-    openSaveModal(state);
+    void handleSave(state);
   });
 
   state.refs.modal.addEventListener("click", (event) => {
@@ -403,6 +411,7 @@ function addResolvedTag(state, tag, rawInput) {
 
   state.entries.push(makeResolvedEntry(state.nextEntryId++, rawInput, tag));
   setStatus(state, "success", `Added ${tagId}.`);
+  setSaveResult(state, "", "");
 }
 
 function addUnresolvedTag(state, rawInput) {
@@ -416,6 +425,7 @@ function addUnresolvedTag(state, rawInput) {
   }
 
   state.entries.push(makeUnresolvedEntry(state.nextEntryId++, rawInput));
+  setSaveResult(state, "", "");
 }
 
 function removeEntry(state, entryId) {
@@ -423,6 +433,7 @@ function removeEntry(state, entryId) {
   state.entries = state.entries.filter((entry) => entry.entryId !== entryId);
   if (state.entries.length < sizeBefore) {
     setStatus(state, "success", "Tag removed.");
+    setSaveResult(state, "", "");
   }
 }
 
@@ -451,6 +462,7 @@ function renderAll(state) {
   renderGroups(state);
   renderMetrics(state);
   renderSuggestions(state);
+  renderSaveMode(state);
   renderSaveState(state);
 }
 
@@ -638,6 +650,12 @@ function renderSaveState(state) {
   state.refs.saveWarning.textContent = hasUnresolved ? "Resolve unknown tags before saving." : "";
 }
 
+function renderSaveMode(state) {
+  if (!state.refs.saveMode) return;
+  const label = state.saveMode === "post" ? "Local server" : "Patch";
+  state.refs.saveMode.textContent = `Save mode: ${label}`;
+}
+
 function computeMetrics(state) {
   const groupCounts = Object.fromEntries(GROUPS.map((group) => [group, 0]));
   const canonicalCounts = new Map();
@@ -659,6 +677,90 @@ function computeMetrics(state) {
   collisions.sort((a, b) => a.tagId.localeCompare(b.tagId));
 
   return { groupCounts, collisions, unresolvedCount };
+}
+
+async function probeSaveMode(state) {
+  const ok = await isLocalSaveAvailable(500);
+  state.saveMode = ok ? "post" : "patch";
+  renderSaveMode(state);
+}
+
+async function isLocalSaveAvailable(timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(HEALTH_ENDPOINT, { signal: controller.signal });
+    if (!response.ok) return false;
+    const data = await response.json();
+    return Boolean(data && data.ok);
+  } catch (error) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function handleSave(state) {
+  const metrics = computeMetrics(state);
+  if (metrics.unresolvedCount > 0) {
+    setStatus(state, "error", "Resolve unknown tags before saving.");
+    renderStatus(state);
+    return;
+  }
+
+  const canonicalTags = getCanonicalTags(state);
+  if (state.saveMode === "post") {
+    try {
+      const result = await postTags(state.seriesId, canonicalTags);
+      const savedAt = String(result.updated_at_utc || utcTimestamp());
+      setStatus(state, "success", `Saved at ${savedAt}.`);
+      setSaveResult(state, "success", `Saved at ${savedAt}.`);
+      renderStatus(state);
+      return;
+    } catch (error) {
+      state.saveMode = "patch";
+      renderSaveMode(state);
+      setStatus(state, "error", "Local save failed. Switched to Patch mode.");
+      setSaveResult(state, "error", "Local server save failed. Showing patch fallback.");
+      renderStatus(state);
+      openSaveModal(state);
+      return;
+    }
+  }
+
+  openSaveModal(state);
+}
+
+async function postTags(seriesId, tags) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 3000);
+  try {
+    const response = await fetch(POST_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        series_id: seriesId,
+        tags,
+        client_time_utc: utcTimestamp()
+      }),
+      signal: controller.signal
+    });
+
+    let body = null;
+    try {
+      body = await response.json();
+    } catch (error) {
+      body = null;
+    }
+
+    if (!response.ok || !body || !body.ok) {
+      const message = (body && body.error) ? String(body.error) : `HTTP ${response.status}`;
+      throw new Error(message);
+    }
+    return body;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function openSaveModal(state) {
@@ -732,6 +834,13 @@ function renderStatus(state) {
   if (state.statusKind) {
     state.refs.status.classList.add(`is-${state.statusKind}`);
   }
+}
+
+function setSaveResult(state, kind, text) {
+  if (!state.refs.saveResult) return;
+  state.refs.saveResult.textContent = text || "";
+  state.refs.saveResult.className = "tagStudio__saveResult";
+  if (kind) state.refs.saveResult.classList.add(`is-${kind}`);
 }
 
 function normalize(value) {

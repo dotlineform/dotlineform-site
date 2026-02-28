@@ -148,6 +148,37 @@ Example (`series-pages` includes `series-curator-pages`):
   --force
 ```
 
+### 3b) Tag Studio local save server
+
+Run:
+
+```bash
+/Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py
+```
+
+Optional flags:
+
+- `--port 8787`: override port
+- `--repo-root /path/to/dotlineform-site`: override root auto-detection (`_config.yml` parent search)
+- `--dry-run`: validate and return response without writing files
+
+Behavior:
+
+- Exposes:
+  - `GET /health`
+  - `POST /save-tags`
+- Tag Studio page probes `/health` and shows:
+  - `Save mode: Local server` when available
+  - `Save mode: Patch` when unavailable (fallback to patch modal)
+
+Security constraints:
+
+- Binds to `127.0.0.1` only
+- CORS allows only `http://localhost:*` and `http://127.0.0.1:*`
+- Write target is allowlisted to one file only:
+  - `assets/data/tag_assignments_v1.json`
+  - backup is created as `assets/data/tag_assignments_v1.json.bak`
+
 ### 4) Audit site consistency (read-only)
 
 Run an audit across generated pages and JSON:
