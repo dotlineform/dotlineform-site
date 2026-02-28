@@ -96,13 +96,6 @@ layout: default
             {% if folders_csv and folders_csv != "" %}{{ folders_csv }}{% else %}—{% endif %}
           </span>
         </div>
-        <div class="page__row">
-          tags
-          <span>
-            {% assign tags_csv = page.tags | join: ", " %}
-            {% if tags_csv and tags_csv != "" %}{{ tags_csv }}{% else %}—{% endif %}
-          </span>
-        </div>
         <div class="page__row">notes <span>{{ page.notes | default: "—" }}</span></div>
       </div>
     </section>
