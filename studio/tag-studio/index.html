@@ -5,6 +5,8 @@ permalink: /studio/tag-studio/
 section: works
 ---
 
+<link rel="stylesheet" href="{{ '/assets/css/tag-studio.css' | relative_url }}">
+
 {% assign series_items = site.tag_studio %}
 {% if series_items and series_items != empty %}
   {% assign series_sorted = series_items | sort_natural: "title" %}
@@ -14,7 +16,7 @@ section: works
     {% assign series_label = "series" %}
   {% endif %}
 
-  <div class="index worksList seriesCuratorList">
+  <div class="index worksList seriesCuratorList tagStudioIndex">
     <h1 class="index__heading visually-hidden">tag studio</h1>
     <div class="worksList__metaRow">
       <p class="worksList__count" id="tagStudioCount">{{ series_count }} {{ series_label }}</p>
@@ -25,6 +27,7 @@ section: works
       <button class="worksList__sortBtn" type="button" data-sort-key="year">
         year <span class="worksList__sortIcon" aria-hidden="true"></span>
       </button>
+      <span class="worksList__headLabel">status</span>
       <button class="worksList__sortBtn" type="button" data-sort-key="title">
         title <span class="worksList__sortIcon" aria-hidden="true"></span>
       </button>
@@ -34,10 +37,19 @@ section: works
       {% for s in series_sorted %}
         <li
           class="worksList__item"
+          data-series-id="{{ s.series_id | default: s.slug | escape }}"
           data-year="{{ s.year | default: 0 }}"
           data-title="{{ s.title_sort | default: s.title | downcase | strip | escape }}"
         >
           <span class="worksList__year">{{ s.year_display | default: s.year }}</span>
+          <span class="tagStudioIndex__statusWrap">
+            <span
+              class="rag rag--red"
+              title="loading tag status..."
+              aria-label="loading tag status"
+              data-rag-indicator
+            ></span>
+          </span>
           <a class="worksList__title" href="{{ s.url | relative_url }}">{{ s.title }}</a>
         </li>
       {% endfor %}
@@ -48,7 +60,7 @@ section: works
     (function () {
       var list = document.getElementById('tagStudioList');
       if (!list) return;
-      var buttons = Array.prototype.slice.call(document.querySelectorAll('.worksList__sortBtn'));
+      var buttons = Array.prototype.slice.call(list.parentElement.querySelectorAll('.worksList__sortBtn'));
       if (!buttons.length) return;
 
       var validKeys = { year: true, title: true };
@@ -122,6 +134,7 @@ section: works
       persist(sortKey, sortDir);
     })();
   </script>
+  <script type="module" src="{{ '/assets/js/tag-studio-index.js' | relative_url }}"></script>
 {% else %}
   <p>no tag studio pages yet</p>
 {% endif %}
