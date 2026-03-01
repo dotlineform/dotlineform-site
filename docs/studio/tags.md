@@ -12,6 +12,9 @@ This document is the central reference for series-level tag editing in Studio Se
 - Registry browsing page:
   - `studio/tag-registry/index.md`
   - `assets/js/tag-registry.js`
+- Series assignments overview page:
+  - `studio/series-tags/index.md`
+  - `assets/js/series-tags.js`
 - Tag write service: `scripts/tag_write_server.py`
 - Data contracts:
   - `assets/data/tag_registry.json`
@@ -52,12 +55,29 @@ When a user enters text, resolution is:
 
 If multiple matches are found, the value is treated as ambiguous.
 If no match is found, it is unresolved and save is blocked.
+For alias arrays, one valid target resolves directly; multiple valid targets are treated as ambiguous.
 
 `tag_aliases.json` maps shorthand inputs to canonical `tag_id` values:
 
 - Version field: `tag_aliases_version`
 - Update timestamp: `updated_at_utc`
 - Map: `aliases`
+  - value may be either:
+    - string (single canonical `tag_id`)
+    - array of strings (multiple canonical `tag_id` values)
+
+Example:
+
+```json
+{
+  "tag_aliases_version": "tag_aliases_v1",
+  "updated_at_utc": "2026-03-01T00:00:00Z",
+  "aliases": {
+    "floral": "subject:flower",
+    "signal": ["theme:signal", "domain:communication", "subject:wave"]
+  }
+}
+```
 
 ## Metrics Currently Calculated
 
@@ -223,3 +243,15 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - shows a group key above the list
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
+
+## Series Tags Page
+
+The Series Tags page (`/studio/series-tags/`) reads `assets/data/tag_assignments.json` and:
+
+- lists series in alphabetical order by title
+- links each series title to its Studio Series page
+- shows assigned-tag count per series
+- renders assigned tags as color-coded pills
+- sorts tags alphabetically by label (fallback: tag id)
+- uses an inline header key (`All tags` + group pills) in the tags column
+- applies key filtering to visible tag pills only (series rows and counts remain unchanged)

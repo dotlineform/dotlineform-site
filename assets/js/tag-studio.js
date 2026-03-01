@@ -80,9 +80,10 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
   const rawAliases = aliasesJson && typeof aliasesJson.aliases === "object" ? aliasesJson.aliases : {};
   for (const [aliasInput, targetInput] of Object.entries(rawAliases)) {
     const aliasKey = normalize(aliasInput);
-    const targetTagId = normalize(targetInput);
     if (!aliasKey) continue;
-    aliases.set(aliasKey, targetTagId);
+    const targetTagIds = normalizeAliasTargets(targetInput);
+    if (!targetTagIds.length) continue;
+    aliases.set(aliasKey, targetTagIds);
   }
 
   const entries = [];
@@ -313,6 +314,14 @@ function addFromInput(state) {
     return;
   }
 
+  if (resolved.type === "ambiguous") {
+    const candidateIds = resolved.candidates.map((tag) => tag.tag_id).slice(0, 6);
+    const suffix = resolved.candidates.length > 6 ? ", ..." : "";
+    setStatus(state, "warn", `Multiple matches for "${rawInput}": ${candidateIds.join(", ")}${suffix}`);
+    renderStatus(state);
+    return;
+  }
+
   if (resolved.type === "unresolved") {
     setStatus(state, "error", `Unknown tag: "${rawInput}".`);
     renderStatus(state);
@@ -330,10 +339,22 @@ function resolveInput(rawInput, state) {
     return { type: "unresolved" };
   }
 
-  const aliasTagId = state.aliases.get(normalized);
-  if (aliasTagId) {
-    const aliasTag = state.tagsById.get(aliasTagId);
-    if (aliasTag) return { type: "resolved", tag: aliasTag };
+  const aliasTagIds = state.aliases.get(normalized);
+  if (Array.isArray(aliasTagIds) && aliasTagIds.length) {
+    const aliasCandidates = [];
+    const seenAlias = new Set();
+    for (const aliasTagId of aliasTagIds) {
+      const normalizedAliasTagId = normalize(aliasTagId);
+      if (!normalizedAliasTagId || seenAlias.has(normalizedAliasTagId)) continue;
+      seenAlias.add(normalizedAliasTagId);
+      const aliasTag = state.tagsById.get(normalizedAliasTagId);
+      if (aliasTag) aliasCandidates.push(aliasTag);
+    }
+    if (aliasCandidates.length === 1) return { type: "resolved", tag: aliasCandidates[0] };
+    if (aliasCandidates.length > 1) {
+      aliasCandidates.sort((a, b) => a.tag_id.localeCompare(b.tag_id));
+      return { type: "ambiguous", candidates: aliasCandidates };
+    }
   }
 
   const candidates = [];
@@ -708,6 +729,23 @@ function setSaveResult(state, kind, text) {
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function normalizeAliasTargets(value) {
+  if (Array.isArray(value)) {
+    const out = [];
+    const seen = new Set();
+    for (const item of value) {
+      const normalized = normalize(item);
+      if (!normalized || seen.has(normalized)) continue;
+      seen.add(normalized);
+      out.push(normalized);
+    }
+    return out;
+  }
+
+  const single = normalize(value);
+  return single ? [single] : [];
 }
 
 function escapeHtml(value) {
