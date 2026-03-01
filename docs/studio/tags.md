@@ -115,13 +115,13 @@ Interaction:
 
 Save mode is probed at page load:
 
-- Health check: `GET http://127.0.0.1:8787/health` (500ms timeout)
+- Health check against local save service (500ms timeout)
 - If available: `Save mode: Local server`
 - Else: `Save mode: Patch`
 
 ### Local server mode
 
-- Endpoint: `POST http://127.0.0.1:8787/save-tags`
+- Endpoint: `POST /save-tags` on the local save service
 - Payload:
   - `series_id`
   - `tags` (canonical IDs, may be empty to clear)

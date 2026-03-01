@@ -143,7 +143,7 @@ Useful flags:
 Run:
 
 ```bash
-/Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py
+python3 scripts/tag_write_server.py
 ```
 
 Optional flags:
@@ -163,8 +163,8 @@ Behavior:
 
 Security constraints:
 
-- Binds to `127.0.0.1` only
-- CORS allows only `http://localhost:*` and `http://127.0.0.1:*`
+- Binds to loopback interface only (local machine only)
+- CORS allows loopback origins only
 - Write target is allowlisted to one file only:
   - `assets/data/tag_assignments_v1.json`
   - backup is created as `assets/data/tag_assignments_v1.json.bak`
