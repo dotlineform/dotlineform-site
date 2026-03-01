@@ -1541,7 +1541,11 @@ def main() -> None:
                     "layout": "tag_studio",
                     "series_id": series_id,
                     "title": series_title,
+                    "title_sort": numeric_aware_sort_key(series_title),
+                    "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
+                    "year": year,
                     "year_display": year_display,
+                    "project_folders": series_project_folders_by_id.get(series_id, []),
                     "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                     "primary_work_id": primary_work_id,
                 }
