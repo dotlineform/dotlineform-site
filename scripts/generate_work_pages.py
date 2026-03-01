@@ -620,8 +620,8 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-curator-pages,series-json,work-details-pages,work-json,moments. "
-            "Note: selecting work-pages also includes works-curator-pages; selecting series-pages also includes series-curator-pages."
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,moments. "
+            "Note: selecting work-pages also includes works-curator-pages."
         ),
     )
     args = ap.parse_args()
@@ -631,7 +631,6 @@ def main() -> None:
         "works-curator-pages",
         "work-files",
         "series-pages",
-        "series-curator-pages",
         "series-json",
         "work-details-pages",
         "work-json",
@@ -664,7 +663,6 @@ def main() -> None:
     run_works_curator_pages = artifact_enabled("works-curator-pages") or run_work_pages
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
-    run_series_curator_pages = artifact_enabled("series-curator-pages") or run_series_pages
     run_series_json = artifact_enabled("series-json")
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
@@ -738,8 +736,6 @@ def main() -> None:
 
     series_out_dir = Path(args.series_output_dir).expanduser()
     series_out_dir.mkdir(parents=True, exist_ok=True)
-    series_curator_out_dir = Path("_series_curator").expanduser()
-    series_curator_out_dir.mkdir(parents=True, exist_ok=True)
     studio_series_out_dir = Path("_studio_series").expanduser()
     studio_series_out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1338,7 +1334,6 @@ def main() -> None:
             series_json_selected_ids = affected_series_ids
         if selected_artifacts is None:
             run_series_pages = False
-            run_series_curator_pages = False
 
     # Guard against stale _works series_sort values when generating series JSON.
     # Canonical order is computed in-memory above (series_sort_by_work_id) and written to series JSON.
@@ -1616,92 +1611,6 @@ def main() -> None:
         print(
             f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
             f"{studio_series_written}. Skipped: {studio_series_skipped}."
-        )
-
-        series_curator_written = 0
-        series_curator_skipped = 0
-        if run_series_curator_pages:
-            sc_total = 0
-            for sr in series_rows[1:]:
-                sid_raw = cell(sr, series_hi, "series_id")
-                if is_empty(sid_raw):
-                    continue
-                sid = require_slug_safe("series_id", sid_raw)
-                if series_page_selected_ids is not None and sid not in series_page_selected_ids:
-                    continue
-                status = normalize_status(cell(sr, series_hi, "status"))
-                if is_actionable_series_status(status):
-                    sc_total += 1
-
-            sc_processed = 0
-            for sr in series_rows[1:]:
-                sid_raw = cell(sr, series_hi, "series_id")
-                if is_empty(sid_raw):
-                    series_curator_skipped += 1
-                    continue
-                series_id = require_slug_safe("series_id", sid_raw)
-                if series_page_selected_ids is not None and series_id not in series_page_selected_ids:
-                    series_curator_skipped += 1
-                    continue
-                status = normalize_status(cell(sr, series_hi, "status"))
-                if not is_actionable_series_status(status):
-                    series_curator_skipped += 1
-                    continue
-
-                sc_processed += 1
-                prefix_sc = f"[series-curator {sc_processed}/{sc_total}] "
-
-                title_raw = cell(sr, series_hi, "title")
-                series_title = coerce_string(title_raw) or series_id
-                year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
-                if "year_display" in series_hi:
-                    year_display = coerce_string(cell(sr, series_hi, "year_display"))
-                else:
-                    year_display = str(year) if year is not None else None
-
-                scfm: Dict[str, Any] = {
-                    "layout": "series_curator",
-                    "series_id": series_id,
-                    "title": series_title,
-                    "title_sort": numeric_aware_sort_key(series_title),
-                    "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
-                    "year": year,
-                    "year_display": year_display,
-                    "project_folders": series_project_folders_by_id.get(series_id, []),
-                    "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
-                    "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
-                }
-                scfm["checksum"] = compute_work_checksum(scfm)
-                series_curator_content = build_front_matter(scfm) + "\n"
-
-                series_curator_path = series_curator_out_dir / f"{series_id}.md"
-                existing_text = None
-                if series_curator_path.exists():
-                    try:
-                        existing_text = series_curator_path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_text = None
-
-                needs_write = (existing_text != series_curator_content)
-                if (not needs_write) and (not args.force):
-                    print(f"{prefix_sc}SKIP (no change): {series_curator_path}")
-                    series_curator_skipped += 1
-                else:
-                    if args.write:
-                        series_curator_path.write_text(series_curator_content, encoding="utf-8")
-                        print(f"{prefix_sc}WRITE: {series_curator_path}")
-                        series_curator_written += 1
-                    else:
-                        print(f"{prefix_sc}DRY-RUN: would write {series_curator_path} (overwrite={series_curator_path.exists()})")
-                        series_curator_written += 1
-        else:
-            if selected_artifacts is not None and not artifact_enabled("series-curator-pages"):
-                print("Series curator pages skipped: not selected by --only.")
-            else:
-                print("Series curator pages skipped: --work-ids scope active (use --series-ids to include series curator rebuild).")
-        print(
-            f"Series curator pages done. {'Would write' if not args.write else 'Wrote'}: "
-            f"{series_curator_written}. Skipped: {series_curator_skipped}."
         )
 
         # ----------------------------

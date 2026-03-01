@@ -28,12 +28,6 @@ sections:
         depth: 0
         node_type: "index"
       -
-        title: "series curator index"
-        url: "/series_curator/"
-        source: "series_curator/index.html"
-        depth: 1
-        node_type: "index"
-      -
         title: "studio series index"
         url: "/studio/studio-series/"
         source: "studio/studio-series/index.html"

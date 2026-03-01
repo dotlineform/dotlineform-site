@@ -40,9 +40,6 @@ collections:
   series:
     output: true
     permalink: /series/:name/
-  series_curator:
-    output: true
-    permalink: /series_curator/:name/
   studio_series:
     output: true
     permalink: /studio/studio-series/:name/
@@ -85,11 +82,6 @@ defaults:
       type: series
     values:
       layout: series
-  - scope:
-      path: ""
-      type: series_curator
-    values:
-      layout: series_curator
   - scope:
       path: ""
       type: themes
