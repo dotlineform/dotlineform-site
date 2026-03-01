@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "living-surface-hand-form"
 title: "living surface hand form"
 title_sort: "living surface hand form"

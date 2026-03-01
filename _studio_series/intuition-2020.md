@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "intuition-2020"
 title: "intuition (2020)"
 title_sort: "intuition (2020)"

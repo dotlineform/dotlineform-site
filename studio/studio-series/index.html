@@ -1,13 +1,13 @@
 ---
 layout: default
-title: Tag Studio
-permalink: /studio/tag-studio/
+title: Studio Series
+permalink: /studio/studio-series/
 section: works
 ---
 
-<link rel="stylesheet" href="{{ '/assets/css/tag-studio.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/studio.css' | relative_url }}">
 
-{% assign series_items = site.tag_studio %}
+{% assign series_items = site.studio_series %}
 {% if series_items and series_items != empty %}
   {% assign series_sorted = series_items | sort_natural: "title" %}
   {% assign series_count = series_sorted.size %}
@@ -17,13 +17,13 @@ section: works
   {% endif %}
 
   <div class="index worksList seriesCuratorList tagStudioIndex">
-    <h1 class="index__heading visually-hidden">tag studio</h1>
+    <h1 class="index__heading visually-hidden">studio series</h1>
     <div class="worksList__metaRow">
       <p class="worksList__count" id="tagStudioCount">{{ series_count }} {{ series_label }}</p>
       <a class="worksList__metaLink" href="{{ '/site_map/' | relative_url }}">site map</a>
     </div>
 
-    <div class="worksList__head" role="group" aria-label="Sort tag studio">
+    <div class="worksList__head" role="group" aria-label="Sort studio series">
       <button class="worksList__sortBtn" type="button" data-sort-key="year">
         year <span class="worksList__sortIcon" aria-hidden="true"></span>
       </button>
@@ -136,5 +136,5 @@ section: works
   </script>
   <script type="module" src="{{ '/assets/js/tag-studio-index.js' | relative_url }}"></script>
 {% else %}
-  <p>no tag studio pages yet</p>
+  <p>no studio series pages yet</p>
 {% endif %}

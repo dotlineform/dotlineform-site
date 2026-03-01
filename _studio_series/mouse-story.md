@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "mouse-story"
 title: "mouse story"
 title_sort: "mouse story"

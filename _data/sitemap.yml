@@ -34,9 +34,9 @@ sections:
         depth: 1
         node_type: "index"
       -
-        title: "tag studio index"
-        url: "/studio/tag-studio/"
-        source: "studio/tag-studio/index.html"
+        title: "studio series index"
+        url: "/studio/studio-series/"
+        source: "studio/studio-series/index.html"
         depth: 1
         node_type: "index"
       -

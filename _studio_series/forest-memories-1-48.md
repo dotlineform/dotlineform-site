@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "forest-memories-1-48"
 title: "forest memories 1-48"
 title_sort: "forest memories 001-048"

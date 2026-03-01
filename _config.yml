@@ -43,9 +43,9 @@ collections:
   series_curator:
     output: true
     permalink: /series_curator/:name/
-  tag_studio:
+  studio_series:
     output: true
-    permalink: /studio/tag-studio/:name/
+    permalink: /studio/studio-series/:name/
   themes:
     output: true
     permalink: /themes/:name/

@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "heaven-and-earth"
 title: "heaven and earth"
 title_sort: "heaven and earth"

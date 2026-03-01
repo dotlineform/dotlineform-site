@@ -740,8 +740,8 @@ def main() -> None:
     series_out_dir.mkdir(parents=True, exist_ok=True)
     series_curator_out_dir = Path("_series_curator").expanduser()
     series_curator_out_dir.mkdir(parents=True, exist_ok=True)
-    tag_studio_out_dir = Path("_tag_studio").expanduser()
-    tag_studio_out_dir.mkdir(parents=True, exist_ok=True)
+    studio_series_out_dir = Path("_studio_series").expanduser()
+    studio_series_out_dir.mkdir(parents=True, exist_ok=True)
 
     series_prose_dir = Path(args.series_prose_dir).expanduser()
     series_prose_dir.mkdir(parents=True, exist_ok=True)
@@ -1412,8 +1412,8 @@ def main() -> None:
         series_published_date_updated = 0
         series_published_date_idx = series_hi.get("published_date")
         series_published_date_missing_warned = False
-        tag_studio_written = 0
-        tag_studio_skipped = 0
+        studio_series_written = 0
+        studio_series_skipped = 0
         tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
         tag_assignments_series = tag_assignments_payload.get("series", {})
         tag_assignments_changed = False
@@ -1537,7 +1537,7 @@ def main() -> None:
                         primary_work_id = series_work_ids_sorted[-1]
 
                 tsm: Dict[str, Any] = {
-                    "layout": "tag_studio",
+                    "layout": "studio_series",
                     "series_id": series_id,
                     "title": series_title,
                     "title_sort": numeric_aware_sort_key(series_title),
@@ -1548,29 +1548,29 @@ def main() -> None:
                     "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                     "primary_work_id": primary_work_id,
                 }
-                tag_studio_content = build_front_matter(tsm) + "\n"
-                tag_studio_path = tag_studio_out_dir / f"{series_id}.md"
+                studio_series_content = build_front_matter(tsm) + "\n"
+                studio_series_path = studio_series_out_dir / f"{series_id}.md"
 
-                existing_tag_studio_text = None
-                if tag_studio_path.exists():
+                existing_studio_series_text = None
+                if studio_series_path.exists():
                     try:
-                        existing_tag_studio_text = tag_studio_path.read_text(encoding="utf-8")
+                        existing_studio_series_text = studio_series_path.read_text(encoding="utf-8")
                     except Exception:
-                        existing_tag_studio_text = None
+                        existing_studio_series_text = None
 
-                tag_studio_needs_write = (existing_tag_studio_text != tag_studio_content)
-                prefix_ts = f"[tag-studio {s_processed}/{s_total}] "
-                if (not tag_studio_needs_write) and (not args.force):
-                    print(f"{prefix_ts}SKIP (no change): {tag_studio_path}")
-                    tag_studio_skipped += 1
+                studio_series_needs_write = (existing_studio_series_text != studio_series_content)
+                prefix_ts = f"[studio-series {s_processed}/{s_total}] "
+                if (not studio_series_needs_write) and (not args.force):
+                    print(f"{prefix_ts}SKIP (no change): {studio_series_path}")
+                    studio_series_skipped += 1
                 else:
                     if args.write:
-                        tag_studio_path.write_text(tag_studio_content, encoding="utf-8")
-                        print(f"{prefix_ts}WRITE: {tag_studio_path}")
-                        tag_studio_written += 1
+                        studio_series_path.write_text(studio_series_content, encoding="utf-8")
+                        print(f"{prefix_ts}WRITE: {studio_series_path}")
+                        studio_series_written += 1
                     else:
-                        print(f"{prefix_ts}DRY-RUN: would write {tag_studio_path} (overwrite={tag_studio_path.exists()})")
-                        tag_studio_written += 1
+                        print(f"{prefix_ts}DRY-RUN: would write {studio_series_path} (overwrite={studio_series_path.exists()})")
+                        studio_series_written += 1
 
                 if series_id not in tag_assignments_series:
                     tag_assignments_series[series_id] = {
@@ -1584,7 +1584,7 @@ def main() -> None:
                 print("Series pages skipped: not selected by --only.")
             else:
                 print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
-            print("Tag studio pages skipped: follows series-pages selection.")
+            print("Studio series pages skipped: follows series-pages selection.")
             print("Tag assignments sync skipped: follows series-pages selection.")
 
         if run_series_pages:
@@ -1614,8 +1614,8 @@ def main() -> None:
                 print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
         print(
-            f"Tag studio pages done. {'Would write' if not args.write else 'Wrote'}: "
-            f"{tag_studio_written}. Skipped: {tag_studio_skipped}."
+            f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
+            f"{studio_series_written}. Skipped: {studio_series_skipped}."
         )
 
         series_curator_written = 0

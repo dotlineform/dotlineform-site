@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "collected-1989-1998"
 title: "collected 1989-1998"
 title_sort: "collected 1989-1998"

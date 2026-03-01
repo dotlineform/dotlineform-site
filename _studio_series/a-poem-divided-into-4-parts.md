@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "a-poem-divided-into-4-parts"
 title: "a poem divided into 4 parts"
 title_sort: "a poem divided into 004 parts"

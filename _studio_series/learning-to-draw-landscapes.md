@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "learning-to-draw-landscapes"
 title: "learning to draw landscapes"
 title_sort: "learning to draw landscapes"

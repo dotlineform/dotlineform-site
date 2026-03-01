@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "kylie-structures"
 title: "kylie structures"
 title_sort: "kylie structures"

@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "colouring-book"
 title: "colouring book"
 title_sort: "colouring book"

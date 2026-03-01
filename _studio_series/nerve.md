@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "nerve"
 title: "nerve"
 title_sort: "nerve"

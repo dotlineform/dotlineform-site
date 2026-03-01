@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "molecules"
 title: "molecules"
 title_sort: "molecules"

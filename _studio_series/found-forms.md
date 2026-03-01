@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "found-forms"
 title: "found forms"
 title_sort: "found forms"

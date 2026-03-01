@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "forests-2023"
 title: "forests (2023)"
 title_sort: "forests (2023)"

@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "for-david-lynch"
 title: "for David Lynch (2025)"
 title_sort: "for David Lynch (2025)"

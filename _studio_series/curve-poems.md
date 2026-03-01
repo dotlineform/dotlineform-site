@@ -1,5 +1,5 @@
 ---
-layout: "tag_studio"
+layout: "studio_series"
 series_id: "curve-poems"
 title: "curve poems"
 title_sort: "curve poems"
