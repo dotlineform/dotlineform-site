@@ -97,7 +97,7 @@ layout: default
         <div class="page__row">
           project folders
           <span>
-            {% if project_folders_json == "null" or project_folders_json == "\"\"" %}
+            {% if meta_project_folders == nil or meta_project_folders == "" %}
               —
             {% elsif project_folders_json contains "[" %}
               {% assign folders_csv = meta_project_folders | join: ", " %}
