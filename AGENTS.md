@@ -1,7 +1,9 @@
 ## General behaviour
 
 - do not make code changes without first confirming what will be changed.
-- instructions like 'check' and 'confirm' DO NOT imply you carry out code changes
+- instructions like 'check' and 'confirm' DO NOT imply you carry out code changes. always ask for confirmation to proceed.
+- consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
+- a ? in the prompt always indicates that some analysis is needed on reasons for observed behaviour of code, or clarification of the best course of action.
 
 ## Runtime and Paths
 
