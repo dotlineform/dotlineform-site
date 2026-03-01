@@ -1473,7 +1473,7 @@ def main() -> None:
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                     "year": year,
                     "year_display": year_display,
-                    "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
+                    "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
                     "layout": "series",
                 }
 
@@ -1530,8 +1530,7 @@ def main() -> None:
                     else:
                         print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
 
-                thumb_work_id = coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None
-                primary_work_id = thumb_work_id
+                primary_work_id = coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None
                 if primary_work_id is None:
                     series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
                     if series_work_ids_sorted:
@@ -1669,7 +1668,7 @@ def main() -> None:
                     "year": year,
                     "year_display": year_display,
                     "project_folders": series_project_folders_by_id.get(series_id, []),
-                    "thumb_work_id": coerce_string(cell(sr, series_hi, "thumb_work_id")) if "thumb_work_id" in series_hi else None,
+                    "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
                     "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                 }
                 scfm["checksum"] = compute_work_checksum(scfm)
