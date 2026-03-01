@@ -1,0 +1,28 @@
+---
+layout: default
+---
+
+<style>
+  .studio{
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  .studio__content{
+    margin-top: 1rem;
+  }
+  .studio__content ul{
+    list-style: none;
+    margin: 0.6rem 0 0;
+    padding: 0;
+  }
+  .studio__content li{
+    margin: 0 0 0.45rem;
+  }
+</style>
+
+<div class="studio">
+  <h2>{{ page.title | default: "Studio" }}</h2>
+  <div class="studio__content">
+    {{ content }}
+  </div>
+</div>
