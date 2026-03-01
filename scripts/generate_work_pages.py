@@ -741,7 +741,7 @@ def main() -> None:
 
     series_prose_dir = Path(args.series_prose_dir).expanduser()
     series_prose_dir.mkdir(parents=True, exist_ok=True)
-    tag_assignments_path = Path("assets/data/tag_assignments_v1.json").expanduser()
+    tag_assignments_path = Path("assets/data/tag_assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
 
     series_json_dir = Path(args.series_json_dir).expanduser()

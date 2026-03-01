@@ -11,8 +11,8 @@ async function initTagStudioIndexRag() {
 
   try {
     const [assignmentsData, registryData] = await Promise.all([
-      fetchJson("/assets/data/tag_assignments_v1.json"),
-      fetchJson("/assets/data/tag_registry_v1.json"),
+      fetchJson("/assets/data/tag_assignments.json"),
+      fetchJson("/assets/data/tag_registry.json"),
     ]);
 
     const registry = buildRegistryLookup(registryData);

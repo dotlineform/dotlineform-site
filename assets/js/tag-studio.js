@@ -21,9 +21,9 @@ async function initTagStudio() {
 
   try {
     const [registryJson, aliasesJson, assignmentsJson] = await Promise.all([
-      fetchJson("/assets/data/tag_registry_v1.json"),
-      fetchJson("/assets/data/tag_aliases_v1.json"),
-      fetchJson("/assets/data/tag_assignments_v1.json")
+      fetchJson("/assets/data/tag_registry.json"),
+      fetchJson("/assets/data/tag_aliases.json"),
+      fetchJson("/assets/data/tag_assignments.json")
     ]);
 
     const state = buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson);
@@ -34,7 +34,7 @@ async function initTagStudio() {
   } catch (error) {
     renderFatalError(
       mount,
-      "Failed to load tag data. Check /assets/data/tag_registry_v1.json, /assets/data/tag_aliases_v1.json, and /assets/data/tag_assignments_v1.json."
+      "Failed to load tag data. Check /assets/data/tag_registry.json, /assets/data/tag_aliases.json, and /assets/data/tag_assignments.json."
     );
   }
 }
@@ -200,7 +200,7 @@ function renderShell(state) {
         <h3 id="tagStudioModalTitle">Tag Patch Preview</h3>
         <p class="tagStudioModal__label">Canonical resolved tags</p>
         <pre class="tagStudioModal__pre" data-role="modal-tags"></pre>
-        <p class="tagStudioModal__label">Patch snippet for <code>tag_assignments_v1.json</code></p>
+        <p class="tagStudioModal__label">Patch snippet for <code>tag_assignments.json</code></p>
         <pre class="tagStudioModal__pre" data-role="modal-snippet"></pre>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-snippet">Copy</button>

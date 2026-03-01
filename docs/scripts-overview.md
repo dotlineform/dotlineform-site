@@ -166,8 +166,8 @@ Security constraints:
 - Binds to loopback interface only (local machine only)
 - CORS allows loopback origins only
 - Write target is allowlisted to one file only:
-  - `assets/data/tag_assignments_v1.json`
-  - backup is created as `assets/data/tag_assignments_v1.json.bak`
+  - `assets/data/tag_assignments.json`
+  - backup is created as `assets/data/tag_assignments.json.bak`
 
 ### 4) Audit site consistency (read-only)
 

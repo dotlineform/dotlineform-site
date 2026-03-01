@@ -12,7 +12,7 @@ What it does:
   - Exposes a tiny localhost API for Tag Studio:
     - GET /health
     - POST /save-tags
-  - Updates assets/data/tag_assignments_v1.json for one series_id.
+  - Updates assets/data/tag_assignments.json for one series_id.
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -20,7 +20,7 @@ Security constraints:
       http://localhost:*
       http://127.0.0.1:*
   - Hard allowlist permits writing only:
-      <repo-root>/assets/data/tag_assignments_v1.json
+      <repo-root>/assets/data/tag_assignments.json
   - No external dependencies (Python stdlib only).
 """
 
@@ -42,7 +42,7 @@ from urllib.parse import urlparse
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 MAX_TAGS = 50
-ALLOWED_REL_PATH = Path("assets/data/tag_assignments_v1.json")
+ALLOWED_REL_PATH = Path("assets/data/tag_assignments.json")
 
 
 def utc_now() -> str:

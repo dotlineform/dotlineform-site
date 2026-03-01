@@ -11,9 +11,9 @@ This document is the central reference for series-level tag editing in Studio Se
   - `studio/studio-series/index.html`
 - Tag write service: `scripts/tag_write_server.py`
 - Data contracts:
-  - `assets/data/tag_registry_v1.json`
-  - `assets/data/tag_aliases_v1.json`
-  - `assets/data/tag_assignments_v1.json`
+  - `assets/data/tag_registry.json`
+  - `assets/data/tag_aliases.json`
+  - `assets/data/tag_assignments.json`
 
 ## Group Model
 
@@ -26,7 +26,7 @@ Groups are fixed and ordered in the editor code:
 
 Tags are canonical IDs in the format `<group>:<slug>`, for example `form:curvilinear`.
 
-Source of truth for groups and tag definitions is `tag_registry_v1.json`:
+Source of truth for groups and tag definitions is `tag_registry.json`:
 
 - `policy.allowed_groups` defines allowed groups.
 - `tags[]` defines tag entries:
@@ -43,14 +43,14 @@ Editor behavior currently expects those four groups and uses `active` tags for i
 When a user enters text, resolution is:
 
 1. Canonical ID if input contains `:`
-2. Alias lookup (`tag_aliases_v1.json`) using lowercased input
+2. Alias lookup (`tag_aliases.json`) using lowercased input
 3. Registry slug match (part after `group:`)
 4. Registry label match (case-insensitive normalized)
 
 If multiple matches are found, the value is treated as ambiguous.
 If no match is found, it is unresolved and save is blocked.
 
-`tag_aliases_v1.json` maps shorthand inputs to canonical `tag_id` values:
+`tag_aliases.json` maps shorthand inputs to canonical `tag_id` values:
 
 - Version field: `tag_aliases_version`
 - Update timestamp: `updated_at_utc`
@@ -77,7 +77,7 @@ Current tags display only resolved tags (sorted alphabetically by label).
 
 ### 2) Index metrics / RAG (`tag-studio-index.js`)
 
-Computed per series from `tag_assignments_v1.json` and registry lookup:
+Computed per series from `tag_assignments.json` and registry lookup:
 
 - `nTotal`: unique assigned tags
 - group counts: `subject`, `domain`, `form`, `theme`
@@ -135,12 +135,12 @@ Save mode is probed at page load:
 
 - Shows modal with:
   - canonical resolved tags array
-  - JSON snippet to paste under `series[series_id]` in `tag_assignments_v1.json`
+  - JSON snippet to paste under `series[series_id]` in `tag_assignments.json`
 - Copy button uses `navigator.clipboard.writeText`
 
 ## Data Files: Purpose and Governance
 
-### `assets/data/tag_registry_v1.json`
+### `assets/data/tag_registry.json`
 
 Purpose:
 
@@ -152,7 +152,7 @@ Governance:
 - Should be updated deliberately with review because it defines allowed semantics used across editor/index.
 - `updated_at_utc` should be bumped when changing tags/policy.
 
-### `assets/data/tag_aliases_v1.json`
+### `assets/data/tag_aliases.json`
 
 Purpose:
 
@@ -164,7 +164,7 @@ Governance:
 - Keep aliases deterministic and unambiguous where possible.
 - `updated_at_utc` should be bumped when aliases change.
 
-### `assets/data/tag_assignments_v1.json`
+### `assets/data/tag_assignments.json`
 
 Purpose:
 
