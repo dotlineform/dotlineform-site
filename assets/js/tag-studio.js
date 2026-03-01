@@ -163,39 +163,35 @@ function renderShell(state) {
   state.mount.innerHTML = `
     <div class="tagStudio">
       <section class="tagStudio__panel">
-        <label class="tagStudio__label" for="tagStudioInput">Add Tag</label>
         <div class="tagStudio__inputRow">
+          <label class="tagStudio__label" for="tagStudioInput">Add Tag</label>
           <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="form:radial or radial">
           <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
         </div>
-        <ul class="tagStudio__autocomplete" data-role="autocomplete" hidden></ul>
-        <div class="tagStudio__chooser" data-role="chooser" hidden></div>
+        <div class="tagStudio__popup" data-role="popup" hidden>
+          <div class="tagStudio__popupInner" data-role="popup-list"></div>
+        </div>
         <p class="tagStudio__status" data-role="status"></p>
       </section>
 
       <div class="tagStudio__grid">
         <section class="tagStudio__panel">
-          <h3 class="tagStudio__heading">Current Tags</h3>
+          <div class="tagStudio__headingRow">
+            <h3 class="tagStudio__heading">Current Tags</h3>
+            <div class="tagStudio__key" data-role="key"></div>
+          </div>
           <div data-role="groups"></div>
         </section>
-
         <section class="tagStudio__panel">
-          <h3 class="tagStudio__heading">Metrics</h3>
-          <div data-role="metrics"></div>
-        </section>
-
-        <section class="tagStudio__panel">
-          <h3 class="tagStudio__heading">Suggestions</h3>
-          <div data-role="suggestions"></div>
+          <h3 class="tagStudio__heading">Save</h3>
+          <div class="tagStudio__actions">
+            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
+            <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
+            <span class="tagStudio__saveWarning" data-role="save-warning"></span>
+          </div>
+          <p class="tagStudio__saveResult" data-role="save-result"></p>
         </section>
       </div>
-
-      <div class="tagStudio__actions">
-        <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
-        <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
-        <span class="tagStudio__saveWarning" data-role="save-warning"></span>
-      </div>
-      <p class="tagStudio__saveResult" data-role="save-result"></p>
     </div>
 
     <div class="tagStudioModal" data-role="modal" hidden>
@@ -217,12 +213,11 @@ function renderShell(state) {
   state.refs = {
     input: state.mount.querySelector("#tagStudioInput"),
     addButton: state.mount.querySelector('[data-role="add-tag"]'),
-    autocomplete: state.mount.querySelector('[data-role="autocomplete"]'),
-    chooser: state.mount.querySelector('[data-role="chooser"]'),
+    popup: state.mount.querySelector('[data-role="popup"]'),
+    popupList: state.mount.querySelector('[data-role="popup-list"]'),
     status: state.mount.querySelector('[data-role="status"]'),
+    key: state.mount.querySelector('[data-role="key"]'),
     groups: state.mount.querySelector('[data-role="groups"]'),
-    metrics: state.mount.querySelector('[data-role="metrics"]'),
-    suggestions: state.mount.querySelector('[data-role="suggestions"]'),
     saveButton: state.mount.querySelector('[data-role="save"]'),
     saveMode: state.mount.querySelector('[data-role="save-mode"]'),
     saveWarning: state.mount.querySelector('[data-role="save-warning"]'),
@@ -236,8 +231,7 @@ function renderShell(state) {
 
 function wireEvents(state) {
   state.refs.input.addEventListener("input", () => {
-    renderAutocomplete(state);
-    hideChooser(state);
+    renderPopup(state);
   });
 
   state.refs.input.addEventListener("keydown", (event) => {
@@ -245,44 +239,31 @@ function wireEvents(state) {
       event.preventDefault();
       addFromInput(state);
     } else if (event.key === "Escape") {
-      hideAutocomplete(state);
-      hideChooser(state);
+      hidePopup(state);
     }
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!state.refs.popup || state.refs.popup.hidden) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('[data-role="popup"]')) return;
+    if (target.closest("#tagStudioInput")) return;
+    hidePopup(state);
   });
 
   state.refs.addButton.addEventListener("click", () => {
     addFromInput(state);
   });
 
-  state.refs.autocomplete.addEventListener("click", (event) => {
+  state.refs.popupList.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-tag-id]");
     if (!button) return;
-
     const tagId = normalize(button.getAttribute("data-tag-id"));
     const tag = state.tagsById.get(tagId);
     if (!tag) return;
-
-    addResolvedTag(state, tag, tag.tag_id);
-    state.refs.input.value = "";
-    hideAutocomplete(state);
-    hideChooser(state);
-    renderAll(state);
-  });
-
-  state.refs.chooser.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-tag-id]");
-    if (!button) return;
-
-    const tagId = normalize(button.getAttribute("data-tag-id"));
-    const tag = state.tagsById.get(tagId);
-    if (!tag) return;
-
-    addResolvedTag(state, tag, state.pendingChooserRaw || tag.tag_id);
-    state.pendingChooserRaw = "";
-    state.refs.input.value = "";
-    hideAutocomplete(state);
-    hideChooser(state);
-    renderAll(state);
+    state.refs.input.value = tag.label;
+    hidePopup(state);
   });
 
   state.refs.groups.addEventListener("click", (event) => {
@@ -291,18 +272,6 @@ function wireEvents(state) {
 
     const entryId = Number(button.getAttribute("data-remove-entry-id"));
     removeEntry(state, entryId);
-    renderAll(state);
-  });
-
-  state.refs.suggestions.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-tag-id]");
-    if (!button) return;
-
-    const tagId = normalize(button.getAttribute("data-tag-id"));
-    const tag = state.tagsById.get(tagId);
-    if (!tag) return;
-
-    addResolvedTag(state, tag, tag.tag_id);
     renderAll(state);
   });
 
@@ -339,26 +308,14 @@ function addFromInput(state) {
   if (resolved.type === "resolved") {
     addResolvedTag(state, resolved.tag, rawInput);
     state.refs.input.value = "";
-    hideAutocomplete(state);
-    hideChooser(state);
+    hidePopup(state);
     renderAll(state);
-    return;
-  }
-
-  if (resolved.type === "ambiguous") {
-    renderChooser(state, rawInput, resolved.candidates);
-    setStatus(state, "warn", "Multiple matches found. Choose one.");
-    renderStatus(state);
     return;
   }
 
   if (resolved.type === "unresolved") {
-    addUnresolvedTag(state, rawInput);
-    state.refs.input.value = "";
-    hideAutocomplete(state);
-    hideChooser(state);
     setStatus(state, "error", `Unknown tag: "${rawInput}".`);
-    renderAll(state);
+    renderStatus(state);
   }
 }
 
@@ -458,189 +415,95 @@ function makeUnresolvedEntry(entryId, rawInput) {
 
 function renderAll(state) {
   renderStatus(state);
-  renderAutocomplete(state);
+  renderKey(state);
   renderGroups(state);
-  renderMetrics(state);
-  renderSuggestions(state);
+  renderPopup(state);
   renderSaveMode(state);
   renderSaveState(state);
 }
 
-function renderAutocomplete(state) {
+function renderKey(state) {
+  const pills = GROUPS.map((group) => {
+    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}">${escapeHtml(group)}</span>`;
+  }).join("");
+  state.refs.key.innerHTML = pills;
+}
+
+function renderPopup(state) {
   const query = normalize(state.refs.input.value);
   if (!query) {
-    hideAutocomplete(state);
+    hidePopup(state);
     return;
   }
 
-  const matches = state.activeTags
-    .filter((tag) => {
-      return (
-        tag.tag_id.includes(query) ||
-        tag.slug.includes(query) ||
-        normalize(tag.label).includes(query)
-      );
-    })
-    .slice(0, 10);
+  const baseSuggestions = getSuggestionPool(state);
+  const matches = baseSuggestions
+    .filter((tag) => normalize(tag.label).startsWith(query))
+    .slice(0, 12);
 
   if (!matches.length) {
-    hideAutocomplete(state);
+    hidePopup(state);
     return;
   }
 
-  state.refs.autocomplete.innerHTML = matches
+  state.refs.popupList.innerHTML = matches
     .map((tag) => {
-      const exists = state.entries.some((entry) => entry.type === "resolved" && entry.canonicalId === tag.tag_id);
       return `
-        <li>
-          <button type="button" class="tagStudio__suggestionBtn" data-tag-id="${escapeHtml(tag.tag_id)}"${exists ? " disabled" : ""}>
-            <span>${escapeHtml(tag.tag_id)}</span>
-            <small>${escapeHtml(tag.label)}</small>
-          </button>
-        </li>
+        <button
+          type="button"
+          class="tagStudio__popupPill tagStudio__chip--${escapeHtml(tag.group)}"
+          data-tag-id="${escapeHtml(tag.tag_id)}"
+          title="${escapeHtml(tag.tag_id)}"
+        >
+          ${escapeHtml(tag.label)}
+        </button>
       `;
     })
     .join("");
-  state.refs.autocomplete.hidden = false;
+  state.refs.popup.hidden = false;
 }
 
-function hideAutocomplete(state) {
-  state.refs.autocomplete.hidden = true;
-  state.refs.autocomplete.innerHTML = "";
+function hidePopup(state) {
+  state.refs.popup.hidden = true;
+  state.refs.popupList.innerHTML = "";
 }
 
-function renderChooser(state, rawInput, candidates) {
-  state.pendingChooserRaw = String(rawInput || "").trim();
-  state.refs.chooser.innerHTML = `
-    <p class="tagStudio__chooserTitle">Choose canonical tag for "${escapeHtml(state.pendingChooserRaw)}"</p>
-    <ul class="tagStudio__chooserList">
-      ${candidates
-        .map((tag) => {
+function getSuggestionPool(state) {
+  const metrics = computeMetrics(state);
+  const missingGroups = GROUPS.filter((group) => metrics.groupCounts[group] === 0);
+  const pool = [];
+  for (const group of missingGroups) {
+    const examples = (state.activeByGroup.get(group) || []).slice(0, 3);
+    for (const tag of examples) pool.push(tag);
+  }
+  return pool;
+}
+
+function renderGroups(state) {
+  const resolvedEntries = state.entries
+    .filter((entry) => entry.type === "resolved")
+    .slice()
+    .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
+
+  if (!resolvedEntries.length) {
+    state.refs.groups.innerHTML = `<p class="tagStudio__empty">none</p>`;
+    return;
+  }
+
+  state.refs.groups.innerHTML = `
+    <ul class="tagStudio__chipList tagStudio__chipList--stack">
+      ${resolvedEntries
+        .map((entry) => {
           return `
-            <li>
-              <button type="button" class="tagStudio__chooserBtn" data-tag-id="${escapeHtml(tag.tag_id)}">
-                ${escapeHtml(tag.tag_id)} <small>${escapeHtml(tag.label)}</small>
-              </button>
+            <li class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}">
+              <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
+              <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
             </li>
           `;
         })
         .join("")}
     </ul>
   `;
-  state.refs.chooser.hidden = false;
-}
-
-function hideChooser(state) {
-  state.pendingChooserRaw = "";
-  state.refs.chooser.hidden = true;
-  state.refs.chooser.innerHTML = "";
-}
-
-function renderGroups(state) {
-  const grouped = new Map(GROUPS.map((group) => [group, []]));
-  const unresolved = [];
-
-  for (const entry of state.entries) {
-    if (entry.type === "resolved" && grouped.has(entry.group)) {
-      grouped.get(entry.group).push(entry);
-    } else if (entry.type === "unresolved") {
-      unresolved.push(entry);
-    }
-  }
-
-  state.refs.groups.innerHTML = GROUPS
-    .map((group) => {
-      const entries = grouped.get(group);
-      const chips = entries.length
-        ? entries
-            .map((entry) => {
-              return `
-                <li class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}">
-                  <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
-                  <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
-                </li>
-              `;
-            })
-            .join("")
-        : '<li class="tagStudio__empty">none</li>';
-
-      return `
-        <section class="tagStudio__group">
-          <h4 class="tagStudio__groupTitle">${escapeHtml(group)}</h4>
-          <ul class="tagStudio__chipList">${chips}</ul>
-        </section>
-      `;
-    })
-    .join("");
-
-  if (unresolved.length) {
-    state.refs.groups.insertAdjacentHTML(
-      "beforeend",
-      `
-        <section class="tagStudio__group">
-          <h4 class="tagStudio__groupTitle">unknown inputs</h4>
-          <ul class="tagStudio__chipList">
-            ${unresolved
-              .map((entry) => {
-                return `
-                  <li class="tagStudio__chip tagStudio__chip--warning">
-                    <span class="tagStudio__chipTag">${escapeHtml(entry.rawInput)}</span>
-                    <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.rawInput)}">x</button>
-                  </li>
-                `;
-              })
-              .join("")}
-          </ul>
-        </section>
-      `
-    );
-  }
-}
-
-function renderMetrics(state) {
-  const metrics = computeMetrics(state);
-  const collisionText = metrics.collisions.length
-    ? metrics.collisions.map((entry) => `${entry.tagId} (${entry.count})`).join(", ")
-    : "none";
-
-  state.refs.metrics.innerHTML = `
-    <dl class="tagStudio__metrics">
-      ${GROUPS.map((group) => `<div><dt>${escapeHtml(group)}</dt><dd>${metrics.groupCounts[group]}</dd></div>`).join("")}
-      <div><dt>collisions</dt><dd>${metrics.collisions.length}</dd></div>
-      <div><dt>unresolved</dt><dd>${metrics.unresolvedCount}</dd></div>
-    </dl>
-    <p class="tagStudio__metricDetail"><strong>collision ids:</strong> ${escapeHtml(collisionText)}</p>
-  `;
-}
-
-function renderSuggestions(state) {
-  const metrics = computeMetrics(state);
-  const missingGroups = GROUPS.filter((group) => metrics.groupCounts[group] === 0);
-
-  if (!missingGroups.length) {
-    state.refs.suggestions.innerHTML = `<p class="tagStudio__empty">All groups have at least one tag.</p>`;
-    return;
-  }
-
-  state.refs.suggestions.innerHTML = missingGroups
-    .map((group) => {
-      const examples = (state.activeByGroup.get(group) || []).slice(0, 3);
-      const buttons = examples.length
-        ? examples
-            .map((tag) => {
-              return `<button type="button" class="tagStudio__exampleBtn" data-tag-id="${escapeHtml(tag.tag_id)}" title="${escapeHtml(tag.tag_id)}">${escapeHtml(tag.label)}</button>`;
-            })
-            .join("")
-        : '<span class="tagStudio__empty">no active examples</span>';
-
-      return `
-        <div class="tagStudio__suggestionGroup">
-          <h4 class="tagStudio__groupTitle">${escapeHtml(group)}</h4>
-          <div class="tagStudio__exampleRow">${buttons}</div>
-        </div>
-      `;
-    })
-    .join("");
 }
 
 function renderSaveState(state) {

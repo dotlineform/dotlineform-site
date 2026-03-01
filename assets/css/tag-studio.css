@@ -1,6 +1,21 @@
 .tagStudioPage {
   max-width: 72rem;
   margin: 0 auto;
+  --tag-subject-bg: #ecf5ef;
+  --tag-subject-bd: #bfdcc8;
+  --tag-subject-fg: #2e5a3f;
+  --tag-domain-bg: #e9f1f8;
+  --tag-domain-bd: #b8d0e3;
+  --tag-domain-fg: #294f6f;
+  --tag-form-bg: #f2edf7;
+  --tag-form-bd: #d2c3e3;
+  --tag-form-fg: #4f3d69;
+  --tag-theme-bg: #f7efe7;
+  --tag-theme-bd: #e3ccb7;
+  --tag-theme-fg: #6a4a2f;
+  --tag-warning-bg: #fff1ec;
+  --tag-warning-bd: #e7a58f;
+  --tag-warning-fg: #8a2b19;
 }
 
 .tagStudioPage__header {
@@ -51,7 +66,7 @@
 
 @media (min-width: 920px) {
   .tagStudio__grid {
-    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
   }
 }
 
@@ -67,24 +82,43 @@
   font-size: 1rem;
 }
 
+.tagStudio__headingRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.tagStudio__headingRow .tagStudio__heading {
+  margin: 0;
+}
+
 .tagStudio__label {
-  display: block;
-  margin-bottom: 0.4rem;
+  flex: 0 0 auto;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .tagStudio__inputRow {
   display: flex;
+  align-items: center;
   gap: 0.45rem;
 }
 
 .tagStudio__input {
   width: 100%;
-  border: 1px solid var(--line, #c4c4c4);
+  border: 1px solid #d6d6d6;
   border-radius: 0.4rem;
   padding: 0.48rem 0.55rem;
   font: inherit;
   background: var(--surface, #fff);
+}
+
+.tagStudio__input:focus {
+  outline: none;
+  border-color: #5f8ffb;
+  box-shadow: 0 0 0 2px rgba(95, 143, 251, 0.18);
 }
 
 .tagStudio__button {
@@ -108,55 +142,68 @@
   cursor: not-allowed;
 }
 
-.tagStudio__autocomplete,
-.tagStudio__chooserList,
 .tagStudio__chipList {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.tagStudio__autocomplete {
-  margin-top: 0.45rem;
-  border: 1px solid var(--line, #d0d0d0);
-  border-radius: 0.4rem;
+.tagStudio__popup {
+  position: relative;
+}
+
+.tagStudio__popupInner {
+  position: absolute;
+  top: 0.45rem;
+  left: 0;
+  z-index: 20;
+  min-width: 18rem;
+  max-width: min(34rem, calc(100vw - 3rem));
   max-height: 16rem;
   overflow: auto;
-}
-
-.tagStudio__suggestionBtn,
-.tagStudio__chooserBtn {
-  width: 100%;
-  text-align: left;
-  border: 0;
-  border-bottom: 1px solid var(--line, #ececec);
-  background: transparent;
-  color: inherit;
-  padding: 0.5rem 0.6rem;
-  font: inherit;
-  cursor: pointer;
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #d0d0d0);
+  border-radius: 0.45rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 0.45rem;
   display: flex;
-  justify-content: space-between;
-  gap: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.42rem;
 }
 
-.tagStudio__suggestionBtn small,
-.tagStudio__chooserBtn small {
-  color: var(--muted, #6e6e6e);
+.tagStudio__popupPill {
+  border: 1px solid var(--line, #cbcbcb);
+  border-radius: 999px;
+  background: #f8f8f8;
+  color: inherit;
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 0.24rem 0.5rem;
+  cursor: pointer;
 }
 
-.tagStudio__chooser {
-  margin-top: 0.5rem;
-  border: 1px solid #e3bf42;
-  border-radius: 0.4rem;
-  background: #fff9df;
+.tagStudio__popupPill.tagStudio__chip--subject {
+  background: var(--tag-subject-bg);
+  border-color: var(--tag-subject-bd);
+  color: var(--tag-subject-fg);
 }
 
-.tagStudio__chooserTitle {
-  margin: 0;
-  padding: 0.5rem 0.6rem;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #f0d889;
+.tagStudio__popupPill.tagStudio__chip--domain {
+  background: var(--tag-domain-bg);
+  border-color: var(--tag-domain-bd);
+  color: var(--tag-domain-fg);
+}
+
+.tagStudio__popupPill.tagStudio__chip--form {
+  background: var(--tag-form-bg);
+  border-color: var(--tag-form-bd);
+  color: var(--tag-form-fg);
+}
+
+.tagStudio__popupPill.tagStudio__chip--theme {
+  background: var(--tag-theme-bg);
+  border-color: var(--tag-theme-bd);
+  color: var(--tag-theme-fg);
 }
 
 .tagStudio__status {
@@ -177,20 +224,15 @@
   color: #a22a2a;
 }
 
-.tagStudio__group {
-  margin-bottom: 0.8rem;
-}
-
-.tagStudio__groupTitle {
-  margin: 0 0 0.4rem;
-  text-transform: lowercase;
-  font-size: 0.92rem;
-}
-
 .tagStudio__chipList {
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
+}
+
+.tagStudio__chipList--stack {
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .tagStudio__chip {
@@ -204,13 +246,34 @@
   font-size: 0.82rem;
 }
 
-.tagStudio__chip--warning {
-  background: #fff1ec;
-  border-color: #e7a58f;
+.tagStudio__chip--subject {
+  background: var(--tag-subject-bg);
+  border-color: var(--tag-subject-bd);
+  color: var(--tag-subject-fg);
 }
 
-.tagStudio__chipLabel {
-  color: var(--muted, #6d6d6d);
+.tagStudio__chip--domain {
+  background: var(--tag-domain-bg);
+  border-color: var(--tag-domain-bd);
+  color: var(--tag-domain-fg);
+}
+
+.tagStudio__chip--form {
+  background: var(--tag-form-bg);
+  border-color: var(--tag-form-bd);
+  color: var(--tag-form-fg);
+}
+
+.tagStudio__chip--theme {
+  background: var(--tag-theme-bg);
+  border-color: var(--tag-theme-bd);
+  color: var(--tag-theme-fg);
+}
+
+.tagStudio__chip--warning {
+  background: var(--tag-warning-bg);
+  border-color: var(--tag-warning-bd);
+  color: var(--tag-warning-fg);
 }
 
 .tagStudio__chipRemove {
@@ -223,55 +286,9 @@
   padding: 0 0.1rem;
 }
 
-.tagStudio__metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem 0.6rem;
-  margin: 0;
-}
-
-.tagStudio__metrics div {
-  border: 1px solid var(--line, #dedede);
-  border-radius: 0.4rem;
-  padding: 0.35rem 0.45rem;
-}
-
-.tagStudio__metrics dt {
-  font-size: 0.78rem;
-  color: var(--muted, #6d6d6d);
-  text-transform: lowercase;
-}
-
-.tagStudio__metrics dd {
-  margin: 0.08rem 0 0;
-  font-weight: 600;
-}
-
-.tagStudio__metricDetail {
-  margin: 0.6rem 0 0;
-  font-size: 0.84rem;
-}
-
-.tagStudio__exampleRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-.tagStudio__exampleBtn {
-  border: 1px dashed var(--line, #a7a7a7);
-  border-radius: 999px;
-  background: transparent;
-  color: inherit;
-  padding: 0.27rem 0.5rem;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.8rem;
-}
-
 .tagStudio__actions {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   flex-wrap: wrap;
 }
@@ -303,6 +320,23 @@
 .tagStudio__empty {
   color: var(--muted, #6d6d6d);
   font-size: 0.85rem;
+}
+
+.tagStudio__key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.tagStudio__keyPill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid var(--line, #cbcbcb);
+  padding: 0.19rem 0.5rem;
+  font-size: 0.78rem;
+  text-transform: lowercase;
 }
 
 .tagStudioModal {

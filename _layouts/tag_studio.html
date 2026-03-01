@@ -5,8 +5,33 @@ layout: default
 <link rel="stylesheet" href="{{ '/assets/css/tag-studio.css' | relative_url }}">
 
 {% assign sid = page.series_id | default: page.slug %}
+{% assign series_doc = site.series | where: "series_id", sid | first %}
 {% assign primary_work_id = page.primary_work_id | default: "" | strip %}
+{% if primary_work_id == "" and series_doc and series_doc.thumb_work_id %}
+  {% assign primary_work_id = series_doc.thumb_work_id | strip %}
+{% endif %}
 {% assign primary_work_doc = site.works | where: "work_id", primary_work_id | first %}
+{% assign meta_year = page.year %}
+{% if meta_year == nil or meta_year == "" %}
+  {% assign meta_year = series_doc.year %}
+{% endif %}
+{% assign meta_year_display = page.year_display %}
+{% if meta_year_display == nil or meta_year_display == "" %}
+  {% assign meta_year_display = series_doc.year_display %}
+{% endif %}
+{% assign meta_sort_fields = page.sort_fields %}
+{% if meta_sort_fields == nil or meta_sort_fields == "" %}
+  {% assign meta_sort_fields = series_doc.sort_fields %}
+{% endif %}
+{% assign meta_notes = page.notes %}
+{% if meta_notes == nil or meta_notes == "" %}
+  {% assign meta_notes = series_doc.notes %}
+{% endif %}
+{% assign meta_project_folders = page.project_folders %}
+{% if meta_project_folders == nil or meta_project_folders == "" %}
+  {% assign meta_project_folders = series_doc.project_folders %}
+{% endif %}
+{% assign project_folders_json = meta_project_folders | jsonify %}
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix %}
 {% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
@@ -68,18 +93,48 @@ layout: default
 
     <section class="tagStudioPage__context">
       <h1 class="tagStudioPage__title">{{ page.title | default: sid }}</h1>
-      <div class="page__row">series id <span>{{ sid }}</span></div>
-      <div class="page__row">year <span>{{ page.year_display | default: "—" }}</span></div>
-      <div class="page__row">notes <span>{{ page.notes | default: "—" }}</span></div>
-      <div class="page__row">
-        primary work
-        <span>
-          {% if primary_work_id != "" %}
-            <a href="{{ '/works/' | append: primary_work_id | append: '/' | relative_url }}">{{ primary_work_id }}</a>
-          {% else %}
-            —
-          {% endif %}
-        </span>
+      <div class="workCurator__rows" style="font-size:var(--meta-small-size);line-height:var(--meta-small-line);">
+        <div class="page__row">
+          cat
+          <span>
+            {% if sid %}
+              <a href="{{ '/series/' | append: sid | append: '/' | relative_url }}">{{ sid }}</a>
+            {% else %}
+              —
+            {% endif %}
+          </span>
+        </div>
+        <div class="page__row">year <span>{{ meta_year | default: "—" }}</span></div>
+        <div class="page__row">year display <span>{{ meta_year_display | default: "—" }}</span></div>
+        <div class="page__row">sort fields <span>{{ meta_sort_fields | default: "—" }}</span></div>
+        <div class="page__row">
+          primary work
+          <span>
+            {% if primary_work_id != "" %}
+              <a href="{{ '/works/' | append: primary_work_id | append: '/' | relative_url }}">{{ primary_work_id }}</a>
+            {% else %}
+              —
+            {% endif %}
+          </span>
+        </div>
+        <div class="page__row">
+          project folders
+          <span>
+            {% if project_folders_json == "null" or project_folders_json == "\"\"" %}
+              —
+            {% elsif project_folders_json contains "[" %}
+              {% assign folders_csv = meta_project_folders | join: ", " %}
+              {% if folders_csv and folders_csv != "" %}
+                {{ folders_csv }}
+              {% else %}
+                —
+              {% endif %}
+            {% else %}
+              {{ meta_project_folders }}
+            {% endif %}
+          </span>
+        </div>
+        <div class="page__row">notes <span>{{ meta_notes | default: "—" }}</span></div>
       </div>
     </section>
   </header>
