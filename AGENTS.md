@@ -61,3 +61,9 @@
 - Preserve existing Jekyll/Liquid conventions in this repo.
 - Prefer shared JS/CSS logic over duplicated inline logic.
 - Keep comments concise and implementation-focused.
+
+## Studio Documentation
+
+- `docs/studio/*.md` are the central product/behavior docs for Studio features.
+- Keep existing script docs (`docs/scripts-overview.md`) in place and updated for command/runtime usage.
+- When Studio features are implemented or changed, update Studio docs and relevant scripts docs in the same change.
