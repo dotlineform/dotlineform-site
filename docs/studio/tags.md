@@ -9,6 +9,9 @@ This document is the central reference for series-level tag editing in Studio Se
 - Layout/page wiring:
   - `_layouts/studio_series.html`
   - `studio/studio-series/index.html`
+- Registry browsing page:
+  - `studio/tag-registry/index.md`
+  - `assets/js/tag-registry.js`
 - Tag write service: `scripts/tag_write_server.py`
 - Data contracts:
   - `assets/data/tag_registry.json`
@@ -210,3 +213,13 @@ When studio tag behavior changes, update this document in the same change:
 - Operational workflow (manual patch vs local server)
 
 Keep `docs/scripts-overview.md` updated as well for command-level usage and script flags.
+
+## Tag Registry Page
+
+The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_registry.json` and:
+
+- lists tag labels in alphabetical order
+- displays group color coding using the same chip palette as Studio Series
+- shows a group key above the list
+- supports key-button filtering by group
+- provides an `All tags` button to clear filter

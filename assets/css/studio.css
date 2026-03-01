@@ -426,3 +426,42 @@
 .rag--green {
   background: #2b8f47;
 }
+
+.tagRegistryPage {
+  --tag-subject-bg: #ecf5ef;
+  --tag-subject-bd: #bfdcc8;
+  --tag-subject-fg: #2e5a3f;
+  --tag-domain-bg: #e9f1f8;
+  --tag-domain-bd: #b8d0e3;
+  --tag-domain-fg: #294f6f;
+  --tag-form-bg: #f2edf7;
+  --tag-form-bd: #d2c3e3;
+  --tag-form-fg: #4f3d69;
+  --tag-theme-bg: #f7efe7;
+  --tag-theme-bd: #e3ccb7;
+  --tag-theme-fg: #6a4a2f;
+}
+
+.tagRegistry__controls {
+  margin: 0 0 0.8rem;
+}
+
+.tagRegistry__key {
+  gap: 0.45rem;
+}
+
+.tagRegistry__allBtn {
+  border-radius: 999px;
+  padding: 0.19rem 0.6rem;
+  font-size: 0.78rem;
+}
+
+.tagRegistry__groupBtn {
+  cursor: pointer;
+}
+
+.tagRegistry__allBtn.is-active,
+.tagRegistry__groupBtn.is-active {
+  border-color: color-mix(in oklab, var(--text) 45%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--text) 12%, transparent);
+}
