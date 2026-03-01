@@ -8,8 +8,8 @@ year: 2025
 year_display: "2017-25"
 project_folders:
   - "found forms"
-thumb_work_id: "00403"
+primary_work_id: "00403"
 notes: "more works to publish"
-checksum: "28b517b69b6f134ffde16551ef612a88"
+checksum: "bc0066a1b7e3514b70fbd78ba15e2bb3"
 ---
 

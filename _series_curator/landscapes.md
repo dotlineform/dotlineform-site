@@ -8,8 +8,8 @@ year: 2023
 year_display: "2023"
 project_folders:
   - "landscapes"
-thumb_work_id: "00516"
+primary_work_id: "00516"
 notes: null
-checksum: "0f698e5403c678b6a4a92448d7c22a98"
+checksum: "745280f9ab547c3d27b651d888c95563"
 ---
 

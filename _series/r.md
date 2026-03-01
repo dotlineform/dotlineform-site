@@ -5,9 +5,9 @@ title_sort: "r"
 sort_fields: "work_id"
 year: 2001
 year_display: "2001"
-thumb_work_id: "00142"
+primary_work_id: "00142"
 layout: "series"
-checksum: "eb2c504e0942e94509a60c4b4b7c8c6b"
+checksum: "6263673c3d0a43da25e92ecef2e5fa67"
 ---
 
 {% include series_prose/r.md %}

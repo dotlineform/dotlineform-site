@@ -8,8 +8,8 @@ year: 1998
 year_display: "c. 1998"
 project_folders:
   - "collected digital c. 1998"
-thumb_work_id: null
+primary_work_id: null
 notes: null
-checksum: "48a1b7c00ee9d12542b80502ff485413"
+checksum: "b657294d5947205fabb7c9871bd8e2ec"
 ---
 

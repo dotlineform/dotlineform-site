@@ -5,9 +5,9 @@ title_sort: "heaven and earth"
 sort_fields: "work_id"
 year: 2011
 year_display: "2011"
-thumb_work_id: null
+primary_work_id: null
 layout: "series"
-checksum: "0eda2b7743395fbb13b6c0a3afc12cd3"
+checksum: "799e0e4472e2b0ba490d0613c9de0c0e"
 ---
 
 {% include series_prose/heaven-and-earth.md %}

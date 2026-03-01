@@ -8,8 +8,8 @@ year: 2025
 year_display: "2025"
 project_folders:
   - "for David Lynch"
-thumb_work_id: null
+primary_work_id: null
 notes: null
-checksum: "45fa4f6f770e85401ccad2f4b9d7ea2b"
+checksum: "f71b43f3db600005c08949d0c6535ddc"
 ---
 

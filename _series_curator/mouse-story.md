@@ -8,8 +8,8 @@ year: 1993
 year_display: "1991-93"
 project_folders:
   - "mouse story"
-thumb_work_id: "00160"
+primary_work_id: "00160"
 notes: null
-checksum: "dfc35e5b34268447756202e61454cd86"
+checksum: "c311c27b3ba68a6a43723fc8aa3f8ecf"
 ---
 

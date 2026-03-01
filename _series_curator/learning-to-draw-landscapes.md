@@ -8,8 +8,8 @@ year: 2010
 year_display: "c. 2010?, 2022"
 project_folders:
   - "learning to draw landscapes"
-thumb_work_id: "00127"
+primary_work_id: "00127"
 notes: null
-checksum: "0e7538ba27f75535f672665f9559ef7d"
+checksum: "2950b6114e4b1335e09baca42c69986a"
 ---
 

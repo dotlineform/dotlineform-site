@@ -8,8 +8,8 @@ year: 2009
 year_display: "2004-15"
 project_folders:
   - "mm"
-thumb_work_id: "00477"
+primary_work_id: "00477"
 notes: "add dall-e versions"
-checksum: "991c87e5cee0ac8579ee39a48ac7624f"
+checksum: "a871b9bad49ab3c2a037a5fade85c50c"
 ---
 

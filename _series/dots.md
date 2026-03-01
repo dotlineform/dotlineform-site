@@ -5,9 +5,9 @@ title_sort: "dots"
 sort_fields: "work_id"
 year: 2010
 year_display: "2010"
-thumb_work_id: null
+primary_work_id: null
 layout: "series"
-checksum: "dae4139a26b2d5c26dec54e5ba732e9f"
+checksum: "52f777213c3bf40a4c3892c39731a5ed"
 ---
 
 {% include series_prose/dots.md %}

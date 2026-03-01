@@ -8,8 +8,8 @@ year: 2023
 year_display: "2023"
 project_folders:
   - "forests (2023)"
-thumb_work_id: "00468"
+primary_work_id: "00468"
 notes: null
-checksum: "729cecdb95e321f8fcfecb9e6a755d4f"
+checksum: "2eff4f4a596137ec1b27f1e46d762d8e"
 ---
 

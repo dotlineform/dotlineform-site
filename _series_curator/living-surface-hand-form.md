@@ -8,8 +8,8 @@ year: 2004
 year_display: "1989, 2004"
 project_folders:
   - "living surface hand form"
-thumb_work_id: null
+primary_work_id: null
 notes: null
-checksum: "39ca69977d4dd2c274dd5df64af1ee23"
+checksum: "6f48c091f56b375470f586a8e3924039"
 ---
 

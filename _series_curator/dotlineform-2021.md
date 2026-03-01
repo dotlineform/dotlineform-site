@@ -8,8 +8,8 @@ year: 2021
 year_display: "2021"
 project_folders:
   - "dotlineform (2021)"
-thumb_work_id: null
+primary_work_id: null
 notes: "details to publish"
-checksum: "959072fce54ad3a312a50835f62f4c3e"
+checksum: "3bd4e12eb830d57906a37fa2f1e41bf0"
 ---
 

@@ -8,8 +8,8 @@ year: 2023
 year_display: "2023"
 project_folders:
   - "forest memories 1-48"
-thumb_work_id: null
+primary_work_id: null
 notes: null
-checksum: "a3f4ab7b95df4b48697ed3fad08952b3"
+checksum: "2a6b08820d51bd0ef017c28499330699"
 ---
 

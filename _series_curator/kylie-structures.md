@@ -8,8 +8,8 @@ year: 2023
 year_display: "2023"
 project_folders:
   - "kylie structures"
-thumb_work_id: "00520"
+primary_work_id: "00520"
 notes: null
-checksum: "440470b6d97e69bf52b5cfeb31f19294"
+checksum: "11e3f045855d6d10e806c181200eb730"
 ---
 

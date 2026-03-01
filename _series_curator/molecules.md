@@ -8,8 +8,8 @@ year: 2013
 year_display: "2013"
 project_folders:
   - "molecules"
-thumb_work_id: "00460"
+primary_work_id: "00460"
 notes: null
-checksum: "fcb3095cfdbbc1f717fa2fc547a2319b"
+checksum: "cc49d639fd8a0e8e472beefadd7dfb17"
 ---
 

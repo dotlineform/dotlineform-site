@@ -8,8 +8,8 @@ year: 1996
 year_display: "1996"
 project_folders:
   - "colouring book"
-thumb_work_id: "00219"
+primary_work_id: "00219"
 notes: null
-checksum: "5c30c095062c07d88eb0083353d93f0a"
+checksum: "2f1246c4bae3c492bdeb4d3e5b0a9ef1"
 ---
 

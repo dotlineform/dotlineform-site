@@ -5,9 +5,9 @@ title_sort: "learning to draw landscapes"
 sort_fields: "work_id"
 year: 2010
 year_display: "c. 2010?, 2022"
-thumb_work_id: "00127"
+primary_work_id: "00127"
 layout: "series"
-checksum: "c9933fb5b01bdcef33094862de04a516"
+checksum: "34067b7cdc52716def48a4fb4454ae69"
 ---
 
 {% include series_prose/learning-to-draw-landscapes.md %}

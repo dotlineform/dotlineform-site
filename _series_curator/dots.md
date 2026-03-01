@@ -8,8 +8,8 @@ year: 2010
 year_display: "2010"
 project_folders:
   - "dots"
-thumb_work_id: null
+primary_work_id: null
 notes: "more works and details to publish"
-checksum: "1701d6a77863c05050645c9779ca9736"
+checksum: "eb03c319a89a498e77cc148d154a3ed3"
 ---
 
