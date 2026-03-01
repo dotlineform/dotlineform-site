@@ -13,7 +13,8 @@ async function initTagRegistryPage() {
   const state = {
     mount,
     tags: [],
-    filterGroup: "all"
+    filterGroup: "all",
+    searchQuery: ""
   };
 
   renderShell(state);
@@ -45,8 +46,9 @@ function normalizeRegistryTags(data) {
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
     const label = String(raw.label || "").trim();
+    const description = String(raw.description || "").trim();
     if (!GROUPS.includes(group) || !tagId || !label) continue;
-    tags.push({ group, tagId, label });
+    tags.push({ group, tagId, label, description });
   }
 
   return tags;
@@ -63,15 +65,31 @@ function renderShell(state) {
     <section class="tagStudio__panel">
       <div class="tagRegistry__controls">
         <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
+        <label class="tagRegistry__searchWrap">
+          <span class="visually-hidden">Search tags</span>
+          <input
+            type="text"
+            class="tagStudio__input tagRegistry__searchInput"
+            data-role="search"
+            placeholder="search"
+            autocomplete="off"
+          >
+        </label>
       </div>
       <div data-role="list"></div>
     </section>
   `;
 
   state.refs = {
+    search: state.mount.querySelector('[data-role="search"]'),
     key: state.mount.querySelector('[data-role="key"]'),
     list: state.mount.querySelector('[data-role="list"]')
   };
+
+  state.refs.search.addEventListener("input", () => {
+    state.searchQuery = normalize(state.refs.search.value);
+    renderList(state);
+  });
 
   state.mount.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-group]");
@@ -105,9 +123,12 @@ function renderControls(state) {
 }
 
 function renderList(state) {
-  const tags = state.filterGroup === "all"
-    ? state.tags
-    : state.tags.filter((tag) => tag.group === state.filterGroup);
+  const tags = state.tags.filter((tag) => {
+    const groupMatch = state.filterGroup === "all" ? true : tag.group === state.filterGroup;
+    if (!groupMatch) return false;
+    if (!state.searchQuery) return true;
+    return normalize(tag.label).startsWith(state.searchQuery);
+  });
 
   if (!tags.length) {
     state.refs.list.innerHTML = `<p class="tagStudio__empty">none</p>`;
@@ -115,10 +136,17 @@ function renderList(state) {
   }
 
   state.refs.list.innerHTML = `
-    <ul class="tagStudio__chipList">
+    <ul class="tagRegistry__rows">
       ${tags.map((tag) => `
-        <li class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(tag.tagId)}">
-          ${escapeHtml(tag.label)}
+        <li class="tagRegistry__row">
+          <div class="tagRegistry__tagCol">
+            <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(tag.tagId)}">
+              ${escapeHtml(tag.label)}
+            </span>
+          </div>
+          <div class="tagRegistry__descCol">
+            ${escapeHtml(tag.description || "—")}
+          </div>
         </li>
       `).join("")}
     </ul>
