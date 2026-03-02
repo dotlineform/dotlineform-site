@@ -158,6 +158,7 @@ Behavior:
   - `GET /health`
   - `POST /save-tags`
   - `POST /import-tag-registry`
+  - `POST /import-tag-aliases`
 - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
   - `Save mode: Patch` when unavailable (fallback to patch modal)
@@ -170,6 +171,14 @@ Behavior:
     - `replace` (replace entire registry)
   - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
   - import request may include `import_filename`; server logs basename only (no client path)
+- Tag Aliases page probes `/health` and shows:
+  - `Import mode: Local server` when available
+  - `Import mode: Patch` when unavailable (fallback to manual patch copy)
+  - Import modes supported by endpoint:
+    - `add` (no overwrite)
+    - `merge` (add + overwrite)
+    - `replace` (replace entire aliases)
+  - successful import responses include `summary_text` and `import_filename` (basename only)
 
 Security constraints:
 
@@ -178,9 +187,11 @@ Security constraints:
 - Write target is allowlisted to these files only:
   - `assets/data/tag_assignments.json`
   - `assets/data/tag_registry.json`
+  - `assets/data/tag_aliases.json`
   - timestamped backups are created in `assets/data/backups/`:
     - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
     - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
+    - `tag_aliases.json.bak-YYYYMMDD-HHMMSS`
 
 Script logging:
 

@@ -12,6 +12,9 @@ This document is the central reference for series-level tag editing in Studio Se
 - Registry browsing page:
   - `studio/tag-registry/index.md`
   - `assets/js/tag-registry.js`
+- Alias browsing page:
+  - `studio/tag-aliases/index.md`
+  - `assets/js/tag-aliases.js`
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/js/series-tags.js`
@@ -270,6 +273,28 @@ Tag Registry import modes:
   - server unavailable fallback
   - generates copyable patch snippet for **new tags only**
   - does not attempt overwrite in manual mode
+
+## Tag Aliases Page
+
+The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_aliases.json` and:
+
+- lists aliases with columns: timestamp, alias
+- renders aliases as clickable color-coded pills
+  - single-group aliases use that group color
+  - multi-group or unresolved aliases use warning color
+- shows selected alias details in a right-side panel:
+  - canonical target tags as color-coded pills
+  - canonical `tag_id` text
+- supports search by alias prefix
+- supports header sorting (timestamp/alias)
+- supports import from a local JSON file (recommended from `assets/data/import`)
+  - mode `add (no overwrite)`: add aliases with new key only
+  - mode `replace`: replace the full aliases map
+  - mode `add + overwrite`: add new aliases and overwrite matching keys, leaving other aliases untouched
+- local-server import uses `POST /import-tag-aliases`
+  - response includes `summary_text` and `import_filename` (basename only)
+  - summary is written to `logs/tag_write_server.log`
+- patch fallback mode provides a copyable snippet for **new aliases only**
 
 ## Series Tags Page
 

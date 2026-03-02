@@ -13,9 +13,11 @@ What it does:
     - GET /health
     - POST /save-tags
     - POST /import-tag-registry
+    - POST /import-tag-aliases
   - Updates:
     - assets/data/tag_assignments.json (series tag saves)
     - assets/data/tag_registry.json (registry import replace/merge)
+    - assets/data/tag_aliases.json (aliases import replace/merge/add)
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -25,6 +27,7 @@ Security constraints:
   - Hard allowlist for data writes permits only:
       <repo-root>/assets/data/tag_assignments.json
       <repo-root>/assets/data/tag_registry.json
+      <repo-root>/assets/data/tag_aliases.json
       <repo-root>/assets/data/backups/*
   - Change event logs are written only to:
       <repo-root>/logs/tag_write_server.log
@@ -53,14 +56,18 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
 MAX_TAGS = 50
 MAX_IMPORT_TAGS = 10000
+MAX_IMPORT_ALIASES = 10000
+MAX_ALIAS_TARGETS = 50
 TAG_STATUSES = {"active", "deprecated", "candidate"}
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 
 ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/data/tag_assignments.json")
 ALLOWED_REGISTRY_REL_PATH = Path("assets/data/tag_registry.json")
+ALLOWED_ALIASES_REL_PATH = Path("assets/data/tag_aliases.json")
 
 
 def utc_now() -> str:
@@ -208,6 +215,68 @@ def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> li
     return [out_by_id[tag_id] for tag_id in out_order]
 
 
+def sanitize_alias_key(raw_key: Any, idx: int) -> str:
+    key = str(raw_key or "").strip().lower()
+    if not key:
+        raise ValueError(f"import_aliases.aliases key at index {idx} must not be empty")
+    if not ALIAS_KEY_RE.fullmatch(key):
+        raise ValueError(f"import_aliases.aliases key at index {idx} must be slug-safe")
+    return key
+
+
+def sanitize_alias_value(raw_value: Any, alias_key: str) -> str | list[str]:
+    if isinstance(raw_value, str):
+        value = raw_value.strip().lower()
+        if not TAG_ID_RE.fullmatch(value):
+            raise ValueError(f"import_aliases.aliases['{alias_key}'] must be canonical <group>:<slug>")
+        return value
+
+    if not isinstance(raw_value, list):
+        raise ValueError(f"import_aliases.aliases['{alias_key}'] must be a string or array of strings")
+    if not raw_value:
+        raise ValueError(f"import_aliases.aliases['{alias_key}'] must not be an empty array")
+    if len(raw_value) > MAX_ALIAS_TARGETS:
+        raise ValueError(f"import_aliases.aliases['{alias_key}'] may include at most {MAX_ALIAS_TARGETS} tag ids")
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for idx, raw_item in enumerate(raw_value):
+        if not isinstance(raw_item, str):
+            raise ValueError(f"import_aliases.aliases['{alias_key}'][{idx}] must be a string")
+        value = raw_item.strip().lower()
+        if not TAG_ID_RE.fullmatch(value):
+            raise ValueError(f"import_aliases.aliases['{alias_key}'][{idx}] must be canonical <group>:<slug>")
+        if value in seen:
+            continue
+        seen.add(value)
+        out.append(value)
+
+    if not out:
+        raise ValueError(f"import_aliases.aliases['{alias_key}'] must include at least one tag id")
+    return out
+
+
+def sanitize_import_aliases(raw_aliases_payload: Any) -> tuple[list[str], Dict[str, str | list[str]]]:
+    if not isinstance(raw_aliases_payload, dict):
+        raise ValueError("import_aliases must be an object")
+
+    raw_aliases = raw_aliases_payload.get("aliases")
+    if not isinstance(raw_aliases, dict):
+        raise ValueError("import_aliases.aliases must be an object")
+    if len(raw_aliases) > MAX_IMPORT_ALIASES:
+        raise ValueError(f"import_aliases.aliases may include at most {MAX_IMPORT_ALIASES} entries")
+
+    order: list[str] = []
+    by_key: Dict[str, str | list[str]] = {}
+    for idx, (raw_key, raw_value) in enumerate(raw_aliases.items()):
+        alias_key = sanitize_alias_key(raw_key, idx)
+        alias_value = sanitize_alias_value(raw_value, alias_key)
+        if alias_key not in by_key:
+            order.append(alias_key)
+        by_key[alias_key] = alias_value
+    return order, by_key
+
+
 def sanitize_import_filename(raw_filename: Any) -> str:
     if raw_filename is None:
         return ""
@@ -264,6 +333,18 @@ def load_registry(path: Path) -> Dict[str, Any]:
             "tags": [],
         },
         "tag registry",
+    )
+
+
+def load_aliases(path: Path) -> Dict[str, Any]:
+    return load_json_object(
+        path,
+        {
+            "tag_aliases_version": "tag_aliases_v1",
+            "updated_at_utc": utc_now(),
+            "aliases": {},
+        },
+        "tag aliases",
     )
 
 
@@ -389,7 +470,85 @@ def apply_registry_import(
     return existing_payload, stats
 
 
-def build_import_summary_text(stats: Dict[str, Any]) -> str:
+def apply_aliases_import(
+    existing_payload: Dict[str, Any],
+    import_aliases_payload: Any,
+    mode: str,
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    if mode not in {"replace", "merge", "add"}:
+        raise ValueError("mode must be one of: replace, merge, add")
+
+    import_order, import_by_key = sanitize_import_aliases(import_aliases_payload)
+    raw_existing_aliases = existing_payload.get("aliases")
+    existing_aliases = raw_existing_aliases if isinstance(raw_existing_aliases, dict) else {}
+
+    existing_order: list[str] = []
+    existing_by_key: Dict[str, str | list[str]] = {}
+    for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
+        alias_key = sanitize_alias_key(raw_key, idx)
+        alias_value = sanitize_alias_value(raw_value, alias_key)
+        if alias_key not in existing_by_key:
+            existing_order.append(alias_key)
+        existing_by_key[alias_key] = alias_value
+
+    overwritten = 0
+    added = 0
+    unchanged = 0
+    removed = 0
+    final_aliases: Dict[str, str | list[str]] = {}
+
+    if mode == "replace":
+        existing_keys = set(existing_by_key.keys())
+        import_keys = set(import_by_key.keys())
+        overwritten = len(existing_keys & import_keys)
+        added = len(import_keys - existing_keys)
+        removed = len(existing_keys - import_keys)
+        for key in import_order:
+            final_aliases[key] = import_by_key[key]
+    elif mode == "merge":
+        remaining_import = dict(import_by_key)
+        for key in existing_order:
+            if key in remaining_import:
+                overwritten += 1
+                final_aliases[key] = remaining_import.pop(key)
+            else:
+                unchanged += 1
+                final_aliases[key] = existing_by_key[key]
+        for key in import_order:
+            if key not in remaining_import:
+                continue
+            added += 1
+            final_aliases[key] = remaining_import.pop(key)
+    else:  # mode == "add"
+        for key in existing_order:
+            final_aliases[key] = existing_by_key[key]
+        existing_keys = set(existing_by_key.keys())
+        for key in import_order:
+            if key in existing_keys:
+                unchanged += 1
+                continue
+            added += 1
+            final_aliases[key] = import_by_key[key]
+
+    if "tag_aliases_version" not in existing_payload:
+        existing_payload["tag_aliases_version"] = "tag_aliases_v1"
+    existing_payload["aliases"] = final_aliases
+    existing_payload["updated_at_utc"] = now_utc
+
+    stats = {
+        "mode": mode,
+        "imported_total": len(import_order),
+        "overwritten": overwritten,
+        "added": added,
+        "unchanged": unchanged,
+        "removed": removed,
+        "final_total": len(final_aliases),
+    }
+    return existing_payload, stats
+
+
+def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
     mode = str(stats.get("mode") or "unknown")
     imported_total = int(stats.get("imported_total") or 0)
     added = int(stats.get("added") or 0)
@@ -398,7 +557,7 @@ def build_import_summary_text(stats: Dict[str, Any]) -> str:
     removed = int(stats.get("removed") or 0)
     final_total = int(stats.get("final_total") or 0)
     return (
-        f"mode {mode}; Imported {imported_total} tags; "
+        f"mode {mode}; Imported {imported_total} {noun}; "
         f"added {added}; overwritten {overwritten}; "
         f"unchanged {unchanged}; removed {removed}; final {final_total}"
     )
@@ -433,6 +592,7 @@ class TagWriteServer(ThreadingHTTPServer):
         repo_root: Path,
         assignments_path: Path,
         registry_path: Path,
+        aliases_path: Path,
         allowed_write_paths: set[Path],
         backups_dir: Path,
         dry_run: bool,
@@ -441,6 +601,7 @@ class TagWriteServer(ThreadingHTTPServer):
         self.repo_root = repo_root.resolve()
         self.assignments_path = assignments_path
         self.registry_path = registry_path
+        self.aliases_path = aliases_path
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
@@ -457,7 +618,7 @@ class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {"/save-tags", "/import-tag-registry"}:
+        if self.path not in {"/save-tags", "/import-tag-registry", "/import-tag-aliases"}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -489,6 +650,7 @@ class Handler(BaseHTTPRequestHandler):
                 "service": "tag_write_server",
                 "tag_assignments_path": str(self.server.assignments_path),
                 "tag_registry_path": str(self.server.registry_path),
+                "tag_aliases_path": str(self.server.aliases_path),
                 "time_utc": utc_now(),
             },
             allowed,
@@ -507,6 +669,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == "/import-tag-registry":
                 self._handle_import_tag_registry(allowed)
+                return
+            if self.path == "/import-tag-aliases":
+                self._handle_import_tag_aliases(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -605,6 +770,50 @@ class Handler(BaseHTTPRequestHandler):
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
+    def _handle_import_tag_aliases(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        mode = str(body.get("mode") or "").strip().lower()
+        import_aliases = body.get("import_aliases")
+        import_filename = sanitize_import_filename(body.get("import_filename"))
+        _ = body.get("client_time_utc")
+
+        now_utc = utc_now()
+        existing_payload = load_aliases(self.server.aliases_path)
+        updated_payload, stats = apply_aliases_import(existing_payload, import_aliases, mode, now_utc)
+        summary_text = build_import_summary_text(stats, noun="aliases")
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "updated_at_utc": now_utc,
+            "summary_text": summary_text,
+            "import_filename": import_filename,
+            **stats,
+        }
+
+        target_path = self.server.aliases_path.resolve()
+        if not self.server.dry_run:
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            atomic_write(target_path, updated_payload, self.server.backups_dir)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **stats,
+            }
+
+        self.server.log_event(
+            "import_tag_aliases",
+            {
+                "summary_text": summary_text,
+                "import_filename": import_filename,
+                "mode": mode,
+                "dry_run": self.server.dry_run,
+                **stats,
+            },
+        )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
     def _read_json_body(self) -> Dict[str, Any]:
         content_length = self.headers.get("Content-Length")
         if content_length is None:
@@ -659,8 +868,9 @@ def main() -> None:
     repo_root = detect_repo_root(args.repo_root)
     assignments_path = (repo_root / ALLOWED_ASSIGNMENTS_REL_PATH).resolve()
     registry_path = (repo_root / ALLOWED_REGISTRY_REL_PATH).resolve()
+    aliases_path = (repo_root / ALLOWED_ALIASES_REL_PATH).resolve()
     backups_dir = (repo_root / "assets/data/backups").resolve()
-    allowed_paths = {assignments_path, registry_path}
+    allowed_paths = {assignments_path, registry_path, aliases_path}
 
     server = TagWriteServer(
         ("127.0.0.1", args.port),
@@ -668,6 +878,7 @@ def main() -> None:
         repo_root=repo_root,
         assignments_path=assignments_path,
         registry_path=registry_path,
+        aliases_path=aliases_path,
         allowed_write_paths=allowed_paths,
         backups_dir=backups_dir,
         dry_run=args.dry_run,
@@ -675,7 +886,7 @@ def main() -> None:
     mode = "dry-run" if args.dry_run else "write"
     print(
         f"tag_write_server listening on http://127.0.0.1:{args.port} "
-        f"(mode={mode}, assignments={assignments_path}, registry={registry_path}, backups={backups_dir})"
+        f"(mode={mode}, assignments={assignments_path}, registry={registry_path}, aliases={aliases_path}, backups={backups_dir})"
     )
     server.log_event(
         "server_start",
@@ -684,6 +895,7 @@ def main() -> None:
             "mode": mode,
             "assignments_path": str(assignments_path.relative_to(repo_root)),
             "registry_path": str(registry_path.relative_to(repo_root)),
+            "aliases_path": str(aliases_path.relative_to(repo_root)),
             "backups_dir": str(backups_dir.relative_to(repo_root)),
         },
     )
