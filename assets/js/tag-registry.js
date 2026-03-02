@@ -64,6 +64,7 @@ function renderShell(state) {
           <span class="tagRegistry__saveMode" data-role="save-mode">Import mode: Patch</span>
         </div>
         <p class="tagRegistry__selected" data-role="selected-file"></p>
+        <p class="tagRegistry__result" data-role="import-result"></p>
       </div>
 
       <div class="tagRegistry__controls">
@@ -79,7 +80,6 @@ function renderShell(state) {
           >
         </label>
       </div>
-      <p class="tagRegistry__result" data-role="import-result"></p>
       <div data-role="list"></div>
     </section>
 
