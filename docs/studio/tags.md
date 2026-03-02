@@ -153,6 +153,7 @@ Save mode is probed at page load:
   - UI status message includes save timestamp
 - On failure:
   - UI falls back to Patch mode and opens patch modal
+- Local write operations are logged to `logs/tag_write_server.log` (JSONL).
 
 ### Patch mode
 
@@ -201,6 +202,11 @@ Governance and maintenance:
   - local save service (`scripts/tag_write_server.py`).
 - Server writes are constrained to this file, with timestamped backups in `assets/data/backups/`.
 - Top-level `updated_at_utc` and per-series `updated_at_utc` must be kept current by writer flow.
+- Script change events are logged in `logs/`:
+  - `logs/tag_write_server.log`
+  - `logs/run_draft_pipeline.log`
+  - `logs/generate_work_pages.log`
+  - retention: 30 days, with fallback to keep the latest 1 day's entries when activity is older than 30 days.
 
 ## Operational Notes
 
@@ -221,7 +227,7 @@ Governance and maintenance:
 - Keyboard navigation for suggestion popup.
 - Configurable suggestion strategies (beyond missing-group examples).
 - Stronger server-side validation against registry (optional phase, currently client-side only).
-- History/change log for tag assignment edits.
+- Surface persisted server log entries directly in Studio UI.
 
 ## Documentation Maintenance Rule
 

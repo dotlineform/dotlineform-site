@@ -57,6 +57,11 @@ from typing import Any, Dict, Iterable, Set
 
 import openpyxl
 
+try:
+    from script_logging import append_script_log
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.script_logging import append_script_log
+
 
 def normalize_text(value: Any) -> str:
     if value is None:
@@ -107,6 +112,14 @@ def run_step(label: str, cmd: list[str], cwd: Path, env: Dict[str, str] | None =
     print(f"\n==> {label}")
     print("+", " ".join(cmd))
     subprocess.run(cmd, cwd=str(cwd), env=env, check=True)
+
+
+def log_event(repo_root: Path, event: str, details: Dict[str, Any] | None = None) -> None:
+    try:
+        append_script_log(Path(__file__), event=event, details=details or {}, repo_root=repo_root)
+    except Exception:
+        # Logging failures must not stop pipeline execution.
+        pass
 
 
 def read_ids(path: Path) -> Set[str]:
@@ -499,6 +512,16 @@ def main() -> int:
     xlsx_path = (repo_root / args.xlsx).resolve()
     if not xlsx_path.exists():
         raise SystemExit(f"Workbook not found: {xlsx_path}")
+    log_event(
+        repo_root,
+        "pipeline_start",
+        {
+            "dry_run": args.dry_run,
+            "modes": sorted(selected_modes),
+            "xlsx": str(xlsx_path.relative_to(repo_root)),
+            "force_generate": args.force_generate,
+        },
+    )
     if series_filter is None and "work" in selected_modes:
         auto_series_filter = collect_draft_series_ids(xlsx_path=xlsx_path)
 
@@ -763,12 +786,42 @@ def main() -> int:
         run_step("Generate Work Pages", generate_cmd, cwd=repo_root)
 
     print("\nPipeline complete.")
+    log_event(
+        repo_root,
+        "pipeline_complete",
+        {
+            "dry_run": args.dry_run,
+            "modes": sorted(selected_modes),
+            "generated_work_ids": len(generate_ids),
+            "generated_moment_ids": len(draft_moment_ids),
+        },
+    )
     return 0
 
 
 if __name__ == "__main__":
+    repo_root = Path(__file__).resolve().parents[1]
     try:
         raise SystemExit(main())
     except subprocess.CalledProcessError as e:
+        log_event(
+            repo_root,
+            "pipeline_failed",
+            {
+                "kind": "called_process_error",
+                "return_code": e.returncode,
+                "cmd": list(e.cmd),
+            },
+        )
         print(f"\nPipeline failed at command: {' '.join(e.cmd)}", file=sys.stderr)
         raise SystemExit(e.returncode)
+    except Exception as e:  # noqa: BLE001
+        log_event(
+            repo_root,
+            "pipeline_failed",
+            {
+                "kind": "exception",
+                "error": str(e),
+            },
+        )
+        raise

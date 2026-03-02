@@ -67,8 +67,14 @@ from typing import Any, Dict, List, Optional
 
 import hashlib
 import json
+import sys
 
 import openpyxl
+
+try:
+    from script_logging import append_script_log
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.script_logging import append_script_log
 
 
 # ----------------------------
@@ -197,6 +203,14 @@ def is_empty(value: Any) -> bool:
     if isinstance(value, str) and value.strip() == "":
         return True
     return False
+
+
+def log_event(event: str, details: Optional[Dict[str, Any]] = None) -> None:
+    try:
+        append_script_log(Path(__file__), event=event, details=details or {})
+    except Exception:
+        # Logging failures must not block generation.
+        pass
 
 
 def coerce_numeric(value: Any) -> Optional[float]:
@@ -625,6 +639,14 @@ def main() -> None:
         ),
     )
     args = ap.parse_args()
+    log_event(
+        "generate_start",
+        {
+            "argv": sys.argv[1:],
+            "write": bool(args.write),
+            "force": bool(args.force),
+        },
+    )
 
     valid_artifacts = {
         "work-pages",
@@ -2278,6 +2300,21 @@ def main() -> None:
         print(
             f"Moment pages done. {'Would write' if not args.write else 'Wrote'}: {moments_written}. Skipped: {moments_skipped}."
         )
+    log_event(
+        "generate_complete",
+        {
+            "write": bool(args.write),
+            "force": bool(args.force),
+        },
+    )
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except SystemExit as exc:
+        code = exc.code if isinstance(exc.code, int) else (0 if exc.code is None else 1)
+        log_event("generate_exit", {"status": "system_exit", "code": code})
+        raise
+    except Exception as exc:  # noqa: BLE001
+        log_event("generate_exit", {"status": "error", "error": str(exc)})
+        raise

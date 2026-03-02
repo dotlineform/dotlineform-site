@@ -19,7 +19,7 @@ async function initTagRegistryPage() {
     searchQuery: "",
     sortKey: "label",
     sortDir: "asc",
-    importMode: "merge",
+    importMode: "add",
     saveMode: "patch",
     selectedFile: null,
     patchSnippet: "",
@@ -29,6 +29,7 @@ async function initTagRegistryPage() {
 
   renderShell(state);
   wireEvents(state);
+  syncImportModeFromControl(state);
 
   try {
     await loadRegistry(state);
@@ -135,14 +136,7 @@ function wireEvents(state) {
   });
 
   state.refs.importMode.addEventListener("change", () => {
-    const mode = normalize(state.refs.importMode.value);
-    if (mode === "replace") {
-      state.importMode = "replace";
-    } else if (mode === "merge") {
-      state.importMode = "merge";
-    } else {
-      state.importMode = "add";
-    }
+    syncImportModeFromControl(state);
   });
 
   state.refs.importButton.addEventListener("click", () => {
@@ -186,6 +180,17 @@ function wireEvents(state) {
       setImportResult(state, "error", "Copy failed. Select and copy the snippet manually.");
     }
   });
+}
+
+function syncImportModeFromControl(state) {
+  const mode = normalize(state.refs.importMode.value);
+  if (mode === "replace") {
+    state.importMode = "replace";
+  } else if (mode === "merge") {
+    state.importMode = "merge";
+  } else {
+    state.importMode = "add";
+  }
 }
 
 async function probeImportMode(state) {
@@ -556,7 +561,9 @@ function setImportResult(state, kind, message) {
 }
 
 function buildImportSummary(response) {
+  const mode = normalize(response.mode || "");
   return [
+    `mode ${mode || "unknown"}`,
     `Imported ${Number(response.imported_total || 0)} tags`,
     `added ${Number(response.added || 0)}`,
     `overwritten ${Number(response.overwritten || 0)}`,

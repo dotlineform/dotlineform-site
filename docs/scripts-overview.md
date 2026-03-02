@@ -180,6 +180,18 @@ Security constraints:
     - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
     - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
 
+Script logging:
+
+- Per-script logs are written to `logs/` at repo root (auto-created).
+- Current pipeline/logged scripts include:
+  - `scripts/run_draft_pipeline.py` -> `logs/run_draft_pipeline.log`
+  - `scripts/generate_work_pages.py` -> `logs/generate_work_pages.log`
+  - `scripts/tag_write_server.py` -> `logs/tag_write_server.log`
+- Log format is JSON Lines (one JSON object per line).
+- Retention policy:
+  - keep entries from the last 30 days
+  - if no entries fall inside the last 30 days, keep the latest 1 day's worth (based on newest entry)
+
 ### 4) Audit site consistency (read-only)
 
 Run an audit across generated pages and JSON:

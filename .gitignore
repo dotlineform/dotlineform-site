@@ -20,3 +20,6 @@ vendor/bundle/
 # Python
 __pycache__/
 *.pyc
+
+# Script logs
+logs/

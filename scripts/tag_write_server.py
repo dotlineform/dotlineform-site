@@ -22,10 +22,12 @@ Security constraints:
   - CORS allows only:
       http://localhost:*
       http://127.0.0.1:*
-  - Hard allowlist permits writing only:
+  - Hard allowlist for data writes permits only:
       <repo-root>/assets/data/tag_assignments.json
       <repo-root>/assets/data/tag_registry.json
       <repo-root>/assets/data/backups/*
+  - Change event logs are written only to:
+      <repo-root>/logs/tag_write_server.log
   - No external dependencies (Python stdlib only).
 """
 
@@ -43,6 +45,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse
+
+try:
+    from script_logging import append_script_log
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.script_logging import append_script_log
 
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
@@ -388,6 +395,7 @@ class TagWriteServer(ThreadingHTTPServer):
         self,
         server_address: tuple[str, int],
         handler_cls,
+        repo_root: Path,
         assignments_path: Path,
         registry_path: Path,
         allowed_write_paths: set[Path],
@@ -395,11 +403,19 @@ class TagWriteServer(ThreadingHTTPServer):
         dry_run: bool,
     ):
         super().__init__(server_address, handler_cls)
+        self.repo_root = repo_root.resolve()
         self.assignments_path = assignments_path
         self.registry_path = registry_path
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
+
+    def log_event(self, event: str, details: Optional[Dict[str, Any]] = None) -> None:
+        try:
+            append_script_log(Path(__file__), event=event, details=details, repo_root=self.repo_root)
+        except Exception:
+            # Logging must never block API requests.
+            pass
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -459,8 +475,10 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
+            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "validation"})
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
+            self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "internal"})
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
 
     def _handle_save_tags(self, allowed: Optional[str]) -> None:
@@ -498,6 +516,14 @@ class Handler(BaseHTTPRequestHandler):
                 "updated_at_utc": now_utc,
             }
 
+        self.server.log_event(
+            "save_tags",
+            {
+                "series_id": series_id,
+                "tag_count": len(sanitized_tags),
+                "dry_run": self.server.dry_run,
+            },
+        )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_import_tag_registry(self, allowed: Optional[str]) -> None:
@@ -528,6 +554,14 @@ class Handler(BaseHTTPRequestHandler):
                 **stats,
             }
 
+        self.server.log_event(
+            "import_tag_registry",
+            {
+                "mode": mode,
+                "dry_run": self.server.dry_run,
+                **stats,
+            },
+        )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _read_json_body(self) -> Dict[str, Any]:
@@ -590,6 +624,7 @@ def main() -> None:
     server = TagWriteServer(
         ("127.0.0.1", args.port),
         Handler,
+        repo_root=repo_root,
         assignments_path=assignments_path,
         registry_path=registry_path,
         allowed_write_paths=allowed_paths,
@@ -601,12 +636,23 @@ def main() -> None:
         f"tag_write_server listening on http://127.0.0.1:{args.port} "
         f"(mode={mode}, assignments={assignments_path}, registry={registry_path}, backups={backups_dir})"
     )
+    server.log_event(
+        "server_start",
+        {
+            "port": args.port,
+            "mode": mode,
+            "assignments_path": str(assignments_path.relative_to(repo_root)),
+            "registry_path": str(registry_path.relative_to(repo_root)),
+            "backups_dir": str(backups_dir.relative_to(repo_root)),
+        },
+    )
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         pass
     finally:
         server.server_close()
+        server.log_event("server_stop", {"port": args.port})
         print("tag_write_server stopped")
 
 
