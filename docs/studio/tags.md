@@ -263,6 +263,16 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - per-tag `updated_at_utc` for added/overwritten tags
 - import response includes `summary_text` and the same summary is written to `logs/tag_write_server.log`
 - import response/log includes `import_filename` (basename only)
+- clicking a tag pill opens an edit modal:
+  - edit `label`
+  - edit canonical slug (group fixed)
+  - delete tag
+- local-server mutation uses `POST /mutate-tag`
+  - modal shows live impact previews via `POST /mutate-tag-preview` before save/delete confirm
+  - label edits update registry only
+  - canonical rename cascades into `tag_assignments.json` and `tag_aliases.json`
+  - delete removes tag from registry and removes references from assignments/aliases
+  - aliases that become 1:1 self-maps (`alias == target slug`) are removed
 
 Tag Registry import modes:
 

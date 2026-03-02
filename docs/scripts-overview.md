@@ -159,18 +159,27 @@ Behavior:
   - `POST /save-tags`
   - `POST /import-tag-registry`
   - `POST /import-tag-aliases`
+  - `POST /mutate-tag-preview`
+  - `POST /mutate-tag`
 - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
   - `Save mode: Patch` when unavailable (fallback to patch modal)
 - Tag Registry page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)
+  - tag edit/delete requires local server mode
   - Import modes supported by endpoint:
     - `add` (no overwrite)
     - `merge` (add + overwrite)
     - `replace` (replace entire registry)
   - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
   - import request may include `import_filename`; server logs basename only (no client path)
+  - tag mutation endpoint behavior (`POST /mutate-tag`):
+    - `action: edit`: update label and optionally canonical slug (`group` fixed)
+    - `action: delete`: remove tag
+    - rename/delete cascades update `tag_assignments.json` and `tag_aliases.json`
+    - aliases that become 1:1 self-maps (`alias == target slug`) are removed automatically
+  - preview endpoint (`POST /mutate-tag-preview`) returns the same impact stats without writing files
 - Tag Aliases page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)

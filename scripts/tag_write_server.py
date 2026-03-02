@@ -14,6 +14,8 @@ What it does:
     - POST /save-tags
     - POST /import-tag-registry
     - POST /import-tag-aliases
+    - POST /mutate-tag-preview
+    - POST /mutate-tag
   - Updates:
     - assets/data/tag_assignments.json (series tag saves)
     - assets/data/tag_registry.json (registry import replace/merge)
@@ -58,6 +60,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 ALIAS_KEY_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
+MUTATE_ACTIONS = {"edit", "delete"}
 MAX_TAGS = 50
 MAX_IMPORT_TAGS = 10000
 MAX_IMPORT_ALIASES = 10000
@@ -295,6 +298,29 @@ def sanitize_import_filename(raw_filename: Any) -> str:
     if any(ord(ch) < 32 or ord(ch) == 127 for ch in basename):
         raise ValueError("import_filename contains control characters")
     return basename
+
+
+def sanitize_tag_id(raw_tag_id: Any, field_name: str = "tag_id") -> str:
+    tag_id = str(raw_tag_id or "").strip().lower()
+    if not TAG_ID_RE.fullmatch(tag_id):
+        raise ValueError(f"{field_name} must match <group>:<slug>")
+    return tag_id
+
+
+def sanitize_slug(raw_slug: Any, field_name: str = "slug") -> str:
+    slug = str(raw_slug or "").strip().lower()
+    if not SLUG_RE.fullmatch(slug):
+        raise ValueError(f"{field_name} must be slug-safe")
+    return slug
+
+
+def sanitize_label(raw_label: Any, field_name: str = "label") -> str:
+    if not isinstance(raw_label, str):
+        raise ValueError(f"{field_name} must be a string")
+    label = raw_label.strip()
+    if not label:
+        raise ValueError(f"{field_name} must not be empty")
+    return label
 
 
 def load_json_object(path: Path, default_payload: Dict[str, Any], object_name: str) -> Dict[str, Any]:
@@ -548,6 +574,237 @@ def apply_aliases_import(
     return existing_payload, stats
 
 
+def update_alias_value_for_tag(value: str | list[str], old_tag_id: str, new_tag_id: Optional[str]) -> tuple[Optional[str | list[str]], bool]:
+    if isinstance(value, str):
+        if value != old_tag_id:
+            return value, False
+        if new_tag_id is None:
+            return None, True
+        return new_tag_id, new_tag_id != value
+
+    if not isinstance(value, list):
+        return value, False
+
+    changed = False
+    out: list[str] = []
+    seen: set[str] = set()
+    for raw in value:
+        if not isinstance(raw, str):
+            continue
+        item = raw
+        if item == old_tag_id:
+            if new_tag_id is None:
+                changed = True
+                continue
+            if new_tag_id != old_tag_id:
+                changed = True
+                item = new_tag_id
+        if item in seen:
+            changed = True
+            continue
+        seen.add(item)
+        out.append(item)
+
+    if not out:
+        return None, True if changed else False
+    if len(out) == 1:
+        return out[0], True if changed or (isinstance(value, list) and len(value) != 1) else changed
+    return out, changed
+
+
+def is_redundant_alias(alias_key: str, value: str | list[str]) -> bool:
+    targets: list[str] = []
+    if isinstance(value, str):
+        targets = [value]
+    elif isinstance(value, list):
+        targets = [item for item in value if isinstance(item, str)]
+    if len(targets) != 1:
+        return False
+    target = targets[0]
+    if ":" not in target:
+        return False
+    target_slug = target.split(":", 1)[1]
+    return alias_key == target_slug
+
+
+def rewrite_aliases_for_tag(
+    aliases_payload: Dict[str, Any],
+    old_tag_id: str,
+    new_tag_id: Optional[str],
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, int]]:
+    raw_aliases = aliases_payload.get("aliases")
+    existing_aliases = raw_aliases if isinstance(raw_aliases, dict) else {}
+
+    final_aliases: Dict[str, str | list[str]] = {}
+    rewritten = 0
+    removed_empty = 0
+    removed_redundant = 0
+
+    for idx, (raw_key, raw_value) in enumerate(existing_aliases.items()):
+        alias_key = sanitize_alias_key(raw_key, idx)
+        alias_value = sanitize_alias_value(raw_value, alias_key)
+        updated_value, changed = update_alias_value_for_tag(alias_value, old_tag_id, new_tag_id)
+        if changed:
+            rewritten += 1
+        if updated_value is None:
+            removed_empty += 1
+            continue
+        if is_redundant_alias(alias_key, updated_value):
+            removed_redundant += 1
+            continue
+        final_aliases[alias_key] = updated_value
+
+    if "tag_aliases_version" not in aliases_payload:
+        aliases_payload["tag_aliases_version"] = "tag_aliases_v1"
+    aliases_payload["aliases"] = final_aliases
+    aliases_payload["updated_at_utc"] = now_utc
+
+    return aliases_payload, {
+        "aliases_rewritten": rewritten,
+        "aliases_removed_empty": removed_empty,
+        "aliases_removed_redundant": removed_redundant,
+        "aliases_final_total": len(final_aliases),
+    }
+
+
+def rewrite_assignments_for_tag(
+    assignments_payload: Dict[str, Any],
+    old_tag_id: str,
+    new_tag_id: Optional[str],
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, int]]:
+    series_obj = assignments_payload.get("series")
+    if not isinstance(series_obj, dict):
+        series_obj = {}
+        assignments_payload["series"] = series_obj
+    if "tag_assignments_version" not in assignments_payload:
+        assignments_payload["tag_assignments_version"] = "tag_assignments_v1"
+
+    rows_touched = 0
+    refs_rewritten = 0
+
+    for series_id, row in series_obj.items():
+        if not isinstance(row, dict):
+            continue
+        tags = row.get("tags")
+        if not isinstance(tags, list):
+            continue
+        changed = False
+        out: list[str] = []
+        seen: set[str] = set()
+        for raw_tag in tags:
+            if not isinstance(raw_tag, str):
+                continue
+            tag_value = raw_tag
+            if tag_value == old_tag_id:
+                refs_rewritten += 1
+                changed = True
+                if new_tag_id is None:
+                    continue
+                tag_value = new_tag_id
+            if tag_value in seen:
+                changed = True
+                continue
+            seen.add(tag_value)
+            out.append(tag_value)
+
+        if changed:
+            row["tags"] = out
+            row["updated_at_utc"] = now_utc
+            rows_touched += 1
+
+    assignments_payload["updated_at_utc"] = now_utc
+    return assignments_payload, {
+        "series_rows_touched": rows_touched,
+        "series_tag_refs_rewritten": refs_rewritten,
+    }
+
+
+def mutate_registry_tag(
+    registry_payload: Dict[str, Any],
+    action: str,
+    old_tag_id: str,
+    now_utc: str,
+    new_label: Optional[str] = None,
+    new_slug: Optional[str] = None,
+    allow_canonical_rename: bool = False,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    if action not in MUTATE_ACTIONS:
+        raise ValueError(f"action must be one of: {sorted(MUTATE_ACTIONS)}")
+
+    raw_tags = registry_payload.get("tags")
+    tags = raw_tags if isinstance(raw_tags, list) else []
+    target_idx = -1
+    target_row: Dict[str, Any] | None = None
+    existing_ids: set[str] = set()
+
+    for idx, raw in enumerate(tags):
+        if not isinstance(raw, dict):
+            continue
+        tag_id = str(raw.get("tag_id") or "").strip().lower()
+        if not tag_id:
+            continue
+        existing_ids.add(tag_id)
+        if tag_id == old_tag_id:
+            target_idx = idx
+            target_row = raw
+
+    if target_idx < 0 or target_row is None:
+        raise ValueError(f"tag not found in registry: {old_tag_id}")
+
+    group = str(target_row.get("group") or "").strip().lower()
+    if not group or ":" not in old_tag_id:
+        raise ValueError(f"invalid target registry row for: {old_tag_id}")
+    old_group = old_tag_id.split(":", 1)[0]
+    if group != old_group:
+        raise ValueError(f"registry group mismatch for tag: {old_tag_id}")
+
+    if action == "delete":
+        final_tags = [row for idx, row in enumerate(tags) if idx != target_idx]
+        registry_payload["tags"] = final_tags
+        registry_payload["updated_at_utc"] = now_utc
+        if "tag_registry_version" not in registry_payload:
+            registry_payload["tag_registry_version"] = "tag_registry_v1"
+        return registry_payload, {
+            "action": "delete",
+            "old_tag_id": old_tag_id,
+            "new_tag_id": None,
+            "group": group,
+            "label": str(target_row.get("label") or "").strip(),
+        }
+
+    label = sanitize_label(new_label, "new_label")
+    slug = sanitize_slug(new_slug, "new_slug")
+    new_tag_id = f"{group}:{slug}"
+    canonical_changed = new_tag_id != old_tag_id
+    if canonical_changed and not allow_canonical_rename:
+        raise ValueError("canonical rename is disabled for this request")
+    if canonical_changed and new_tag_id in existing_ids:
+        raise ValueError(f"target tag_id already exists: {new_tag_id}")
+
+    updated_row = dict(target_row)
+    updated_row["label"] = label
+    updated_row["tag_id"] = new_tag_id
+    updated_row["updated_at_utc"] = now_utc
+    final_tags = list(tags)
+    final_tags[target_idx] = updated_row
+
+    registry_payload["tags"] = final_tags
+    registry_payload["updated_at_utc"] = now_utc
+    if "tag_registry_version" not in registry_payload:
+        registry_payload["tag_registry_version"] = "tag_registry_v1"
+
+    return registry_payload, {
+        "action": "edit",
+        "old_tag_id": old_tag_id,
+        "new_tag_id": new_tag_id,
+        "group": group,
+        "label": label,
+        "canonical_changed": canonical_changed,
+    }
+
+
 def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
     mode = str(stats.get("mode") or "unknown")
     imported_total = int(stats.get("imported_total") or 0)
@@ -560,6 +817,25 @@ def build_import_summary_text(stats: Dict[str, Any], noun: str = "tags") -> str:
         f"mode {mode}; Imported {imported_total} {noun}; "
         f"added {added}; overwritten {overwritten}; "
         f"unchanged {unchanged}; removed {removed}; final {final_total}"
+    )
+
+
+def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
+    action = str(stats.get("action") or "unknown")
+    old_tag_id = str(stats.get("old_tag_id") or "")
+    new_tag_id = str(stats.get("new_tag_id") or "")
+    touched = int(stats.get("series_rows_touched") or 0)
+    refs = int(stats.get("series_tag_refs_rewritten") or 0)
+    alias_rw = int(stats.get("aliases_rewritten") or 0)
+    alias_empty = int(stats.get("aliases_removed_empty") or 0)
+    alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
+
+    id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
+    return (
+        f"mode {action}; tag {id_part}; "
+        f"series rows {touched}; refs {refs}; "
+        f"aliases rewritten {alias_rw}; aliases removed-empty {alias_empty}; "
+        f"aliases removed-redundant {alias_redundant}"
     )
 
 
@@ -582,6 +858,50 @@ def atomic_write(path: Path, payload: Dict[str, Any], backups_dir: Path) -> None
                 temp_path.unlink()
             except OSError:
                 pass
+
+
+def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir: Path) -> None:
+    backups_dir.mkdir(parents=True, exist_ok=True)
+    stamp = backup_stamp_now()
+    backups: Dict[Path, Path] = {}
+    temp_paths: Dict[Path, Path] = {}
+    replaced_paths: list[Path] = []
+
+    try:
+        for path, payload in payloads_by_path.items():
+            if path.exists():
+                backup_path = backups_dir / f"{path.name}.bak-{stamp}"
+                shutil.copy2(path, backup_path)
+                backups[path] = backup_path
+
+            fd, temp_name = tempfile.mkstemp(prefix=f"{path.name}.", suffix=".tmp", dir=str(path.parent))
+            temp_path = Path(temp_name)
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                json.dump(payload, fh, ensure_ascii=False, indent=2, sort_keys=False)
+                fh.write("\n")
+            temp_paths[path] = temp_path
+
+        for path, temp_path in temp_paths.items():
+            os.replace(temp_path, path)
+            replaced_paths.append(path)
+    except Exception:
+        for path in reversed(replaced_paths):
+            backup_path = backups.get(path)
+            try:
+                if backup_path and backup_path.exists():
+                    shutil.copy2(backup_path, path)
+                elif path.exists():
+                    path.unlink()
+            except Exception:
+                pass
+        raise
+    finally:
+        for temp_path in temp_paths.values():
+            if temp_path.exists():
+                try:
+                    temp_path.unlink()
+                except OSError:
+                    pass
 
 
 class TagWriteServer(ThreadingHTTPServer):
@@ -618,7 +938,7 @@ class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {"/save-tags", "/import-tag-registry", "/import-tag-aliases"}:
+        if self.path not in {"/save-tags", "/import-tag-registry", "/import-tag-aliases", "/mutate-tag", "/mutate-tag-preview"}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -672,6 +992,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == "/import-tag-aliases":
                 self._handle_import_tag_aliases(allowed)
+                return
+            if self.path == "/mutate-tag":
+                self._handle_mutate_tag(allowed, preview=False)
+                return
+            if self.path == "/mutate-tag-preview":
+                self._handle_mutate_tag(allowed, preview=True)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -812,6 +1138,127 @@ class Handler(BaseHTTPRequestHandler):
                 **stats,
             },
         )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_mutate_tag(self, allowed: Optional[str], preview: bool = False) -> None:
+        body = self._read_json_body()
+        action = str(body.get("action") or "").strip().lower()
+        old_tag_id = sanitize_tag_id(body.get("tag_id"), "tag_id")
+        raw_allow_canonical_rename = body.get("allow_canonical_rename", False)
+        if not isinstance(raw_allow_canonical_rename, bool):
+            raise ValueError("allow_canonical_rename must be a boolean")
+        allow_canonical_rename = raw_allow_canonical_rename
+        _ = body.get("client_time_utc")
+
+        if action not in MUTATE_ACTIONS:
+            raise ValueError(f"action must be one of: {sorted(MUTATE_ACTIONS)}")
+
+        new_label: Optional[str] = None
+        new_slug: Optional[str] = None
+        if action == "edit":
+            new_label = sanitize_label(body.get("new_label"), "new_label")
+            new_slug = sanitize_slug(body.get("new_slug"), "new_slug")
+
+        now_utc = utc_now()
+        registry_payload = load_registry(self.server.registry_path)
+        aliases_payload = load_aliases(self.server.aliases_path)
+        assignments_payload = load_assignments(self.server.assignments_path)
+
+        registry_updated, mutate_meta = mutate_registry_tag(
+            registry_payload,
+            action=action,
+            old_tag_id=old_tag_id,
+            now_utc=now_utc,
+            new_label=new_label,
+            new_slug=new_slug,
+            allow_canonical_rename=allow_canonical_rename,
+        )
+        new_tag_id = mutate_meta.get("new_tag_id")
+        rewrite_to = str(new_tag_id) if new_tag_id else None
+        should_rewrite_refs = (action == "delete") or (rewrite_to is not None and rewrite_to != old_tag_id)
+        if should_rewrite_refs:
+            aliases_updated, alias_stats = rewrite_aliases_for_tag(
+                aliases_payload,
+                old_tag_id=old_tag_id,
+                new_tag_id=rewrite_to,
+                now_utc=now_utc,
+            )
+            assignments_updated, assignment_stats = rewrite_assignments_for_tag(
+                assignments_payload,
+                old_tag_id=old_tag_id,
+                new_tag_id=rewrite_to,
+                now_utc=now_utc,
+            )
+        else:
+            aliases_updated = aliases_payload
+            assignments_updated = assignments_payload
+            alias_stats = {
+                "aliases_rewritten": 0,
+                "aliases_removed_empty": 0,
+                "aliases_removed_redundant": 0,
+                "aliases_final_total": len(aliases_payload.get("aliases", {})) if isinstance(aliases_payload.get("aliases"), dict) else 0,
+            }
+            assignment_stats = {
+                "series_rows_touched": 0,
+                "series_tag_refs_rewritten": 0,
+            }
+
+        stats: Dict[str, Any] = {
+            "action": action,
+            "old_tag_id": old_tag_id,
+            "new_tag_id": rewrite_to,
+            "canonical_changed": bool(mutate_meta.get("canonical_changed")),
+            **alias_stats,
+            **assignment_stats,
+        }
+        summary_text = build_mutation_summary_text(stats)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "updated_at_utc": now_utc,
+            "summary_text": summary_text,
+            "preview": preview,
+            **stats,
+        }
+
+        registry_target = self.server.registry_path.resolve()
+        aliases_target = self.server.aliases_path.resolve()
+        assignments_target = self.server.assignments_path.resolve()
+
+        payloads_to_write: Dict[Path, Dict[str, Any]] = {
+            registry_target: registry_updated,
+        }
+        if should_rewrite_refs:
+            payloads_to_write[aliases_target] = aliases_updated
+            payloads_to_write[assignments_target] = assignments_updated
+
+        if preview:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **stats,
+            }
+        elif not self.server.dry_run:
+            for target in payloads_to_write.keys():
+                if target not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+            atomic_write_many(payloads_to_write, self.server.backups_dir)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **stats,
+            }
+
+        if not preview:
+            self.server.log_event(
+                "mutate_tag",
+                {
+                    "summary_text": summary_text,
+                    "dry_run": self.server.dry_run,
+                    **stats,
+                },
+            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _read_json_body(self) -> Dict[str, Any]:
