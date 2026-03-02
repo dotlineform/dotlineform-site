@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-02T19:56:14Z",
+  "updated_at_utc": "2026-03-02T16:18:14Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -887,12 +887,12 @@
       "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
-      "tag_id": "domain:digital",
+      "tag_id": "domain:technology",
       "group": "domain",
-      "label": "digital",
+      "label": "Technology",
       "status": "active",
       "description": "Conceptual domain or field of reference.",
-      "updated_at_utc": "2026-03-02T19:56:14Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:systems",

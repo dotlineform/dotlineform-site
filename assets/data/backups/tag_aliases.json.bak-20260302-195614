@@ -1,6 +1,6 @@
 {
   "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-03-02T19:56:14Z",
+  "updated_at_utc": "2026-03-02T18:07:58Z",
   "aliases": {
     "floral": "subject:flower",
     "branches": "subject:branch",
@@ -36,6 +36,7 @@
     "overlayed": "form:overlay",
     "overlaid": "form:overlay",
     "tangle": "form:tangled",
+    "tangled": "form:tangled",
     "knotty": "form:knotted",
     "knots": "subject:knot",
     "spirals": "subject:spiral",
@@ -54,6 +55,7 @@
     "temporal": "domain:time",
     "photo": "domain:photography",
     "photograph": "domain:photography",
+    "digital": "domain:technology",
     "minimalism": "form:minimal",
     "maximalism": "form:maximal",
     "blackandwhite": "form:monochrome",

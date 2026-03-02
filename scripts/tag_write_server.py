@@ -639,7 +639,7 @@ def rewrite_aliases_for_tag(
         if updated_value is None:
             removed_empty += 1
             continue
-        if is_redundant_alias(alias_key, updated_value):
+        if changed and is_redundant_alias(alias_key, updated_value):
             removed_redundant += 1
             continue
         final_aliases[alias_key] = updated_value
