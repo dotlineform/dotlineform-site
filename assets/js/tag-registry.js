@@ -113,13 +113,10 @@ function renderShell(state) {
         <p class="tagRegistryEdit__meta" data-role="edit-tag-id"></p>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">Label</span>
-            <input type="text" class="tagStudio__input" data-role="edit-label" autocomplete="off">
-          </label>
-          <label class="tagRegistryEdit__field">
             <span class="tagRegistryEdit__label">Slug</span>
             <input type="text" class="tagStudio__input" data-role="edit-slug" autocomplete="off">
           </label>
+          <p class="tagRegistryEdit__meta" data-role="edit-label-preview"></p>
         </div>
         <p class="tagRegistryEdit__impact" data-role="edit-impact-save"></p>
         <p class="tagRegistryEdit__impact" data-role="edit-impact-delete"></p>
@@ -149,7 +146,7 @@ function renderShell(state) {
     copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
     editModal: state.mount.querySelector('[data-role="edit-modal"]'),
     editTagId: state.mount.querySelector('[data-role="edit-tag-id"]'),
-    editLabel: state.mount.querySelector('[data-role="edit-label"]'),
+    editLabelPreview: state.mount.querySelector('[data-role="edit-label-preview"]'),
     editSlug: state.mount.querySelector('[data-role="edit-slug"]'),
     editImpactSave: state.mount.querySelector('[data-role="edit-impact-save"]'),
     editImpactDelete: state.mount.querySelector('[data-role="edit-impact-delete"]'),
@@ -245,10 +242,8 @@ function wireEvents(state) {
     void handleTagDelete(state);
   });
 
-  state.refs.editLabel.addEventListener("input", () => {
-    scheduleSaveImpactPreview(state);
-  });
   state.refs.editSlug.addEventListener("input", () => {
+    refreshEditLabelPreview(state);
     scheduleSaveImpactPreview(state);
   });
 }
@@ -312,7 +307,7 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
     if (!raw || typeof raw !== "object") continue;
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
-    const label = String(raw.label || "").trim();
+    const label = String(raw.label || "").trim() || labelFromTagId(tagId);
     const description = String(raw.description || "").trim();
     const status = normalize(raw.status || "active");
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
@@ -470,8 +465,8 @@ function openEditModal(state, tagId) {
     state.editPreviewTimer = null;
   }
   state.refs.editTagId.textContent = `tag: ${tag.tagId} (${tag.group})`;
-  state.refs.editLabel.value = tag.label;
   state.refs.editSlug.value = slug;
+  refreshEditLabelPreview(state);
   state.refs.editImpactSave.textContent = "";
   state.refs.editImpactDelete.textContent = "";
   state.refs.editImpactSave.className = "tagRegistryEdit__impact";
@@ -515,19 +510,22 @@ function setImpactPreview(target, kind, message) {
   if (kind) target.classList.add(`is-${kind}`);
 }
 
+function refreshEditLabelPreview(state) {
+  const nextSlug = normalize(state.refs.editSlug.value);
+  const label = nextSlug ? labelFromSlug(nextSlug) : "—";
+  state.refs.editLabelPreview.textContent = `Label (auto): ${label}`;
+}
+
 function buildEditPreviewPayload(state) {
   if (!state.editTagId) return null;
   const tag = findTagById(state, state.editTagId);
   if (!tag) return null;
-  const nextLabel = String(state.refs.editLabel.value || "").trim();
   const nextSlug = normalize(state.refs.editSlug.value);
-  if (!nextLabel) return { error: "label required" };
   if (!SLUG_RE.test(nextSlug)) return { error: "slug invalid" };
   const nextTagId = `${tag.group}:${nextSlug}`;
   return {
     action: "edit",
     tag_id: tag.tagId,
-    new_label: nextLabel,
     new_slug: nextSlug,
     allow_canonical_rename: nextTagId !== tag.tagId,
     client_time_utc: utcTimestamp()
@@ -562,7 +560,7 @@ async function refreshSaveImpactPreview(state) {
     return;
   }
   if (payload.error) {
-    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: enter valid label and slug.");
+    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: enter a valid slug.");
     return;
   }
   const seq = ++state.editPreviewSaveSeq;
@@ -573,7 +571,8 @@ async function refreshSaveImpactPreview(state) {
     setImpactPreview(state.refs.editImpactSave, "", `Save impact: ${state.editPreviewSave}`);
   } catch (error) {
     if (seq !== state.editPreviewSaveSeq || state.refs.editModal.hidden) return;
-    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: preview failed.");
+    const message = String(error && error.message ? error.message : "preview failed");
+    setImpactPreview(state.refs.editImpactSave, "error", `Save impact: ${message}`);
   }
 }
 
@@ -595,7 +594,8 @@ async function refreshDeleteImpactPreview(state) {
     setImpactPreview(state.refs.editImpactDelete, "", `Delete impact: ${state.editPreviewDelete}`);
   } catch (error) {
     if (seq !== state.editPreviewDeleteSeq || state.refs.editModal.hidden) return;
-    setImpactPreview(state.refs.editImpactDelete, "error", "Delete impact: preview failed.");
+    const message = String(error && error.message ? error.message : "preview failed");
+    setImpactPreview(state.refs.editImpactDelete, "error", `Delete impact: ${message}`);
   }
 }
 
@@ -612,12 +612,7 @@ async function handleTagEdit(state) {
     return;
   }
 
-  const nextLabel = String(state.refs.editLabel.value || "").trim();
   const nextSlug = normalize(state.refs.editSlug.value);
-  if (!nextLabel) {
-    setEditStatus(state, "error", "Label is required.");
-    return;
-  }
   if (!SLUG_RE.test(nextSlug)) {
     setEditStatus(state, "error", "Slug must be lowercase letters/numbers/hyphens.");
     return;
@@ -637,7 +632,6 @@ async function handleTagEdit(state) {
     const response = await postJson(MUTATE_ENDPOINT, {
       action: "edit",
       tag_id: tag.tagId,
-      new_label: nextLabel,
       new_slug: nextSlug,
       allow_canonical_rename: canonicalChanged,
       client_time_utc: utcTimestamp()
@@ -795,7 +789,6 @@ function normalizeImportTag(raw, idx) {
 
   const tagId = normalize(raw.tag_id);
   const group = normalize(raw.group);
-  const label = String(raw.label || "").trim();
   const status = normalize(raw.status || "active");
   const description = String(raw.description || "").trim();
 
@@ -804,9 +797,6 @@ function normalizeImportTag(raw, idx) {
   }
   if (!GROUPS.includes(group)) {
     throw new Error(`Import tag ${idx} has invalid group.`);
-  }
-  if (!label) {
-    throw new Error(`Import tag ${idx} must include label.`);
   }
   if (!["active", "deprecated", "candidate"].includes(status)) {
     throw new Error(`Import tag ${idx} has invalid status.`);
@@ -817,10 +807,12 @@ function normalizeImportTag(raw, idx) {
     throw new Error(`Import tag ${idx} group must match tag_id prefix.`);
   }
 
+  const [, slug = ""] = tagId.split(":", 2);
+
   return {
     tag_id: tagId,
     group,
-    label,
+    label: labelFromSlug(slug),
     status,
     description
   };
@@ -836,7 +828,7 @@ function buildManualPatchForNewTags(state, importRegistry) {
     .map((tag) => ({
       tag_id: normalize(tag.tag_id),
       group: normalize(tag.group),
-      label: String(tag.label || "").trim(),
+      label: labelFromTagId(normalize(tag.tag_id)),
       status: normalize(tag.status || "active"),
       description: String(tag.description || "").trim(),
       updated_at_utc: nowUtc
@@ -956,6 +948,17 @@ function renderError(state, message) {
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function labelFromTagId(tagId) {
+  const normalized = normalize(tagId);
+  if (!normalized || !normalized.includes(":")) return "";
+  const [, slug = ""] = normalized.split(":", 2);
+  return labelFromSlug(slug);
+}
+
+function labelFromSlug(slug) {
+  return normalize(slug);
 }
 
 function escapeHtml(value) {

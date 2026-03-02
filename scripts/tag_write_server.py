@@ -168,7 +168,6 @@ def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Di
 
     tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
     group = str(raw_tag.get("group") or "").strip().lower()
-    label = str(raw_tag.get("label") or "").strip()
     status = str(raw_tag.get("status") or "active").strip().lower()
     description = str(raw_tag.get("description") or "").strip()
 
@@ -177,19 +176,18 @@ def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Di
     if ":" not in tag_id:
         raise ValueError(f"import_registry.tags[{idx}].tag_id must include ':'")
     tag_group = tag_id.split(":", 1)[0]
+    slug = tag_id.split(":", 1)[1]
     if group != tag_group:
         raise ValueError(f"import_registry.tags[{idx}] group must match tag_id prefix")
     if group not in allowed_groups:
         raise ValueError(f"import_registry.tags[{idx}].group is not allowed")
-    if not label:
-        raise ValueError(f"import_registry.tags[{idx}].label must not be empty")
     if status not in TAG_STATUSES:
         raise ValueError(f"import_registry.tags[{idx}].status must be one of {sorted(TAG_STATUSES)}")
 
     return {
         "tag_id": tag_id,
         "group": group,
-        "label": label,
+        "label": slug,
         "status": status,
         "description": description,
     }
@@ -312,15 +310,6 @@ def sanitize_slug(raw_slug: Any, field_name: str = "slug") -> str:
     if not SLUG_RE.fullmatch(slug):
         raise ValueError(f"{field_name} must be slug-safe")
     return slug
-
-
-def sanitize_label(raw_label: Any, field_name: str = "label") -> str:
-    if not isinstance(raw_label, str):
-        raise ValueError(f"{field_name} must be a string")
-    label = raw_label.strip()
-    if not label:
-        raise ValueError(f"{field_name} must not be empty")
-    return label
 
 
 def load_json_object(path: Path, default_payload: Dict[str, Any], object_name: str) -> Dict[str, Any]:
@@ -726,7 +715,6 @@ def mutate_registry_tag(
     action: str,
     old_tag_id: str,
     now_utc: str,
-    new_label: Optional[str] = None,
     new_slug: Optional[str] = None,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
@@ -774,8 +762,8 @@ def mutate_registry_tag(
             "label": str(target_row.get("label") or "").strip(),
         }
 
-    label = sanitize_label(new_label, "new_label")
     slug = sanitize_slug(new_slug, "new_slug")
+    label = slug
     new_tag_id = f"{group}:{slug}"
     canonical_changed = new_tag_id != old_tag_id
     if canonical_changed and not allow_canonical_rename:
@@ -1153,10 +1141,8 @@ class Handler(BaseHTTPRequestHandler):
         if action not in MUTATE_ACTIONS:
             raise ValueError(f"action must be one of: {sorted(MUTATE_ACTIONS)}")
 
-        new_label: Optional[str] = None
         new_slug: Optional[str] = None
         if action == "edit":
-            new_label = sanitize_label(body.get("new_label"), "new_label")
             new_slug = sanitize_slug(body.get("new_slug"), "new_slug")
 
         now_utc = utc_now()
@@ -1169,7 +1155,6 @@ class Handler(BaseHTTPRequestHandler):
             action=action,
             old_tag_id=old_tag_id,
             now_utc=now_utc,
-            new_label=new_label,
             new_slug=new_slug,
             allow_canonical_rename=allow_canonical_rename,
         )

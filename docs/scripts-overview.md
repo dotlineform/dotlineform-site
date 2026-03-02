@@ -175,7 +175,7 @@ Behavior:
   - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
   - import request may include `import_filename`; server logs basename only (no client path)
   - tag mutation endpoint behavior (`POST /mutate-tag`):
-    - `action: edit`: update label and optionally canonical slug (`group` fixed)
+    - `action: edit`: update canonical slug (`group` fixed); `label` is auto-derived from slug
     - `action: delete`: remove tag
     - rename/delete cascades update `tag_assignments.json` and `tag_aliases.json`
     - aliases that become 1:1 self-maps (`alias == target slug`) are removed automatically
