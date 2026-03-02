@@ -199,7 +199,7 @@ Governance and maintenance:
 - Updated interactively via:
   - patch workflow (manual paste), or
   - local save service (`scripts/tag_write_server.py`).
-- Server writes are constrained to this file (plus `.bak` backup).
+- Server writes are constrained to this file, with timestamped backups in `assets/data/backups/`.
 - Top-level `updated_at_utc` and per-series `updated_at_utc` must be kept current by writer flow.
 
 ## Operational Notes

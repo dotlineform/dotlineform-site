@@ -3,10 +3,10 @@
 README
 ======
 Run:
-  /Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py
-  /Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py --port 8787
-  /Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py --repo-root /path/to/dotlineform-site
-  /Users/dlf/miniconda3/bin/python3 scripts/tag_write_server.py --dry-run
+  python3 scripts/tag_write_server.py
+  python3 scripts/tag_write_server.py --port 8787
+  python3 scripts/tag_write_server.py --repo-root /path/to/dotlineform-site
+  python3 scripts/tag_write_server.py --dry-run
 
 What it does:
   - Exposes a tiny localhost API for Tag Studio:
@@ -25,6 +25,7 @@ Security constraints:
   - Hard allowlist permits writing only:
       <repo-root>/assets/data/tag_assignments.json
       <repo-root>/assets/data/tag_registry.json
+      <repo-root>/assets/data/backups/*
   - No external dependencies (Python stdlib only).
 """
 
@@ -57,6 +58,10 @@ ALLOWED_REGISTRY_REL_PATH = Path("assets/data/tag_registry.json")
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def backup_stamp_now() -> str:
+    return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S")
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -357,8 +362,9 @@ def apply_registry_import(
     return existing_payload, stats
 
 
-def atomic_write(path: Path, payload: Dict[str, Any]) -> None:
-    backup_path = path.with_suffix(path.suffix + ".bak")
+def atomic_write(path: Path, payload: Dict[str, Any], backups_dir: Path) -> None:
+    backups_dir.mkdir(parents=True, exist_ok=True)
+    backup_path = backups_dir / f"{path.name}.bak-{backup_stamp_now()}"
     if path.exists():
         shutil.copy2(path, backup_path)
 
@@ -385,12 +391,14 @@ class TagWriteServer(ThreadingHTTPServer):
         assignments_path: Path,
         registry_path: Path,
         allowed_write_paths: set[Path],
+        backups_dir: Path,
         dry_run: bool,
     ):
         super().__init__(server_address, handler_cls)
         self.assignments_path = assignments_path
         self.registry_path = registry_path
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
+        self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
 
 
@@ -481,7 +489,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload)
+            atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -512,7 +520,7 @@ class Handler(BaseHTTPRequestHandler):
         if not self.server.dry_run:
             if target_path not in self.server.allowed_write_paths:
                 raise ValueError("write target not allowlisted")
-            atomic_write(target_path, updated_payload)
+            atomic_write(target_path, updated_payload, self.server.backups_dir)
         else:
             response_payload["dry_run"] = True
             response_payload["would_write"] = {
@@ -576,6 +584,7 @@ def main() -> None:
     repo_root = detect_repo_root(args.repo_root)
     assignments_path = (repo_root / ALLOWED_ASSIGNMENTS_REL_PATH).resolve()
     registry_path = (repo_root / ALLOWED_REGISTRY_REL_PATH).resolve()
+    backups_dir = (repo_root / "assets/data/backups").resolve()
     allowed_paths = {assignments_path, registry_path}
 
     server = TagWriteServer(
@@ -584,12 +593,13 @@ def main() -> None:
         assignments_path=assignments_path,
         registry_path=registry_path,
         allowed_write_paths=allowed_paths,
+        backups_dir=backups_dir,
         dry_run=args.dry_run,
     )
     mode = "dry-run" if args.dry_run else "write"
     print(
         f"tag_write_server listening on http://127.0.0.1:{args.port} "
-        f"(mode={mode}, assignments={assignments_path}, registry={registry_path})"
+        f"(mode={mode}, assignments={assignments_path}, registry={registry_path}, backups={backups_dir})"
     )
     try:
         server.serve_forever()

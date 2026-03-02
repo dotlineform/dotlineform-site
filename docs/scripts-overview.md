@@ -176,8 +176,9 @@ Security constraints:
 - Write target is allowlisted to these files only:
   - `assets/data/tag_assignments.json`
   - `assets/data/tag_registry.json`
-  - backup is created as `assets/data/tag_assignments.json.bak`
-  - backup is created as `assets/data/tag_registry.json.bak`
+  - timestamped backups are created in `assets/data/backups/`:
+    - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
+    - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
 
 ### 4) Audit site consistency (read-only)
 
