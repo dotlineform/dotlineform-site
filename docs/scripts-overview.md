@@ -159,6 +159,7 @@ Behavior:
   - `POST /save-tags`
   - `POST /import-tag-registry`
   - `POST /import-tag-aliases`
+  - `POST /delete-tag-alias`
   - `POST /mutate-tag-preview`
   - `POST /mutate-tag`
 - Tag Studio page probes `/health` and shows:
@@ -183,6 +184,9 @@ Behavior:
 - Tag Aliases page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)
+  - alias pill `×` delete:
+    - local mode uses `POST /delete-tag-alias`
+    - patch mode generates manual snippet with `aliases_to_remove`
   - Import modes supported by endpoint:
     - `add` (no overwrite)
     - `merge` (add + overwrite)

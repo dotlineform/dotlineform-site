@@ -14,6 +14,7 @@ What it does:
     - POST /save-tags
     - POST /import-tag-registry
     - POST /import-tag-aliases
+    - POST /delete-tag-alias
     - POST /mutate-tag-preview
     - POST /mutate-tag
   - Updates:
@@ -563,6 +564,38 @@ def apply_aliases_import(
     return existing_payload, stats
 
 
+def delete_alias_key(
+    aliases_payload: Dict[str, Any],
+    alias_key: str,
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    raw_aliases = aliases_payload.get("aliases")
+    aliases = raw_aliases if isinstance(raw_aliases, dict) else {}
+
+    normalized_aliases: Dict[str, str | list[str]] = {}
+    found = False
+    for idx, (raw_key, raw_value) in enumerate(aliases.items()):
+        key = sanitize_alias_key(raw_key, idx)
+        value = sanitize_alias_value(raw_value, key)
+        if key == alias_key:
+            found = True
+            continue
+        normalized_aliases[key] = value
+
+    if not found:
+        raise ValueError(f"alias not found: {alias_key}")
+
+    if "tag_aliases_version" not in aliases_payload:
+        aliases_payload["tag_aliases_version"] = "tag_aliases_v1"
+    aliases_payload["aliases"] = normalized_aliases
+    aliases_payload["updated_at_utc"] = now_utc
+
+    return aliases_payload, {
+        "alias": alias_key,
+        "final_total": len(normalized_aliases),
+    }
+
+
 def update_alias_value_for_tag(value: str | list[str], old_tag_id: str, new_tag_id: Optional[str]) -> tuple[Optional[str | list[str]], bool]:
     if isinstance(value, str):
         if value != old_tag_id:
@@ -926,7 +959,7 @@ class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {"/save-tags", "/import-tag-registry", "/import-tag-aliases", "/mutate-tag", "/mutate-tag-preview"}:
+        if self.path not in {"/save-tags", "/import-tag-registry", "/import-tag-aliases", "/delete-tag-alias", "/mutate-tag", "/mutate-tag-preview"}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -980,6 +1013,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == "/import-tag-aliases":
                 self._handle_import_tag_aliases(allowed)
+                return
+            if self.path == "/delete-tag-alias":
+                self._handle_delete_tag_alias(allowed)
                 return
             if self.path == "/mutate-tag":
                 self._handle_mutate_tag(allowed, preview=False)
@@ -1122,6 +1158,46 @@ class Handler(BaseHTTPRequestHandler):
                 "summary_text": summary_text,
                 "import_filename": import_filename,
                 "mode": mode,
+                "dry_run": self.server.dry_run,
+                **stats,
+            },
+        )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_delete_tag_alias(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        alias_raw = body.get("alias")
+        alias_key = sanitize_alias_key(alias_raw, 0)
+        _ = body.get("client_time_utc")
+
+        now_utc = utc_now()
+        existing_payload = load_aliases(self.server.aliases_path)
+        updated_payload, stats = delete_alias_key(existing_payload, alias_key, now_utc)
+        summary_text = f"deleted alias {alias_key}; final {int(stats.get('final_total') or 0)}"
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "updated_at_utc": now_utc,
+            "summary_text": summary_text,
+            **stats,
+        }
+
+        target_path = self.server.aliases_path.resolve()
+        if not self.server.dry_run:
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            atomic_write(target_path, updated_payload, self.server.backups_dir)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **stats,
+            }
+
+        self.server.log_event(
+            "delete_tag_alias",
+            {
+                "summary_text": summary_text,
                 "dry_run": self.server.dry_run,
                 **stats,
             },

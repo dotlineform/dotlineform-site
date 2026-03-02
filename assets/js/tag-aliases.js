@@ -2,6 +2,7 @@ const GROUPS = ["subject", "domain", "form", "theme"];
 const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-aliases";
+const DELETE_ENDPOINT = "http://127.0.0.1:8787/delete-tag-alias";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -143,6 +144,13 @@ function wireEvents(state) {
   });
 
   state.mount.addEventListener("click", (event) => {
+    const deleteButton = event.target.closest("button[data-delete-alias]");
+    if (deleteButton) {
+      const alias = normalize(deleteButton.getAttribute("data-delete-alias"));
+      if (alias) void handleAliasDelete(state, alias);
+      return;
+    }
+
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
       const group = normalize(groupButton.getAttribute("data-group"));
@@ -354,7 +362,18 @@ function renderList(state) {
         <li class="tagAliases__row">
           <div class="tagAliases__tsCol">${escapeHtml(formatTimestamp(entry.updatedAtUtc))}</div>
           <div class="tagAliases__aliasCol">
-            <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">${escapeHtml(entry.alias)}</span>
+            <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">
+              <span>${escapeHtml(entry.alias)}</span>
+              <button
+                type="button"
+                class="tagStudio__chipRemove"
+                data-delete-alias="${escapeHtml(entry.alias)}"
+                aria-label="Delete alias ${escapeHtml(entry.alias)}"
+                title="Delete alias"
+              >
+                ×
+              </button>
+            </span>
           </div>
           <div class="tagAliases__tagsCol">
             <div class="tagAliases__tagList">
@@ -480,6 +499,37 @@ async function handleImport(state) {
   }
 }
 
+async function handleAliasDelete(state, alias) {
+  const aliasKey = normalize(alias);
+  if (!aliasKey) return;
+
+  const ok = window.confirm(`Delete alias "${aliasKey}"?`);
+  if (!ok) return;
+
+  if (state.saveMode === "post") {
+    try {
+      const response = await postJson(DELETE_ENDPOINT, {
+        alias: aliasKey,
+        client_time_utc: utcTimestamp()
+      });
+      const summary = String(response.summary_text || "").trim() || `deleted alias ${aliasKey}`;
+      setImportResult(state, "success", summary);
+      await loadData(state);
+      renderControls(state);
+      renderList(state);
+      return;
+    } catch (error) {
+      state.saveMode = "patch";
+      renderImportMode(state);
+      setImportResult(state, "error", `Server delete failed; switched to patch mode. ${error.message || ""}`.trim());
+    }
+  }
+
+  const patchResult = buildManualPatchForAliasDelete(aliasKey);
+  setImportResult(state, patchResult.kind, patchResult.message);
+  openPatchModal(state, patchResult.snippet);
+}
+
 function buildManualPatchForNewAliases(state, importAliases) {
   const importRows = normalizeImportAliasRows(importAliases.aliases || {});
   const existing = new Set(state.aliases.map((entry) => entry.alias));
@@ -530,6 +580,24 @@ function buildImportSummary(response) {
     `removed ${Number(response.removed || 0)}`,
     `final ${Number(response.final_total || 0)}`
   ].join("; ");
+}
+
+function buildManualPatchForAliasDelete(aliasKey) {
+  const nowUtc = utcTimestamp();
+  const snippet = JSON.stringify(
+    {
+      updated_at_utc: nowUtc,
+      aliases_to_remove: [aliasKey]
+    },
+    null,
+    2
+  );
+
+  return {
+    kind: "warn",
+    message: `Patch mode: alias "${aliasKey}" marked for removal.`,
+    snippet
+  };
 }
 
 function normalizeImportAliasRows(rawAliases) {

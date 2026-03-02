@@ -293,6 +293,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - alias row supports one or more canonical target tags
   - single-group aliases use that group color
   - multi-group or unresolved aliases use warning color
+  - alias pills include `×` delete (no alias edit flow)
 - includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
 - supports search by alias prefix
 - supports header sorting (timestamp/alias)
@@ -303,7 +304,10 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 - local-server import uses `POST /import-tag-aliases`
   - response includes `summary_text` and `import_filename` (basename only)
   - summary is written to `logs/tag_write_server.log`
-- patch fallback mode provides a copyable snippet for **new aliases only**
+- alias delete behavior:
+  - local server mode uses `POST /delete-tag-alias`
+  - patch mode provides copyable snippet with `aliases_to_remove`
+- import patch fallback mode provides a copyable snippet for **new aliases only**
 
 ## Series Tags Page
 
