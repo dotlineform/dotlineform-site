@@ -49,6 +49,21 @@
 - After layout/template changes, verify behavior on desktop and mobile.
 - Include changed file paths (and line references when useful) in summaries.
 
+## Security and Sanitization
+
+- Treat sanitization as a required pre-finish check for script/doc changes.
+- Scan changed files for local path leaks and sensitive terms before final response:
+  - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
+- Remove user-specific absolute paths from comments/docs/examples unless explicitly required by the user.
+- Keep script examples generic (`python3 scripts/...`) unless a project policy explicitly requires a pinned binary path.
+- Do not publish machine-specific usernames, absolute filesystem paths, or local mount details in repo docs.
+- Never hardcode credentials, tokens, or private keys in source/docs; use env vars and redact examples.
+- Keep logs for local write services minimal (ids/counts/status), not full payload/file-content dumps.
+- For local write services, keep explicit write allowlists and do not widen write scope implicitly.
+- Keep local write services bound to loopback and limit CORS to localhost origins only.
+- For overwrite/import flows, create backups before write and document backup location/pattern.
+- If a runtime smoke test is blocked by sandbox restrictions, state that clearly in the final summary.
+
 ## Git and Change Hygiene
 
 - Do not commit unless explicitly requested.
