@@ -19,9 +19,9 @@ async function initTagAliasesPage() {
     registryById: new Map(),
     aliasesUpdatedAt: "",
     searchQuery: "",
+    filterGroup: "all",
     sortKey: "alias",
     sortDir: "asc",
-    selectedAlias: "",
     importMode: "add",
     saveMode: "patch",
     selectedFile: null,
@@ -35,8 +35,8 @@ async function initTagAliasesPage() {
 
   try {
     await loadData(state);
+    renderControls(state);
     renderList(state);
-    renderDetails(state);
   } catch (error) {
     renderError(state, "Failed to load aliases from /assets/data/tag_aliases.json.");
     return;
@@ -71,6 +71,7 @@ function renderShell(state) {
       </div>
 
       <div class="tagAliases__controls">
+        <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
         <label class="tagRegistry__searchWrap">
           <span class="visually-hidden">Search aliases</span>
           <input
@@ -83,12 +84,7 @@ function renderShell(state) {
         </label>
       </div>
 
-      <div class="tagAliases__layout">
-        <div>
-          <div data-role="list"></div>
-        </div>
-        <aside class="tagAliases__detail" data-role="detail"></aside>
-      </div>
+      <div data-role="list"></div>
     </section>
 
     <div class="tagStudioModal" data-role="patch-modal" hidden>
@@ -106,6 +102,7 @@ function renderShell(state) {
   `;
 
   state.refs = {
+    key: state.mount.querySelector('[data-role="key"]'),
     search: state.mount.querySelector('[data-role="search"]'),
     chooseFile: state.mount.querySelector('[data-role="choose-file"]'),
     importFile: state.mount.querySelector('[data-role="import-file"]'),
@@ -115,7 +112,6 @@ function renderShell(state) {
     selectedFile: state.mount.querySelector('[data-role="selected-file"]'),
     importResult: state.mount.querySelector('[data-role="import-result"]'),
     list: state.mount.querySelector('[data-role="list"]'),
-    detail: state.mount.querySelector('[data-role="detail"]'),
     patchModal: state.mount.querySelector('[data-role="patch-modal"]'),
     patchSnippet: state.mount.querySelector('[data-role="patch-snippet"]'),
     copyPatch: state.mount.querySelector('[data-role="copy-patch"]')
@@ -126,7 +122,6 @@ function wireEvents(state) {
   state.refs.search.addEventListener("input", () => {
     state.searchQuery = normalize(state.refs.search.value);
     renderList(state);
-    renderDetails(state);
   });
 
   state.refs.chooseFile.addEventListener("click", () => {
@@ -148,11 +143,12 @@ function wireEvents(state) {
   });
 
   state.mount.addEventListener("click", (event) => {
-    const aliasButton = event.target.closest("button[data-alias]");
-    if (aliasButton) {
-      state.selectedAlias = normalize(aliasButton.getAttribute("data-alias"));
+    const groupButton = event.target.closest("button[data-group]");
+    if (groupButton) {
+      const group = normalize(groupButton.getAttribute("data-group"));
+      state.filterGroup = group && group !== "all" ? group : "all";
+      renderControls(state);
       renderList(state);
-      renderDetails(state);
       return;
     }
 
@@ -167,7 +163,6 @@ function wireEvents(state) {
         state.sortDir = "asc";
       }
       renderList(state);
-      renderDetails(state);
       return;
     }
   });
@@ -207,9 +202,6 @@ async function loadData(state) {
   state.registryById = buildRegistryLookup(registryData);
   state.aliasesUpdatedAt = normalizeTimestamp(aliasesData && aliasesData.updated_at_utc);
   state.aliases = normalizeAliases(aliasesData, state.aliasesUpdatedAt, state.registryById);
-  if (!state.selectedAlias && state.aliases.length) {
-    state.selectedAlias = state.aliases[0].alias;
-  }
 }
 
 function buildRegistryLookup(data) {
@@ -297,9 +289,44 @@ function normalizeAliasValue(rawValue) {
   return { value: out, targets: out.slice() };
 }
 
+function renderControls(state) {
+  const counts = countAliasesByGroup(state.aliases);
+  const totalCount = state.aliases.length;
+  const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
+  const groupButtons = GROUPS.map((group) => {
+    const activeClass = state.filterGroup === group ? " is-active" : "";
+    const count = Number(counts[group] || 0);
+    return `
+      <button
+        type="button"
+        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
+        data-group="${escapeHtml(group)}"
+      >
+        ${escapeHtml(group)} [${count}]
+      </button>
+    `;
+  }).join("");
+
+  state.refs.key.innerHTML = `
+    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags [${totalCount}]</button>
+    ${groupButtons}
+  `;
+}
+
+function countAliasesByGroup(aliases) {
+  const counts = { subject: 0, domain: 0, form: 0, theme: 0 };
+  for (const entry of aliases || []) {
+    for (const group of entry.groups || []) {
+      if (GROUPS.includes(group)) {
+        counts[group] += 1;
+      }
+    }
+  }
+  return counts;
+}
+
 function renderList(state) {
   const visible = getVisibleAliases(state);
-  ensureSelectedAlias(state, visible);
 
   const headerHtml = `
     <div class="tagAliases__head">
@@ -309,6 +336,7 @@ function renderList(state) {
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
         alias${sortIndicator(state, "alias")}
       </button>
+      <span class="tagAliases__headLabel">group tags</span>
     </div>
   `;
 
@@ -320,59 +348,26 @@ function renderList(state) {
   state.refs.list.innerHTML = `
     ${headerHtml}
     <ul class="tagAliases__rows">
-      ${visible.map((entry) => `
+      ${visible.map((entry) => {
+        const sortedTargets = entry.resolvedTargets.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
+        return `
         <li class="tagAliases__row">
           <div class="tagAliases__tsCol">${escapeHtml(formatTimestamp(entry.updatedAtUtc))}</div>
           <div class="tagAliases__aliasCol">
-            <button
-              type="button"
-              class="tagStudio__chip tagAliases__aliasBtn ${escapeHtml(getAliasClass(entry))}${state.selectedAlias === entry.alias ? " is-active" : ""}"
-              data-alias="${escapeHtml(entry.alias)}"
-            >
-              ${escapeHtml(entry.alias)}
-            </button>
+            <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">${escapeHtml(entry.alias)}</span>
+          </div>
+          <div class="tagAliases__tagsCol">
+            <div class="tagAliases__tagList">
+              ${sortedTargets.map((target) => `
+                <span class="tagStudio__chip ${escapeHtml(target.known ? `tagStudio__chip--${target.group}` : "tagStudio__chip--warning")}" title="${escapeHtml(target.tagId)}">
+                  ${escapeHtml(target.label)}
+                </span>
+              `).join("")}
+            </div>
           </div>
         </li>
-      `).join("")}
-    </ul>
-  `;
-}
-
-function ensureSelectedAlias(state, visible) {
-  if (state.selectedAlias && state.aliases.some((entry) => entry.alias === state.selectedAlias)) {
-    return;
-  }
-  if (visible.length) {
-    state.selectedAlias = visible[0].alias;
-    return;
-  }
-  state.selectedAlias = state.aliases.length ? state.aliases[0].alias : "";
-}
-
-function renderDetails(state) {
-  const selected = state.aliases.find((entry) => entry.alias === state.selectedAlias) || null;
-  if (!selected) {
-    state.refs.detail.innerHTML = `
-      <h3 class="tagStudio__heading">Alias Details</h3>
-      <p class="tagStudio__empty">Select an alias.</p>
-    `;
-    return;
-  }
-
-  state.refs.detail.innerHTML = `
-    <h3 class="tagStudio__heading">Alias Details</h3>
-    <p class="tagAliases__selectedAlias">
-      <span class="tagStudio__chip ${escapeHtml(getAliasClass(selected))}">${escapeHtml(selected.alias)}</span>
-    </p>
-    <ul class="tagAliases__targetList">
-      ${selected.resolvedTargets.map((target) => `
-        <li class="tagAliases__targetRow">
-          <span class="tagStudio__chip ${escapeHtml(target.known ? `tagStudio__chip--${target.group}` : "tagStudio__chip--warning")}" title="${escapeHtml(target.tagId)}">
-            ${escapeHtml(target.label)}
-          </span>
-          <span class="tagAliases__targetId">${escapeHtml(target.tagId)}</span>
-        </li>
-      `).join("")}
+      `;
+      }).join("")}
     </ul>
   `;
 }
@@ -387,8 +382,10 @@ function getAliasClass(entry) {
 
 function getVisibleAliases(state) {
   const filtered = state.aliases.filter((entry) => {
-    if (!state.searchQuery) return true;
-    return normalize(entry.alias).startsWith(state.searchQuery);
+    const searchMatch = !state.searchQuery || normalize(entry.alias).startsWith(state.searchQuery);
+    if (!searchMatch) return false;
+    if (state.filterGroup === "all") return true;
+    return Array.isArray(entry.groups) && entry.groups.includes(state.filterGroup);
   });
 
   const direction = state.sortDir === "desc" ? -1 : 1;
@@ -466,8 +463,8 @@ async function handleImport(state) {
       });
       setImportResult(state, "success", buildImportSummary(response));
       await loadData(state);
+      renderControls(state);
       renderList(state);
-      renderDetails(state);
       return;
     } catch (error) {
       state.saveMode = "patch";

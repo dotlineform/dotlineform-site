@@ -278,13 +278,12 @@ Tag Registry import modes:
 
 The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_aliases.json` and:
 
-- lists aliases with columns: timestamp, alias
-- renders aliases as clickable color-coded pills
+- lists aliases with columns: timestamp, alias, group tags
+- renders alias values inline as color-coded pills in the `group tags` column
+  - alias row supports one or more canonical target tags
   - single-group aliases use that group color
   - multi-group or unresolved aliases use warning color
-- shows selected alias details in a right-side panel:
-  - canonical target tags as color-coded pills
-  - canonical `tag_id` text
+- includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
 - supports search by alias prefix
 - supports header sorting (timestamp/alias)
 - supports import from a local JSON file (recommended from `assets/data/import`)
