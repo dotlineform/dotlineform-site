@@ -208,6 +208,26 @@ def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> li
     return [out_by_id[tag_id] for tag_id in out_order]
 
 
+def sanitize_import_filename(raw_filename: Any) -> str:
+    if raw_filename is None:
+        return ""
+    if not isinstance(raw_filename, str):
+        raise ValueError("import_filename must be a string")
+
+    # Keep basename only to avoid logging local path details.
+    normalized = raw_filename.replace("\\", "/").strip()
+    if not normalized:
+        return ""
+    basename = normalized.split("/")[-1]
+    if not basename:
+        return ""
+    if len(basename) > 255:
+        raise ValueError("import_filename is too long")
+    if any(ord(ch) < 32 or ord(ch) == 127 for ch in basename):
+        raise ValueError("import_filename contains control characters")
+    return basename
+
+
 def load_json_object(path: Path, default_payload: Dict[str, Any], object_name: str) -> Dict[str, Any]:
     if not path.exists():
         return default_payload
@@ -367,6 +387,21 @@ def apply_registry_import(
         "final_total": len(final_tags),
     }
     return existing_payload, stats
+
+
+def build_import_summary_text(stats: Dict[str, Any]) -> str:
+    mode = str(stats.get("mode") or "unknown")
+    imported_total = int(stats.get("imported_total") or 0)
+    added = int(stats.get("added") or 0)
+    overwritten = int(stats.get("overwritten") or 0)
+    unchanged = int(stats.get("unchanged") or 0)
+    removed = int(stats.get("removed") or 0)
+    final_total = int(stats.get("final_total") or 0)
+    return (
+        f"mode {mode}; Imported {imported_total} tags; "
+        f"added {added}; overwritten {overwritten}; "
+        f"unchanged {unchanged}; removed {removed}; final {final_total}"
+    )
 
 
 def atomic_write(path: Path, payload: Dict[str, Any], backups_dir: Path) -> None:
@@ -530,15 +565,19 @@ class Handler(BaseHTTPRequestHandler):
         body = self._read_json_body()
         mode = str(body.get("mode") or "").strip().lower()
         import_registry = body.get("import_registry")
+        import_filename = sanitize_import_filename(body.get("import_filename"))
         _ = body.get("client_time_utc")
 
         now_utc = utc_now()
         existing_payload = load_registry(self.server.registry_path)
         updated_payload, stats = apply_registry_import(existing_payload, import_registry, mode, now_utc)
+        summary_text = build_import_summary_text(stats)
 
         response_payload: Dict[str, Any] = {
             "ok": True,
             "updated_at_utc": now_utc,
+            "summary_text": summary_text,
+            "import_filename": import_filename,
             **stats,
         }
 
@@ -557,6 +596,8 @@ class Handler(BaseHTTPRequestHandler):
         self.server.log_event(
             "import_tag_registry",
             {
+                "summary_text": summary_text,
+                "import_filename": import_filename,
                 "mode": mode,
                 "dry_run": self.server.dry_run,
                 **stats,

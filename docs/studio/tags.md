@@ -258,6 +258,8 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - local-server import writes update timestamps:
   - top-level `updated_at_utc`
   - per-tag `updated_at_utc` for added/overwritten tags
+- import response includes `summary_text` and the same summary is written to `logs/tag_write_server.log`
+- import response/log includes `import_filename` (basename only)
 
 Tag Registry import modes:
 

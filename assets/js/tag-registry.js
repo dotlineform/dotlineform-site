@@ -386,6 +386,7 @@ async function handleImport(state) {
       const response = await postJson(IMPORT_ENDPOINT, {
         mode: state.importMode,
         import_registry: importRegistry,
+        import_filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
         client_time_utc: utcTimestamp()
       });
       setImportResult(state, "success", buildImportSummary(response));
@@ -561,6 +562,8 @@ function setImportResult(state, kind, message) {
 }
 
 function buildImportSummary(response) {
+  const summaryText = String(response.summary_text || "").trim();
+  if (summaryText) return summaryText;
   const mode = normalize(response.mode || "");
   return [
     `mode ${mode || "unknown"}`,

@@ -168,6 +168,8 @@ Behavior:
     - `add` (no overwrite)
     - `merge` (add + overwrite)
     - `replace` (replace entire registry)
+  - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
+  - import request may include `import_filename`; server logs basename only (no client path)
 
 Security constraints:
 
