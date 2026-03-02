@@ -262,24 +262,38 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
 }
 
 function renderControls(state) {
+  const groupCounts = countTagsByGroup(state.tags);
+  const totalCount = state.tags.length;
   const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
   const groupButtons = GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
+    const count = Number(groupCounts[group] || 0);
     return `
       <button
         type="button"
         class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
         data-group="${escapeHtml(group)}"
       >
-        ${escapeHtml(group)}
+        ${escapeHtml(group)} [${count}]
       </button>
     `;
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags</button>
+    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags [${totalCount}]</button>
     ${groupButtons}
   `;
+}
+
+function countTagsByGroup(tags) {
+  const counts = { subject: 0, domain: 0, form: 0, theme: 0 };
+  for (const tag of tags || []) {
+    const group = normalize(tag && tag.group);
+    if (GROUPS.includes(group)) {
+      counts[group] += 1;
+    }
+  }
+  return counts;
 }
 
 function renderList(state) {
