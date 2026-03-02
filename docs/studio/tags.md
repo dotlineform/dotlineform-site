@@ -238,11 +238,30 @@ Keep `docs/scripts-overview.md` updated as well for command-level usage and scri
 
 The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_registry.json` and:
 
-- lists tag labels in alphabetical order
+- lists tags with columns: timestamp, tag, description
+- default sort is alphabetical by tag label
+- supports header click sorting (timestamp/tag/description, asc/desc)
 - displays group color coding using the same chip palette as Studio Series
 - shows a group key above the list
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
+- supports import from a local JSON file (recommended from `assets/data/import`)
+  - mode `add (no overwrite)`: add tags with new `tag_id` only, keep existing entries unchanged
+  - mode `replace`: replace the full tag list
+  - mode `add + overwrite`: add new tags and overwrite matching `tag_id` entries, leaving other entries untouched
+- local-server import writes update timestamps:
+  - top-level `updated_at_utc`
+  - per-tag `updated_at_utc` for added/overwritten tags
+
+Tag Registry import modes:
+
+- `Import mode: Local server`
+  - uses `POST /import-tag-registry`
+  - returns import result counts (imported, added, overwritten, unchanged, removed, final)
+- `Import mode: Patch`
+  - server unavailable fallback
+  - generates copyable patch snippet for **new tags only**
+  - does not attempt overwrite in manual mode
 
 ## Series Tags Page
 

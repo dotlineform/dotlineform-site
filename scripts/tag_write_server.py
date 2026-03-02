@@ -12,7 +12,10 @@ What it does:
   - Exposes a tiny localhost API for Tag Studio:
     - GET /health
     - POST /save-tags
-  - Updates assets/data/tag_assignments.json for one series_id.
+    - POST /import-tag-registry
+  - Updates:
+    - assets/data/tag_assignments.json (series tag saves)
+    - assets/data/tag_registry.json (registry import replace/merge)
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -21,6 +24,7 @@ Security constraints:
       http://127.0.0.1:*
   - Hard allowlist permits writing only:
       <repo-root>/assets/data/tag_assignments.json
+      <repo-root>/assets/data/tag_registry.json
   - No external dependencies (Python stdlib only).
 """
 
@@ -41,8 +45,14 @@ from urllib.parse import urlparse
 
 
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+TAG_ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$")
 MAX_TAGS = 50
-ALLOWED_REL_PATH = Path("assets/data/tag_assignments.json")
+MAX_IMPORT_TAGS = 10000
+TAG_STATUSES = {"active", "deprecated", "candidate"}
+DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
+
+ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/data/tag_assignments.json")
+ALLOWED_REGISTRY_REL_PATH = Path("assets/data/tag_registry.json")
 
 
 def utc_now() -> str:
@@ -116,25 +126,116 @@ def sanitize_tags(raw_tags: Any) -> list[str]:
     return out
 
 
-def load_assignments(path: Path) -> Dict[str, Any]:
+def extract_allowed_groups(registry_payload: Dict[str, Any]) -> list[str]:
+    policy = registry_payload.get("policy")
+    if isinstance(policy, dict) and isinstance(policy.get("allowed_groups"), list):
+        groups: list[str] = []
+        for raw in policy.get("allowed_groups", []):
+            value = str(raw or "").strip().lower()
+            if not value or value in groups:
+                continue
+            groups.append(value)
+        if groups:
+            return groups
+    return list(DEFAULT_ALLOWED_GROUPS)
+
+
+def normalize_import_tag(raw_tag: Any, idx: int, allowed_groups: set[str]) -> Dict[str, str]:
+    if not isinstance(raw_tag, dict):
+        raise ValueError(f"import_registry.tags[{idx}] must be an object")
+
+    tag_id = str(raw_tag.get("tag_id") or "").strip().lower()
+    group = str(raw_tag.get("group") or "").strip().lower()
+    label = str(raw_tag.get("label") or "").strip()
+    status = str(raw_tag.get("status") or "active").strip().lower()
+    description = str(raw_tag.get("description") or "").strip()
+
+    if not TAG_ID_RE.fullmatch(tag_id):
+        raise ValueError(f"import_registry.tags[{idx}].tag_id must match <group>:<slug>")
+    if ":" not in tag_id:
+        raise ValueError(f"import_registry.tags[{idx}].tag_id must include ':'")
+    tag_group = tag_id.split(":", 1)[0]
+    if group != tag_group:
+        raise ValueError(f"import_registry.tags[{idx}] group must match tag_id prefix")
+    if group not in allowed_groups:
+        raise ValueError(f"import_registry.tags[{idx}].group is not allowed")
+    if not label:
+        raise ValueError(f"import_registry.tags[{idx}].label must not be empty")
+    if status not in TAG_STATUSES:
+        raise ValueError(f"import_registry.tags[{idx}].status must be one of {sorted(TAG_STATUSES)}")
+
+    return {
+        "tag_id": tag_id,
+        "group": group,
+        "label": label,
+        "status": status,
+        "description": description,
+    }
+
+
+def sanitize_import_registry(raw_registry: Any, allowed_groups: list[str]) -> list[Dict[str, str]]:
+    if not isinstance(raw_registry, dict):
+        raise ValueError("import_registry must be an object")
+
+    raw_tags = raw_registry.get("tags")
+    if not isinstance(raw_tags, list):
+        raise ValueError("import_registry.tags must be an array")
+    if len(raw_tags) > MAX_IMPORT_TAGS:
+        raise ValueError(f"import_registry.tags may include at most {MAX_IMPORT_TAGS} entries")
+
+    out_order: list[str] = []
+    out_by_id: dict[str, Dict[str, str]] = {}
+    allowed_set = set(allowed_groups)
+    for idx, raw_tag in enumerate(raw_tags):
+        normalized = normalize_import_tag(raw_tag, idx, allowed_set)
+        tag_id = normalized["tag_id"]
+        if tag_id not in out_by_id:
+            out_order.append(tag_id)
+        out_by_id[tag_id] = normalized
+
+    return [out_by_id[tag_id] for tag_id in out_order]
+
+
+def load_json_object(path: Path, default_payload: Dict[str, Any], object_name: str) -> Dict[str, Any]:
     if not path.exists():
-        return {
-            "tag_assignments_version": "tag_assignments_v1",
-            "updated_at_utc": utc_now(),
-            "series": {},
-        }
+        return default_payload
 
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
-        raise ValueError(f"failed to parse JSON: {exc}") from exc
+        raise ValueError(f"failed to parse {object_name}: {exc}") from exc
 
     if not isinstance(payload, dict):
-        raise ValueError("tag assignments must be a JSON object")
+        raise ValueError(f"{object_name} must be a JSON object")
     return payload
 
 
-def apply_update(payload: Dict[str, Any], series_id: str, tags: list[str], now_utc: str) -> Dict[str, Any]:
+def load_assignments(path: Path) -> Dict[str, Any]:
+    return load_json_object(
+        path,
+        {
+            "tag_assignments_version": "tag_assignments_v1",
+            "updated_at_utc": utc_now(),
+            "series": {},
+        },
+        "tag assignments",
+    )
+
+
+def load_registry(path: Path) -> Dict[str, Any]:
+    return load_json_object(
+        path,
+        {
+            "tag_registry_version": "tag_registry_v1",
+            "updated_at_utc": utc_now(),
+            "policy": {"allowed_groups": list(DEFAULT_ALLOWED_GROUPS)},
+            "tags": [],
+        },
+        "tag registry",
+    )
+
+
+def apply_assignment_update(payload: Dict[str, Any], series_id: str, tags: list[str], now_utc: str) -> Dict[str, Any]:
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
     if "tag_assignments_version" not in payload:
@@ -150,6 +251,110 @@ def apply_update(payload: Dict[str, Any], series_id: str, tags: list[str], now_u
     row["updated_at_utc"] = now_utc
     payload["updated_at_utc"] = now_utc
     return payload
+
+
+def apply_registry_import(
+    existing_payload: Dict[str, Any],
+    import_registry: Any,
+    mode: str,
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    if mode not in {"replace", "merge", "add"}:
+        raise ValueError("mode must be one of: replace, merge, add")
+
+    allowed_groups = extract_allowed_groups(existing_payload)
+    imported_tags = sanitize_import_registry(import_registry, allowed_groups)
+
+    raw_existing_tags = existing_payload.get("tags")
+    existing_tags = raw_existing_tags if isinstance(raw_existing_tags, list) else []
+
+    existing_order: list[str] = []
+    existing_by_id: dict[str, Dict[str, Any]] = {}
+    for raw in existing_tags:
+        if not isinstance(raw, dict):
+            continue
+        tag_id = str(raw.get("tag_id") or "").strip().lower()
+        if not tag_id:
+            continue
+        if tag_id not in existing_by_id:
+            existing_order.append(tag_id)
+        existing_by_id[tag_id] = raw
+
+    import_order = [tag["tag_id"] for tag in imported_tags]
+    import_by_id = {tag["tag_id"]: tag for tag in imported_tags}
+
+    overwritten = 0
+    added = 0
+    unchanged = 0
+    removed = 0
+
+    if mode == "replace":
+        existing_ids = set(existing_by_id.keys())
+        imported_ids = set(import_by_id.keys())
+        overwritten = len(existing_ids & imported_ids)
+        added = len(imported_ids - existing_ids)
+        removed = len(existing_ids - imported_ids)
+        final_tags: list[Any] = []
+        for tag_id in import_order:
+            tag = dict(import_by_id[tag_id])
+            tag["updated_at_utc"] = now_utc
+            final_tags.append(tag)
+    elif mode == "merge":
+        final_tags = []
+        remaining_import = dict(import_by_id)
+        for existing_tag in existing_tags:
+            if not isinstance(existing_tag, dict):
+                unchanged += 1
+                final_tags.append(existing_tag)
+                continue
+
+            existing_tag_id = str(existing_tag.get("tag_id") or "").strip().lower()
+            if existing_tag_id and existing_tag_id in remaining_import:
+                overwritten += 1
+                incoming = dict(remaining_import.pop(existing_tag_id))
+                incoming["updated_at_utc"] = now_utc
+                final_tags.append(incoming)
+            else:
+                unchanged += 1
+                final_tags.append(existing_tag)
+
+        for tag_id in import_order:
+            if tag_id not in remaining_import:
+                continue
+            added += 1
+            incoming = dict(remaining_import.pop(tag_id))
+            incoming["updated_at_utc"] = now_utc
+            final_tags.append(incoming)
+    else:  # mode == "add"
+        final_tags = list(existing_tags)
+        existing_ids = set(existing_by_id.keys())
+        for tag_id in import_order:
+            if tag_id in existing_ids:
+                unchanged += 1
+                continue
+            incoming = dict(import_by_id[tag_id])
+            incoming["updated_at_utc"] = now_utc
+            final_tags.append(incoming)
+            added += 1
+
+    if "tag_registry_version" not in existing_payload:
+        existing_payload["tag_registry_version"] = "tag_registry_v1"
+    if not isinstance(existing_payload.get("policy"), dict):
+        existing_payload["policy"] = {"allowed_groups": allowed_groups}
+
+    existing_payload["tags"] = final_tags
+    existing_payload["updated_at_utc"] = now_utc
+
+    stats = {
+        "mode": mode,
+        "imported_total": len(imported_tags),
+        "overwritten": overwritten,
+        "added": added,
+        "unchanged": unchanged,
+        "removed": removed,
+        "final_total": len(final_tags),
+    }
+    return existing_payload, stats
 
 
 def atomic_write(path: Path, payload: Dict[str, Any]) -> None:
@@ -178,12 +383,14 @@ class TagWriteServer(ThreadingHTTPServer):
         server_address: tuple[str, int],
         handler_cls,
         assignments_path: Path,
-        allowed_write_path: Path,
+        registry_path: Path,
+        allowed_write_paths: set[Path],
         dry_run: bool,
     ):
         super().__init__(server_address, handler_cls)
         self.assignments_path = assignments_path
-        self.allowed_write_path = allowed_write_path
+        self.registry_path = registry_path
+        self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.dry_run = dry_run
 
 
@@ -191,7 +398,7 @@ class Handler(BaseHTTPRequestHandler):
     server: TagWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path != "/save-tags":
+        if self.path not in {"/save-tags", "/import-tag-registry"}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -222,6 +429,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "service": "tag_write_server",
                 "tag_assignments_path": str(self.server.assignments_path),
+                "tag_registry_path": str(self.server.registry_path),
                 "time_utc": utc_now(),
             },
             allowed,
@@ -234,48 +442,85 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.FORBIDDEN, {"ok": False, "error": "origin not allowed"})
             return
 
-        if self.path != "/save-tags":
-            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
-            return
-
         try:
-            body = self._read_json_body()
-            series_id = body.get("series_id")
-            tags = body.get("tags")
-            _ = body.get("client_time_utc")
-
-            if not isinstance(series_id, str) or not series_id or not SLUG_RE.fullmatch(series_id):
-                raise ValueError("series_id must be a non-empty slug-safe string")
-
-            sanitized_tags = sanitize_tags(tags)
-            now_utc = utc_now()
-
-            payload = load_assignments(self.server.assignments_path)
-            updated_payload = apply_update(payload, series_id, sanitized_tags, now_utc)
-
-            response_payload: Dict[str, Any] = {
-                "ok": True,
-                "series_id": series_id,
-                "updated_at_utc": now_utc,
-                "tag_count": len(sanitized_tags),
-            }
-            if not self.server.dry_run:
-                if self.server.assignments_path.resolve() != self.server.allowed_write_path.resolve():
-                    raise ValueError("write target not allowlisted")
-                atomic_write(self.server.assignments_path, updated_payload)
-            else:
-                response_payload["dry_run"] = True
-                response_payload["would_write"] = {
-                    "series_id": series_id,
-                    "tags": sanitized_tags,
-                    "updated_at_utc": now_utc,
-                }
-
-            self._send_json(HTTPStatus.OK, response_payload, allowed)
+            if self.path == "/save-tags":
+                self._handle_save_tags(allowed)
+                return
+            if self.path == "/import-tag-registry":
+                self._handle_import_tag_registry(allowed)
+                return
+            self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
             self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, {"ok": False, "error": f"internal error: {exc}"}, allowed)
+
+    def _handle_save_tags(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        series_id = body.get("series_id")
+        tags = body.get("tags")
+        _ = body.get("client_time_utc")
+
+        if not isinstance(series_id, str) or not series_id or not SLUG_RE.fullmatch(series_id):
+            raise ValueError("series_id must be a non-empty slug-safe string")
+
+        sanitized_tags = sanitize_tags(tags)
+        now_utc = utc_now()
+
+        payload = load_assignments(self.server.assignments_path)
+        updated_payload = apply_assignment_update(payload, series_id, sanitized_tags, now_utc)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "series_id": series_id,
+            "updated_at_utc": now_utc,
+            "tag_count": len(sanitized_tags),
+        }
+
+        target_path = self.server.assignments_path.resolve()
+        if not self.server.dry_run:
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            atomic_write(target_path, updated_payload)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "series_id": series_id,
+                "tags": sanitized_tags,
+                "updated_at_utc": now_utc,
+            }
+
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_import_tag_registry(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        mode = str(body.get("mode") or "").strip().lower()
+        import_registry = body.get("import_registry")
+        _ = body.get("client_time_utc")
+
+        now_utc = utc_now()
+        existing_payload = load_registry(self.server.registry_path)
+        updated_payload, stats = apply_registry_import(existing_payload, import_registry, mode, now_utc)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "updated_at_utc": now_utc,
+            **stats,
+        }
+
+        target_path = self.server.registry_path.resolve()
+        if not self.server.dry_run:
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            atomic_write(target_path, updated_payload)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **stats,
+            }
+
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _read_json_body(self) -> Dict[str, Any]:
         content_length = self.headers.get("Content-Length")
@@ -319,7 +564,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Localhost-only tag assignment write service.")
+    parser = argparse.ArgumentParser(description="Localhost-only tag write service.")
     parser.add_argument("--port", type=int, default=8787, help="Server port (default: 8787)")
     parser.add_argument("--repo-root", default="", help="Repo root path (auto-detected if omitted)")
     parser.add_argument("--dry-run", action="store_true", help="Validate and respond without writing files")
@@ -329,24 +574,22 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     repo_root = detect_repo_root(args.repo_root)
-    assignments_path = (repo_root / ALLOWED_REL_PATH).resolve()
-    allowed_path = (repo_root / ALLOWED_REL_PATH).resolve()
-
-    # Hard allowlist: the service writes to exactly one file.
-    if assignments_path != allowed_path:
-        raise SystemExit("allowlist path mismatch")
+    assignments_path = (repo_root / ALLOWED_ASSIGNMENTS_REL_PATH).resolve()
+    registry_path = (repo_root / ALLOWED_REGISTRY_REL_PATH).resolve()
+    allowed_paths = {assignments_path, registry_path}
 
     server = TagWriteServer(
         ("127.0.0.1", args.port),
         Handler,
         assignments_path=assignments_path,
-        allowed_write_path=allowed_path,
+        registry_path=registry_path,
+        allowed_write_paths=allowed_paths,
         dry_run=args.dry_run,
     )
     mode = "dry-run" if args.dry_run else "write"
     print(
         f"tag_write_server listening on http://127.0.0.1:{args.port} "
-        f"(mode={mode}, path={assignments_path})"
+        f"(mode={mode}, assignments={assignments_path}, registry={registry_path})"
     )
     try:
         server.serve_forever()

@@ -157,17 +157,27 @@ Behavior:
 - Exposes:
   - `GET /health`
   - `POST /save-tags`
+  - `POST /import-tag-registry`
 - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
   - `Save mode: Patch` when unavailable (fallback to patch modal)
+- Tag Registry page probes `/health` and shows:
+  - `Import mode: Local server` when available
+  - `Import mode: Patch` when unavailable (fallback to manual patch copy)
+  - Import modes supported by endpoint:
+    - `add` (no overwrite)
+    - `merge` (add + overwrite)
+    - `replace` (replace entire registry)
 
 Security constraints:
 
 - Binds to loopback interface only (local machine only)
 - CORS allows loopback origins only
-- Write target is allowlisted to one file only:
+- Write target is allowlisted to these files only:
   - `assets/data/tag_assignments.json`
+  - `assets/data/tag_registry.json`
   - backup is created as `assets/data/tag_assignments.json.bak`
+  - backup is created as `assets/data/tag_registry.json.bak`
 
 ### 4) Audit site consistency (read-only)
 
