@@ -360,7 +360,7 @@ function renderList(state) {
             <div class="tagAliases__tagList">
               ${sortedTargets.map((target) => `
                 <span class="tagStudio__chip ${escapeHtml(target.known ? `tagStudio__chip--${target.group}` : "tagStudio__chip--warning")}" title="${escapeHtml(target.tagId)}">
-                  ${escapeHtml(target.label)}
+                  ${escapeHtml(String(target.label || "").toLowerCase())}
                 </span>
               `).join("")}
             </div>
