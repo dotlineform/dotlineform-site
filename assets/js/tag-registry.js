@@ -33,10 +33,11 @@ async function initTagRegistryPage() {
     editTagId: "",
     demoteState: null,
     aliasKeys: new Set(),
+    deleteTagId: "",
+    deletePreview: "",
+    deletePreviewSeq: 0,
     editPreviewSave: "",
-    editPreviewDelete: "",
     editPreviewSaveSeq: 0,
-    editPreviewDeleteSeq: 0,
     editPreviewTimer: null,
     registryOptions: [],
     refs: null,
@@ -120,17 +121,13 @@ function renderShell(state) {
         <p class="tagRegistryEdit__meta" data-role="edit-tag-id"></p>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">Slug</span>
             <input type="text" class="tagStudio__input" data-role="edit-slug" autocomplete="off">
           </label>
-          <p class="tagRegistryEdit__meta" data-role="edit-label-preview"></p>
         </div>
         <p class="tagRegistryEdit__impact" data-role="edit-impact-save"></p>
-        <p class="tagRegistryEdit__impact" data-role="edit-impact-delete"></p>
         <p class="tagRegistryEdit__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">Save</button>
-          <button type="button" class="tagStudio__button" data-role="delete-tag">Delete</button>
           <button type="button" class="tagStudio__button" data-role="close-edit-modal">Close</button>
         </div>
       </div>
@@ -159,6 +156,23 @@ function renderShell(state) {
         </div>
       </div>
     </div>
+
+    <div class="tagStudioModal" data-role="delete-modal" hidden>
+      <div class="tagStudioModal__backdrop" data-role="close-delete-modal"></div>
+      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDeleteTitle">
+        <h3 id="tagRegistryDeleteTitle">Delete Tag</h3>
+        <p class="tagRegistryEdit__meta" data-role="delete-tag-meta"></p>
+        <p class="tagRegistryEdit__impact">
+          Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted.
+        </p>
+        <p class="tagRegistryEdit__impact" data-role="delete-impact"></p>
+        <p class="tagRegistryEdit__status" data-role="delete-status"></p>
+        <div class="tagStudioModal__actions">
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-delete-tag">Delete</button>
+          <button type="button" class="tagStudio__button" data-role="close-delete-modal">Close</button>
+        </div>
+      </div>
+    </div>
   `;
 
   state.refs = {
@@ -177,13 +191,10 @@ function renderShell(state) {
     copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
     editModal: state.mount.querySelector('[data-role="edit-modal"]'),
     editTagId: state.mount.querySelector('[data-role="edit-tag-id"]'),
-    editLabelPreview: state.mount.querySelector('[data-role="edit-label-preview"]'),
     editSlug: state.mount.querySelector('[data-role="edit-slug"]'),
     editImpactSave: state.mount.querySelector('[data-role="edit-impact-save"]'),
-    editImpactDelete: state.mount.querySelector('[data-role="edit-impact-delete"]'),
     editStatus: state.mount.querySelector('[data-role="edit-status"]'),
     saveEdit: state.mount.querySelector('[data-role="save-edit"]'),
-    deleteTag: state.mount.querySelector('[data-role="delete-tag"]'),
     demoteModal: state.mount.querySelector('[data-role="demote-modal"]'),
     demoteTagMeta: state.mount.querySelector('[data-role="demote-tag-meta"]'),
     demoteTagSearch: state.mount.querySelector('[data-role="demote-tag-search"]'),
@@ -192,7 +203,12 @@ function renderShell(state) {
     demoteGroupKey: state.mount.querySelector('[data-role="demote-group-key"]'),
     demoteTagList: state.mount.querySelector('[data-role="demote-tag-list"]'),
     demoteStatus: state.mount.querySelector('[data-role="demote-status"]'),
-    confirmDemote: state.mount.querySelector('[data-role="confirm-demote"]')
+    confirmDemote: state.mount.querySelector('[data-role="confirm-demote"]'),
+    deleteModal: state.mount.querySelector('[data-role="delete-modal"]'),
+    deleteTagMeta: state.mount.querySelector('[data-role="delete-tag-meta"]'),
+    deleteImpact: state.mount.querySelector('[data-role="delete-impact"]'),
+    deleteStatus: state.mount.querySelector('[data-role="delete-status"]'),
+    confirmDeleteTag: state.mount.querySelector('[data-role="confirm-delete-tag"]')
   };
 }
 
@@ -243,9 +259,15 @@ function wireEvents(state) {
 
     const tagButton = event.target.closest("button[data-tag-id]");
     const demoteButton = event.target.closest("button[data-demote-tag-id]");
+    const deleteButton = event.target.closest("button[data-delete-tag-id]");
     if (demoteButton) {
       const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
       if (tagId) openDemoteModal(state, tagId);
+      return;
+    }
+    if (deleteButton) {
+      const tagId = normalize(deleteButton.getAttribute("data-delete-tag-id"));
+      if (tagId) openDeleteModal(state, tagId);
       return;
     }
 
@@ -290,10 +312,6 @@ function wireEvents(state) {
 
   state.refs.saveEdit.addEventListener("click", () => {
     void handleTagEdit(state);
-  });
-
-  state.refs.deleteTag.addEventListener("click", () => {
-    void handleTagDelete(state);
   });
 
   state.refs.demoteModal.addEventListener("click", (event) => {
@@ -342,8 +360,16 @@ function wireEvents(state) {
     void handleTagDemote(state);
   });
 
+  state.refs.deleteModal.addEventListener("click", (event) => {
+    if (!event.target.closest('[data-role="close-delete-modal"]')) return;
+    closeDeleteModal(state);
+  });
+
+  state.refs.confirmDeleteTag.addEventListener("click", () => {
+    void handleDeleteFromModal(state);
+  });
+
   state.refs.editSlug.addEventListener("input", () => {
-    refreshEditLabelPreview(state);
     scheduleSaveImpactPreview(state);
   });
 }
@@ -538,6 +564,15 @@ function renderList(state) {
               >
                 ←
               </button>
+              <button
+                type="button"
+                class="tagStudio__chipRemove"
+                data-delete-tag-id="${escapeHtml(tag.tagId)}"
+                title="Delete canonical tag"
+                aria-label="Delete ${escapeHtml(tag.tagId)}"
+              >
+                ×
+              </button>
               </span>
             </div>
           </div>
@@ -605,31 +640,28 @@ function openEditModal(state, tagId) {
   const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
   state.editPreviewSave = "";
-  state.editPreviewDelete = "";
   state.editPreviewSaveSeq += 1;
-  state.editPreviewDeleteSeq += 1;
   if (state.editPreviewTimer) {
     clearTimeout(state.editPreviewTimer);
     state.editPreviewTimer = null;
   }
-  state.refs.editTagId.textContent = `tag: ${tag.tagId} (${tag.group})`;
+  state.refs.editTagId.innerHTML = `
+    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(tag.tagId)}">
+      ${escapeHtml(tag.group)}
+    </span>
+  `;
   state.refs.editSlug.value = slug;
-  refreshEditLabelPreview(state);
   state.refs.editImpactSave.textContent = "";
-  state.refs.editImpactDelete.textContent = "";
   state.refs.editImpactSave.className = "tagRegistryEdit__impact";
-  state.refs.editImpactDelete.className = "tagRegistryEdit__impact";
   state.refs.editStatus.className = "tagRegistryEdit__status";
   state.refs.editStatus.textContent = state.saveMode === "post"
     ? ""
-    : "Local server is required for edit/delete.";
+    : "Local server is required for edit.";
   state.refs.editModal.hidden = false;
   if (state.saveMode === "post") {
     void refreshSaveImpactPreview(state);
-    void refreshDeleteImpactPreview(state);
   } else {
     state.refs.editImpactSave.textContent = "Save impact: unavailable (local server required).";
-    state.refs.editImpactDelete.textContent = "Delete impact: unavailable (local server required).";
   }
 }
 
@@ -637,9 +669,7 @@ function closeEditModal(state) {
   state.refs.editModal.hidden = true;
   state.editTagId = "";
   state.editPreviewSave = "";
-  state.editPreviewDelete = "";
   state.editPreviewSaveSeq += 1;
-  state.editPreviewDeleteSeq += 1;
   if (state.editPreviewTimer) {
     clearTimeout(state.editPreviewTimer);
     state.editPreviewTimer = null;
@@ -658,12 +688,6 @@ function setImpactPreview(target, kind, message) {
   if (kind) target.classList.add(`is-${kind}`);
 }
 
-function refreshEditLabelPreview(state) {
-  const nextSlug = normalize(state.refs.editSlug.value);
-  const label = nextSlug ? labelFromSlug(nextSlug) : "—";
-  state.refs.editLabelPreview.textContent = `Label (auto): ${label}`;
-}
-
 function buildEditPreviewPayload(state) {
   if (!state.editTagId) return null;
   const tag = findTagById(state, state.editTagId);
@@ -680,11 +704,12 @@ function buildEditPreviewPayload(state) {
   };
 }
 
-function buildDeletePreviewPayload(state) {
-  if (!state.editTagId) return null;
+function buildDeletePreviewPayload(tagId) {
+  const normalizedTagId = normalize(tagId);
+  if (!normalizedTagId) return null;
   return {
     action: "delete",
-    tag_id: state.editTagId,
+    tag_id: normalizedTagId,
     client_time_utc: utcTimestamp()
   };
 }
@@ -726,31 +751,31 @@ async function refreshSaveImpactPreview(state) {
 
 async function refreshDeleteImpactPreview(state) {
   if (state.saveMode !== "post") {
-    setImpactPreview(state.refs.editImpactDelete, "error", "Delete impact: unavailable (local server required).");
+    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable (local server required).");
     return;
   }
-  const payload = buildDeletePreviewPayload(state);
+  const payload = buildDeletePreviewPayload(state.deleteTagId);
   if (!payload) {
-    setImpactPreview(state.refs.editImpactDelete, "error", "Delete impact: unavailable.");
+    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable.");
     return;
   }
-  const seq = ++state.editPreviewDeleteSeq;
+  const seq = ++state.deletePreviewSeq;
   try {
     const response = await postJson(MUTATE_PREVIEW_ENDPOINT, payload);
-    if (seq !== state.editPreviewDeleteSeq || state.refs.editModal.hidden) return;
-    state.editPreviewDelete = buildMutationSummary(response);
-    setImpactPreview(state.refs.editImpactDelete, "", `Delete impact: ${state.editPreviewDelete}`);
+    if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
+    state.deletePreview = buildMutationSummary(response);
+    setImpactPreview(state.refs.deleteImpact, "", `Delete impact: ${state.deletePreview}`);
   } catch (error) {
-    if (seq !== state.editPreviewDeleteSeq || state.refs.editModal.hidden) return;
+    if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
     const message = String(error && error.message ? error.message : "preview failed");
-    setImpactPreview(state.refs.editImpactDelete, "error", `Delete impact: ${message}`);
+    setImpactPreview(state.refs.deleteImpact, "error", `Delete impact: ${message}`);
   }
 }
 
 async function handleTagEdit(state) {
   if (!state.editTagId) return;
   if (state.saveMode !== "post") {
-    setEditStatus(state, "error", "Local server is required for edit/delete.");
+    setEditStatus(state, "error", "Local server is required for edit.");
     return;
   }
 
@@ -798,24 +823,60 @@ async function handleTagEdit(state) {
   }
 }
 
-async function handleTagDelete(state) {
-  if (!state.editTagId) return;
-  if (state.saveMode !== "post") {
-    setEditStatus(state, "error", "Local server is required for edit/delete.");
-    return;
-  }
+function setDeleteStatus(state, kind, message) {
+  state.refs.deleteStatus.textContent = message || "";
+  state.refs.deleteStatus.className = "tagRegistryEdit__status";
+  if (kind) state.refs.deleteStatus.classList.add(`is-${kind}`);
+}
 
-  const tag = findTagById(state, state.editTagId);
+function openDeleteModal(state, tagId) {
+  clearImportResult(state);
+  const tag = findTagById(state, tagId);
   if (!tag) {
-    setEditStatus(state, "error", "Selected tag is no longer available.");
+    setImportResult(state, "error", "Selected tag is no longer available.");
+    return;
+  }
+  state.deleteTagId = tag.tagId;
+  state.deletePreview = "";
+  state.deletePreviewSeq += 1;
+  state.refs.deleteTagMeta.textContent = `tag: ${tag.tagId}`;
+  state.refs.deleteImpact.textContent = "";
+  state.refs.deleteImpact.className = "tagRegistryEdit__impact";
+  setDeleteStatus(state, "", "");
+  state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
+  state.refs.deleteModal.hidden = false;
+
+  if (state.saveMode !== "post") {
+    setDeleteStatus(state, "error", "Local server is required for delete.");
+    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable (local server required).");
     return;
   }
 
-  const ok = window.confirm(
-    `Delete tag ${tag.tagId}?\n\nThis also removes it from series assignments and aliases.${state.editPreviewDelete ? `\n\nImpact:\n${state.editPreviewDelete}` : ""}`
-  );
-  if (!ok) {
-    clearImportResult(state);
+  void refreshDeleteImpactPreview(state);
+}
+
+function closeDeleteModal(state) {
+  state.refs.deleteModal.hidden = true;
+  state.deleteTagId = "";
+  state.deletePreview = "";
+  state.deletePreviewSeq += 1;
+  state.refs.deleteTagMeta.textContent = "";
+  state.refs.deleteImpact.textContent = "";
+  state.refs.deleteImpact.className = "tagRegistryEdit__impact";
+  setDeleteStatus(state, "", "");
+  state.refs.confirmDeleteTag.disabled = false;
+}
+
+async function handleDeleteFromModal(state) {
+  if (!state.deleteTagId) return;
+  if (state.saveMode !== "post") {
+    setDeleteStatus(state, "error", "Local server is required for delete.");
+    return;
+  }
+
+  const tag = findTagById(state, state.deleteTagId);
+  if (!tag) {
+    setDeleteStatus(state, "error", "Selected tag is no longer available.");
     return;
   }
 
@@ -825,13 +886,13 @@ async function handleTagDelete(state) {
       tag_id: tag.tagId,
       client_time_utc: utcTimestamp()
     });
+    closeDeleteModal(state);
     setImportResult(state, "success", buildMutationSummary(response));
     await loadRegistry(state);
     renderControls(state);
     renderList(state);
-    closeEditModal(state);
   } catch (error) {
-    setEditStatus(state, "error", String(error.message || "Delete failed."));
+    setDeleteStatus(state, "error", String(error.message || "Delete failed."));
   }
 }
 

@@ -278,9 +278,9 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - import response includes `summary_text` and the same summary is written to `logs/tag_write_server.log`
 - import response/log includes `import_filename` (basename only)
 - clicking a tag pill opens an edit modal:
+  - shows the tag group as a color-coded pill
   - edit canonical slug (group fixed)
   - `label` is auto-derived from slug
-  - delete tag
 - tag row includes `<-` action to demote canonical tag into alias mapping
   - opens a demotion modal (not free-text prompt)
   - target tag picker uses the same autocomplete-style popup as alias edit:
@@ -290,11 +290,17 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - demotion is blocked if alias key already exists (no overwrite allowed)
   - selected targets are sorted by canonical `tag_id` before submit
   - target constraints enforced in the modal: at least 1 target, max 4 targets, max 1 target per group
+- tag row includes `×` action to delete canonical tag
+  - opens a delete modal (same chip-remove button style as aliases page)
+  - warns that delete also removes matching series assignments and alias target refs
+  - warns that aliases left with no targets are deleted
+  - in patch mode, modal remains available but delete is blocked with local-server-required status
 - local-server mutation uses `POST /mutate-tag`
-  - modal shows live impact previews via `POST /mutate-tag-preview` before save/delete confirm
+  - edit and delete modals show live impact previews via `POST /mutate-tag-preview` before confirm
   - slug edits update registry row and auto-refresh label
   - canonical rename cascades into `tag_assignments.json` and `tag_aliases.json`
   - delete removes tag from registry and removes references from assignments/aliases
+  - aliases that become empty after delete are removed and reported in mutation stats (`aliases_removed_empty`)
   - aliases that become 1:1 self-maps (`alias == target slug`) are removed
 - local-server demotion uses:
   - `POST /demote-tag-preview` (required before confirm)
