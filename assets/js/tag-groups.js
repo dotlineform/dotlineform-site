@@ -51,7 +51,6 @@ function renderGroups(mount, groups) {
 
   mount.innerHTML = `
     <div class="tagStudio__panel">
-      <h2 class="tagStudio__heading">Tag Group Descriptions</h2>
       <div class="tagGroups__sections">
         ${groups.map((group) => `
           <section class="tagStudio__groupInfoSection tagGroups__section">
