@@ -1,4 +1,5 @@
 const GROUPS = ["subject", "domain", "form", "theme"];
+const GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSeriesTagsPage);
@@ -32,62 +33,25 @@ async function initSeriesTagsPage() {
       assignmentsSeries,
       registry,
       groupDescriptions: new Map(),
-      groupDescriptionLongs: new Map(),
-      groupInfoOpen: false,
       filterGroup: "all"
     };
     try {
       const groupsJson = await fetchJson("/assets/data/tag_groups.json");
       state.groupDescriptions = buildGroupDescriptionMap(groupsJson);
-      state.groupDescriptionLongs = buildGroupDescriptionLongMap(groupsJson);
     } catch (error) {
       state.groupDescriptions = new Map();
-      state.groupDescriptionLongs = new Map();
     }
     renderTable(state);
     mount.addEventListener("click", (event) => {
-      const infoToggle = event.target.closest("button[data-action='toggle-group-info']");
-      if (infoToggle) {
-        state.groupInfoOpen = !state.groupInfoOpen;
-        renderTable(state);
-        return;
-      }
-
-      const clickedInsideInfo = Boolean(event.target.closest('[data-role="group-info-wrap"]'));
-      let closedInfo = false;
-      if (!clickedInsideInfo && state.groupInfoOpen) {
-        state.groupInfoOpen = false;
-        closedInfo = true;
-      }
-
       const button = event.target.closest("button[data-group]");
-      if (!button) {
-        if (closedInfo) renderTable(state);
-        return;
-      }
+      if (!button) return;
       const next = normalize(button.getAttribute("data-group"));
       state.filterGroup = GROUPS.includes(next) ? next : "all";
       renderTable(state);
     });
-
-    document.addEventListener("click", (event) => {
-      if (event.target.closest('[data-role="group-info-wrap"]')) return;
-      closeOpenGroupInfo(state);
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
-      closeOpenGroupInfo(state);
-    });
   } catch (error) {
     mount.innerHTML = `<div class="tagStudioError">Failed to load series tag data.</div>`;
   }
-}
-
-function closeOpenGroupInfo(state) {
-  if (!state.groupInfoOpen) return;
-  state.groupInfoOpen = false;
-  renderTable(state);
 }
 
 function parseSeriesData() {
@@ -140,19 +104,6 @@ function buildGroupDescriptionMap(groupsJson) {
     const description = String(raw.description || "").trim();
     if (!GROUPS.includes(groupId) || !description) continue;
     out.set(groupId, description);
-  }
-  return out;
-}
-
-function buildGroupDescriptionLongMap(groupsJson) {
-  const out = new Map();
-  const groups = Array.isArray(groupsJson && groupsJson.groups) ? groupsJson.groups : [];
-  for (const raw of groups) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    const descriptionLong = String(raw.description_long || "").trim();
-    if (!GROUPS.includes(groupId) || !descriptionLong) continue;
-    out.set(groupId, descriptionLong);
   }
   return out;
 }
@@ -234,41 +185,17 @@ function groupTitleAttr(groupDescriptions, group) {
 
 function renderGroupInfoControl(state) {
   return `
-    <span class="tagStudio__keyInfoWrap" data-role="group-info-wrap" data-scope="series">
-      <button
-        type="button"
-        class="tagStudio__keyPill tagStudio__keyInfoBtn"
-        data-action="toggle-group-info"
-        data-scope="series"
-        aria-expanded="${state.groupInfoOpen ? "true" : "false"}"
-        title="Group descriptions"
-      >
-        <em>i</em>
-      </button>
-      ${state.groupInfoOpen ? `
-        <div class="tagStudio__keyInfoPopup" data-role="group-info-popup">
-          ${renderGroupInfoSections(state)}
-        </div>
-      ` : ""}
-    </span>
+    <a
+      class="tagStudio__keyPill tagStudio__keyInfoBtn"
+      href="${GROUP_INFO_PAGE_PATH}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open group descriptions in a new tab"
+      aria-label="Open group descriptions in a new tab"
+    >
+      <em>i</em>
+    </a>
   `;
-}
-
-function renderGroupInfoSections(state) {
-  const sections = GROUPS.map((group) => {
-    const descriptionLong = String(state.groupDescriptionLongs.get(group) || "").trim();
-    if (!descriptionLong) return "";
-    const titleAttr = groupTitleAttr(state.groupDescriptions, group);
-    return `
-      <section class="tagStudio__groupInfoSection">
-        <p class="tagStudio__groupInfoHead">
-          <span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}" ${titleAttr}>${escapeHtml(group)}</span>
-        </p>
-        <p class="tagStudio__groupInfoText">${escapeHtml(descriptionLong)}</p>
-      </section>
-    `;
-  }).filter(Boolean).join("");
-  return sections || '<p class="tagStudio__empty">No group descriptions available.</p>';
 }
 
 function getSeriesTags(assignmentsSeries, seriesId) {

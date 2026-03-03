@@ -8,6 +8,7 @@ permalink: /studio/
 - [tag registry]({{ '/studio/tag-registry/' | relative_url }})
 - [tag aliases]({{ '/studio/tag-aliases/' | relative_url }})
 - [series tags]({{ '/studio/series-tags/' | relative_url }})
+- [tag groups]({{ '/studio/tag-groups/' | relative_url }})
 
 ## Documentation
 

@@ -18,6 +18,9 @@ This document is the central reference for series-level tag editing in Studio Se
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/js/series-tags.js`
+- Group descriptions reference page:
+  - `studio/tag-groups/index.md`
+  - `assets/js/tag-groups.js`
 - Tag write service: `scripts/tag_write_server.py`
 - Data contracts:
   - `assets/data/tag_registry.json`
@@ -267,13 +270,14 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - displays group color coding using the same chip palette as Studio Series
 - shows a group key above the list
   - group pills use `tag_groups.json` `description` as hover text (`title`)
-  - includes an `i` info pill that opens a popup with per-group `description_long` content
+  - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
 - supports import from a local JSON file (recommended from `assets/data/import`)
   - mode `add (no overwrite)`: add tags with new `tag_id` only, keep existing entries unchanged
   - mode `replace`: replace the full tag list
   - mode `add + overwrite`: add new tags and overwrite matching `tag_id` entries, leaving other entries untouched
+  - includes `New tag` button (right side of import controls) to open tag-create modal
 - local-server import writes update timestamps:
   - top-level `updated_at_utc`
   - per-tag `updated_at_utc` for added/overwritten tags
@@ -284,10 +288,17 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - group pill hover text uses `tag_groups.json` `description`
   - shows tag name as read-only
   - allows editing `description`
+- tag create behavior:
+  - `New tag` opens modal with group-selection pills above slug input
+  - modal group key includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
+  - live duplicate check warns if `<group>:<slug>` already exists
+  - description is optional/editable in create modal
+  - local server mode uses `POST /import-tag-registry` in `add` mode with a single tag payload
+  - patch mode provides add-tag row snippet
 - tag row includes `<-` action to demote canonical tag into alias mapping
   - opens a demotion modal (not free-text prompt)
   - modal group-key pills use `tag_groups.json` `description` as hover text
-  - modal group key includes an `i` info pill that opens a popup with per-group `description_long` content
+  - modal group key includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
   - target tag picker uses the same autocomplete-style popup as alias edit:
     - search matches tag label/slug prefix
     - selecting adds removable target pills below the search field
@@ -342,7 +353,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
     - alias tag constraints enforced: max 4 total, max 1 per group
 - includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
   - group pills use `tag_groups.json` `description` as hover text (`title`)
-  - includes an `i` info pill that opens a popup with per-group `description_long` content
+  - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - supports search by alias prefix
 - supports header sorting (alias, asc/desc)
 - supports import from a local JSON file (recommended from `assets/data/import`)
@@ -361,10 +372,10 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - server validates alias uniqueness and registry-backed selected tags
   - modal closes via `Cancel` button (outside/backdrop click does not close)
   - modal group-key pills use `tag_groups.json` `description` as hover text
-  - modal group key includes an `i` info pill that opens a popup with per-group `description_long` content
+  - modal group key includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
   - patch mode provides ordered `set_alias`/`remove_alias_key` steps
 - alias create behavior:
-  - `New alias` opens modal with same tag search/selection flow and group-key info popup as edit
+  - `New alias` opens modal with same tag search/selection flow and group-key info link as edit
   - alias name uniqueness is validated live while typing
   - local server mode uses `POST /import-tag-aliases` in `add` mode with a single alias payload
   - patch mode provides add-alias fragment snippet
@@ -391,5 +402,5 @@ The Series Tags page (`/studio/series-tags/`) reads `assets/data/tag_assignments
 - sorts tags alphabetically by label (fallback: tag id)
 - uses an inline header key (`All tags` + group pills) in the tags column
 - group pills use `tag_groups.json` `description` as hover text (`title`)
-- includes an `i` info pill that opens a popup with per-group `description_long` content
+- includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)

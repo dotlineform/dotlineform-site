@@ -7,6 +7,8 @@ const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
 const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
+const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
+const GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -30,12 +32,10 @@ async function initTagRegistryPage() {
     selectedFile: null,
     patchSnippet: "",
     editTagId: "",
+    newTagState: null,
     demoteState: null,
     aliasKeys: new Set(),
     groupDescriptions: new Map(),
-    groupDescriptionLongs: new Map(),
-    groupInfoOpen: false,
-    demoteGroupInfoOpen: false,
     deleteTagId: "",
     deletePreview: "",
     deletePreviewSeq: 0,
@@ -80,6 +80,7 @@ function renderShell(state) {
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">Import</button>
           <span class="tagRegistry__saveMode" data-role="save-mode">Import mode: Patch</span>
+          <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__newTagBtn" data-role="open-new-tag">New tag</button>
         </div>
         <p class="tagRegistry__selected" data-role="selected-file"></p>
         <p class="tagRegistry__result" data-role="import-result"></p>
@@ -136,6 +137,30 @@ function renderShell(state) {
       </div>
     </div>
 
+    <div class="tagStudioModal" data-role="new-modal" hidden>
+      <div class="tagStudioModal__backdrop"></div>
+      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryNewTitle">
+        <h3 id="tagRegistryNewTitle">New Tag</h3>
+        <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
+        <div class="tagRegistryEdit__fields">
+          <label class="tagRegistryEdit__field">
+            <span class="tagRegistryEdit__label">slug</span>
+            <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
+          </label>
+          <p class="tagAliasesEdit__warning" data-role="new-tag-warning"></p>
+          <label class="tagRegistryEdit__field">
+            <span class="tagRegistryEdit__label">description</span>
+            <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
+          </label>
+        </div>
+        <p class="tagRegistryEdit__status" data-role="new-tag-status"></p>
+        <div class="tagStudioModal__actions">
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="create-tag" disabled>Create</button>
+          <button type="button" class="tagStudio__button" data-role="close-new-modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <div class="tagStudioModal" data-role="demote-modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-demote-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDemoteTitle">
@@ -185,6 +210,7 @@ function renderShell(state) {
     importFile: state.mount.querySelector('[data-role="import-file"]'),
     importMode: state.mount.querySelector('[data-role="import-mode"]'),
     importButton: state.mount.querySelector('[data-role="import-btn"]'),
+    openNewTag: state.mount.querySelector('[data-role="open-new-tag"]'),
     saveMode: state.mount.querySelector('[data-role="save-mode"]'),
     selectedFile: state.mount.querySelector('[data-role="selected-file"]'),
     importResult: state.mount.querySelector('[data-role="import-result"]'),
@@ -198,6 +224,13 @@ function renderShell(state) {
     editDescription: state.mount.querySelector('[data-role="edit-description"]'),
     editStatus: state.mount.querySelector('[data-role="edit-status"]'),
     saveEdit: state.mount.querySelector('[data-role="save-edit"]'),
+    newModal: state.mount.querySelector('[data-role="new-modal"]'),
+    newGroupKey: state.mount.querySelector('[data-role="new-group-key"]'),
+    newTagSlug: state.mount.querySelector('[data-role="new-tag-slug"]'),
+    newTagWarning: state.mount.querySelector('[data-role="new-tag-warning"]'),
+    newTagDescription: state.mount.querySelector('[data-role="new-tag-description"]'),
+    newTagStatus: state.mount.querySelector('[data-role="new-tag-status"]'),
+    createTag: state.mount.querySelector('[data-role="create-tag"]'),
     demoteModal: state.mount.querySelector('[data-role="demote-modal"]'),
     demoteTagMeta: state.mount.querySelector('[data-role="demote-tag-meta"]'),
     demoteTagSearch: state.mount.querySelector('[data-role="demote-tag-search"]'),
@@ -244,25 +277,11 @@ function wireEvents(state) {
     void handleImport(state);
   });
 
+  state.refs.openNewTag.addEventListener("click", () => {
+    openNewTagModal(state);
+  });
+
   state.mount.addEventListener("click", (event) => {
-    const infoToggle = event.target.closest("button[data-action='toggle-group-info']");
-    if (infoToggle) {
-      const scope = normalize(infoToggle.getAttribute("data-scope"));
-      if (scope === "demote") {
-        state.demoteGroupInfoOpen = !state.demoteGroupInfoOpen;
-        if (state.demoteState) renderDemoteGroupKey(state);
-      } else {
-        state.groupInfoOpen = !state.groupInfoOpen;
-        renderControls(state);
-      }
-      return;
-    }
-
-    const clickedInsideInfo = Boolean(event.target.closest('[data-role="group-info-wrap"]'));
-    if (!clickedInsideInfo) {
-      closeOpenGroupInfo(state);
-    }
-
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
       const group = normalize(groupButton.getAttribute("data-group"));
@@ -335,6 +354,31 @@ function wireEvents(state) {
     void handleTagEdit(state);
   });
 
+  state.refs.newModal.addEventListener("click", (event) => {
+    if (event.target.closest('[data-role="close-new-modal"]')) {
+      closeNewTagModal(state);
+      return;
+    }
+    const groupButton = event.target.closest("button[data-new-group]");
+    if (!groupButton || !state.newTagState) return;
+    const group = normalize(groupButton.getAttribute("data-new-group"));
+    if (!GROUPS.includes(group)) return;
+    state.newTagState.group = group;
+    updateNewTagUi(state);
+  });
+
+  state.refs.newTagSlug.addEventListener("input", () => {
+    updateNewTagUi(state);
+  });
+
+  state.refs.newTagDescription.addEventListener("input", () => {
+    updateNewTagUi(state);
+  });
+
+  state.refs.createTag.addEventListener("click", () => {
+    void handleCreateTag(state);
+  });
+
   state.refs.demoteModal.addEventListener("click", (event) => {
     if (event.target.closest('[data-role="close-demote-modal"]')) {
       closeDemoteModal(state);
@@ -393,31 +437,6 @@ function wireEvents(state) {
   state.refs.editDescription.addEventListener("input", () => {
     setEditStatus(state, "", "");
   });
-
-  document.addEventListener("click", (event) => {
-    if (event.target.closest('[data-role="group-info-wrap"]')) return;
-    closeOpenGroupInfo(state);
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    closeOpenGroupInfo(state);
-  });
-}
-
-function closeOpenGroupInfo(state) {
-  let controlsChanged = false;
-  let demoteChanged = false;
-  if (state.groupInfoOpen) {
-    state.groupInfoOpen = false;
-    controlsChanged = true;
-  }
-  if (state.demoteGroupInfoOpen) {
-    state.demoteGroupInfoOpen = false;
-    demoteChanged = true;
-  }
-  if (controlsChanged) renderControls(state);
-  if (demoteChanged && state.demoteState) renderDemoteGroupKey(state);
 }
 
 function syncImportModeFromControl(state) {
@@ -472,7 +491,6 @@ async function loadRegistry(state) {
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
   state.aliasKeys = buildAliasKeySet(aliasesData);
   state.groupDescriptions = buildGroupDescriptionMap(groupsData);
-  state.groupDescriptionLongs = buildGroupDescriptionLongMap(groupsData);
   state.registryOptions = buildRegistryOptions(state.tags);
 }
 
@@ -554,19 +572,6 @@ function buildGroupDescriptionMap(data) {
   return out;
 }
 
-function buildGroupDescriptionLongMap(data) {
-  const out = new Map();
-  const groups = Array.isArray(data && data.groups) ? data.groups : [];
-  for (const raw of groups) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    const descriptionLong = String(raw.description_long || "").trim();
-    if (!GROUPS.includes(groupId) || !descriptionLong) continue;
-    out.set(groupId, descriptionLong);
-  }
-  return out;
-}
-
 function renderControls(state) {
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
@@ -612,44 +617,18 @@ function groupTitleAttr(state, group) {
 }
 
 function renderGroupInfoControl(state, scope) {
-  const isOpen = scope === "demote" ? Boolean(state.demoteGroupInfoOpen) : Boolean(state.groupInfoOpen);
   return `
-    <span class="tagStudio__keyInfoWrap" data-role="group-info-wrap" data-scope="${escapeHtml(scope)}">
-      <button
-        type="button"
-        class="tagStudio__keyPill tagStudio__keyInfoBtn"
-        data-action="toggle-group-info"
-        data-scope="${escapeHtml(scope)}"
-        aria-expanded="${isOpen ? "true" : "false"}"
-        title="Group descriptions"
-      >
-        <em>i</em>
-      </button>
-      ${isOpen ? `
-        <div class="tagStudio__keyInfoPopup" data-role="group-info-popup">
-          ${renderGroupInfoSections(state)}
-        </div>
-      ` : ""}
-    </span>
+    <a
+      class="tagStudio__keyPill tagStudio__keyInfoBtn"
+      href="${GROUP_INFO_PAGE_PATH}"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open group descriptions in a new tab"
+      aria-label="Open group descriptions in a new tab"
+    >
+      <em>i</em>
+    </a>
   `;
-}
-
-function renderGroupInfoSections(state) {
-  const sections = GROUPS.map((group) => {
-    const descriptionLong = String(state.groupDescriptionLongs.get(group) || "").trim();
-    if (!descriptionLong) return "";
-    const titleAttr = groupTitleAttr(state, group);
-    return `
-      <section class="tagStudio__groupInfoSection">
-        <p class="tagStudio__groupInfoHead">
-          <span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}" ${titleAttr}>${escapeHtml(group)}</span>
-        </p>
-        <p class="tagStudio__groupInfoText">${escapeHtml(descriptionLong)}</p>
-      </section>
-    `;
-  }).filter(Boolean).join("");
-
-  return sections || '<p class="tagStudio__empty">No group descriptions available.</p>';
 }
 
 function renderList(state) {
@@ -778,6 +757,110 @@ function closeEditModal(state) {
   state.refs.editDescription.value = "";
 }
 
+function openNewTagModal(state) {
+  clearImportResult(state);
+  state.newTagState = {
+    group: "",
+    slug: "",
+    description: ""
+  };
+  state.refs.newTagSlug.value = "";
+  state.refs.newTagDescription.value = "";
+  state.refs.newTagWarning.textContent = "";
+  setNewTagStatus(state, "", "");
+  renderNewTagGroupKey(state);
+  state.refs.createTag.disabled = true;
+  state.refs.newModal.hidden = false;
+  state.refs.newTagSlug.focus();
+}
+
+function closeNewTagModal(state) {
+  state.newTagState = null;
+  state.refs.newModal.hidden = true;
+  state.refs.newTagSlug.value = "";
+  state.refs.newTagDescription.value = "";
+  state.refs.newTagWarning.textContent = "";
+  setNewTagStatus(state, "", "");
+  state.refs.newGroupKey.innerHTML = "";
+  state.refs.createTag.disabled = true;
+}
+
+function setNewTagStatus(state, kind, message) {
+  state.refs.newTagStatus.textContent = message || "";
+  state.refs.newTagStatus.className = "tagRegistryEdit__status";
+  if (kind) state.refs.newTagStatus.classList.add(`is-${kind}`);
+}
+
+function renderNewTagGroupKey(state) {
+  if (!state.newTagState) {
+    state.refs.newGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.newGroupKey.innerHTML = GROUPS.map((group) => {
+    const activeClass = state.newTagState.group === group ? " is-active" : "";
+    const titleAttr = groupTitleAttr(state, group);
+    return `
+      <button
+        type="button"
+        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}"
+        data-new-group="${escapeHtml(group)}"
+        ${titleAttr}
+      >
+        ${escapeHtml(group)}
+      </button>
+    `;
+  }).join("") + renderGroupInfoControl(state, "new");
+}
+
+function getNewTagValidation(state) {
+  if (!state.newTagState) {
+    return { valid: false, warning: "", group: "", slug: "", description: "", tagId: "" };
+  }
+  const group = normalize(state.newTagState.group);
+  const slug = normalize(state.refs.newTagSlug.value);
+  const description = String(state.refs.newTagDescription.value || "").trim();
+  let warning = "";
+
+  if (!GROUPS.includes(group)) {
+    warning = "Select a tag group.";
+  } else if (!slug) {
+    warning = "Tag slug is required.";
+  } else if (!TAG_SLUG_RE.test(slug)) {
+    warning = "Tag slug must be lowercase letters, numbers, or hyphens.";
+  } else {
+    const tagId = `${group}:${slug}`;
+    const exists = state.tags.some((tag) => tag.tagId === tagId);
+    if (exists) warning = "Tag already exists.";
+  }
+
+  return {
+    valid: !warning,
+    warning,
+    group,
+    slug,
+    description,
+    tagId: group && slug ? `${group}:${slug}` : ""
+  };
+}
+
+function updateNewTagUi(state) {
+  if (!state.newTagState) return;
+  const slug = normalize(state.refs.newTagSlug.value);
+  if (state.refs.newTagSlug.value !== slug) {
+    state.refs.newTagSlug.value = slug;
+  }
+  state.newTagState.slug = slug;
+  state.newTagState.description = String(state.refs.newTagDescription.value || "").trim();
+
+  renderNewTagGroupKey(state);
+  const validation = getNewTagValidation(state);
+  state.refs.newTagWarning.textContent = validation.warning || "";
+  state.refs.createTag.disabled = !validation.valid;
+  if (!validation.warning) {
+    setNewTagStatus(state, "", "");
+  }
+}
+
 function setEditStatus(state, kind, message) {
   state.refs.editStatus.textContent = message || "";
   state.refs.editStatus.className = "tagRegistryEdit__status";
@@ -859,6 +942,51 @@ async function handleTagEdit(state) {
   } catch (error) {
     setEditStatus(state, "error", String(error.message || "Save failed."));
   }
+}
+
+async function handleCreateTag(state) {
+  if (!state.newTagState) return;
+  const validation = getNewTagValidation(state);
+  if (!validation.valid) {
+    state.refs.newTagWarning.textContent = validation.warning || "";
+    return;
+  }
+
+  const newTagRow = {
+    tag_id: validation.tagId,
+    group: validation.group,
+    label: validation.slug,
+    status: "active",
+    description: validation.description
+  };
+
+  if (state.saveMode === "post") {
+    try {
+      const response = await postJson(IMPORT_ENDPOINT, {
+        mode: "add",
+        import_registry: {
+          tags: [newTagRow]
+        },
+        import_filename: "",
+        client_time_utc: utcTimestamp()
+      });
+      closeNewTagModal(state);
+      setImportResult(state, "success", buildImportSummary(response));
+      await loadRegistry(state);
+      renderControls(state);
+      renderList(state);
+      return;
+    } catch (error) {
+      state.saveMode = "patch";
+      renderImportMode(state);
+      setNewTagStatus(state, "error", `Server create failed; switched to patch mode. ${error.message || ""}`.trim());
+    }
+  }
+
+  const patchResult = buildManualPatchForCreateTag(newTagRow);
+  closeNewTagModal(state);
+  setImportResult(state, patchResult.kind, patchResult.message);
+  openPatchModal(state, patchResult.snippet);
 }
 
 function setDeleteStatus(state, kind, message) {
@@ -951,7 +1079,6 @@ function openDemoteModal(state, tagId) {
     tagId: tag.tagId,
     tags: []
   };
-  state.demoteGroupInfoOpen = false;
   state.refs.demoteTagMeta.textContent = `tag: ${tag.tagId} -> alias "${aliasKey}"`;
   state.refs.demoteTagSearch.value = "";
   hideDemoteTagPopup(state);
@@ -962,7 +1089,6 @@ function openDemoteModal(state, tagId) {
 
 function closeDemoteModal(state) {
   state.demoteState = null;
-  state.demoteGroupInfoOpen = false;
   state.refs.demoteModal.hidden = true;
   state.refs.demoteTagMeta.textContent = "";
   state.refs.demoteTagSearch.value = "";
@@ -1398,6 +1524,29 @@ function normalizeImportTag(raw, idx) {
     label: labelFromSlug(slug),
     status,
     description
+  };
+}
+
+function buildManualPatchForCreateTag(tagRow) {
+  const normalizedTagId = normalize(tagRow && tagRow.tag_id);
+  const snippet = JSON.stringify(
+    [
+      {
+        tag_id: normalizedTagId,
+        group: normalize(tagRow && tagRow.group),
+        label: labelFromTagId(normalizedTagId),
+        status: normalize((tagRow && tagRow.status) || "active"),
+        description: String((tagRow && tagRow.description) || "").trim(),
+        updated_at_utc: utcTimestamp()
+      }
+    ],
+    null,
+    2
+  );
+  return {
+    kind: "warn",
+    message: `Patch mode: new tag row prepared for assets/data/tag_registry.json tags[].`,
+    snippet
   };
 }
 

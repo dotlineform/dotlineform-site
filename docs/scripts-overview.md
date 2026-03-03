@@ -175,6 +175,11 @@ Behavior:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)
   - tag edit/delete requires local server mode
+  - `New tag` button opens create modal:
+    - group selected via group pills; slug + optional description entry
+    - live duplicate check blocks existing `<group>:<slug>`
+    - local mode uses `POST /import-tag-registry` with `mode: add` and a single tag payload
+    - patch mode emits add-tag row snippet
   - Import modes supported by endpoint:
     - `add` (no overwrite)
     - `merge` (add + overwrite)
