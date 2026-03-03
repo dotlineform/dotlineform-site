@@ -261,9 +261,9 @@ Keep `docs/scripts-overview.md` updated as well for command-level usage and scri
 
 The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_registry.json` and:
 
-- lists tags with columns: timestamp, tag, description
+- lists tags with columns: tag, description
 - default sort is alphabetical by tag label
-- supports header click sorting (timestamp/tag/description, asc/desc)
+- supports header click sorting (tag/description, asc/desc)
 - displays group color coding using the same chip palette as Studio Series
 - shows a group key above the list
   - group pills use `tag_groups.json` `description` as hover text (`title`)
@@ -282,8 +282,8 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - clicking a tag pill opens an edit modal:
   - shows the tag group as a color-coded pill
   - group pill hover text uses `tag_groups.json` `description`
-  - edit canonical slug (group fixed)
-  - `label` is auto-derived from slug
+  - shows tag name as read-only
+  - allows editing `description`
 - tag row includes `<-` action to demote canonical tag into alias mapping
   - opens a demotion modal (not free-text prompt)
   - modal group-key pills use `tag_groups.json` `description` as hover text
@@ -301,9 +301,8 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - warns that aliases left with no targets are deleted
   - in patch mode, modal remains available but delete is blocked with local-server-required status
 - local-server mutation uses `POST /mutate-tag`
-  - edit and delete modals show live impact previews via `POST /mutate-tag-preview` before confirm
-  - slug edits update registry row and auto-refresh label
-  - canonical rename cascades into `tag_assignments.json` and `tag_aliases.json`
+  - delete modal shows live impact preview via `POST /mutate-tag-preview` before confirm
+  - edit updates tag `description` in registry row
   - delete removes tag from registry and removes references from assignments/aliases
   - aliases that become empty after delete are removed and reported in mutation stats (`aliases_removed_empty`)
   - aliases that become 1:1 self-maps (`alias == target slug`) are removed
@@ -326,7 +325,7 @@ Tag Registry import modes:
 
 The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_aliases.json` and:
 
-- lists aliases with columns: timestamp, alias, group tags
+- lists aliases with columns: alias, group tags
 - renders alias values inline as color-coded pills in the `group tags` column
   - alias row supports one or more canonical target tags
   - single-group aliases use that group color
@@ -345,11 +344,12 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - group pills use `tag_groups.json` `description` as hover text (`title`)
   - includes an `i` info pill that opens a popup with per-group `description_long` content
 - supports search by alias prefix
-- supports header sorting (timestamp/alias)
+- supports header sorting (alias, asc/desc)
 - supports import from a local JSON file (recommended from `assets/data/import`)
   - mode `add (no overwrite)`: add aliases with new key only
   - mode `replace`: replace the full aliases map
   - mode `add + overwrite`: add new aliases and overwrite matching keys, leaving other aliases untouched
+  - includes `New alias` button (right side of import controls) to open alias-create modal
 - local-server import uses `POST /import-tag-aliases`
   - response includes `summary_text` and `import_filename` (basename only)
   - summary is written to `logs/tag_write_server.log`
@@ -359,9 +359,15 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 - alias edit behavior:
   - local server mode uses `POST /mutate-tag-alias`
   - server validates alias uniqueness and registry-backed selected tags
+  - modal closes via `Cancel` button (outside/backdrop click does not close)
   - modal group-key pills use `tag_groups.json` `description` as hover text
   - modal group key includes an `i` info pill that opens a popup with per-group `description_long` content
   - patch mode provides ordered `set_alias`/`remove_alias_key` steps
+- alias create behavior:
+  - `New alias` opens modal with same tag search/selection flow and group-key info popup as edit
+  - alias name uniqueness is validated live while typing
+  - local server mode uses `POST /import-tag-aliases` in `add` mode with a single alias payload
+  - patch mode provides add-alias fragment snippet
 - alias promotion behavior:
   - user chooses target group at action time
   - local server mode uses `POST /promote-tag-alias-preview` then `POST /promote-tag-alias`

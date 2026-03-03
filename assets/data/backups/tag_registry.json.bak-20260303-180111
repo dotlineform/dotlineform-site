@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-03T18:01:11Z",
+  "updated_at_utc": "2026-03-03T17:43:04Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -839,8 +839,8 @@
       "group": "domain",
       "label": "astronomy",
       "status": "active",
-      "description": "astronomy as conceptual domain: the field of reference invoked (ideas, methods, discourse).",
-      "updated_at_utc": "2026-03-03T18:01:11Z"
+      "description": "astronomy as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
+      "updated_at_utc": "2026-03-03T17:43:04Z"
     },
     {
       "tag_id": "domain:biology",

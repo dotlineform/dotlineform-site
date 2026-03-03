@@ -80,6 +80,7 @@ function renderShell(state) {
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">Import</button>
           <span class="tagRegistry__saveMode" data-role="save-mode">Import mode: Patch</span>
+          <button type="button" class="tagStudio__button tagStudio__button--primary tagAliases__newAliasBtn" data-role="open-new-alias">New alias</button>
         </div>
         <p class="tagRegistry__selected" data-role="selected-file"></p>
         <p class="tagRegistry__result" data-role="import-result"></p>
@@ -116,9 +117,9 @@ function renderShell(state) {
     </div>
 
     <div class="tagStudioModal" data-role="edit-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-edit-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
-        <h3 id="tagAliasesEditTitle">Edit Alias</h3>
+      <div class="tagStudioModal__backdrop"></div>
+      <div class="tagStudioModal__dialog tagAliasesEdit__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
+        <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">Edit Alias</h3>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
             <span class="tagRegistryEdit__label">alias</span>
@@ -142,7 +143,7 @@ function renderShell(state) {
         <p class="tagRegistryEdit__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>Save</button>
-          <button type="button" class="tagStudio__button" data-role="close-edit-modal">Close</button>
+          <button type="button" class="tagStudio__button" data-role="close-edit-modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -155,6 +156,7 @@ function renderShell(state) {
     importFile: state.mount.querySelector('[data-role="import-file"]'),
     importMode: state.mount.querySelector('[data-role="import-mode"]'),
     importButton: state.mount.querySelector('[data-role="import-btn"]'),
+    openNewAlias: state.mount.querySelector('[data-role="open-new-alias"]'),
     saveMode: state.mount.querySelector('[data-role="save-mode"]'),
     selectedFile: state.mount.querySelector('[data-role="selected-file"]'),
     importResult: state.mount.querySelector('[data-role="import-result"]'),
@@ -163,6 +165,7 @@ function renderShell(state) {
     patchSnippet: state.mount.querySelector('[data-role="patch-snippet"]'),
     copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
     editModal: state.mount.querySelector('[data-role="edit-modal"]'),
+    editModalTitle: state.mount.querySelector('[data-role="edit-modal-title"]'),
     editAliasName: state.mount.querySelector('[data-role="edit-alias-name"]'),
     editAliasWarning: state.mount.querySelector('[data-role="edit-alias-warning"]'),
     editAliasDescription: state.mount.querySelector('[data-role="edit-alias-description"]'),
@@ -199,6 +202,10 @@ function wireEvents(state) {
 
   state.refs.importButton.addEventListener("click", () => {
     void handleImport(state);
+  });
+
+  state.refs.openNewAlias.addEventListener("click", () => {
+    openAliasCreateModal(state);
   });
 
   state.mount.addEventListener("click", (event) => {
@@ -260,7 +267,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (sortButton) {
       const key = normalize(sortButton.getAttribute("data-sort-key"));
-      if (!key) return;
+      if (key !== "alias") return;
       if (state.sortKey === key) {
         state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
       } else {
@@ -652,9 +659,6 @@ function renderList(state) {
 
   const headerHtml = `
     <div class="tagAliases__head">
-      <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "updatedat")}" data-sort-key="updatedat">
-        timestamp${sortIndicator(state, "updatedat")}
-      </button>
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
         alias${sortIndicator(state, "alias")}
       </button>
@@ -674,7 +678,6 @@ function renderList(state) {
         const sortedTargets = entry.resolvedTargets.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
         return `
         <li class="tagAliases__row">
-          <div class="tagAliases__tsCol">${escapeHtml(formatTimestamp(entry.updatedAtUtc))}</div>
           <div class="tagAliases__aliasCol">
             <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">
               <button
@@ -755,13 +758,6 @@ function getVisibleAliases(state) {
 }
 
 function compareAliases(a, b, sortKey) {
-  if (sortKey === "updatedat") {
-    if (a.updatedAtMs === null && b.updatedAtMs === null) return compareAliases(a, b, "alias");
-    if (a.updatedAtMs === null) return 1;
-    if (b.updatedAtMs === null) return -1;
-    if (a.updatedAtMs !== b.updatedAtMs) return a.updatedAtMs - b.updatedAtMs;
-    return compareAliases(a, b, "alias");
-  }
   return a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" });
 }
 
@@ -880,6 +876,16 @@ function findAliasEntry(state, aliasKey) {
   return state.aliases.find((entry) => normalize(entry.alias) === normalized) || null;
 }
 
+function isCreateAliasFlow(state) {
+  return Boolean(state.editState && !normalize(state.editState.originalAlias));
+}
+
+function setAliasEditModalMode(state, mode) {
+  const normalizedMode = mode === "new" ? "new" : "edit";
+  state.refs.editModalTitle.textContent = normalizedMode === "new" ? "New Alias" : "Edit Alias";
+  state.refs.saveEditAlias.textContent = normalizedMode === "new" ? "Create" : "Save";
+}
+
 function openAliasEditModal(state, aliasKey) {
   clearImportResult(state);
   const entry = findAliasEntry(state, aliasKey);
@@ -900,9 +906,30 @@ function openAliasEditModal(state, aliasKey) {
   state.editGroupInfoOpen = false;
   state.refs.editTagSearch.value = "";
   hideEditTagPopup(state);
+  setAliasEditModalMode(state, "edit");
   renderEditGroupKey(state);
   updateAliasEditUi(state);
   state.refs.editModal.hidden = false;
+}
+
+function openAliasCreateModal(state) {
+  clearImportResult(state);
+  state.editState = {
+    originalAlias: "",
+    originalDescription: "",
+    originalTags: [],
+    tags: []
+  };
+  state.editGroupInfoOpen = false;
+  state.refs.editAliasName.value = "";
+  state.refs.editAliasDescription.value = "";
+  state.refs.editTagSearch.value = "";
+  hideEditTagPopup(state);
+  setAliasEditModalMode(state, "new");
+  renderEditGroupKey(state);
+  updateAliasEditUi(state);
+  state.refs.editModal.hidden = false;
+  state.refs.editAliasName.focus();
 }
 
 function closeAliasEditModal(state) {
@@ -912,6 +939,7 @@ function closeAliasEditModal(state) {
   state.refs.editAliasDescription.value = "";
   state.refs.editTagSearch.value = "";
   state.editGroupInfoOpen = false;
+  setAliasEditModalMode(state, "edit");
   state.refs.editAliasWarning.textContent = "";
   state.refs.editStatus.textContent = "";
   state.refs.saveEditAlias.disabled = true;
@@ -1032,7 +1060,7 @@ function updateAliasEditUi(state) {
   state.refs.saveEditAlias.disabled = !(validation.valid && validation.changed);
   if (validation.tagsWarning) {
     setAliasEditStatus(state, "error", validation.tagsWarning);
-  } else if (!validation.changed) {
+  } else if (!validation.changed && !isCreateAliasFlow(state)) {
     setAliasEditStatus(state, "", "No changes.");
   } else if (!validation.warning) {
     setAliasEditStatus(state, "", "");
@@ -1113,6 +1141,46 @@ async function saveAliasEdit(state) {
   if (!state.editState) return;
   const validation = getAliasEditValidation(state);
   if (!validation.valid || !validation.changed) return;
+  const isCreate = isCreateAliasFlow(state);
+
+  if (isCreate) {
+    if (state.saveMode === "post") {
+      try {
+        const response = await postJson(IMPORT_ENDPOINT, {
+          mode: "add",
+          import_aliases: {
+            aliases: {
+              [validation.alias]: {
+                description: validation.description,
+                tags: validation.tags
+              }
+            }
+          },
+          import_filename: "",
+          client_time_utc: utcTimestamp()
+        });
+        setImportResult(state, "success", buildImportSummary(response));
+        await loadData(state);
+        renderControls(state);
+        renderList(state);
+        closeAliasEditModal(state);
+        return;
+      } catch (error) {
+        state.saveMode = "patch";
+        renderImportMode(state);
+        setAliasEditStatus(state, "error", `Server create failed; switched to patch mode. ${error.message || ""}`.trim());
+      }
+    }
+
+    const patchResult = buildManualPatchForAliasCreate(
+      validation.alias,
+      validation.description,
+      validation.tags
+    );
+    closeAliasEditModal(state);
+    openPatchModal(state, patchResult.snippet);
+    return;
+  }
 
   const payload = {
     alias: state.editState.originalAlias,
@@ -1427,6 +1495,22 @@ function buildManualPatchForAliasDelete(aliasKey) {
   };
 }
 
+function buildManualPatchForAliasCreate(aliasKey, description, tags) {
+  const normalizedAlias = normalize(aliasKey);
+  const fragment = {
+    [normalizedAlias]: {
+      description: String(description || "").trim(),
+      tags: Array.isArray(tags) ? tags.slice() : []
+    }
+  };
+  const snippet = JSON.stringify(fragment, null, 2);
+  return {
+    kind: "warn",
+    message: `Patch mode: alias fragment prepared for new alias "${normalizedAlias}". Paste inside aliases object.`,
+    snippet
+  };
+}
+
 function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description, tags) {
   const normalizedOld = normalize(aliasKey);
   const normalizedNew = normalize(newAliasKey);
@@ -1597,18 +1681,6 @@ function normalizeTimestamp(value) {
   const ms = Date.parse(raw);
   if (!Number.isFinite(ms)) return "";
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-function formatTimestamp(value) {
-  const normalized = normalizeTimestamp(value);
-  if (!normalized) return "—";
-  const date = new Date(normalized);
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const hour = String(date.getUTCHours()).padStart(2, "0");
-  const minute = String(date.getUTCMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day} - ${hour}:${minute}`;
 }
 
 function utcTimestamp() {

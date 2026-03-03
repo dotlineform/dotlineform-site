@@ -5,7 +5,6 @@ const MUTATE_ENDPOINT = "http://127.0.0.1:8787/mutate-tag";
 const MUTATE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-preview";
 const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
 const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
-const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
 
@@ -40,9 +39,6 @@ async function initTagRegistryPage() {
     deleteTagId: "",
     deletePreview: "",
     deletePreviewSeq: 0,
-    editPreviewSave: "",
-    editPreviewSaveSeq: 0,
-    editPreviewTimer: null,
     registryOptions: [],
     refs: null,
     registryUpdatedAt: ""
@@ -119,16 +115,19 @@ function renderShell(state) {
     </div>
 
     <div class="tagStudioModal" data-role="edit-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-edit-modal"></div>
+      <div class="tagStudioModal__backdrop"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryEditTitle">
         <h3 id="tagRegistryEditTitle">Edit Tag</h3>
         <p class="tagRegistryEdit__meta" data-role="edit-tag-id"></p>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
-            <input type="text" class="tagStudio__input" data-role="edit-slug" autocomplete="off">
+            <input type="text" class="tagStudio__input tagRegistryEdit__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
+          </label>
+          <label class="tagRegistryEdit__field">
+            <span class="tagRegistryEdit__label">description</span>
+            <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
           </label>
         </div>
-        <p class="tagRegistryEdit__impact" data-role="edit-impact-save"></p>
         <p class="tagRegistryEdit__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">Save</button>
@@ -195,8 +194,8 @@ function renderShell(state) {
     copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
     editModal: state.mount.querySelector('[data-role="edit-modal"]'),
     editTagId: state.mount.querySelector('[data-role="edit-tag-id"]'),
-    editSlug: state.mount.querySelector('[data-role="edit-slug"]'),
-    editImpactSave: state.mount.querySelector('[data-role="edit-impact-save"]'),
+    editTagName: state.mount.querySelector('[data-role="edit-tag-name"]'),
+    editDescription: state.mount.querySelector('[data-role="edit-description"]'),
     editStatus: state.mount.querySelector('[data-role="edit-status"]'),
     saveEdit: state.mount.querySelector('[data-role="save-edit"]'),
     demoteModal: state.mount.querySelector('[data-role="demote-modal"]'),
@@ -302,7 +301,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (!sortButton) return;
     const nextSortKey = normalize(sortButton.getAttribute("data-sort-key"));
-    if (!nextSortKey) return;
+    if (!["label", "description"].includes(nextSortKey)) return;
     if (state.sortKey === nextSortKey) {
       state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     } else {
@@ -391,8 +390,8 @@ function wireEvents(state) {
     void handleDeleteFromModal(state);
   });
 
-  state.refs.editSlug.addEventListener("input", () => {
-    scheduleSaveImpactPreview(state);
+  state.refs.editDescription.addEventListener("input", () => {
+    setEditStatus(state, "", "");
   });
 
   document.addEventListener("click", (event) => {
@@ -657,9 +656,6 @@ function renderList(state) {
   const visible = getVisibleSortedTags(state);
   const headerHtml = `
     <div class="tagRegistry__head">
-      <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "updatedat")}" data-sort-key="updatedat">
-        timestamp${sortIndicator(state, "updatedat")}
-      </button>
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "label")}" data-sort-key="label">
         tag${sortIndicator(state, "label")}
       </button>
@@ -679,7 +675,6 @@ function renderList(state) {
     <ul class="tagRegistry__rows">
       ${visible.map((tag) => `
         <li class="tagRegistry__row">
-          <div class="tagRegistry__tsCol">${escapeHtml(formatTimestamp(tag.updatedAtUtc))}</div>
           <div class="tagRegistry__tagCol">
             <div class="tagRegistry__tagActions">
               <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagChip" title="${escapeHtml(tag.tagId)}">
@@ -730,14 +725,6 @@ function getVisibleSortedTags(state) {
 }
 
 function compareTags(a, b, sortKey) {
-  if (sortKey === "updatedat") {
-    if (a.updatedAtMs === null && b.updatedAtMs === null) return compareTags(a, b, "label");
-    if (a.updatedAtMs === null) return 1;
-    if (b.updatedAtMs === null) return -1;
-    if (a.updatedAtMs !== b.updatedAtMs) return a.updatedAtMs - b.updatedAtMs;
-    return compareTags(a, b, "label");
-  }
-
   if (sortKey === "description") {
     const ad = normalize(a.description);
     const bd = normalize(b.description);
@@ -770,41 +757,25 @@ function openEditModal(state, tagId) {
   clearImportResult(state);
   const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
-  state.editPreviewSave = "";
-  state.editPreviewSaveSeq += 1;
-  if (state.editPreviewTimer) {
-    clearTimeout(state.editPreviewTimer);
-    state.editPreviewTimer = null;
-  }
   state.refs.editTagId.innerHTML = `
     <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
       ${escapeHtml(tag.group)}
     </span>
   `;
-  state.refs.editSlug.value = slug;
-  state.refs.editImpactSave.textContent = "";
-  state.refs.editImpactSave.className = "tagRegistryEdit__impact";
+  state.refs.editTagName.value = slug;
+  state.refs.editDescription.value = String(tag.description || "");
   state.refs.editStatus.className = "tagRegistryEdit__status";
   state.refs.editStatus.textContent = state.saveMode === "post"
     ? ""
     : "Local server is required for edit.";
   state.refs.editModal.hidden = false;
-  if (state.saveMode === "post") {
-    void refreshSaveImpactPreview(state);
-  } else {
-    state.refs.editImpactSave.textContent = "Save impact: unavailable (local server required).";
-  }
 }
 
 function closeEditModal(state) {
   state.refs.editModal.hidden = true;
   state.editTagId = "";
-  state.editPreviewSave = "";
-  state.editPreviewSaveSeq += 1;
-  if (state.editPreviewTimer) {
-    clearTimeout(state.editPreviewTimer);
-    state.editPreviewTimer = null;
-  }
+  state.refs.editTagName.value = "";
+  state.refs.editDescription.value = "";
 }
 
 function setEditStatus(state, kind, message) {
@@ -819,22 +790,6 @@ function setImpactPreview(target, kind, message) {
   if (kind) target.classList.add(`is-${kind}`);
 }
 
-function buildEditPreviewPayload(state) {
-  if (!state.editTagId) return null;
-  const tag = findTagById(state, state.editTagId);
-  if (!tag) return null;
-  const nextSlug = normalize(state.refs.editSlug.value);
-  if (!SLUG_RE.test(nextSlug)) return { error: "slug invalid" };
-  const nextTagId = `${tag.group}:${nextSlug}`;
-  return {
-    action: "edit",
-    tag_id: tag.tagId,
-    new_slug: nextSlug,
-    allow_canonical_rename: nextTagId !== tag.tagId,
-    client_time_utc: utcTimestamp()
-  };
-}
-
 function buildDeletePreviewPayload(tagId) {
   const normalizedTagId = normalize(tagId);
   if (!normalizedTagId) return null;
@@ -843,41 +798,6 @@ function buildDeletePreviewPayload(tagId) {
     tag_id: normalizedTagId,
     client_time_utc: utcTimestamp()
   };
-}
-
-function scheduleSaveImpactPreview(state) {
-  if (state.editPreviewTimer) clearTimeout(state.editPreviewTimer);
-  state.editPreviewTimer = setTimeout(() => {
-    state.editPreviewTimer = null;
-    void refreshSaveImpactPreview(state);
-  }, 180);
-}
-
-async function refreshSaveImpactPreview(state) {
-  if (state.saveMode !== "post") {
-    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: unavailable (local server required).");
-    return;
-  }
-  const payload = buildEditPreviewPayload(state);
-  if (!payload) {
-    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: unavailable.");
-    return;
-  }
-  if (payload.error) {
-    setImpactPreview(state.refs.editImpactSave, "error", "Save impact: enter a valid slug.");
-    return;
-  }
-  const seq = ++state.editPreviewSaveSeq;
-  try {
-    const response = await postJson(MUTATE_PREVIEW_ENDPOINT, payload);
-    if (seq !== state.editPreviewSaveSeq || state.refs.editModal.hidden) return;
-    state.editPreviewSave = buildMutationSummary(response);
-    setImpactPreview(state.refs.editImpactSave, "", `Save impact: ${state.editPreviewSave}`);
-  } catch (error) {
-    if (seq !== state.editPreviewSaveSeq || state.refs.editModal.hidden) return;
-    const message = String(error && error.message ? error.message : "preview failed");
-    setImpactPreview(state.refs.editImpactSave, "error", `Save impact: ${message}`);
-  }
 }
 
 async function refreshDeleteImpactPreview(state) {
@@ -916,31 +836,18 @@ async function handleTagEdit(state) {
     return;
   }
 
-  const nextSlug = normalize(state.refs.editSlug.value);
-  if (!SLUG_RE.test(nextSlug)) {
-    setEditStatus(state, "error", "Slug must be lowercase letters/numbers/hyphens.");
+  const description = String(state.refs.editDescription.value || "").trim();
+  if (description === String(tag.description || "").trim()) {
+    setEditStatus(state, "", "No changes to save.");
     return;
-  }
-
-  const nextTagId = `${tag.group}:${nextSlug}`;
-  const canonicalChanged = nextTagId !== tag.tagId;
-  if (canonicalChanged) {
-    const impact = state.editPreviewSave ? `\n\nImpact:\n${state.editPreviewSave}` : "";
-    const ok = window.confirm(
-      `Rename canonical tag ID?\n\n${tag.tagId} -> ${nextTagId}\n\nThis will update assignments and aliases.${impact}`
-    );
-    if (!ok) {
-      clearImportResult(state);
-      return;
-    }
   }
 
   try {
     const response = await postJson(MUTATE_ENDPOINT, {
       action: "edit",
       tag_id: tag.tagId,
-      new_slug: nextSlug,
-      allow_canonical_rename: canonicalChanged,
+      description,
+      allow_canonical_rename: false,
       client_time_utc: utcTimestamp()
     });
     setEditStatus(state, "success", "Saved.");
@@ -1601,18 +1508,6 @@ function normalizeTimestamp(value) {
   const ms = Date.parse(raw);
   if (!Number.isFinite(ms)) return "";
   return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-function formatTimestamp(value) {
-  const normalized = normalizeTimestamp(value);
-  if (!normalized) return "—";
-  const date = new Date(normalized);
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const hour = String(date.getUTCHours()).padStart(2, "0");
-  const minute = String(date.getUTCMinutes()).padStart(2, "0");
-  return `${year}-${month}-${day} - ${hour}:${minute}`;
 }
 
 function utcTimestamp() {

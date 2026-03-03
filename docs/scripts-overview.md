@@ -182,9 +182,9 @@ Behavior:
   - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
   - import request may include `import_filename`; server logs basename only (no client path)
   - tag mutation endpoint behavior (`POST /mutate-tag`):
-    - `action: edit`: update canonical slug (`group` fixed); `label` is auto-derived from slug
+    - `action: edit`: update canonical tag `description` (tag id/name remains fixed in UI flow)
     - `action: delete`: remove tag
-    - rename/delete cascades update `tag_assignments.json` and `tag_aliases.json`
+    - delete cascades update `tag_assignments.json` and `tag_aliases.json`
     - aliases that become 1:1 self-maps (`alias == target slug`) are removed automatically
   - preview endpoint (`POST /mutate-tag-preview`) returns the same impact stats without writing files
   - tag demotion behavior:
@@ -205,6 +205,10 @@ Behavior:
     - selected tags must be canonical and satisfy: max 4 tags, max 1 per group
     - local mode uses `POST /mutate-tag-alias`
     - patch mode emits ordered `set_alias`/`remove_alias_key` steps
+  - `New alias` button opens create modal:
+    - same alias/tag validation and tag-picker behavior as edit modal
+    - local mode uses `POST /import-tag-aliases` with `mode: add` and a single alias payload
+    - patch mode emits add-alias fragment snippet
   - alias pill `→` promote:
     - user chooses target group at action time
     - preview via `POST /promote-tag-alias-preview` is required before confirm

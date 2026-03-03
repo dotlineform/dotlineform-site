@@ -1172,6 +1172,7 @@ def mutate_registry_tag(
     old_tag_id: str,
     now_utc: str,
     new_slug: Optional[str] = None,
+    new_description: Optional[str] = None,
     allow_canonical_rename: bool = False,
 ) -> tuple[Dict[str, Any], Dict[str, Any]]:
     if action not in MUTATE_ACTIONS:
@@ -1218,7 +1219,8 @@ def mutate_registry_tag(
             "label": str(target_row.get("label") or "").strip(),
         }
 
-    slug = sanitize_slug(new_slug, "new_slug")
+    old_slug = old_tag_id.split(":", 1)[1]
+    slug = old_slug if new_slug is None else sanitize_slug(new_slug, "new_slug")
     label = slug
     new_tag_id = f"{group}:{slug}"
     canonical_changed = new_tag_id != old_tag_id
@@ -1226,10 +1228,14 @@ def mutate_registry_tag(
         raise ValueError("canonical rename is disabled for this request")
     if canonical_changed and new_tag_id in existing_ids:
         raise ValueError(f"target tag_id already exists: {new_tag_id}")
+    old_description = str(target_row.get("description") or "").strip()
+    description = old_description if new_description is None else sanitize_alias_description(new_description, "description")
+    description_changed = description != old_description
 
     updated_row = dict(target_row)
     updated_row["label"] = label
     updated_row["tag_id"] = new_tag_id
+    updated_row["description"] = description
     updated_row["updated_at_utc"] = now_utc
     final_tags = list(tags)
     final_tags[target_idx] = updated_row
@@ -1246,6 +1252,7 @@ def mutate_registry_tag(
         "group": group,
         "label": label,
         "canonical_changed": canonical_changed,
+        "description_changed": description_changed,
     }
 
 
@@ -1273,10 +1280,12 @@ def build_mutation_summary_text(stats: Dict[str, Any]) -> str:
     alias_rw = int(stats.get("aliases_rewritten") or 0)
     alias_empty = int(stats.get("aliases_removed_empty") or 0)
     alias_redundant = int(stats.get("aliases_removed_redundant") or 0)
+    description_changed = 1 if bool(stats.get("description_changed")) else 0
 
     id_part = f"{old_tag_id} -> {new_tag_id}" if new_tag_id else old_tag_id
     return (
         f"mode {action}; tag {id_part}; "
+        f"description_changed {description_changed}; "
         f"series rows {touched}; refs {refs}; "
         f"aliases rewritten {alias_rw}; aliases removed-empty {alias_empty}; "
         f"aliases removed-redundant {alias_redundant}"
@@ -1915,8 +1924,13 @@ class Handler(BaseHTTPRequestHandler):
             raise ValueError(f"action must be one of: {sorted(MUTATE_ACTIONS)}")
 
         new_slug: Optional[str] = None
+        new_description: Optional[str] = None
         if action == "edit":
-            new_slug = sanitize_slug(body.get("new_slug"), "new_slug")
+            raw_new_slug = body.get("new_slug")
+            if raw_new_slug is not None and str(raw_new_slug).strip():
+                new_slug = sanitize_slug(raw_new_slug, "new_slug")
+            if "description" in body:
+                new_description = sanitize_alias_description(body.get("description"), "description")
 
         now_utc = utc_now()
         registry_payload = load_registry(self.server.registry_path)
@@ -1929,6 +1943,7 @@ class Handler(BaseHTTPRequestHandler):
             old_tag_id=old_tag_id,
             now_utc=now_utc,
             new_slug=new_slug,
+            new_description=new_description,
             allow_canonical_rename=allow_canonical_rename,
         )
         new_tag_id = mutate_meta.get("new_tag_id")
@@ -1966,6 +1981,7 @@ class Handler(BaseHTTPRequestHandler):
             "old_tag_id": old_tag_id,
             "new_tag_id": rewrite_to,
             "canonical_changed": bool(mutate_meta.get("canonical_changed")),
+            "description_changed": bool(mutate_meta.get("description_changed")),
             **alias_stats,
             **assignment_stats,
         }

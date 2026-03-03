@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-03T18:01:11Z",
+  "updated_at_utc": "2026-03-03T11:19:26Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -16,7 +16,7 @@
       "label": "flower",
       "status": "active",
       "description": "Depicted flower: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:branch",
@@ -24,7 +24,7 @@
       "label": "branch",
       "status": "active",
       "description": "branch as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:nature",
@@ -32,7 +32,7 @@
       "label": "nature",
       "status": "active",
       "description": "nature as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:memory",
@@ -40,15 +40,14 @@
       "label": "memory",
       "status": "active",
       "description": "Domain axis memory: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:signal",
       "group": "domain",
       "label": "signal",
       "status": "active",
-      "description": "Communications/information framing: signal, channel, noise, encoding, and detection. Emphasises legibility and measurement metaphors; contrasts with purely expressive mark-making or purely representational depiction.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "description": "Communications/information framing: signal, channel, noise, encoding, and detection. Emphasises legibility and measurement metaphors; contrasts with purely expressive mark-making or purely representational depiction."
     },
     {
       "tag_id": "domain:language",
@@ -56,23 +55,21 @@
       "label": "language",
       "status": "active",
       "description": "Domain axis language: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:system",
       "group": "domain",
       "label": "system",
       "status": "active",
-      "description": "system as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "description": "system as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs."
     },
     {
       "tag_id": "form:line",
       "group": "form",
       "label": "line",
       "status": "active",
-      "description": "line as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "description": "line as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ."
     },
     {
       "tag_id": "form:curvilinear",
@@ -80,7 +77,7 @@
       "label": "curvilinear",
       "status": "active",
       "description": "Formal quality curvilinear: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:radial",
@@ -88,7 +85,7 @@
       "label": "radial",
       "status": "active",
       "description": "Organisation around a centre with spokes, arcs, or concentric tendencies. Produces rotational balance and outward dispersion; common in blooms, bursts, vortices; distinct from linear flow.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:dense",
@@ -96,7 +93,7 @@
       "label": "dense",
       "status": "active",
       "description": "High mark or element density with limited negative space. Reads as compression, pressure, or accumulation; can increase cognitive load and visual noise; distinct from sparse, airy distributions.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:sparse",
@@ -104,7 +101,7 @@
       "label": "sparse",
       "status": "active",
       "description": "Low element density with ample negative space. Reads as openness, pause, or isolation; emphasises placement and interval; distinct from dense, crowded, or saturated surfaces.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:enclosed",
@@ -112,7 +109,7 @@
       "label": "enclosed",
       "status": "active",
       "description": "Formal quality enclosed: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:layered",
@@ -120,7 +117,7 @@
       "label": "layered",
       "status": "active",
       "description": "Multiple strata or passes remain visible: palimpsest, accretion, or composite overlays. Encodes time and revision; can be transparent or opaque; distinct from single-pass, flat surfaces.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:fragmented",
@@ -128,7 +125,7 @@
       "label": "fragmented",
       "status": "active",
       "description": "Broken into discontinuous parts: gaps, cuts, shards, or interrupted contours. Reads as interruption or assembly; can be collage-like or glitch-like; distinct from continuous, flowing forms.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:growth",
@@ -136,7 +133,7 @@
       "label": "growth",
       "status": "active",
       "description": "Theme growth: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:repetition",
@@ -144,7 +141,7 @@
       "label": "repetition",
       "status": "active",
       "description": "repetition as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:drift",
@@ -152,7 +149,7 @@
       "label": "drift",
       "status": "active",
       "description": "Theme drift: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:emergence",
@@ -160,7 +157,7 @@
       "label": "emergence",
       "status": "active",
       "description": "Theme emergence: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:containment",
@@ -168,15 +165,14 @@
       "label": "containment",
       "status": "active",
       "description": "containment as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:trace",
       "group": "theme",
       "label": "trace",
       "status": "active",
-      "description": "Theme trace: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "description": "Theme trace: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors."
     },
     {
       "tag_id": "theme:connection",
@@ -184,7 +180,7 @@
       "label": "connection",
       "status": "active",
       "description": "Theme connection: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:line",
@@ -192,7 +188,7 @@
       "label": "line",
       "status": "active",
       "description": "line as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:curve",
@@ -200,7 +196,7 @@
       "label": "curve",
       "status": "active",
       "description": "Depicted curve: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:loop",
@@ -208,7 +204,7 @@
       "label": "loop",
       "status": "active",
       "description": "Depicted loop: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:knot",
@@ -216,7 +212,7 @@
       "label": "knot",
       "status": "active",
       "description": "Depicted knot: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:spiral",
@@ -224,7 +220,7 @@
       "label": "spiral",
       "status": "active",
       "description": "spiral as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:grid",
@@ -232,7 +228,7 @@
       "label": "grid",
       "status": "active",
       "description": "grid as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:field",
@@ -240,7 +236,7 @@
       "label": "field",
       "status": "active",
       "description": "field as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:point",
@@ -248,7 +244,7 @@
       "label": "point",
       "status": "active",
       "description": "point as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:dot",
@@ -256,7 +252,7 @@
       "label": "dot",
       "status": "active",
       "description": "dot as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:droplet",
@@ -264,7 +260,7 @@
       "label": "droplet",
       "status": "active",
       "description": "droplet as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:splash",
@@ -272,7 +268,7 @@
       "label": "splash",
       "status": "active",
       "description": "Depicted splash: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:stain",
@@ -280,7 +276,7 @@
       "label": "stain",
       "status": "active",
       "description": "Depicted stain: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:trace",
@@ -288,7 +284,7 @@
       "label": "trace",
       "status": "active",
       "description": "Depicted trace: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:mark",
@@ -296,7 +292,7 @@
       "label": "mark",
       "status": "active",
       "description": "mark as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:stroke",
@@ -304,7 +300,7 @@
       "label": "stroke",
       "status": "active",
       "description": "stroke as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:gesture",
@@ -312,7 +308,7 @@
       "label": "gesture",
       "status": "active",
       "description": "gesture as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:edge",
@@ -320,7 +316,7 @@
       "label": "edge",
       "status": "active",
       "description": "edge as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:contour",
@@ -328,7 +324,7 @@
       "label": "contour",
       "status": "active",
       "description": "contour as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:silhouette",
@@ -336,7 +332,7 @@
       "label": "silhouette",
       "status": "active",
       "description": "silhouette as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:shape",
@@ -344,7 +340,7 @@
       "label": "shape",
       "status": "active",
       "description": "shape as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:form",
@@ -352,7 +348,7 @@
       "label": "form",
       "status": "active",
       "description": "form as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:pattern",
@@ -360,7 +356,7 @@
       "label": "pattern",
       "status": "active",
       "description": "Depicted pattern: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:text",
@@ -368,7 +364,7 @@
       "label": "text",
       "status": "active",
       "description": "text as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:letter",
@@ -376,7 +372,7 @@
       "label": "letter",
       "status": "active",
       "description": "letter as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:symbol",
@@ -384,7 +380,7 @@
       "label": "symbol",
       "status": "active",
       "description": "symbol as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:number",
@@ -392,7 +388,7 @@
       "label": "number",
       "status": "active",
       "description": "Depicted number: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:diagram",
@@ -400,7 +396,7 @@
       "label": "diagram",
       "status": "active",
       "description": "Depicted diagram: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:map",
@@ -408,7 +404,7 @@
       "label": "map",
       "status": "active",
       "description": "Depicted map: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:wave",
@@ -416,7 +412,7 @@
       "label": "wave",
       "status": "active",
       "description": "wave as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:signal",
@@ -424,7 +420,7 @@
       "label": "signal",
       "status": "active",
       "description": "Depicted readable trace or message-like pattern: waveform, graph, or repeated mark with legibility. Bridges to communication metaphors; distinct from noise-like speckle and purely decorative patterning.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:noise",
@@ -432,7 +428,7 @@
       "label": "noise",
       "status": "active",
       "description": "Depicted interference texture: speckle, static, clutter, or unreadable grain. Suggests obstruction or excess variation; distinct from intentional pattern, rhythm, or clean signal traces.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:screen",
@@ -440,7 +436,7 @@
       "label": "screen",
       "status": "active",
       "description": "Display surface or mediated image plane: monitor, phone, projection, or luminous rectangle. Signals interface and representation-within-representation; may imply pixels, refresh, glare, and distance from material reality.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:window",
@@ -448,7 +444,7 @@
       "label": "window",
       "status": "active",
       "description": "window as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:mirror",
@@ -456,7 +452,7 @@
       "label": "mirror",
       "status": "active",
       "description": "Depicted mirror: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:shadow",
@@ -464,7 +460,7 @@
       "label": "shadow",
       "status": "active",
       "description": "Depicted shadow: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:reflection",
@@ -472,7 +468,7 @@
       "label": "reflection",
       "status": "active",
       "description": "reflection as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:surface",
@@ -480,7 +476,7 @@
       "label": "surface",
       "status": "active",
       "description": "surface as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:stone",
@@ -488,7 +484,7 @@
       "label": "stone",
       "status": "active",
       "description": "stone as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:rock",
@@ -496,7 +492,7 @@
       "label": "rock",
       "status": "active",
       "description": "Depicted rock: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:sand",
@@ -504,7 +500,7 @@
       "label": "sand",
       "status": "active",
       "description": "sand as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:water",
@@ -512,7 +508,7 @@
       "label": "water",
       "status": "active",
       "description": "Depicted liquid medium: sea, river, rain, or pooled surface. Connotes flow, reflection, depth, and change; can cue drift, dissolution, renewal; distinct from solid ground or granular matter.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:rain",
@@ -520,7 +516,7 @@
       "label": "rain",
       "status": "active",
       "description": "Depicted rain: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:fog",
@@ -528,7 +524,7 @@
       "label": "fog",
       "status": "active",
       "description": "fog as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:cloud",
@@ -536,7 +532,7 @@
       "label": "cloud",
       "status": "active",
       "description": "Depicted cloud: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:sky",
@@ -544,7 +540,7 @@
       "label": "sky",
       "status": "active",
       "description": "Depicted sky: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:sun",
@@ -552,7 +548,7 @@
       "label": "sun",
       "status": "active",
       "description": "sun as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:moon",
@@ -560,7 +556,7 @@
       "label": "moon",
       "status": "active",
       "description": "moon as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:tree",
@@ -568,7 +564,7 @@
       "label": "tree",
       "status": "active",
       "description": "tree as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:leaf",
@@ -576,7 +572,7 @@
       "label": "leaf",
       "status": "active",
       "description": "leaf as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:seed",
@@ -584,7 +580,7 @@
       "label": "seed",
       "status": "active",
       "description": "Depicted seed: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:root",
@@ -592,7 +588,7 @@
       "label": "root",
       "status": "active",
       "description": "Depicted root: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:grass",
@@ -600,7 +596,7 @@
       "label": "grass",
       "status": "active",
       "description": "Depicted grass: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:weed",
@@ -608,7 +604,7 @@
       "label": "weed",
       "status": "active",
       "description": "Depicted weed: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:moss",
@@ -616,7 +612,7 @@
       "label": "moss",
       "status": "active",
       "description": "moss as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:lichen",
@@ -624,7 +620,7 @@
       "label": "lichen",
       "status": "active",
       "description": "lichen as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:insect",
@@ -632,7 +628,7 @@
       "label": "insect",
       "status": "active",
       "description": "Depicted insect: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:bird",
@@ -640,7 +636,7 @@
       "label": "bird",
       "status": "active",
       "description": "Depicted bird: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:animal",
@@ -648,7 +644,7 @@
       "label": "animal",
       "status": "active",
       "description": "Depicted animal: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:skin",
@@ -656,7 +652,7 @@
       "label": "skin",
       "status": "active",
       "description": "skin as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:hand",
@@ -664,7 +660,7 @@
       "label": "hand",
       "status": "active",
       "description": "Depicted hand: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:face",
@@ -672,7 +668,7 @@
       "label": "face",
       "status": "active",
       "description": "Depicted face: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:eye",
@@ -680,7 +676,7 @@
       "label": "eye",
       "status": "active",
       "description": "eye as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:body",
@@ -688,7 +684,7 @@
       "label": "body",
       "status": "active",
       "description": "Depicted body: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:figure",
@@ -696,7 +692,7 @@
       "label": "figure",
       "status": "active",
       "description": "figure as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:object",
@@ -704,7 +700,7 @@
       "label": "object",
       "status": "active",
       "description": "object as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:fragment",
@@ -712,7 +708,7 @@
       "label": "fragment",
       "status": "active",
       "description": "fragment as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:ruin",
@@ -720,7 +716,7 @@
       "label": "ruin",
       "status": "active",
       "description": "ruin as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:building",
@@ -728,7 +724,7 @@
       "label": "building",
       "status": "active",
       "description": "building as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:wall",
@@ -736,7 +732,7 @@
       "label": "wall",
       "status": "active",
       "description": "wall as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:door",
@@ -744,7 +740,7 @@
       "label": "door",
       "status": "active",
       "description": "door as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:stairs",
@@ -752,7 +748,7 @@
       "label": "stairs",
       "status": "active",
       "description": "stairs as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:road",
@@ -760,7 +756,7 @@
       "label": "road",
       "status": "active",
       "description": "Depicted road: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:path",
@@ -768,7 +764,7 @@
       "label": "path",
       "status": "active",
       "description": "path as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:fence",
@@ -776,7 +772,7 @@
       "label": "fence",
       "status": "active",
       "description": "fence as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:wire",
@@ -784,7 +780,7 @@
       "label": "wire",
       "status": "active",
       "description": "wire as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:net",
@@ -792,7 +788,7 @@
       "label": "net",
       "status": "active",
       "description": "Depicted net: an observable element the viewer can point to. Useful for content-level linking across media; keep separate from domain framing and theme inference to reduce ambiguity.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:thread",
@@ -800,7 +796,7 @@
       "label": "thread",
       "status": "active",
       "description": "thread as depicted element: a recognisable motif or object-like form in the work. Can be literal or icon-like; distinguishes ‘what is shown’ from structural qualities and interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "subject:fiber",
@@ -808,7 +804,7 @@
       "label": "fiber",
       "status": "active",
       "description": "fiber as subject motif: a visible element, token, or referent. May carry symbolic weight, but the tag itself names appearance rather than meaning; pair with form/theme for nuance.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:ecology",
@@ -816,7 +812,7 @@
       "label": "ecology",
       "status": "active",
       "description": "ecology as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:landscape",
@@ -824,7 +820,7 @@
       "label": "landscape",
       "status": "active",
       "description": "landscape as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:weather",
@@ -832,15 +828,15 @@
       "label": "weather",
       "status": "active",
       "description": "weather as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:astronomy",
       "group": "domain",
       "label": "astronomy",
       "status": "active",
-      "description": "astronomy as conceptual domain: the field of reference invoked (ideas, methods, discourse).",
-      "updated_at_utc": "2026-03-03T18:01:11Z"
+      "description": "astronomy as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:biology",
@@ -848,7 +844,7 @@
       "label": "biology",
       "status": "active",
       "description": "Domain axis biology: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:botany",
@@ -856,7 +852,7 @@
       "label": "botany",
       "status": "active",
       "description": "botany as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:geology",
@@ -864,7 +860,7 @@
       "label": "geology",
       "status": "active",
       "description": "Domain axis geology: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:water",
@@ -872,7 +868,7 @@
       "label": "water",
       "status": "active",
       "description": "Domain axis water: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:urban",
@@ -880,7 +876,7 @@
       "label": "urban",
       "status": "active",
       "description": "urban as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:architecture",
@@ -888,7 +884,7 @@
       "label": "architecture",
       "status": "active",
       "description": "architecture as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:digital",
@@ -896,7 +892,7 @@
       "label": "digital",
       "status": "active",
       "description": "Domain axis digital: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T19:56:14Z"
     },
     {
       "tag_id": "domain:systems",
@@ -904,7 +900,7 @@
       "label": "systems",
       "status": "active",
       "description": "systems as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:networks",
@@ -912,7 +908,7 @@
       "label": "networks",
       "status": "active",
       "description": "Domain axis networks: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:information",
@@ -920,7 +916,7 @@
       "label": "information",
       "status": "active",
       "description": "information as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:communication",
@@ -928,7 +924,7 @@
       "label": "communication",
       "status": "active",
       "description": "Domain axis communication: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:writing",
@@ -936,7 +932,7 @@
       "label": "writing",
       "status": "active",
       "description": "Domain axis writing: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:music",
@@ -944,7 +940,7 @@
       "label": "music",
       "status": "active",
       "description": "music as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:photography",
@@ -952,7 +948,7 @@
       "label": "photography",
       "status": "active",
       "description": "photography as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:drawing",
@@ -960,7 +956,7 @@
       "label": "drawing",
       "status": "active",
       "description": "Domain axis drawing: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:print",
@@ -968,7 +964,7 @@
       "label": "print",
       "status": "active",
       "description": "print as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:craft",
@@ -976,7 +972,7 @@
       "label": "craft",
       "status": "active",
       "description": "Domain axis craft: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:materiality",
@@ -984,7 +980,7 @@
       "label": "materiality",
       "status": "active",
       "description": "materiality as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:time",
@@ -992,7 +988,7 @@
       "label": "time",
       "status": "active",
       "description": "time as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:attention",
@@ -1000,7 +996,7 @@
       "label": "attention",
       "status": "active",
       "description": "attention as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:perception",
@@ -1008,7 +1004,7 @@
       "label": "perception",
       "status": "active",
       "description": "Domain axis perception: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:consciousness",
@@ -1016,7 +1012,7 @@
       "label": "consciousness",
       "status": "active",
       "description": "consciousness as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:body",
@@ -1024,7 +1020,7 @@
       "label": "body",
       "status": "active",
       "description": "Domain axis body: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:identity",
@@ -1032,7 +1028,7 @@
       "label": "identity",
       "status": "active",
       "description": "Domain axis identity: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:ritual",
@@ -1040,7 +1036,7 @@
       "label": "ritual",
       "status": "active",
       "description": "Domain axis ritual: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:myth",
@@ -1048,7 +1044,7 @@
       "label": "myth",
       "status": "active",
       "description": "Domain axis myth: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:science",
@@ -1056,7 +1052,7 @@
       "label": "science",
       "status": "active",
       "description": "science as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:mathematics",
@@ -1064,7 +1060,7 @@
       "label": "mathematics",
       "status": "active",
       "description": "mathematics as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:physics",
@@ -1072,7 +1068,7 @@
       "label": "physics",
       "status": "active",
       "description": "physics as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:quantum",
@@ -1080,7 +1076,7 @@
       "label": "quantum",
       "status": "active",
       "description": "Domain axis quantum: a stable framing category used to connect series by shared discourse. Indicates context (science, memory, language, nature) without requiring literal depiction of the term.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:emptiness",
@@ -1088,7 +1084,7 @@
       "label": "emptiness",
       "status": "active",
       "description": "emptiness as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:order",
@@ -1096,7 +1092,7 @@
       "label": "order",
       "status": "active",
       "description": "order as domain framing: situates the work within a territory of concern or vocabulary. Keep domains relatively few; disambiguate from subject motifs and from affective/interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:chance",
@@ -1104,7 +1100,7 @@
       "label": "chance",
       "status": "active",
       "description": "Aleatory framing: contingency, randomness, and non-deterministic outcomes. Useful for generative processes, found forms, and sampling-driven decisions; contrasts with strict control, planning, and deterministic systems.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:central",
@@ -1112,7 +1108,7 @@
       "label": "central",
       "status": "active",
       "description": "Formal quality central: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:peripheral",
@@ -1120,7 +1116,7 @@
       "label": "peripheral",
       "status": "active",
       "description": "Formal quality peripheral: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:balanced",
@@ -1128,7 +1124,7 @@
       "label": "balanced",
       "status": "active",
       "description": "Formal quality balanced: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:unbalanced",
@@ -1136,7 +1132,7 @@
       "label": "unbalanced",
       "status": "active",
       "description": "unbalanced as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:symmetric",
@@ -1144,7 +1140,7 @@
       "label": "symmetric",
       "status": "active",
       "description": "Formal quality symmetric: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:asymmetric",
@@ -1152,7 +1148,7 @@
       "label": "asymmetric",
       "status": "active",
       "description": "asymmetric as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:linear",
@@ -1160,7 +1156,7 @@
       "label": "linear",
       "status": "active",
       "description": "linear as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:angular",
@@ -1168,7 +1164,7 @@
       "label": "angular",
       "status": "active",
       "description": "angular as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:stacked",
@@ -1176,7 +1172,7 @@
       "label": "stacked",
       "status": "active",
       "description": "stacked as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:woven",
@@ -1184,7 +1180,7 @@
       "label": "woven",
       "status": "active",
       "description": "woven as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:braided",
@@ -1192,7 +1188,7 @@
       "label": "braided",
       "status": "active",
       "description": "braided as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:netted",
@@ -1200,7 +1196,7 @@
       "label": "netted",
       "status": "active",
       "description": "netted as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:cellular",
@@ -1208,7 +1204,7 @@
       "label": "cellular",
       "status": "active",
       "description": "cellular as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:branching",
@@ -1216,7 +1212,7 @@
       "label": "branching",
       "status": "active",
       "description": "Tree-like bifurcation: lines split into limbs or networks. Suggests growth, recursion, and spread; appears in roots, rivers, cracks, and graphs; distinct from loops and grids.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:filament",
@@ -1224,7 +1220,7 @@
       "label": "filament",
       "status": "active",
       "description": "Formal quality filament: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:threadlike",
@@ -1232,7 +1228,7 @@
       "label": "threadlike",
       "status": "active",
       "description": "threadlike as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:granular",
@@ -1240,7 +1236,7 @@
       "label": "granular",
       "status": "active",
       "description": "Texture made of discrete particles or ‘grains’ that read as units. Seen in sand, pigment, stippling, or pixel-like specks; distinct from continuous tone or blurred mottling.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:cloudlike",
@@ -1248,7 +1244,7 @@
       "label": "cloudlike",
       "status": "active",
       "description": "cloudlike as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:fieldlike",
@@ -1256,7 +1252,7 @@
       "label": "fieldlike",
       "status": "active",
       "description": "Formal quality fieldlike: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:contoured",
@@ -1264,7 +1260,7 @@
       "label": "contoured",
       "status": "active",
       "description": "contoured as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:looped",
@@ -1272,7 +1268,7 @@
       "label": "looped",
       "status": "active",
       "description": "looped as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:spiralling",
@@ -1280,7 +1276,7 @@
       "label": "spiralling",
       "status": "active",
       "description": "spiralling as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:tangled",
@@ -1288,7 +1284,7 @@
       "label": "tangled",
       "status": "active",
       "description": "tangled as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:knotted",
@@ -1296,7 +1292,7 @@
       "label": "knotted",
       "status": "active",
       "description": "knotted as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:continuous",
@@ -1304,7 +1300,7 @@
       "label": "continuous",
       "status": "active",
       "description": "continuous as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:broken",
@@ -1312,7 +1308,7 @@
       "label": "broken",
       "status": "active",
       "description": "broken as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:dispersed",
@@ -1320,7 +1316,7 @@
       "label": "dispersed",
       "status": "active",
       "description": "Formal quality dispersed: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:compressed",
@@ -1328,7 +1324,7 @@
       "label": "compressed",
       "status": "active",
       "description": "Formal quality compressed: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:open",
@@ -1336,7 +1332,7 @@
       "label": "open",
       "status": "active",
       "description": "open as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:porous",
@@ -1344,7 +1340,7 @@
       "label": "porous",
       "status": "active",
       "description": "porous as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:boundary",
@@ -1352,7 +1348,7 @@
       "label": "boundary",
       "status": "active",
       "description": "boundary as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:frame",
@@ -1360,7 +1356,7 @@
       "label": "frame",
       "status": "active",
       "description": "frame as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:margin",
@@ -1368,7 +1364,7 @@
       "label": "margin",
       "status": "active",
       "description": "Formal quality margin: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:cutoff",
@@ -1376,7 +1372,7 @@
       "label": "cutoff",
       "status": "active",
       "description": "Formal quality cutoff: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:repeating",
@@ -1384,7 +1380,7 @@
       "label": "repeating",
       "status": "active",
       "description": "repeating as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:rhythmic",
@@ -1392,7 +1388,7 @@
       "label": "rhythmic",
       "status": "active",
       "description": "rhythmic as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:random",
@@ -1400,7 +1396,7 @@
       "label": "random",
       "status": "active",
       "description": "random as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:ordered",
@@ -1408,7 +1404,7 @@
       "label": "ordered",
       "status": "active",
       "description": "ordered as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:chaotic",
@@ -1416,7 +1412,7 @@
       "label": "chaotic",
       "status": "active",
       "description": "chaotic as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:quiet",
@@ -1424,7 +1420,7 @@
       "label": "quiet",
       "status": "active",
       "description": "quiet as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:violent",
@@ -1432,7 +1428,7 @@
       "label": "violent",
       "status": "active",
       "description": "violent as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:soft",
@@ -1440,7 +1436,7 @@
       "label": "soft",
       "status": "active",
       "description": "soft as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:hard",
@@ -1448,7 +1444,7 @@
       "label": "hard",
       "status": "active",
       "description": "hard as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:light",
@@ -1456,7 +1452,7 @@
       "label": "light",
       "status": "active",
       "description": "light as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:dark",
@@ -1464,23 +1460,23 @@
       "label": "dark",
       "status": "active",
       "description": "Formal quality dark: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:high-contrast",
       "group": "form",
-      "label": "high-contrast",
+      "label": "high contrast",
       "status": "active",
       "description": "high contrast as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:low-contrast",
       "group": "form",
-      "label": "low-contrast",
+      "label": "low contrast",
       "status": "active",
       "description": "low contrast as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:flat",
@@ -1488,7 +1484,7 @@
       "label": "flat",
       "status": "active",
       "description": "Formal quality flat: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:volumetric",
@@ -1496,7 +1492,7 @@
       "label": "volumetric",
       "status": "active",
       "description": "volumetric as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:depth",
@@ -1504,7 +1500,7 @@
       "label": "depth",
       "status": "active",
       "description": "Formal quality depth: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:shallow",
@@ -1512,7 +1508,7 @@
       "label": "shallow",
       "status": "active",
       "description": "shallow as compositional structure: describes how marks or elements behave (directionality, clustering, enclosure, repetition). Provides geometry-based similarity even when depicted subjects differ.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:sharp",
@@ -1520,7 +1516,7 @@
       "label": "sharp",
       "status": "active",
       "description": "Edges and local contrast are crisp; high spatial-frequency detail is preserved. Seen in hard ink lines, high-acutance photos, or clean vector forms; distinct from blur, haze, and soft focus.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:blurred",
@@ -1528,7 +1524,7 @@
       "label": "blurred",
       "status": "active",
       "description": "Edges lose high-frequency detail through motion, depth-of-field, diffusion, or averaging. Produces softness and ambiguity; distinct from low-resolution pixelation, grain, or deliberate smearing.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:grainy",
@@ -1536,7 +1532,7 @@
       "label": "grainy",
       "status": "active",
       "description": "High-frequency particulate texture: many small intensity variations at short spatial scales. Appears as film grain, high-ISO sensor noise, dithering, or sand-like stipple; distinct from smooth gradients.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:smooth",
@@ -1544,7 +1540,7 @@
       "label": "smooth",
       "status": "active",
       "description": "Low micro-variation: gradients or planes read continuous, with minimal particulate texture. Seen in clean ink washes, polished surfaces, or compressed images; distinct from grainy, gritty, or speckled fields.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:textured",
@@ -1552,7 +1548,7 @@
       "label": "textured",
       "status": "active",
       "description": "Surface with tactile variation—roughness, grain, or patterned micro-structure. Can be paper tooth, corrosion, stipple, or fabric weave; distinct from flat, uniform tone and smooth surfaces.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:minimal",
@@ -1560,7 +1556,7 @@
       "label": "minimal",
       "status": "active",
       "description": "Formal quality minimal: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:maximal",
@@ -1568,7 +1564,7 @@
       "label": "maximal",
       "status": "active",
       "description": "Formal quality maximal: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:monochrome",
@@ -1576,15 +1572,15 @@
       "label": "monochrome",
       "status": "active",
       "description": "Single-hue or near-black-and-white palette emphasising value, texture, and structure over colour relationships. Common in ink and B/W photography; distinct from polychrome or colour-coded layers.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:limited-palette",
       "group": "form",
-      "label": "limited-palette",
+      "label": "limited palette",
       "status": "active",
       "description": "limited palette as formal property: describes organisation, texture, contrast, rhythm, or spatial behaviour. Typically observable in distribution and edge quality; contrasts with subject motifs and conceptual domains.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:polychrome",
@@ -1592,7 +1588,7 @@
       "label": "polychrome",
       "status": "active",
       "description": "Formal quality polychrome: a structural descriptor affecting perception of density, flow, boundary, or tone. Often scale-dependent (micro texture vs macro composition); distinct from interpretive themes.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:glitch",
@@ -1600,7 +1596,7 @@
       "label": "glitch",
       "status": "active",
       "description": "Digital or process error aesthetic: discontinuities, tearing, blocks, misregistration, or codec artifacts. Reads as system failure or mediation; distinct from organic irregularity and hand jitter.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "form:overlay",
@@ -1608,7 +1604,7 @@
       "label": "overlay",
       "status": "active",
       "description": "Two or more layers occupy the same field, partially occluding or blending. Can be double exposure, composite drawing passes, or UI superposition; distinct from simple repetition without stacking.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:becoming",
@@ -1616,7 +1612,7 @@
       "label": "becoming",
       "status": "active",
       "description": "becoming as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:change",
@@ -1624,7 +1620,7 @@
       "label": "change",
       "status": "active",
       "description": "change as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:transformation",
@@ -1632,7 +1628,7 @@
       "label": "transformation",
       "status": "active",
       "description": "Theme transformation: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:recurrence",
@@ -1640,7 +1636,7 @@
       "label": "recurrence",
       "status": "active",
       "description": "recurrence as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:cycle",
@@ -1648,7 +1644,7 @@
       "label": "cycle",
       "status": "active",
       "description": "cycle as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:return",
@@ -1656,15 +1652,15 @@
       "label": "return",
       "status": "active",
       "description": "return as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:memory-trace",
       "group": "theme",
-      "label": "memory-trace",
+      "label": "memory trace",
       "status": "active",
       "description": "memory trace as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:reconstruction",
@@ -1672,7 +1668,7 @@
       "label": "reconstruction",
       "status": "active",
       "description": "Theme reconstruction: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:fragmentation",
@@ -1680,7 +1676,7 @@
       "label": "fragmentation",
       "status": "active",
       "description": "fragmentation as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:repair",
@@ -1688,7 +1684,7 @@
       "label": "repair",
       "status": "active",
       "description": "repair as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:release",
@@ -1696,7 +1692,7 @@
       "label": "release",
       "status": "active",
       "description": "Theme release: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:tension",
@@ -1704,7 +1700,7 @@
       "label": "tension",
       "status": "active",
       "description": "Theme tension: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:stillness",
@@ -1712,7 +1708,7 @@
       "label": "stillness",
       "status": "active",
       "description": "Theme stillness: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:movement",
@@ -1720,7 +1716,7 @@
       "label": "movement",
       "status": "active",
       "description": "Theme movement: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:flow",
@@ -1728,7 +1724,7 @@
       "label": "flow",
       "status": "active",
       "description": "flow as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:resistance",
@@ -1736,7 +1732,7 @@
       "label": "resistance",
       "status": "active",
       "description": "Theme resistance: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:ambiguity",
@@ -1744,7 +1740,7 @@
       "label": "ambiguity",
       "status": "active",
       "description": "ambiguity as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:uncertainty",
@@ -1752,7 +1748,7 @@
       "label": "uncertainty",
       "status": "active",
       "description": "uncertainty as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:signal",
@@ -1760,7 +1756,7 @@
       "label": "signal",
       "status": "active",
       "description": "Motif of legibility versus interference: what stands out, what is obscured, and how meaning survives noise. Often expressed as partial messages, traces, thresholds; contrasts with pure chaos or silence.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:noise",
@@ -1768,7 +1764,7 @@
       "label": "noise",
       "status": "active",
       "description": "Motif of interference, excess, and irreducible variation. Reads as ambiguity, friction, or entropy; can be comforting or oppressive; contrasts with clarity, order, and clean transmission.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:translation",
@@ -1776,7 +1772,7 @@
       "label": "translation",
       "status": "active",
       "description": "translation as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:communication",
@@ -1784,7 +1780,7 @@
       "label": "communication",
       "status": "active",
       "description": "communication as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:encoding",
@@ -1792,7 +1788,7 @@
       "label": "encoding",
       "status": "active",
       "description": "encoding as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:decoding",
@@ -1800,7 +1796,7 @@
       "label": "decoding",
       "status": "active",
       "description": "decoding as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:attention",
@@ -1808,7 +1804,7 @@
       "label": "attention",
       "status": "active",
       "description": "attention as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:absence",
@@ -1816,7 +1812,7 @@
       "label": "absence",
       "status": "active",
       "description": "absence as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:emptiness",
@@ -1824,7 +1820,7 @@
       "label": "emptiness",
       "status": "active",
       "description": "emptiness as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:presence",
@@ -1832,7 +1828,7 @@
       "label": "presence",
       "status": "active",
       "description": "presence as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:threshold",
@@ -1840,7 +1836,7 @@
       "label": "threshold",
       "status": "active",
       "description": "threshold as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:boundary",
@@ -1848,15 +1844,15 @@
       "label": "boundary",
       "status": "active",
       "description": "boundary as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:inside-outside",
       "group": "theme",
-      "label": "inside-outside",
+      "label": "inside outside",
       "status": "active",
       "description": "Theme inside outside: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:entanglement",
@@ -1864,7 +1860,7 @@
       "label": "entanglement",
       "status": "active",
       "description": "entanglement as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:network",
@@ -1872,7 +1868,7 @@
       "label": "network",
       "status": "active",
       "description": "Theme network: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:field",
@@ -1880,7 +1876,7 @@
       "label": "field",
       "status": "active",
       "description": "Theme field: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:scale",
@@ -1888,15 +1884,15 @@
       "label": "scale",
       "status": "active",
       "description": "Theme scale: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:micro-macro",
       "group": "theme",
-      "label": "micro-macro",
+      "label": "micro macro",
       "status": "active",
       "description": "micro macro as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:order",
@@ -1904,7 +1900,7 @@
       "label": "order",
       "status": "active",
       "description": "order as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:chance",
@@ -1912,7 +1908,7 @@
       "label": "chance",
       "status": "active",
       "description": "chance as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:control",
@@ -1920,7 +1916,7 @@
       "label": "control",
       "status": "active",
       "description": "control as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:freedom",
@@ -1928,7 +1924,7 @@
       "label": "freedom",
       "status": "active",
       "description": "freedom as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:gesture",
@@ -1936,7 +1932,7 @@
       "label": "gesture",
       "status": "active",
       "description": "Theme gesture: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:embodiment",
@@ -1944,7 +1940,7 @@
       "label": "embodiment",
       "status": "active",
       "description": "Theme embodiment: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:perception",
@@ -1952,7 +1948,7 @@
       "label": "perception",
       "status": "active",
       "description": "perception as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:interpretation",
@@ -1960,7 +1956,7 @@
       "label": "interpretation",
       "status": "active",
       "description": "Theme interpretation: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:symbol",
@@ -1968,7 +1964,7 @@
       "label": "symbol",
       "status": "active",
       "description": "symbol as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:myth",
@@ -1976,7 +1972,7 @@
       "label": "myth",
       "status": "active",
       "description": "myth as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:ritual",
@@ -1984,7 +1980,7 @@
       "label": "ritual",
       "status": "active",
       "description": "Theme ritual: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:time",
@@ -1992,7 +1988,7 @@
       "label": "time",
       "status": "active",
       "description": "Theme time: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:duration",
@@ -2000,7 +1996,7 @@
       "label": "duration",
       "status": "active",
       "description": "duration as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:decay",
@@ -2008,7 +2004,7 @@
       "label": "decay",
       "status": "active",
       "description": "decay as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:renewal",
@@ -2016,7 +2012,7 @@
       "label": "renewal",
       "status": "active",
       "description": "renewal as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:fragility",
@@ -2024,7 +2020,7 @@
       "label": "fragility",
       "status": "active",
       "description": "fragility as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "theme:resilience",
@@ -2032,7 +2028,7 @@
       "label": "resilience",
       "status": "active",
       "description": "resilience as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-02T16:18:14Z"
     },
     {
       "tag_id": "domain:technology",
@@ -2040,7 +2036,7 @@
       "label": "technology",
       "status": "active",
       "description": "technology as conceptual domain: the field of reference invoked (ideas, methods, discourse). Acts as contextual backdrop rather than depicted content; contrasts with theme, which captures inferred motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:calm",
@@ -2048,7 +2044,7 @@
       "label": "calm",
       "status": "active",
       "description": "Experienced quality of steadiness and reduced agitation (interpretive, not diagnostic). Often aligns with openness, soft contrast, repetition, or balanced distribution; contrasts with tension, fragmentation, and overload.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:restlessness",
@@ -2056,7 +2052,7 @@
       "label": "restlessness",
       "status": "active",
       "description": "Theme restlessness: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:anxiety",
@@ -2064,7 +2060,7 @@
       "label": "anxiety",
       "status": "active",
       "description": "Experienced quality of unease, vigilance, or constraint (interpretive, not diagnostic). Often aligns with compression, noise, unstable boundaries, or high alertness; contrasts with calm, openness, and steady rhythm.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:melancholy",
@@ -2072,7 +2068,7 @@
       "label": "melancholy",
       "status": "active",
       "description": "melancholy as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:joy",
@@ -2080,7 +2076,7 @@
       "label": "joy",
       "status": "active",
       "description": "joy as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:sorrow",
@@ -2088,7 +2084,7 @@
       "label": "sorrow",
       "status": "active",
       "description": "sorrow as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:anger",
@@ -2096,7 +2092,7 @@
       "label": "anger",
       "status": "active",
       "description": "Theme anger: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:fear",
@@ -2104,7 +2100,7 @@
       "label": "fear",
       "status": "active",
       "description": "Theme fear: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:wonder",
@@ -2112,7 +2108,7 @@
       "label": "wonder",
       "status": "active",
       "description": "Theme wonder: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:awe",
@@ -2120,7 +2116,7 @@
       "label": "awe",
       "status": "active",
       "description": "awe as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:overwhelm",
@@ -2128,7 +2124,7 @@
       "label": "overwhelm",
       "status": "active",
       "description": "overwhelm as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:clarity",
@@ -2136,7 +2132,7 @@
       "label": "clarity",
       "status": "active",
       "description": "clarity as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:confusion",
@@ -2144,7 +2140,7 @@
       "label": "confusion",
       "status": "active",
       "description": "confusion as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:intimacy",
@@ -2152,7 +2148,7 @@
       "label": "intimacy",
       "status": "active",
       "description": "intimacy as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:alienation",
@@ -2160,7 +2156,7 @@
       "label": "alienation",
       "status": "active",
       "description": "alienation as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:hope",
@@ -2168,7 +2164,7 @@
       "label": "hope",
       "status": "active",
       "description": "Theme hope: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:grief",
@@ -2176,7 +2172,7 @@
       "label": "grief",
       "status": "active",
       "description": "grief as interpretive motif: a recurring idea or experienced quality inferred from the work. Not a factual claim about intent; contrasts with domain context and with visible subject motifs.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:contemplation",
@@ -2184,7 +2180,7 @@
       "label": "contemplation",
       "status": "active",
       "description": "contemplation as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     },
     {
       "tag_id": "theme:play",
@@ -2192,7 +2188,7 @@
       "label": "play",
       "status": "active",
       "description": "play as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
+      "updated_at_utc": "2026-03-03T11:19:26Z"
     }
   ]
 }
