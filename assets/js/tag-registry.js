@@ -33,6 +33,10 @@ async function initTagRegistryPage() {
     editTagId: "",
     demoteState: null,
     aliasKeys: new Set(),
+    groupDescriptions: new Map(),
+    groupDescriptionLongs: new Map(),
+    groupInfoOpen: false,
+    demoteGroupInfoOpen: false,
     deleteTagId: "",
     deletePreview: "",
     deletePreviewSeq: 0,
@@ -242,6 +246,24 @@ function wireEvents(state) {
   });
 
   state.mount.addEventListener("click", (event) => {
+    const infoToggle = event.target.closest("button[data-action='toggle-group-info']");
+    if (infoToggle) {
+      const scope = normalize(infoToggle.getAttribute("data-scope"));
+      if (scope === "demote") {
+        state.demoteGroupInfoOpen = !state.demoteGroupInfoOpen;
+        if (state.demoteState) renderDemoteGroupKey(state);
+      } else {
+        state.groupInfoOpen = !state.groupInfoOpen;
+        renderControls(state);
+      }
+      return;
+    }
+
+    const clickedInsideInfo = Boolean(event.target.closest('[data-role="group-info-wrap"]'));
+    if (!clickedInsideInfo) {
+      closeOpenGroupInfo(state);
+    }
+
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
       const group = normalize(groupButton.getAttribute("data-group"));
@@ -372,6 +394,31 @@ function wireEvents(state) {
   state.refs.editSlug.addEventListener("input", () => {
     scheduleSaveImpactPreview(state);
   });
+
+  document.addEventListener("click", (event) => {
+    if (event.target.closest('[data-role="group-info-wrap"]')) return;
+    closeOpenGroupInfo(state);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    closeOpenGroupInfo(state);
+  });
+}
+
+function closeOpenGroupInfo(state) {
+  let controlsChanged = false;
+  let demoteChanged = false;
+  if (state.groupInfoOpen) {
+    state.groupInfoOpen = false;
+    controlsChanged = true;
+  }
+  if (state.demoteGroupInfoOpen) {
+    state.demoteGroupInfoOpen = false;
+    demoteChanged = true;
+  }
+  if (controlsChanged) renderControls(state);
+  if (demoteChanged && state.demoteState) renderDemoteGroupKey(state);
 }
 
 function syncImportModeFromControl(state) {
@@ -416,9 +463,17 @@ async function loadRegistry(state) {
     fetchJson("/assets/data/tag_registry.json"),
     fetchJson("/assets/data/tag_aliases.json")
   ]);
+  let groupsData = null;
+  try {
+    groupsData = await fetchJson("/assets/data/tag_groups.json");
+  } catch (error) {
+    groupsData = null;
+  }
   state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
   state.aliasKeys = buildAliasKeySet(aliasesData);
+  state.groupDescriptions = buildGroupDescriptionMap(groupsData);
+  state.groupDescriptionLongs = buildGroupDescriptionLongMap(groupsData);
   state.registryOptions = buildRegistryOptions(state.tags);
 }
 
@@ -487,6 +542,32 @@ function buildAliasKeySet(data) {
   return out;
 }
 
+function buildGroupDescriptionMap(data) {
+  const out = new Map();
+  const groups = Array.isArray(data && data.groups) ? data.groups : [];
+  for (const raw of groups) {
+    if (!raw || typeof raw !== "object") continue;
+    const groupId = normalize(raw.group_id);
+    const description = String(raw.description || "").trim();
+    if (!GROUPS.includes(groupId) || !description) continue;
+    out.set(groupId, description);
+  }
+  return out;
+}
+
+function buildGroupDescriptionLongMap(data) {
+  const out = new Map();
+  const groups = Array.isArray(data && data.groups) ? data.groups : [];
+  for (const raw of groups) {
+    if (!raw || typeof raw !== "object") continue;
+    const groupId = normalize(raw.group_id);
+    const descriptionLong = String(raw.description_long || "").trim();
+    if (!GROUPS.includes(groupId) || !descriptionLong) continue;
+    out.set(groupId, descriptionLong);
+  }
+  return out;
+}
+
 function renderControls(state) {
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
@@ -494,11 +575,13 @@ function renderControls(state) {
   const groupButtons = GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(groupCounts[group] || 0);
+    const titleAttr = groupTitleAttr(state, group);
     return `
       <button
         type="button"
         class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
         data-group="${escapeHtml(group)}"
+        ${titleAttr}
       >
         ${escapeHtml(group)} [${count}]
       </button>
@@ -508,6 +591,7 @@ function renderControls(state) {
   state.refs.key.innerHTML = `
     <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags [${totalCount}]</button>
     ${groupButtons}
+    ${renderGroupInfoControl(state, "registry")}
   `;
 }
 
@@ -520,6 +604,53 @@ function countTagsByGroup(tags) {
     }
   }
   return counts;
+}
+
+function groupTitleAttr(state, group) {
+  const description = String(state.groupDescriptions.get(group) || "").trim();
+  if (!description) return "";
+  return `title="${escapeHtml(description)}"`;
+}
+
+function renderGroupInfoControl(state, scope) {
+  const isOpen = scope === "demote" ? Boolean(state.demoteGroupInfoOpen) : Boolean(state.groupInfoOpen);
+  return `
+    <span class="tagStudio__keyInfoWrap" data-role="group-info-wrap" data-scope="${escapeHtml(scope)}">
+      <button
+        type="button"
+        class="tagStudio__keyPill tagStudio__keyInfoBtn"
+        data-action="toggle-group-info"
+        data-scope="${escapeHtml(scope)}"
+        aria-expanded="${isOpen ? "true" : "false"}"
+        title="Group descriptions"
+      >
+        <em>i</em>
+      </button>
+      ${isOpen ? `
+        <div class="tagStudio__keyInfoPopup" data-role="group-info-popup">
+          ${renderGroupInfoSections(state)}
+        </div>
+      ` : ""}
+    </span>
+  `;
+}
+
+function renderGroupInfoSections(state) {
+  const sections = GROUPS.map((group) => {
+    const descriptionLong = String(state.groupDescriptionLongs.get(group) || "").trim();
+    if (!descriptionLong) return "";
+    const titleAttr = groupTitleAttr(state, group);
+    return `
+      <section class="tagStudio__groupInfoSection">
+        <p class="tagStudio__groupInfoHead">
+          <span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}" ${titleAttr}>${escapeHtml(group)}</span>
+        </p>
+        <p class="tagStudio__groupInfoText">${escapeHtml(descriptionLong)}</p>
+      </section>
+    `;
+  }).filter(Boolean).join("");
+
+  return sections || '<p class="tagStudio__empty">No group descriptions available.</p>';
 }
 
 function renderList(state) {
@@ -646,7 +777,7 @@ function openEditModal(state, tagId) {
     state.editPreviewTimer = null;
   }
   state.refs.editTagId.innerHTML = `
-    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(tag.tagId)}">
+    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
       ${escapeHtml(tag.group)}
     </span>
   `;
@@ -913,6 +1044,7 @@ function openDemoteModal(state, tagId) {
     tagId: tag.tagId,
     tags: []
   };
+  state.demoteGroupInfoOpen = false;
   state.refs.demoteTagMeta.textContent = `tag: ${tag.tagId} -> alias "${aliasKey}"`;
   state.refs.demoteTagSearch.value = "";
   hideDemoteTagPopup(state);
@@ -923,6 +1055,7 @@ function openDemoteModal(state, tagId) {
 
 function closeDemoteModal(state) {
   state.demoteState = null;
+  state.demoteGroupInfoOpen = false;
   state.refs.demoteModal.hidden = true;
   state.refs.demoteTagMeta.textContent = "";
   state.refs.demoteTagSearch.value = "";
@@ -947,8 +1080,9 @@ function renderDemoteGroupKey(state) {
   const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
   state.refs.demoteGroupKey.innerHTML = GROUPS.map((group) => {
     const activeClass = selected.has(group) ? " is-active" : "";
-    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}">${escapeHtml(group)}</span>`;
-  }).join("");
+    const titleAttr = groupTitleAttr(state, group);
+    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}" ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state, "demote");
 }
 
 function renderDemoteTagList(state) {

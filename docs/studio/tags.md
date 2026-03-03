@@ -266,6 +266,8 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - supports header click sorting (timestamp/tag/description, asc/desc)
 - displays group color coding using the same chip palette as Studio Series
 - shows a group key above the list
+  - group pills use `tag_groups.json` `description` as hover text (`title`)
+  - includes an `i` info pill that opens a popup with per-group `description_long` content
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
 - supports import from a local JSON file (recommended from `assets/data/import`)
@@ -279,10 +281,13 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - import response/log includes `import_filename` (basename only)
 - clicking a tag pill opens an edit modal:
   - shows the tag group as a color-coded pill
+  - group pill hover text uses `tag_groups.json` `description`
   - edit canonical slug (group fixed)
   - `label` is auto-derived from slug
 - tag row includes `<-` action to demote canonical tag into alias mapping
   - opens a demotion modal (not free-text prompt)
+  - modal group-key pills use `tag_groups.json` `description` as hover text
+  - modal group key includes an `i` info pill that opens a popup with per-group `description_long` content
   - target tag picker uses the same autocomplete-style popup as alias edit:
     - search matches tag label/slug prefix
     - selecting adds removable target pills below the search field
@@ -337,6 +342,8 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
     - save enabled only when alias name, description, or selected tags change
     - alias tag constraints enforced: max 4 total, max 1 per group
 - includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
+  - group pills use `tag_groups.json` `description` as hover text (`title`)
+  - includes an `i` info pill that opens a popup with per-group `description_long` content
 - supports search by alias prefix
 - supports header sorting (timestamp/alias)
 - supports import from a local JSON file (recommended from `assets/data/import`)
@@ -352,6 +359,8 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 - alias edit behavior:
   - local server mode uses `POST /mutate-tag-alias`
   - server validates alias uniqueness and registry-backed selected tags
+  - modal group-key pills use `tag_groups.json` `description` as hover text
+  - modal group key includes an `i` info pill that opens a popup with per-group `description_long` content
   - patch mode provides ordered `set_alias`/`remove_alias_key` steps
 - alias promotion behavior:
   - user chooses target group at action time
@@ -375,4 +384,6 @@ The Series Tags page (`/studio/series-tags/`) reads `assets/data/tag_assignments
 - renders assigned tags as color-coded pills
 - sorts tags alphabetically by label (fallback: tag id)
 - uses an inline header key (`All tags` + group pills) in the tags column
+- group pills use `tag_groups.json` `description` as hover text (`title`)
+- includes an `i` info pill that opens a popup with per-group `description_long` content
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)

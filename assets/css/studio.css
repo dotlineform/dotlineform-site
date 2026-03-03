@@ -380,6 +380,56 @@
   text-transform: lowercase;
 }
 
+.tagStudio__keyInfoWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tagStudio__keyInfoBtn {
+  background: var(--studio-surface-subtle);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.tagStudio__keyInfoBtn em {
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.tagStudio__keyInfoPopup {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 40;
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: min(24rem, calc(100vh - 5rem));
+  overflow: auto;
+  background: var(--surface, var(--studio-surface));
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: 0.45rem;
+  box-shadow: var(--studio-shadow-pop);
+  padding: 0.6rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.tagStudio__groupInfoSection {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.tagStudio__groupInfoHead {
+  margin: 0;
+}
+
+.tagStudio__groupInfoText {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--muted, var(--studio-muted-body));
+}
+
 .tagStudioModal {
   position: fixed;
   inset: 0;
