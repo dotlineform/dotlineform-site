@@ -2,6 +2,8 @@ const GROUPS = ["subject", "domain", "form", "theme"];
 const GROUP_INDEX = new Map(GROUPS.map((group, index) => [group, index]));
 const POST_ENDPOINT = "http://127.0.0.1:8787/save-tags";
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
+const POPUP_TAG_MATCH_CAP = 12;
+const POPUP_ALIAS_MATCH_CAP = 12;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagStudio);
@@ -53,7 +55,6 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
   const slugMap = new Map();
   const labelMap = new Map();
   const activeTags = [];
-  const activeByGroup = new Map(GROUPS.map((group) => [group, []]));
 
   for (const rawTag of tags) {
     const tag = sanitizeTag(rawTag);
@@ -65,16 +66,15 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
 
     if (tag.status === "active") {
       activeTags.push(tag);
-      if (activeByGroup.has(tag.group)) {
-        activeByGroup.get(tag.group).push(tag);
-      }
     }
   }
 
   activeTags.sort((a, b) => a.tag_id.localeCompare(b.tag_id));
-  for (const group of GROUPS) {
-    activeByGroup.get(group).sort((a, b) => a.tag_id.localeCompare(b.tag_id));
-  }
+  const activeTagsBySlug = activeTags.slice().sort((a, b) => {
+    const bySlug = a.slug.localeCompare(b.slug, undefined, { sensitivity: "base" });
+    if (bySlug !== 0) return bySlug;
+    return a.tag_id.localeCompare(b.tag_id);
+  });
 
   const aliases = new Map();
   const rawAliases = aliasesJson && typeof aliasesJson.aliases === "object" ? aliasesJson.aliases : {};
@@ -85,6 +85,7 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
     if (!targetTagIds.length) continue;
     aliases.set(aliasKey, targetTagIds);
   }
+  const aliasOptions = buildAliasOptions(aliases, tagsById);
 
   const entries = [];
   let nextEntryId = 1;
@@ -108,8 +109,8 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
     slugMap,
     labelMap,
     aliases,
-    activeTags,
-    activeByGroup,
+    activeTagsBySlug,
+    aliasOptions,
     entries,
     nextEntryId,
     statusText: "",
@@ -163,36 +164,21 @@ function getSeriesAssignment(seriesAssignments, seriesId) {
 function renderShell(state) {
   state.mount.innerHTML = `
     <div class="tagStudio">
-      <section class="tagStudio__panel">
-        <div class="tagStudio__inputRow">
-          <label class="tagStudio__label" for="tagStudioInput">Add Tag</label>
-          <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="form:radial or radial">
+      <section class="tagStudio__panel tagStudio__panel--editor">
+        <div data-role="groups"></div>
+        <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+          <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="tag slug or alias">
           <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
+          <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
         </div>
-        <div class="tagStudio__popup" data-role="popup" hidden>
-          <div class="tagStudio__popupInner" data-role="popup-list"></div>
+        <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
+          <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>
         </div>
         <p class="tagStudio__status" data-role="status"></p>
+        <p class="tagStudio__saveWarning" data-role="save-warning"></p>
+        <p class="tagStudio__saveResult" data-role="save-result"></p>
       </section>
-
-      <div class="tagStudio__grid">
-        <section class="tagStudio__panel">
-          <div class="tagStudio__headingRow">
-            <h3 class="tagStudio__heading">Current Tags</h3>
-            <div class="tagStudio__key" data-role="key"></div>
-          </div>
-          <div data-role="groups"></div>
-        </section>
-        <section class="tagStudio__panel">
-          <h3 class="tagStudio__heading">Save</h3>
-          <div class="tagStudio__actions">
-            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
-            <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
-            <span class="tagStudio__saveWarning" data-role="save-warning"></span>
-          </div>
-          <p class="tagStudio__saveResult" data-role="save-result"></p>
-        </section>
-      </div>
     </div>
 
     <div class="tagStudioModal" data-role="modal" hidden>
@@ -217,7 +203,6 @@ function renderShell(state) {
     popup: state.mount.querySelector('[data-role="popup"]'),
     popupList: state.mount.querySelector('[data-role="popup-list"]'),
     status: state.mount.querySelector('[data-role="status"]'),
-    key: state.mount.querySelector('[data-role="key"]'),
     groups: state.mount.querySelector('[data-role="groups"]'),
     saveButton: state.mount.querySelector('[data-role="save"]'),
     saveMode: state.mount.querySelector('[data-role="save-mode"]'),
@@ -232,6 +217,8 @@ function renderShell(state) {
 
 function wireEvents(state) {
   state.refs.input.addEventListener("input", () => {
+    setStatus(state, "", "");
+    renderStatus(state);
     renderPopup(state);
   });
 
@@ -258,13 +245,33 @@ function wireEvents(state) {
   });
 
   state.refs.popupList.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-tag-id]");
-    if (!button) return;
-    const tagId = normalize(button.getAttribute("data-tag-id"));
-    const tag = state.tagsById.get(tagId);
-    if (!tag) return;
-    state.refs.input.value = tag.label;
-    hidePopup(state);
+    const tagButton = event.target.closest("button[data-popup-tag-id]");
+    if (tagButton) {
+      const tagId = normalize(tagButton.getAttribute("data-popup-tag-id"));
+      const tag = state.tagsById.get(tagId);
+      if (!tag) return;
+      addResolvedTag(state, tag, tag.slug || tag.tag_id);
+      state.refs.input.value = "";
+      hidePopup(state);
+      renderAll(state);
+      return;
+    }
+
+    const aliasTargetButton = event.target.closest("button[data-popup-alias-target]");
+    if (aliasTargetButton) {
+      const tagId = normalize(aliasTargetButton.getAttribute("data-popup-alias-target"));
+      const tag = state.tagsById.get(tagId);
+      if (!tag) return;
+      const aliasSource = normalize(aliasTargetButton.getAttribute("data-popup-alias-source"));
+      addResolvedTag(state, tag, aliasSource || tag.tag_id);
+      state.refs.input.value = "";
+      hidePopup(state);
+      renderAll(state);
+      return;
+    }
+
+    const aliasPill = event.target.closest("[data-popup-alias]");
+    if (aliasPill) return;
   });
 
   state.refs.groups.addEventListener("click", (event) => {
@@ -300,7 +307,7 @@ function wireEvents(state) {
 function addFromInput(state) {
   const rawInput = String(state.refs.input.value || "").trim();
   if (!rawInput) {
-    setStatus(state, "warn", "Enter a tag id or shorthand.");
+    setStatus(state, "warn", "Enter a tag slug, tag id, or alias.");
     renderStatus(state);
     return;
   }
@@ -317,7 +324,7 @@ function addFromInput(state) {
   if (resolved.type === "ambiguous") {
     const candidateIds = resolved.candidates.map((tag) => tag.tag_id).slice(0, 6);
     const suffix = resolved.candidates.length > 6 ? ", ..." : "";
-    setStatus(state, "warn", `Multiple matches for "${rawInput}": ${candidateIds.join(", ")}${suffix}`);
+    setStatus(state, "warn", `Multiple matches for "${rawInput}": ${candidateIds.join(", ")}${suffix}. Choose one from autocomplete.`);
     renderStatus(state);
     return;
   }
@@ -436,18 +443,10 @@ function makeUnresolvedEntry(entryId, rawInput) {
 
 function renderAll(state) {
   renderStatus(state);
-  renderKey(state);
   renderGroups(state);
   renderPopup(state);
   renderSaveMode(state);
   renderSaveState(state);
-}
-
-function renderKey(state) {
-  const pills = GROUPS.map((group) => {
-    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}">${escapeHtml(group)}</span>`;
-  }).join("");
-  state.refs.key.innerHTML = pills;
 }
 
 function renderPopup(state) {
@@ -457,30 +456,81 @@ function renderPopup(state) {
     return;
   }
 
-  const baseSuggestions = getSuggestionPool(state);
-  const matches = baseSuggestions
-    .filter((tag) => normalize(tag.label).startsWith(query))
-    .slice(0, 12);
+  const selectedTagIds = getSelectedTagIdSet(state);
+  const tagMatches = state.activeTagsBySlug
+    .filter((tag) => tag.slug.startsWith(query) && !selectedTagIds.has(tag.tag_id))
+    .slice(0, POPUP_TAG_MATCH_CAP);
+  const aliasMatches = getPopupAliasMatches(state, query, selectedTagIds).slice(0, POPUP_ALIAS_MATCH_CAP);
 
-  if (!matches.length) {
+  if (!tagMatches.length && !aliasMatches.length) {
     hidePopup(state);
     return;
   }
 
-  state.refs.popupList.innerHTML = matches
-    .map((tag) => {
+  const tagSection = tagMatches.length
+    ? `
+      <section class="tagStudioSuggest__section">
+        <p class="tagStudioSuggest__heading">tags</p>
+        <div class="tagStudioSuggest__tagRows">
+          ${tagMatches.map((tag) => {
       return `
         <button
           type="button"
           class="tagStudio__popupPill tagStudio__chip--${escapeHtml(tag.group)}"
-          data-tag-id="${escapeHtml(tag.tag_id)}"
+          data-popup-tag-id="${escapeHtml(tag.tag_id)}"
           title="${escapeHtml(tag.tag_id)}"
         >
           ${escapeHtml(tag.label)}
         </button>
       `;
-    })
-    .join("");
+    }).join("")}
+        </div>
+      </section>
+    `
+    : "";
+
+  const aliasSection = aliasMatches.length
+    ? `
+      <section class="tagStudioSuggest__section">
+        <p class="tagStudioSuggest__heading">aliases</p>
+        <div class="tagStudioSuggest__aliasRows">
+          ${aliasMatches.map((entry) => {
+      return `
+        <div class="tagStudioSuggest__aliasRow">
+          <span
+            class="tagStudio__popupPill tagStudioSuggest__aliasPill"
+            data-popup-alias="${escapeHtml(entry.alias)}"
+            title="${escapeHtml(entry.alias)}"
+          >
+            ${escapeHtml(entry.alias)}
+          </span>
+          <div class="tagStudioSuggest__aliasTargets">
+            ${entry.targets.map((target) => `
+              <button
+                type="button"
+                class="tagStudio__popupPill tagStudio__chip--${escapeHtml(target.group)} tagStudioSuggest__aliasTarget"
+                data-popup-alias-target="${escapeHtml(target.tagId)}"
+                data-popup-alias-source="${escapeHtml(entry.alias)}"
+                title="${escapeHtml(target.tagId)}"
+              >
+                ${escapeHtml(target.label)}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }).join("")}
+        </div>
+      </section>
+    `
+    : "";
+
+  state.refs.popupList.innerHTML = `
+    <div class="tagStudioSuggest">
+      ${tagSection}
+      ${aliasSection}
+    </div>
+  `;
   state.refs.popup.hidden = false;
 }
 
@@ -489,42 +539,83 @@ function hidePopup(state) {
   state.refs.popupList.innerHTML = "";
 }
 
-function getSuggestionPool(state) {
-  const metrics = computeMetrics(state);
-  const missingGroups = GROUPS.filter((group) => metrics.groupCounts[group] === 0);
-  const pool = [];
-  for (const group of missingGroups) {
-    const examples = (state.activeByGroup.get(group) || []).slice(0, 3);
-    for (const tag of examples) pool.push(tag);
+function getPopupAliasMatches(state, query, selectedTagIds) {
+  return state.aliasOptions
+    .filter((entry) => entry.alias.startsWith(query))
+    .map((entry) => ({
+      alias: entry.alias,
+      targets: entry.targets.filter((target) => !selectedTagIds.has(target.tagId))
+    }))
+    .filter((entry) => entry.targets.length > 0);
+}
+
+function getSelectedTagIdSet(state) {
+  const out = new Set();
+  for (const entry of state.entries) {
+    if (entry.type !== "resolved") continue;
+    out.add(entry.canonicalId);
   }
-  return pool;
+  return out;
+}
+
+function buildAliasOptions(aliases, tagsById) {
+  const out = [];
+  for (const [alias, targets] of aliases.entries()) {
+    const resolved = [];
+    const seen = new Set();
+    for (const targetTagId of targets) {
+      const normalizedTagId = normalize(targetTagId);
+      if (!normalizedTagId || seen.has(normalizedTagId)) continue;
+      const tag = tagsById.get(normalizedTagId);
+      if (!tag) continue;
+      seen.add(normalizedTagId);
+      resolved.push({
+        tagId: normalizedTagId,
+        group: tag.group,
+        label: tag.label
+      });
+    }
+    if (!resolved.length) continue;
+    resolved.sort((a, b) => {
+      const aIndex = GROUP_INDEX.has(a.group) ? GROUP_INDEX.get(a.group) : Number.MAX_SAFE_INTEGER;
+      const bIndex = GROUP_INDEX.has(b.group) ? GROUP_INDEX.get(b.group) : Number.MAX_SAFE_INTEGER;
+      if (aIndex !== bIndex) return aIndex - bIndex;
+      return a.tagId.localeCompare(b.tagId);
+    });
+    out.push({ alias, targets: resolved });
+  }
+  out.sort((a, b) => a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" }));
+  return out;
 }
 
 function renderGroups(state) {
-  const resolvedEntries = state.entries
-    .filter((entry) => entry.type === "resolved")
-    .slice()
-    .sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
-
-  if (!resolvedEntries.length) {
-    state.refs.groups.innerHTML = `<p class="tagStudio__empty">none</p>`;
-    return;
+  const groupedEntries = new Map(GROUPS.map((group) => [group, []]));
+  for (const entry of state.entries) {
+    if (entry.type !== "resolved") continue;
+    if (!groupedEntries.has(entry.group)) continue;
+    groupedEntries.get(entry.group).push(entry);
+  }
+  for (const group of GROUPS) {
+    groupedEntries.get(group).sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
   }
 
-  state.refs.groups.innerHTML = `
-    <ul class="tagStudio__chipList tagStudio__chipList--stack">
-      ${resolvedEntries
-        .map((entry) => {
-          return `
-            <li class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}">
-              <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
-              <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
-            </li>
-          `;
-        })
-        .join("")}
-    </ul>
-  `;
+  const rowsHtml = GROUPS.map((group) => {
+    const entries = groupedEntries.get(group) || [];
+    const chipsHtml = entries.map((entry) => `
+      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}">
+        <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
+        <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
+      </span>
+    `).join("");
+    return `
+      <div class="tagStudioGroupRow">
+        <span class="tagStudioGroupRow__label">${escapeHtml(group)}:</span>
+        <div class="tagStudioGroupRow__chips">${chipsHtml}</div>
+      </div>
+    `;
+  }).join("");
+
+  state.refs.groups.innerHTML = `<div class="tagStudioGroups">${rowsHtml}</div>`;
 }
 
 function renderSaveState(state) {

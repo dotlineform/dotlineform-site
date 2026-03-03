@@ -48,7 +48,7 @@ Source of truth for groups and tag definitions is `tag_registry.json`:
   - `status` (`active`, `deprecated`, `candidate`)
   - `description`
 
-Editor behavior currently expects those four groups and uses `active` tags for input suggestions and group examples.
+Editor behavior currently expects those four groups and uses `active` tags for input suggestions.
 
 ## Resolution and Aliases
 
@@ -61,7 +61,7 @@ When a user enters text, resolution is:
 
 If multiple matches are found, the value is treated as ambiguous.
 If no match is found, it is unresolved and save is blocked.
-For alias arrays, one valid target resolves directly; multiple valid targets are treated as ambiguous.
+For alias arrays, one valid target resolves directly; multiple valid targets require selecting one canonical target from autocomplete.
 
 `tag_aliases.json` maps shorthand inputs to canonical `tag_id` values:
 
@@ -112,7 +112,7 @@ Current save gate:
 - Save disabled when `unresolvedCount > 0`
 - Message: `Resolve unknown tags before saving.`
 
-Current tags display only resolved tags (sorted alphabetically by label).
+Current tags display only resolved tags, grouped into fixed rows (`subject`, `domain`, `form`, `theme`) with labels sorted within each group.
 
 ### 2) Index metrics / RAG (`tag-studio-index.js`)
 
@@ -137,18 +137,25 @@ Tooltip includes tags/groups/missing/unknown/deprecated/completeness.
 
 ## Suggestions: Current Implementation
 
-Suggestions are generated from missing groups only:
+While typing in `Add Tag`, autocomplete shows two sections in one popup:
 
-1. Compute editor `groupCounts`
-2. For each missing group, take first 3 active tags from registry group list
-3. Build a pool of those tags
-4. While typing, show popup matches where `label` starts with typed prefix (normalized), max 12 shown
+1. `tags` section:
+   - matches active tags by `slug` prefix only
+   - rendered as group-colored pills
+2. `aliases` section:
+   - matches alias keys by alias prefix
+   - each alias row shows:
+     - alias pill (neutral white/grey style)
+     - vertical list of group-colored canonical target tag pills for that alias
+   - alias rows are laid out horizontally with wrapping (like tag pills)
 
 Interaction:
 
-- Clicking a suggestion sets input text to the tag label
-- It does not auto-add; user confirms via `Add` or Enter
+- Clicking a tag pill adds that canonical tag immediately
+- Clicking an alias target pill adds that canonical tag immediately
+- Alias pills are display-only and are not clickable
 - `Esc` or clicking outside closes popup
+- Popup is constrained to a compact scrollable height sized for roughly 6 suggestion rows
 
 ## Save Flow
 
@@ -233,11 +240,11 @@ Governance and maintenance:
 - Editor always stores canonical IDs in save payload/snippet.
 - Unknown/unresolved user inputs are blocked from save.
 - Empty tag array is valid and means clear all tags for that series.
+- Editor layout shows four fixed group rows (`subject:`, `domain:`, `form:`, `theme:`); rows with no tags are left blank.
+- Add/search row places controls inline as: search input, `Add`, `Save Tags`, then save-mode text.
 
 ## Open Issues
 
-- Suggestions only match prefix on label and only from "missing group examples"; this is intentionally narrow and will likely be refined.
-- Ambiguous shorthand resolution is computed but not surfaced as a dedicated chooser UI yet.
 - Editor metrics are internal (save gate + logic) and no longer shown as a user-facing metrics panel.
 - Registry group list in JS is currently fixed to four groups; future policy changes would require coordinated code updates.
 
@@ -245,7 +252,7 @@ Governance and maintenance:
 
 - Rich ambiguity chooser for multiple matches before adding a tag.
 - Keyboard navigation for suggestion popup.
-- Configurable suggestion strategies (beyond missing-group examples).
+- Configurable suggestion strategies (beyond slug/alias prefix).
 - Stronger server-side validation against registry (optional phase, currently client-side only).
 - Surface persisted server log entries directly in Studio UI.
 
