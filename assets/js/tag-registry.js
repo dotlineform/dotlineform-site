@@ -174,6 +174,7 @@ function wireEvents(state) {
     state.selectedFile = files && files.length ? files[0] : null;
     if (state.selectedFile) {
       state.refs.selectedFile.textContent = `Selected: ${state.selectedFile.name}`;
+      clearImportResult(state);
     } else {
       state.refs.selectedFile.textContent = "";
     }
@@ -323,7 +324,7 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
     if (!raw || typeof raw !== "object") continue;
     const group = normalize(raw.group);
     const tagId = normalize(raw.tag_id);
-    const label = String(raw.label || "").trim() || labelFromTagId(tagId);
+    const label = normalize(raw.label) || labelFromTagId(tagId);
     const description = String(raw.description || "").trim();
     const status = normalize(raw.status || "active");
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
@@ -407,9 +408,10 @@ function renderList(state) {
           <div class="tagRegistry__tsCol">${escapeHtml(formatTimestamp(tag.updatedAtUtc))}</div>
           <div class="tagRegistry__tagCol">
             <div class="tagRegistry__tagActions">
-              <button type="button" class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagBtn" data-tag-id="${escapeHtml(tag.tagId)}" title="${escapeHtml(tag.tagId)}">
-                ${escapeHtml(tag.label)}
-              </button>
+              <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagChip" title="${escapeHtml(tag.tagId)}">
+                <button type="button" class="tagRegistry__tagInlineBtn" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="Edit ${escapeHtml(tag.tagId)}">
+                  ${escapeHtml(tag.label)}
+                </button>
               <button
                 type="button"
                 class="tagStudio__chipRemove tagRegistry__demoteBtn"
@@ -417,8 +419,9 @@ function renderList(state) {
                 title="Demote canonical tag to alias"
                 aria-label="Demote ${escapeHtml(tag.tagId)}"
               >
-                <-
+                ←
               </button>
+              </span>
             </div>
           </div>
           <div class="tagRegistry__descCol">
@@ -481,6 +484,7 @@ function findTagById(state, tagId) {
 function openEditModal(state, tagId) {
   const tag = findTagById(state, tagId);
   if (!tag) return;
+  clearImportResult(state);
   const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
   state.editPreviewSave = "";
@@ -652,7 +656,10 @@ async function handleTagEdit(state) {
     const ok = window.confirm(
       `Rename canonical tag ID?\n\n${tag.tagId} -> ${nextTagId}\n\nThis will update assignments and aliases.${impact}`
     );
-    if (!ok) return;
+    if (!ok) {
+      clearImportResult(state);
+      return;
+    }
   }
 
   try {
@@ -690,7 +697,10 @@ async function handleTagDelete(state) {
   const ok = window.confirm(
     `Delete tag ${tag.tagId}?\n\nThis also removes it from series assignments and aliases.${state.editPreviewDelete ? `\n\nImpact:\n${state.editPreviewDelete}` : ""}`
   );
-  if (!ok) return;
+  if (!ok) {
+    clearImportResult(state);
+    return;
+  }
 
   try {
     const response = await postJson(MUTATE_ENDPOINT, {
@@ -779,7 +789,10 @@ async function handleTagDemote(state, tagId) {
     const ok = window.confirm(
       `Demote "${tag.tagId}" to alias "${tag.tagId.split(":")[1]}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
     );
-    if (!ok) return;
+    if (!ok) {
+      clearImportResult(state);
+      return;
+    }
 
     try {
       const response = await postJson(DEMOTE_ENDPOINT, payload);
@@ -800,44 +813,33 @@ async function handleTagDemote(state, tagId) {
 }
 
 function buildManualPatchForDemote(tagId, aliasTargets) {
-  const nowUtc = utcTimestamp();
   const parts = String(tagId || "").split(":", 2);
   const aliasKey = parts.length === 2 ? parts[1] : "";
-  const aliasValue = aliasTargets.length === 1 ? aliasTargets[0] : aliasTargets;
+  const aliasValue = {
+    description: "",
+    tags: aliasTargets.slice()
+  };
 
   const snippet = JSON.stringify(
     {
-      operation: "demote-tag",
-      updated_at_utc: nowUtc,
-      steps: [
-        {
-          order: 1,
-          file: "assets/data/tag_registry.json",
-          action: "remove_tag",
-          tag_id: tagId
+      tag_registry: {
+        remove_tag_ids: [tagId]
+      },
+      tag_aliases: {
+        set_aliases: {
+          [aliasKey]: aliasValue
         },
-        {
-          order: 2,
-          file: "assets/data/tag_aliases.json",
-          action: "set_alias",
-          alias: aliasKey,
-          value: aliasValue
-        },
-        {
-          order: 3,
-          file: "assets/data/tag_assignments.json",
-          action: "replace_tag_refs",
-          from: tagId,
-          to: aliasTargets
-        },
-        {
-          order: 4,
-          file: "assets/data/tag_aliases.json",
-          action: "replace_alias_target_refs",
+        replace_target_refs: {
           from: tagId,
           to: aliasTargets
         }
-      ]
+      },
+      tag_assignments: {
+        replace_tag_refs: {
+          from: tagId,
+          to: aliasTargets
+        }
+      }
     },
     null,
     2
@@ -845,7 +847,7 @@ function buildManualPatchForDemote(tagId, aliasTargets) {
 
   return {
     kind: "warn",
-    message: `Patch mode: demotion steps prepared for "${tagId}".`,
+    message: `Patch mode: section snippets prepared for demoting "${tagId}".`,
     snippet
   };
 }
@@ -1012,17 +1014,14 @@ function buildManualPatchForNewTags(state, importRegistry) {
   }
 
   const snippet = JSON.stringify(
-    {
-      updated_at_utc: nowUtc,
-      tags_to_append: newTags
-    },
+    newTags,
     null,
     2
   );
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importTags.length} imported; ${newTags.length} new tags available to append.`,
+    message: `Patch mode (${state.importMode}): ${importTags.length} imported; ${newTags.length} new tag rows prepared for assets/data/tag_registry.json tags[].`,
     snippet
   };
 }
@@ -1041,6 +1040,10 @@ function setImportResult(state, kind, message) {
   state.refs.importResult.textContent = message || "";
   state.refs.importResult.className = "tagRegistry__result";
   if (kind) state.refs.importResult.classList.add(`is-${kind}`);
+}
+
+function clearImportResult(state) {
+  setImportResult(state, "", "");
 }
 
 function buildImportSummary(response) {

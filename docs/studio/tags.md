@@ -65,7 +65,11 @@ For alias arrays, one valid target resolves directly; multiple valid targets are
 - Version field: `tag_aliases_version`
 - Update timestamp: `updated_at_utc`
 - Map: `aliases`
-  - value may be either:
+  - canonical value format:
+    - object with:
+      - `description` (string)
+      - `tags` (array of canonical `tag_id`, max 4, max 1 tag per group)
+  - legacy values are still read for compatibility:
     - string (single canonical `tag_id`)
     - array of strings (multiple canonical `tag_id` values)
 
@@ -76,8 +80,14 @@ Example:
   "tag_aliases_version": "tag_aliases_v1",
   "updated_at_utc": "2026-03-01T00:00:00Z",
   "aliases": {
-    "floral": "subject:flower",
-    "signal": ["theme:signal", "domain:communication", "subject:wave"]
+    "floral": {
+      "description": "flower-related shorthand",
+      "tags": ["subject:flower"]
+    },
+    "signal": {
+      "description": "",
+      "tags": ["theme:signal", "domain:communication", "subject:wave"]
+    }
   }
 }
 ```
@@ -189,6 +199,10 @@ Governance:
 
 - Maintained manually in repo.
 - Keep aliases deterministic and unambiguous where possible.
+- Alias contract:
+  - alias key is lowercase slug-safe text
+  - `tags` must contain 1-4 canonical tag IDs
+  - max one tag per group (`subject/domain/form/theme`)
 - `updated_at_utc` should be bumped when aliases change.
 
 ### `assets/data/tag_assignments.json`
@@ -298,8 +312,16 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - alias row supports one or more canonical target tags
   - single-group aliases use that group color
   - multi-group or unresolved aliases use warning color
-  - alias pills include `->` promote
-  - alias pills include `×` delete (no alias edit flow)
+  - known group-tag pills include `←` demote
+  - alias pills include `→` promote
+  - alias pills include `×` delete
+  - clicking alias text opens edit modal:
+    - live alias-name collision check
+    - editable description
+    - tag picker with autocomplete from registry only (no free-text tag IDs)
+    - selected tags shown as removable pills
+    - save enabled only when alias name, description, or selected tags change
+    - alias tag constraints enforced: max 4 total, max 1 per group
 - includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
 - supports search by alias prefix
 - supports header sorting (timestamp/alias)
@@ -313,11 +335,19 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 - alias delete behavior:
   - local server mode uses `POST /delete-tag-alias`
   - patch mode provides copyable snippet with `aliases_to_remove`
+- alias edit behavior:
+  - local server mode uses `POST /mutate-tag-alias`
+  - server validates alias uniqueness and registry-backed selected tags
+  - patch mode provides ordered `set_alias`/`remove_alias_key` steps
 - alias promotion behavior:
   - user chooses target group at action time
   - local server mode uses `POST /promote-tag-alias-preview` then `POST /promote-tag-alias`
   - canonical target id is `<group>:<alias-slug>`; label auto-derived from slug
   - if canonical exists already, promotion removes alias key only
+  - patch mode provides ordered manual steps
+- tag demotion behavior from aliases page:
+  - trigger via `←` on known group-tag pills
+  - local server mode uses `POST /demote-tag-preview` then `POST /demote-tag`
   - patch mode provides ordered manual steps
 - import patch fallback mode provides a copyable snippet for **new aliases only**
 

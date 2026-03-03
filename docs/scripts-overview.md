@@ -160,6 +160,8 @@ Behavior:
   - `POST /import-tag-registry`
   - `POST /import-tag-aliases`
   - `POST /delete-tag-alias`
+  - `POST /mutate-tag-alias-preview`
+  - `POST /mutate-tag-alias`
   - `POST /promote-tag-alias-preview`
   - `POST /promote-tag-alias`
   - `POST /demote-tag-preview`
@@ -197,7 +199,13 @@ Behavior:
   - alias pill `×` delete:
     - local mode uses `POST /delete-tag-alias`
     - patch mode generates manual snippet with `aliases_to_remove`
-  - alias pill `->` promote:
+  - alias text click opens edit modal:
+    - live alias-name uniqueness validation
+    - editable description + selected tags
+    - selected tags must be canonical and satisfy: max 4 tags, max 1 per group
+    - local mode uses `POST /mutate-tag-alias`
+    - patch mode emits ordered `set_alias`/`remove_alias_key` steps
+  - alias pill `→` promote:
     - user chooses target group at action time
     - preview via `POST /promote-tag-alias-preview` is required before confirm
     - apply via `POST /promote-tag-alias`

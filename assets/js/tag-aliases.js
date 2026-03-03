@@ -1,10 +1,16 @@
 const GROUPS = ["subject", "domain", "form", "theme"];
 const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
+const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
+const MAX_ALIAS_TAGS = 4;
+const EDIT_TAG_MATCH_CAP = 12;
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-aliases";
 const DELETE_ENDPOINT = "http://127.0.0.1:8787/delete-tag-alias";
+const MUTATE_ALIAS_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-alias";
 const PROMOTE_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias";
 const PROMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias-preview";
+const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
+const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -29,6 +35,8 @@ async function initTagAliasesPage() {
     saveMode: "patch",
     selectedFile: null,
     patchSnippet: "",
+    registryOptions: [],
+    editState: null,
     refs: null
   };
 
@@ -102,6 +110,38 @@ function renderShell(state) {
         </div>
       </div>
     </div>
+
+    <div class="tagStudioModal" data-role="edit-modal" hidden>
+      <div class="tagStudioModal__backdrop" data-role="close-edit-modal"></div>
+      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
+        <h3 id="tagAliasesEditTitle">Edit Alias</h3>
+        <div class="tagRegistryEdit__fields">
+          <label class="tagRegistryEdit__field">
+            <span class="tagRegistryEdit__label">alias</span>
+            <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
+          </label>
+          <p class="tagAliasesEdit__warning" data-role="edit-alias-warning"></p>
+          <label class="tagRegistryEdit__field">
+            <span class="tagRegistryEdit__label">description</span>
+            <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
+          </label>
+          <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
+            <span class="tagRegistryEdit__label">find tags</span>
+            <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="search tags">
+            <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
+              <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
+            </div>
+          </label>
+        </div>
+        <div class="tagStudio__key tagAliasesEdit__key" data-role="edit-group-key"></div>
+        <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="edit-tag-list"></div>
+        <p class="tagRegistryEdit__status" data-role="edit-status"></p>
+        <div class="tagStudioModal__actions">
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>Save</button>
+          <button type="button" class="tagStudio__button" data-role="close-edit-modal">Close</button>
+        </div>
+      </div>
+    </div>
   `;
 
   state.refs = {
@@ -117,7 +157,18 @@ function renderShell(state) {
     list: state.mount.querySelector('[data-role="list"]'),
     patchModal: state.mount.querySelector('[data-role="patch-modal"]'),
     patchSnippet: state.mount.querySelector('[data-role="patch-snippet"]'),
-    copyPatch: state.mount.querySelector('[data-role="copy-patch"]')
+    copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
+    editModal: state.mount.querySelector('[data-role="edit-modal"]'),
+    editAliasName: state.mount.querySelector('[data-role="edit-alias-name"]'),
+    editAliasWarning: state.mount.querySelector('[data-role="edit-alias-warning"]'),
+    editAliasDescription: state.mount.querySelector('[data-role="edit-alias-description"]'),
+    editTagSearch: state.mount.querySelector('[data-role="edit-tag-search"]'),
+    editTagPopupWrap: state.mount.querySelector('[data-role="edit-tag-popup-wrap"]'),
+    editTagPopup: state.mount.querySelector('[data-role="edit-tag-popup"]'),
+    editGroupKey: state.mount.querySelector('[data-role="edit-group-key"]'),
+    editTagList: state.mount.querySelector('[data-role="edit-tag-list"]'),
+    editStatus: state.mount.querySelector('[data-role="edit-status"]'),
+    saveEditAlias: state.mount.querySelector('[data-role="save-edit-alias"]')
   };
 }
 
@@ -135,6 +186,7 @@ function wireEvents(state) {
     const files = state.refs.importFile.files;
     state.selectedFile = files && files.length ? files[0] : null;
     state.refs.selectedFile.textContent = state.selectedFile ? `Selected: ${state.selectedFile.name}` : "";
+    if (state.selectedFile) clearImportResult(state);
   });
 
   state.refs.importMode.addEventListener("change", () => {
@@ -146,6 +198,13 @@ function wireEvents(state) {
   });
 
   state.mount.addEventListener("click", (event) => {
+    const demoteButton = event.target.closest("button[data-demote-tag-id]");
+    if (demoteButton) {
+      const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
+      if (tagId) void handleTagDemoteFromAliases(state, tagId);
+      return;
+    }
+
     const promoteButton = event.target.closest("button[data-promote-alias]");
     if (promoteButton) {
       const alias = normalize(promoteButton.getAttribute("data-promote-alias"));
@@ -157,6 +216,13 @@ function wireEvents(state) {
     if (deleteButton) {
       const alias = normalize(deleteButton.getAttribute("data-delete-alias"));
       if (alias) void handleAliasDelete(state, alias);
+      return;
+    }
+
+    const editButton = event.target.closest("button[data-edit-alias]");
+    if (editButton) {
+      const alias = normalize(editButton.getAttribute("data-edit-alias"));
+      if (alias) openAliasEditModal(state, alias);
       return;
     }
 
@@ -198,6 +264,60 @@ function wireEvents(state) {
       setImportResult(state, "error", "Copy failed. Select and copy the snippet manually.");
     }
   });
+
+  state.refs.editModal.addEventListener("click", (event) => {
+    if (event.target.closest('[data-role="close-edit-modal"]')) {
+      closeAliasEditModal(state);
+      return;
+    }
+    if (state.refs.editTagPopupWrap.hidden) return;
+    if (!event.target.closest('[data-role="edit-tag-popup-wrap"]') && !event.target.closest('[data-role="edit-tag-search"]')) {
+      hideEditTagPopup(state);
+    }
+  });
+
+  state.refs.editAliasName.addEventListener("input", () => {
+    updateAliasEditUi(state);
+  });
+
+  state.refs.editAliasDescription.addEventListener("input", () => {
+    updateAliasEditUi(state);
+  });
+
+  state.refs.editTagSearch.addEventListener("input", () => {
+    renderEditTagPopup(state);
+  });
+
+  state.refs.editTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideEditTagPopup(state);
+      state.refs.editTagSearch.blur();
+    }
+  });
+
+  state.refs.editTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-tag-id]");
+    if (!button) return;
+    const tagId = normalize(button.getAttribute("data-popup-tag-id"));
+    if (!tagId) return;
+    addEditTag(state, tagId);
+    state.refs.editTagSearch.value = "";
+    hideEditTagPopup(state);
+    updateAliasEditUi(state);
+  });
+
+  state.refs.editTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-edit-tag]");
+    if (!button || !state.editState) return;
+    const tagId = normalize(button.getAttribute("data-remove-edit-tag"));
+    if (!tagId) return;
+    state.editState.tags = state.editState.tags.filter((item) => item !== tagId);
+    updateAliasEditUi(state);
+  });
+
+  state.refs.saveEditAlias.addEventListener("click", () => {
+    void saveAliasEdit(state);
+  });
 }
 
 function syncImportModeFromControl(state) {
@@ -217,6 +337,7 @@ async function loadData(state) {
     fetchJson("/assets/data/tag_aliases.json")
   ]);
   state.registryById = buildRegistryLookup(registryData);
+  state.registryOptions = buildRegistryOptions(state.registryById);
   state.aliasesUpdatedAt = normalizeTimestamp(aliasesData && aliasesData.updated_at_utc);
   state.aliases = normalizeAliases(aliasesData, state.aliasesUpdatedAt, state.registryById);
 }
@@ -228,7 +349,7 @@ function buildRegistryLookup(data) {
     if (!raw || typeof raw !== "object") continue;
     const tagId = normalize(raw.tag_id);
     const group = normalize(raw.group);
-    const label = String(raw.label || "").trim();
+    const label = normalize(raw.label);
     if (!tagId || !GROUPS.includes(group) || !label) continue;
     map.set(tagId, { group, label });
   }
@@ -266,6 +387,7 @@ function normalizeAliases(data, fallbackUpdatedAt, registryById) {
     entries.push({
       alias,
       value: normalizedValue.value,
+      description: normalizedValue.description,
       targets,
       resolvedTargets,
       groups,
@@ -278,32 +400,81 @@ function normalizeAliases(data, fallbackUpdatedAt, registryById) {
 }
 
 function normalizeAliasValue(rawValue) {
+  if (rawValue && typeof rawValue === "object" && !Array.isArray(rawValue)) {
+    const description = String(rawValue.description || "").trim();
+    const tags = normalizeAliasTagsArray(rawValue.tags);
+    return {
+      description,
+      value: { description, tags },
+      targets: tags.slice()
+    };
+  }
+
   if (typeof rawValue === "string") {
     const value = normalize(rawValue);
     if (!TAG_ID_RE.test(value)) {
       throw new Error("Invalid alias tag_id value.");
     }
-    return { value, targets: [value] };
+    return {
+      description: "",
+      value: { description: "", tags: [value] },
+      targets: [value]
+    };
   }
+  const out = normalizeAliasTagsArray(rawValue);
+  return {
+    description: "",
+    value: { description: "", tags: out },
+    targets: out.slice()
+  };
+}
+
+function normalizeAliasTagsArray(rawValue) {
   if (!Array.isArray(rawValue)) {
-    throw new Error("Alias value must be string or array.");
+    throw new Error("Alias tags must be an array.");
+  }
+  if (!rawValue.length) {
+    throw new Error("Alias tags must include at least one tag_id.");
+  }
+  if (rawValue.length > MAX_ALIAS_TAGS) {
+    throw new Error(`Alias tags may include at most ${MAX_ALIAS_TAGS} tags.`);
   }
 
   const out = [];
   const seen = new Set();
+  const seenGroups = new Set();
   for (const raw of rawValue) {
     const value = normalize(raw);
     if (!value || !TAG_ID_RE.test(value)) {
       throw new Error("Invalid alias tag_id array value.");
     }
     if (seen.has(value)) continue;
+    const group = value.split(":", 1)[0];
+    if (seenGroups.has(group)) {
+      throw new Error(`Alias tags may include only one tag per group: ${group}`);
+    }
     seen.add(value);
+    seenGroups.add(group);
     out.push(value);
   }
   if (!out.length) {
-    throw new Error("Alias array value must include at least one tag_id.");
+    throw new Error("Alias tags must include at least one tag_id.");
   }
-  return { value: out, targets: out.slice() };
+  return out;
+}
+
+function buildRegistryOptions(registryById) {
+  const out = [];
+  for (const [tagId, info] of registryById.entries()) {
+    if (!info || !GROUPS.includes(info.group)) continue;
+    out.push({
+      tagId,
+      group: info.group,
+      label: normalize(info.label) || tagId.split(":")[1] || tagId
+    });
+  }
+  out.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
+  return out;
 }
 
 function renderControls(state) {
@@ -372,7 +543,15 @@ function renderList(state) {
           <div class="tagAliases__tsCol">${escapeHtml(formatTimestamp(entry.updatedAtUtc))}</div>
           <div class="tagAliases__aliasCol">
             <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">
-              <span>${escapeHtml(entry.alias)}</span>
+              <button
+                type="button"
+                class="tagAliases__aliasBtn"
+                data-edit-alias="${escapeHtml(entry.alias)}"
+                title="Edit alias ${escapeHtml(entry.alias)}"
+                aria-label="Edit alias ${escapeHtml(entry.alias)}"
+              >
+                ${escapeHtml(entry.alias)}
+              </button>
               <button
                 type="button"
                 class="tagStudio__chipRemove"
@@ -380,7 +559,7 @@ function renderList(state) {
                 aria-label="Promote alias ${escapeHtml(entry.alias)}"
                 title="Promote alias to canonical tag"
               >
-                ->
+                →
               </button>
               <button
                 type="button"
@@ -398,6 +577,17 @@ function renderList(state) {
               ${sortedTargets.map((target) => `
                 <span class="tagStudio__chip ${escapeHtml(target.known ? `tagStudio__chip--${target.group}` : "tagStudio__chip--warning")}" title="${escapeHtml(target.tagId)}">
                   ${escapeHtml(String(target.label || "").toLowerCase())}
+                  ${target.known ? `
+                    <button
+                      type="button"
+                      class="tagStudio__chipRemove"
+                      data-demote-tag-id="${escapeHtml(target.tagId)}"
+                      title="Demote canonical tag to alias"
+                      aria-label="Demote ${escapeHtml(target.tagId)}"
+                    >
+                      ←
+                    </button>
+                  ` : ""}
                 </span>
               `).join("")}
             </div>
@@ -522,7 +712,10 @@ async function handleAliasDelete(state, alias) {
   if (!aliasKey) return;
 
   const ok = window.confirm(`Delete alias "${aliasKey}"?`);
-  if (!ok) return;
+  if (!ok) {
+    clearImportResult(state);
+    return;
+  }
 
   if (state.saveMode === "post") {
     try {
@@ -553,6 +746,280 @@ function findAliasEntry(state, aliasKey) {
   return state.aliases.find((entry) => normalize(entry.alias) === normalized) || null;
 }
 
+function openAliasEditModal(state, aliasKey) {
+  clearImportResult(state);
+  const entry = findAliasEntry(state, aliasKey);
+  if (!entry) {
+    setImportResult(state, "error", `Alias not found: ${aliasKey}`);
+    return;
+  }
+
+  state.editState = {
+    originalAlias: entry.alias,
+    originalDescription: String(entry.description || "").trim(),
+    originalTags: Array.isArray(entry.targets) ? entry.targets.slice() : [],
+    tags: Array.isArray(entry.targets) ? entry.targets.slice() : []
+  };
+
+  state.refs.editAliasName.value = entry.alias;
+  state.refs.editAliasDescription.value = String(entry.description || "").trim();
+  state.refs.editTagSearch.value = "";
+  hideEditTagPopup(state);
+  renderEditGroupKey(state);
+  updateAliasEditUi(state);
+  state.refs.editModal.hidden = false;
+}
+
+function closeAliasEditModal(state) {
+  state.editState = null;
+  state.refs.editModal.hidden = true;
+  state.refs.editAliasName.value = "";
+  state.refs.editAliasDescription.value = "";
+  state.refs.editTagSearch.value = "";
+  state.refs.editAliasWarning.textContent = "";
+  state.refs.editStatus.textContent = "";
+  state.refs.saveEditAlias.disabled = true;
+  state.refs.editTagList.innerHTML = "";
+  hideEditTagPopup(state);
+}
+
+function renderEditGroupKey(state) {
+  if (!state.editState) {
+    state.refs.editGroupKey.innerHTML = "";
+    return;
+  }
+  const selected = new Set((state.editState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
+  state.refs.editGroupKey.innerHTML = GROUPS.map((group) => {
+    const activeClass = selected.has(group) ? " is-active" : "";
+    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}">${escapeHtml(group)}</span>`;
+  }).join("");
+}
+
+function renderEditTagList(state) {
+  if (!state.editState) {
+    state.refs.editTagList.innerHTML = "";
+    return;
+  }
+  const rows = state.editState.tags.map((tagId) => {
+    const info = state.registryById.get(tagId);
+    const group = info && GROUPS.includes(info.group) ? info.group : "warning";
+    const label = info ? info.label : tagId;
+    return `
+      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
+        ${escapeHtml(label)}
+        <button
+          type="button"
+          class="tagStudio__chipRemove"
+          data-remove-edit-tag="${escapeHtml(tagId)}"
+          aria-label="Remove ${escapeHtml(tagId)}"
+        >
+          x
+        </button>
+      </span>
+    `;
+  }).join("");
+
+  state.refs.editTagList.innerHTML = rows || '<span class="tagStudio__empty">none</span>';
+}
+
+function getAliasEditValidation(state) {
+  const edit = state.editState;
+  if (!edit) return { valid: false, changed: false, alias: "", tags: [], description: "", warning: "" };
+
+  const alias = normalize(state.refs.editAliasName.value);
+  const description = String(state.refs.editAliasDescription.value || "").trim();
+  const tags = Array.isArray(edit.tags) ? edit.tags.slice() : [];
+
+  let warning = "";
+  if (!alias) {
+    warning = "Alias is required.";
+  } else if (!ALIAS_RE.test(alias)) {
+    warning = "Alias must be lowercase letters, numbers, or hyphens.";
+  } else {
+    const conflict = state.aliases.some((entry) => entry.alias !== edit.originalAlias && entry.alias === alias);
+    if (conflict) warning = "Alias already exists.";
+  }
+
+  let tagsWarning = "";
+  if (!tags.length) {
+    tagsWarning = "Select at least one tag.";
+  } else if (tags.length > MAX_ALIAS_TAGS) {
+    tagsWarning = `Select up to ${MAX_ALIAS_TAGS} tags.`;
+  } else {
+    const seenGroups = new Set();
+    for (const tagId of tags) {
+      if (!state.registryById.has(tagId)) {
+        tagsWarning = `Unknown tag selected: ${tagId}`;
+        break;
+      }
+      const group = tagId.split(":", 1)[0];
+      if (seenGroups.has(group)) {
+        tagsWarning = `Only one tag per group is allowed (${group}).`;
+        break;
+      }
+      seenGroups.add(group);
+    }
+  }
+
+  const valid = !warning && !tagsWarning;
+  const changed = (
+    alias !== edit.originalAlias ||
+    description !== edit.originalDescription ||
+    !sameStringArray(tags, edit.originalTags)
+  );
+
+  return {
+    valid,
+    changed,
+    alias,
+    tags,
+    description,
+    warning,
+    tagsWarning
+  };
+}
+
+function setAliasEditStatus(state, kind, message) {
+  state.refs.editStatus.textContent = message || "";
+  state.refs.editStatus.className = "tagRegistryEdit__status";
+  if (kind) state.refs.editStatus.classList.add(`is-${kind}`);
+}
+
+function updateAliasEditUi(state) {
+  if (!state.editState) return;
+  renderEditGroupKey(state);
+  renderEditTagList(state);
+  const validation = getAliasEditValidation(state);
+  state.refs.editAliasName.value = normalize(state.refs.editAliasName.value);
+  state.refs.editAliasWarning.textContent = validation.warning || "";
+  state.refs.saveEditAlias.disabled = !(validation.valid && validation.changed);
+  if (validation.tagsWarning) {
+    setAliasEditStatus(state, "error", validation.tagsWarning);
+  } else if (!validation.changed) {
+    setAliasEditStatus(state, "", "No changes.");
+  } else if (!validation.warning) {
+    setAliasEditStatus(state, "", "");
+  }
+}
+
+function getEditTagMatches(state, query) {
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery) return { matches: [], truncated: false };
+  const selected = new Set((state.editState && state.editState.tags) || []);
+  const allMatches = state.registryOptions
+    .filter((item) => {
+      if (selected.has(item.tagId)) return false;
+      const slug = item.tagId.split(":", 2)[1] || "";
+      return (
+        normalize(item.label).startsWith(normalizedQuery) ||
+        normalize(slug).startsWith(normalizedQuery)
+      );
+    });
+  return {
+    matches: allMatches.slice(0, EDIT_TAG_MATCH_CAP),
+    truncated: allMatches.length > EDIT_TAG_MATCH_CAP
+  };
+}
+
+function renderEditTagPopup(state) {
+  if (!state.editState) return;
+  const query = state.refs.editTagSearch.value;
+  const result = getEditTagMatches(state, query);
+  const matches = result.matches;
+  if (!matches.length) {
+    hideEditTagPopup(state);
+    return;
+  }
+  const chips = matches.map((item) => `
+    <button
+      type="button"
+      class="tagStudio__popupPill tagStudio__chip--${escapeHtml(item.group)}"
+      data-popup-tag-id="${escapeHtml(item.tagId)}"
+      title="${escapeHtml(item.tagId)}"
+    >
+      ${escapeHtml(item.label)}
+    </button>
+  `);
+  if (result.truncated) {
+    chips.push('<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="More matches available">…</span>');
+  }
+  state.refs.editTagPopup.innerHTML = chips.join("");
+  state.refs.editTagPopupWrap.hidden = false;
+}
+
+function hideEditTagPopup(state) {
+  state.refs.editTagPopupWrap.hidden = true;
+  state.refs.editTagPopup.innerHTML = "";
+}
+
+function addEditTag(state, tagId) {
+  if (!state.editState) return;
+  const normalizedTagId = normalize(tagId);
+  if (!normalizedTagId || !state.registryById.has(normalizedTagId)) return;
+  if (state.editState.tags.includes(normalizedTagId)) return;
+  if (state.editState.tags.length >= MAX_ALIAS_TAGS) {
+    setAliasEditStatus(state, "error", `Select up to ${MAX_ALIAS_TAGS} tags.`);
+    return;
+  }
+
+  const nextGroup = normalizedTagId.split(":", 1)[0];
+  const groupConflict = state.editState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
+  if (groupConflict) {
+    setAliasEditStatus(state, "error", `Only one tag per group is allowed (${nextGroup}).`);
+    return;
+  }
+
+  state.editState.tags.push(normalizedTagId);
+}
+
+async function saveAliasEdit(state) {
+  if (!state.editState) return;
+  const validation = getAliasEditValidation(state);
+  if (!validation.valid || !validation.changed) return;
+
+  const payload = {
+    alias: state.editState.originalAlias,
+    new_alias: validation.alias,
+    description: validation.description,
+    tags: validation.tags,
+    client_time_utc: utcTimestamp()
+  };
+
+  if (state.saveMode === "post") {
+    try {
+      await postJson(MUTATE_ALIAS_ENDPOINT, payload);
+      await loadData(state);
+      renderControls(state);
+      renderList(state);
+      closeAliasEditModal(state);
+      return;
+    } catch (error) {
+      state.saveMode = "patch";
+      renderImportMode(state);
+      setAliasEditStatus(state, "error", `Server save failed; switched to patch mode. ${error.message || ""}`.trim());
+    }
+  }
+
+  const patchResult = buildManualPatchForAliasEdit(
+    state.editState.originalAlias,
+    validation.alias,
+    validation.description,
+    validation.tags
+  );
+  closeAliasEditModal(state);
+  openPatchModal(state, patchResult.snippet);
+}
+
+function sameStringArray(a, b) {
+  const left = Array.isArray(a) ? a.map((item) => normalize(item)).slice().sort() : [];
+  const right = Array.isArray(b) ? b.map((item) => normalize(item)).slice().sort() : [];
+  if (left.length !== right.length) return false;
+  for (let idx = 0; idx < left.length; idx += 1) {
+    if (left[idx] !== right[idx]) return false;
+  }
+  return true;
+}
+
 function promptPromotionGroup(entry) {
   const suggested = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
   const raw = window.prompt("Promote alias: choose group (subject/domain/form/theme)", suggested || "subject");
@@ -571,6 +1038,10 @@ async function handleAliasPromote(state, alias) {
   }
 
   const group = promptPromotionGroup(entry);
+  if (!group) {
+    clearImportResult(state);
+    return;
+  }
   if (!GROUPS.includes(group)) {
     setImportResult(state, "error", "Promotion group must be one of: subject, domain, form, theme.");
     return;
@@ -595,7 +1066,10 @@ async function handleAliasPromote(state, alias) {
     const ok = window.confirm(
       `Promote alias "${aliasKey}" to canonical tag "${group}:${aliasKey}"?\n\nImpact:\n${previewSummary}`
     );
-    if (!ok) return;
+    if (!ok) {
+      clearImportResult(state);
+      return;
+    }
 
     try {
       const response = await postJson(PROMOTE_ENDPOINT, payload);
@@ -615,10 +1089,112 @@ async function handleAliasPromote(state, alias) {
   openPatchModal(state, patchResult.snippet);
 }
 
+function parseTagIdCsv(input) {
+  const values = String(input || "")
+    .split(",")
+    .map((item) => normalize(item))
+    .filter((item) => Boolean(item));
+  const out = [];
+  const seen = new Set();
+  for (const value of values) {
+    if (!TAG_ID_RE.test(value)) {
+      throw new Error(`Invalid tag_id: ${value}`);
+    }
+    if (seen.has(value)) continue;
+    seen.add(value);
+    out.push(value);
+  }
+  if (!out.length) {
+    throw new Error("At least one canonical target tag_id is required.");
+  }
+  if (out.length > MAX_ALIAS_TAGS) {
+    throw new Error(`At most ${MAX_ALIAS_TAGS} target tags are allowed.`);
+  }
+  const seenGroups = new Set();
+  for (const value of out) {
+    const group = value.split(":", 1)[0];
+    if (seenGroups.has(group)) {
+      throw new Error(`Only one target tag per group is allowed (${group}).`);
+    }
+    seenGroups.add(group);
+  }
+  return out;
+}
+
+function promptDemotionTargets(tagId) {
+  const promptText = [
+    `Demote ${tagId} to alias.`,
+    "Enter canonical target tag_ids (comma-separated).",
+    "Example: form:line,theme:emergence"
+  ].join("\n");
+  return window.prompt(promptText, "");
+}
+
+async function handleTagDemoteFromAliases(state, tagId) {
+  const canonicalTagId = normalize(tagId);
+  if (!canonicalTagId) return;
+
+  const input = promptDemotionTargets(canonicalTagId);
+  if (input === null) return;
+
+  let aliasTargets = [];
+  try {
+    aliasTargets = parseTagIdCsv(input);
+  } catch (error) {
+    setImportResult(state, "error", String(error.message || "Invalid target tags."));
+    return;
+  }
+  if (aliasTargets.includes(canonicalTagId)) {
+    setImportResult(state, "error", "Target list must not include the demoted tag.");
+    return;
+  }
+
+  const payload = {
+    tag_id: canonicalTagId,
+    alias_targets: aliasTargets,
+    client_time_utc: utcTimestamp()
+  };
+
+  if (state.saveMode === "post") {
+    let preview = null;
+    try {
+      preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Demotion preview failed."));
+      return;
+    }
+
+    const previewSummary = String(preview.summary_text || "").trim() || `demote ${canonicalTagId}`;
+    const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
+    const ok = window.confirm(
+      `Demote "${canonicalTagId}" to alias "${aliasKey}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
+    );
+    if (!ok) {
+      clearImportResult(state);
+      return;
+    }
+
+    try {
+      const response = await postJson(DEMOTE_ENDPOINT, payload);
+      setImportResult(state, "success", String(response.summary_text || "Demoted."));
+      await loadData(state);
+      renderControls(state);
+      renderList(state);
+      return;
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Demotion failed."));
+      return;
+    }
+  }
+
+  const patchResult = buildManualPatchForDemote(canonicalTagId, aliasTargets);
+  setImportResult(state, patchResult.kind, patchResult.message);
+  openPatchModal(state, patchResult.snippet);
+}
+
 function buildManualPatchForNewAliases(state, importAliases) {
   const importRows = normalizeImportAliasRows(importAliases.aliases || {});
   const existing = new Set(state.aliases.map((entry) => entry.alias));
-  const nowUtc = utcTimestamp();
   const aliasesToAdd = {};
   let newCount = 0;
 
@@ -637,17 +1213,14 @@ function buildManualPatchForNewAliases(state, importAliases) {
   }
 
   const snippet = JSON.stringify(
-    {
-      updated_at_utc: nowUtc,
-      aliases_to_add: aliasesToAdd
-    },
+    aliasesToAdd,
     null,
     2
   );
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importRows.length} imported; ${newCount} new aliases available to append.`,
+    message: `Patch mode (${state.importMode}): ${importRows.length} imported; ${newCount} alias rows prepared for assets/data/tag_aliases.json aliases object.`,
     snippet
   };
 }
@@ -668,63 +1241,43 @@ function buildImportSummary(response) {
 }
 
 function buildManualPatchForAliasPromote(state, aliasKey, group) {
-  const nowUtc = utcTimestamp();
   const newTagId = `${group}:${aliasKey}`;
   const canonicalExists = state.registryById.has(newTagId);
-  const steps = [];
+  const sectionSnippet = {
+    tag_registry: {},
+    tag_aliases: {
+      remove_alias_keys: [aliasKey]
+    }
+  };
 
   if (!canonicalExists) {
-    steps.push({
-      order: 1,
-      file: "assets/data/tag_registry.json",
-      action: "append_tag",
-      tag: {
-        tag_id: newTagId,
-        group,
-        label: aliasKey,
-        status: "active",
-        description: "",
-        updated_at_utc: nowUtc
-      }
-    });
-    steps.push({
-      order: 2,
-      file: "assets/data/tag_aliases.json",
-      action: "remove_alias_key",
-      alias: aliasKey
-    });
-  } else {
-    steps.push({
-      order: 1,
-      file: "assets/data/tag_aliases.json",
-      action: "remove_alias_key",
-      alias: aliasKey
-    });
+    sectionSnippet.tag_registry = {
+      tags_append: [
+        {
+          tag_id: newTagId,
+          group,
+          label: aliasKey,
+          status: "active",
+          description: "",
+          updated_at_utc: utcTimestamp()
+        }
+      ]
+    };
   }
 
-  const snippet = JSON.stringify(
-    {
-      operation: "promote-alias",
-      updated_at_utc: nowUtc,
-      steps
-    },
-    null,
-    2
-  );
+  const snippet = JSON.stringify(sectionSnippet, null, 2);
 
   return {
     kind: "warn",
-    message: `Patch mode: promotion steps prepared for alias "${aliasKey}".`,
+    message: `Patch mode: section snippets prepared for promoting "${aliasKey}".`,
     snippet
   };
 }
 
 function buildManualPatchForAliasDelete(aliasKey) {
-  const nowUtc = utcTimestamp();
   const snippet = JSON.stringify(
     {
-      updated_at_utc: nowUtc,
-      aliases_to_remove: [aliasKey]
+      remove_alias_keys: [aliasKey]
     },
     null,
     2
@@ -732,7 +1285,68 @@ function buildManualPatchForAliasDelete(aliasKey) {
 
   return {
     kind: "warn",
-    message: `Patch mode: alias "${aliasKey}" marked for removal.`,
+    message: `Patch mode: remove this alias key from assets/data/tag_aliases.json aliases object.`,
+    snippet
+  };
+}
+
+function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description, tags) {
+  const normalizedOld = normalize(aliasKey);
+  const normalizedNew = normalize(newAliasKey);
+  const fragment = {
+    [normalizedNew]: {
+      description: String(description || "").trim(),
+      tags: Array.isArray(tags) ? tags.slice() : []
+    }
+  };
+  const snippet = JSON.stringify(fragment, null, 2);
+  const renameNote = normalizedOld !== normalizedNew
+    ? ` Also remove old alias key "${normalizedOld}" from assets/data/tag_aliases.json.`
+    : "";
+
+  return {
+    kind: "warn",
+    message: `Patch mode: alias fragment prepared for "${normalizedOld}". Paste inside aliases object.${renameNote}`,
+    snippet
+  };
+}
+
+function buildManualPatchForDemote(tagId, aliasTargets) {
+  const parts = String(tagId || "").split(":", 2);
+  const aliasKey = parts.length === 2 ? parts[1] : "";
+  const aliasValue = {
+    description: "",
+    tags: aliasTargets.slice()
+  };
+
+  const snippet = JSON.stringify(
+    {
+      tag_registry: {
+        remove_tag_ids: [tagId]
+      },
+      tag_aliases: {
+        set_aliases: {
+          [aliasKey]: aliasValue
+        },
+        replace_target_refs: {
+          from: tagId,
+          to: aliasTargets
+        }
+      },
+      tag_assignments: {
+        replace_tag_refs: {
+          from: tagId,
+          to: aliasTargets
+        }
+      }
+    },
+    null,
+    2
+  );
+
+  return {
+    kind: "warn",
+    message: `Patch mode: section snippets prepared for demoting "${tagId}".`,
     snippet
   };
 }
@@ -822,6 +1436,10 @@ function setImportResult(state, kind, message) {
   state.refs.importResult.textContent = message || "";
   state.refs.importResult.className = "tagRegistry__result";
   if (kind) state.refs.importResult.classList.add(`is-${kind}`);
+}
+
+function clearImportResult(state) {
+  setImportResult(state, "", "");
 }
 
 async function fetchJson(url) {

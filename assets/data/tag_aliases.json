@@ -1,62 +1,498 @@
 {
   "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-03-02T19:56:14Z",
+  "updated_at_utc": "2026-03-03T12:51:44Z",
   "aliases": {
-    "floral": "subject:flower",
-    "branches": "subject:branch",
-    "curves": "form:curvilinear",
-    "radial-form": "form:radial",
-    "signal-noise": "domain:signal",
-    "natural": "domain:nature",
-    "organic": "domain:nature",
-    "outdoors": "domain:nature",
-    "wild": "domain:nature",
-    "wildness": "domain:nature",
-    "environment": "domain:ecology",
-    "ecological": "domain:ecology",
-    "land": "domain:landscape",
-    "weathered": "theme:decay",
-    "bloom": "subject:flower",
-    "blooms": "subject:flower",
-    "petal": "subject:flower",
-    "petals": "subject:flower",
-    "leafy": "subject:leaf",
-    "leaves": "subject:leaf",
-    "trees": "subject:tree",
-    "roots": "subject:root",
-    "seedling": "subject:seed",
-    "lines": "subject:line",
-    "linework": "subject:line",
-    "strokes": "subject:stroke",
-    "markmaking": "subject:mark",
-    "marks": "subject:mark",
-    "gestural": "theme:gesture",
-    "layer": "form:layered",
-    "layers": "form:layered",
-    "overlayed": "form:overlay",
-    "overlaid": "form:overlay",
-    "tangle": "form:tangled",
-    "knotty": "form:knotted",
-    "knots": "subject:knot",
-    "spirals": "subject:spiral",
-    "loops": "subject:loop",
-    "enclosure": "theme:containment",
-    "contained": "theme:containment",
-    "closed": "form:enclosed",
-    "messenger": "theme:communication",
-    "message": "theme:communication",
-    "messages": "theme:communication",
-    "symbolic": "theme:symbol",
-    "symbols": "subject:symbol",
-    "remembering": "domain:memory",
-    "recall": "domain:memory",
-    "traces": "subject:trace",
-    "temporal": "domain:time",
-    "photo": "domain:photography",
-    "photograph": "domain:photography",
-    "minimalism": "form:minimal",
-    "maximalism": "form:maximal",
-    "blackandwhite": "form:monochrome",
-    "b-w": "form:monochrome"
+    "floral": {
+      "description": "",
+      "tags": [
+        "subject:flower"
+      ]
+    },
+    "branches": {
+      "description": "",
+      "tags": [
+        "subject:branch"
+      ]
+    },
+    "curves": {
+      "description": "",
+      "tags": [
+        "form:curvilinear"
+      ]
+    },
+    "radial-form": {
+      "description": "",
+      "tags": [
+        "form:radial"
+      ]
+    },
+    "signal-noise": {
+      "description": "",
+      "tags": [
+        "domain:signal"
+      ]
+    },
+    "natural": {
+      "description": "",
+      "tags": [
+        "domain:nature"
+      ]
+    },
+    "organic": {
+      "description": "",
+      "tags": [
+        "domain:nature"
+      ]
+    },
+    "outdoors": {
+      "description": "",
+      "tags": [
+        "domain:nature"
+      ]
+    },
+    "wild": {
+      "description": "",
+      "tags": [
+        "domain:nature"
+      ]
+    },
+    "wildness": {
+      "description": "",
+      "tags": [
+        "domain:nature"
+      ]
+    },
+    "environment": {
+      "description": "",
+      "tags": [
+        "domain:ecology"
+      ]
+    },
+    "ecological": {
+      "description": "",
+      "tags": [
+        "domain:ecology"
+      ]
+    },
+    "land": {
+      "description": "",
+      "tags": [
+        "domain:landscape"
+      ]
+    },
+    "weathered": {
+      "description": "",
+      "tags": [
+        "theme:decay"
+      ]
+    },
+    "bloom": {
+      "description": "",
+      "tags": [
+        "subject:flower"
+      ]
+    },
+    "blooms": {
+      "description": "",
+      "tags": [
+        "subject:flower"
+      ]
+    },
+    "petal": {
+      "description": "",
+      "tags": [
+        "subject:flower"
+      ]
+    },
+    "petals": {
+      "description": "",
+      "tags": [
+        "subject:flower"
+      ]
+    },
+    "leafy": {
+      "description": "",
+      "tags": [
+        "subject:leaf"
+      ]
+    },
+    "leaves": {
+      "description": "",
+      "tags": [
+        "subject:leaf"
+      ]
+    },
+    "trees": {
+      "description": "",
+      "tags": [
+        "subject:tree"
+      ]
+    },
+    "roots": {
+      "description": "",
+      "tags": [
+        "subject:root"
+      ]
+    },
+    "seedling": {
+      "description": "",
+      "tags": [
+        "subject:seed"
+      ]
+    },
+    "lines": {
+      "description": "",
+      "tags": [
+        "subject:line"
+      ]
+    },
+    "linework": {
+      "description": "",
+      "tags": [
+        "subject:line"
+      ]
+    },
+    "strokes": {
+      "description": "",
+      "tags": [
+        "subject:stroke"
+      ]
+    },
+    "markmaking": {
+      "description": "",
+      "tags": [
+        "subject:mark"
+      ]
+    },
+    "marks": {
+      "description": "",
+      "tags": [
+        "subject:mark"
+      ]
+    },
+    "gestural": {
+      "description": "",
+      "tags": [
+        "theme:gesture"
+      ]
+    },
+    "layer": {
+      "description": "",
+      "tags": [
+        "form:layered"
+      ]
+    },
+    "layers": {
+      "description": "",
+      "tags": [
+        "form:layered"
+      ]
+    },
+    "overlayed": {
+      "description": "",
+      "tags": [
+        "form:overlay"
+      ]
+    },
+    "overlaid": {
+      "description": "",
+      "tags": [
+        "form:overlay"
+      ]
+    },
+    "tangle": {
+      "description": "",
+      "tags": [
+        "form:tangled"
+      ]
+    },
+    "knotty": {
+      "description": "",
+      "tags": [
+        "form:knotted"
+      ]
+    },
+    "knots": {
+      "description": "",
+      "tags": [
+        "subject:knot"
+      ]
+    },
+    "spirals": {
+      "description": "",
+      "tags": [
+        "subject:spiral"
+      ]
+    },
+    "loops": {
+      "description": "",
+      "tags": [
+        "subject:loop"
+      ]
+    },
+    "enclosure": {
+      "description": "",
+      "tags": [
+        "theme:containment"
+      ]
+    },
+    "contained": {
+      "description": "",
+      "tags": [
+        "theme:containment"
+      ]
+    },
+    "closed": {
+      "description": "",
+      "tags": [
+        "form:enclosed"
+      ]
+    },
+    "messenger": {
+      "description": "",
+      "tags": [
+        "theme:communication"
+      ]
+    },
+    "message": {
+      "description": "",
+      "tags": [
+        "theme:communication"
+      ]
+    },
+    "messages": {
+      "description": "",
+      "tags": [
+        "theme:communication"
+      ]
+    },
+    "symbolic": {
+      "description": "",
+      "tags": [
+        "theme:symbol"
+      ]
+    },
+    "symbols": {
+      "description": "",
+      "tags": [
+        "subject:symbol"
+      ]
+    },
+    "remembering": {
+      "description": "",
+      "tags": [
+        "domain:memory"
+      ]
+    },
+    "recall": {
+      "description": "",
+      "tags": [
+        "domain:memory"
+      ]
+    },
+    "traces": {
+      "description": "",
+      "tags": [
+        "subject:trace"
+      ]
+    },
+    "temporal": {
+      "description": "",
+      "tags": [
+        "domain:time"
+      ]
+    },
+    "photo": {
+      "description": "",
+      "tags": [
+        "domain:photography"
+      ]
+    },
+    "photograph": {
+      "description": "",
+      "tags": [
+        "domain:photography"
+      ]
+    },
+    "minimalism": {
+      "description": "",
+      "tags": [
+        "form:minimal"
+      ]
+    },
+    "maximalism": {
+      "description": "",
+      "tags": [
+        "form:maximal"
+      ]
+    },
+    "blackandwhite": {
+      "description": "",
+      "tags": [
+        "form:monochrome"
+      ]
+    },
+    "b-w": {
+      "description": "",
+      "tags": [
+        "form:monochrome"
+      ]
+    },
+    "tangled": {
+      "description": "",
+      "tags": [
+        "form:tangled"
+      ]
+    },
+    "digital": {
+      "description": "",
+      "tags": [
+        "domain:technology"
+      ]
+    },
+    "calmness": {
+      "description": "",
+      "tags": [
+        "theme:calm"
+      ]
+    },
+    "anxious": {
+      "description": "",
+      "tags": [
+        "theme:anxiety"
+      ]
+    },
+    "anxiousness": {
+      "description": "",
+      "tags": [
+        "theme:anxiety"
+      ]
+    },
+    "worried": {
+      "description": "",
+      "tags": [
+        "theme:anxiety"
+      ]
+    },
+    "sad": {
+      "description": "",
+      "tags": [
+        "theme:sorrow"
+      ]
+    },
+    "sadness": {
+      "description": "",
+      "tags": [
+        "theme:sorrow"
+      ]
+    },
+    "melancholic": {
+      "description": "",
+      "tags": [
+        "theme:melancholy"
+      ]
+    },
+    "joyful": {
+      "description": "",
+      "tags": [
+        "theme:joy"
+      ]
+    },
+    "angry": {
+      "description": "",
+      "tags": [
+        "theme:anger"
+      ]
+    },
+    "fearful": {
+      "description": "",
+      "tags": [
+        "theme:fear"
+      ]
+    },
+    "scared": {
+      "description": "",
+      "tags": [
+        "theme:fear"
+      ]
+    },
+    "overwhelmed": {
+      "description": "",
+      "tags": [
+        "theme:overwhelm"
+      ]
+    },
+    "overwhelming": {
+      "description": "",
+      "tags": [
+        "theme:overwhelm"
+      ]
+    },
+    "clear": {
+      "description": "",
+      "tags": [
+        "theme:clarity"
+      ]
+    },
+    "confused": {
+      "description": "",
+      "tags": [
+        "theme:confusion"
+      ]
+    },
+    "confusing": {
+      "description": "",
+      "tags": [
+        "theme:confusion"
+      ]
+    },
+    "intimate": {
+      "description": "",
+      "tags": [
+        "theme:intimacy"
+      ]
+    },
+    "isolated": {
+      "description": "",
+      "tags": [
+        "theme:alienation"
+      ]
+    },
+    "lonely": {
+      "description": "",
+      "tags": [
+        "theme:alienation"
+      ]
+    },
+    "hopeful": {
+      "description": "",
+      "tags": [
+        "theme:hope"
+      ]
+    },
+    "grieving": {
+      "description": "",
+      "tags": [
+        "theme:grief"
+      ]
+    },
+    "meditative": {
+      "description": "",
+      "tags": [
+        "theme:contemplation"
+      ]
+    },
+    "contemplative": {
+      "description": "",
+      "tags": [
+        "theme:contemplation"
+      ]
+    },
+    "playful": {
+      "description": "",
+      "tags": [
+        "theme:play"
+      ]
+    }
   }
 }

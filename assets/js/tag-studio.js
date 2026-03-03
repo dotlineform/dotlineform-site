@@ -732,10 +732,14 @@ function normalize(value) {
 }
 
 function normalizeAliasTargets(value) {
-  if (Array.isArray(value)) {
+  const rawTargets = (value && typeof value === "object" && !Array.isArray(value))
+    ? value.tags
+    : value;
+
+  if (Array.isArray(rawTargets)) {
     const out = [];
     const seen = new Set();
-    for (const item of value) {
+    for (const item of rawTargets) {
       const normalized = normalize(item);
       if (!normalized || seen.has(normalized)) continue;
       seen.add(normalized);
@@ -744,7 +748,7 @@ function normalizeAliasTargets(value) {
     return out;
   }
 
-  const single = normalize(value);
+  const single = normalize(rawTargets);
   return single ? [single] : [];
 }
 
