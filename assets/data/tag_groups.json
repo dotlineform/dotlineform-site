@@ -1,0 +1,30 @@
+{
+  "tag_groups_version": "tag_groups_v1",
+  "updated_at_utc": "2026-03-03T16:29:52Z",
+  "groups": [
+    {
+      "group_id": "domain",
+      "label": "Domain",
+      "description": "The conceptual field or discourse the work sits within or references.",
+      "description_long": "Use Domain tags for broad territories of concern (e.g., nature, memory, language, systems, technology, physics). Domains are about framing and context: they indicate the field of reference in which the work is operating, even if no literal object is depicted. Domains help organise series-level intent and connect bodies of work that share a conceptual backdrop. Keep Domain tags relatively few and stable; prefer aliasing over creating near-synonyms."
+    },
+    {
+      "group_id": "form",
+      "label": "Form",
+      "description": "How the work is structured: its visible organisation, material behaviour, and compositional qualities.",
+      "description_long": "Use Form tags for formal/structural properties (e.g., dense, sparse, radial, layered, fragmented, high-contrast, curvilinear). Form tags describe what can be seen in the arrangement of marks, shapes, tones, or time-based structure (for audio/video). They are especially valuable for linking works by visual/structural kinship even when subject matter differs. Form tags should remain descriptive rather than psychological; if a term implies mood, consider whether it is better placed as Theme."
+    },
+    {
+      "group_id": "subject",
+      "label": "Subject",
+      "description": "What the work depicts or presents as an observable element.",
+      "description_long": "Use Subject tags for concrete things that appear in the work (e.g., flower, branch, grid, wave, letter). These are descriptive rather than interpretive: they name visible or presented elements, regardless of what they might ‘mean’. Subject tags are most useful for linking works by depicted content across media (e.g., photographs and drawings that share botanical motifs). Avoid using Subject for abstract ideas or moods; those belong in Theme or Domain."
+    },
+    {
+      "group_id": "theme",
+      "label": "Theme",
+      "description": "What the work suggests or explores as a motif: interpretive, experiential, or conceptual emphasis.",
+      "description_long": "Use Theme tags for motifs and experiential qualities (e.g., emergence, drift, containment, signal/noise, growth, stillness, anxiety). Themes are interpretive: they describe recurring ideas, tensions, and felt qualities that the work evokes or investigates, without claiming objective proof or authorial diagnosis. Theme tags are where psychological or affective language belongs, expressed as ‘experienced qualities’ rather than factual states. Use weights to indicate centrality (High = core motif; Medium = clearly present; Low = secondary nuance)."
+    }
+  ]
+}
