@@ -1,0 +1,418 @@
+{
+  "tag_registry_version": "tag_registry_v3",
+  "updated_at_utc": "2026-03-02T00:00:00Z",
+  "groups": [
+    "subject",
+    "domain",
+    "form",
+    "theme"
+  ],
+  "tags": [
+    {
+      "tag_id": "domain:alchemy-chemistry",
+      "group": "domain",
+      "label": "Alchemy / chemistry",
+      "status": "active",
+      "description": "Alchemical/chemical frame; transformation via substances."
+    },
+    {
+      "tag_id": "domain:ethics",
+      "group": "domain",
+      "label": "Ethics",
+      "status": "active",
+      "description": "Ethical frame: protection, care, responsibility."
+    },
+    {
+      "tag_id": "domain:medicine-disinfection",
+      "group": "domain",
+      "label": "Medicine / disinfection",
+      "status": "active",
+      "description": "Medical/clinical/disinfection frame (formaldehyde, sterilising)."
+    },
+    {
+      "tag_id": "domain:sexuality",
+      "group": "domain",
+      "label": "Sexuality",
+      "status": "active",
+      "description": "Sexuality/erotic frame, intimacy, pornography."
+    },
+    {
+      "tag_id": "domain:trauma",
+      "group": "domain",
+      "label": "Trauma",
+      "status": "active",
+      "description": "Trauma frame (psychological injury, aftermath)."
+    },
+    {
+      "tag_id": "domain:violence",
+      "group": "domain",
+      "label": "Violence",
+      "status": "active",
+      "description": "Violence/cruelty frame."
+    },
+    {
+      "tag_id": "domain:war",
+      "group": "domain",
+      "label": "War",
+      "status": "active",
+      "description": "War/bombing/collective violence frame."
+    },
+    {
+      "tag_id": "form:burning",
+      "group": "form",
+      "label": "Burning",
+      "status": "active",
+      "description": "Fire/burning/incineration as visible process."
+    },
+    {
+      "tag_id": "form:cell",
+      "group": "form",
+      "label": "Cell",
+      "status": "active",
+      "description": "Cell-like enclosure: concrete cell, sealed room, chamber; emphasis on 'cell' as the primary formal unit."
+    },
+    {
+      "tag_id": "form:containment",
+      "group": "form",
+      "label": "Containment",
+      "status": "active",
+      "description": "Containing/holding/isolating within boundaries."
+    },
+    {
+      "tag_id": "form:dissolution",
+      "group": "form",
+      "label": "Dissolution",
+      "status": "active",
+      "description": "Dissolving/bleeding out; forms breaking into fluid."
+    },
+    {
+      "tag_id": "form:fog",
+      "group": "form",
+      "label": "Fog",
+      "status": "active",
+      "description": "Atmospheric fog as a visible formal veil."
+    },
+    {
+      "tag_id": "form:fragmentation",
+      "group": "form",
+      "label": "Fragmentation",
+      "status": "active",
+      "description": "Broken pieces, dismemberment, discontinuity."
+    },
+    {
+      "tag_id": "form:inside-out",
+      "group": "form",
+      "label": "Inside-out",
+      "status": "active",
+      "description": "Inside/outside inversion; insides exposed."
+    },
+    {
+      "tag_id": "form:mist",
+      "group": "form",
+      "label": "Mist",
+      "status": "active",
+      "description": "Atmospheric mist as a visible formal veil."
+    },
+    {
+      "tag_id": "form:preservation",
+      "group": "form",
+      "label": "Preservation",
+      "status": "active",
+      "description": "Preserved/kept in jar, fridge, solution; arrested decay."
+    },
+    {
+      "tag_id": "form:stain",
+      "group": "form",
+      "label": "Stain",
+      "status": "active",
+      "description": "Stains/marks/traces on surfaces."
+    },
+    {
+      "tag_id": "form:still-life",
+      "group": "form",
+      "label": "Still life",
+      "status": "active",
+      "description": "Arranged object-scene; tableau."
+    },
+    {
+      "tag_id": "form:wrapping",
+      "group": "form",
+      "label": "Wrapping",
+      "status": "active",
+      "description": "Wrapped/bandaged/enveloped surfaces."
+    },
+    {
+      "tag_id": "subject:animal/bird",
+      "group": "subject",
+      "label": "Animal: bird",
+      "status": "active",
+      "description": "Bird (alive/dead) as subject."
+    },
+    {
+      "tag_id": "subject:animal/dog",
+      "group": "subject",
+      "label": "Animal: dog",
+      "status": "active",
+      "description": "Dog (alive/dead) as subject."
+    },
+    {
+      "tag_id": "subject:animal/mouse",
+      "group": "subject",
+      "label": "Animal: mouse",
+      "status": "active",
+      "description": "Mouse as subject."
+    },
+    {
+      "tag_id": "subject:bandage",
+      "group": "subject",
+      "label": "Bandage",
+      "status": "active",
+      "description": "Bandages/wraps as object/material."
+    },
+    {
+      "tag_id": "subject:bed",
+      "group": "subject",
+      "label": "Bed",
+      "status": "active",
+      "description": "Bed / sheets as scene object."
+    },
+    {
+      "tag_id": "subject:blood",
+      "group": "subject",
+      "label": "Blood",
+      "status": "active",
+      "description": "Blood as substance/signifier."
+    },
+    {
+      "tag_id": "subject:body",
+      "group": "subject",
+      "label": "Body",
+      "status": "active",
+      "description": "Human body as whole figure or invoked body."
+    },
+    {
+      "tag_id": "subject:bone",
+      "group": "subject",
+      "label": "Bone",
+      "status": "active",
+      "description": "Bones / skeleton / skull/rib/spine as bony structure."
+    },
+    {
+      "tag_id": "subject:doll",
+      "group": "subject",
+      "label": "Doll",
+      "status": "active",
+      "description": "Doll figure/object (often surrogate body or proxy)."
+    },
+    {
+      "tag_id": "subject:eye",
+      "group": "subject",
+      "label": "Eye",
+      "status": "active",
+      "description": "Eyes / gaze / eye-as-object."
+    },
+    {
+      "tag_id": "subject:fridge",
+      "group": "subject",
+      "label": "Fridge",
+      "status": "active",
+      "description": "Fridge as object/scene element (clinical preservation, clean white fridge)."
+    },
+    {
+      "tag_id": "subject:glass-container",
+      "group": "subject",
+      "label": "Glass container",
+      "status": "active",
+      "description": "Glass jar/vessel/container."
+    },
+    {
+      "tag_id": "subject:hand",
+      "group": "subject",
+      "label": "Hand",
+      "status": "active",
+      "description": "Hands / touch / grasp."
+    },
+    {
+      "tag_id": "subject:jar",
+      "group": "subject",
+      "label": "Jar",
+      "status": "active",
+      "description": "Jar as object (often a vessel used for preservation/containment)."
+    },
+    {
+      "tag_id": "subject:mannequin",
+      "group": "subject",
+      "label": "Mannequin",
+      "status": "active",
+      "description": "Mannequin / mannequin fragment / mannequin head."
+    },
+    {
+      "tag_id": "subject:organs",
+      "group": "subject",
+      "label": "Organs",
+      "status": "active",
+      "description": "Internal organs / viscera."
+    },
+    {
+      "tag_id": "subject:skin",
+      "group": "subject",
+      "label": "Skin",
+      "status": "active",
+      "description": "Skin / surface / epidermis."
+    },
+    {
+      "tag_id": "subject:vessel",
+      "group": "subject",
+      "label": "Vessel",
+      "status": "active",
+      "description": "Vessel/container as object (jar, vessel)."
+    },
+    {
+      "tag_id": "subject:wire-frame",
+      "group": "subject",
+      "label": "Wire frame",
+      "status": "active",
+      "description": "Wireframe body/structure."
+    },
+    {
+      "tag_id": "theme:containment",
+      "group": "theme",
+      "label": "Containment (psychic)",
+      "status": "active",
+      "description": "Psychic/existential containment; mind enclosed; trapped inside."
+    },
+    {
+      "tag_id": "theme:healing-repair",
+      "group": "theme",
+      "label": "Healing / repair",
+      "status": "active",
+      "description": "Healing, repair, reassembly; making-whole."
+    },
+    {
+      "tag_id": "theme:hope",
+      "group": "theme",
+      "label": "Hope",
+      "status": "active",
+      "description": "Hope/positive turn; guiding toward future work."
+    },
+    {
+      "tag_id": "theme:horror",
+      "group": "theme",
+      "label": "Horror",
+      "status": "active",
+      "description": "Horror/terror; unbearable images."
+    },
+    {
+      "tag_id": "theme:loneliness",
+      "group": "theme",
+      "label": "Loneliness",
+      "status": "active",
+      "description": "Isolation, aloneness, cold distance."
+    },
+    {
+      "tag_id": "theme:loss",
+      "group": "theme",
+      "label": "Loss",
+      "status": "active",
+      "description": "Loss/bereavement; disappearance/clearing away."
+    },
+    {
+      "tag_id": "theme:love",
+      "group": "theme",
+      "label": "Love",
+      "status": "active",
+      "description": "Love/attachment; care and devotion."
+    },
+    {
+      "tag_id": "theme:memory",
+      "group": "theme",
+      "label": "Memory",
+      "status": "active",
+      "description": "Memory as core concern; remembering/holding images."
+    },
+    {
+      "tag_id": "theme:memory/failed",
+      "group": "theme",
+      "label": "Memory: failed",
+      "status": "active",
+      "description": "Failed memory; broken recall; gaps."
+    },
+    {
+      "tag_id": "theme:memory/inseparable",
+      "group": "theme",
+      "label": "Memory: inseparable",
+      "status": "active",
+      "description": "Co-present memories (e.g., alive/dead) that cannot be separated."
+    },
+    {
+      "tag_id": "theme:memory/trace",
+      "group": "theme",
+      "label": "Memory: trace",
+      "status": "active",
+      "description": "Residual traces; stains/retina-images; lingering imprint."
+    },
+    {
+      "tag_id": "theme:nightmare",
+      "group": "theme",
+      "label": "Nightmare",
+      "status": "active",
+      "description": "Nightmare imagery; intrusive dream/horror loop."
+    },
+    {
+      "tag_id": "theme:objecthood",
+      "group": "theme",
+      "label": "Objecthood",
+      "status": "active",
+      "description": "Human-as-object; doll/mannequin; inanimate-yet-real."
+    },
+    {
+      "tag_id": "theme:purification",
+      "group": "theme",
+      "label": "Purification",
+      "status": "active",
+      "description": "Purification/sterilisation; cleansing air/body; burning as purification."
+    },
+    {
+      "tag_id": "theme:retina-image",
+      "group": "theme",
+      "label": "Retina image",
+      "status": "active",
+      "description": "Retinal afterimage / image stuck to the retina; persistent imprint."
+    },
+    {
+      "tag_id": "theme:separation",
+      "group": "theme",
+      "label": "Separation",
+      "status": "active",
+      "description": "Separation between bodies/selves; inability to connect."
+    },
+    {
+      "tag_id": "theme:tenderness",
+      "group": "theme",
+      "label": "Tenderness",
+      "status": "active",
+      "description": "Tenderness/gentleness; careful touch."
+    },
+    {
+      "tag_id": "theme:transformation",
+      "group": "theme",
+      "label": "Transformation",
+      "status": "active",
+      "description": "Transformation/transmutation; turning dead into living; change of state."
+    },
+    {
+      "tag_id": "theme:violation",
+      "group": "theme",
+      "label": "Violation",
+      "status": "active",
+      "description": "Violation/penetration/abuse; bodily boundary breach."
+    },
+    {
+      "tag_id": "theme:witnessing",
+      "group": "theme",
+      "label": "Witnessing",
+      "status": "active",
+      "description": "Witnessing/attestation; holding what is seen."
+    }
+  ]
+}

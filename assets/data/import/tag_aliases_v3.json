@@ -1,0 +1,163 @@
+{
+  "tag_aliases_version": "tag_aliases_v3",
+  "updated_at_utc": "2026-03-02T00:00:00Z",
+  "aliases": {
+    "plastic doll": "subject:doll",
+    "rag doll": "subject:doll",
+    "toy doll": "subject:doll",
+    "mannequin head": "subject:mannequin",
+    "mannequin fragment": "subject:mannequin",
+    "eyes": "subject:eye",
+    "white eyes": "subject:eye",
+    "blue eyes": "subject:eye",
+    "glass eyes": "subject:eye",
+    "fly eyes": "subject:eye",
+    "skin surface": "subject:skin",
+    "plastic skin": "subject:skin",
+    "pores": "subject:skin",
+    "holes": "subject:skin",
+    "skeleton": "subject:bone",
+    "skull": "subject:bone",
+    "rib cage": "subject:bone",
+    "spine": "subject:bone",
+    "internal organs": "subject:organs",
+    "viscera": "subject:organs",
+    "blood pours": "subject:blood",
+    "bleeding": "subject:blood",
+    "stain": "form:stain",
+    "jar": "subject:jar",
+    "glass jar": [
+      "subject:jar",
+      "subject:glass-container"
+    ],
+    "glass vessel": "subject:glass-container",
+    "vessel": "subject:vessel",
+    "container": "form:containment",
+    "sealed room": "form:cell",
+    "concrete cell": [
+      "form:cell",
+      "theme:containment"
+    ],
+    "cell": [
+      "form:cell",
+      "theme:containment"
+    ],
+    "airless": [
+      "form:cell",
+      "theme:containment"
+    ],
+    "empty shell": [
+      "theme:objecthood",
+      "theme:containment"
+    ],
+    "empty state": [
+      "theme:containment",
+      "theme:loneliness"
+    ],
+    "fridge": [
+      "subject:fridge",
+      "form:preservation"
+    ],
+    "solution": [
+      "form:preservation",
+      "domain:alchemy-chemistry"
+    ],
+    "formaldehyde": [
+      "domain:medicine-disinfection",
+      "domain:alchemy-chemistry"
+    ],
+    "chloroform": [
+      "domain:medicine-disinfection",
+      "domain:alchemy-chemistry"
+    ],
+    "mercury": "domain:alchemy-chemistry",
+    "disinfectant": "domain:medicine-disinfection",
+    "sterilise": "domain:medicine-disinfection",
+    "inside out": "form:inside-out",
+    "insides outside": "form:inside-out",
+    "shattered": "form:fragmentation",
+    "broken pieces": "form:fragmentation",
+    "dissolves": "form:dissolution",
+    "dissolving": "form:dissolution",
+    "burnt": "form:burning",
+    "on fire": "form:burning",
+    "bandaged": "form:wrapping",
+    "wrapped": "form:wrapping",
+    "mist": "form:mist",
+    "fog": "form:fog",
+    "failed memory": "theme:memory/failed",
+    "retina": [
+      "theme:retina-image",
+      "theme:memory/trace"
+    ],
+    "retina image": [
+      "theme:retina-image",
+      "theme:memory/trace"
+    ],
+    "trace": "theme:memory/trace",
+    "inseparable memories": "theme:memory/inseparable",
+    "never forget": "theme:memory",
+    "nightmare": [
+      "theme:nightmare",
+      "theme:memory/failed"
+    ],
+    "silent life": "theme:witnessing",
+    "cannot speak": [
+      "theme:objecthood",
+      "theme:witnessing"
+    ],
+    "records patterns": "theme:witnessing",
+    "not alive but real": "theme:objecthood",
+    "neither alive nor dead": "theme:objecthood",
+    "rape": [
+      "domain:sexuality",
+      "domain:violence",
+      "theme:violation"
+    ],
+    "pornography": [
+      "domain:sexuality",
+      "domain:trauma"
+    ],
+    "porn addiction": [
+      "domain:sexuality",
+      "domain:trauma"
+    ],
+    "brutality": "domain:violence",
+    "mutilation": "domain:violence",
+    "slaughter": "domain:violence",
+    "war": "domain:war",
+    "bombing": "domain:war",
+    "tender": "theme:tenderness",
+    "gentle": "theme:tenderness",
+    "care": "theme:love",
+    "warmth": "theme:love",
+    "loss": "theme:loss",
+    "grief": "theme:loss",
+    "alone": "theme:loneliness",
+    "separate": "theme:separation",
+    "peace": "theme:hope",
+    "positive turn": "theme:hope",
+    "healing": "theme:healing-repair",
+    "repair": "theme:healing-repair",
+    "reassembly": "theme:healing-repair",
+    "purify": "theme:purification",
+    "purification": "theme:purification",
+    "protect children": "domain:ethics",
+    "kindness": "domain:ethics",
+    "compassion": "domain:ethics",
+    "enclosure": "form:cell",
+    "form:enclosure": "form:cell",
+    "mist-fog": [
+      "form:mist",
+      "form:fog"
+    ],
+    "form:mist-fog": [
+      "form:mist",
+      "form:fog"
+    ],
+    "retina-image": [
+      "theme:retina-image",
+      "theme:memory/trace"
+    ]
+  }
+}

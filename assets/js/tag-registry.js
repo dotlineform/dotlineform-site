@@ -3,7 +3,10 @@ const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-registry";
 const MUTATE_ENDPOINT = "http://127.0.0.1:8787/mutate-tag";
 const MUTATE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-preview";
+const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
+const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
+const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -97,7 +100,7 @@ function renderShell(state) {
       <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryPatchTitle">
         <h3 id="tagRegistryPatchTitle">Registry Patch Preview</h3>
-        <p class="tagStudioModal__label">Manual patch snippet (new tags only)</p>
+        <p class="tagStudioModal__label">Manual patch snippet</p>
         <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">Copy</button>
@@ -201,6 +204,13 @@ function wireEvents(state) {
     }
 
     const tagButton = event.target.closest("button[data-tag-id]");
+    const demoteButton = event.target.closest("button[data-demote-tag-id]");
+    if (demoteButton) {
+      const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
+      if (tagId) void handleTagDemote(state, tagId);
+      return;
+    }
+
     if (tagButton) {
       const tagId = normalize(tagButton.getAttribute("data-tag-id"));
       if (tagId) openEditModal(state, tagId);
@@ -396,9 +406,20 @@ function renderList(state) {
         <li class="tagRegistry__row">
           <div class="tagRegistry__tsCol">${escapeHtml(formatTimestamp(tag.updatedAtUtc))}</div>
           <div class="tagRegistry__tagCol">
-            <button type="button" class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagBtn" data-tag-id="${escapeHtml(tag.tagId)}" title="${escapeHtml(tag.tagId)}">
-              ${escapeHtml(tag.label)}
-            </button>
+            <div class="tagRegistry__tagActions">
+              <button type="button" class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagBtn" data-tag-id="${escapeHtml(tag.tagId)}" title="${escapeHtml(tag.tagId)}">
+                ${escapeHtml(tag.label)}
+              </button>
+              <button
+                type="button"
+                class="tagStudio__chipRemove tagRegistry__demoteBtn"
+                data-demote-tag-id="${escapeHtml(tag.tagId)}"
+                title="Demote canonical tag to alias"
+                aria-label="Demote ${escapeHtml(tag.tagId)}"
+              >
+                <-
+              </button>
+            </div>
           </div>
           <div class="tagRegistry__descCol">
             ${escapeHtml(tag.description || "—")}
@@ -685,6 +706,148 @@ async function handleTagDelete(state) {
   } catch (error) {
     setEditStatus(state, "error", String(error.message || "Delete failed."));
   }
+}
+
+function parseTagIdCsv(input) {
+  const values = String(input || "")
+    .split(",")
+    .map((item) => normalize(item))
+    .filter((item) => Boolean(item));
+  const out = [];
+  const seen = new Set();
+  for (const value of values) {
+    if (!TAG_ID_RE.test(value)) {
+      throw new Error(`Invalid tag_id: ${value}`);
+    }
+    if (seen.has(value)) continue;
+    seen.add(value);
+    out.push(value);
+  }
+  if (!out.length) {
+    throw new Error("At least one canonical target tag_id is required.");
+  }
+  return out;
+}
+
+function promptDemotionTargets(tag) {
+  const promptText = [
+    `Demote ${tag.tagId} to alias.`,
+    "Enter canonical target tag_ids (comma-separated).",
+    "Example: form:line,theme:emergence"
+  ].join("\n");
+  return window.prompt(promptText, "");
+}
+
+async function handleTagDemote(state, tagId) {
+  const tag = findTagById(state, tagId);
+  if (!tag) {
+    setImportResult(state, "error", "Selected tag is no longer available.");
+    return;
+  }
+
+  const input = promptDemotionTargets(tag);
+  if (input === null) return;
+
+  let aliasTargets = [];
+  try {
+    aliasTargets = parseTagIdCsv(input);
+  } catch (error) {
+    setImportResult(state, "error", String(error.message || "Invalid target tags."));
+    return;
+  }
+  if (aliasTargets.includes(tag.tagId)) {
+    setImportResult(state, "error", "Target list must not include the demoted tag.");
+    return;
+  }
+
+  const payload = {
+    tag_id: tag.tagId,
+    alias_targets: aliasTargets,
+    client_time_utc: utcTimestamp()
+  };
+
+  if (state.saveMode === "post") {
+    let preview = null;
+    try {
+      preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Demotion preview failed."));
+      return;
+    }
+
+    const previewSummary = String(preview.summary_text || "").trim() || `demote ${tag.tagId}`;
+    const ok = window.confirm(
+      `Demote "${tag.tagId}" to alias "${tag.tagId.split(":")[1]}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
+    );
+    if (!ok) return;
+
+    try {
+      const response = await postJson(DEMOTE_ENDPOINT, payload);
+      setImportResult(state, "success", String(response.summary_text || "Demoted."));
+      await loadRegistry(state);
+      renderControls(state);
+      renderList(state);
+      return;
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Demotion failed."));
+      return;
+    }
+  }
+
+  const patchResult = buildManualPatchForDemote(tag.tagId, aliasTargets);
+  setImportResult(state, patchResult.kind, patchResult.message);
+  openPatchModal(state, patchResult.snippet);
+}
+
+function buildManualPatchForDemote(tagId, aliasTargets) {
+  const nowUtc = utcTimestamp();
+  const parts = String(tagId || "").split(":", 2);
+  const aliasKey = parts.length === 2 ? parts[1] : "";
+  const aliasValue = aliasTargets.length === 1 ? aliasTargets[0] : aliasTargets;
+
+  const snippet = JSON.stringify(
+    {
+      operation: "demote-tag",
+      updated_at_utc: nowUtc,
+      steps: [
+        {
+          order: 1,
+          file: "assets/data/tag_registry.json",
+          action: "remove_tag",
+          tag_id: tagId
+        },
+        {
+          order: 2,
+          file: "assets/data/tag_aliases.json",
+          action: "set_alias",
+          alias: aliasKey,
+          value: aliasValue
+        },
+        {
+          order: 3,
+          file: "assets/data/tag_assignments.json",
+          action: "replace_tag_refs",
+          from: tagId,
+          to: aliasTargets
+        },
+        {
+          order: 4,
+          file: "assets/data/tag_aliases.json",
+          action: "replace_alias_target_refs",
+          from: tagId,
+          to: aliasTargets
+        }
+      ]
+    },
+    null,
+    2
+  );
+
+  return {
+    kind: "warn",
+    message: `Patch mode: demotion steps prepared for "${tagId}".`,
+    snippet
+  };
 }
 
 async function handleImport(state) {

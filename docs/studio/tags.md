@@ -267,12 +267,17 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - edit canonical slug (group fixed)
   - `label` is auto-derived from slug
   - delete tag
+- tag row includes `<-` action to demote canonical tag into alias mapping
 - local-server mutation uses `POST /mutate-tag`
   - modal shows live impact previews via `POST /mutate-tag-preview` before save/delete confirm
   - slug edits update registry row and auto-refresh label
   - canonical rename cascades into `tag_assignments.json` and `tag_aliases.json`
   - delete removes tag from registry and removes references from assignments/aliases
   - aliases that become 1:1 self-maps (`alias == target slug`) are removed
+- local-server demotion uses:
+  - `POST /demote-tag-preview` (required before confirm)
+  - `POST /demote-tag` (apply)
+  - demotion removes canonical tag, creates alias `<slug> -> target tag_id(s)`, rewrites assignment refs and alias target refs
 
 Tag Registry import modes:
 
@@ -293,6 +298,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - alias row supports one or more canonical target tags
   - single-group aliases use that group color
   - multi-group or unresolved aliases use warning color
+  - alias pills include `->` promote
   - alias pills include `×` delete (no alias edit flow)
 - includes a group key above the list (`All tags` + group pills) to filter rows by mapped group
 - supports search by alias prefix
@@ -307,6 +313,12 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 - alias delete behavior:
   - local server mode uses `POST /delete-tag-alias`
   - patch mode provides copyable snippet with `aliases_to_remove`
+- alias promotion behavior:
+  - user chooses target group at action time
+  - local server mode uses `POST /promote-tag-alias-preview` then `POST /promote-tag-alias`
+  - canonical target id is `<group>:<alias-slug>`; label auto-derived from slug
+  - if canonical exists already, promotion removes alias key only
+  - patch mode provides ordered manual steps
 - import patch fallback mode provides a copyable snippet for **new aliases only**
 
 ## Series Tags Page

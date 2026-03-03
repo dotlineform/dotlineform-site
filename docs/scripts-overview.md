@@ -160,6 +160,10 @@ Behavior:
   - `POST /import-tag-registry`
   - `POST /import-tag-aliases`
   - `POST /delete-tag-alias`
+  - `POST /promote-tag-alias-preview`
+  - `POST /promote-tag-alias`
+  - `POST /demote-tag-preview`
+  - `POST /demote-tag`
   - `POST /mutate-tag-preview`
   - `POST /mutate-tag`
 - Tag Studio page probes `/health` and shows:
@@ -181,12 +185,25 @@ Behavior:
     - rename/delete cascades update `tag_assignments.json` and `tag_aliases.json`
     - aliases that become 1:1 self-maps (`alias == target slug`) are removed automatically
   - preview endpoint (`POST /mutate-tag-preview`) returns the same impact stats without writing files
+  - tag demotion behavior:
+    - trigger via tag pill `<-` action in registry list
+    - preview via `POST /demote-tag-preview` is required before confirm
+    - apply via `POST /demote-tag`
+    - demotion removes canonical tag from registry, creates alias (`<slug>` -> chosen canonical targets), and rewrites assignments/alias target refs
+    - patch fallback emits ordered manual steps only
 - Tag Aliases page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)
   - alias pill `×` delete:
     - local mode uses `POST /delete-tag-alias`
     - patch mode generates manual snippet with `aliases_to_remove`
+  - alias pill `->` promote:
+    - user chooses target group at action time
+    - preview via `POST /promote-tag-alias-preview` is required before confirm
+    - apply via `POST /promote-tag-alias`
+    - canonical tag id is `<group>:<alias-slug>`; label auto-derived from slug
+    - if canonical already exists, alias key is removed only
+    - patch fallback emits ordered manual steps only
   - Import modes supported by endpoint:
     - `add` (no overwrite)
     - `merge` (add + overwrite)

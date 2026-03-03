@@ -3,6 +3,8 @@ const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-aliases";
 const DELETE_ENDPOINT = "http://127.0.0.1:8787/delete-tag-alias";
+const PROMOTE_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias";
+const PROMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias-preview";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -92,7 +94,7 @@ function renderShell(state) {
       <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesPatchTitle">
         <h3 id="tagAliasesPatchTitle">Aliases Patch Preview</h3>
-        <p class="tagStudioModal__label">Manual patch snippet (new aliases only)</p>
+        <p class="tagStudioModal__label">Manual patch snippet</p>
         <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">Copy</button>
@@ -144,6 +146,13 @@ function wireEvents(state) {
   });
 
   state.mount.addEventListener("click", (event) => {
+    const promoteButton = event.target.closest("button[data-promote-alias]");
+    if (promoteButton) {
+      const alias = normalize(promoteButton.getAttribute("data-promote-alias"));
+      if (alias) void handleAliasPromote(state, alias);
+      return;
+    }
+
     const deleteButton = event.target.closest("button[data-delete-alias]");
     if (deleteButton) {
       const alias = normalize(deleteButton.getAttribute("data-delete-alias"));
@@ -367,6 +376,15 @@ function renderList(state) {
               <button
                 type="button"
                 class="tagStudio__chipRemove"
+                data-promote-alias="${escapeHtml(entry.alias)}"
+                aria-label="Promote alias ${escapeHtml(entry.alias)}"
+                title="Promote alias to canonical tag"
+              >
+                ->
+              </button>
+              <button
+                type="button"
+                class="tagStudio__chipRemove"
                 data-delete-alias="${escapeHtml(entry.alias)}"
                 aria-label="Delete alias ${escapeHtml(entry.alias)}"
                 title="Delete alias"
@@ -530,6 +548,73 @@ async function handleAliasDelete(state, alias) {
   openPatchModal(state, patchResult.snippet);
 }
 
+function findAliasEntry(state, aliasKey) {
+  const normalized = normalize(aliasKey);
+  return state.aliases.find((entry) => normalize(entry.alias) === normalized) || null;
+}
+
+function promptPromotionGroup(entry) {
+  const suggested = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
+  const raw = window.prompt("Promote alias: choose group (subject/domain/form/theme)", suggested || "subject");
+  if (raw === null) return "";
+  return normalize(raw);
+}
+
+async function handleAliasPromote(state, alias) {
+  const aliasKey = normalize(alias);
+  if (!aliasKey) return;
+
+  const entry = findAliasEntry(state, aliasKey);
+  if (!entry) {
+    setImportResult(state, "error", `Alias not found: ${aliasKey}`);
+    return;
+  }
+
+  const group = promptPromotionGroup(entry);
+  if (!GROUPS.includes(group)) {
+    setImportResult(state, "error", "Promotion group must be one of: subject, domain, form, theme.");
+    return;
+  }
+
+  const payload = {
+    alias: aliasKey,
+    group,
+    client_time_utc: utcTimestamp()
+  };
+
+  if (state.saveMode === "post") {
+    let preview = null;
+    try {
+      preview = await postJson(PROMOTE_PREVIEW_ENDPOINT, payload);
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Promotion preview failed."));
+      return;
+    }
+
+    const previewSummary = String(preview.summary_text || "").trim() || `alias ${aliasKey} -> ${group}:${aliasKey}`;
+    const ok = window.confirm(
+      `Promote alias "${aliasKey}" to canonical tag "${group}:${aliasKey}"?\n\nImpact:\n${previewSummary}`
+    );
+    if (!ok) return;
+
+    try {
+      const response = await postJson(PROMOTE_ENDPOINT, payload);
+      setImportResult(state, "success", String(response.summary_text || "Promoted."));
+      await loadData(state);
+      renderControls(state);
+      renderList(state);
+      return;
+    } catch (error) {
+      setImportResult(state, "error", String(error.message || "Promotion failed."));
+      return;
+    }
+  }
+
+  const patchResult = buildManualPatchForAliasPromote(state, aliasKey, group);
+  setImportResult(state, patchResult.kind, patchResult.message);
+  openPatchModal(state, patchResult.snippet);
+}
+
 function buildManualPatchForNewAliases(state, importAliases) {
   const importRows = normalizeImportAliasRows(importAliases.aliases || {});
   const existing = new Set(state.aliases.map((entry) => entry.alias));
@@ -580,6 +665,58 @@ function buildImportSummary(response) {
     `removed ${Number(response.removed || 0)}`,
     `final ${Number(response.final_total || 0)}`
   ].join("; ");
+}
+
+function buildManualPatchForAliasPromote(state, aliasKey, group) {
+  const nowUtc = utcTimestamp();
+  const newTagId = `${group}:${aliasKey}`;
+  const canonicalExists = state.registryById.has(newTagId);
+  const steps = [];
+
+  if (!canonicalExists) {
+    steps.push({
+      order: 1,
+      file: "assets/data/tag_registry.json",
+      action: "append_tag",
+      tag: {
+        tag_id: newTagId,
+        group,
+        label: aliasKey,
+        status: "active",
+        description: "",
+        updated_at_utc: nowUtc
+      }
+    });
+    steps.push({
+      order: 2,
+      file: "assets/data/tag_aliases.json",
+      action: "remove_alias_key",
+      alias: aliasKey
+    });
+  } else {
+    steps.push({
+      order: 1,
+      file: "assets/data/tag_aliases.json",
+      action: "remove_alias_key",
+      alias: aliasKey
+    });
+  }
+
+  const snippet = JSON.stringify(
+    {
+      operation: "promote-alias",
+      updated_at_utc: nowUtc,
+      steps
+    },
+    null,
+    2
+  );
+
+  return {
+    kind: "warn",
+    message: `Patch mode: promotion steps prepared for alias "${aliasKey}".`,
+    snippet
+  };
 }
 
 function buildManualPatchForAliasDelete(aliasKey) {

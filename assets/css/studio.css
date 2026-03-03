@@ -636,8 +636,23 @@
   min-width: 0;
 }
 
+.tagRegistry__tagActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  flex-wrap: wrap;
+}
+
 .tagRegistry__tagBtn {
   cursor: pointer;
+}
+
+.tagRegistry__demoteBtn {
+  border: 1px solid var(--line, var(--studio-line-chip));
+  border-radius: 999px;
+  padding: 0.16rem 0.38rem;
+  background: var(--surface, var(--studio-surface));
+  line-height: 1;
 }
 
 .tagRegistryEdit__meta {
