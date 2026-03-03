@@ -282,6 +282,14 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - `label` is auto-derived from slug
   - delete tag
 - tag row includes `<-` action to demote canonical tag into alias mapping
+  - opens a demotion modal (not free-text prompt)
+  - target tag picker uses the same autocomplete-style popup as alias edit:
+    - search matches tag label/slug prefix
+    - selecting adds removable target pills below the search field
+    - current tag being demoted is excluded from available targets
+  - demotion is blocked if alias key already exists (no overwrite allowed)
+  - selected targets are sorted by canonical `tag_id` before submit
+  - target constraints enforced in the modal: at least 1 target, max 4 targets, max 1 target per group
 - local-server mutation uses `POST /mutate-tag`
   - modal shows live impact previews via `POST /mutate-tag-preview` before save/delete confirm
   - slug edits update registry row and auto-refresh label

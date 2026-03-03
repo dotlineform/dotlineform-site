@@ -6,7 +6,8 @@ const MUTATE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-preview";
 const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
 const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
+const MAX_ALIAS_TAGS = 4;
+const DEMOTE_TAG_MATCH_CAP = 12;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -30,11 +31,14 @@ async function initTagRegistryPage() {
     selectedFile: null,
     patchSnippet: "",
     editTagId: "",
+    demoteState: null,
+    aliasKeys: new Set(),
     editPreviewSave: "",
     editPreviewDelete: "",
     editPreviewSaveSeq: 0,
     editPreviewDeleteSeq: 0,
     editPreviewTimer: null,
+    registryOptions: [],
     refs: null,
     registryUpdatedAt: ""
   };
@@ -48,7 +52,7 @@ async function initTagRegistryPage() {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    renderError(state, "Failed to load tag registry from /assets/data/tag_registry.json.");
+    renderError(state, "Failed to load tag data from /assets/data/tag_registry.json and /assets/data/tag_aliases.json.");
     return;
   }
 
@@ -131,6 +135,30 @@ function renderShell(state) {
         </div>
       </div>
     </div>
+
+    <div class="tagStudioModal" data-role="demote-modal" hidden>
+      <div class="tagStudioModal__backdrop" data-role="close-demote-modal"></div>
+      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDemoteTitle">
+        <h3 id="tagRegistryDemoteTitle">Demote Tag to Alias</h3>
+        <p class="tagRegistryEdit__meta" data-role="demote-tag-meta"></p>
+        <div class="tagRegistryEdit__fields">
+          <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
+            <span class="tagRegistryEdit__label">find target tags</span>
+            <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="search tags">
+            <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
+              <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
+            </div>
+          </label>
+        </div>
+        <div class="tagStudio__key tagAliasesEdit__key" data-role="demote-group-key"></div>
+        <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="demote-tag-list"></div>
+        <p class="tagRegistryEdit__status" data-role="demote-status"></p>
+        <div class="tagStudioModal__actions">
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-demote" disabled>Demote</button>
+          <button type="button" class="tagStudio__button" data-role="close-demote-modal">Close</button>
+        </div>
+      </div>
+    </div>
   `;
 
   state.refs = {
@@ -155,7 +183,16 @@ function renderShell(state) {
     editImpactDelete: state.mount.querySelector('[data-role="edit-impact-delete"]'),
     editStatus: state.mount.querySelector('[data-role="edit-status"]'),
     saveEdit: state.mount.querySelector('[data-role="save-edit"]'),
-    deleteTag: state.mount.querySelector('[data-role="delete-tag"]')
+    deleteTag: state.mount.querySelector('[data-role="delete-tag"]'),
+    demoteModal: state.mount.querySelector('[data-role="demote-modal"]'),
+    demoteTagMeta: state.mount.querySelector('[data-role="demote-tag-meta"]'),
+    demoteTagSearch: state.mount.querySelector('[data-role="demote-tag-search"]'),
+    demoteTagPopupWrap: state.mount.querySelector('[data-role="demote-tag-popup-wrap"]'),
+    demoteTagPopup: state.mount.querySelector('[data-role="demote-tag-popup"]'),
+    demoteGroupKey: state.mount.querySelector('[data-role="demote-group-key"]'),
+    demoteTagList: state.mount.querySelector('[data-role="demote-tag-list"]'),
+    demoteStatus: state.mount.querySelector('[data-role="demote-status"]'),
+    confirmDemote: state.mount.querySelector('[data-role="confirm-demote"]')
   };
 }
 
@@ -208,7 +245,7 @@ function wireEvents(state) {
     const demoteButton = event.target.closest("button[data-demote-tag-id]");
     if (demoteButton) {
       const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
-      if (tagId) void handleTagDemote(state, tagId);
+      if (tagId) openDemoteModal(state, tagId);
       return;
     }
 
@@ -259,6 +296,52 @@ function wireEvents(state) {
     void handleTagDelete(state);
   });
 
+  state.refs.demoteModal.addEventListener("click", (event) => {
+    if (event.target.closest('[data-role="close-demote-modal"]')) {
+      closeDemoteModal(state);
+      return;
+    }
+    if (state.refs.demoteTagPopupWrap.hidden) return;
+    if (!event.target.closest('[data-role="demote-tag-popup-wrap"]') && !event.target.closest('[data-role="demote-tag-search"]')) {
+      hideDemoteTagPopup(state);
+    }
+  });
+
+  state.refs.demoteTagSearch.addEventListener("input", () => {
+    renderDemoteTagPopup(state);
+  });
+
+  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideDemoteTagPopup(state);
+      state.refs.demoteTagSearch.blur();
+    }
+  });
+
+  state.refs.demoteTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-demote-tag-id]");
+    if (!button) return;
+    const tagId = normalize(button.getAttribute("data-popup-demote-tag-id"));
+    if (!tagId) return;
+    addDemoteTag(state, tagId);
+    state.refs.demoteTagSearch.value = "";
+    hideDemoteTagPopup(state);
+    updateDemoteUi(state);
+  });
+
+  state.refs.demoteTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-demote-tag]");
+    if (!button || !state.demoteState) return;
+    const tagId = normalize(button.getAttribute("data-remove-demote-tag"));
+    if (!tagId) return;
+    state.demoteState.tags = state.demoteState.tags.filter((item) => item !== tagId);
+    updateDemoteUi(state);
+  });
+
+  state.refs.confirmDemote.addEventListener("click", () => {
+    void handleTagDemote(state);
+  });
+
   state.refs.editSlug.addEventListener("input", () => {
     refreshEditLabelPreview(state);
     scheduleSaveImpactPreview(state);
@@ -303,9 +386,14 @@ function renderImportMode(state) {
 }
 
 async function loadRegistry(state) {
-  const data = await fetchJson("/assets/data/tag_registry.json");
-  state.registryUpdatedAt = normalizeTimestamp(data && data.updated_at_utc);
-  state.tags = normalizeRegistryTags(data, state.registryUpdatedAt);
+  const [registryData, aliasesData] = await Promise.all([
+    fetchJson("/assets/data/tag_registry.json"),
+    fetchJson("/assets/data/tag_aliases.json")
+  ]);
+  state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
+  state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
+  state.aliasKeys = buildAliasKeySet(aliasesData);
+  state.registryOptions = buildRegistryOptions(state.tags);
 }
 
 async function fetchJson(url) {
@@ -342,6 +430,35 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
   }
 
   return tags;
+}
+
+function buildRegistryOptions(tags) {
+  const options = [];
+  for (const tag of tags || []) {
+    if (!tag || !tag.tagId || !GROUPS.includes(tag.group)) continue;
+    options.push({
+      tagId: tag.tagId,
+      group: tag.group,
+      label: normalize(tag.label) || labelFromTagId(tag.tagId) || tag.tagId
+    });
+  }
+  options.sort((a, b) => {
+    const byLabel = a.label.localeCompare(b.label, undefined, { sensitivity: "base" });
+    if (byLabel !== 0) return byLabel;
+    return a.tagId.localeCompare(b.tagId);
+  });
+  return options;
+}
+
+function buildAliasKeySet(data) {
+  const out = new Set();
+  const aliasesObj = data && typeof data.aliases === "object" && data.aliases ? data.aliases : {};
+  for (const rawKey of Object.keys(aliasesObj)) {
+    const key = normalize(rawKey);
+    if (!key) continue;
+    out.add(key);
+  }
+  return out;
 }
 
 function renderControls(state) {
@@ -718,57 +835,238 @@ async function handleTagDelete(state) {
   }
 }
 
-function parseTagIdCsv(input) {
-  const values = String(input || "")
-    .split(",")
-    .map((item) => normalize(item))
-    .filter((item) => Boolean(item));
-  const out = [];
-  const seen = new Set();
-  for (const value of values) {
-    if (!TAG_ID_RE.test(value)) {
-      throw new Error(`Invalid tag_id: ${value}`);
-    }
-    if (seen.has(value)) continue;
-    seen.add(value);
-    out.push(value);
-  }
-  if (!out.length) {
-    throw new Error("At least one canonical target tag_id is required.");
-  }
-  return out;
-}
-
-function promptDemotionTargets(tag) {
-  const promptText = [
-    `Demote ${tag.tagId} to alias.`,
-    "Enter canonical target tag_ids (comma-separated).",
-    "Example: form:line,theme:emergence"
-  ].join("\n");
-  return window.prompt(promptText, "");
-}
-
-async function handleTagDemote(state, tagId) {
+function openDemoteModal(state, tagId) {
+  clearImportResult(state);
   const tag = findTagById(state, tagId);
   if (!tag) {
     setImportResult(state, "error", "Selected tag is no longer available.");
     return;
   }
-
-  const input = promptDemotionTargets(tag);
-  if (input === null) return;
-
-  let aliasTargets = [];
-  try {
-    aliasTargets = parseTagIdCsv(input);
-  } catch (error) {
-    setImportResult(state, "error", String(error.message || "Invalid target tags."));
+  const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
+  if (state.aliasKeys.has(aliasKey)) {
+    setImportResult(state, "error", `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`);
     return;
   }
-  if (aliasTargets.includes(tag.tagId)) {
-    setImportResult(state, "error", "Target list must not include the demoted tag.");
+
+  state.demoteState = {
+    tagId: tag.tagId,
+    tags: []
+  };
+  state.refs.demoteTagMeta.textContent = `tag: ${tag.tagId} -> alias "${aliasKey}"`;
+  state.refs.demoteTagSearch.value = "";
+  hideDemoteTagPopup(state);
+  updateDemoteUi(state);
+  state.refs.demoteModal.hidden = false;
+  state.refs.demoteTagSearch.focus();
+}
+
+function closeDemoteModal(state) {
+  state.demoteState = null;
+  state.refs.demoteModal.hidden = true;
+  state.refs.demoteTagMeta.textContent = "";
+  state.refs.demoteTagSearch.value = "";
+  state.refs.demoteTagList.innerHTML = "";
+  state.refs.demoteGroupKey.innerHTML = "";
+  state.refs.confirmDemote.disabled = true;
+  setDemoteStatus(state, "", "");
+  hideDemoteTagPopup(state);
+}
+
+function setDemoteStatus(state, kind, message) {
+  state.refs.demoteStatus.textContent = message || "";
+  state.refs.demoteStatus.className = "tagRegistryEdit__status";
+  if (kind) state.refs.demoteStatus.classList.add(`is-${kind}`);
+}
+
+function renderDemoteGroupKey(state) {
+  if (!state.demoteState) {
+    state.refs.demoteGroupKey.innerHTML = "";
     return;
   }
+  const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
+  state.refs.demoteGroupKey.innerHTML = GROUPS.map((group) => {
+    const activeClass = selected.has(group) ? " is-active" : "";
+    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}">${escapeHtml(group)}</span>`;
+  }).join("");
+}
+
+function renderDemoteTagList(state) {
+  if (!state.demoteState) {
+    state.refs.demoteTagList.innerHTML = "";
+    return;
+  }
+  const rows = state.demoteState.tags.map((tagId) => {
+    const info = findTagById(state, tagId);
+    const group = info && GROUPS.includes(info.group) ? info.group : "warning";
+    const label = info ? info.label : tagId;
+    return `
+      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
+        ${escapeHtml(label)}
+        <button
+          type="button"
+          class="tagStudio__chipRemove"
+          data-remove-demote-tag="${escapeHtml(tagId)}"
+          aria-label="Remove ${escapeHtml(tagId)}"
+        >
+          x
+        </button>
+      </span>
+    `;
+  }).join("");
+  state.refs.demoteTagList.innerHTML = rows || '<span class="tagStudio__empty">none</span>';
+}
+
+function getDemoteValidation(state) {
+  if (!state.demoteState) return { valid: false, tags: [], warning: "" };
+  const tags = Array.isArray(state.demoteState.tags) ? state.demoteState.tags.slice() : [];
+
+  let warning = "";
+  if (!tags.length) {
+    warning = "Select at least one target tag.";
+  } else if (tags.length > MAX_ALIAS_TAGS) {
+    warning = `Select up to ${MAX_ALIAS_TAGS} tags.`;
+  } else {
+    const seenGroups = new Set();
+    for (const tagId of tags) {
+      if (tagId === state.demoteState.tagId) {
+        warning = "Target list must not include the demoted tag.";
+        break;
+      }
+      const info = findTagById(state, tagId);
+      if (!info) {
+        warning = `Unknown tag selected: ${tagId}`;
+        break;
+      }
+      if (seenGroups.has(info.group)) {
+        warning = `Only one target tag per group is allowed (${info.group}).`;
+        break;
+      }
+      seenGroups.add(info.group);
+    }
+  }
+
+  return {
+    valid: !warning,
+    tags,
+    warning
+  };
+}
+
+function updateDemoteUi(state) {
+  if (!state.demoteState) return;
+  renderDemoteGroupKey(state);
+  renderDemoteTagList(state);
+  const validation = getDemoteValidation(state);
+  state.refs.confirmDemote.disabled = !validation.valid;
+  if (validation.warning) {
+    const kind = validation.warning === "Select at least one target tag." ? "" : "error";
+    setDemoteStatus(state, kind, validation.warning);
+  } else {
+    setDemoteStatus(state, "", "");
+  }
+}
+
+function getDemoteTagMatches(state, query) {
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery || !state.demoteState) {
+    return { matches: [], truncated: false };
+  }
+  const selected = new Set(state.demoteState.tags || []);
+  const allMatches = state.registryOptions.filter((item) => {
+    if (selected.has(item.tagId)) return false;
+    if (item.tagId === state.demoteState.tagId) return false;
+    const slug = item.tagId.split(":", 2)[1] || "";
+    return (
+      normalize(item.label).startsWith(normalizedQuery) ||
+      normalize(slug).startsWith(normalizedQuery)
+    );
+  });
+  return {
+    matches: allMatches.slice(0, DEMOTE_TAG_MATCH_CAP),
+    truncated: allMatches.length > DEMOTE_TAG_MATCH_CAP
+  };
+}
+
+function renderDemoteTagPopup(state) {
+  if (!state.demoteState) return;
+  const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
+  if (!result.matches.length) {
+    hideDemoteTagPopup(state);
+    return;
+  }
+  const chips = result.matches.map((item) => `
+    <button
+      type="button"
+      class="tagStudio__popupPill tagStudio__chip--${escapeHtml(item.group)}"
+      data-popup-demote-tag-id="${escapeHtml(item.tagId)}"
+      title="${escapeHtml(item.tagId)}"
+    >
+      ${escapeHtml(item.label)}
+    </button>
+  `);
+  if (result.truncated) {
+    chips.push('<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="More matches available">...</span>');
+  }
+  state.refs.demoteTagPopup.innerHTML = chips.join("");
+  state.refs.demoteTagPopupWrap.hidden = false;
+}
+
+function hideDemoteTagPopup(state) {
+  state.refs.demoteTagPopupWrap.hidden = true;
+  state.refs.demoteTagPopup.innerHTML = "";
+}
+
+function addDemoteTag(state, tagId) {
+  if (!state.demoteState) return;
+  const normalizedTagId = normalize(tagId);
+  if (!normalizedTagId) return;
+  const tag = findTagById(state, normalizedTagId);
+  if (!tag) return;
+  if (normalizedTagId === state.demoteState.tagId) {
+    setDemoteStatus(state, "error", "Target list must not include the demoted tag.");
+    return;
+  }
+  if (state.demoteState.tags.includes(normalizedTagId)) return;
+  if (state.demoteState.tags.length >= MAX_ALIAS_TAGS) {
+    setDemoteStatus(state, "error", `Select up to ${MAX_ALIAS_TAGS} tags.`);
+    return;
+  }
+  const nextGroup = tag.group;
+  const groupConflict = state.demoteState.tags.some((item) => {
+    const existing = findTagById(state, item);
+    return Boolean(existing && existing.group === nextGroup);
+  });
+  if (groupConflict) {
+    setDemoteStatus(state, "error", `Only one target tag per group is allowed (${nextGroup}).`);
+    return;
+  }
+  state.demoteState.tags.push(normalizedTagId);
+}
+
+async function handleTagDemote(state) {
+  if (!state.demoteState) return;
+  const tag = findTagById(state, state.demoteState.tagId);
+  if (!tag) {
+    setDemoteStatus(state, "error", "Selected tag is no longer available.");
+    setImportResult(state, "error", "Selected tag is no longer available.");
+    return;
+  }
+
+  const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
+  if (state.aliasKeys.has(aliasKey)) {
+    const message = `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`;
+    setDemoteStatus(state, "error", message);
+    setImportResult(state, "error", message);
+    return;
+  }
+
+  const validation = getDemoteValidation(state);
+  if (!validation.valid) {
+    setDemoteStatus(state, "error", validation.warning || "Invalid target tags.");
+    return;
+  }
+
+  const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
 
   const payload = {
     tag_id: tag.tagId,
@@ -781,13 +1079,21 @@ async function handleTagDemote(state, tagId) {
     try {
       preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Demotion preview failed."));
+      const message = String(error.message || "Demotion preview failed.");
+      setDemoteStatus(state, "error", message);
+      setImportResult(state, "error", message);
       return;
     }
 
     const previewSummary = String(preview.summary_text || "").trim() || `demote ${tag.tagId}`;
+    if (Number(preview.demoted_alias_overwritten || 0) > 0) {
+      const message = `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`;
+      setDemoteStatus(state, "error", message);
+      setImportResult(state, "error", message);
+      return;
+    }
     const ok = window.confirm(
-      `Demote "${tag.tagId}" to alias "${tag.tagId.split(":")[1]}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
+      `Demote "${tag.tagId}" to alias "${aliasKey}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
     );
     if (!ok) {
       clearImportResult(state);
@@ -796,18 +1102,22 @@ async function handleTagDemote(state, tagId) {
 
     try {
       const response = await postJson(DEMOTE_ENDPOINT, payload);
+      closeDemoteModal(state);
       setImportResult(state, "success", String(response.summary_text || "Demoted."));
       await loadRegistry(state);
       renderControls(state);
       renderList(state);
       return;
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Demotion failed."));
+      const message = String(error.message || "Demotion failed.");
+      setDemoteStatus(state, "error", message);
+      setImportResult(state, "error", message);
       return;
     }
   }
 
   const patchResult = buildManualPatchForDemote(tag.tagId, aliasTargets);
+  closeDemoteModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
