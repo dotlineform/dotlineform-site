@@ -171,6 +171,9 @@ Behavior:
 - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
   - `Save mode: Patch` when unavailable (fallback to patch modal)
+  - `POST /save-tags` expects assignment objects in `tags`:
+    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "w_effective": <number 0..1> }`
+  - save writes `assets/data/tag_assignments.json` with object-only tag rows (no string tags)
 - Tag Registry page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)

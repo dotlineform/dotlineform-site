@@ -4,6 +4,8 @@ const POST_ENDPOINT = "http://127.0.0.1:8787/save-tags";
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const POPUP_TAG_MATCH_CAP = 12;
 const POPUP_ALIAS_MATCH_CAP = 12;
+const WEIGHT_VALUES = [0.3, 0.6, 0.9];
+const DEFAULT_WEIGHT = 0.6;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagStudio);
@@ -91,14 +93,14 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
   let nextEntryId = 1;
   const seriesAssignments = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
   const existingAssignment = getSeriesAssignment(seriesAssignments, seriesId);
-  const existingTags = Array.isArray(existingAssignment && existingAssignment.tags) ? existingAssignment.tags : [];
+  const existingTags = normalizeAssignmentTags(existingAssignment && existingAssignment.tags);
 
-  for (const input of existingTags) {
-    const resolved = resolveInput(input, { tagsById, slugMap, labelMap, aliases });
+  for (const row of existingTags) {
+    const resolved = resolveInput(row.tagId, { tagsById, slugMap, labelMap, aliases });
     if (resolved.type === "resolved") {
-      entries.push(makeResolvedEntry(nextEntryId++, String(input), resolved.tag));
-    } else if (String(input || "").trim()) {
-      entries.push(makeUnresolvedEntry(nextEntryId++, String(input)));
+      entries.push(makeResolvedEntry(nextEntryId++, row.tagId, resolved.tag, row.wManual, row.wEffective));
+    } else if (row.tagId) {
+      entries.push(makeUnresolvedEntry(nextEntryId++, row.tagId));
     }
   }
 
@@ -275,6 +277,19 @@ function wireEvents(state) {
   });
 
   state.refs.groups.addEventListener("click", (event) => {
+    const weightButton = event.target.closest("button[data-cycle-weight-entry-id]");
+    if (weightButton) {
+      const entryId = Number(weightButton.getAttribute("data-cycle-weight-entry-id"));
+      if (!Number.isFinite(entryId)) return;
+      const entry = state.entries.find((item) => item.entryId === entryId && item.type === "resolved");
+      if (!entry) return;
+      entry.wManual = nextWeight(entry.wManual);
+      setStatus(state, "success", `Updated ${entry.canonicalId} w_manual to ${entry.wManual.toFixed(1)}.`);
+      setSaveResult(state, "", "");
+      renderAll(state);
+      return;
+    }
+
     const button = event.target.closest("button[data-remove-entry-id]");
     if (!button) return;
 
@@ -394,7 +409,7 @@ function addResolvedTag(state, tag, rawInput) {
     return;
   }
 
-  state.entries.push(makeResolvedEntry(state.nextEntryId++, rawInput, tag));
+  state.entries.push(makeResolvedEntry(state.nextEntryId++, rawInput, tag, DEFAULT_WEIGHT, DEFAULT_WEIGHT));
   setStatus(state, "success", `Added ${tagId}.`);
   setSaveResult(state, "", "");
 }
@@ -422,14 +437,18 @@ function removeEntry(state, entryId) {
   }
 }
 
-function makeResolvedEntry(entryId, rawInput, tag) {
+function makeResolvedEntry(entryId, rawInput, tag, wManual, wEffective) {
+  const manual = normalizeManualWeight(wManual, DEFAULT_WEIGHT);
+  const effective = normalizeEffectiveWeight(wEffective, DEFAULT_WEIGHT);
   return {
     entryId,
     type: "resolved",
     rawInput: String(rawInput || "").trim(),
     canonicalId: normalize(tag.tag_id),
     group: normalize(tag.group),
-    label: String(tag.label || tag.tag_id).trim()
+    label: String(tag.label || tag.tag_id).trim(),
+    wManual: manual,
+    wEffective: effective
   };
 }
 
@@ -596,13 +615,23 @@ function renderGroups(state) {
     groupedEntries.get(entry.group).push(entry);
   }
   for (const group of GROUPS) {
-    groupedEntries.get(group).sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
+    groupedEntries.get(group).sort((a, b) => {
+      if (b.wManual !== a.wManual) return b.wManual - a.wManual;
+      return slugFromTagId(a.canonicalId).localeCompare(slugFromTagId(b.canonicalId), undefined, { sensitivity: "base" });
+    });
   }
 
   const rowsHtml = GROUPS.map((group) => {
     const entries = groupedEntries.get(group) || [];
     const chipsHtml = entries.map((entry) => `
       <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}">
+        <button
+          type="button"
+          class="tagStudio__weightDot ${weightDotClass(entry.wManual)}"
+          data-cycle-weight-entry-id="${entry.entryId}"
+          title="w_manual ${entry.wManual.toFixed(1)}"
+          aria-label="w_manual ${entry.wManual.toFixed(1)}"
+        ></button>
         <span class="tagStudio__chipTag" title="${escapeHtml(entry.canonicalId)}">${escapeHtml(entry.label)}</span>
         <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
       </span>
@@ -683,10 +712,10 @@ async function handleSave(state) {
     return;
   }
 
-  const canonicalTags = getCanonicalTags(state);
+  const assignments = getCanonicalTagAssignments(state);
   if (state.saveMode === "post") {
     try {
-      const result = await postTags(state.seriesId, canonicalTags);
+      const result = await postTags(state.seriesId, assignments);
       const savedAt = String(result.updated_at_utc || utcTimestamp());
       setStatus(state, "success", `Saved at ${savedAt}.`);
       setSaveResult(state, "success", `Saved at ${savedAt}.`);
@@ -746,7 +775,7 @@ function openSaveModal(state) {
     return;
   }
 
-  const canonicalTags = getCanonicalTags(state);
+  const canonicalTags = getCanonicalTagAssignments(state);
   const timestamp = utcTimestamp();
   const snippet = buildPatchSnippet(state.seriesId, canonicalTags, timestamp);
   state.modalSnippet = snippet;
@@ -760,7 +789,7 @@ function closeModal(state) {
   state.refs.modal.hidden = true;
 }
 
-function getCanonicalTags(state) {
+function getCanonicalTagAssignments(state) {
   const seen = new Set();
   const tags = [];
 
@@ -768,16 +797,21 @@ function getCanonicalTags(state) {
     if (entry.type !== "resolved") continue;
     if (seen.has(entry.canonicalId)) continue;
     seen.add(entry.canonicalId);
-    tags.push(entry.canonicalId);
+    tags.push({
+      tag_id: entry.canonicalId,
+      w_manual: entry.wManual,
+      w_effective: entry.wEffective,
+    });
   }
 
   tags.sort((a, b) => {
-    const ga = groupFromTagId(a);
-    const gb = groupFromTagId(b);
+    const ga = groupFromTagId(a.tag_id);
+    const gb = groupFromTagId(b.tag_id);
     const ia = GROUP_INDEX.has(ga) ? GROUP_INDEX.get(ga) : Number.MAX_SAFE_INTEGER;
     const ib = GROUP_INDEX.has(gb) ? GROUP_INDEX.get(gb) : Number.MAX_SAFE_INTEGER;
     if (ia !== ib) return ia - ib;
-    return a.localeCompare(b);
+    if (b.w_manual !== a.w_manual) return b.w_manual - a.w_manual;
+    return slugFromTagId(a.tag_id).localeCompare(slugFromTagId(b.tag_id), undefined, { sensitivity: "base" });
   });
 
   return tags;
@@ -841,6 +875,78 @@ function normalizeAliasTargets(value) {
 
   const single = normalize(rawTargets);
   return single ? [single] : [];
+}
+
+function normalizeAssignmentTags(rawTags) {
+  if (!Array.isArray(rawTags)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const raw of rawTags) {
+    if (typeof raw === "string") {
+      const tagId = normalize(raw);
+      if (!tagId || seen.has(tagId)) continue;
+      seen.add(tagId);
+      out.push({
+        tagId,
+        wManual: DEFAULT_WEIGHT,
+        wEffective: DEFAULT_WEIGHT,
+      });
+      continue;
+    }
+    if (!raw || typeof raw !== "object") continue;
+    const tagId = normalize(raw.tag_id);
+    if (!tagId || seen.has(tagId)) continue;
+    seen.add(tagId);
+    out.push({
+      tagId,
+      wManual: normalizeManualWeight(raw.w_manual, DEFAULT_WEIGHT),
+      wEffective: normalizeEffectiveWeight(raw.w_effective, DEFAULT_WEIGHT),
+    });
+  }
+  return out;
+}
+
+function normalizeManualWeight(raw, fallback) {
+  const value = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(value)) return fallback;
+  let closest = WEIGHT_VALUES[0];
+  let diff = Math.abs(value - closest);
+  for (const candidate of WEIGHT_VALUES) {
+    const currentDiff = Math.abs(value - candidate);
+    if (currentDiff < diff) {
+      closest = candidate;
+      diff = currentDiff;
+    }
+  }
+  return closest;
+}
+
+function normalizeEffectiveWeight(raw, fallback) {
+  const value = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(value)) return fallback;
+  if (value < 0) return 0;
+  if (value > 1) return 1;
+  return Math.round(value * 1000) / 1000;
+}
+
+function nextWeight(value) {
+  const normalized = normalizeManualWeight(value, DEFAULT_WEIGHT);
+  const index = WEIGHT_VALUES.indexOf(normalized);
+  if (index < 0) return DEFAULT_WEIGHT;
+  return WEIGHT_VALUES[(index + 1) % WEIGHT_VALUES.length];
+}
+
+function weightDotClass(weight) {
+  const normalized = normalizeManualWeight(weight, DEFAULT_WEIGHT);
+  if (normalized === 0.3) return "tagStudio__weightDot--low";
+  if (normalized === 0.9) return "tagStudio__weightDot--high";
+  return "tagStudio__weightDot--mid";
+}
+
+function slugFromTagId(tagId) {
+  const normalized = normalize(tagId);
+  const splitIndex = normalized.indexOf(":");
+  return splitIndex >= 0 ? normalized.slice(splitIndex + 1) : normalized;
 }
 
 function escapeHtml(value) {

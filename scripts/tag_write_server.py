@@ -75,6 +75,8 @@ MAX_ALIAS_TARGETS = 50
 MAX_ALIAS_TAGS_PER_ALIAS = 4
 TAG_STATUSES = {"active", "deprecated", "candidate"}
 DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
+MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
+DEFAULT_TAG_WEIGHT = 0.6
 
 ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/data/tag_assignments.json")
 ALLOWED_REGISTRY_REL_PATH = Path("assets/data/tag_registry.json")
@@ -134,25 +136,105 @@ def allowed_origin(origin: str) -> Optional[str]:
     return f"{parsed.scheme}://{parsed.hostname}:{parsed.port}"
 
 
-def sanitize_tags(raw_tags: Any) -> list[str]:
-    if not isinstance(raw_tags, list):
-        raise ValueError("tags must be an array")
-    if len(raw_tags) > MAX_TAGS:
-        raise ValueError(f"tags may include at most {MAX_TAGS} entries")
+def sanitize_manual_weight(raw_weight: Any, field_name: str, strict: bool = True) -> float:
+    if raw_weight is None:
+        if strict:
+            raise ValueError(f"{field_name} is required")
+        return DEFAULT_TAG_WEIGHT
+    try:
+        value = float(raw_weight)
+    except Exception as exc:  # noqa: BLE001
+        if strict:
+            raise ValueError(f"{field_name} must be numeric") from exc
+        return DEFAULT_TAG_WEIGHT
 
-    out: list[str] = []
+    for allowed in MANUAL_WEIGHT_VALUES:
+        if abs(value - allowed) < 1e-9:
+            return allowed
+
+    if strict:
+        raise ValueError(f"{field_name} must be one of: {MANUAL_WEIGHT_VALUES}")
+
+    closest = MANUAL_WEIGHT_VALUES[0]
+    diff = abs(value - closest)
+    for allowed in MANUAL_WEIGHT_VALUES[1:]:
+        current = abs(value - allowed)
+        if current < diff:
+            closest = allowed
+            diff = current
+    return closest
+
+
+def sanitize_effective_weight(raw_weight: Any, field_name: str, strict: bool = True) -> float:
+    if raw_weight is None:
+        if strict:
+            raise ValueError(f"{field_name} is required")
+        return DEFAULT_TAG_WEIGHT
+    try:
+        value = float(raw_weight)
+    except Exception as exc:  # noqa: BLE001
+        if strict:
+            raise ValueError(f"{field_name} must be numeric") from exc
+        return DEFAULT_TAG_WEIGHT
+
+    if not (value >= 0 and value <= 1):
+        if strict:
+            raise ValueError(f"{field_name} must be between 0 and 1")
+        value = 0 if value < 0 else 1
+    return round(value, 3)
+
+
+def build_assignment_tag(tag_id: str, w_manual: float, w_effective: float) -> Dict[str, Any]:
+    return {
+        "tag_id": tag_id,
+        "w_manual": sanitize_manual_weight(w_manual, "w_manual", strict=False),
+        "w_effective": sanitize_effective_weight(w_effective, "w_effective", strict=False),
+    }
+
+
+def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False) -> Optional[Dict[str, Any]]:
+    if isinstance(raw_tag, str):
+        if strict:
+            raise ValueError(f"{field_name} must be an object with tag_id, w_manual, w_effective")
+        try:
+            tag_id = sanitize_tag_id(raw_tag, field_name)
+        except ValueError:
+            return None
+        return build_assignment_tag(tag_id, DEFAULT_TAG_WEIGHT, DEFAULT_TAG_WEIGHT)
+
+    if not isinstance(raw_tag, dict):
+        if strict:
+            raise ValueError(f"{field_name} must be an object with tag_id, w_manual, w_effective")
+        return None
+
+    try:
+        tag_id = sanitize_tag_id(raw_tag.get("tag_id"), f"{field_name}.tag_id")
+    except ValueError:
+        if strict:
+            raise
+        return None
+    w_manual = sanitize_manual_weight(raw_tag.get("w_manual"), f"{field_name}.w_manual", strict=strict)
+    w_effective = sanitize_effective_weight(raw_tag.get("w_effective"), f"{field_name}.w_effective", strict=strict)
+    return build_assignment_tag(tag_id, w_manual, w_effective)
+
+
+def sanitize_assignment_tags(raw_tags: Any, field_name: str = "tags", strict: bool = True) -> list[Dict[str, Any]]:
+    if not isinstance(raw_tags, list):
+        raise ValueError(f"{field_name} must be an array")
+    if len(raw_tags) > MAX_TAGS:
+        raise ValueError(f"{field_name} may include at most {MAX_TAGS} entries")
+
+    out: list[Dict[str, Any]] = []
     seen: set[str] = set()
     for idx, raw in enumerate(raw_tags):
-        if not isinstance(raw, str):
-            raise ValueError(f"tags[{idx}] must be a string")
-        if raw == "":
-            raise ValueError(f"tags[{idx}] must not be empty")
-        if any((ch.isspace() or ord(ch) < 32 or ord(ch) == 127) for ch in raw):
-            raise ValueError(f"tags[{idx}] contains whitespace or control characters")
-        if raw in seen:
+        row = normalize_assignment_tag(raw, f"{field_name}[{idx}]", strict=strict)
+        if row is None:
             continue
-        seen.add(raw)
-        out.append(raw)
+        tag_id = row["tag_id"]
+        if tag_id in seen:
+            continue
+        seen.add(tag_id)
+        out.append(row)
     return out
 
 
@@ -408,7 +490,7 @@ def load_aliases(path: Path) -> Dict[str, Any]:
     )
 
 
-def apply_assignment_update(payload: Dict[str, Any], series_id: str, tags: list[str], now_utc: str) -> Dict[str, Any]:
+def apply_assignment_update(payload: Dict[str, Any], series_id: str, tags: list[Dict[str, Any]], now_utc: str) -> Dict[str, Any]:
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
     if "tag_assignments_version" not in payload:
@@ -420,7 +502,7 @@ def apply_assignment_update(payload: Dict[str, Any], series_id: str, tags: list[
         row = {}
         series_obj[series_id] = row
 
-    row["tags"] = tags
+    row["tags"] = list(tags)
     row["updated_at_utc"] = now_utc
     payload["updated_at_utc"] = now_utc
     return payload
@@ -706,27 +788,37 @@ def rewrite_assignments_for_targets(
         if not isinstance(tags, list):
             continue
         changed = False
-        out: list[str] = []
+        out: list[Dict[str, Any]] = []
         seen: set[str] = set()
 
         for raw_tag in tags:
-            if not isinstance(raw_tag, str):
+            normalized_tag = normalize_assignment_tag(raw_tag, f"series[{series_id}].tags[*]", strict=False)
+            if normalized_tag is None:
+                changed = True
                 continue
-            if raw_tag == old_tag_id:
+
+            tag_value = normalized_tag["tag_id"]
+            if tag_value == old_tag_id:
                 refs_rewritten += 1
                 changed = True
                 for replacement in replacement_tag_ids:
                     if replacement in seen:
                         continue
                     seen.add(replacement)
-                    out.append(replacement)
+                    out.append(
+                        build_assignment_tag(
+                            replacement,
+                            normalized_tag["w_manual"],
+                            normalized_tag["w_effective"],
+                        )
+                    )
                     targets_inserted += 1
                 continue
-            if raw_tag in seen:
+            if tag_value in seen:
                 changed = True
                 continue
-            seen.add(raw_tag)
-            out.append(raw_tag)
+            seen.add(tag_value)
+            out.append(normalized_tag)
 
         if changed:
             row["tags"] = out
@@ -1136,12 +1228,15 @@ def rewrite_assignments_for_tag(
         if not isinstance(tags, list):
             continue
         changed = False
-        out: list[str] = []
+        out: list[Dict[str, Any]] = []
         seen: set[str] = set()
         for raw_tag in tags:
-            if not isinstance(raw_tag, str):
+            normalized_tag = normalize_assignment_tag(raw_tag, f"series[{series_id}].tags[*]", strict=False)
+            if normalized_tag is None:
+                changed = True
                 continue
-            tag_value = raw_tag
+
+            tag_value = normalized_tag["tag_id"]
             if tag_value == old_tag_id:
                 refs_rewritten += 1
                 changed = True
@@ -1152,7 +1247,13 @@ def rewrite_assignments_for_tag(
                 changed = True
                 continue
             seen.add(tag_value)
-            out.append(tag_value)
+            out.append(
+                build_assignment_tag(
+                    tag_value,
+                    normalized_tag["w_manual"],
+                    normalized_tag["w_effective"],
+                )
+            )
 
         if changed:
             row["tags"] = out
@@ -1547,7 +1648,7 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(series_id, str) or not series_id or not SLUG_RE.fullmatch(series_id):
             raise ValueError("series_id must be a non-empty slug-safe string")
 
-        sanitized_tags = sanitize_tags(tags)
+        sanitized_tags = sanitize_assignment_tags(tags, "tags", strict=True)
         now_utc = utc_now()
 
         payload = load_assignments(self.server.assignments_path)

@@ -79,15 +79,38 @@ function getAssignmentsSeries(assignmentsData) {
 
 function getSeriesTags(assignmentsSeries, seriesId) {
   if (assignmentsSeries[seriesId] && Array.isArray(assignmentsSeries[seriesId].tags)) {
-    return assignmentsSeries[seriesId].tags;
+    return normalizeSeriesTagIds(assignmentsSeries[seriesId].tags);
   }
 
   const normalizedSeriesId = normalize(seriesId);
   for (const [key, value] of Object.entries(assignmentsSeries)) {
     if (normalize(key) !== normalizedSeriesId) continue;
-    return Array.isArray(value && value.tags) ? value.tags : [];
+    return Array.isArray(value && value.tags) ? normalizeSeriesTagIds(value.tags) : [];
   }
   return [];
+}
+
+function normalizeSeriesTagIds(rawTags) {
+  if (!Array.isArray(rawTags)) return [];
+  const out = [];
+  const seen = new Set();
+  for (const raw of rawTags) {
+    const tagId = normalizeAssignmentTagId(raw);
+    if (!tagId || seen.has(tagId)) continue;
+    seen.add(tagId);
+    out.push(tagId);
+  }
+  return out;
+}
+
+function normalizeAssignmentTagId(rawTag) {
+  if (typeof rawTag === "string") {
+    return normalize(rawTag);
+  }
+  if (rawTag && typeof rawTag === "object") {
+    return normalize(rawTag.tag_id);
+  }
+  return "";
 }
 
 function computeMetrics(assignedTags, registry) {

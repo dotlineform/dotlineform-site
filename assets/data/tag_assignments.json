@@ -4,9 +4,21 @@
   "series": {
     "curve-poems": {
       "tags": [
-        "form:line",
-        "form:curvilinear",
-        "theme:emergence"
+        {
+          "tag_id": "form:line",
+          "w_manual": 0.6,
+          "w_effective": 0.6
+        },
+        {
+          "tag_id": "form:curvilinear",
+          "w_manual": 0.6,
+          "w_effective": 0.6
+        },
+        {
+          "tag_id": "theme:emergence",
+          "w_manual": 0.6,
+          "w_effective": 0.6
+        }
       ],
       "updated_at_utc": "2026-02-27T00:00:00Z"
     },
@@ -28,13 +40,21 @@
     },
     "dotlineform-2021": {
       "tags": [
-        "domain:memory"
+        {
+          "tag_id": "domain:memory",
+          "w_manual": 0.6,
+          "w_effective": 0.6
+        }
       ],
       "updated_at_utc": "2026-02-28T23:19:30Z"
     },
     "dots": {
       "tags": [
-        "form:curvilinear"
+        {
+          "tag_id": "form:curvilinear",
+          "w_manual": 0.6,
+          "w_effective": 0.6
+        }
       ],
       "updated_at_utc": "2026-02-28T21:56:56Z"
     },

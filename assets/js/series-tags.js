@@ -201,9 +201,21 @@ function renderGroupInfoControl(state) {
 function getSeriesTags(assignmentsSeries, seriesId) {
   const row = assignmentsSeries && assignmentsSeries[seriesId];
   if (!row || !Array.isArray(row.tags)) return [];
-  return row.tags
-    .map((value) => String(value || "").trim())
-    .filter(Boolean);
+  const out = [];
+  const seen = new Set();
+  for (const value of row.tags) {
+    let tagId = "";
+    if (typeof value === "string") {
+      tagId = String(value || "").trim();
+    } else if (value && typeof value === "object") {
+      tagId = String(value.tag_id || "").trim();
+    }
+    tagId = normalize(tagId);
+    if (!tagId || seen.has(tagId)) continue;
+    seen.add(tagId);
+    out.push(tagId);
+  }
+  return out;
 }
 
 function toTagDisplay(rawTagId, registry) {

@@ -112,7 +112,12 @@ Current save gate:
 - Save disabled when `unresolvedCount > 0`
 - Message: `Resolve unknown tags before saving.`
 
-Current tags display only resolved tags, grouped into fixed rows (`subject`, `domain`, `form`, `theme`) with labels sorted within each group.
+Current tags display only resolved tags, grouped into fixed rows (`subject`, `domain`, `form`, `theme`) with labels sorted by `w_manual` (desc) then slug (asc) within each group.
+Each chip includes a `w_manual` dot control:
+- white = `0.3`
+- amber = `0.6`
+- green = `0.9`
+- click cycles `0.3 -> 0.6 -> 0.9 -> 0.3`
 
 ### 2) Index metrics / RAG (`tag-studio-index.js`)
 
@@ -170,7 +175,8 @@ Save mode is probed at page load:
 - Endpoint: `POST /save-tags` on the local save service
 - Payload:
   - `series_id`
-  - `tags` (canonical IDs, may be empty to clear)
+  - `tags` (array of assignment objects; may be empty to clear):
+    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "w_effective": <number 0..1> }`
   - `client_time_utc`
 - On success:
   - UI status message includes save timestamp
@@ -181,7 +187,7 @@ Save mode is probed at page load:
 ### Patch mode
 
 - Shows modal with:
-  - canonical resolved tags array
+  - canonical resolved assignment object array
   - JSON snippet to paste under `series[series_id]` in `tag_assignments.json`
 - Copy button uses `navigator.clipboard.writeText`
 
@@ -220,6 +226,10 @@ Governance:
 Purpose:
 
 - Per-series canonical tag assignments used by studio pages and index RAG.
+- `series[*].tags` schema is object-only:
+  - `tag_id`: canonical `<group>:<slug>`
+  - `w_manual`: discrete manual weight (`0.3`, `0.6`, `0.9`)
+  - `w_effective`: numeric effective weight (0..1 range in current server validation)
 
 Governance and maintenance:
 
@@ -237,11 +247,13 @@ Governance and maintenance:
 
 ## Operational Notes
 
-- Editor always stores canonical IDs in save payload/snippet.
+- Editor stores canonical assignment objects (`tag_id`, `w_manual`, `w_effective`) in save payload/snippet.
 - Unknown/unresolved user inputs are blocked from save.
 - Empty tag array is valid and means clear all tags for that series.
 - Editor layout shows four fixed group rows (`subject:`, `domain:`, `form:`, `theme:`); rows with no tags are left blank.
 - Add/search row places controls inline as: search input, `Add`, `Save Tags`, then save-mode text.
+- New assignments default to `w_manual: 0.6`, `w_effective: 0.6`.
+- UI only edits `w_manual`; `w_effective` is preserved as-is by current Studio controls.
 
 ## Open Issues
 
