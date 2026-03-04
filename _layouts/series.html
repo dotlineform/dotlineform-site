@@ -17,7 +17,7 @@ layout: default
 {%- if page.series_id -%}
   {% comment %}
   Include ?series=<series_id> in work links so the work page can fetch
-  assets/series/index/<series_id>.json and render Prev/Next navigation.
+  series context and render Prev/Next navigation.
   {% endcomment %}
   <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
   <div class="seriesGridFooter">
@@ -36,16 +36,6 @@ layout: default
   {%- unless base contains '://' -%}
     {%- assign thumb_base_out = base | relative_url -%}
   {%- endunless -%}
-  <script type="application/json" id="seriesWorkTitleMap">
-    {
-    {%- assign series_title_items = site.works | where: "series_id", page.series_id -%}
-    {%- for w in series_title_items -%}
-      {%- if w and w.work_id -%}
-        {{ w.work_id | jsonify }}: {{ w.title | default: w.work_id | jsonify }}{% unless forloop.last %},{% endunless %}
-      {%- endif -%}
-    {%- endfor -%}
-    }
-  </script>
 
   <script>
     (function () {
@@ -54,15 +44,7 @@ layout: default
       var statusEl = document.getElementById('seriesGridPagerStatus');
       var prevBtn = document.getElementById('seriesGridPrev');
       var nextBtn = document.getElementById('seriesGridNext');
-      var titleMapEl = document.getElementById('seriesWorkTitleMap');
-      if (!grid || !pager || !statusEl || !prevBtn || !nextBtn || !titleMapEl) return;
-
-      var titleMap = {};
-      try {
-        titleMap = JSON.parse(titleMapEl.textContent || '{}');
-      } catch (e) {
-        titleMap = {};
-      }
+      if (!grid || !pager || !statusEl || !prevBtn || !nextBtn) return;
 
       var baseurl = {{ site.baseurl | default: '' | jsonify }};
       var seriesId = {{ page.series_id | jsonify }};
@@ -70,7 +52,9 @@ layout: default
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
-      var jsonUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json';
+      var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
+      var worksIndexUrl = baseurl + '/assets/data/works_index.json';
+      var legacySeriesUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json';
 
       function workUrl(id) {
         return baseurl + '/works/' + encodeURIComponent(id) + '/';
@@ -78,6 +62,22 @@ layout: default
 
       function thumbUrl(id, size) {
         return String(thumbBase || '') + id + '-thumb-' + size + '.webp';
+      }
+
+      function toAssetUrl(path) {
+        var s = String(path || '').trim();
+        if (!s) return '';
+        if (/^https?:\/\//i.test(s)) return s;
+        if (s.charAt(0) === '/') return baseurl + s;
+        return baseurl + '/' + s.replace(/^\/+/, '');
+      }
+
+      function fetchJson(url) {
+        return fetch(url, { cache: 'default' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          });
       }
 
       function updateUrl(page) {
@@ -94,7 +94,11 @@ layout: default
       }
 
       function render(items) {
-        if (!Array.isArray(items) || !items.length) return;
+        if (!Array.isArray(items) || !items.length) {
+          pager.hidden = true;
+          grid.innerHTML = '';
+          return;
+        }
         var pageCount = Math.max(1, Math.ceil(items.length / pageSize));
         var currentPage = (Number.isFinite(rawPage) && rawPage > 0) ? Math.floor(rawPage) : 1;
         if (currentPage > pageCount) currentPage = pageCount;
@@ -144,23 +148,70 @@ layout: default
         renderPage(currentPage);
       }
 
-      fetch(jsonUrl, { cache: 'default' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
+      function buildItems(workIds, worksIndexData) {
+        var worksMap = {};
+        if (worksIndexData && worksIndexData.works && typeof worksIndexData.works === 'object') {
+          worksMap = worksIndexData.works;
+        }
+
+        return workIds.map(function (rawId) {
+          var id = String(rawId || '').trim();
+          if (!id) return null;
+          var wr = worksMap[id] || {};
+          var primaryMedia = (wr.media && wr.media.primary && typeof wr.media.primary === 'object') ? wr.media.primary : {};
+          var thumb96 = toAssetUrl(primaryMedia.thumb_96) || thumbUrl(id, '96');
+          var thumb192 = toAssetUrl(primaryMedia.thumb_192) || thumbUrl(id, '192');
+          return {
+            work_id: id,
+            title: String(wr.title || id),
+            work_url: workUrl(id),
+            thumb_96: thumb96,
+            thumb_192: thumb192
+          };
+        }).filter(function (it) { return it && it.work_id.length > 0; });
+      }
+
+      function extractWorkIds(seriesIndexData) {
+        if (!seriesIndexData || !seriesIndexData.series || typeof seriesIndexData.series !== 'object') return [];
+        var sr = seriesIndexData.series[seriesId];
+        if (!sr || !Array.isArray(sr.works)) return [];
+        return sr.works;
+      }
+
+      function loadFromSeriesIndex() {
+        return fetchJson(seriesIndexUrl)
+          .then(function (seriesIndexData) {
+            var workIds = extractWorkIds(seriesIndexData);
+            if (!workIds.length) throw new Error('no series work ids');
+            return fetchJson(worksIndexUrl)
+              .then(function (worksIndexData) {
+                return buildItems(workIds, worksIndexData);
+              })
+              .catch(function () {
+                return buildItems(workIds, null);
+              });
+          });
+      }
+
+      function loadFromLegacySeriesJson() {
+        return fetchJson(legacySeriesUrl)
+          .then(function (legacyData) {
+            var legacyIds = (legacyData && Array.isArray(legacyData.work_ids)) ? legacyData.work_ids : [];
+            return fetchJson(worksIndexUrl)
+              .then(function (worksIndexData) {
+                return buildItems(legacyIds, worksIndexData);
+              })
+              .catch(function () {
+                return buildItems(legacyIds, null);
+              });
+          });
+      }
+
+      loadFromSeriesIndex()
+        .catch(function () {
+          return loadFromLegacySeriesJson();
         })
-        .then(function (data) {
-          var workIds = (data && Array.isArray(data.work_ids)) ? data.work_ids : [];
-          var items = workIds.map(function (rawId) {
-            var id = String(rawId || '').trim();
-            return {
-              work_id: id,
-              title: String(titleMap[id] || id),
-              work_url: workUrl(id),
-              thumb_96: thumbUrl(id, '96'),
-              thumb_192: thumbUrl(id, '192')
-            };
-          }).filter(function (it) { return it.work_id.length > 0; });
+        .then(function (items) {
           render(items);
         })
         .catch(function () {
