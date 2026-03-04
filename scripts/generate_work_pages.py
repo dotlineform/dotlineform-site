@@ -2085,12 +2085,28 @@ def main() -> None:
             print("Work detail pages skipped: not selected by --only.")
 
         if run_work_json:
-            # Build per-work detail JSON from currently published detail rows only.
-            # Keep worksheet order for section order.
+            # Build per-work JSON from Works rows (work-driven).
+            # Detail sections are sourced from currently published detail rows only.
             encountered_work_ids: List[str] = []
             encountered_work_id_set: set[str] = set()
             detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
             detail_status_idx = work_details_hi.get("status")
+
+            for wr in works_rows[1:]:
+                wid_raw = cell(wr, works_hi, "work_id")
+                if is_empty(wid_raw):
+                    continue
+                wid = slug_id(wid_raw)
+                if selected_ids is not None and wid not in selected_ids:
+                    continue
+                status = normalize_status(cell(wr, works_hi, "status"))
+                if status not in {"draft", "published"}:
+                    continue
+                if wid not in canonical_work_record_by_id:
+                    continue
+                if wid not in encountered_work_id_set:
+                    encountered_work_ids.append(wid)
+                    encountered_work_id_set.add(wid)
 
             for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
                 wid_raw = cell(dr, work_details_hi, "work_id")
@@ -2099,14 +2115,8 @@ def main() -> None:
                     continue
 
                 wid = slug_id(wid_raw)
-                if selected_ids is not None and wid not in selected_ids:
-                    continue
-                if wid not in known_work_ids:
-                    continue
-
                 if wid not in encountered_work_id_set:
-                    encountered_work_ids.append(wid)
-                    encountered_work_id_set.add(wid)
+                    continue
 
                 status_val = dr_cells[detail_status_idx].value if detail_status_idx is not None else cell(dr, work_details_hi, "status")
                 if normalize_status(status_val) != "published":

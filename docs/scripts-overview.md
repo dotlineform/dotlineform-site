@@ -141,6 +141,7 @@ Useful flags:
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
+    - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
 
 ### 3b) Tag Studio local save server
 
