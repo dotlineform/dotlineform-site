@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-b22391cb4270577421e87bf8fda890f8",
+    "generated_at_utc": "2026-03-04T22:18:27Z",
+    "work_id": "00037",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-9b27099e5edfc1cc116ad07e1cd13454",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-b22391cb4270577421e87bf8fda890f8"
+  },
+  "work": {
+    "work_id": "00037",
+    "title": "slaughter (nerve 3)",
+    "title_sort": "slaughter (nerve 003)",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "153-00037",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "9b27099e5edfc1cc116ad07e1cd13454"
+  },
+  "sections": []
+}

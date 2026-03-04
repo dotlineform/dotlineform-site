@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-a2050971a54c5286c4625f509841eb90",
+    "generated_at_utc": "2026-03-04T22:18:27Z",
+    "work_id": "00097",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-a6d4ea0c72a2621ec5c95b6e6928abe1",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-a2050971a54c5286c4625f509841eb90"
+  },
+  "work": {
+    "work_id": "00097",
+    "title": "dissection (prepared body 2)",
+    "title_sort": "dissection (prepared body 002)",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "058-00097",
+    "medium_type": "painting",
+    "medium_caption": "ink and watercolour on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "a6d4ea0c72a2621ec5c95b6e6928abe1"
+  },
+  "sections": []
+}

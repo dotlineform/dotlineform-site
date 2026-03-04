@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-e0783e12c17a7e7e425934da75d16aac",
+    "generated_at_utc": "2026-03-04T22:18:27Z",
+    "work_id": "00008",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-210c3ebac544ca9e7509a0e42f6fc8cb",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-e0783e12c17a7e7e425934da75d16aac"
+  },
+  "work": {
+    "work_id": "00008",
+    "title": "nerve",
+    "title_sort": "nerve",
+    "year": 1995,
+    "year_display": "July 1990 – January 1995",
+    "series_id": "nerve",
+    "series_title": "nerve",
+    "series_sort": "00008",
+    "medium_type": "writing",
+    "medium_caption": "loose bound book, 48p",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": "nerve.pdf",
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "210c3ebac544ca9e7509a0e42f6fc8cb"
+  },
+  "sections": []
+}

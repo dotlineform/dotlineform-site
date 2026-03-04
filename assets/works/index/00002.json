@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-a91c430ca24d37fdb58ba8c5e1dce95a",
+    "generated_at_utc": "2026-03-04T22:18:27Z",
+    "work_id": "00002",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-9001e33a2c5665c0c22166fbfd15927a",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-a91c430ca24d37fdb58ba8c5e1dce95a"
+  },
+  "work": {
+    "work_id": "00002",
+    "title": "a poem divided into 4 parts (\"there must be hope\")",
+    "title_sort": "a poem divided into 004 parts (\"there must be hope\")",
+    "year": 2025,
+    "year_display": "2025",
+    "series_id": "a-poem-divided-into-4-parts",
+    "series_title": "a poem divided into 4 parts",
+    "series_sort": "00002",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on tracing paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 21.0,
+    "width_cm": 29.7,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "9001e33a2c5665c0c22166fbfd15927a"
+  },
+  "sections": []
+}

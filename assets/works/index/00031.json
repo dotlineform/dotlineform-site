@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-7c8710a491d35e75a3f877832182a606",
+    "generated_at_utc": "2026-03-04T22:18:27Z",
+    "work_id": "00031",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-c6eb1e0b543d48fd89dcb713882855c9",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-7c8710a491d35e75a3f877832182a606"
+  },
+  "work": {
+    "work_id": "00031",
+    "title": "slaughter 4",
+    "title_sort": "slaughter 004",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "157-00031",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "c6eb1e0b543d48fd89dcb713882855c9"
+  },
+  "sections": []
+}
