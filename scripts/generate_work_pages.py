@@ -8,6 +8,7 @@ It can also emit a parallel print collection (e.g. `_works_print/00286.md`) for 
 
 Series JSON index files are written to assets/series/index/<series_id>.json (one per series_id in the Series sheet).
 Work-details JSON index files are written to assets/works/index/<work_id>.json (one per work_id with published details).
+Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -58,6 +59,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import math
 import os
 import re
 import shutil
@@ -467,6 +469,45 @@ def compute_work_details_hash(work_id: str, sections: List[Dict[str, Any]]) -> s
     return hashlib.blake2b(canonical, digest_size=16).hexdigest()
 
 
+def canonicalize_for_hash(value: Any) -> Any:
+    """Canonicalize values for deterministic hashing."""
+    if isinstance(value, dict):
+        out: Dict[str, Any] = {}
+        for key in sorted(value.keys(), key=lambda k: str(k)):
+            out[str(key)] = canonicalize_for_hash(value[key])
+        return out
+    if isinstance(value, list):
+        return [canonicalize_for_hash(item) for item in value]
+    if isinstance(value, tuple):
+        return [canonicalize_for_hash(item) for item in value]
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            return value
+        if value == 0.0:
+            return 0
+        if value.is_integer():
+            return int(value)
+        return float(f"{value:.15g}")
+    return value
+
+
+def compute_payload_hash_hex(payload: Any) -> str:
+    """Compute deterministic blake2b hex hash for a canonicalized payload."""
+    canonical = json.dumps(
+        canonicalize_for_hash(payload),
+        sort_keys=True,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.blake2b(canonical, digest_size=16).hexdigest()
+
+
+def compute_payload_version(payload: Any) -> str:
+    """Compute deterministic blake2b content version token."""
+    return f"blake2b-{compute_payload_hash_hex(payload)}"
+
+
 def extract_existing_series_hash(path: Path) -> Optional[str]:
     """Extract header.hash from an existing series JSON file."""
     try:
@@ -477,6 +518,24 @@ def extract_existing_series_hash(path: Path) -> Optional[str]:
     if not isinstance(header, dict):
         return None
     hv = header.get("hash")
+    if hv is None:
+        return None
+    s = str(hv).strip()
+    return s or None
+
+
+def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
+    """Extract header.<key> from an existing JSON payload."""
+    try:
+        obj = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(obj, dict):
+        return None
+    header = obj.get("header")
+    if not isinstance(header, dict):
+        return None
+    hv = header.get(key)
     if hv is None:
         return None
     s = str(hv).strip()
@@ -575,6 +634,7 @@ def main() -> None:
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
+    ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--works-files-dir", default="assets/works/files", help="Output folder for copied work download files")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
@@ -634,7 +694,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,moments. "
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,works-index-json,moments. "
             "Note: selecting work-pages also includes works-curator-pages."
         ),
     )
@@ -656,6 +716,7 @@ def main() -> None:
         "series-json",
         "work-details-pages",
         "work-json",
+        "works-index-json",
         "moments",
     }
     selected_artifacts: Optional[set[str]] = None
@@ -688,6 +749,7 @@ def main() -> None:
     run_series_json = artifact_enabled("series-json")
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
+    run_works_index_json = artifact_enabled("works-index-json")
     run_moments_artifact = artifact_enabled("moments")
 
     needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
@@ -772,6 +834,8 @@ def main() -> None:
     work_details_out_dir.mkdir(parents=True, exist_ok=True)
     works_json_dir = Path(args.works_json_dir).expanduser()
     works_json_dir.mkdir(parents=True, exist_ok=True)
+    works_index_json_path = Path(args.works_index_json_path).expanduser()
+    works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     works_files_dir = Path(args.works_files_dir).expanduser()
     works_files_dir.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
@@ -949,6 +1013,125 @@ def main() -> None:
                 continue
             work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
 
+    works_field_order = [
+        "work_id",
+        "title",
+        "title_sort",
+        "year",
+        "year_display",
+        "series_id",
+        "series_title",
+        "series_sort",
+        "medium_type",
+        "medium_caption",
+        "duration",
+        "vimeo_url",
+        "youtube_url",
+        "bandcamp_url",
+        "height_cm",
+        "width_cm",
+        "depth_cm",
+        "download",
+        "has_primary_2400",
+        "artist",
+    ]
+
+    def build_canonical_work_record(wid: str) -> Optional[Dict[str, Any]]:
+        base = work_meta_by_id.get(wid)
+        if base is None:
+            return None
+        fm: Dict[str, Any] = {"work_id": wid}
+        fm.update(base)
+        download_rel = coerce_string(fm.get("download"))
+        fm["download"] = Path(download_rel).name if download_rel is not None else None
+        sid = coerce_string(fm.get("series_id"))
+        fm["series_id"] = sid
+        fm["series_title"] = series_title_by_id.get(sid) if sid is not None else None
+        fm["series_sort"] = series_sort_by_work_id.get(wid, wid)
+        fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
+
+        fm_ordered: Dict[str, Any] = {}
+        for key in works_field_order:
+            if key in fm:
+                fm_ordered[key] = fm[key]
+        for key, value in fm.items():
+            if key not in fm_ordered:
+                fm_ordered[key] = value
+        fm = fm_ordered
+        fm["checksum"] = compute_work_checksum(fm)
+        return fm
+
+    def build_canonical_detail_record(
+        wid: str,
+        did: str,
+        title: Optional[str],
+        project_subfolder: Optional[str],
+        width_px: Optional[int],
+        height_px: Optional[int],
+        has_primary_2400: bool,
+    ) -> Dict[str, Any]:
+        detail_uid = f"{wid}-{did}"
+        dfm: Dict[str, Any] = {
+            "work_id": wid,
+            "detail_id": did,
+            "detail_uid": detail_uid,
+            "title": title,
+            "title_sort": numeric_aware_sort_key(title),
+            "project_subfolder": project_subfolder,
+            "width_px": width_px,
+            "height_px": height_px,
+            "has_primary_2400": has_primary_2400,
+            "layout": "work_details",
+        }
+        dfm["checksum"] = compute_work_checksum(dfm)
+        return dfm
+
+    def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
+        wid = str(work_record.get("work_id", ""))
+        work_checksum_raw = coerce_string(work_record.get("checksum"))
+        media_kind = "image"
+        if coerce_string(work_record.get("vimeo_url")) or coerce_string(work_record.get("youtube_url")):
+            media_kind = "video"
+        elif coerce_string(work_record.get("bandcamp_url")):
+            media_kind = "audio"
+        return {
+            "work_id": wid,
+            "title": work_record.get("title"),
+            "year": work_record.get("year"),
+            "series_id": work_record.get("series_id"),
+            "media": {
+                "primary": {
+                    "kind": media_kind,
+                    "thumb_96": f"/assets/works/img/{wid}-thumb-96.webp",
+                    "thumb_192": f"/assets/works/img/{wid}-thumb-192.webp",
+                }
+            },
+            "has_details": False,
+            "details_count": 0,
+            "work_checksum": f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None,
+            "details_checksum": None,
+        }
+
+    def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        section_index: Dict[str, int] = {}
+        sections: List[Dict[str, Any]] = []
+        for detail in detail_records:
+            project_subfolder = coerce_string(detail.get("project_subfolder")) or ""
+            if project_subfolder not in section_index:
+                section_index[project_subfolder] = len(sections)
+                sections.append(
+                    {
+                        "project_subfolder": project_subfolder,
+                        "details": [],
+                    }
+                )
+            sections[section_index[project_subfolder]]["details"].append(dict(detail))
+        for sec in sections:
+            details = sec.get("details")
+            if isinstance(details, list):
+                details.sort(key=lambda item: str(item.get("detail_id", "")))
+        return sections
+
     written = 0
     skipped = 0
     print_written = 0
@@ -957,7 +1140,13 @@ def main() -> None:
     curator_skipped = 0
     downloads_copied = 0
     downloads_missing = 0
-    run_works_loop = run_work_pages or run_works_curator_pages or run_work_files
+    run_works_loop = run_work_pages or run_works_curator_pages or run_work_files or run_works_index_json
+    canonical_work_record_by_id: Dict[str, Dict[str, Any]] = {}
+    for wid in sorted(work_meta_by_id.keys()):
+        record = build_canonical_work_record(wid)
+        if record is not None:
+            canonical_work_record_by_id[wid] = record
+
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
             return True
@@ -1080,60 +1269,13 @@ def main() -> None:
 
             processed += 1
             prefix = f"[{processed}/{total}] "
-            # Fields in stable order (matches your canonical front matter schema)
-            fm: Dict[str, Any] = {"work_id": wid}
-            fm.update(build_works_front_matter(r, works_hi))
             # Normalise download to a filename (basename only) for front matter/link text.
             download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
-            if download_rel is not None:
-                fm["download"] = Path(download_rel).name
-
-            # Series title lookup (Works.series_id -> series_id; Series.series_title -> series_title)
-            sid = fm.get("series_id")
-            if isinstance(sid, str) and sid.strip() != "":
-                fm["series_title"] = series_title_by_id.get(sid.strip())
-            else:
-                fm["series_title"] = None
-
-            # Canonical per-series ordering key. Default ordering is work_id ascending.
-            fm["series_sort"] = series_sort_by_work_id.get(wid, wid)
-            fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
-
-            # Canonical works front-matter ordering.
-            works_field_order = [
-                "work_id",
-                "title",
-                "title_sort",
-                "year",
-                "year_display",
-                "series_id",
-                "series_title",
-                "series_sort",
-                "medium_type",
-                "medium_caption",
-                "duration",
-                "vimeo_url",
-                "youtube_url",
-                "bandcamp_url",
-                "height_cm",
-                "width_cm",
-                "depth_cm",
-                "download",
-                "has_primary_2400",
-                "artist",
-            ]
-            fm_ordered: Dict[str, Any] = {}
-            for key in works_field_order:
-                if key in fm:
-                    fm_ordered[key] = fm[key]
-            for key, value in fm.items():
-                if key not in fm_ordered:
-                    fm_ordered[key] = value
-            fm = fm_ordered
-
-            # Compute checksum from the canonical Excel-derived record and write it into front matter.
-            checksum = compute_work_checksum(fm)
-            fm["checksum"] = checksum
+            fm = build_canonical_work_record(wid)
+            if fm is None:
+                skipped += 1
+                continue
+            checksum = str(fm.get("checksum"))
 
             prose_path = work_prose_dir / f"{wid}.md"
             work_body = ""
@@ -1755,7 +1897,7 @@ def main() -> None:
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
     if not work_details_rows or len(work_details_rows) < 2 or work_details_ws is None:
-        if run_work_details_pages or run_work_json:
+        if run_work_details_pages or run_work_json or run_works_index_json:
             print("No work detail pages/JSON to generate (WorkDetails sheet empty or missing).")
         else:
             print("Work detail pages/JSON skipped: not selected by --only.")
@@ -1885,20 +2027,16 @@ def main() -> None:
                 elif project_filename:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
-                dfm: Dict[str, Any] = {
-                    "work_id": wid,
-                    "detail_id": did,
-                    "detail_uid": detail_uid,
-                    "title": title,
-                    "title_sort": numeric_aware_sort_key(title),
-                    "project_subfolder": project_subfolder,
-                    "width_px": width_px,
-                    "height_px": height_px,
-                    "has_primary_2400": has_primary_2400,
-                    "layout": "work_details",
-                }
-                d_checksum = compute_work_checksum(dfm)
-                dfm["checksum"] = d_checksum
+                dfm = build_canonical_detail_record(
+                    wid=wid,
+                    did=did,
+                    title=title,
+                    project_subfolder=project_subfolder,
+                    width_px=width_px,
+                    height_px=height_px,
+                    has_primary_2400=has_primary_2400,
+                )
+                d_checksum = str(dfm.get("checksum"))
 
                 d_content = build_front_matter(dfm)
                 d_path = work_details_out_dir / f"{detail_uid}.md"
@@ -1951,8 +2089,7 @@ def main() -> None:
             # Keep worksheet order for section order.
             encountered_work_ids: List[str] = []
             encountered_work_id_set: set[str] = set()
-            sections_by_work: Dict[str, List[Dict[str, Any]]] = {}
-            section_index_by_work: Dict[str, Dict[str, int]] = {}
+            detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
             detail_status_idx = work_details_hi.get("status")
 
             for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
@@ -1976,63 +2113,56 @@ def main() -> None:
                     continue
 
                 did = slug_id(did_raw, width=3)
-                detail_uid = f"{wid}-{did}"
-                project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder")) or ""
-
-                if wid not in sections_by_work:
-                    sections_by_work[wid] = []
-                    section_index_by_work[wid] = {}
-
-                if project_subfolder not in section_index_by_work[wid]:
-                    section_index_by_work[wid][project_subfolder] = len(sections_by_work[wid])
-                    sections_by_work[wid].append(
-                        {
-                            "project_subfolder": project_subfolder,
-                            "details": [],
-                        }
-                    )
-
-                section_idx = section_index_by_work[wid][project_subfolder]
-                detail_entry = {
-                    "detail_id": did,
-                    "detail_uid": detail_uid,
-                    "title": coerce_string(cell(dr, work_details_hi, "title")),
-                }
-                if coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")):
-                    detail_entry["has_primary_2400"] = True
-                sections_by_work[wid][section_idx]["details"].append(detail_entry)
-
-            # Ensure deterministic detail ordering by detail_id ascending within each section.
-            for sections in sections_by_work.values():
-                for sec in sections:
-                    details = sec.get("details")
-                    if isinstance(details, list):
-                        details.sort(key=lambda item: str(item.get("detail_id", "")))
+                detail_record = build_canonical_detail_record(
+                    wid=wid,
+                    did=did,
+                    title=coerce_string(cell(dr, work_details_hi, "title")),
+                    project_subfolder=coerce_string(cell(dr, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                    height_px=coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                    has_primary_2400=coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
+                )
+                detail_records_by_work.setdefault(wid, []).append(detail_record)
 
             wj_written = 0
             wj_skipped = 0
             wj_total = len(encountered_work_ids)
             wj_processed = 0
+            generated_at_utc = utc_timestamp_now()
 
             for wid in encountered_work_ids:
                 wj_processed += 1
                 prefix_wj = f"[workjson {wj_processed}/{wj_total}] "
 
-                sections = sections_by_work.get(wid, [])
+                sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
+                details_total = sum(len(s.get("details", [])) for s in sections)
+                work_record = canonical_work_record_by_id.get(wid, {"work_id": wid})
+                work_checksum_raw = coerce_string(work_record.get("checksum"))
+                work_checksum = f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None
+                details_checksum = compute_payload_version({"sections": sections})
+                record_checksum = compute_payload_version({"work": work_record, "sections": sections})
+
                 payload = {
                     "header": {
+                        "schema": "work_record_v1",
+                        "version": record_checksum,
+                        "generated_at_utc": generated_at_utc,
                         "work_id": wid,
-                        "count": sum(len(s.get("details", [])) for s in sections),
-                        "hash": compute_work_details_hash(wid, sections),
+                        "count": details_total,
+                        "hash": details_checksum,
+                        "work_checksum": work_checksum,
+                        "details_checksum": details_checksum,
+                        "record_checksum": record_checksum,
                     },
+                    "work": work_record,
                     "sections": sections,
                 }
                 out_json_path = works_json_dir / f"{wid}.json"
                 exists = out_json_path.exists()
-                existing_hash = extract_existing_series_hash(out_json_path) if exists else None
-                payload_hash = payload["header"]["hash"]
+                existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
+                payload_version = payload["header"]["version"]
 
-                if (existing_hash is not None) and (existing_hash == payload_hash) and (not args.force):
+                if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
                     wj_skipped += 1
                     continue
 
@@ -2049,6 +2179,90 @@ def main() -> None:
             )
         else:
             print("Work detail JSON skipped: not selected by --only.")
+
+    if run_works_index_json:
+        works_payload: Dict[str, Dict[str, Any]] = {}
+        for wr in works_rows[1:]:
+            wid_raw = cell(wr, works_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            status = normalize_status(cell(wr, works_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+            wid = slug_id(wid_raw)
+            record = canonical_work_record_by_id.get(wid)
+            if record is None:
+                continue
+            works_payload[wid] = build_work_index_record(record)
+
+        detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
+        if work_details_rows and len(work_details_rows) > 1:
+            for dr in work_details_rows[1:]:
+                wid_raw = cell(dr, work_details_hi, "work_id")
+                did_raw = cell(dr, work_details_hi, "detail_id")
+                if is_empty(wid_raw) or is_empty(did_raw):
+                    continue
+                wid = slug_id(wid_raw)
+                if wid not in works_payload:
+                    continue
+                status = normalize_status(cell(dr, work_details_hi, "status"))
+                if status not in {"draft", "published"}:
+                    continue
+                did = slug_id(did_raw, width=3)
+                detail_records_by_work.setdefault(wid, []).append(
+                    build_canonical_detail_record(
+                        wid=wid,
+                        did=did,
+                        title=coerce_string(cell(dr, work_details_hi, "title")),
+                        project_subfolder=coerce_string(cell(dr, work_details_hi, "project_subfolder")),
+                        width_px=coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                        height_px=coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                        has_primary_2400=coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
+                    )
+                )
+
+        for wid in sorted(works_payload.keys()):
+            item = works_payload[wid]
+            detail_records = detail_records_by_work.get(wid, [])
+            detail_sections = build_sections_from_detail_records(detail_records)
+            details_count = sum(len(sec.get("details", [])) for sec in detail_sections)
+            item["has_details"] = details_count > 0
+            item["details_count"] = details_count
+            item["details_checksum"] = compute_payload_version({"sections": detail_sections})
+
+        version_payload = {
+            "schema": "works_index_v1",
+            "works": works_payload,
+        }
+        version = compute_payload_version(version_payload)
+        payload = {
+            "header": {
+                "schema": "works_index_v1",
+                "version": version,
+                "generated_at_utc": utc_timestamp_now(),
+                "count": len(works_payload),
+            },
+            "works": works_payload,
+        }
+        payload_version = payload["header"]["version"]
+        exists = works_index_json_path.exists()
+        existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
+        if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+            print("Works index JSON done. Wrote: 0. Skipped: 1.")
+        else:
+            if args.write:
+                works_index_json_path.write_text(
+                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {works_index_json_path}")
+            else:
+                print(
+                    "Works index JSON done. Would write: 1. Skipped: 0. "
+                    f"Path: {works_index_json_path} (overwrite={exists})"
+                )
+    else:
+        print("Works index JSON skipped: not selected by --only.")
 
     # ----------------------------
     # Moment page generation (Moments)

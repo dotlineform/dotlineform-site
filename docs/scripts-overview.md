@@ -131,12 +131,16 @@ Useful flags:
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
+- `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
   - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-json`, `work-details-pages`, `work-json`, `moments`
+  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - coupling:
     - selecting `work-pages` also includes `works-curator-pages`
+  - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
+    - always rebuilt as a full index (not scoped by `--work-ids`)
+  - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
 
 ### 3b) Tag Studio local save server
 

@@ -1,5 +1,6 @@
 ## General behaviour
 
+- when prompted to 'read Agents.md', note any actions needed before continuing. Specifically: always ask for confirmation before edits.
 - do not make code changes without first confirming what will be changed.
 - instructions like 'check' and 'confirm' DO NOT imply you carry out code changes. always ask for confirmation to proceed.
 - consider the prompt requirements and ask for clarification, raise potential issues or unintended side-effects.
