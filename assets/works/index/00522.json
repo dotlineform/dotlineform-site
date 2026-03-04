@@ -1,22 +1,67 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-8615f750415d347cdffeb1c9a3b52f35",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00522",
     "count": 2,
-    "hash": "148c034e8e32ba929387c85d497c0ec9"
+    "hash": "blake2b-0190c5a1495efa0411d91226415caabf",
+    "work_checksum": "blake2b-d5e3b2afdf85f8d1c976aaec1ffe8950",
+    "details_checksum": "blake2b-0190c5a1495efa0411d91226415caabf",
+    "record_checksum": "blake2b-8615f750415d347cdffeb1c9a3b52f35"
+  },
+  "work": {
+    "work_id": "00522",
+    "title": "kylie structure 3",
+    "title_sort": "kylie structure 003",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "kylie-structures",
+    "series_title": "kylie structures",
+    "series_sort": "00522",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 45.0,
+    "width_cm": 80.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "d5e3b2afdf85f8d1c976aaec1ffe8950"
   },
   "sections": [
     {
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00522",
           "detail_id": "013",
           "detail_uid": "00522-013",
-          "title": "kylie structure 3.1"
+          "title": "kylie structure 3.1",
+          "title_sort": "kylie structure 003.001",
+          "project_subfolder": "details",
+          "width_px": 3316,
+          "height_px": 3316,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aefcf2a25caf74f3a996b89147511890"
         },
         {
+          "work_id": "00522",
           "detail_id": "014",
           "detail_uid": "00522-014",
-          "title": "kylie structure 3.2"
+          "title": "kylie structure 3.2",
+          "title_sort": "kylie structure 003.002",
+          "project_subfolder": "details",
+          "width_px": 3316,
+          "height_px": 3316,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5abb41c2a6132361723ca51473050568"
         }
       ]
     }

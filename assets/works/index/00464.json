@@ -1,32 +1,93 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-bc19127d63f8e3d03691bb687cf740ed",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00464",
     "count": 60,
-    "hash": "88fc4b9e9b8a3f22b35c5ba10b4a31f5"
+    "hash": "blake2b-af1e96846bab9b2df025a5b0ae380462",
+    "work_checksum": "blake2b-3fa3aeda85a0f80aa316cecb79daa0b1",
+    "details_checksum": "blake2b-af1e96846bab9b2df025a5b0ae380462",
+    "record_checksum": "blake2b-bc19127d63f8e3d03691bb687cf740ed"
+  },
+  "work": {
+    "work_id": "00464",
+    "title": "forest memories 1-48",
+    "title_sort": "forest memories 001-048",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "forest-memories-1-48",
+    "series_title": "forest memories 1-48",
+    "series_sort": "00464",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "3fa3aeda85a0f80aa316cecb79daa0b1"
   },
   "sections": [
     {
       "project_subfolder": "moments",
       "details": [
         {
+          "work_id": "00464",
           "detail_id": "001",
           "detail_uid": "00464-001",
-          "title": "memories of the forest 1"
+          "title": "memories of the forest 1",
+          "title_sort": "memories of the forest 001",
+          "project_subfolder": "moments",
+          "width_px": 8268,
+          "height_px": 8268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d75680cb3fdf7988af4509a50e45bf35"
         },
         {
+          "work_id": "00464",
           "detail_id": "002",
           "detail_uid": "00464-002",
-          "title": "memories of the forest 2"
+          "title": "memories of the forest 2",
+          "title_sort": "memories of the forest 002",
+          "project_subfolder": "moments",
+          "width_px": 8268,
+          "height_px": 8268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "29e788317ea2adcb1c6c317971732adf"
         },
         {
+          "work_id": "00464",
           "detail_id": "003",
           "detail_uid": "00464-003",
-          "title": "memories of the forest 3"
+          "title": "memories of the forest 3",
+          "title_sort": "memories of the forest 003",
+          "project_subfolder": "moments",
+          "width_px": 8268,
+          "height_px": 8268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0f975899800a59eb74eca6b7ae39acea"
         },
         {
+          "work_id": "00464",
           "detail_id": "004",
           "detail_uid": "00464-004",
-          "title": "3 moments"
+          "title": "3 moments",
+          "title_sort": "003 moments",
+          "project_subfolder": "moments",
+          "width_px": 4000,
+          "height_px": 4000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bd33e5fe3439959800ae8339a0f0a2de"
         }
       ]
     },
@@ -34,244 +95,628 @@
       "project_subfolder": "memories",
       "details": [
         {
+          "work_id": "00464",
           "detail_id": "005",
           "detail_uid": "00464-005",
-          "title": "memory - 1.1"
+          "title": "memory - 1.1",
+          "title_sort": "memory - 001.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "30cec114f3db2bf0e0f9f8d43dff7d7c"
         },
         {
+          "work_id": "00464",
           "detail_id": "006",
           "detail_uid": "00464-006",
-          "title": "memory - 1.2"
+          "title": "memory - 1.2",
+          "title_sort": "memory - 001.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d42d5df9747fac423873cf21558b6dac"
         },
         {
+          "work_id": "00464",
           "detail_id": "007",
           "detail_uid": "00464-007",
-          "title": "memory - 1.3"
+          "title": "memory - 1.3",
+          "title_sort": "memory - 001.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ff2ef597ba5767834d9f48e200a3cf41"
         },
         {
+          "work_id": "00464",
           "detail_id": "008",
           "detail_uid": "00464-008",
-          "title": "memory - 2.1"
+          "title": "memory - 2.1",
+          "title_sort": "memory - 002.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "63c48b2af962983781881626a4f3656a"
         },
         {
+          "work_id": "00464",
           "detail_id": "009",
           "detail_uid": "00464-009",
-          "title": "memory - 2.2"
+          "title": "memory - 2.2",
+          "title_sort": "memory - 002.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "901071f2c9259ccc4fab58e5d20c8a6f"
         },
         {
+          "work_id": "00464",
           "detail_id": "010",
           "detail_uid": "00464-010",
-          "title": "memory - 2.3"
+          "title": "memory - 2.3",
+          "title_sort": "memory - 002.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "61551c507f5323623a3535f9be637beb"
         },
         {
+          "work_id": "00464",
           "detail_id": "011",
           "detail_uid": "00464-011",
-          "title": "memory - 3.1"
+          "title": "memory - 3.1",
+          "title_sort": "memory - 003.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aa028269b0e22c02dd29e96403323bd6"
         },
         {
+          "work_id": "00464",
           "detail_id": "012",
           "detail_uid": "00464-012",
-          "title": "memory - 3.2"
+          "title": "memory - 3.2",
+          "title_sort": "memory - 003.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0bef5bf84b4799dada85875cd9501d2a"
         },
         {
+          "work_id": "00464",
           "detail_id": "013",
           "detail_uid": "00464-013",
-          "title": "memory - 3.3"
+          "title": "memory - 3.3",
+          "title_sort": "memory - 003.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d45e2b38910ba6b5d2dd331c949279d8"
         },
         {
+          "work_id": "00464",
           "detail_id": "014",
           "detail_uid": "00464-014",
-          "title": "memory - 4.1"
+          "title": "memory - 4.1",
+          "title_sort": "memory - 004.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "70b2d4c77685212172d16b95cfaed556"
         },
         {
+          "work_id": "00464",
           "detail_id": "015",
           "detail_uid": "00464-015",
-          "title": "memory - 4.2"
+          "title": "memory - 4.2",
+          "title_sort": "memory - 004.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "09e06533f0ed3f333bc042306f55b988"
         },
         {
+          "work_id": "00464",
           "detail_id": "016",
           "detail_uid": "00464-016",
-          "title": "memory - 4.3"
+          "title": "memory - 4.3",
+          "title_sort": "memory - 004.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6c00e2cf2fd6ad5b92c63f966eaa794f"
         },
         {
+          "work_id": "00464",
           "detail_id": "017",
           "detail_uid": "00464-017",
-          "title": "memory - 5.1"
+          "title": "memory - 5.1",
+          "title_sort": "memory - 005.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ba03ba66d4e2075c40a0e3094ba974c5"
         },
         {
+          "work_id": "00464",
           "detail_id": "018",
           "detail_uid": "00464-018",
-          "title": "memory - 5.2"
+          "title": "memory - 5.2",
+          "title_sort": "memory - 005.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d070fb65fc43521656adad1477947048"
         },
         {
+          "work_id": "00464",
           "detail_id": "019",
           "detail_uid": "00464-019",
-          "title": "memory - 5.3"
+          "title": "memory - 5.3",
+          "title_sort": "memory - 005.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2dc83c8d03f84b866bbab4114926fb3c"
         },
         {
+          "work_id": "00464",
           "detail_id": "020",
           "detail_uid": "00464-020",
-          "title": "memory - 6.1"
+          "title": "memory - 6.1",
+          "title_sort": "memory - 006.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a070f20fa2a65a5d5d59f0e698966285"
         },
         {
+          "work_id": "00464",
           "detail_id": "021",
           "detail_uid": "00464-021",
-          "title": "memory - 6.2"
+          "title": "memory - 6.2",
+          "title_sort": "memory - 006.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "89bb511001124421ae0164ae768e2d13"
         },
         {
+          "work_id": "00464",
           "detail_id": "022",
           "detail_uid": "00464-022",
-          "title": "memory - 6.3"
+          "title": "memory - 6.3",
+          "title_sort": "memory - 006.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "95902abb590ab6e88c548b764e3bd086"
         },
         {
+          "work_id": "00464",
           "detail_id": "023",
           "detail_uid": "00464-023",
-          "title": "memory - 7.1"
+          "title": "memory - 7.1",
+          "title_sort": "memory - 007.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "36282a36943a5b3ce28bd88316328950"
         },
         {
+          "work_id": "00464",
           "detail_id": "024",
           "detail_uid": "00464-024",
-          "title": "memory - 7.2"
+          "title": "memory - 7.2",
+          "title_sort": "memory - 007.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9d3a98634756cd095a37ed9584aec2f0"
         },
         {
+          "work_id": "00464",
           "detail_id": "025",
           "detail_uid": "00464-025",
-          "title": "memory - 7.3"
+          "title": "memory - 7.3",
+          "title_sort": "memory - 007.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1ded74d3948fab9d0a37ef51d92ca7ad"
         },
         {
+          "work_id": "00464",
           "detail_id": "026",
           "detail_uid": "00464-026",
-          "title": "memory - 8.1"
+          "title": "memory - 8.1",
+          "title_sort": "memory - 008.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f139e1e40849a18e648f4b27771094c6"
         },
         {
+          "work_id": "00464",
           "detail_id": "027",
           "detail_uid": "00464-027",
-          "title": "memory - 8.2"
+          "title": "memory - 8.2",
+          "title_sort": "memory - 008.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c1bf02edd940e5236ae919eecddb7a43"
         },
         {
+          "work_id": "00464",
           "detail_id": "028",
           "detail_uid": "00464-028",
-          "title": "memory - 8.3"
+          "title": "memory - 8.3",
+          "title_sort": "memory - 008.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e4bc802313c43a8718f0c5ef80e251a6"
         },
         {
+          "work_id": "00464",
           "detail_id": "029",
           "detail_uid": "00464-029",
-          "title": "memory - 9.1"
+          "title": "memory - 9.1",
+          "title_sort": "memory - 009.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6c60a8d98db2ac6e9dc77cc65386007a"
         },
         {
+          "work_id": "00464",
           "detail_id": "030",
           "detail_uid": "00464-030",
-          "title": "memory - 9.2"
+          "title": "memory - 9.2",
+          "title_sort": "memory - 009.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fff3b339e87f1261124ce813a2f47e44"
         },
         {
+          "work_id": "00464",
           "detail_id": "031",
           "detail_uid": "00464-031",
-          "title": "memory - 9.3"
+          "title": "memory - 9.3",
+          "title_sort": "memory - 009.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ea1dd603b59cfffdedd08c851bd5f590"
         },
         {
+          "work_id": "00464",
           "detail_id": "032",
           "detail_uid": "00464-032",
-          "title": "memory - 10.1"
+          "title": "memory - 10.1",
+          "title_sort": "memory - 010.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7698a9353ff3d9c2c76acde840156624"
         },
         {
+          "work_id": "00464",
           "detail_id": "033",
           "detail_uid": "00464-033",
-          "title": "memory - 10.2"
+          "title": "memory - 10.2",
+          "title_sort": "memory - 010.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f60164c8ac5a76a0affb0ac7cde7f2ce"
         },
         {
+          "work_id": "00464",
           "detail_id": "034",
           "detail_uid": "00464-034",
-          "title": "memory - 10.3"
+          "title": "memory - 10.3",
+          "title_sort": "memory - 010.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c819f026ea060ada78d009a00664c495"
         },
         {
+          "work_id": "00464",
           "detail_id": "035",
           "detail_uid": "00464-035",
-          "title": "memory - 11.1"
+          "title": "memory - 11.1",
+          "title_sort": "memory - 011.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "22e3239482871f00ae126b5f4f798db2"
         },
         {
+          "work_id": "00464",
           "detail_id": "036",
           "detail_uid": "00464-036",
-          "title": "memory - 11.2"
+          "title": "memory - 11.2",
+          "title_sort": "memory - 011.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d39e09dad1a7ed479fec22738bb5fd8a"
         },
         {
+          "work_id": "00464",
           "detail_id": "037",
           "detail_uid": "00464-037",
-          "title": "memory - 11.3"
+          "title": "memory - 11.3",
+          "title_sort": "memory - 011.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e9f524bbbff53dd2274fedd2941cf962"
         },
         {
+          "work_id": "00464",
           "detail_id": "038",
           "detail_uid": "00464-038",
-          "title": "memory - 12.1"
+          "title": "memory - 12.1",
+          "title_sort": "memory - 012.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "49b1e0d6fc8de2a0d0b32381851a2ea7"
         },
         {
+          "work_id": "00464",
           "detail_id": "039",
           "detail_uid": "00464-039",
-          "title": "memory - 12.2"
+          "title": "memory - 12.2",
+          "title_sort": "memory - 012.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0c092e4731896168feab626ae997ca51"
         },
         {
+          "work_id": "00464",
           "detail_id": "040",
           "detail_uid": "00464-040",
-          "title": "memory - 12.3"
+          "title": "memory - 12.3",
+          "title_sort": "memory - 012.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "af2cfc74239d407896f8acdb42f758d7"
         },
         {
+          "work_id": "00464",
           "detail_id": "041",
           "detail_uid": "00464-041",
-          "title": "memory - 13.1"
+          "title": "memory - 13.1",
+          "title_sort": "memory - 013.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c407ac9023f8fd9f16a3869ed327eff1"
         },
         {
+          "work_id": "00464",
           "detail_id": "042",
           "detail_uid": "00464-042",
-          "title": "memory - 13.2"
+          "title": "memory - 13.2",
+          "title_sort": "memory - 013.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ace8b5bee9545464aec7a302db43ebf3"
         },
         {
+          "work_id": "00464",
           "detail_id": "043",
           "detail_uid": "00464-043",
-          "title": "memory - 13.3"
+          "title": "memory - 13.3",
+          "title_sort": "memory - 013.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "db4209607572b18391565e5e884ab5d9"
         },
         {
+          "work_id": "00464",
           "detail_id": "044",
           "detail_uid": "00464-044",
-          "title": "memory - 14.1"
+          "title": "memory - 14.1",
+          "title_sort": "memory - 014.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "80d39dde3ca5295d174e91aae83d95b4"
         },
         {
+          "work_id": "00464",
           "detail_id": "045",
           "detail_uid": "00464-045",
-          "title": "memory - 14.2"
+          "title": "memory - 14.2",
+          "title_sort": "memory - 014.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0a0b39404717981a7b4421635673c68e"
         },
         {
+          "work_id": "00464",
           "detail_id": "046",
           "detail_uid": "00464-046",
-          "title": "memory - 14.3"
+          "title": "memory - 14.3",
+          "title_sort": "memory - 014.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9476fbaa5a550bdc4b229b5f1f82c0fd"
         },
         {
+          "work_id": "00464",
           "detail_id": "047",
           "detail_uid": "00464-047",
-          "title": "memory - 15.1"
+          "title": "memory - 15.1",
+          "title_sort": "memory - 015.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3870c61c78a1c33f2952fe3d539633ee"
         },
         {
+          "work_id": "00464",
           "detail_id": "048",
           "detail_uid": "00464-048",
-          "title": "memory - 15.2"
+          "title": "memory - 15.2",
+          "title_sort": "memory - 015.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "232b1e93bac3e75d459d10c42ce0f938"
         },
         {
+          "work_id": "00464",
           "detail_id": "049",
           "detail_uid": "00464-049",
-          "title": "memory - 15.3"
+          "title": "memory - 15.3",
+          "title_sort": "memory - 015.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "67b91381126ae4e6543056d44585d217"
         },
         {
+          "work_id": "00464",
           "detail_id": "050",
           "detail_uid": "00464-050",
-          "title": "memory - 16.1"
+          "title": "memory - 16.1",
+          "title_sort": "memory - 016.001",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dd6d1f79453803215d9de7c0b1be55c2"
         },
         {
+          "work_id": "00464",
           "detail_id": "051",
           "detail_uid": "00464-051",
-          "title": "memory - 16.2"
+          "title": "memory - 16.2",
+          "title_sort": "memory - 016.002",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "23bb20e3b38c59459550d2525ae6e6bf"
         },
         {
+          "work_id": "00464",
           "detail_id": "052",
           "detail_uid": "00464-052",
-          "title": "memory - 16.3"
+          "title": "memory - 16.3",
+          "title_sort": "memory - 016.003",
+          "project_subfolder": "memories",
+          "width_px": 2362,
+          "height_px": 2362,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a904092137e3e03568612d0393181f1e"
         }
       ]
     },
@@ -279,44 +724,108 @@
       "project_subfolder": "composite memories",
       "details": [
         {
+          "work_id": "00464",
           "detail_id": "053",
           "detail_uid": "00464-053",
-          "title": "memories 1-6"
+          "title": "memories 1-6",
+          "title_sort": "memories 001-006",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dc6e40b33a1f655d5730111e34691a16"
         },
         {
+          "work_id": "00464",
           "detail_id": "054",
           "detail_uid": "00464-054",
-          "title": "memories 7-12"
+          "title": "memories 7-12",
+          "title_sort": "memories 007-012",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9ad1aa6f1ea6515d9445afa23d9d1966"
         },
         {
+          "work_id": "00464",
           "detail_id": "055",
           "detail_uid": "00464-055",
-          "title": "memories 13-18"
+          "title": "memories 13-18",
+          "title_sort": "memories 013-018",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "80217d1d5e5cee53ff8e4d274b2e45b2"
         },
         {
+          "work_id": "00464",
           "detail_id": "056",
           "detail_uid": "00464-056",
-          "title": "memories 19-24"
+          "title": "memories 19-24",
+          "title_sort": "memories 019-024",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7b3297d68f11363e4ca96af5a349323d"
         },
         {
+          "work_id": "00464",
           "detail_id": "057",
           "detail_uid": "00464-057",
-          "title": "memories 25-30"
+          "title": "memories 25-30",
+          "title_sort": "memories 025-030",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "05536bacb8517e927dd36e5485dfd18e"
         },
         {
+          "work_id": "00464",
           "detail_id": "058",
           "detail_uid": "00464-058",
-          "title": "memories 31-36"
+          "title": "memories 31-36",
+          "title_sort": "memories 031-036",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "63dee33054249bea512a81d6835eda03"
         },
         {
+          "work_id": "00464",
           "detail_id": "059",
           "detail_uid": "00464-059",
-          "title": "memories 37-42"
+          "title": "memories 37-42",
+          "title_sort": "memories 037-042",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c3fd1c939a2ee56ecb649f5f195988eb"
         },
         {
+          "work_id": "00464",
           "detail_id": "060",
           "detail_uid": "00464-060",
-          "title": "memories 43-48"
+          "title": "memories 43-48",
+          "title_sort": "memories 043-048",
+          "project_subfolder": "composite memories",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "21012645b1e51a904b976be52a431128"
         }
       ]
     }

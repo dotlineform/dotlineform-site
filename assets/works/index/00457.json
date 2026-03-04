@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-5712145a193e5eb77432ea2e3a51e746",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00457",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-5301e2f23cb62f8be1494c426db995fb",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-5712145a193e5eb77432ea2e3a51e746"
+  },
+  "work": {
+    "work_id": "00457",
+    "title": "intuition (2020)",
+    "title_sort": "intuition (2020)",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "series_id": "intuition-2020",
+    "series_title": "intuition (2020)",
+    "series_sort": "00457",
+    "medium_type": "music",
+    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": "https://dotlineform.bandcamp.com/album/intuition",
+    "height_cm": 11.8,
+    "width_cm": 11.8,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "5301e2f23cb62f8be1494c426db995fb"
+  },
+  "sections": []
+}

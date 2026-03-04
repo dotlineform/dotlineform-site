@@ -1,27 +1,80 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-3cc0dde45422d50573db90fe073f5561",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00465",
     "count": 3,
-    "hash": "40ce0e94bd3559fe723f65c112d1b24f"
+    "hash": "blake2b-e0a685df2152dc7c350feb530508ab6b",
+    "work_checksum": "blake2b-af97a9855b66c388e0dcba8393c74b27",
+    "details_checksum": "blake2b-e0a685df2152dc7c350feb530508ab6b",
+    "record_checksum": "blake2b-3cc0dde45422d50573db90fe073f5561"
+  },
+  "work": {
+    "work_id": "00465",
+    "title": "forests (2023) - forest 1",
+    "title_sort": "forests (2023) - forest 001",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "forests-2023",
+    "series_title": "forests (2023)",
+    "series_sort": "00465",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 120.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "af97a9855b66c388e0dcba8393c74b27"
   },
   "sections": [
     {
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00465",
           "detail_id": "001",
           "detail_uid": "00465-001",
-          "title": "forests (2023) - forest 1 - detail 1"
+          "title": "forests (2023) - forest 1 - detail 1",
+          "title_sort": "forests (2023) - forest 001 - detail 001",
+          "project_subfolder": "details",
+          "width_px": 4000,
+          "height_px": 4000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f44d16521500b2449b244fb177ed991d"
         },
         {
+          "work_id": "00465",
           "detail_id": "002",
           "detail_uid": "00465-002",
-          "title": "forests (2023) - forest 1 - detail 2"
+          "title": "forests (2023) - forest 1 - detail 2",
+          "title_sort": "forests (2023) - forest 001 - detail 002",
+          "project_subfolder": "details",
+          "width_px": 4000,
+          "height_px": 4000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2961da7988b961f37d9d8fa173b40fb2"
         },
         {
+          "work_id": "00465",
           "detail_id": "003",
           "detail_uid": "00465-003",
-          "title": "forests (2023) - forest 1 - detail 3"
+          "title": "forests (2023) - forest 1 - detail 3",
+          "title_sort": "forests (2023) - forest 001 - detail 003",
+          "project_subfolder": "details",
+          "width_px": 4000,
+          "height_px": 4000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "54ac83ec3d713e654affe6405142b9ed"
         }
       ]
     }

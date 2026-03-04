@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-4ac57c54093122ea52cbb0c55fec3b32",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00514",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-08de52e5d0bddfe741140335ea884929",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-4ac57c54093122ea52cbb0c55fec3b32"
+  },
+  "work": {
+    "work_id": "00514",
+    "title": "mm quantum 2.12",
+    "title_sort": "mm quantum 002.012",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "mm",
+    "series_title": "mm",
+    "series_sort": "00514",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "08de52e5d0bddfe741140335ea884929"
+  },
+  "sections": []
+}

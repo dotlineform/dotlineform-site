@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-8b4e65a19661810216883955c068855d",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00477",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-573450a08f3309a01a3c120a3f33bf61",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-8b4e65a19661810216883955c068855d"
+  },
+  "work": {
+    "work_id": "00477",
+    "title": "mm creased 4",
+    "title_sort": "mm creased 004",
+    "year": 2007,
+    "year_display": "2007",
+    "series_id": "mm",
+    "series_title": "mm",
+    "series_sort": "00477",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "573450a08f3309a01a3c120a3f33bf61"
+  },
+  "sections": []
+}

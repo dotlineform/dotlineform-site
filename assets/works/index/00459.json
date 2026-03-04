@@ -1,1292 +1,3369 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-b1071eb18be013870da8b5298ef36c28",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00459",
     "count": 256,
-    "hash": "40aa5e53aa18cdb977d807211e2588fa"
+    "hash": "blake2b-376ef707ce6de204ae2bd5e34f385c77",
+    "work_checksum": "blake2b-e843c382e0b5b7d4faf76bcb0b037bad",
+    "details_checksum": "blake2b-376ef707ce6de204ae2bd5e34f385c77",
+    "record_checksum": "blake2b-b1071eb18be013870da8b5298ef36c28"
+  },
+  "work": {
+    "work_id": "00459",
+    "title": "molecule forms",
+    "title_sort": "molecule forms",
+    "year": 2013,
+    "year_display": "2013",
+    "series_id": "molecules",
+    "series_title": "molecules",
+    "series_sort": "00459",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 81.3,
+    "width_cm": 81.3,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "e843c382e0b5b7d4faf76bcb0b037bad"
   },
   "sections": [
     {
       "project_subfolder": "molecules",
       "details": [
         {
+          "work_id": "00459",
           "detail_id": "001",
           "detail_uid": "00459-001",
-          "title": "molecule form 1 (2004-06-25)"
+          "title": "molecule form 1 (2004-06-25)",
+          "title_sort": "molecule form 001 (2004-006-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "df5debae35963e4aa859fadb5ffa77b8"
         },
         {
+          "work_id": "00459",
           "detail_id": "002",
           "detail_uid": "00459-002",
-          "title": "molecule form 2 (2004-06-25)"
+          "title": "molecule form 2 (2004-06-25)",
+          "title_sort": "molecule form 002 (2004-006-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ffb369dde9f41306a15e89c0ccef7b44"
         },
         {
+          "work_id": "00459",
           "detail_id": "003",
           "detail_uid": "00459-003",
-          "title": "molecule form 3 (2004-06-25)"
+          "title": "molecule form 3 (2004-06-25)",
+          "title_sort": "molecule form 003 (2004-006-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ccd8db00f1f4621e9af1a15e01cd5c91"
         },
         {
+          "work_id": "00459",
           "detail_id": "004",
           "detail_uid": "00459-004",
-          "title": "molecule form 4 (2006-05-06)"
+          "title": "molecule form 4 (2006-05-06)",
+          "title_sort": "molecule form 004 (2006-005-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "97f328d6cb22f9e2b8536425b7e76edb"
         },
         {
+          "work_id": "00459",
           "detail_id": "005",
           "detail_uid": "00459-005",
-          "title": "molecule form 5 (2006-05-21)"
+          "title": "molecule form 5 (2006-05-21)",
+          "title_sort": "molecule form 005 (2006-005-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "51c164e59bb9b6fb26aae8354f8aaf88"
         },
         {
+          "work_id": "00459",
           "detail_id": "006",
           "detail_uid": "00459-006",
-          "title": "molecule form 6 (2006-05-21)"
+          "title": "molecule form 6 (2006-05-21)",
+          "title_sort": "molecule form 006 (2006-005-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d19418645f7a1c98a13c835e5e2f9324"
         },
         {
+          "work_id": "00459",
           "detail_id": "007",
           "detail_uid": "00459-007",
-          "title": "molecule form 7 (2006-05-28)"
+          "title": "molecule form 7 (2006-05-28)",
+          "title_sort": "molecule form 007 (2006-005-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "616076b430462aa75b0e06a28c528907"
         },
         {
+          "work_id": "00459",
           "detail_id": "008",
           "detail_uid": "00459-008",
-          "title": "molecule form 8 (2006-06-25)"
+          "title": "molecule form 8 (2006-06-25)",
+          "title_sort": "molecule form 008 (2006-006-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3ebc13d324adabb405241bf2b78750a9"
         },
         {
+          "work_id": "00459",
           "detail_id": "009",
           "detail_uid": "00459-009",
-          "title": "molecule form 9 (2006-08-06)"
+          "title": "molecule form 9 (2006-08-06)",
+          "title_sort": "molecule form 009 (2006-008-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "783d1fd6b3458988f6f55a6a09151c60"
         },
         {
+          "work_id": "00459",
           "detail_id": "010",
           "detail_uid": "00459-010",
-          "title": "molecule form 10 (2006-08-15)"
+          "title": "molecule form 10 (2006-08-15)",
+          "title_sort": "molecule form 010 (2006-008-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "905f18a99c526ffc3c3ecf748354fcc8"
         },
         {
+          "work_id": "00459",
           "detail_id": "011",
           "detail_uid": "00459-011",
-          "title": "molecule form 11 (2006-09-30)"
+          "title": "molecule form 11 (2006-09-30)",
+          "title_sort": "molecule form 011 (2006-009-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d1efeaca65909eee1079cacf74f3a994"
         },
         {
+          "work_id": "00459",
           "detail_id": "012",
           "detail_uid": "00459-012",
-          "title": "molecule form 12 (2006-10-22)"
+          "title": "molecule form 12 (2006-10-22)",
+          "title_sort": "molecule form 012 (2006-010-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5131bbed76a65cbca820b62d33527035"
         },
         {
+          "work_id": "00459",
           "detail_id": "013",
           "detail_uid": "00459-013",
-          "title": "molecule form 13 (2006-10-29)"
+          "title": "molecule form 13 (2006-10-29)",
+          "title_sort": "molecule form 013 (2006-010-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b57091f1995e7005a282e5866a401b02"
         },
         {
+          "work_id": "00459",
           "detail_id": "014",
           "detail_uid": "00459-014",
-          "title": "molecule form 14 (2006-11-05)"
+          "title": "molecule form 14 (2006-11-05)",
+          "title_sort": "molecule form 014 (2006-011-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "213d6ef2ad1083e80c33857d968f76d3"
         },
         {
+          "work_id": "00459",
           "detail_id": "015",
           "detail_uid": "00459-015",
-          "title": "molecule form 15 (2006-11-05)"
+          "title": "molecule form 15 (2006-11-05)",
+          "title_sort": "molecule form 015 (2006-011-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8c0bcf8398d6121401ff6a5ceead4d8c"
         },
         {
+          "work_id": "00459",
           "detail_id": "016",
           "detail_uid": "00459-016",
-          "title": "molecule form 16 (2006-11-05)"
+          "title": "molecule form 16 (2006-11-05)",
+          "title_sort": "molecule form 016 (2006-011-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "224b95b99ce1d7aa548bc68d1e463a03"
         },
         {
+          "work_id": "00459",
           "detail_id": "017",
           "detail_uid": "00459-017",
-          "title": "molecule form 17 (2006-11-05)"
+          "title": "molecule form 17 (2006-11-05)",
+          "title_sort": "molecule form 017 (2006-011-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d1281ef6c115a9519ebc84a4f8219a99"
         },
         {
+          "work_id": "00459",
           "detail_id": "018",
           "detail_uid": "00459-018",
-          "title": "molecule form 18 (2006-11-06)"
+          "title": "molecule form 18 (2006-11-06)",
+          "title_sort": "molecule form 018 (2006-011-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dd8c83213158b62f25af6671cc70a8f3"
         },
         {
+          "work_id": "00459",
           "detail_id": "019",
           "detail_uid": "00459-019",
-          "title": "molecule form 19 (2006-11-06)"
+          "title": "molecule form 19 (2006-11-06)",
+          "title_sort": "molecule form 019 (2006-011-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e02cb75acae93ed4257560220ad737ec"
         },
         {
+          "work_id": "00459",
           "detail_id": "020",
           "detail_uid": "00459-020",
-          "title": "molecule form 20 (2006-11-09)"
+          "title": "molecule form 20 (2006-11-09)",
+          "title_sort": "molecule form 020 (2006-011-009)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f3d1ebb393467d47911aedce2e1a4688"
         },
         {
+          "work_id": "00459",
           "detail_id": "021",
           "detail_uid": "00459-021",
-          "title": "molecule form 21 (2006-12-02)"
+          "title": "molecule form 21 (2006-12-02)",
+          "title_sort": "molecule form 021 (2006-012-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ebbb106d1e98501f4afdffcb1d3d4fdf"
         },
         {
+          "work_id": "00459",
           "detail_id": "022",
           "detail_uid": "00459-022",
-          "title": "molecule form 22 (2006-12-26)"
+          "title": "molecule form 22 (2006-12-26)",
+          "title_sort": "molecule form 022 (2006-012-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9a2b139d6525d2ae05f3e8103f1fba28"
         },
         {
+          "work_id": "00459",
           "detail_id": "023",
           "detail_uid": "00459-023",
-          "title": "molecule form 23 (2006-12-27)"
+          "title": "molecule form 23 (2006-12-27)",
+          "title_sort": "molecule form 023 (2006-012-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a19259d341d7b180f68e199f0cf70086"
         },
         {
+          "work_id": "00459",
           "detail_id": "024",
           "detail_uid": "00459-024",
-          "title": "molecule form 24 (2006-12-29)"
+          "title": "molecule form 24 (2006-12-29)",
+          "title_sort": "molecule form 024 (2006-012-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3f2e467812b7d12fe2ebb35ecbc88b4d"
         },
         {
+          "work_id": "00459",
           "detail_id": "025",
           "detail_uid": "00459-025",
-          "title": "molecule form 25 (2006-12-29)"
+          "title": "molecule form 25 (2006-12-29)",
+          "title_sort": "molecule form 025 (2006-012-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6437e3bd318c4cafa9e72c4d02b7611f"
         },
         {
+          "work_id": "00459",
           "detail_id": "026",
           "detail_uid": "00459-026",
-          "title": "molecule form 26 (2006-12-31)"
+          "title": "molecule form 26 (2006-12-31)",
+          "title_sort": "molecule form 026 (2006-012-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e67129e4446ff53782eb870478c3807a"
         },
         {
+          "work_id": "00459",
           "detail_id": "027",
           "detail_uid": "00459-027",
-          "title": "molecule form 27 (2007-01-02)"
+          "title": "molecule form 27 (2007-01-02)",
+          "title_sort": "molecule form 027 (2007-001-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2c16fea63e9753f476b8e3f125b016c6"
         },
         {
+          "work_id": "00459",
           "detail_id": "028",
           "detail_uid": "00459-028",
-          "title": "molecule form 28 (2007-03-18)"
+          "title": "molecule form 28 (2007-03-18)",
+          "title_sort": "molecule form 028 (2007-003-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7cd587a8684f13f77b95b79477b1a2bc"
         },
         {
+          "work_id": "00459",
           "detail_id": "029",
           "detail_uid": "00459-029",
-          "title": "molecule form 29 (2007-03-18)"
+          "title": "molecule form 29 (2007-03-18)",
+          "title_sort": "molecule form 029 (2007-003-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "773f9bdbb5c2b3c714c2df7b7aa396cf"
         },
         {
+          "work_id": "00459",
           "detail_id": "030",
           "detail_uid": "00459-030",
-          "title": "molecule form 30 (2007-04-05)"
+          "title": "molecule form 30 (2007-04-05)",
+          "title_sort": "molecule form 030 (2007-004-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7b56a27e6e2224fa66b3cf281ade2b35"
         },
         {
+          "work_id": "00459",
           "detail_id": "031",
           "detail_uid": "00459-031",
-          "title": "molecule form 31 (2007-04-05)"
+          "title": "molecule form 31 (2007-04-05)",
+          "title_sort": "molecule form 031 (2007-004-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "30d6c70f1e3e5f57924272057f4784b6"
         },
         {
+          "work_id": "00459",
           "detail_id": "032",
           "detail_uid": "00459-032",
-          "title": "molecule form 32 (2007-04-08)"
+          "title": "molecule form 32 (2007-04-08)",
+          "title_sort": "molecule form 032 (2007-004-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c259f25343fb246a5c574f3d9026aaac"
         },
         {
+          "work_id": "00459",
           "detail_id": "033",
           "detail_uid": "00459-033",
-          "title": "molecule form 33 (2007-04-21)"
+          "title": "molecule form 33 (2007-04-21)",
+          "title_sort": "molecule form 033 (2007-004-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "321e3c3ec2d3bb01986fa368876df3be"
         },
         {
+          "work_id": "00459",
           "detail_id": "034",
           "detail_uid": "00459-034",
-          "title": "molecule form 34 (2007-04-28)"
+          "title": "molecule form 34 (2007-04-28)",
+          "title_sort": "molecule form 034 (2007-004-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "975894c0dd8571c3d0de30e88d340bae"
         },
         {
+          "work_id": "00459",
           "detail_id": "035",
           "detail_uid": "00459-035",
-          "title": "molecule form 35 (2007-04-29)"
+          "title": "molecule form 35 (2007-04-29)",
+          "title_sort": "molecule form 035 (2007-004-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e0b4f031c1e11fd05d03912a025b786f"
         },
         {
+          "work_id": "00459",
           "detail_id": "036",
           "detail_uid": "00459-036",
-          "title": "molecule form 36 (2007-04-30)"
+          "title": "molecule form 36 (2007-04-30)",
+          "title_sort": "molecule form 036 (2007-004-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6893d55c696482da529f0de331f5f199"
         },
         {
+          "work_id": "00459",
           "detail_id": "037",
           "detail_uid": "00459-037",
-          "title": "molecule form 37 (2007-05-02)"
+          "title": "molecule form 37 (2007-05-02)",
+          "title_sort": "molecule form 037 (2007-005-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "76b0f178c05e074ab9a9fcf118532dee"
         },
         {
+          "work_id": "00459",
           "detail_id": "038",
           "detail_uid": "00459-038",
-          "title": "molecule form 38 (2007-05-18)"
+          "title": "molecule form 38 (2007-05-18)",
+          "title_sort": "molecule form 038 (2007-005-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "19414a68e0227cef3e412d624f891f88"
         },
         {
+          "work_id": "00459",
           "detail_id": "039",
           "detail_uid": "00459-039",
-          "title": "molecule form 39 (2007-05-19)"
+          "title": "molecule form 39 (2007-05-19)",
+          "title_sort": "molecule form 039 (2007-005-019)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "205275806c58c2f3f66cea2eac63fc45"
         },
         {
+          "work_id": "00459",
           "detail_id": "040",
           "detail_uid": "00459-040",
-          "title": "molecule form 40 (2007-05-24)"
+          "title": "molecule form 40 (2007-05-24)",
+          "title_sort": "molecule form 040 (2007-005-024)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "78b7105ff3cfdcdceeaf851afff0c370"
         },
         {
+          "work_id": "00459",
           "detail_id": "041",
           "detail_uid": "00459-041",
-          "title": "molecule form 41 (2007-05-24)"
+          "title": "molecule form 41 (2007-05-24)",
+          "title_sort": "molecule form 041 (2007-005-024)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e96ed3133bad6a5f13e16fdefc8b621b"
         },
         {
+          "work_id": "00459",
           "detail_id": "042",
           "detail_uid": "00459-042",
-          "title": "molecule form 42 (2007-06-28)"
+          "title": "molecule form 42 (2007-06-28)",
+          "title_sort": "molecule form 042 (2007-006-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e334193c6d62c0fabed8ea742942bfd4"
         },
         {
+          "work_id": "00459",
           "detail_id": "043",
           "detail_uid": "00459-043",
-          "title": "molecule form 43 (2007-07-16)"
+          "title": "molecule form 43 (2007-07-16)",
+          "title_sort": "molecule form 043 (2007-007-016)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bff8b303da76b02fa9c3405f57dfbab3"
         },
         {
+          "work_id": "00459",
           "detail_id": "044",
           "detail_uid": "00459-044",
-          "title": "molecule form 44 (2007-07-18)"
+          "title": "molecule form 44 (2007-07-18)",
+          "title_sort": "molecule form 044 (2007-007-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ccccd2f4bba7f33e248afeaf7ac32073"
         },
         {
+          "work_id": "00459",
           "detail_id": "045",
           "detail_uid": "00459-045",
-          "title": "molecule form 45 (2007-09-02)"
+          "title": "molecule form 45 (2007-09-02)",
+          "title_sort": "molecule form 045 (2007-009-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fba652e87a2e63f4867519039cd28b3d"
         },
         {
+          "work_id": "00459",
           "detail_id": "046",
           "detail_uid": "00459-046",
-          "title": "molecule form 46 (2007-09-02)"
+          "title": "molecule form 46 (2007-09-02)",
+          "title_sort": "molecule form 046 (2007-009-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7110e24b72c27cd87602e9f631337f28"
         },
         {
+          "work_id": "00459",
           "detail_id": "047",
           "detail_uid": "00459-047",
-          "title": "molecule form 47 (2007-09-04)"
+          "title": "molecule form 47 (2007-09-04)",
+          "title_sort": "molecule form 047 (2007-009-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6b35292cb9e399717dc1b9e9625e2671"
         },
         {
+          "work_id": "00459",
           "detail_id": "048",
           "detail_uid": "00459-048",
-          "title": "molecule form 48 (2007-09-04)"
+          "title": "molecule form 48 (2007-09-04)",
+          "title_sort": "molecule form 048 (2007-009-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "01f4f1251f6777dc7be88d02482b9070"
         },
         {
+          "work_id": "00459",
           "detail_id": "049",
           "detail_uid": "00459-049",
-          "title": "molecule form 49 (2007-09-15)"
+          "title": "molecule form 49 (2007-09-15)",
+          "title_sort": "molecule form 049 (2007-009-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c1562e3f7a7d0d4ccbdb167ae5d1d29c"
         },
         {
+          "work_id": "00459",
           "detail_id": "050",
           "detail_uid": "00459-050",
-          "title": "molecule form 50 (2008-05-29)"
+          "title": "molecule form 50 (2008-05-29)",
+          "title_sort": "molecule form 050 (2008-005-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "144aed082b106bb59ea0094bf1b92f3e"
         },
         {
+          "work_id": "00459",
           "detail_id": "051",
           "detail_uid": "00459-051",
-          "title": "molecule form 51 (2008-06-08)"
+          "title": "molecule form 51 (2008-06-08)",
+          "title_sort": "molecule form 051 (2008-006-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3fc8f39d63cdb734e5d7055be906029a"
         },
         {
+          "work_id": "00459",
           "detail_id": "052",
           "detail_uid": "00459-052",
-          "title": "molecule form 52 (2008-07-21)"
+          "title": "molecule form 52 (2008-07-21)",
+          "title_sort": "molecule form 052 (2008-007-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a420e7472e7e50907f1576951006a0e4"
         },
         {
+          "work_id": "00459",
           "detail_id": "053",
           "detail_uid": "00459-053",
-          "title": "molecule form 53 (2008-07-21)"
+          "title": "molecule form 53 (2008-07-21)",
+          "title_sort": "molecule form 053 (2008-007-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "319c0b43371dc3b761f3ccdb29fdb035"
         },
         {
+          "work_id": "00459",
           "detail_id": "054",
           "detail_uid": "00459-054",
-          "title": "molecule form 54 (2008-07-21)"
+          "title": "molecule form 54 (2008-07-21)",
+          "title_sort": "molecule form 054 (2008-007-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "afe11efc70913c2aa1528d1edcf6e96f"
         },
         {
+          "work_id": "00459",
           "detail_id": "055",
           "detail_uid": "00459-055",
-          "title": "molecule form 55 (2008-10-02)"
+          "title": "molecule form 55 (2008-10-02)",
+          "title_sort": "molecule form 055 (2008-010-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6a2b8c97a713b038244d516fdc7bfbee"
         },
         {
+          "work_id": "00459",
           "detail_id": "056",
           "detail_uid": "00459-056",
-          "title": "molecule form 56 (2009-02-03)"
+          "title": "molecule form 56 (2009-02-03)",
+          "title_sort": "molecule form 056 (2009-002-003)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "49e31f57764621c185b6286086d5b0a0"
         },
         {
+          "work_id": "00459",
           "detail_id": "057",
           "detail_uid": "00459-057",
-          "title": "molecule form 57 (2009-06-28)"
+          "title": "molecule form 57 (2009-06-28)",
+          "title_sort": "molecule form 057 (2009-006-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3c1ba1ab3934526b8ae1b09ac37de0ad"
         },
         {
+          "work_id": "00459",
           "detail_id": "058",
           "detail_uid": "00459-058",
-          "title": "molecule form 58 (2009-07-06)"
+          "title": "molecule form 58 (2009-07-06)",
+          "title_sort": "molecule form 058 (2009-007-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7535916f58f90befc52ddec70ea50000"
         },
         {
+          "work_id": "00459",
           "detail_id": "059",
           "detail_uid": "00459-059",
-          "title": "molecule form 59 (2009-07-07)"
+          "title": "molecule form 59 (2009-07-07)",
+          "title_sort": "molecule form 059 (2009-007-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "650f4ae5d6301e6b4f47d9efb35ecc4a"
         },
         {
+          "work_id": "00459",
           "detail_id": "060",
           "detail_uid": "00459-060",
-          "title": "molecule form 60 (2009-09-05)"
+          "title": "molecule form 60 (2009-09-05)",
+          "title_sort": "molecule form 060 (2009-009-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "19ad6c969d96791bc195d01b0e5f77a0"
         },
         {
+          "work_id": "00459",
           "detail_id": "061",
           "detail_uid": "00459-061",
-          "title": "molecule form 61 (2010-01-23)"
+          "title": "molecule form 61 (2010-01-23)",
+          "title_sort": "molecule form 061 (2010-001-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a92304e6fbb54358b0bcead3eca32fa0"
         },
         {
+          "work_id": "00459",
           "detail_id": "062",
           "detail_uid": "00459-062",
-          "title": "molecule form 62 (2010-01-23)"
+          "title": "molecule form 62 (2010-01-23)",
+          "title_sort": "molecule form 062 (2010-001-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5cc0633d98ba58d67d482ecc20b0cbc1"
         },
         {
+          "work_id": "00459",
           "detail_id": "063",
           "detail_uid": "00459-063",
-          "title": "molecule form 63 (2010-02-09)"
+          "title": "molecule form 63 (2010-02-09)",
+          "title_sort": "molecule form 063 (2010-002-009)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6ae0bb38ca07a50459fb5901288e9961"
         },
         {
+          "work_id": "00459",
           "detail_id": "064",
           "detail_uid": "00459-064",
-          "title": "molecule form 64 (2010-02-09)"
+          "title": "molecule form 64 (2010-02-09)",
+          "title_sort": "molecule form 064 (2010-002-009)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "76e02c7e94de37e7c10649945ae2e907"
         },
         {
+          "work_id": "00459",
           "detail_id": "065",
           "detail_uid": "00459-065",
-          "title": "molecule form 65 (2010-03-01)"
+          "title": "molecule form 65 (2010-03-01)",
+          "title_sort": "molecule form 065 (2010-003-001)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "802a2c085133ae65a1fbaea3df1c4341"
         },
         {
+          "work_id": "00459",
           "detail_id": "066",
           "detail_uid": "00459-066",
-          "title": "molecule form 66 (2010-04-21)"
+          "title": "molecule form 66 (2010-04-21)",
+          "title_sort": "molecule form 066 (2010-004-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "05586f0c1cce61c207700aff20472e2b"
         },
         {
+          "work_id": "00459",
           "detail_id": "067",
           "detail_uid": "00459-067",
-          "title": "molecule form 67 (2010-05-26)"
+          "title": "molecule form 67 (2010-05-26)",
+          "title_sort": "molecule form 067 (2010-005-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "30f81c0a6a194bb9f1d269921c89210b"
         },
         {
+          "work_id": "00459",
           "detail_id": "068",
           "detail_uid": "00459-068",
-          "title": "molecule form 68 (2010-05-30)"
+          "title": "molecule form 68 (2010-05-30)",
+          "title_sort": "molecule form 068 (2010-005-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "91f2c8f49f89f6185089aecd2b58bed7"
         },
         {
+          "work_id": "00459",
           "detail_id": "069",
           "detail_uid": "00459-069",
-          "title": "molecule form 69 (2010-05-30)"
+          "title": "molecule form 69 (2010-05-30)",
+          "title_sort": "molecule form 069 (2010-005-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7d6b5ff83e5d33cae4d75dbc0c8ba313"
         },
         {
+          "work_id": "00459",
           "detail_id": "070",
           "detail_uid": "00459-070",
-          "title": "molecule form 70 (2010-06-02)"
+          "title": "molecule form 70 (2010-06-02)",
+          "title_sort": "molecule form 070 (2010-006-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0235166252c2fa6acd0b2fd48cac0406"
         },
         {
+          "work_id": "00459",
           "detail_id": "071",
           "detail_uid": "00459-071",
-          "title": "molecule form 71 (2010-07-20)"
+          "title": "molecule form 71 (2010-07-20)",
+          "title_sort": "molecule form 071 (2010-007-020)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b81215e6ee887d6ee99707b0edc5bed8"
         },
         {
+          "work_id": "00459",
           "detail_id": "072",
           "detail_uid": "00459-072",
-          "title": "molecule form 72 (2010-07-21)"
+          "title": "molecule form 72 (2010-07-21)",
+          "title_sort": "molecule form 072 (2010-007-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dc3d63ec659f03cb7309bd4686e89ce9"
         },
         {
+          "work_id": "00459",
           "detail_id": "073",
           "detail_uid": "00459-073",
-          "title": "molecule form 73 (2010-08-14)"
+          "title": "molecule form 73 (2010-08-14)",
+          "title_sort": "molecule form 073 (2010-008-014)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5556c0ee92d212a44ae99e259c419b7c"
         },
         {
+          "work_id": "00459",
           "detail_id": "074",
           "detail_uid": "00459-074",
-          "title": "molecule form 74 (2010-10-25)"
+          "title": "molecule form 74 (2010-10-25)",
+          "title_sort": "molecule form 074 (2010-010-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8b1dc54c3494bfc07c15d7e8b72285ee"
         },
         {
+          "work_id": "00459",
           "detail_id": "075",
           "detail_uid": "00459-075",
-          "title": "molecule form 75 (2010-11-17)"
+          "title": "molecule form 75 (2010-11-17)",
+          "title_sort": "molecule form 075 (2010-011-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e056539566a1666df0ee74370e85416b"
         },
         {
+          "work_id": "00459",
           "detail_id": "076",
           "detail_uid": "00459-076",
-          "title": "molecule form 76 (2010-12-30)"
+          "title": "molecule form 76 (2010-12-30)",
+          "title_sort": "molecule form 076 (2010-012-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "96ea4aaf204794bf1e6e923a2644778b"
         },
         {
+          "work_id": "00459",
           "detail_id": "077",
           "detail_uid": "00459-077",
-          "title": "molecule form 77 (2011-01-06)"
+          "title": "molecule form 77 (2011-01-06)",
+          "title_sort": "molecule form 077 (2011-001-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e8c18f1b411ea23e25f9554e3651b388"
         },
         {
+          "work_id": "00459",
           "detail_id": "078",
           "detail_uid": "00459-078",
-          "title": "molecule form 78 (2011-02-19)"
+          "title": "molecule form 78 (2011-02-19)",
+          "title_sort": "molecule form 078 (2011-002-019)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8da2bc361063b8f1a2e12235091dc781"
         },
         {
+          "work_id": "00459",
           "detail_id": "079",
           "detail_uid": "00459-079",
-          "title": "molecule form 79 (2011-03-13)"
+          "title": "molecule form 79 (2011-03-13)",
+          "title_sort": "molecule form 079 (2011-003-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0916387761fae9626d8344ca7f6ee051"
         },
         {
+          "work_id": "00459",
           "detail_id": "080",
           "detail_uid": "00459-080",
-          "title": "molecule form 80 (2011-04-13)"
+          "title": "molecule form 80 (2011-04-13)",
+          "title_sort": "molecule form 080 (2011-004-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "76663ecab80b170a76fc1e09164b0ed8"
         },
         {
+          "work_id": "00459",
           "detail_id": "081",
           "detail_uid": "00459-081",
-          "title": "molecule form 81 (2011-04-13)"
+          "title": "molecule form 81 (2011-04-13)",
+          "title_sort": "molecule form 081 (2011-004-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1c1eb2fa949530410b8dd9d49ad81b94"
         },
         {
+          "work_id": "00459",
           "detail_id": "082",
           "detail_uid": "00459-082",
-          "title": "molecule form 82 (2011-04-24)"
+          "title": "molecule form 82 (2011-04-24)",
+          "title_sort": "molecule form 082 (2011-004-024)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "eff675a25fdbd90ca2ae14758386cf1b"
         },
         {
+          "work_id": "00459",
           "detail_id": "083",
           "detail_uid": "00459-083",
-          "title": "molecule form 83 (2011-05-01)"
+          "title": "molecule form 83 (2011-05-01)",
+          "title_sort": "molecule form 083 (2011-005-001)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d24cb408c18bc4ba1617724a990b3497"
         },
         {
+          "work_id": "00459",
           "detail_id": "084",
           "detail_uid": "00459-084",
-          "title": "molecule form 84 (2011-05-21)"
+          "title": "molecule form 84 (2011-05-21)",
+          "title_sort": "molecule form 084 (2011-005-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9c3e046767f064420c7c59a780b1fe34"
         },
         {
+          "work_id": "00459",
           "detail_id": "085",
           "detail_uid": "00459-085",
-          "title": "molecule form 85 (2011-08-13)"
+          "title": "molecule form 85 (2011-08-13)",
+          "title_sort": "molecule form 085 (2011-008-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e8a98cd00254ac6666ca0e8eb3ae35d8"
         },
         {
+          "work_id": "00459",
           "detail_id": "086",
           "detail_uid": "00459-086",
-          "title": "molecule form 86 (2011-12-14)"
+          "title": "molecule form 86 (2011-12-14)",
+          "title_sort": "molecule form 086 (2011-012-014)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "01482574070f6cff8bb22301f9f4505a"
         },
         {
+          "work_id": "00459",
           "detail_id": "087",
           "detail_uid": "00459-087",
-          "title": "molecule form 87 (2011-12-17)"
+          "title": "molecule form 87 (2011-12-17)",
+          "title_sort": "molecule form 087 (2011-012-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9368e2ba52cc3eaa0d36b610258c24a3"
         },
         {
+          "work_id": "00459",
           "detail_id": "088",
           "detail_uid": "00459-088",
-          "title": "molecule form 88 (2011-12-21)"
+          "title": "molecule form 88 (2011-12-21)",
+          "title_sort": "molecule form 088 (2011-012-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "235c4655fbf9e801f35bbeebdbbc5ba9"
         },
         {
+          "work_id": "00459",
           "detail_id": "089",
           "detail_uid": "00459-089",
-          "title": "molecule form 89 (2011-12-30)"
+          "title": "molecule form 89 (2011-12-30)",
+          "title_sort": "molecule form 089 (2011-012-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b8285ea8dbb571c2062451d8b6fde731"
         },
         {
+          "work_id": "00459",
           "detail_id": "090",
           "detail_uid": "00459-090",
-          "title": "molecule form 90 (2011-12-31)"
+          "title": "molecule form 90 (2011-12-31)",
+          "title_sort": "molecule form 090 (2011-012-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e5342f36449eb8406a6ec4a24b372f9a"
         },
         {
+          "work_id": "00459",
           "detail_id": "091",
           "detail_uid": "00459-091",
-          "title": "molecule form 91 (2011-12-31)"
+          "title": "molecule form 91 (2011-12-31)",
+          "title_sort": "molecule form 091 (2011-012-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6c9dfe162bbbf4c10c38d46f2e923803"
         },
         {
+          "work_id": "00459",
           "detail_id": "092",
           "detail_uid": "00459-092",
-          "title": "molecule form 92 (2012-01-02)"
+          "title": "molecule form 92 (2012-01-02)",
+          "title_sort": "molecule form 092 (2012-001-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9084e0c28853a28aa8e65789b58e1c87"
         },
         {
+          "work_id": "00459",
           "detail_id": "093",
           "detail_uid": "00459-093",
-          "title": "molecule form 93 (2012-01-06)"
+          "title": "molecule form 93 (2012-01-06)",
+          "title_sort": "molecule form 093 (2012-001-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3c9c9604cb4d93779860f5fd432b6b34"
         },
         {
+          "work_id": "00459",
           "detail_id": "094",
           "detail_uid": "00459-094",
-          "title": "molecule form 94 (2012-01-18)"
+          "title": "molecule form 94 (2012-01-18)",
+          "title_sort": "molecule form 094 (2012-001-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "55e341ba58465f715cec5925b12b6f15"
         },
         {
+          "work_id": "00459",
           "detail_id": "095",
           "detail_uid": "00459-095",
-          "title": "molecule form 95 (2012-01-22)"
+          "title": "molecule form 95 (2012-01-22)",
+          "title_sort": "molecule form 095 (2012-001-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "83490ef9e8847be75a3995f98b39ac61"
         },
         {
+          "work_id": "00459",
           "detail_id": "096",
           "detail_uid": "00459-096",
-          "title": "molecule form 96 (2012-01-29)"
+          "title": "molecule form 96 (2012-01-29)",
+          "title_sort": "molecule form 096 (2012-001-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "129983aca70f7a98aaa3d8a5b4bfb141"
         },
         {
+          "work_id": "00459",
           "detail_id": "097",
           "detail_uid": "00459-097",
-          "title": "molecule form 97 (2012-02-04)"
+          "title": "molecule form 97 (2012-02-04)",
+          "title_sort": "molecule form 097 (2012-002-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0c09b0746832f51b973f694ab2f159f9"
         },
         {
+          "work_id": "00459",
           "detail_id": "098",
           "detail_uid": "00459-098",
-          "title": "molecule form 98 (2012-02-04)"
+          "title": "molecule form 98 (2012-02-04)",
+          "title_sort": "molecule form 098 (2012-002-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "50cdbc11aeae95f6e35418bd066a3f9f"
         },
         {
+          "work_id": "00459",
           "detail_id": "099",
           "detail_uid": "00459-099",
-          "title": "molecule form 99 (2012-02-27)"
+          "title": "molecule form 99 (2012-02-27)",
+          "title_sort": "molecule form 099 (2012-002-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e01510719eca66a2dab0810887e1c37f"
         },
         {
+          "work_id": "00459",
           "detail_id": "100",
           "detail_uid": "00459-100",
-          "title": "molecule form 100 (2012-03-05)"
+          "title": "molecule form 100 (2012-03-05)",
+          "title_sort": "molecule form 100 (2012-003-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "35bd2e327e9276f00c550f1d9994d9e3"
         },
         {
+          "work_id": "00459",
           "detail_id": "101",
           "detail_uid": "00459-101",
-          "title": "molecule form 101 (2012-03-05)"
+          "title": "molecule form 101 (2012-03-05)",
+          "title_sort": "molecule form 101 (2012-003-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fbe50a406be541a0b0bafdff5cfe1396"
         },
         {
+          "work_id": "00459",
           "detail_id": "102",
           "detail_uid": "00459-102",
-          "title": "molecule form 102 (2012-03-27)"
+          "title": "molecule form 102 (2012-03-27)",
+          "title_sort": "molecule form 102 (2012-003-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "09e794499ff6dfb25c1c4152c1693b81"
         },
         {
+          "work_id": "00459",
           "detail_id": "103",
           "detail_uid": "00459-103",
-          "title": "molecule form 103 (2012-03-30)"
+          "title": "molecule form 103 (2012-03-30)",
+          "title_sort": "molecule form 103 (2012-003-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "41626c38afb651e263228027fdd13264"
         },
         {
+          "work_id": "00459",
           "detail_id": "104",
           "detail_uid": "00459-104",
-          "title": "molecule form 104 (2012-03-30)"
+          "title": "molecule form 104 (2012-03-30)",
+          "title_sort": "molecule form 104 (2012-003-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "962c4e22651f579a6b917641bf564ba9"
         },
         {
+          "work_id": "00459",
           "detail_id": "105",
           "detail_uid": "00459-105",
-          "title": "molecule form 105 (2012-04-25)"
+          "title": "molecule form 105 (2012-04-25)",
+          "title_sort": "molecule form 105 (2012-004-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c1f5155d2cd77463780fb3f716784510"
         },
         {
+          "work_id": "00459",
           "detail_id": "106",
           "detail_uid": "00459-106",
-          "title": "molecule form 106 (2012-05-05)"
+          "title": "molecule form 106 (2012-05-05)",
+          "title_sort": "molecule form 106 (2012-005-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b4008258bdf7e34b77626bd0488caf31"
         },
         {
+          "work_id": "00459",
           "detail_id": "107",
           "detail_uid": "00459-107",
-          "title": "molecule form 107 (2012-05-22)"
+          "title": "molecule form 107 (2012-05-22)",
+          "title_sort": "molecule form 107 (2012-005-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f9eb718aa17e4576b36287a1d7773a50"
         },
         {
+          "work_id": "00459",
           "detail_id": "108",
           "detail_uid": "00459-108",
-          "title": "molecule form 108 (2012-05-22)"
+          "title": "molecule form 108 (2012-05-22)",
+          "title_sort": "molecule form 108 (2012-005-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6664ce682ac0f7c5ade9667d6c773854"
         },
         {
+          "work_id": "00459",
           "detail_id": "109",
           "detail_uid": "00459-109",
-          "title": "molecule form 109 (2012-05-22)"
+          "title": "molecule form 109 (2012-05-22)",
+          "title_sort": "molecule form 109 (2012-005-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0025147880ee40e741ee4b035cd218d2"
         },
         {
+          "work_id": "00459",
           "detail_id": "110",
           "detail_uid": "00459-110",
-          "title": "molecule form 110 (2012-05-26)"
+          "title": "molecule form 110 (2012-05-26)",
+          "title_sort": "molecule form 110 (2012-005-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "33325b9eaaa6fbc953fd4b4287526a40"
         },
         {
+          "work_id": "00459",
           "detail_id": "111",
           "detail_uid": "00459-111",
-          "title": "molecule form 111 (2012-05-26)"
+          "title": "molecule form 111 (2012-05-26)",
+          "title_sort": "molecule form 111 (2012-005-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d47fa6de11b2ba8dd92c3dab85222c18"
         },
         {
+          "work_id": "00459",
           "detail_id": "112",
           "detail_uid": "00459-112",
-          "title": "molecule form 112 (2012-05-26)"
+          "title": "molecule form 112 (2012-05-26)",
+          "title_sort": "molecule form 112 (2012-005-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "53e25f519cdae689b4b5d0a85d4cf878"
         },
         {
+          "work_id": "00459",
           "detail_id": "113",
           "detail_uid": "00459-113",
-          "title": "molecule form 113 (2012-05-28)"
+          "title": "molecule form 113 (2012-05-28)",
+          "title_sort": "molecule form 113 (2012-005-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3e269a6d3a4f613488f8030bb40c417f"
         },
         {
+          "work_id": "00459",
           "detail_id": "114",
           "detail_uid": "00459-114",
-          "title": "molecule form 114 (2012-06-08)"
+          "title": "molecule form 114 (2012-06-08)",
+          "title_sort": "molecule form 114 (2012-006-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4313591a0dec2f0d8f0e935a28d67bbf"
         },
         {
+          "work_id": "00459",
           "detail_id": "115",
           "detail_uid": "00459-115",
-          "title": "molecule form 115 (2012-06-22)"
+          "title": "molecule form 115 (2012-06-22)",
+          "title_sort": "molecule form 115 (2012-006-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b1e8b30fb18c0250080502ec5642fcc8"
         },
         {
+          "work_id": "00459",
           "detail_id": "116",
           "detail_uid": "00459-116",
-          "title": "molecule form 116 (2012-06-29)"
+          "title": "molecule form 116 (2012-06-29)",
+          "title_sort": "molecule form 116 (2012-006-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ada2ad11d922f56dc4dfcb7326c13404"
         },
         {
+          "work_id": "00459",
           "detail_id": "117",
           "detail_uid": "00459-117",
-          "title": "molecule form 117 (2012-07-13)"
+          "title": "molecule form 117 (2012-07-13)",
+          "title_sort": "molecule form 117 (2012-007-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "efa5eca7b4f6b1b413a06b0809bec23b"
         },
         {
+          "work_id": "00459",
           "detail_id": "118",
           "detail_uid": "00459-118",
-          "title": "molecule form 118 (2012-07-14)"
+          "title": "molecule form 118 (2012-07-14)",
+          "title_sort": "molecule form 118 (2012-007-014)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8b77ff3d19318e17f49b6d7600eb4fea"
         },
         {
+          "work_id": "00459",
           "detail_id": "119",
           "detail_uid": "00459-119",
-          "title": "molecule form 119 (2012-07-15)"
+          "title": "molecule form 119 (2012-07-15)",
+          "title_sort": "molecule form 119 (2012-007-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e1dd12bf94fcddc9c26f58050169a2e3"
         },
         {
+          "work_id": "00459",
           "detail_id": "120",
           "detail_uid": "00459-120",
-          "title": "molecule form 120 (2012-07-29)"
+          "title": "molecule form 120 (2012-07-29)",
+          "title_sort": "molecule form 120 (2012-007-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d52314985c85435b985bf4266851aa06"
         },
         {
+          "work_id": "00459",
           "detail_id": "121",
           "detail_uid": "00459-121",
-          "title": "molecule form 121 (2012-07-29)"
+          "title": "molecule form 121 (2012-07-29)",
+          "title_sort": "molecule form 121 (2012-007-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a7346d3742d55868d88a1ba14024fc9c"
         },
         {
+          "work_id": "00459",
           "detail_id": "122",
           "detail_uid": "00459-122",
-          "title": "molecule form 122 (2012-08-11)"
+          "title": "molecule form 122 (2012-08-11)",
+          "title_sort": "molecule form 122 (2012-008-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2ac1515c9bcfa1d79cacb6e89a9513cc"
         },
         {
+          "work_id": "00459",
           "detail_id": "123",
           "detail_uid": "00459-123",
-          "title": "molecule form 123 (2012-08-22)"
+          "title": "molecule form 123 (2012-08-22)",
+          "title_sort": "molecule form 123 (2012-008-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e668ffe7f76447d6cd70b4977e32bc53"
         },
         {
+          "work_id": "00459",
           "detail_id": "124",
           "detail_uid": "00459-124",
-          "title": "molecule form 124 (2012-08-28)"
+          "title": "molecule form 124 (2012-08-28)",
+          "title_sort": "molecule form 124 (2012-008-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "96f068bc80a1f7cee02201e502af67b3"
         },
         {
+          "work_id": "00459",
           "detail_id": "125",
           "detail_uid": "00459-125",
-          "title": "molecule form 125 (2012-09-11)"
+          "title": "molecule form 125 (2012-09-11)",
+          "title_sort": "molecule form 125 (2012-009-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a4e13ff92981e5ea6d982c7eef7af189"
         },
         {
+          "work_id": "00459",
           "detail_id": "126",
           "detail_uid": "00459-126",
-          "title": "molecule form 126 (2012-09-15)"
+          "title": "molecule form 126 (2012-09-15)",
+          "title_sort": "molecule form 126 (2012-009-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "633cc0aaca04f061e90fb30e3e65f0bc"
         },
         {
+          "work_id": "00459",
           "detail_id": "127",
           "detail_uid": "00459-127",
-          "title": "molecule form 127 (2012-09-17)"
+          "title": "molecule form 127 (2012-09-17)",
+          "title_sort": "molecule form 127 (2012-009-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9958028ae10d94c95a6fdf9b7834621d"
         },
         {
+          "work_id": "00459",
           "detail_id": "128",
           "detail_uid": "00459-128",
-          "title": "molecule form 128 (2012-09-18)"
+          "title": "molecule form 128 (2012-09-18)",
+          "title_sort": "molecule form 128 (2012-009-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "77b09bf8ec52ff5c5683f493ac9fac67"
         },
         {
+          "work_id": "00459",
           "detail_id": "129",
           "detail_uid": "00459-129",
-          "title": "molecule form 129 (2012-09-27)"
+          "title": "molecule form 129 (2012-09-27)",
+          "title_sort": "molecule form 129 (2012-009-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "32887d33381cc1fa2c670032933db0a2"
         },
         {
+          "work_id": "00459",
           "detail_id": "130",
           "detail_uid": "00459-130",
-          "title": "molecule form 130 (2012-09-27)"
+          "title": "molecule form 130 (2012-09-27)",
+          "title_sort": "molecule form 130 (2012-009-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "72f11e97a89825a83f61f29c4b547d06"
         },
         {
+          "work_id": "00459",
           "detail_id": "131",
           "detail_uid": "00459-131",
-          "title": "molecule form 131 (2012-09-28)"
+          "title": "molecule form 131 (2012-09-28)",
+          "title_sort": "molecule form 131 (2012-009-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "64a1c64b179a3f309246ecbc2f2de1d6"
         },
         {
+          "work_id": "00459",
           "detail_id": "132",
           "detail_uid": "00459-132",
-          "title": "molecule form 132 (2012-09-30)"
+          "title": "molecule form 132 (2012-09-30)",
+          "title_sort": "molecule form 132 (2012-009-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fc0eb645e39bca80b654445657b8788f"
         },
         {
+          "work_id": "00459",
           "detail_id": "133",
           "detail_uid": "00459-133",
-          "title": "molecule form 133 (2012-10-05)"
+          "title": "molecule form 133 (2012-10-05)",
+          "title_sort": "molecule form 133 (2012-010-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2f7eece7c3221ddb53c5b9858110afc9"
         },
         {
+          "work_id": "00459",
           "detail_id": "134",
           "detail_uid": "00459-134",
-          "title": "molecule form 134 (2012-10-06)"
+          "title": "molecule form 134 (2012-10-06)",
+          "title_sort": "molecule form 134 (2012-010-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "198281f886f2a902e32e9b45a3437f6b"
         },
         {
+          "work_id": "00459",
           "detail_id": "135",
           "detail_uid": "00459-135",
-          "title": "molecule form 135 (2012-10-07)"
+          "title": "molecule form 135 (2012-10-07)",
+          "title_sort": "molecule form 135 (2012-010-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8c9a8255059eb5dd11a2e8d9e9bc9df2"
         },
         {
+          "work_id": "00459",
           "detail_id": "136",
           "detail_uid": "00459-136",
-          "title": "molecule form 136 (2012-10-10)"
+          "title": "molecule form 136 (2012-10-10)",
+          "title_sort": "molecule form 136 (2012-010-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4be56cd3ea1833cbde906ab14b78fd83"
         },
         {
+          "work_id": "00459",
           "detail_id": "137",
           "detail_uid": "00459-137",
-          "title": "molecule form 137 (2012-10-17)"
+          "title": "molecule form 137 (2012-10-17)",
+          "title_sort": "molecule form 137 (2012-010-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6e2e8e16e8adc608f838d9e75dd418a0"
         },
         {
+          "work_id": "00459",
           "detail_id": "138",
           "detail_uid": "00459-138",
-          "title": "molecule form 138 (2012-10-18)"
+          "title": "molecule form 138 (2012-10-18)",
+          "title_sort": "molecule form 138 (2012-010-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d30419b84e77fcfa8f6ab249c3e7f4f4"
         },
         {
+          "work_id": "00459",
           "detail_id": "139",
           "detail_uid": "00459-139",
-          "title": "molecule form 139 (2012-10-21)"
+          "title": "molecule form 139 (2012-10-21)",
+          "title_sort": "molecule form 139 (2012-010-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bb057d360fb7f566d23ae055fbf2c633"
         },
         {
+          "work_id": "00459",
           "detail_id": "140",
           "detail_uid": "00459-140",
-          "title": "molecule form 140 (2012-10-25)"
+          "title": "molecule form 140 (2012-10-25)",
+          "title_sort": "molecule form 140 (2012-010-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "93f761113b27540ccb4fc9d1460f31ef"
         },
         {
+          "work_id": "00459",
           "detail_id": "141",
           "detail_uid": "00459-141",
-          "title": "molecule form 141 (2012-10-26)"
+          "title": "molecule form 141 (2012-10-26)",
+          "title_sort": "molecule form 141 (2012-010-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5a9318104984fa84739812ba433d026c"
         },
         {
+          "work_id": "00459",
           "detail_id": "142",
           "detail_uid": "00459-142",
-          "title": "molecule form 142 (2012-10-31)"
+          "title": "molecule form 142 (2012-10-31)",
+          "title_sort": "molecule form 142 (2012-010-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ba9d709551b19d1c5d666d4e61616f16"
         },
         {
+          "work_id": "00459",
           "detail_id": "143",
           "detail_uid": "00459-143",
-          "title": "molecule form 143 (2012-11-03)"
+          "title": "molecule form 143 (2012-11-03)",
+          "title_sort": "molecule form 143 (2012-011-003)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bc15a1054baf979679b5923ecf366611"
         },
         {
+          "work_id": "00459",
           "detail_id": "144",
           "detail_uid": "00459-144",
-          "title": "molecule form 144 (2012-11-06)"
+          "title": "molecule form 144 (2012-11-06)",
+          "title_sort": "molecule form 144 (2012-011-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "219233a1f5754bed69529a03be2fb1cb"
         },
         {
+          "work_id": "00459",
           "detail_id": "145",
           "detail_uid": "00459-145",
-          "title": "molecule form 145 (2012-11-25)"
+          "title": "molecule form 145 (2012-11-25)",
+          "title_sort": "molecule form 145 (2012-011-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b2526d9a6d069b0e81eee50aa1644c88"
         },
         {
+          "work_id": "00459",
           "detail_id": "146",
           "detail_uid": "00459-146",
-          "title": "molecule form 146 (2012-12-06)"
+          "title": "molecule form 146 (2012-12-06)",
+          "title_sort": "molecule form 146 (2012-012-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2b55fca3815634820c4a41a5db55786f"
         },
         {
+          "work_id": "00459",
           "detail_id": "147",
           "detail_uid": "00459-147",
-          "title": "molecule form 147 (2012-12-13)"
+          "title": "molecule form 147 (2012-12-13)",
+          "title_sort": "molecule form 147 (2012-012-013)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b742c8a04746f14c744ef3ff0a6ac944"
         },
         {
+          "work_id": "00459",
           "detail_id": "148",
           "detail_uid": "00459-148",
-          "title": "molecule form 148 (2012-12-22)"
+          "title": "molecule form 148 (2012-12-22)",
+          "title_sort": "molecule form 148 (2012-012-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ebad96e8abb110b1d44a79ba4910e7d9"
         },
         {
+          "work_id": "00459",
           "detail_id": "149",
           "detail_uid": "00459-149",
-          "title": "molecule form 149 (2012-12-22)"
+          "title": "molecule form 149 (2012-12-22)",
+          "title_sort": "molecule form 149 (2012-012-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b28670aea15dc579627fdef14ccc9dfd"
         },
         {
+          "work_id": "00459",
           "detail_id": "150",
           "detail_uid": "00459-150",
-          "title": "molecule form 150 (2012-12-23)"
+          "title": "molecule form 150 (2012-12-23)",
+          "title_sort": "molecule form 150 (2012-012-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "404040eb2fd6cd8813b8582115688236"
         },
         {
+          "work_id": "00459",
           "detail_id": "151",
           "detail_uid": "00459-151",
-          "title": "molecule form 151 (2012-12-25)"
+          "title": "molecule form 151 (2012-12-25)",
+          "title_sort": "molecule form 151 (2012-012-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6d33846c88d47d68c24cbc51bcef31d7"
         },
         {
+          "work_id": "00459",
           "detail_id": "152",
           "detail_uid": "00459-152",
-          "title": "molecule form 152 (2012-12-26)"
+          "title": "molecule form 152 (2012-12-26)",
+          "title_sort": "molecule form 152 (2012-012-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3669a005f85ceae427aa62a4e5710d9a"
         },
         {
+          "work_id": "00459",
           "detail_id": "153",
           "detail_uid": "00459-153",
-          "title": "molecule form 153 (2012-12-26)"
+          "title": "molecule form 153 (2012-12-26)",
+          "title_sort": "molecule form 153 (2012-012-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "87428610511865d85660061d1a5d1c7f"
         },
         {
+          "work_id": "00459",
           "detail_id": "154",
           "detail_uid": "00459-154",
-          "title": "molecule form 154 (2012-12-26)"
+          "title": "molecule form 154 (2012-12-26)",
+          "title_sort": "molecule form 154 (2012-012-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "326aa123f2eedfe08d7342d77a01dd1d"
         },
         {
+          "work_id": "00459",
           "detail_id": "155",
           "detail_uid": "00459-155",
-          "title": "molecule form 155 (2012-12-26)"
+          "title": "molecule form 155 (2012-12-26)",
+          "title_sort": "molecule form 155 (2012-012-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "33649722ab0aa2dd3608d1ae17121916"
         },
         {
+          "work_id": "00459",
           "detail_id": "156",
           "detail_uid": "00459-156",
-          "title": "molecule form 156 (2012-12-27)"
+          "title": "molecule form 156 (2012-12-27)",
+          "title_sort": "molecule form 156 (2012-012-027)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c7eeff2bbdc771248029a873a14c723c"
         },
         {
+          "work_id": "00459",
           "detail_id": "157",
           "detail_uid": "00459-157",
-          "title": "molecule form 157 (2012-12-28)"
+          "title": "molecule form 157 (2012-12-28)",
+          "title_sort": "molecule form 157 (2012-012-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8f2492176db97e3b4a88bfdb5c615814"
         },
         {
+          "work_id": "00459",
           "detail_id": "158",
           "detail_uid": "00459-158",
-          "title": "molecule form 158 (2012-12-31)"
+          "title": "molecule form 158 (2012-12-31)",
+          "title_sort": "molecule form 158 (2012-012-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5ad7044815f4dc30397719b134019d3e"
         },
         {
+          "work_id": "00459",
           "detail_id": "159",
           "detail_uid": "00459-159",
-          "title": "molecule form 159 (2012-12-31)"
+          "title": "molecule form 159 (2012-12-31)",
+          "title_sort": "molecule form 159 (2012-012-031)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4b39322d0c4457254dc8e9a937721ff6"
         },
         {
+          "work_id": "00459",
           "detail_id": "160",
           "detail_uid": "00459-160",
-          "title": "molecule form 160 (2013-01-04)"
+          "title": "molecule form 160 (2013-01-04)",
+          "title_sort": "molecule form 160 (2013-001-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "58f73939a38f31bd048e41beb6cbb9d3"
         },
         {
+          "work_id": "00459",
           "detail_id": "161",
           "detail_uid": "00459-161",
-          "title": "molecule form 161 (2013-01-04)"
+          "title": "molecule form 161 (2013-01-04)",
+          "title_sort": "molecule form 161 (2013-001-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "292d88d0a7f90586fc036855942368f0"
         },
         {
+          "work_id": "00459",
           "detail_id": "162",
           "detail_uid": "00459-162",
-          "title": "molecule form 162 (2013-01-04)"
+          "title": "molecule form 162 (2013-01-04)",
+          "title_sort": "molecule form 162 (2013-001-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0ff70143ef98ce5c2bebcb16927fb09d"
         },
         {
+          "work_id": "00459",
           "detail_id": "163",
           "detail_uid": "00459-163",
-          "title": "molecule form 163 (2013-01-08)"
+          "title": "molecule form 163 (2013-01-08)",
+          "title_sort": "molecule form 163 (2013-001-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a1159af7c831734b54717af518fa2c76"
         },
         {
+          "work_id": "00459",
           "detail_id": "164",
           "detail_uid": "00459-164",
-          "title": "molecule form 164 (2013-01-16)"
+          "title": "molecule form 164 (2013-01-16)",
+          "title_sort": "molecule form 164 (2013-001-016)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1833e477a5e3815affe99b6e52c197b3"
         },
         {
+          "work_id": "00459",
           "detail_id": "165",
           "detail_uid": "00459-165",
-          "title": "molecule form 165 (2013-01-20)"
+          "title": "molecule form 165 (2013-01-20)",
+          "title_sort": "molecule form 165 (2013-001-020)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ed49069c8cc94f192a51a74de888c96c"
         },
         {
+          "work_id": "00459",
           "detail_id": "166",
           "detail_uid": "00459-166",
-          "title": "molecule form 166 (2013-01-25)"
+          "title": "molecule form 166 (2013-01-25)",
+          "title_sort": "molecule form 166 (2013-001-025)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "161e91ffda2d52cca6e22f7d5824c57b"
         },
         {
+          "work_id": "00459",
           "detail_id": "167",
           "detail_uid": "00459-167",
-          "title": "molecule form 167 (2013-01-28)"
+          "title": "molecule form 167 (2013-01-28)",
+          "title_sort": "molecule form 167 (2013-001-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "85f691ee487b27bf06b83e78a90f7861"
         },
         {
+          "work_id": "00459",
           "detail_id": "168",
           "detail_uid": "00459-168",
-          "title": "molecule form 168 (2013-01-28)"
+          "title": "molecule form 168 (2013-01-28)",
+          "title_sort": "molecule form 168 (2013-001-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "206417138117ef8c5491411c72da1ceb"
         },
         {
+          "work_id": "00459",
           "detail_id": "169",
           "detail_uid": "00459-169",
-          "title": "molecule form 169 (2013-01-29)"
+          "title": "molecule form 169 (2013-01-29)",
+          "title_sort": "molecule form 169 (2013-001-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "65f94190a27c5b1c30177952fa4765b5"
         },
         {
+          "work_id": "00459",
           "detail_id": "170",
           "detail_uid": "00459-170",
-          "title": "molecule form 170 (2013-02-08)"
+          "title": "molecule form 170 (2013-02-08)",
+          "title_sort": "molecule form 170 (2013-002-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f69abd397ac288c4bb6677343db81dce"
         },
         {
+          "work_id": "00459",
           "detail_id": "171",
           "detail_uid": "00459-171",
-          "title": "molecule form 171 (2013-02-16)"
+          "title": "molecule form 171 (2013-02-16)",
+          "title_sort": "molecule form 171 (2013-002-016)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dea709d186d7b5910ff4c10aec8ca052"
         },
         {
+          "work_id": "00459",
           "detail_id": "172",
           "detail_uid": "00459-172",
-          "title": "molecule form 172 (2013-02-21)"
+          "title": "molecule form 172 (2013-02-21)",
+          "title_sort": "molecule form 172 (2013-002-021)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "83256d4f781a4781820d0fc50966ecbe"
         },
         {
+          "work_id": "00459",
           "detail_id": "173",
           "detail_uid": "00459-173",
-          "title": "molecule form 173 (2013-02-28)"
+          "title": "molecule form 173 (2013-02-28)",
+          "title_sort": "molecule form 173 (2013-002-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "484e91622c4e1cc1d02cc9020e500f2c"
         },
         {
+          "work_id": "00459",
           "detail_id": "174",
           "detail_uid": "00459-174",
-          "title": "molecule form 174 (2013-02-28)"
+          "title": "molecule form 174 (2013-02-28)",
+          "title_sort": "molecule form 174 (2013-002-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1d039b13c1c404b4e9fe161e459d1377"
         },
         {
+          "work_id": "00459",
           "detail_id": "175",
           "detail_uid": "00459-175",
-          "title": "molecule form 175 (2013-03-02)"
+          "title": "molecule form 175 (2013-03-02)",
+          "title_sort": "molecule form 175 (2013-003-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f99f4d09e5b2de78bede22380b2fbf34"
         },
         {
+          "work_id": "00459",
           "detail_id": "176",
           "detail_uid": "00459-176",
-          "title": "molecule form 176 (2013-03-02)"
+          "title": "molecule form 176 (2013-03-02)",
+          "title_sort": "molecule form 176 (2013-003-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c30e824275ff0d1cec21cc2dd43d8184"
         },
         {
+          "work_id": "00459",
           "detail_id": "177",
           "detail_uid": "00459-177",
-          "title": "molecule form 177 (2013-03-02)"
+          "title": "molecule form 177 (2013-03-02)",
+          "title_sort": "molecule form 177 (2013-003-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "03eb175a85597ad78249abe253a2246a"
         },
         {
+          "work_id": "00459",
           "detail_id": "178",
           "detail_uid": "00459-178",
-          "title": "molecule form 178 (2013-03-02)"
+          "title": "molecule form 178 (2013-03-02)",
+          "title_sort": "molecule form 178 (2013-003-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "28bb3e7244cf151fe4d6d589f9e9baa6"
         },
         {
+          "work_id": "00459",
           "detail_id": "179",
           "detail_uid": "00459-179",
-          "title": "molecule form 179 (2013-03-02)"
+          "title": "molecule form 179 (2013-03-02)",
+          "title_sort": "molecule form 179 (2013-003-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "232dc3ce37539e33c874ef9523923a47"
         },
         {
+          "work_id": "00459",
           "detail_id": "180",
           "detail_uid": "00459-180",
-          "title": "molecule form 180 (2013-03-10)"
+          "title": "molecule form 180 (2013-03-10)",
+          "title_sort": "molecule form 180 (2013-003-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5aeb033a83eafc51ec03baf5a86b2330"
         },
         {
+          "work_id": "00459",
           "detail_id": "181",
           "detail_uid": "00459-181",
-          "title": "molecule form 181 (2013-03-11)"
+          "title": "molecule form 181 (2013-03-11)",
+          "title_sort": "molecule form 181 (2013-003-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0edfbc06b6bdb2be3edb4b355bc52b41"
         },
         {
+          "work_id": "00459",
           "detail_id": "182",
           "detail_uid": "00459-182",
-          "title": "molecule form 182 (2013-03-11)"
+          "title": "molecule form 182 (2013-03-11)",
+          "title_sort": "molecule form 182 (2013-003-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "74d6c1b75b2fbbc774711a8acffd91fa"
         },
         {
+          "work_id": "00459",
           "detail_id": "183",
           "detail_uid": "00459-183",
-          "title": "molecule form 183 (2013-03-15)"
+          "title": "molecule form 183 (2013-03-15)",
+          "title_sort": "molecule form 183 (2013-003-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "43b30dae33f4e44234dca77efacbd7e5"
         },
         {
+          "work_id": "00459",
           "detail_id": "184",
           "detail_uid": "00459-184",
-          "title": "molecule form 184 (2013-03-16)"
+          "title": "molecule form 184 (2013-03-16)",
+          "title_sort": "molecule form 184 (2013-003-016)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b55b1d418a7f26bffed9e66addaf4f09"
         },
         {
+          "work_id": "00459",
           "detail_id": "185",
           "detail_uid": "00459-185",
-          "title": "molecule form 185 (2013-03-17)"
+          "title": "molecule form 185 (2013-03-17)",
+          "title_sort": "molecule form 185 (2013-003-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f5d37ff3bb060b5046ea8a0adada9746"
         },
         {
+          "work_id": "00459",
           "detail_id": "186",
           "detail_uid": "00459-186",
-          "title": "molecule form 186 (2013-03-17)"
+          "title": "molecule form 186 (2013-03-17)",
+          "title_sort": "molecule form 186 (2013-003-017)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "517189b98598bcf9278ec2de74c86e08"
         },
         {
+          "work_id": "00459",
           "detail_id": "187",
           "detail_uid": "00459-187",
-          "title": "molecule form 187 (2013-03-18)"
+          "title": "molecule form 187 (2013-03-18)",
+          "title_sort": "molecule form 187 (2013-003-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "525fb4f81b2a7c2ae7e2b88e34ebbfe4"
         },
         {
+          "work_id": "00459",
           "detail_id": "188",
           "detail_uid": "00459-188",
-          "title": "molecule form 188 (2013-03-22)"
+          "title": "molecule form 188 (2013-03-22)",
+          "title_sort": "molecule form 188 (2013-003-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0c4f1310d04a6529d0a8fcf476c37a73"
         },
         {
+          "work_id": "00459",
           "detail_id": "189",
           "detail_uid": "00459-189",
-          "title": "molecule form 189 (2013-03-23)"
+          "title": "molecule form 189 (2013-03-23)",
+          "title_sort": "molecule form 189 (2013-003-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e193a12e09fa4efa1b32d6e151207ef1"
         },
         {
+          "work_id": "00459",
           "detail_id": "190",
           "detail_uid": "00459-190",
-          "title": "molecule form 190 (2013-04-02)"
+          "title": "molecule form 190 (2013-04-02)",
+          "title_sort": "molecule form 190 (2013-004-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "67167f9cf7d5c9c7143e54366276e69c"
         },
         {
+          "work_id": "00459",
           "detail_id": "191",
           "detail_uid": "00459-191",
-          "title": "molecule form 191 (2013-04-02)"
+          "title": "molecule form 191 (2013-04-02)",
+          "title_sort": "molecule form 191 (2013-004-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1b0233febe8d772a608d2d65e7ce70d8"
         },
         {
+          "work_id": "00459",
           "detail_id": "192",
           "detail_uid": "00459-192",
-          "title": "molecule form 192 (2013-04-02)"
+          "title": "molecule form 192 (2013-04-02)",
+          "title_sort": "molecule form 192 (2013-004-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f715db8b1664c28454bb3277e47b9a30"
         },
         {
+          "work_id": "00459",
           "detail_id": "193",
           "detail_uid": "00459-193",
-          "title": "molecule form 193 (2013-04-02)"
+          "title": "molecule form 193 (2013-04-02)",
+          "title_sort": "molecule form 193 (2013-004-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "acfa349231e13c47e5e601b510e757c7"
         },
         {
+          "work_id": "00459",
           "detail_id": "194",
           "detail_uid": "00459-194",
-          "title": "molecule form 194 (2013-04-02)"
+          "title": "molecule form 194 (2013-04-02)",
+          "title_sort": "molecule form 194 (2013-004-002)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "85602cb8fcb8eda86158b10a62d545c8"
         },
         {
+          "work_id": "00459",
           "detail_id": "195",
           "detail_uid": "00459-195",
-          "title": "molecule form 195 (2013-04-04)"
+          "title": "molecule form 195 (2013-04-04)",
+          "title_sort": "molecule form 195 (2013-004-004)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "838d26501a28d2638da771caee42f39d"
         },
         {
+          "work_id": "00459",
           "detail_id": "196",
           "detail_uid": "00459-196",
-          "title": "molecule form 196 (2013-04-06)"
+          "title": "molecule form 196 (2013-04-06)",
+          "title_sort": "molecule form 196 (2013-004-006)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0d8725fca4d8433c442a782ae9ee6190"
         },
         {
+          "work_id": "00459",
           "detail_id": "197",
           "detail_uid": "00459-197",
-          "title": "molecule form 197 (2013-04-12)"
+          "title": "molecule form 197 (2013-04-12)",
+          "title_sort": "molecule form 197 (2013-004-012)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a1f91a6a17b8681298aa441934660d79"
         },
         {
+          "work_id": "00459",
           "detail_id": "198",
           "detail_uid": "00459-198",
-          "title": "molecule form 198 (2013-04-12)"
+          "title": "molecule form 198 (2013-04-12)",
+          "title_sort": "molecule form 198 (2013-004-012)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ef95b605cd42d0175ff7998e7564b92e"
         },
         {
+          "work_id": "00459",
           "detail_id": "199",
           "detail_uid": "00459-199",
-          "title": "molecule form 199 (2013-04-12)"
+          "title": "molecule form 199 (2013-04-12)",
+          "title_sort": "molecule form 199 (2013-004-012)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0d306d3013068a8b49957575bd8a8d97"
         },
         {
+          "work_id": "00459",
           "detail_id": "200",
           "detail_uid": "00459-200",
-          "title": "molecule form 200 (2013-04-15)"
+          "title": "molecule form 200 (2013-04-15)",
+          "title_sort": "molecule form 200 (2013-004-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ea08e6bdb34a7a0bf55cac536dee9557"
         },
         {
+          "work_id": "00459",
           "detail_id": "201",
           "detail_uid": "00459-201",
-          "title": "molecule form 201 (2013-04-15)"
+          "title": "molecule form 201 (2013-04-15)",
+          "title_sort": "molecule form 201 (2013-004-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "93d66fa8524a20378ae07d7370b32432"
         },
         {
+          "work_id": "00459",
           "detail_id": "202",
           "detail_uid": "00459-202",
-          "title": "molecule form 202 (2013-04-18)"
+          "title": "molecule form 202 (2013-04-18)",
+          "title_sort": "molecule form 202 (2013-004-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "75c0eec7b10bb100836a4b8476d226eb"
         },
         {
+          "work_id": "00459",
           "detail_id": "203",
           "detail_uid": "00459-203",
-          "title": "molecule form 203 (2013-04-18)"
+          "title": "molecule form 203 (2013-04-18)",
+          "title_sort": "molecule form 203 (2013-004-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e14e0ff7d2f599df4d016b6530670d87"
         },
         {
+          "work_id": "00459",
           "detail_id": "204",
           "detail_uid": "00459-204",
-          "title": "molecule form 204 (2013-04-18)"
+          "title": "molecule form 204 (2013-04-18)",
+          "title_sort": "molecule form 204 (2013-004-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0932e630c5e3b90c95827006a5a32529"
         },
         {
+          "work_id": "00459",
           "detail_id": "205",
           "detail_uid": "00459-205",
-          "title": "molecule form 205 (2013-04-18)"
+          "title": "molecule form 205 (2013-04-18)",
+          "title_sort": "molecule form 205 (2013-004-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "11cd083fe8b909a48e1b3d10ec0ca9d8"
         },
         {
+          "work_id": "00459",
           "detail_id": "206",
           "detail_uid": "00459-206",
-          "title": "molecule form 206 (2013-04-18)"
+          "title": "molecule form 206 (2013-04-18)",
+          "title_sort": "molecule form 206 (2013-004-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b48b6bb3bf8c1e2ecbada468978548b6"
         },
         {
+          "work_id": "00459",
           "detail_id": "207",
           "detail_uid": "00459-207",
-          "title": "molecule form 207 (2013-04-28)"
+          "title": "molecule form 207 (2013-04-28)",
+          "title_sort": "molecule form 207 (2013-004-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9e4a90a94c41cc1d5b18e0323681aa26"
         },
         {
+          "work_id": "00459",
           "detail_id": "208",
           "detail_uid": "00459-208",
-          "title": "molecule form 208 (2013-04-30)"
+          "title": "molecule form 208 (2013-04-30)",
+          "title_sort": "molecule form 208 (2013-004-030)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "57990c5612dc792fdfe6a50368ff8846"
         },
         {
+          "work_id": "00459",
           "detail_id": "209",
           "detail_uid": "00459-209",
-          "title": "molecule form 209 (2013-05-03)"
+          "title": "molecule form 209 (2013-05-03)",
+          "title_sort": "molecule form 209 (2013-005-003)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5d033d185f81cb01d1fe867817ca98a0"
         },
         {
+          "work_id": "00459",
           "detail_id": "210",
           "detail_uid": "00459-210",
-          "title": "molecule form 210 (2013-05-03)"
+          "title": "molecule form 210 (2013-05-03)",
+          "title_sort": "molecule form 210 (2013-005-003)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bd887c2725b55d67861b6b2936f95676"
         },
         {
+          "work_id": "00459",
           "detail_id": "211",
           "detail_uid": "00459-211",
-          "title": "molecule form 211 (2013-05-07)"
+          "title": "molecule form 211 (2013-05-07)",
+          "title_sort": "molecule form 211 (2013-005-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e7ccd0a63f58d9773f86cd90caae2e30"
         },
         {
+          "work_id": "00459",
           "detail_id": "212",
           "detail_uid": "00459-212",
-          "title": "molecule form 212 (2013-05-07)"
+          "title": "molecule form 212 (2013-05-07)",
+          "title_sort": "molecule form 212 (2013-005-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5cc6743bf557e9d418ca555c855c4b83"
         },
         {
+          "work_id": "00459",
           "detail_id": "213",
           "detail_uid": "00459-213",
-          "title": "molecule form 213 (2013-05-09)"
+          "title": "molecule form 213 (2013-05-09)",
+          "title_sort": "molecule form 213 (2013-005-009)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "adcb89064da03cd5e0b5d00b557a9bbc"
         },
         {
+          "work_id": "00459",
           "detail_id": "214",
           "detail_uid": "00459-214",
-          "title": "molecule form 214 (2013-05-09)"
+          "title": "molecule form 214 (2013-05-09)",
+          "title_sort": "molecule form 214 (2013-005-009)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a22dedf244a4be8889a9571b2c2b496c"
         },
         {
+          "work_id": "00459",
           "detail_id": "215",
           "detail_uid": "00459-215",
-          "title": "molecule form 215 (2013-05-10)"
+          "title": "molecule form 215 (2013-05-10)",
+          "title_sort": "molecule form 215 (2013-005-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dd5759e3e6fe2f3a72b40d93c6d43133"
         },
         {
+          "work_id": "00459",
           "detail_id": "216",
           "detail_uid": "00459-216",
-          "title": "molecule form 216 (2013-05-10)"
+          "title": "molecule form 216 (2013-05-10)",
+          "title_sort": "molecule form 216 (2013-005-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e71536a6c0036ef7864c3687432b99c4"
         },
         {
+          "work_id": "00459",
           "detail_id": "217",
           "detail_uid": "00459-217",
-          "title": "molecule form 217 (2013-05-11)"
+          "title": "molecule form 217 (2013-05-11)",
+          "title_sort": "molecule form 217 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "918f572019d5f88d89566c72b30d4b36"
         },
         {
+          "work_id": "00459",
           "detail_id": "218",
           "detail_uid": "00459-218",
-          "title": "molecule form 218 (2013-05-11)"
+          "title": "molecule form 218 (2013-05-11)",
+          "title_sort": "molecule form 218 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f257d55511f0a745e33a433c0f00465f"
         },
         {
+          "work_id": "00459",
           "detail_id": "219",
           "detail_uid": "00459-219",
-          "title": "molecule form 219 (2013-05-11)"
+          "title": "molecule form 219 (2013-05-11)",
+          "title_sort": "molecule form 219 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d8646747c04acf8ae6aeb70d27d10357"
         },
         {
+          "work_id": "00459",
           "detail_id": "220",
           "detail_uid": "00459-220",
-          "title": "molecule form 220 (2013-05-11)"
+          "title": "molecule form 220 (2013-05-11)",
+          "title_sort": "molecule form 220 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "572896bc21071f2c94cae8b122ca0df3"
         },
         {
+          "work_id": "00459",
           "detail_id": "221",
           "detail_uid": "00459-221",
-          "title": "molecule form 221 (2013-05-11)"
+          "title": "molecule form 221 (2013-05-11)",
+          "title_sort": "molecule form 221 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b0761d48b2b46006dff3f44ab718794d"
         },
         {
+          "work_id": "00459",
           "detail_id": "222",
           "detail_uid": "00459-222",
-          "title": "molecule form 222 (2013-05-11)"
+          "title": "molecule form 222 (2013-05-11)",
+          "title_sort": "molecule form 222 (2013-005-011)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "701aeae4dfa0e667b41907302ed91012"
         },
         {
+          "work_id": "00459",
           "detail_id": "223",
           "detail_uid": "00459-223",
-          "title": "molecule form 223 (2013-05-15)"
+          "title": "molecule form 223 (2013-05-15)",
+          "title_sort": "molecule form 223 (2013-005-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3adcbd40e56e7434a8f27d70ed52d31a"
         },
         {
+          "work_id": "00459",
           "detail_id": "224",
           "detail_uid": "00459-224",
-          "title": "molecule form 224 (2013-05-15)"
+          "title": "molecule form 224 (2013-05-15)",
+          "title_sort": "molecule form 224 (2013-005-015)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2d30b3bddb9c1a6f1f88426b61360dc6"
         },
         {
+          "work_id": "00459",
           "detail_id": "225",
           "detail_uid": "00459-225",
-          "title": "molecule form 225 (2013-06-07)"
+          "title": "molecule form 225 (2013-06-07)",
+          "title_sort": "molecule form 225 (2013-006-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3c6e09113ffdcc9c1fdff0c832120d07"
         },
         {
+          "work_id": "00459",
           "detail_id": "226",
           "detail_uid": "00459-226",
-          "title": "molecule form 226 (2013-06-07)"
+          "title": "molecule form 226 (2013-06-07)",
+          "title_sort": "molecule form 226 (2013-006-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8432dae151c369dc12b38ab4a940a858"
         },
         {
+          "work_id": "00459",
           "detail_id": "227",
           "detail_uid": "00459-227",
-          "title": "molecule form 227 (2013-06-07)"
+          "title": "molecule form 227 (2013-06-07)",
+          "title_sort": "molecule form 227 (2013-006-007)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6adaace0c7c4fa01bb6617ecbbda8f89"
         },
         {
+          "work_id": "00459",
           "detail_id": "228",
           "detail_uid": "00459-228",
-          "title": "molecule form 228 (2013-06-10)"
+          "title": "molecule form 228 (2013-06-10)",
+          "title_sort": "molecule form 228 (2013-006-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a967144b2ecc554a970093f4f340af02"
         },
         {
+          "work_id": "00459",
           "detail_id": "229",
           "detail_uid": "00459-229",
-          "title": "molecule form 229 (2013-06-10)"
+          "title": "molecule form 229 (2013-06-10)",
+          "title_sort": "molecule form 229 (2013-006-010)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "832fb4a1c4bd98cd5fb9369fe93b0a96"
         },
         {
+          "work_id": "00459",
           "detail_id": "230",
           "detail_uid": "00459-230",
-          "title": "molecule form 230 (2013-06-12)"
+          "title": "molecule form 230 (2013-06-12)",
+          "title_sort": "molecule form 230 (2013-006-012)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3043d3eb3ae3f91ffc7420710e2c9a89"
         },
         {
+          "work_id": "00459",
           "detail_id": "231",
           "detail_uid": "00459-231",
-          "title": "molecule form 231 (2013-06-20)"
+          "title": "molecule form 231 (2013-06-20)",
+          "title_sort": "molecule form 231 (2013-006-020)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d06021c4ee2316dc478d9efee1d7f611"
         },
         {
+          "work_id": "00459",
           "detail_id": "232",
           "detail_uid": "00459-232",
-          "title": "molecule form 232 (2013-06-22)"
+          "title": "molecule form 232 (2013-06-22)",
+          "title_sort": "molecule form 232 (2013-006-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0ff726515fc3d66dc10287c69de32f74"
         },
         {
+          "work_id": "00459",
           "detail_id": "233",
           "detail_uid": "00459-233",
-          "title": "molecule form 233 (2013-06-28)"
+          "title": "molecule form 233 (2013-06-28)",
+          "title_sort": "molecule form 233 (2013-006-028)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f2fc4da53e705af57fea0fe752e5b58b"
         },
         {
+          "work_id": "00459",
           "detail_id": "234",
           "detail_uid": "00459-234",
-          "title": "molecule form 234 (2013-07-22)"
+          "title": "molecule form 234 (2013-07-22)",
+          "title_sort": "molecule form 234 (2013-007-022)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1b68987cf59b47b48a14c615649bca31"
         },
         {
+          "work_id": "00459",
           "detail_id": "235",
           "detail_uid": "00459-235",
-          "title": "molecule form 235 (2013-07-23)"
+          "title": "molecule form 235 (2013-07-23)",
+          "title_sort": "molecule form 235 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "555689e0eface8caf07bebe8ea6d190a"
         },
         {
+          "work_id": "00459",
           "detail_id": "236",
           "detail_uid": "00459-236",
-          "title": "molecule form 236 (2013-07-23)"
+          "title": "molecule form 236 (2013-07-23)",
+          "title_sort": "molecule form 236 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "540b4283591fd828d4b6de194accd8d4"
         },
         {
+          "work_id": "00459",
           "detail_id": "237",
           "detail_uid": "00459-237",
-          "title": "molecule form 237 (2013-07-23)"
+          "title": "molecule form 237 (2013-07-23)",
+          "title_sort": "molecule form 237 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "df8f3cb236958b7b64d4a647cc6f1372"
         },
         {
+          "work_id": "00459",
           "detail_id": "238",
           "detail_uid": "00459-238",
-          "title": "molecule form 238 (2013-07-23)"
+          "title": "molecule form 238 (2013-07-23)",
+          "title_sort": "molecule form 238 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aaba6fde96b81b8364643f9f7fe00870"
         },
         {
+          "work_id": "00459",
           "detail_id": "239",
           "detail_uid": "00459-239",
-          "title": "molecule form 239 (2013-07-23)"
+          "title": "molecule form 239 (2013-07-23)",
+          "title_sort": "molecule form 239 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e3a7f21f7b2c1b902e3bd3dba7404cec"
         },
         {
+          "work_id": "00459",
           "detail_id": "240",
           "detail_uid": "00459-240",
-          "title": "molecule form 240 (2013-07-23)"
+          "title": "molecule form 240 (2013-07-23)",
+          "title_sort": "molecule form 240 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4adbd20be8261baa559fbb927f2d8218"
         },
         {
+          "work_id": "00459",
           "detail_id": "241",
           "detail_uid": "00459-241",
-          "title": "molecule form 241 (2013-07-23)"
+          "title": "molecule form 241 (2013-07-23)",
+          "title_sort": "molecule form 241 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6d796cd893be15f9607ea7b3f47dbd5a"
         },
         {
+          "work_id": "00459",
           "detail_id": "242",
           "detail_uid": "00459-242",
-          "title": "molecule form 242 (2013-07-23)"
+          "title": "molecule form 242 (2013-07-23)",
+          "title_sort": "molecule form 242 (2013-007-023)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b09f9a15f76d6f56b6249c028dc94f99"
         },
         {
+          "work_id": "00459",
           "detail_id": "243",
           "detail_uid": "00459-243",
-          "title": "molecule form 243 (2013-07-26)"
+          "title": "molecule form 243 (2013-07-26)",
+          "title_sort": "molecule form 243 (2013-007-026)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "abb59c10b28d926b404e0462ce799bfe"
         },
         {
+          "work_id": "00459",
           "detail_id": "244",
           "detail_uid": "00459-244",
-          "title": "molecule form 244 (2013-07-29)"
+          "title": "molecule form 244 (2013-07-29)",
+          "title_sort": "molecule form 244 (2013-007-029)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f2d72fb7164809d789b79ce95c56f14a"
         },
         {
+          "work_id": "00459",
           "detail_id": "245",
           "detail_uid": "00459-245",
-          "title": "molecule form 245 (2013-08-01)"
+          "title": "molecule form 245 (2013-08-01)",
+          "title_sort": "molecule form 245 (2013-008-001)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5cdb567ce1e6818fb3a75c5ffc0e696c"
         },
         {
+          "work_id": "00459",
           "detail_id": "246",
           "detail_uid": "00459-246",
-          "title": "molecule form 246 (2013-08-01)"
+          "title": "molecule form 246 (2013-08-01)",
+          "title_sort": "molecule form 246 (2013-008-001)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4e71153f6d82c8d633dcbd07fa10edec"
         },
         {
+          "work_id": "00459",
           "detail_id": "247",
           "detail_uid": "00459-247",
-          "title": "molecule form 247 (2013-08-03)"
+          "title": "molecule form 247 (2013-08-03)",
+          "title_sort": "molecule form 247 (2013-008-003)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "398bb25fe6c74f89f874892bf68d66bb"
         },
         {
+          "work_id": "00459",
           "detail_id": "248",
           "detail_uid": "00459-248",
-          "title": "molecule form 248 (2013-08-05)"
+          "title": "molecule form 248 (2013-08-05)",
+          "title_sort": "molecule form 248 (2013-008-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "453ffb9c504af16351f1fe5679a3e415"
         },
         {
+          "work_id": "00459",
           "detail_id": "249",
           "detail_uid": "00459-249",
-          "title": "molecule form 249 (2013-08-05)"
+          "title": "molecule form 249 (2013-08-05)",
+          "title_sort": "molecule form 249 (2013-008-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0c1f2328c1c931ebef6cd80f280ceea7"
         },
         {
+          "work_id": "00459",
           "detail_id": "250",
           "detail_uid": "00459-250",
-          "title": "molecule form 250 (2013-08-05)"
+          "title": "molecule form 250 (2013-08-05)",
+          "title_sort": "molecule form 250 (2013-008-005)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f8d409b36d7aa73cfb936f7fef2bd385"
         },
         {
+          "work_id": "00459",
           "detail_id": "251",
           "detail_uid": "00459-251",
-          "title": "molecule form 251 (2013-08-08)"
+          "title": "molecule form 251 (2013-08-08)",
+          "title_sort": "molecule form 251 (2013-008-008)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2167a161281a9f27be4f71d353453a85"
         },
         {
+          "work_id": "00459",
           "detail_id": "252",
           "detail_uid": "00459-252",
-          "title": "molecule form 252 (2013-08-16)"
+          "title": "molecule form 252 (2013-08-16)",
+          "title_sort": "molecule form 252 (2013-008-016)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c9b7cfe8f42b0a7f6ffa63018f7f79ae"
         },
         {
+          "work_id": "00459",
           "detail_id": "253",
           "detail_uid": "00459-253",
-          "title": "molecule form 253 (2013-08-18)"
+          "title": "molecule form 253 (2013-08-18)",
+          "title_sort": "molecule form 253 (2013-008-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4814916af369ce8ddc21f60a389391d6"
         },
         {
+          "work_id": "00459",
           "detail_id": "254",
           "detail_uid": "00459-254",
-          "title": "molecule form 254 (2013-08-18)"
+          "title": "molecule form 254 (2013-08-18)",
+          "title_sort": "molecule form 254 (2013-008-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b7482a5f53c2b06557fcdea1e12a28a6"
         },
         {
+          "work_id": "00459",
           "detail_id": "255",
           "detail_uid": "00459-255",
-          "title": "molecule form 255 (2013-08-18)"
+          "title": "molecule form 255 (2013-08-18)",
+          "title_sort": "molecule form 255 (2013-008-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "16a27f1f4823d3b83c0233445a4fff67"
         },
         {
+          "work_id": "00459",
           "detail_id": "256",
           "detail_uid": "00459-256",
-          "title": "molecule form 256 (2013-08-18)"
+          "title": "molecule form 256 (2013-08-18)",
+          "title_sort": "molecule form 256 (2013-008-018)",
+          "project_subfolder": "molecules",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "09a49e646e7e1a81a00eb787ae22d325"
         }
       ]
     }

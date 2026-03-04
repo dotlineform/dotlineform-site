@@ -1,42 +1,119 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-31bd470de15e3fad3c437555fdbc8239",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00521",
     "count": 6,
-    "hash": "dd56fb3d3785edafe2e46c2310333726"
+    "hash": "blake2b-36be852fc901b373dfe3e64a66f9384f",
+    "work_checksum": "blake2b-70aefab3a8f626beae806f44654f6dba",
+    "details_checksum": "blake2b-36be852fc901b373dfe3e64a66f9384f",
+    "record_checksum": "blake2b-31bd470de15e3fad3c437555fdbc8239"
+  },
+  "work": {
+    "work_id": "00521",
+    "title": "kylie structure 2",
+    "title_sort": "kylie structure 002",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "kylie-structures",
+    "series_title": "kylie structures",
+    "series_sort": "00521",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "70aefab3a8f626beae806f44654f6dba"
   },
   "sections": [
     {
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00521",
           "detail_id": "007",
           "detail_uid": "00521-007",
-          "title": "kylie structure 2.1"
+          "title": "kylie structure 2.1",
+          "title_sort": "kylie structure 002.001",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aae7679f5f95c561eb9cc7f625e19008"
         },
         {
+          "work_id": "00521",
           "detail_id": "008",
           "detail_uid": "00521-008",
-          "title": "kylie structure 2.2"
+          "title": "kylie structure 2.2",
+          "title_sort": "kylie structure 002.002",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "23ce4d17d388a141dbfa74d48fb685a8"
         },
         {
+          "work_id": "00521",
           "detail_id": "009",
           "detail_uid": "00521-009",
-          "title": "kylie structure 2.3"
+          "title": "kylie structure 2.3",
+          "title_sort": "kylie structure 002.003",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "86e2db738fb42624ccdf1f221e1e36d8"
         },
         {
+          "work_id": "00521",
           "detail_id": "010",
           "detail_uid": "00521-010",
-          "title": "kylie structure 2.4"
+          "title": "kylie structure 2.4",
+          "title_sort": "kylie structure 002.004",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0673a3084aa30e79e9733da3fee41409"
         },
         {
+          "work_id": "00521",
           "detail_id": "011",
           "detail_uid": "00521-011",
-          "title": "kylie structure 2.5"
+          "title": "kylie structure 2.5",
+          "title_sort": "kylie structure 002.005",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7e7a0e1d16a1a0eaa01b4188935bde06"
         },
         {
+          "work_id": "00521",
           "detail_id": "012",
           "detail_uid": "00521-012",
-          "title": "kylie structure 2.6"
+          "title": "kylie structure 2.6",
+          "title_sort": "kylie structure 002.006",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5ed20c161bb2f0bea7712a1a80270292"
         }
       ]
     }

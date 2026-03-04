@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-b2b4653461c139a004f784f1d4fd7923",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00487",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-92b08f9d76b1b1af2f224377af003d61",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-b2b4653461c139a004f784f1d4fd7923"
+  },
+  "work": {
+    "work_id": "00487",
+    "title": "mm particles 6",
+    "title_sort": "mm particles 006",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "mm",
+    "series_title": "mm",
+    "series_sort": "00487",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "92b08f9d76b1b1af2f224377af003d61"
+  },
+  "sections": []
+}

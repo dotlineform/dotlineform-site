@@ -1,387 +1,1016 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-6b5c4439e896af0ae716fe675aa88ed7",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00519",
     "count": 75,
-    "hash": "d4272522e3fbc92a188707ee696b2f9a"
+    "hash": "blake2b-e9aaebc5fbb162d2fdcf3a4813eb4067",
+    "work_checksum": "blake2b-034864d4e5915742018c694a2bea035c",
+    "details_checksum": "blake2b-e9aaebc5fbb162d2fdcf3a4813eb4067",
+    "record_checksum": "blake2b-6b5c4439e896af0ae716fe675aa88ed7"
+  },
+  "work": {
+    "work_id": "00519",
+    "title": "learning to draw landscapes (versions)",
+    "title_sort": "learning to draw landscapes (versions)",
+    "year": 2022,
+    "year_display": "c. 2022?",
+    "series_id": "learning-to-draw-landscapes",
+    "series_title": "learning to draw landscapes",
+    "series_sort": "00519",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 90.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "034864d4e5915742018c694a2bea035c"
   },
   "sections": [
     {
       "project_subfolder": "versions",
       "details": [
         {
+          "work_id": "00519",
           "detail_id": "001",
           "detail_uid": "00519-001",
-          "title": "version dall-e - 1.0 (run source)"
+          "title": "version dall-e - 1.0 (run source)",
+          "title_sort": "version dall-e - 001.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "816d7d0e435ab470e6f7cd502581fc8c"
         },
         {
+          "work_id": "00519",
           "detail_id": "002",
           "detail_uid": "00519-002",
-          "title": "version dall-e - 1.1"
+          "title": "version dall-e - 1.1",
+          "title_sort": "version dall-e - 001.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c4dfcf94364308cc284e1fdcd33bb8be"
         },
         {
+          "work_id": "00519",
           "detail_id": "003",
           "detail_uid": "00519-003",
-          "title": "version dall-e - 1.2"
+          "title": "version dall-e - 1.2",
+          "title_sort": "version dall-e - 001.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cfd887656ecae9e082dd674df764126d"
         },
         {
+          "work_id": "00519",
           "detail_id": "004",
           "detail_uid": "00519-004",
-          "title": "version dall-e - 1.3"
+          "title": "version dall-e - 1.3",
+          "title_sort": "version dall-e - 001.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "40dd70bf087797ecd3ba6ee3aa5725e0"
         },
         {
+          "work_id": "00519",
           "detail_id": "005",
           "detail_uid": "00519-005",
-          "title": "version dall-e - 1.4"
+          "title": "version dall-e - 1.4",
+          "title_sort": "version dall-e - 001.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "64ac995e40f5c2f3069742fd69866c7e"
         },
         {
+          "work_id": "00519",
           "detail_id": "006",
           "detail_uid": "00519-006",
-          "title": "version dall-e - 2.0 (run source)"
+          "title": "version dall-e - 2.0 (run source)",
+          "title_sort": "version dall-e - 002.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "55d541f31e229d6d108a60c89f16292f"
         },
         {
+          "work_id": "00519",
           "detail_id": "007",
           "detail_uid": "00519-007",
-          "title": "version dall-e - 2.1"
+          "title": "version dall-e - 2.1",
+          "title_sort": "version dall-e - 002.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8f368303b03b530ff7c219d421d299ea"
         },
         {
+          "work_id": "00519",
           "detail_id": "008",
           "detail_uid": "00519-008",
-          "title": "version dall-e - 2.2"
+          "title": "version dall-e - 2.2",
+          "title_sort": "version dall-e - 002.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e12a28bdc60f91c0d9241fe08a00c254"
         },
         {
+          "work_id": "00519",
           "detail_id": "009",
           "detail_uid": "00519-009",
-          "title": "version dall-e - 2.3"
+          "title": "version dall-e - 2.3",
+          "title_sort": "version dall-e - 002.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3cba7e5ec0660f7ecdd4fabfae333850"
         },
         {
+          "work_id": "00519",
           "detail_id": "010",
           "detail_uid": "00519-010",
-          "title": "version dall-e - 2.4"
+          "title": "version dall-e - 2.4",
+          "title_sort": "version dall-e - 002.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8c54eae16a3140afef87e62f1c30c8c9"
         },
         {
+          "work_id": "00519",
           "detail_id": "011",
           "detail_uid": "00519-011",
-          "title": "version dall-e - 3.0 (run source)"
+          "title": "version dall-e - 3.0 (run source)",
+          "title_sort": "version dall-e - 003.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "80d319420e965c5352ae9dc8ca1be634"
         },
         {
+          "work_id": "00519",
           "detail_id": "012",
           "detail_uid": "00519-012",
-          "title": "version dall-e - 3.1"
+          "title": "version dall-e - 3.1",
+          "title_sort": "version dall-e - 003.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "15d0835f23bc35fb164e76993087a7d9"
         },
         {
+          "work_id": "00519",
           "detail_id": "013",
           "detail_uid": "00519-013",
-          "title": "version dall-e - 3.2"
+          "title": "version dall-e - 3.2",
+          "title_sort": "version dall-e - 003.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a78cc1ca2bf6a936ec47f29e925763e3"
         },
         {
+          "work_id": "00519",
           "detail_id": "014",
           "detail_uid": "00519-014",
-          "title": "version dall-e - 3.3"
+          "title": "version dall-e - 3.3",
+          "title_sort": "version dall-e - 003.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6fd03abc85358181380f15230ec0c4aa"
         },
         {
+          "work_id": "00519",
           "detail_id": "015",
           "detail_uid": "00519-015",
-          "title": "version dall-e - 3.4"
+          "title": "version dall-e - 3.4",
+          "title_sort": "version dall-e - 003.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "590bc2a469fc8ff39df0343b96e31763"
         },
         {
+          "work_id": "00519",
           "detail_id": "016",
           "detail_uid": "00519-016",
-          "title": "version dall-e - 4.0 (run source)"
+          "title": "version dall-e - 4.0 (run source)",
+          "title_sort": "version dall-e - 004.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "dea06f7e66f11013531e94b909e0101c"
         },
         {
+          "work_id": "00519",
           "detail_id": "017",
           "detail_uid": "00519-017",
-          "title": "version dall-e - 4.1"
+          "title": "version dall-e - 4.1",
+          "title_sort": "version dall-e - 004.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fdf3d6ec6fa949a678ce6d295f4ad417"
         },
         {
+          "work_id": "00519",
           "detail_id": "018",
           "detail_uid": "00519-018",
-          "title": "version dall-e - 4.2"
+          "title": "version dall-e - 4.2",
+          "title_sort": "version dall-e - 004.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9a4cb346e25d7691e79322fc1ce1a9b9"
         },
         {
+          "work_id": "00519",
           "detail_id": "019",
           "detail_uid": "00519-019",
-          "title": "version dall-e - 4.3"
+          "title": "version dall-e - 4.3",
+          "title_sort": "version dall-e - 004.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aee6bafb9a192891858dff7a34d66bb9"
         },
         {
+          "work_id": "00519",
           "detail_id": "020",
           "detail_uid": "00519-020",
-          "title": "version dall-e - 4.4"
+          "title": "version dall-e - 4.4",
+          "title_sort": "version dall-e - 004.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "15d0170bde4f275d09284a397c2ea8a5"
         },
         {
+          "work_id": "00519",
           "detail_id": "021",
           "detail_uid": "00519-021",
-          "title": "version dall-e - 5.0 (run source)"
+          "title": "version dall-e - 5.0 (run source)",
+          "title_sort": "version dall-e - 005.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "07bc84344e9142309e9b23df012aa746"
         },
         {
+          "work_id": "00519",
           "detail_id": "022",
           "detail_uid": "00519-022",
-          "title": "version dall-e - 5.1"
+          "title": "version dall-e - 5.1",
+          "title_sort": "version dall-e - 005.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "63c6237a1ec99c07a57213e39c9d350e"
         },
         {
+          "work_id": "00519",
           "detail_id": "023",
           "detail_uid": "00519-023",
-          "title": "version dall-e - 5.2"
+          "title": "version dall-e - 5.2",
+          "title_sort": "version dall-e - 005.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fb1fc4fbae608bf06eed5e52ffd3c7c8"
         },
         {
+          "work_id": "00519",
           "detail_id": "024",
           "detail_uid": "00519-024",
-          "title": "version dall-e - 5.3"
+          "title": "version dall-e - 5.3",
+          "title_sort": "version dall-e - 005.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ea5b3dca086a918028d23c77f370f67f"
         },
         {
+          "work_id": "00519",
           "detail_id": "025",
           "detail_uid": "00519-025",
-          "title": "version dall-e - 5.4"
+          "title": "version dall-e - 5.4",
+          "title_sort": "version dall-e - 005.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7cd0ecda11f4ea6ca6c3fdf5faee5070"
         },
         {
+          "work_id": "00519",
           "detail_id": "026",
           "detail_uid": "00519-026",
-          "title": "version dall-e - 6.0 (run source)"
+          "title": "version dall-e - 6.0 (run source)",
+          "title_sort": "version dall-e - 006.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2386183d4861495c777fea43328eebce"
         },
         {
+          "work_id": "00519",
           "detail_id": "027",
           "detail_uid": "00519-027",
-          "title": "version dall-e - 6.1"
+          "title": "version dall-e - 6.1",
+          "title_sort": "version dall-e - 006.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7ca02b47fdd1cf54b2fa4ed92a622720"
         },
         {
+          "work_id": "00519",
           "detail_id": "028",
           "detail_uid": "00519-028",
-          "title": "version dall-e - 6.2"
+          "title": "version dall-e - 6.2",
+          "title_sort": "version dall-e - 006.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "078767cea8b0a101a9aea593765a6183"
         },
         {
+          "work_id": "00519",
           "detail_id": "029",
           "detail_uid": "00519-029",
-          "title": "version dall-e - 6.3"
+          "title": "version dall-e - 6.3",
+          "title_sort": "version dall-e - 006.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2575788a6867e0e0a0fd259d2febfc63"
         },
         {
+          "work_id": "00519",
           "detail_id": "030",
           "detail_uid": "00519-030",
-          "title": "version dall-e - 6.4"
+          "title": "version dall-e - 6.4",
+          "title_sort": "version dall-e - 006.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f49e514dc190dd383b14e4048abfb18f"
         },
         {
+          "work_id": "00519",
           "detail_id": "031",
           "detail_uid": "00519-031",
-          "title": "version dall-e - 7.0 (run source)"
+          "title": "version dall-e - 7.0 (run source)",
+          "title_sort": "version dall-e - 007.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "07ce0cc5fa02007c70c638a79a275c4f"
         },
         {
+          "work_id": "00519",
           "detail_id": "032",
           "detail_uid": "00519-032",
-          "title": "version dall-e - 7.1"
+          "title": "version dall-e - 7.1",
+          "title_sort": "version dall-e - 007.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8fa78bc67c428a61d6aaaabefe01b4d6"
         },
         {
+          "work_id": "00519",
           "detail_id": "033",
           "detail_uid": "00519-033",
-          "title": "version dall-e - 7.2"
+          "title": "version dall-e - 7.2",
+          "title_sort": "version dall-e - 007.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d868bc939bf0a65114ea83e0eda9d898"
         },
         {
+          "work_id": "00519",
           "detail_id": "034",
           "detail_uid": "00519-034",
-          "title": "version dall-e - 7.3"
+          "title": "version dall-e - 7.3",
+          "title_sort": "version dall-e - 007.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b941a529411c677c3b0a0aece7827987"
         },
         {
+          "work_id": "00519",
           "detail_id": "035",
           "detail_uid": "00519-035",
-          "title": "version dall-e - 7.4"
+          "title": "version dall-e - 7.4",
+          "title_sort": "version dall-e - 007.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "432a3d0f15efd2f1b5f59517ba330692"
         },
         {
+          "work_id": "00519",
           "detail_id": "036",
           "detail_uid": "00519-036",
-          "title": "version dall-e - 8.0 (run source)"
+          "title": "version dall-e - 8.0 (run source)",
+          "title_sort": "version dall-e - 008.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5569cfff53072bd38df7a94e1ba08bee"
         },
         {
+          "work_id": "00519",
           "detail_id": "037",
           "detail_uid": "00519-037",
-          "title": "version dall-e - 8.1"
+          "title": "version dall-e - 8.1",
+          "title_sort": "version dall-e - 008.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "52dd73be076e841a1fe79003837a00a4"
         },
         {
+          "work_id": "00519",
           "detail_id": "038",
           "detail_uid": "00519-038",
-          "title": "version dall-e - 8.2"
+          "title": "version dall-e - 8.2",
+          "title_sort": "version dall-e - 008.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "668461a1e4c647e3ea59d0f1a60993ee"
         },
         {
+          "work_id": "00519",
           "detail_id": "039",
           "detail_uid": "00519-039",
-          "title": "version dall-e - 8.3"
+          "title": "version dall-e - 8.3",
+          "title_sort": "version dall-e - 008.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "19dc1824dd59e9bdc607af526d6c1a79"
         },
         {
+          "work_id": "00519",
           "detail_id": "040",
           "detail_uid": "00519-040",
-          "title": "version dall-e - 8.4"
+          "title": "version dall-e - 8.4",
+          "title_sort": "version dall-e - 008.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1b04625b9fe0e911ee305f37ca0b795f"
         },
         {
+          "work_id": "00519",
           "detail_id": "041",
           "detail_uid": "00519-041",
-          "title": "version dall-e - 9.0 (run source)"
+          "title": "version dall-e - 9.0 (run source)",
+          "title_sort": "version dall-e - 009.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "92bfc2d03d230494dc6aa851480d5a7f"
         },
         {
+          "work_id": "00519",
           "detail_id": "042",
           "detail_uid": "00519-042",
-          "title": "version dall-e - 9.1"
+          "title": "version dall-e - 9.1",
+          "title_sort": "version dall-e - 009.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "04a57ef8835bea6510647f4188f8a775"
         },
         {
+          "work_id": "00519",
           "detail_id": "043",
           "detail_uid": "00519-043",
-          "title": "version dall-e - 9.2"
+          "title": "version dall-e - 9.2",
+          "title_sort": "version dall-e - 009.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4732dafcb0e0df925dc2a93c624d36d8"
         },
         {
+          "work_id": "00519",
           "detail_id": "044",
           "detail_uid": "00519-044",
-          "title": "version dall-e - 9.3"
+          "title": "version dall-e - 9.3",
+          "title_sort": "version dall-e - 009.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "fc9682d2bdc5d316247a6926c1c1896a"
         },
         {
+          "work_id": "00519",
           "detail_id": "045",
           "detail_uid": "00519-045",
-          "title": "version dall-e - 9.4"
+          "title": "version dall-e - 9.4",
+          "title_sort": "version dall-e - 009.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "834783fa77e0c3eeb59eec76325b697d"
         },
         {
+          "work_id": "00519",
           "detail_id": "046",
           "detail_uid": "00519-046",
-          "title": "version dall-e - 10.0 (run source)"
+          "title": "version dall-e - 10.0 (run source)",
+          "title_sort": "version dall-e - 010.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6a9335cacf5252b636c23d5e6f8d0a39"
         },
         {
+          "work_id": "00519",
           "detail_id": "047",
           "detail_uid": "00519-047",
-          "title": "version dall-e - 10.1"
+          "title": "version dall-e - 10.1",
+          "title_sort": "version dall-e - 010.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7f2f2057bb5a36b3279e458558630ae2"
         },
         {
+          "work_id": "00519",
           "detail_id": "048",
           "detail_uid": "00519-048",
-          "title": "version dall-e - 10.2"
+          "title": "version dall-e - 10.2",
+          "title_sort": "version dall-e - 010.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6debe80998f3c820484369f676dc2a64"
         },
         {
+          "work_id": "00519",
           "detail_id": "049",
           "detail_uid": "00519-049",
-          "title": "version dall-e - 10.3"
+          "title": "version dall-e - 10.3",
+          "title_sort": "version dall-e - 010.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "97cb1579c14ba1a06506ac97462eaa48"
         },
         {
+          "work_id": "00519",
           "detail_id": "050",
           "detail_uid": "00519-050",
-          "title": "version dall-e - 10.4"
+          "title": "version dall-e - 10.4",
+          "title_sort": "version dall-e - 010.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "02186c7a1b53a52f7fa95d2fd4518acb"
         },
         {
+          "work_id": "00519",
           "detail_id": "051",
           "detail_uid": "00519-051",
-          "title": "version dall-e - 11.0 (run source)"
+          "title": "version dall-e - 11.0 (run source)",
+          "title_sort": "version dall-e - 011.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0f92f02a2c11c66f61ea7c2d81e3832f"
         },
         {
+          "work_id": "00519",
           "detail_id": "052",
           "detail_uid": "00519-052",
-          "title": "version dall-e - 11.1"
+          "title": "version dall-e - 11.1",
+          "title_sort": "version dall-e - 011.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "209714fddbedaac78f152c9122acc65d"
         },
         {
+          "work_id": "00519",
           "detail_id": "053",
           "detail_uid": "00519-053",
-          "title": "version dall-e - 11.2"
+          "title": "version dall-e - 11.2",
+          "title_sort": "version dall-e - 011.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "25a70cb725f4730ba31bbe0d8780260a"
         },
         {
+          "work_id": "00519",
           "detail_id": "054",
           "detail_uid": "00519-054",
-          "title": "version dall-e - 11.3"
+          "title": "version dall-e - 11.3",
+          "title_sort": "version dall-e - 011.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1787ee157f07d24e17b050fa6d7d6c3b"
         },
         {
+          "work_id": "00519",
           "detail_id": "055",
           "detail_uid": "00519-055",
-          "title": "version dall-e - 11.4"
+          "title": "version dall-e - 11.4",
+          "title_sort": "version dall-e - 011.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "45c240032af7685f549cd675e5cd2ea2"
         },
         {
+          "work_id": "00519",
           "detail_id": "056",
           "detail_uid": "00519-056",
-          "title": "version dall-e - 12.0 (run source)"
+          "title": "version dall-e - 12.0 (run source)",
+          "title_sort": "version dall-e - 012.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "be4353a31161a49108c5ed0e9e95207b"
         },
         {
+          "work_id": "00519",
           "detail_id": "057",
           "detail_uid": "00519-057",
-          "title": "version dall-e - 12.1"
+          "title": "version dall-e - 12.1",
+          "title_sort": "version dall-e - 012.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3b86ed9fcf92fd8782eb4f7a898c4067"
         },
         {
+          "work_id": "00519",
           "detail_id": "058",
           "detail_uid": "00519-058",
-          "title": "version dall-e - 12.2"
+          "title": "version dall-e - 12.2",
+          "title_sort": "version dall-e - 012.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2edbb7e448a93702b3bce61f13e8b048"
         },
         {
+          "work_id": "00519",
           "detail_id": "059",
           "detail_uid": "00519-059",
-          "title": "version dall-e - 12.3"
+          "title": "version dall-e - 12.3",
+          "title_sort": "version dall-e - 012.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3d4daad43a55fbcfb44655d2746ed9f4"
         },
         {
+          "work_id": "00519",
           "detail_id": "060",
           "detail_uid": "00519-060",
-          "title": "version dall-e - 12.4"
+          "title": "version dall-e - 12.4",
+          "title_sort": "version dall-e - 012.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c7d4beffcab70f406489ac0a0e8e9a28"
         },
         {
+          "work_id": "00519",
           "detail_id": "061",
           "detail_uid": "00519-061",
-          "title": "version dall-e - 13.0 (run source)"
+          "title": "version dall-e - 13.0 (run source)",
+          "title_sort": "version dall-e - 013.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9261a60fc4a59110cdfa709f430c0099"
         },
         {
+          "work_id": "00519",
           "detail_id": "062",
           "detail_uid": "00519-062",
-          "title": "version dall-e - 13.1"
+          "title": "version dall-e - 13.1",
+          "title_sort": "version dall-e - 013.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "498972636cd7c3f501c1c7cd8bfe6ba4"
         },
         {
+          "work_id": "00519",
           "detail_id": "063",
           "detail_uid": "00519-063",
-          "title": "version dall-e - 13.2"
+          "title": "version dall-e - 13.2",
+          "title_sort": "version dall-e - 013.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "33bc8f3324e2b9dd365ab4a3e543d9cf"
         },
         {
+          "work_id": "00519",
           "detail_id": "064",
           "detail_uid": "00519-064",
-          "title": "version dall-e - 13.3"
+          "title": "version dall-e - 13.3",
+          "title_sort": "version dall-e - 013.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a3c3c21c0345c35ae83fc3df027361e2"
         },
         {
+          "work_id": "00519",
           "detail_id": "065",
           "detail_uid": "00519-065",
-          "title": "version dall-e - 13.4"
+          "title": "version dall-e - 13.4",
+          "title_sort": "version dall-e - 013.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "56147f87e4882dca435271562b4255e6"
         },
         {
+          "work_id": "00519",
           "detail_id": "066",
           "detail_uid": "00519-066",
-          "title": "version dall-e - 14.0 (run source)"
+          "title": "version dall-e - 14.0 (run source)",
+          "title_sort": "version dall-e - 014.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c3794c0c0d40dd104959107b6a7e4a93"
         },
         {
+          "work_id": "00519",
           "detail_id": "067",
           "detail_uid": "00519-067",
-          "title": "version dall-e - 14.1"
+          "title": "version dall-e - 14.1",
+          "title_sort": "version dall-e - 014.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8be22934346724121585cd25f0da94da"
         },
         {
+          "work_id": "00519",
           "detail_id": "068",
           "detail_uid": "00519-068",
-          "title": "version dall-e - 14.2"
+          "title": "version dall-e - 14.2",
+          "title_sort": "version dall-e - 014.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2dd7857ca9195d8dc7573d58642ff315"
         },
         {
+          "work_id": "00519",
           "detail_id": "069",
           "detail_uid": "00519-069",
-          "title": "version dall-e - 14.3"
+          "title": "version dall-e - 14.3",
+          "title_sort": "version dall-e - 014.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b8068dd745ae48eee118af2f2c0effd9"
         },
         {
+          "work_id": "00519",
           "detail_id": "070",
           "detail_uid": "00519-070",
-          "title": "version dall-e - 14.4"
+          "title": "version dall-e - 14.4",
+          "title_sort": "version dall-e - 014.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bf147ff9294535240ce15bb88a0a9e1b"
         },
         {
+          "work_id": "00519",
           "detail_id": "071",
           "detail_uid": "00519-071",
-          "title": "version dall-e - 15.0 (run source)"
+          "title": "version dall-e - 15.0 (run source)",
+          "title_sort": "version dall-e - 015.000 (run source)",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "900abe449235e5ba7c0a14b3025a5f9a"
         },
         {
+          "work_id": "00519",
           "detail_id": "072",
           "detail_uid": "00519-072",
-          "title": "version dall-e - 15.1"
+          "title": "version dall-e - 15.1",
+          "title_sort": "version dall-e - 015.001",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "72d895bdf9d511def2ff9ee4ae39e480"
         },
         {
+          "work_id": "00519",
           "detail_id": "073",
           "detail_uid": "00519-073",
-          "title": "version dall-e - 15.2"
+          "title": "version dall-e - 15.2",
+          "title_sort": "version dall-e - 015.002",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2c96e27c42e2f534a640609705901bde"
         },
         {
+          "work_id": "00519",
           "detail_id": "074",
           "detail_uid": "00519-074",
-          "title": "version dall-e - 15.3"
+          "title": "version dall-e - 15.3",
+          "title_sort": "version dall-e - 015.003",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5ad2a99117cf479e606c28b5295528ea"
         },
         {
+          "work_id": "00519",
           "detail_id": "075",
           "detail_uid": "00519-075",
-          "title": "version dall-e - 15.4"
+          "title": "version dall-e - 15.4",
+          "title_sort": "version dall-e - 015.004",
+          "project_subfolder": "versions",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bfe8eabf7b37a3c7e798f038cebebad9"
         }
       ]
     }

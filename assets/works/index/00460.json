@@ -1,32 +1,93 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-e043c438ec96ab9117efb4b9a3fa8b79",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
     "work_id": "00460",
     "count": 20,
-    "hash": "58728cba3a9440da23d79b7a8628fa36"
+    "hash": "blake2b-890b7401c3c2638e3c39dbbaebc6f7b4",
+    "work_checksum": "blake2b-ba9edf9b3d12c0fa4985c7d0ba1ca3be",
+    "details_checksum": "blake2b-890b7401c3c2638e3c39dbbaebc6f7b4",
+    "record_checksum": "blake2b-e043c438ec96ab9117efb4b9a3fa8b79"
+  },
+  "work": {
+    "work_id": "00460",
+    "title": "molecules",
+    "title_sort": "molecules",
+    "year": 2013,
+    "year_display": "2013",
+    "series_id": "molecules",
+    "series_title": "molecules",
+    "series_sort": "00460",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 81.3,
+    "width_cm": 81.3,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "ba9edf9b3d12c0fa4985c7d0ba1ca3be"
   },
   "sections": [
     {
       "project_subfolder": "versions",
       "details": [
         {
+          "work_id": "00460",
           "detail_id": "001",
           "detail_uid": "00460-001",
-          "title": "molecules (positive)"
+          "title": "molecules (positive)",
+          "title_sort": "molecules (positive)",
+          "project_subfolder": "versions",
+          "width_px": 9000,
+          "height_px": 9000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "97d7f60fb564656a556c16eae919a7d2"
         },
         {
+          "work_id": "00460",
           "detail_id": "002",
           "detail_uid": "00460-002",
-          "title": "molecules (negative)"
+          "title": "molecules (negative)",
+          "title_sort": "molecules (negative)",
+          "project_subfolder": "versions",
+          "width_px": 9000,
+          "height_px": 9000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9485cfa23f653e0f1a2ea1b98d899f88"
         },
         {
+          "work_id": "00460",
           "detail_id": "003",
           "detail_uid": "00460-003",
-          "title": "molecules mist (positive)"
+          "title": "molecules mist (positive)",
+          "title_sort": "molecules mist (positive)",
+          "project_subfolder": "versions",
+          "width_px": 9000,
+          "height_px": 9000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "39624cc7fa9da8716b0466f85c81b0f6"
         },
         {
+          "work_id": "00460",
           "detail_id": "004",
           "detail_uid": "00460-004",
-          "title": "molecules mist (negative)"
+          "title": "molecules mist (negative)",
+          "title_sort": "molecules mist (negative)",
+          "project_subfolder": "versions",
+          "width_px": 9000,
+          "height_px": 9000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cbd28ee61f035d4ab444b69e842a1384"
         }
       ]
     },
@@ -34,84 +95,212 @@
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00460",
           "detail_id": "005",
           "detail_uid": "00460-005",
-          "title": "molecules (detail 1)"
+          "title": "molecules (detail 1)",
+          "title_sort": "molecules (detail 001)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8ba6e41ed00144b20107d64464350afc"
         },
         {
+          "work_id": "00460",
           "detail_id": "006",
           "detail_uid": "00460-006",
-          "title": "molecules (detail 2)"
+          "title": "molecules (detail 2)",
+          "title_sort": "molecules (detail 002)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "59a59695d6bd7fdf27e2be5d17ac7050"
         },
         {
+          "work_id": "00460",
           "detail_id": "007",
           "detail_uid": "00460-007",
-          "title": "molecules (detail 3)"
+          "title": "molecules (detail 3)",
+          "title_sort": "molecules (detail 003)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "43d792d9a222addefe44102ec961e2a7"
         },
         {
+          "work_id": "00460",
           "detail_id": "008",
           "detail_uid": "00460-008",
-          "title": "molecules (detail 4)"
+          "title": "molecules (detail 4)",
+          "title_sort": "molecules (detail 004)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ece9459a6686e8ae6fe3be74be02ad16"
         },
         {
+          "work_id": "00460",
           "detail_id": "009",
           "detail_uid": "00460-009",
-          "title": "molecules (detail 5)"
+          "title": "molecules (detail 5)",
+          "title_sort": "molecules (detail 005)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "6ca16127ce63b2c40db1fd26e725dff7"
         },
         {
+          "work_id": "00460",
           "detail_id": "010",
           "detail_uid": "00460-010",
-          "title": "molecules (detail 6)"
+          "title": "molecules (detail 6)",
+          "title_sort": "molecules (detail 006)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3d844d77c44ed7f4fc4f97d115fae842"
         },
         {
+          "work_id": "00460",
           "detail_id": "011",
           "detail_uid": "00460-011",
-          "title": "molecules (detail 7)"
+          "title": "molecules (detail 7)",
+          "title_sort": "molecules (detail 007)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "34d33825edfb20d1e48950d9291a83c4"
         },
         {
+          "work_id": "00460",
           "detail_id": "012",
           "detail_uid": "00460-012",
-          "title": "molecules (detail 8)"
+          "title": "molecules (detail 8)",
+          "title_sort": "molecules (detail 008)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "40c0d1ded9bb91b3aa48f11ed660a3f1"
         },
         {
+          "work_id": "00460",
           "detail_id": "013",
           "detail_uid": "00460-013",
-          "title": "molecules (detail 9)"
+          "title": "molecules (detail 9)",
+          "title_sort": "molecules (detail 009)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3bac82b69823e4ae32c326dd94fd9d90"
         },
         {
+          "work_id": "00460",
           "detail_id": "014",
           "detail_uid": "00460-014",
-          "title": "molecules (detail 10)"
+          "title": "molecules (detail 10)",
+          "title_sort": "molecules (detail 010)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e115dc95ccac69a4f598baa0b6854afb"
         },
         {
+          "work_id": "00460",
           "detail_id": "015",
           "detail_uid": "00460-015",
-          "title": "molecules (detail 11)"
+          "title": "molecules (detail 11)",
+          "title_sort": "molecules (detail 011)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9a6a7c3b26120b41bfabd77e90558080"
         },
         {
+          "work_id": "00460",
           "detail_id": "016",
           "detail_uid": "00460-016",
-          "title": "molecules (detail 12)"
+          "title": "molecules (detail 12)",
+          "title_sort": "molecules (detail 012)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0409154809f4c9a4dc91d5aa9374e917"
         },
         {
+          "work_id": "00460",
           "detail_id": "017",
           "detail_uid": "00460-017",
-          "title": "molecules (detail 13)"
+          "title": "molecules (detail 13)",
+          "title_sort": "molecules (detail 013)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e06d42d8d96bd5a3da5db9c9180b8104"
         },
         {
+          "work_id": "00460",
           "detail_id": "018",
           "detail_uid": "00460-018",
-          "title": "molecules (detail 14)"
+          "title": "molecules (detail 14)",
+          "title_sort": "molecules (detail 014)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "77e34323bd65956aebff2c5afbdfcff5"
         },
         {
+          "work_id": "00460",
           "detail_id": "019",
           "detail_uid": "00460-019",
-          "title": "molecules (detail 15)"
+          "title": "molecules (detail 15)",
+          "title_sort": "molecules (detail 015)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "709dfb1d0d85da7b0ba361cfee697e71"
         },
         {
+          "work_id": "00460",
           "detail_id": "020",
           "detail_uid": "00460-020",
-          "title": "molecules (detail 16)"
+          "title": "molecules (detail 16)",
+          "title_sort": "molecules (detail 016)",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cddc5dfdae76c35baf789357cd634fee"
         }
       ]
     }
