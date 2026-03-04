@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-2476c7b10281df8c22b5c31c0867d63f",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00191",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-d21993fd690ef2b9beb1679de891b2f2",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-2476c7b10281df8c22b5c31c0867d63f"
+  },
+  "work": {
+    "work_id": "00191",
+    "title": "nude frame",
+    "title_sort": "nude frame",
+    "year": 1992,
+    "year_display": "1992",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "120-00191",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "d21993fd690ef2b9beb1679de891b2f2"
+  },
+  "sections": []
+}

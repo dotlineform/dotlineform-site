@@ -1,37 +1,106 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-e94cdcd3f66c999113766f4270b58e7b",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
     "work_id": "00160",
     "count": 10,
-    "hash": "43c16a6f435ce8a44c5a12b1302d21bf"
+    "hash": "blake2b-7d4939c2d31a1ec4007b7936fda2ab07",
+    "work_checksum": "blake2b-df9a3d7a1cfb9de53dd4b054bb5b62c6",
+    "details_checksum": "blake2b-7d4939c2d31a1ec4007b7936fda2ab07",
+    "record_checksum": "blake2b-e94cdcd3f66c999113766f4270b58e7b"
+  },
+  "work": {
+    "work_id": "00160",
+    "title": "mouse story",
+    "title_sort": "mouse story",
+    "year": 1991,
+    "year_display": "1991",
+    "series_id": "mouse-story",
+    "series_title": "mouse story",
+    "series_sort": "00160",
+    "medium_type": "writing",
+    "medium_caption": "typed text, 5 pages",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": "mouse story.pdf",
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "df9a3d7a1cfb9de53dd4b054bb5b62c6"
   },
   "sections": [
     {
       "project_subfolder": "pages",
       "details": [
         {
+          "work_id": "00160",
           "detail_id": "001",
           "detail_uid": "00160-001",
-          "title": "mouse story - 1"
+          "title": "mouse story - 1",
+          "title_sort": "mouse story - 001",
+          "project_subfolder": "pages",
+          "width_px": 2472,
+          "height_px": 3498,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cb6284b76df1147c4c5d044ea7f72da9"
         },
         {
+          "work_id": "00160",
           "detail_id": "002",
           "detail_uid": "00160-002",
-          "title": "mouse story - 2"
+          "title": "mouse story - 2",
+          "title_sort": "mouse story - 002",
+          "project_subfolder": "pages",
+          "width_px": 2472,
+          "height_px": 3498,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "706f3b9d3a9faa967fbe8aeb44576566"
         },
         {
+          "work_id": "00160",
           "detail_id": "003",
           "detail_uid": "00160-003",
-          "title": "mouse story - 3"
+          "title": "mouse story - 3",
+          "title_sort": "mouse story - 003",
+          "project_subfolder": "pages",
+          "width_px": 2472,
+          "height_px": 3498,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "272b2693726290989b6dca9601898660"
         },
         {
+          "work_id": "00160",
           "detail_id": "004",
           "detail_uid": "00160-004",
-          "title": "mouse story - 4"
+          "title": "mouse story - 4",
+          "title_sort": "mouse story - 004",
+          "project_subfolder": "pages",
+          "width_px": 2472,
+          "height_px": 3498,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1508f632f1fc4ea15124ff1b48379bf0"
         },
         {
+          "work_id": "00160",
           "detail_id": "005",
           "detail_uid": "00160-005",
-          "title": "mouse story - 5"
+          "title": "mouse story - 5",
+          "title_sort": "mouse story - 005",
+          "project_subfolder": "pages",
+          "width_px": 2472,
+          "height_px": 3498,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c026c7208eeaaef34c9e2cac86f656e0"
         }
       ]
     },
@@ -39,29 +108,69 @@
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00160",
           "detail_id": "006",
           "detail_uid": "00160-006",
-          "title": "mouse story - detail 1"
+          "title": "mouse story - detail 1",
+          "title_sort": "mouse story - detail 001",
+          "project_subfolder": "details",
+          "width_px": 5192,
+          "height_px": 2921,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b2882ebe348981d51bb5cda7ce516a05"
         },
         {
+          "work_id": "00160",
           "detail_id": "007",
           "detail_uid": "00160-007",
-          "title": "mouse story - detail 2"
+          "title": "mouse story - detail 2",
+          "title_sort": "mouse story - detail 002",
+          "project_subfolder": "details",
+          "width_px": 6525,
+          "height_px": 3671,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7f8d9d591f8221e4311065aad4ca82a4"
         },
         {
+          "work_id": "00160",
           "detail_id": "008",
           "detail_uid": "00160-008",
-          "title": "mouse story - detail 3"
+          "title": "mouse story - detail 3",
+          "title_sort": "mouse story - detail 003",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 1125,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "764ca995839b1f27511bb071601bb795"
         },
         {
+          "work_id": "00160",
           "detail_id": "009",
           "detail_uid": "00160-009",
-          "title": "mouse story - detail 4"
+          "title": "mouse story - detail 4",
+          "title_sort": "mouse story - detail 004",
+          "project_subfolder": "details",
+          "width_px": 4179,
+          "height_px": 2350,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e35d286c6a7757760417cc8aa3c0be04"
         },
         {
+          "work_id": "00160",
           "detail_id": "010",
           "detail_uid": "00160-010",
-          "title": "mouse story - detail 5"
+          "title": "mouse story - detail 5",
+          "title_sort": "mouse story - detail 005",
+          "project_subfolder": "details",
+          "width_px": 5983,
+          "height_px": 3367,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4006bd21db0f19a5034e6cfb9e44ea20"
         }
       ]
     }

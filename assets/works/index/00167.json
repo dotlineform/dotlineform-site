@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-7c1b44e2dcd17e897314706dbf816558",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00167",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-5dce3518d5d5182c0433d6075137c3ed",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-7c1b44e2dcd17e897314706dbf816558"
+  },
+  "work": {
+    "work_id": "00167",
+    "title": "hand life 1",
+    "title_sort": "hand life 001",
+    "year": 1989,
+    "year_display": "1989",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "085-00167",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "5dce3518d5d5182c0433d6075137c3ed"
+  },
+  "sections": []
+}

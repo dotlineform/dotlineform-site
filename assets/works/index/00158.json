@@ -1,57 +1,158 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-9f2a26514fba4ec1c42013fe97522e70",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
     "work_id": "00158",
     "count": 9,
-    "hash": "986d3936d17ceef957b8134f426b9427"
+    "hash": "blake2b-83bb3d3ec0e09e3a47e03d5c46708c70",
+    "work_checksum": "blake2b-0f5a8160afe51216f737507c36f52db4",
+    "details_checksum": "blake2b-83bb3d3ec0e09e3a47e03d5c46708c70",
+    "record_checksum": "blake2b-9f2a26514fba4ec1c42013fe97522e70"
+  },
+  "work": {
+    "work_id": "00158",
+    "title": "grid dissection",
+    "title_sort": "grid dissection",
+    "year": 1990,
+    "year_display": "1990",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "083-00158",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy, booklet",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "0f5a8160afe51216f737507c36f52db4"
   },
   "sections": [
     {
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00158",
           "detail_id": "001",
           "detail_uid": "00158-001",
-          "title": "grid dissection - cover"
+          "title": "grid dissection - cover",
+          "title_sort": "grid dissection - cover",
+          "project_subfolder": "details",
+          "width_px": 2138,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8fea7b1694a05f1ab602cc9581dd1667"
         },
         {
+          "work_id": "00158",
           "detail_id": "002",
           "detail_uid": "00158-002",
-          "title": "grid dissection - detail 1"
+          "title": "grid dissection - detail 1",
+          "title_sort": "grid dissection - detail 001",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "29e70f2a56ccbc198200b3a2f25a7938"
         },
         {
+          "work_id": "00158",
           "detail_id": "003",
           "detail_uid": "00158-003",
-          "title": "grid dissection - detail 2"
+          "title": "grid dissection - detail 2",
+          "title_sort": "grid dissection - detail 002",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "3476dfe739c6c9a604c3fe8a75c2c50e"
         },
         {
+          "work_id": "00158",
           "detail_id": "004",
           "detail_uid": "00158-004",
-          "title": "grid dissection - detail 3"
+          "title": "grid dissection - detail 3",
+          "title_sort": "grid dissection - detail 003",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "baa8c764def0d92e400df71599757219"
         },
         {
+          "work_id": "00158",
           "detail_id": "005",
           "detail_uid": "00158-005",
-          "title": "grid dissection - detail 4"
+          "title": "grid dissection - detail 4",
+          "title_sort": "grid dissection - detail 004",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8020799342d79ceaf18889bcb930f382"
         },
         {
+          "work_id": "00158",
           "detail_id": "006",
           "detail_uid": "00158-006",
-          "title": "grid dissection - detail 5"
+          "title": "grid dissection - detail 5",
+          "title_sort": "grid dissection - detail 005",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7ac2e55bec7b3a742ad14b8bc27fd91f"
         },
         {
+          "work_id": "00158",
           "detail_id": "007",
           "detail_uid": "00158-007",
-          "title": "grid dissection - detail 6"
+          "title": "grid dissection - detail 6",
+          "title_sort": "grid dissection - detail 006",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2b945aedbd860923f1b2aeb7d4e2e031"
         },
         {
+          "work_id": "00158",
           "detail_id": "008",
           "detail_uid": "00158-008",
-          "title": "grid dissection - detail 7"
+          "title": "grid dissection - detail 7",
+          "title_sort": "grid dissection - detail 007",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d06d15f02037291439e0d4d06d0224e7"
         },
         {
+          "work_id": "00158",
           "detail_id": "009",
           "detail_uid": "00158-009",
-          "title": "grid dissection - detail 8"
+          "title": "grid dissection - detail 8",
+          "title_sort": "grid dissection - detail 008",
+          "project_subfolder": "details",
+          "width_px": 4038,
+          "height_px": 5712,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "e6c9450c71fad297d299a9748a9fe95a"
         }
       ]
     }

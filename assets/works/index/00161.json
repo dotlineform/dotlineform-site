@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-0830ed0f4a19fabcbd723739de70ecad",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00161",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-ee305cc935d62daebf32d2434c2a2bdc",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-0830ed0f4a19fabcbd723739de70ecad"
+  },
+  "work": {
+    "work_id": "00161",
+    "title": "mouse story (extended version)",
+    "title_sort": "mouse story (extended version)",
+    "year": 1993,
+    "year_display": "1993",
+    "series_id": "mouse-story",
+    "series_title": "mouse story",
+    "series_sort": "00161",
+    "medium_type": "writing",
+    "medium_caption": "photocopied printed pages, 13 pages",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": "mouse story (extended version).pdf",
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "ee305cc935d62daebf32d2434c2a2bdc"
+  },
+  "sections": []
+}

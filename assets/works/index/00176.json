@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-7bbb209ba346dee08ca78e9cd44683f0",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00176",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-4acfe9e319b8fdd819bfe79d005d9315",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-7bbb209ba346dee08ca78e9cd44683f0"
+  },
+  "work": {
+    "work_id": "00176",
+    "title": "all chemical 3",
+    "title_sort": "all chemical 003",
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "004-00176",
+    "medium_type": "mixed media",
+    "medium_caption": "dried leaf mounted on canvas",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 25.5,
+    "width_cm": 20.4,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "4acfe9e319b8fdd819bfe79d005d9315"
+  },
+  "sections": []
+}

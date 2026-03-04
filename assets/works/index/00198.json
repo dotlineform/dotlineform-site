@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-57712d3b7c7d626cb8f4beb3f6b40caf",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00198",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-da428464bdda6914290b0681c39416a9",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-57712d3b7c7d626cb8f4beb3f6b40caf"
+  },
+  "work": {
+    "work_id": "00198",
+    "title": "book of curves 1",
+    "title_sort": "book of curves 001",
+    "year": 1994,
+    "year_display": "1994",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "027-00198",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "da428464bdda6914290b0681c39416a9"
+  },
+  "sections": []
+}

@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-dc32f7369500f79b7ee36a2d158ed439",
+    "generated_at_utc": "2026-03-04T22:21:10Z",
+    "work_id": "00164",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-14e9c5abe3f6d4040886a66fcd725568",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-dc32f7369500f79b7ee36a2d158ed439"
+  },
+  "work": {
+    "work_id": "00164",
+    "title": "unrelated commentaries",
+    "title_sort": "unrelated commentaries",
+    "year": 1997,
+    "year_display": "1997",
+    "series_id": "collected-1989-1998",
+    "series_title": "collected 1989-1998",
+    "series_sort": "162-00164",
+    "medium_type": "writing",
+    "medium_caption": "printed 3 pages",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "14e9c5abe3f6d4040886a66fcd725568"
+  },
+  "sections": []
+}
