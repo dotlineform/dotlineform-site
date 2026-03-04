@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-72bdac1485503b5014869a44c15372ee",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00225",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-9dc2dd668bf4c61d6dd1e53d67c444d1",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-72bdac1485503b5014869a44c15372ee"
+  },
+  "work": {
+    "work_id": "00225",
+    "title": "colouring book 9",
+    "title_sort": "colouring book 009",
+    "year": 1996,
+    "year_display": "1996",
+    "series_id": "colouring-book",
+    "series_title": "colouring book",
+    "series_sort": "00225",
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 27.0,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "9dc2dd668bf4c61d6dd1e53d67c444d1"
+  },
+  "sections": []
+}
