@@ -1,0 +1,37 @@
+{
+  "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-be34c2e319cce11a43c4beea32e428dc",
+    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "work_id": "00365",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-17c13c28b4a958f12734082a50d69b8b",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-be34c2e319cce11a43c4beea32e428dc"
+  },
+  "work": {
+    "work_id": "00365",
+    "title": "the eye",
+    "title_sort": "the eye",
+    "year": 2025,
+    "year_display": "2025",
+    "series_id": "curve-poems",
+    "series_title": "curve poems",
+    "series_sort": "00365",
+    "medium_type": "drawing",
+    "medium_caption": "ink and pencil on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 42.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "17c13c28b4a958f12734082a50d69b8b"
+  },
+  "sections": []
+}
