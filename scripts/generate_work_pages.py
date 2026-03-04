@@ -7,7 +7,8 @@ file per work (e.g. `_works/00286.md`) with YAML front matter populated from the
 It can also emit a parallel print collection (e.g. `_works_print/00286.md`) for PDF rendering.
 
 Series JSON index files are written to assets/series/index/<series_id>.json (one per series_id in the Series sheet).
-Work-details JSON index files are written to assets/works/index/<work_id>.json (one per work_id with published details).
+Series index JSON is written to assets/data/series_index.json.
+Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
 
 - Works: base work metadata (1 row per work)
@@ -632,6 +633,7 @@ def main() -> None:
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
+    ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
@@ -694,7 +696,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,work-details-pages,work-json,works-index-json,moments. "
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,series-index-json,work-details-pages,work-json,works-index-json,moments. "
             "Note: selecting work-pages also includes works-curator-pages."
         ),
     )
@@ -714,6 +716,7 @@ def main() -> None:
         "work-files",
         "series-pages",
         "series-json",
+        "series-index-json",
         "work-details-pages",
         "work-json",
         "works-index-json",
@@ -747,6 +750,7 @@ def main() -> None:
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
     run_series_json = artifact_enabled("series-json")
+    run_series_index_json = artifact_enabled("series-index-json")
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
     run_works_index_json = artifact_enabled("works-index-json")
@@ -830,6 +834,8 @@ def main() -> None:
 
     series_json_dir = Path(args.series_json_dir).expanduser()
     series_json_dir.mkdir(parents=True, exist_ok=True)
+    series_index_json_path = Path(args.series_index_json_path).expanduser()
+    series_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_details_out_dir = Path(args.work_details_output_dir).expanduser()
     work_details_out_dir.mkdir(parents=True, exist_ok=True)
     works_json_dir = Path(args.works_json_dir).expanduser()
@@ -1892,6 +1898,138 @@ def main() -> None:
             )
         else:
             print("Series JSON skipped: not selected by --only.")
+
+    if run_series_index_json:
+        work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}
+        for wr in works_rows[1:]:
+            wid_raw = cell(wr, works_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            status = normalize_status(cell(wr, works_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+            sid_raw = cell(wr, works_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = require_slug_safe("series_id", sid_raw)
+            wid = slug_id(wid_raw)
+            series_sort = series_sort_by_work_id.get(wid, wid)
+            work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
+
+        ordered_work_ids_by_series_for_index: Dict[str, List[str]] = {}
+        for sid, rows in work_rows_by_series_for_index.items():
+            rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
+            ordered_work_ids_by_series_for_index[sid] = [wid for _, wid in rows_sorted]
+
+        series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
+        for sr in series_rows[1:] if len(series_rows) > 1 else []:
+            sid_raw = cell(sr, series_hi, "series_id")
+            if is_empty(sid_raw):
+                continue
+            sid = require_slug_safe("series_id", sid_raw)
+            status = normalize_status(cell(sr, series_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+
+            title_raw = cell(sr, series_hi, "title")
+            series_title = coerce_string(title_raw) or sid
+            year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
+            if "year_display" in series_hi:
+                year_display = coerce_string(cell(sr, series_hi, "year_display"))
+            else:
+                year_display = str(year) if year is not None else None
+            published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
+
+            ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
+            primary_work_id = coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None
+            if primary_work_id is None and ordered_work_ids:
+                primary_work_id = sorted(ordered_work_ids)[-1]
+
+            thumb_work_id = primary_work_id
+            if thumb_work_id is None and ordered_work_ids:
+                thumb_work_id = sorted(ordered_work_ids)[-1]
+            if thumb_work_id is None:
+                thumb = {
+                    "work_id": None,
+                    "thumb_96": None,
+                    "thumb_192": None,
+                }
+            else:
+                thumb = {
+                    "work_id": thumb_work_id,
+                    "thumb_96": f"/assets/works/img/{thumb_work_id}-thumb-96.webp",
+                    "thumb_192": f"/assets/works/img/{thumb_work_id}-thumb-192.webp",
+                }
+
+            sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
+            # Keep checksum semantics aligned with generated _series/<series_id>.md.
+            series_front_matter_like = {
+                "series_id": sid,
+                "title": series_title,
+                "title_sort": numeric_aware_sort_key(series_title),
+                "sort_fields": sort_fields,
+                "year": year,
+                "year_display": year_display,
+                "primary_work_id": primary_work_id,
+                "layout": "series",
+            }
+            series_checksum = compute_work_checksum(series_front_matter_like)
+
+            series_payload_unsorted[sid] = {
+                "series_id": sid,
+                "layout": "series",
+                "status": status,
+                "published_date": published_date,
+                "title": series_title,
+                "title_sort": numeric_aware_sort_key(series_title),
+                "sort_fields": sort_fields,
+                "year": year,
+                "year_display": year_display,
+                "primary_work_id": primary_work_id,
+                "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                "project_folders": series_project_folders_by_id.get(sid, []),
+                "checksum": series_checksum,
+                "works": ordered_work_ids,
+                "thumb": thumb,
+            }
+
+        series_payload: Dict[str, Dict[str, Any]] = {
+            sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())
+        }
+
+        series_version_payload = {
+            "schema": "series_index_v1",
+            "series": series_payload,
+        }
+        series_version = compute_payload_version(series_version_payload)
+        series_index_payload = {
+            "header": {
+                "schema": "series_index_v1",
+                "version": series_version,
+                "generated_at_utc": utc_timestamp_now(),
+                "count": len(series_payload),
+            },
+            "series": series_payload,
+        }
+
+        exists = series_index_json_path.exists()
+        existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
+        if (existing_version is not None) and (existing_version == series_version) and (not args.force):
+            print("Series index JSON done. Wrote: 0. Skipped: 1.")
+        else:
+            if args.write:
+                series_index_json_path.write_text(
+                    json.dumps(series_index_payload, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {series_index_json_path}")
+            else:
+                print(
+                    "Series index JSON done. Would write: 1. Skipped: 0. "
+                    f"Path: {series_index_json_path} (overwrite={exists})"
+                )
+    else:
+        print("Series index JSON skipped: not selected by --only.")
 
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
