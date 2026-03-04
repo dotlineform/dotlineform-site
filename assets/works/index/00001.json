@@ -1,97 +1,262 @@
 {
   "header": {
+    "schema": "work_record_v1",
+    "version": "blake2b-646c4f459f44f8da0d20a05662d01215",
+    "generated_at_utc": "2026-03-04T22:06:22Z",
     "work_id": "00001",
     "count": 17,
-    "hash": "cb3e46e82c1104fc969743109cab26cb"
+    "hash": "blake2b-94577bcc95de1b1af020f38f28a60a41",
+    "work_checksum": "blake2b-6cdfa414c907b633410aa687088cc793",
+    "details_checksum": "blake2b-94577bcc95de1b1af020f38f28a60a41",
+    "record_checksum": "blake2b-646c4f459f44f8da0d20a05662d01215"
+  },
+  "work": {
+    "work_id": "00001",
+    "title": "a poem divided into 4 parts (\"our dreams are real\")",
+    "title_sort": "a poem divided into 004 parts (\"our dreams are real\")",
+    "year": 2025,
+    "year_display": "2025",
+    "series_id": "a-poem-divided-into-4-parts",
+    "series_title": "a poem divided into 4 parts",
+    "series_sort": "00001",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on tracing paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 21.0,
+    "width_cm": 29.7,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "6cdfa414c907b633410aa687088cc793"
   },
   "sections": [
     {
       "project_subfolder": "details",
       "details": [
         {
+          "work_id": "00001",
           "detail_id": "001",
           "detail_uid": "00001-001",
-          "title": "a poem divided into 4 parts - end 1"
+          "title": "a poem divided into 4 parts - end 1",
+          "title_sort": "a poem divided into 004 parts - end 001",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 2268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aa476efc10aa41bc9d1c985a241d5206"
         },
         {
+          "work_id": "00001",
           "detail_id": "002",
           "detail_uid": "00001-002",
-          "title": "a poem divided into 4 parts - end 2"
+          "title": "a poem divided into 4 parts - end 2",
+          "title_sort": "a poem divided into 004 parts - end 002",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 2268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d2cda945fdab42560e04b3b9e3c3dd27"
         },
         {
+          "work_id": "00001",
           "detail_id": "003",
           "detail_uid": "00001-003",
-          "title": "a poem divided into 4 parts - end 3"
+          "title": "a poem divided into 4 parts - end 3",
+          "title_sort": "a poem divided into 004 parts - end 003",
+          "project_subfolder": "details",
+          "width_px": 3047,
+          "height_px": 1714,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2931bffea02675603655ac2c2b9a2329"
         },
         {
+          "work_id": "00001",
           "detail_id": "004",
           "detail_uid": "00001-004",
-          "title": "a poem divided into 4 parts - end 4"
+          "title": "a poem divided into 4 parts - end 4",
+          "title_sort": "a poem divided into 004 parts - end 004",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 2268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c916583556c9bf745049ba9a242839b8"
         },
         {
+          "work_id": "00001",
           "detail_id": "005",
           "detail_uid": "00001-005",
-          "title": "a poem divided into 4 parts - end 5"
+          "title": "a poem divided into 4 parts - end 5",
+          "title_sort": "a poem divided into 004 parts - end 005",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 2268,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "7a44e06052b797dd2f52ebf022012b49"
         },
         {
+          "work_id": "00001",
           "detail_id": "006",
           "detail_uid": "00001-006",
-          "title": "a poem divided into 4 parts - end 6"
+          "title": "a poem divided into 4 parts - end 6",
+          "title_sort": "a poem divided into 004 parts - end 006",
+          "project_subfolder": "details",
+          "width_px": 3661,
+          "height_px": 2059,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4687b92a85bd78f83eb3e4213cf8986f"
         },
         {
+          "work_id": "00001",
           "detail_id": "007",
           "detail_uid": "00001-007",
-          "title": "a poem divided into 4 parts - end 7"
+          "title": "a poem divided into 4 parts - end 7",
+          "title_sort": "a poem divided into 004 parts - end 007",
+          "project_subfolder": "details",
+          "width_px": 3607,
+          "height_px": 2029,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8e960d00644181eb90b2ec9e6d308e9d"
         },
         {
+          "work_id": "00001",
           "detail_id": "008",
           "detail_uid": "00001-008",
-          "title": "a poem divided into 4 parts - end 8"
+          "title": "a poem divided into 4 parts - end 8",
+          "title_sort": "a poem divided into 004 parts - end 008",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1d5b7bae064168b1f52b7efcb2b08beb"
         },
         {
+          "work_id": "00001",
           "detail_id": "009",
           "detail_uid": "00001-009",
-          "title": "a poem divided into 4 parts - end 9"
+          "title": "a poem divided into 4 parts - end 9",
+          "title_sort": "a poem divided into 004 parts - end 009",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ae38a565723986d612004c2582daf4cb"
         },
         {
+          "work_id": "00001",
           "detail_id": "010",
           "detail_uid": "00001-010",
-          "title": "a poem divided into 4 parts - end 10"
+          "title": "a poem divided into 4 parts - end 10",
+          "title_sort": "a poem divided into 004 parts - end 010",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "07b7bb7fb3c5c956450498a7c065911a"
         },
         {
+          "work_id": "00001",
           "detail_id": "011",
           "detail_uid": "00001-011",
-          "title": "a poem divided into 4 parts - end 11"
+          "title": "a poem divided into 4 parts - end 11",
+          "title_sort": "a poem divided into 004 parts - end 011",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d043b43a524adeeda93fe276657f67d4"
         },
         {
+          "work_id": "00001",
           "detail_id": "012",
           "detail_uid": "00001-012",
-          "title": "a poem divided into 4 parts - end 12"
+          "title": "a poem divided into 4 parts - end 12",
+          "title_sort": "a poem divided into 004 parts - end 012",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "97ad384efc2249684e6bdadeeb994469"
         },
         {
+          "work_id": "00001",
           "detail_id": "013",
           "detail_uid": "00001-013",
-          "title": "a poem divided into 4 parts - end 13"
+          "title": "a poem divided into 4 parts - end 13",
+          "title_sort": "a poem divided into 004 parts - end 013",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b9210b8eec89eb98ba3afe60be99ae2c"
         },
         {
+          "work_id": "00001",
           "detail_id": "014",
           "detail_uid": "00001-014",
-          "title": "a poem divided into 4 parts - end 14"
+          "title": "a poem divided into 4 parts - end 14",
+          "title_sort": "a poem divided into 004 parts - end 014",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "41a272b0955a1b775e6647ee356f4015"
         },
         {
+          "work_id": "00001",
           "detail_id": "015",
           "detail_uid": "00001-015",
-          "title": "a poem divided into 4 parts - end 15"
+          "title": "a poem divided into 4 parts - end 15",
+          "title_sort": "a poem divided into 004 parts - end 015",
+          "project_subfolder": "details",
+          "width_px": 3895,
+          "height_px": 2191,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "20ac4c67b6b08ce01bd525ee8434e6fc"
         },
         {
+          "work_id": "00001",
           "detail_id": "016",
           "detail_uid": "00001-016",
-          "title": "a poem divided into 4 parts - end 16"
+          "title": "a poem divided into 4 parts - end 16",
+          "title_sort": "a poem divided into 004 parts - end 016",
+          "project_subfolder": "details",
+          "width_px": 2784,
+          "height_px": 1566,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8b97d7673dd660f00e677bdcf4f17e04"
         },
         {
+          "work_id": "00001",
           "detail_id": "017",
           "detail_uid": "00001-017",
-          "title": "a poem divided into 4 parts - end 17"
+          "title": "a poem divided into 4 parts - end 17",
+          "title_sort": "a poem divided into 004 parts - end 017",
+          "project_subfolder": "details",
+          "width_px": 4028,
+          "height_px": 2266,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c9b794c09e14a3e7e7b613ff159162e9"
         }
       ]
     }
