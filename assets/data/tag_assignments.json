@@ -6,18 +6,15 @@
       "tags": [
         {
           "tag_id": "form:line",
-          "w_manual": 0.6,
-          "w_effective": 0.6
+          "w_manual": 0.6
         },
         {
           "tag_id": "form:curvilinear",
-          "w_manual": 0.6,
-          "w_effective": 0.6
+          "w_manual": 0.6
         },
         {
           "tag_id": "theme:emergence",
-          "w_manual": 0.6,
-          "w_effective": 0.6
+          "w_manual": 0.6
         }
       ],
       "updated_at_utc": "2026-02-27T00:00:00Z"
@@ -42,8 +39,7 @@
       "tags": [
         {
           "tag_id": "domain:memory",
-          "w_manual": 0.6,
-          "w_effective": 0.6
+          "w_manual": 0.6
         }
       ],
       "updated_at_utc": "2026-02-28T23:19:30Z"
@@ -52,8 +48,7 @@
       "tags": [
         {
           "tag_id": "form:curvilinear",
-          "w_manual": 0.6,
-          "w_effective": 0.6
+          "w_manual": 0.6
         }
       ],
       "updated_at_utc": "2026-02-28T21:56:56Z"

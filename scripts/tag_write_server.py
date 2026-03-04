@@ -165,46 +165,26 @@ def sanitize_manual_weight(raw_weight: Any, field_name: str, strict: bool = True
     return closest
 
 
-def sanitize_effective_weight(raw_weight: Any, field_name: str, strict: bool = True) -> float:
-    if raw_weight is None:
-        if strict:
-            raise ValueError(f"{field_name} is required")
-        return DEFAULT_TAG_WEIGHT
-    try:
-        value = float(raw_weight)
-    except Exception as exc:  # noqa: BLE001
-        if strict:
-            raise ValueError(f"{field_name} must be numeric") from exc
-        return DEFAULT_TAG_WEIGHT
-
-    if not (value >= 0 and value <= 1):
-        if strict:
-            raise ValueError(f"{field_name} must be between 0 and 1")
-        value = 0 if value < 0 else 1
-    return round(value, 3)
-
-
-def build_assignment_tag(tag_id: str, w_manual: float, w_effective: float) -> Dict[str, Any]:
+def build_assignment_tag(tag_id: str, w_manual: float) -> Dict[str, Any]:
     return {
         "tag_id": tag_id,
         "w_manual": sanitize_manual_weight(w_manual, "w_manual", strict=False),
-        "w_effective": sanitize_effective_weight(w_effective, "w_effective", strict=False),
     }
 
 
 def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False) -> Optional[Dict[str, Any]]:
     if isinstance(raw_tag, str):
         if strict:
-            raise ValueError(f"{field_name} must be an object with tag_id, w_manual, w_effective")
+            raise ValueError(f"{field_name} must be an object with tag_id, w_manual")
         try:
             tag_id = sanitize_tag_id(raw_tag, field_name)
         except ValueError:
             return None
-        return build_assignment_tag(tag_id, DEFAULT_TAG_WEIGHT, DEFAULT_TAG_WEIGHT)
+        return build_assignment_tag(tag_id, DEFAULT_TAG_WEIGHT)
 
     if not isinstance(raw_tag, dict):
         if strict:
-            raise ValueError(f"{field_name} must be an object with tag_id, w_manual, w_effective")
+            raise ValueError(f"{field_name} must be an object with tag_id, w_manual")
         return None
 
     try:
@@ -214,8 +194,7 @@ def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False
             raise
         return None
     w_manual = sanitize_manual_weight(raw_tag.get("w_manual"), f"{field_name}.w_manual", strict=strict)
-    w_effective = sanitize_effective_weight(raw_tag.get("w_effective"), f"{field_name}.w_effective", strict=strict)
-    return build_assignment_tag(tag_id, w_manual, w_effective)
+    return build_assignment_tag(tag_id, w_manual)
 
 
 def sanitize_assignment_tags(raw_tags: Any, field_name: str = "tags", strict: bool = True) -> list[Dict[str, Any]]:
@@ -809,7 +788,6 @@ def rewrite_assignments_for_targets(
                         build_assignment_tag(
                             replacement,
                             normalized_tag["w_manual"],
-                            normalized_tag["w_effective"],
                         )
                     )
                     targets_inserted += 1
@@ -1251,7 +1229,6 @@ def rewrite_assignments_for_tag(
                 build_assignment_tag(
                     tag_value,
                     normalized_tag["w_manual"],
-                    normalized_tag["w_effective"],
                 )
             )
 

@@ -98,7 +98,7 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
   for (const row of existingTags) {
     const resolved = resolveInput(row.tagId, { tagsById, slugMap, labelMap, aliases });
     if (resolved.type === "resolved") {
-      entries.push(makeResolvedEntry(nextEntryId++, row.tagId, resolved.tag, row.wManual, row.wEffective));
+      entries.push(makeResolvedEntry(nextEntryId++, row.tagId, resolved.tag, row.wManual));
     } else if (row.tagId) {
       entries.push(makeUnresolvedEntry(nextEntryId++, row.tagId));
     }
@@ -409,7 +409,7 @@ function addResolvedTag(state, tag, rawInput) {
     return;
   }
 
-  state.entries.push(makeResolvedEntry(state.nextEntryId++, rawInput, tag, DEFAULT_WEIGHT, DEFAULT_WEIGHT));
+  state.entries.push(makeResolvedEntry(state.nextEntryId++, rawInput, tag, DEFAULT_WEIGHT));
   setStatus(state, "success", `Added ${tagId}.`);
   setSaveResult(state, "", "");
 }
@@ -437,9 +437,8 @@ function removeEntry(state, entryId) {
   }
 }
 
-function makeResolvedEntry(entryId, rawInput, tag, wManual, wEffective) {
+function makeResolvedEntry(entryId, rawInput, tag, wManual) {
   const manual = normalizeManualWeight(wManual, DEFAULT_WEIGHT);
-  const effective = normalizeEffectiveWeight(wEffective, DEFAULT_WEIGHT);
   return {
     entryId,
     type: "resolved",
@@ -447,8 +446,7 @@ function makeResolvedEntry(entryId, rawInput, tag, wManual, wEffective) {
     canonicalId: normalize(tag.tag_id),
     group: normalize(tag.group),
     label: String(tag.label || tag.tag_id).trim(),
-    wManual: manual,
-    wEffective: effective
+    wManual: manual
   };
 }
 
@@ -800,7 +798,6 @@ function getCanonicalTagAssignments(state) {
     tags.push({
       tag_id: entry.canonicalId,
       w_manual: entry.wManual,
-      w_effective: entry.wEffective,
     });
   }
 
@@ -889,7 +886,6 @@ function normalizeAssignmentTags(rawTags) {
       out.push({
         tagId,
         wManual: DEFAULT_WEIGHT,
-        wEffective: DEFAULT_WEIGHT,
       });
       continue;
     }
@@ -900,7 +896,6 @@ function normalizeAssignmentTags(rawTags) {
     out.push({
       tagId,
       wManual: normalizeManualWeight(raw.w_manual, DEFAULT_WEIGHT),
-      wEffective: normalizeEffectiveWeight(raw.w_effective, DEFAULT_WEIGHT),
     });
   }
   return out;
@@ -919,14 +914,6 @@ function normalizeManualWeight(raw, fallback) {
     }
   }
   return closest;
-}
-
-function normalizeEffectiveWeight(raw, fallback) {
-  const value = typeof raw === "number" ? raw : Number(raw);
-  if (!Number.isFinite(value)) return fallback;
-  if (value < 0) return 0;
-  if (value > 1) return 1;
-  return Math.round(value * 1000) / 1000;
 }
 
 function nextWeight(value) {
