@@ -4,17 +4,6 @@ layout: default
 
 {% assign wid = page.work_id | default: page.slug %}
 {%- assign title_txt = page.title | default: "" | strip -%}
-{% assign series_works = site.works | where: "series_id", page.series_id | sort: "series_sort" %}
-{% assign series_total = series_works.size %}
-{% assign series_index = 0 %}
-{% if series_total > 1 %}
-  {% for w in series_works %}
-    {% if w.work_id == page.work_id %}
-      {% assign series_index = forloop.index %}
-      {% break %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix %}
@@ -103,9 +92,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
             data-series="{{ page.series_id | default: '' | escape }}"
             data-baseurl="{{ site.baseurl | default: '' }}"
             hidden>
-          {% if series_total > 1 and series_index > 0 %}
-            <span class="navCounter">{{ series_index }}/{{ series_total }}</span>
-          {% endif %}
+          <span class="navCounter" id="seriesNavCounter" hidden></span>
           <a class="seriesNav__prev" id="seriesNavPrev" href="#">←</a>
           <a class="seriesNav__next" id="seriesNavNext" href="#">→</a>
         </nav>
@@ -168,10 +155,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
           {% if page.series_id %}
             {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
             {% assign series_label = page.series_title | default: page.series_id %}
-            {% assign works_in_series = site.works | where: "series_id", page.series_id %}
-            {% if works_in_series.size > 1 %}
-              | <a class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a>
-            {% endif %}
+            <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a></span>
           {% endif %}
         </div>
       {% endif %}

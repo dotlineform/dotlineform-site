@@ -1,60 +1,115 @@
 (function () {
-  // Parameters are passed from Jekyll via data-* attributes on #seriesNav:
-  // data-series and data-baseurl. Querystring ?series=... overrides data-series.
-  var nav = document.getElementById('seriesNav'); // series nav container (also holds data-* config)
+  // Parameters are passed from Jekyll via data-* attributes on #seriesNav.
+  // ?series=... controls navigation context; page-level series metadata comes from data-series.
+  var nav = document.getElementById('seriesNav');
+  var seriesLinkWrap = document.getElementById('workSeriesLinkWrap');
+  if (!nav && !seriesLinkWrap) return;
 
-  var baseurl = ''; // site baseurl, used to build absolute-ish paths
+  var baseurl = '';
   if (nav && nav.dataset && nav.dataset.baseurl) {
-    baseurl = String(nav.dataset.baseurl); // raw baseurl from data-baseurl
+    baseurl = String(nav.dataset.baseurl);
   }
-  baseurl = baseurl.replace(/\/$/, ''); // normalize: no trailing slash
+  baseurl = baseurl.replace(/\/$/, '');
 
-  var params = new URLSearchParams(window.location.search); // parsed query string
-  var seriesFromQuery = (params.get('series') || '').trim(); // series context only when explicitly present
+  var params = new URLSearchParams(window.location.search);
+  var seriesFromQuery = (params.get('series') || '').trim();
   var seriesPageRaw = Number(params.get('series_page') || '0');
   var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
 
-  if (!nav || !seriesFromQuery) {
-    if (nav) nav.hidden = true;
-    return;
-  }
-
   var prevA = document.getElementById('seriesNavPrev');
   var nextA = document.getElementById('seriesNavNext');
-  if (!prevA || !nextA) return;
+  var counterEl = document.getElementById('seriesNavCounter');
+  var pageSeriesId = (nav && nav.dataset) ? String(nav.dataset.series || '').trim() : '';
+  var currentId = (nav && nav.dataset) ? String(nav.dataset.workId || '').trim() : '';
 
-  var currentId = (nav.dataset.workId || '').trim();
-  if (!currentId) return;
+  function fetchJson(url) {
+    return fetch(url, { cache: 'default' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      });
+  }
 
-  var jsonUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesFromQuery) + '.json';
+  function normalizeIds(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map(function (id) { return String(id || '').trim(); }).filter(Boolean);
+  }
 
-  fetch(jsonUrl, { cache: 'default' })
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (data) {
-      var ids = [];
-      if (Array.isArray(data)) ids = data;
-      else if (data && Array.isArray(data.work_ids)) ids = data.work_ids;
-      else if (data && Array.isArray(data.items)) ids = data.items;
-      ids = ids.map(String);
+  function extractSeriesIndexIds(payload, seriesId) {
+    if (!payload || !payload.series || typeof payload.series !== 'object') return [];
+    var row = payload.series[seriesId];
+    if (!row || !Array.isArray(row.works)) return [];
+    return normalizeIds(row.works);
+  }
 
-      var i = ids.indexOf(currentId);
-      if (i === -1 || ids.length < 2) return;
+  function extractLegacyIds(payload) {
+    if (Array.isArray(payload)) return normalizeIds(payload);
+    if (payload && Array.isArray(payload.work_ids)) return normalizeIds(payload.work_ids);
+    if (payload && Array.isArray(payload.items)) return normalizeIds(payload.items);
+    return [];
+  }
 
-      var prevId = ids[(i - 1 + ids.length) % ids.length];
-      var nextId = ids[(i + 1) % ids.length];
+  function setSeriesLinkVisibilityFromIds(ids) {
+    if (!seriesLinkWrap) return;
+    seriesLinkWrap.hidden = ids.length <= 1;
+  }
 
-      var qs = '?series=' + encodeURIComponent(seriesFromQuery);
-      if (seriesPage > 0) qs += '&series_page=' + encodeURIComponent(String(seriesPage));
-      prevA.href = baseurl + '/works/' + prevId + '/' + qs;
-      nextA.href = baseurl + '/works/' + nextId + '/' + qs;
+  function configureNav(ids) {
+    if (!nav || !prevA || !nextA || !seriesFromQuery || !currentId) return;
+    var i = ids.indexOf(currentId);
+    if (i === -1 || ids.length < 2) {
+      nav.hidden = true;
+      if (counterEl) counterEl.hidden = true;
+      return;
+    }
 
-      nav.hidden = false;
+    var prevId = ids[(i - 1 + ids.length) % ids.length];
+    var nextId = ids[(i + 1) % ids.length];
+
+    var qs = '?series=' + encodeURIComponent(seriesFromQuery);
+    if (seriesPage > 0) qs += '&series_page=' + encodeURIComponent(String(seriesPage));
+    prevA.href = baseurl + '/works/' + prevId + '/' + qs;
+    nextA.href = baseurl + '/works/' + nextId + '/' + qs;
+
+    if (counterEl) {
+      counterEl.textContent = String(i + 1) + '/' + String(ids.length);
+      counterEl.hidden = false;
+    }
+    nav.hidden = false;
+  }
+
+  function loadLegacySeriesIds() {
+    if (!seriesFromQuery) return Promise.resolve([]);
+    var legacyUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesFromQuery) + '.json';
+    return fetchJson(legacyUrl)
+      .then(extractLegacyIds)
+      .catch(function () { return []; });
+  }
+
+  var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
+  fetchJson(seriesIndexUrl)
+    .then(function (seriesIndexData) {
+      if (pageSeriesId) {
+        setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
+      }
+      if (!seriesFromQuery) {
+        if (nav) nav.hidden = true;
+        return;
+      }
+      var idsForNav = extractSeriesIndexIds(seriesIndexData, seriesFromQuery);
+      if (idsForNav.length) {
+        configureNav(idsForNav);
+        return;
+      }
+      return loadLegacySeriesIds().then(configureNav);
     })
     .catch(function () {
-      nav.hidden = true;
+      if (seriesLinkWrap) seriesLinkWrap.hidden = true;
+      if (!seriesFromQuery) {
+        if (nav) nav.hidden = true;
+        return;
+      }
+      return loadLegacySeriesIds().then(configureNav);
     });
 })();
 

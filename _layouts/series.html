@@ -82,15 +82,18 @@ layout: default
 
       function updateUrl(page) {
         var next = new URLSearchParams(window.location.search);
-        next.set('series_page', String(page));
+        if (page > 1) next.set('series_page', String(page));
+        else next.delete('series_page');
         var qs = next.toString();
         var nextUrl = window.location.pathname + (qs ? ('?' + qs) : '') + window.location.hash;
         window.history.replaceState({}, '', nextUrl);
       }
 
       function withQuery(url, page) {
+        var q = 'series=' + encodeURIComponent(seriesId);
+        if (page > 1) q += '&series_page=' + encodeURIComponent(String(page));
         var join = (url.indexOf('?') === -1) ? '?' : '&';
-        return url + join + 'series=' + encodeURIComponent(seriesId) + '&series_page=' + encodeURIComponent(String(page));
+        return url + join + q;
       }
 
       function render(items) {
