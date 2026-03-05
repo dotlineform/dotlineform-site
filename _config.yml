@@ -28,9 +28,6 @@ collections:
   works:
     output: true
     permalink: /works/:name/
-  works_curator:
-    output: true
-    permalink: /works_curator/:name/
   works_print:
     output: true
     permalink: /works/:name-print/
@@ -62,11 +59,6 @@ defaults:
       type: works
     values:
       layout: work
-  - scope:
-      path: ""
-      type: works_curator
-    values:
-      layout: work_curator
   - scope:
       path: ""
       type: work_details
