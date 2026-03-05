@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-e6cd0d8160637d4636d14943e708f262",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-40918b67f14a57f69b59144f3dd34bf2",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00262",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-a9d26e736674547c45a15f6fab487ac3",
+    "work_checksum": "blake2b-4992486683604b24dfa5103620d27f0f",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e6cd0d8160637d4636d14943e708f262"
+    "record_checksum": "blake2b-40918b67f14a57f69b59144f3dd34bf2"
   },
   "work": {
     "work_id": "00262",
@@ -17,6 +17,9 @@
     "year": 1998,
     "year_display": "c. 1998",
     "series_id": "collected-digital-1998",
+    "series_ids": [
+      "collected-digital-1998"
+    ],
     "series_title": "collected digital c. 1998",
     "series_sort": "00262",
     "storage": "3",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "a9d26e736674547c45a15f6fab487ac3"
+    "checksum": "4992486683604b24dfa5103620d27f0f"
   },
   "sections": []
 }

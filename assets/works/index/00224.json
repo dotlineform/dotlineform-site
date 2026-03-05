@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-9ff0272d954d3f842cf3e4ed45a40116",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-31ddd2fd98a462cbf3bb2bd22ea8271e",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00224",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-6531198c62b32f649cb9c40b5ff34b13",
+    "work_checksum": "blake2b-afb5b681371264b05fff14c1454cf420",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-9ff0272d954d3f842cf3e4ed45a40116"
+    "record_checksum": "blake2b-31ddd2fd98a462cbf3bb2bd22ea8271e"
   },
   "work": {
     "work_id": "00224",
@@ -17,6 +17,9 @@
     "year": 1996,
     "year_display": "1996",
     "series_id": "colouring-book",
+    "series_ids": [
+      "colouring-book"
+    ],
     "series_title": "colouring book",
     "series_sort": "00224",
     "storage": "1",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "6531198c62b32f649cb9c40b5ff34b13"
+    "checksum": "afb5b681371264b05fff14c1454cf420"
   },
   "sections": []
 }

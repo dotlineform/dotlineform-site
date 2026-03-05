@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-d9f641ebd7f867583d9d12c42028265e",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-2a489638625a6d952d91dbe9f4a422c1",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00319",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4cafe0797d31fcf7df0a2fd65abebcde",
+    "work_checksum": "blake2b-e4ea673015e20912f9f54d8538854cba",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-d9f641ebd7f867583d9d12c42028265e"
+    "record_checksum": "blake2b-2a489638625a6d952d91dbe9f4a422c1"
   },
   "work": {
     "work_id": "00319",
@@ -17,6 +17,9 @@
     "year": 2024,
     "year_display": "2024",
     "series_id": "curve-poems",
+    "series_ids": [
+      "curve-poems"
+    ],
     "series_title": "curve poems",
     "series_sort": "00319",
     "storage": "2",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "4cafe0797d31fcf7df0a2fd65abebcde"
+    "checksum": "e4ea673015e20912f9f54d8538854cba"
   },
   "sections": []
 }

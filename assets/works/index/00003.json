@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-5ad34112ef779b1c9a21f8f41d768110",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-630aaec172a194450c58c895865ba5e0",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00003",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3d4c55c5a2345d4b96de28b3a560fbc7",
+    "work_checksum": "blake2b-aa0137e8ac809acddf40731f792af222",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5ad34112ef779b1c9a21f8f41d768110"
+    "record_checksum": "blake2b-630aaec172a194450c58c895865ba5e0"
   },
   "work": {
     "work_id": "00003",
@@ -17,6 +17,9 @@
     "year": 2025,
     "year_display": "2025",
     "series_id": "a-poem-divided-into-4-parts",
+    "series_ids": [
+      "a-poem-divided-into-4-parts"
+    ],
     "series_title": "a poem divided into 4 parts",
     "series_sort": "00003",
     "storage": "1",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "3d4c55c5a2345d4b96de28b3a560fbc7"
+    "checksum": "aa0137e8ac809acddf40731f792af222"
   },
   "sections": []
 }

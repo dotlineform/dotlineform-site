@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-da79c5fe2c0a2de51a1d519ab30b038c",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-8f8c545acbe4069b420ef339fa84e330",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00522",
     "count": 2,
     "hash": "blake2b-0190c5a1495efa0411d91226415caabf",
-    "work_checksum": "blake2b-1c36c823ee462c0dfee96577f80083d8",
+    "work_checksum": "blake2b-e363711cbd0af330300422f75de0769f",
     "details_checksum": "blake2b-0190c5a1495efa0411d91226415caabf",
-    "record_checksum": "blake2b-da79c5fe2c0a2de51a1d519ab30b038c"
+    "record_checksum": "blake2b-8f8c545acbe4069b420ef339fa84e330"
   },
   "work": {
     "work_id": "00522",
@@ -17,6 +17,9 @@
     "year": 2023,
     "year_display": "2023",
     "series_id": "kylie-structures",
+    "series_ids": [
+      "kylie-structures"
+    ],
     "series_title": "kylie structures",
     "series_sort": "00522",
     "storage": null,
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "1c36c823ee462c0dfee96577f80083d8"
+    "checksum": "e363711cbd0af330300422f75de0769f"
   },
   "sections": [
     {

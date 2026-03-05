@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-f28f6a8f9aa8d216623c429bf346462e",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-9104ae49ebf2e94d22e5abdc56bd3fc3",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00111",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8a4387c4dd9c7894a2e11cc417b08729",
+    "work_checksum": "blake2b-ed0ea495cf9a745ce604dcfcb809c6d7",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f28f6a8f9aa8d216623c429bf346462e"
+    "record_checksum": "blake2b-9104ae49ebf2e94d22e5abdc56bd3fc3"
   },
   "work": {
     "work_id": "00111",
@@ -17,8 +17,11 @@
     "year": 1990,
     "year_display": "1990",
     "series_id": "collected-1989-1998",
+    "series_ids": [
+      "collected-1989-1998"
+    ],
     "series_title": "collected 1989-1998",
-    "series_sort": "148-00111",
+    "series_sort": "149-00111",
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "8a4387c4dd9c7894a2e11cc417b08729"
+    "checksum": "ed0ea495cf9a745ce604dcfcb809c6d7"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-54e6831be255d39a31c349717f254041",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-34c4dc80c2f663d2fa05ac34bd83090a",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00123",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fa2fc07436ac72ea8ec0150a35ce4e39",
+    "work_checksum": "blake2b-95d0430ccf56d6193d8780cf585d0c64",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-54e6831be255d39a31c349717f254041"
+    "record_checksum": "blake2b-34c4dc80c2f663d2fa05ac34bd83090a"
   },
   "work": {
     "work_id": "00123",
@@ -17,6 +17,9 @@
     "year": 2010,
     "year_display": "c. 2010?",
     "series_id": "learning-to-draw-landscapes",
+    "series_ids": [
+      "learning-to-draw-landscapes"
+    ],
     "series_title": "learning to draw landscapes",
     "series_sort": "00123",
     "storage": "1",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "fa2fc07436ac72ea8ec0150a35ce4e39"
+    "checksum": "95d0430ccf56d6193d8780cf585d0c64"
   },
   "sections": []
 }

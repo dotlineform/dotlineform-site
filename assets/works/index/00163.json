@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-ad1b9b0012316503ebf9d17a715109c6",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-a23aaa4e44d8f44d9203e88f18f69fc6",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00163",
     "count": 10,
     "hash": "blake2b-12170e703d421e1bf114b3717124f9a6",
-    "work_checksum": "blake2b-c6107458054586a22738f60ea95789cf",
+    "work_checksum": "blake2b-4aa6236759efcfd65a5a8410a2548416",
     "details_checksum": "blake2b-12170e703d421e1bf114b3717124f9a6",
-    "record_checksum": "blake2b-ad1b9b0012316503ebf9d17a715109c6"
+    "record_checksum": "blake2b-a23aaa4e44d8f44d9203e88f18f69fc6"
   },
   "work": {
     "work_id": "00163",
@@ -17,6 +17,9 @@
     "year": 1995,
     "year_display": "1990-95",
     "series_id": "nerve",
+    "series_ids": [
+      "nerve"
+    ],
     "series_title": "nerve",
     "series_sort": "00163",
     "storage": "1",
@@ -32,7 +35,7 @@
     "download": "nerve (abattoir).pdf",
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "c6107458054586a22738f60ea95789cf"
+    "checksum": "4aa6236759efcfd65a5a8410a2548416"
   },
   "sections": [
     {

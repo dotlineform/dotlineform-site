@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-5aecad27900f59f2546a54ad8c88cea8",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-8bf5313d287eabe1ad58a79d9f667ba7",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00434",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-dc32d2f0485ff3c1bf2fe4e9b6d4249b",
+    "work_checksum": "blake2b-6795f6191ade6aaf2d0c1aa2c9340d71",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5aecad27900f59f2546a54ad8c88cea8"
+    "record_checksum": "blake2b-8bf5313d287eabe1ad58a79d9f667ba7"
   },
   "work": {
     "work_id": "00434",
@@ -17,6 +17,9 @@
     "year": 2023,
     "year_display": "2023",
     "series_id": "found-forms",
+    "series_ids": [
+      "found-forms"
+    ],
     "series_title": "found forms",
     "series_sort": "00434",
     "storage": null,
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "dc32d2f0485ff3c1bf2fe4e9b6d4249b"
+    "checksum": "6795f6191ade6aaf2d0c1aa2c9340d71"
   },
   "sections": []
 }

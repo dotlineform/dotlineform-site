@@ -1,14 +1,14 @@
 {
   "header": {
-    "schema": "work_record_v1",
-    "version": "blake2b-515eb23bd73b4fdb598b1b20ecd58748",
-    "generated_at_utc": "2026-03-05T15:26:45Z",
+    "schema": "work_record_v2",
+    "version": "blake2b-3285bae3cc5bdeab56180e51055ea227",
+    "generated_at_utc": "2026-03-05T21:25:22Z",
     "work_id": "00346",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-a8db83f1a2a4c6d6a0d7395dd9fc9085",
+    "work_checksum": "blake2b-942c76f731b40a62e4e32e1c01997c92",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-515eb23bd73b4fdb598b1b20ecd58748"
+    "record_checksum": "blake2b-3285bae3cc5bdeab56180e51055ea227"
   },
   "work": {
     "work_id": "00346",
@@ -17,6 +17,9 @@
     "year": 2025,
     "year_display": "2025",
     "series_id": "for-david-lynch",
+    "series_ids": [
+      "for-david-lynch"
+    ],
     "series_title": "for David Lynch (2025)",
     "series_sort": "00346",
     "storage": "2",
@@ -32,7 +35,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "a8db83f1a2a4c6d6a0d7395dd9fc9085"
+    "checksum": "942c76f731b40a62e4e32e1c01997c92"
   },
   "sections": []
 }
