@@ -61,17 +61,22 @@ async function getSeriesData() {
 }
 
 function parseSeriesDataFromInline() {
+  const basePath = getBasePath();
   const node = document.getElementById("series-tags-series-data");
   if (!node) return [];
   try {
     const parsed = JSON.parse(node.textContent || "[]");
     if (!Array.isArray(parsed)) return [];
     return parsed
-      .map((entry) => ({
-        seriesId: normalize(entry && entry.series_id),
-        title: String((entry && entry.title) || "").trim(),
-        url: String((entry && entry.url) || "").trim()
-      }))
+      .map((entry) => {
+        const seriesId = normalize(entry && entry.series_id);
+        const title = String((entry && entry.title) || "").trim();
+        return {
+          seriesId,
+          title,
+          url: buildSeriesEditorUrl(seriesId, basePath)
+        };
+      })
       .filter((entry) => entry.seriesId && entry.title)
       .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
   } catch (error) {
@@ -80,15 +85,7 @@ function parseSeriesDataFromInline() {
 }
 
 async function fetchSeriesDataFromIndex() {
-  const baseEl = document.querySelector("base[href]");
-  const baseHref = String((baseEl && baseEl.getAttribute("href")) || "/").trim();
-  let basePath = "/";
-  try {
-    basePath = new URL(baseHref, window.location.origin).pathname || "/";
-  } catch (error) {
-    basePath = "/";
-  }
-  basePath = basePath.replace(/\/+$/, "");
+  const basePath = getBasePath();
   const seriesIndexUrl = `${basePath}/assets/data/series_index.json`.replace(/\/{2,}/g, "/");
   const payload = await fetchJson(seriesIndexUrl);
   const seriesMap = payload && typeof payload.series === "object" && payload.series !== null
@@ -102,11 +99,28 @@ async function fetchSeriesDataFromIndex() {
       return {
         seriesId: sid,
         title,
-        url: `${basePath}/studio/studio-series/${encodeURIComponent(sid)}/`.replace(/\/{2,}/g, "/")
+        url: buildSeriesEditorUrl(sid, basePath)
       };
     })
     .filter((entry) => entry.seriesId && entry.title)
     .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
+}
+
+function getBasePath() {
+  const baseEl = document.querySelector("base[href]");
+  const baseHref = String((baseEl && baseEl.getAttribute("href")) || "/").trim();
+  let basePath = "/";
+  try {
+    basePath = new URL(baseHref, window.location.origin).pathname || "/";
+  } catch (error) {
+    basePath = "/";
+  }
+  return basePath.replace(/\/+$/, "");
+}
+
+function buildSeriesEditorUrl(seriesId, basePath) {
+  const sid = normalize(seriesId);
+  return `${basePath}/studio/series-tag-editor/?series=${encodeURIComponent(sid)}`.replace(/\/{2,}/g, "/");
 }
 
 async function fetchJson(url) {

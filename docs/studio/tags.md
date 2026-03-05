@@ -1,14 +1,13 @@
 # Studio Tags
 
-This document is the central reference for series-level tag editing in Studio Series pages (`/studio/studio-series/:series_id/`).
+This document is the central reference for series-level tag editing in the Series Tag Editor page (`/studio/series-tag-editor/?series=:series_id`).
 
 ## Scope
 
 - UI/editor logic: `assets/js/tag-studio.js`
 - Index status logic (RAG): `assets/js/tag-studio-index.js`
 - Layout/page wiring:
-  - `_layouts/studio_series.html`
-  - `studio/studio-series/index.html`
+  - `studio/series-tag-editor/index.md`
 - Registry browsing page:
   - `studio/tag-registry/index.md`
   - `assets/js/tag-registry.js`
@@ -420,7 +419,7 @@ The Series Tags page (`/studio/series-tags/`) reads:
 It then:
 
 - lists series in alphabetical order by title
-- links each series title to its Studio Series page
+- links each series title to its Series Tag Editor page (`/studio/series-tag-editor/?series=<series_id>`)
 - shows assigned-tag count per series
 - renders assigned tags as color-coded pills
 - sorts tags alphabetically by label (fallback: tag id)
