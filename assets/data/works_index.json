@@ -1,15 +1,17 @@
 {
   "header": {
     "schema": "works_index_v1",
-    "version": "blake2b-30f1362dd7814e8d9c5f6782424681d0",
-    "generated_at_utc": "2026-03-04T21:20:56Z",
+    "version": "blake2b-1175e27e39a2fab52b49450fa4067b85",
+    "generated_at_utc": "2026-03-05T09:52:05Z",
     "count": 494
   },
   "works": {
     "00001": {
       "work_id": "00001",
       "title": "a poem divided into 4 parts (\"our dreams are real\")",
+      "title_sort": "a poem divided into 004 parts (\"our dreams are real\")",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "a-poem-divided-into-4-parts",
       "media": {
         "primary": {
@@ -26,7 +28,9 @@
     "00002": {
       "work_id": "00002",
       "title": "a poem divided into 4 parts (\"there must be hope\")",
+      "title_sort": "a poem divided into 004 parts (\"there must be hope\")",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "a-poem-divided-into-4-parts",
       "media": {
         "primary": {
@@ -43,7 +47,9 @@
     "00003": {
       "work_id": "00003",
       "title": "a poem divided into 4 parts (\"we are not lost\")",
+      "title_sort": "a poem divided into 004 parts (\"we are not lost\")",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "a-poem-divided-into-4-parts",
       "media": {
         "primary": {
@@ -60,7 +66,9 @@
     "00004": {
       "work_id": "00004",
       "title": "a poem divided into 4 parts (\"we only feel love\")",
+      "title_sort": "a poem divided into 004 parts (\"we only feel love\")",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "a-poem-divided-into-4-parts",
       "media": {
         "primary": {
@@ -77,7 +85,9 @@
     "00005": {
       "work_id": "00005",
       "title": "untitled forms",
+      "title_sort": "untitled forms",
       "year": 1998,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -94,7 +104,9 @@
     "00006": {
       "work_id": "00006",
       "title": "gesture in grey 1",
+      "title_sort": "gesture in grey 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -111,7 +123,9 @@
     "00007": {
       "work_id": "00007",
       "title": "skeletal",
+      "title_sort": "skeletal",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -128,7 +142,9 @@
     "00008": {
       "work_id": "00008",
       "title": "nerve",
+      "title_sort": "nerve",
       "year": 1995,
+      "year_display": "July 1990 – January 1995",
       "series_id": "nerve",
       "media": {
         "primary": {
@@ -145,7 +161,9 @@
     "00009": {
       "work_id": "00009",
       "title": "internal organs (wireframe)",
+      "title_sort": "internal organs (wireframe)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -162,7 +180,9 @@
     "00010": {
       "work_id": "00010",
       "title": "slaughter (composite)",
+      "title_sort": "slaughter (composite)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -179,7 +199,9 @@
     "00011": {
       "work_id": "00011",
       "title": "prototype for repeating pattern",
+      "title_sort": "prototype for repeating pattern",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -196,7 +218,9 @@
     "00012": {
       "work_id": "00012",
       "title": "frame (positive)",
+      "title_sort": "frame (positive)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -213,7 +237,9 @@
     "00013": {
       "work_id": "00013",
       "title": "frame (negative)",
+      "title_sort": "frame (negative)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -230,7 +256,9 @@
     "00014": {
       "work_id": "00014",
       "title": "forms (ink and water 1)",
+      "title_sort": "forms (ink and water 001)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -247,7 +275,9 @@
     "00015": {
       "work_id": "00015",
       "title": "forms (ink and water 2)",
+      "title_sort": "forms (ink and water 002)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -264,7 +294,9 @@
     "00016": {
       "work_id": "00016",
       "title": "forms (ink and water 3)",
+      "title_sort": "forms (ink and water 003)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -281,7 +313,9 @@
     "00017": {
       "work_id": "00017",
       "title": "forms (ink and water 4)",
+      "title_sort": "forms (ink and water 004)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -298,7 +332,9 @@
     "00018": {
       "work_id": "00018",
       "title": "forms (ink and water 5)",
+      "title_sort": "forms (ink and water 005)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -315,7 +351,9 @@
     "00019": {
       "work_id": "00019",
       "title": "forms (ink and water 6)",
+      "title_sort": "forms (ink and water 006)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -332,7 +370,9 @@
     "00020": {
       "work_id": "00020",
       "title": "forms (internal 1)",
+      "title_sort": "forms (internal 001)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -349,7 +389,9 @@
     "00021": {
       "work_id": "00021",
       "title": "forms (internal 2)",
+      "title_sort": "forms (internal 002)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -366,7 +408,9 @@
     "00022": {
       "work_id": "00022",
       "title": "collage 1",
+      "title_sort": "collage 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -383,7 +427,9 @@
     "00023": {
       "work_id": "00023",
       "title": "collage 2",
+      "title_sort": "collage 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -400,7 +446,9 @@
     "00024": {
       "work_id": "00024",
       "title": "collage 3",
+      "title_sort": "collage 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -417,7 +465,9 @@
     "00025": {
       "work_id": "00025",
       "title": "collage 4",
+      "title_sort": "collage 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -434,7 +484,9 @@
     "00026": {
       "work_id": "00026",
       "title": "collage 5",
+      "title_sort": "collage 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -451,7 +503,9 @@
     "00027": {
       "work_id": "00027",
       "title": "doll forms",
+      "title_sort": "doll forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -468,7 +522,9 @@
     "00028": {
       "work_id": "00028",
       "title": "forms",
+      "title_sort": "forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -485,7 +541,9 @@
     "00029": {
       "work_id": "00029",
       "title": "forms",
+      "title_sort": "forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -502,7 +560,9 @@
     "00030": {
       "work_id": "00030",
       "title": "forms",
+      "title_sort": "forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -519,7 +579,9 @@
     "00031": {
       "work_id": "00031",
       "title": "slaughter 4",
+      "title_sort": "slaughter 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -536,7 +598,9 @@
     "00032": {
       "work_id": "00032",
       "title": "slaughter 5",
+      "title_sort": "slaughter 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -553,7 +617,9 @@
     "00033": {
       "work_id": "00033",
       "title": "slaughter 6",
+      "title_sort": "slaughter 006",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -570,7 +636,9 @@
     "00034": {
       "work_id": "00034",
       "title": "slaughter 7",
+      "title_sort": "slaughter 007",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -587,7 +655,9 @@
     "00035": {
       "work_id": "00035",
       "title": "slaughter (nerve 1)",
+      "title_sort": "slaughter (nerve 001)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -604,7 +674,9 @@
     "00036": {
       "work_id": "00036",
       "title": "slaughter (nerve 2)",
+      "title_sort": "slaughter (nerve 002)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -621,7 +693,9 @@
     "00037": {
       "work_id": "00037",
       "title": "slaughter (nerve 3)",
+      "title_sort": "slaughter (nerve 003)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -638,7 +712,9 @@
     "00038": {
       "work_id": "00038",
       "title": "nude frame 10 (surface)",
+      "title_sort": "nude frame 010 (surface)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -655,7 +731,9 @@
     "00039": {
       "work_id": "00039",
       "title": "nude frame 11 (surface)",
+      "title_sort": "nude frame 011 (surface)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -672,7 +750,9 @@
     "00040": {
       "work_id": "00040",
       "title": "nude frame 12",
+      "title_sort": "nude frame 012",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -689,7 +769,9 @@
     "00041": {
       "work_id": "00041",
       "title": "hair",
+      "title_sort": "hair",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -706,7 +788,9 @@
     "00042": {
       "work_id": "00042",
       "title": "model face",
+      "title_sort": "model face",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -723,7 +807,9 @@
     "00043": {
       "work_id": "00043",
       "title": "form symbol (superimposed) 1",
+      "title_sort": "form symbol (superimposed) 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -740,7 +826,9 @@
     "00044": {
       "work_id": "00044",
       "title": "form symbol (superimposed) 2",
+      "title_sort": "form symbol (superimposed) 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -757,7 +845,9 @@
     "00045": {
       "work_id": "00045",
       "title": "outline form",
+      "title_sort": "outline form",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -774,7 +864,9 @@
     "00046": {
       "work_id": "00046",
       "title": "ink legs",
+      "title_sort": "ink legs",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -791,7 +883,9 @@
     "00047": {
       "work_id": "00047",
       "title": "slaughter 1",
+      "title_sort": "slaughter 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -808,7 +902,9 @@
     "00048": {
       "work_id": "00048",
       "title": "slaughter 2",
+      "title_sort": "slaughter 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -825,7 +921,9 @@
     "00049": {
       "work_id": "00049",
       "title": "slaughter 3",
+      "title_sort": "slaughter 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -842,7 +940,9 @@
     "00050": {
       "work_id": "00050",
       "title": "perspective 1",
+      "title_sort": "perspective 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -859,7 +959,9 @@
     "00051": {
       "work_id": "00051",
       "title": "perspective 2",
+      "title_sort": "perspective 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -876,7 +978,9 @@
     "00052": {
       "work_id": "00052",
       "title": "perspective 3",
+      "title_sort": "perspective 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -893,7 +997,9 @@
     "00053": {
       "work_id": "00053",
       "title": "internal organs of doll",
+      "title_sort": "internal organs of doll",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -910,7 +1016,9 @@
     "00054": {
       "work_id": "00054",
       "title": "preparation for mannequin",
+      "title_sort": "preparation for mannequin",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -927,7 +1035,9 @@
     "00055": {
       "work_id": "00055",
       "title": "mannequin (legs)",
+      "title_sort": "mannequin (legs)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -944,7 +1054,9 @@
     "00056": {
       "work_id": "00056",
       "title": "open form",
+      "title_sort": "open form",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -961,7 +1073,9 @@
     "00057": {
       "work_id": "00057",
       "title": "joining forms 1",
+      "title_sort": "joining forms 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -978,7 +1092,9 @@
     "00058": {
       "work_id": "00058",
       "title": "joining forms 2",
+      "title_sort": "joining forms 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -995,7 +1111,9 @@
     "00059": {
       "work_id": "00059",
       "title": "joining forms 3",
+      "title_sort": "joining forms 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1012,7 +1130,9 @@
     "00060": {
       "work_id": "00060",
       "title": "mesh forms 1",
+      "title_sort": "mesh forms 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1029,7 +1149,9 @@
     "00061": {
       "work_id": "00061",
       "title": "mesh forms 2",
+      "title_sort": "mesh forms 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1046,7 +1168,9 @@
     "00062": {
       "work_id": "00062",
       "title": "dissecting forms 1",
+      "title_sort": "dissecting forms 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1063,7 +1187,9 @@
     "00063": {
       "work_id": "00063",
       "title": "dissecting forms 2",
+      "title_sort": "dissecting forms 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1080,7 +1206,9 @@
     "00064": {
       "work_id": "00064",
       "title": "fly",
+      "title_sort": "fly",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1097,7 +1225,9 @@
     "00065": {
       "work_id": "00065",
       "title": "fly (broken)",
+      "title_sort": "fly (broken)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1114,7 +1244,9 @@
     "00066": {
       "work_id": "00066",
       "title": "nude frame 1",
+      "title_sort": "nude frame 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1131,7 +1263,9 @@
     "00067": {
       "work_id": "00067",
       "title": "nude frame 2",
+      "title_sort": "nude frame 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1148,7 +1282,9 @@
     "00068": {
       "work_id": "00068",
       "title": "nude frame 3",
+      "title_sort": "nude frame 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1165,7 +1301,9 @@
     "00069": {
       "work_id": "00069",
       "title": "nude frame 4",
+      "title_sort": "nude frame 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1182,7 +1320,9 @@
     "00070": {
       "work_id": "00070",
       "title": "nude frame 5",
+      "title_sort": "nude frame 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1199,7 +1339,9 @@
     "00071": {
       "work_id": "00071",
       "title": "nude frame 6",
+      "title_sort": "nude frame 006",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1216,7 +1358,9 @@
     "00072": {
       "work_id": "00072",
       "title": "nude frame 7",
+      "title_sort": "nude frame 007",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1233,7 +1377,9 @@
     "00073": {
       "work_id": "00073",
       "title": "nude frame 8 (internal frame)",
+      "title_sort": "nude frame 008 (internal frame)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1250,7 +1396,9 @@
     "00074": {
       "work_id": "00074",
       "title": "nude frame 9",
+      "title_sort": "nude frame 009",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1267,7 +1415,9 @@
     "00075": {
       "work_id": "00075",
       "title": "body forms 2",
+      "title_sort": "body forms 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1284,7 +1434,9 @@
     "00076": {
       "work_id": "00076",
       "title": "body forms 3",
+      "title_sort": "body forms 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1301,7 +1453,9 @@
     "00077": {
       "work_id": "00077",
       "title": "body forms 4",
+      "title_sort": "body forms 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1318,7 +1472,9 @@
     "00078": {
       "work_id": "00078",
       "title": "body forms 5",
+      "title_sort": "body forms 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1335,7 +1491,9 @@
     "00079": {
       "work_id": "00079",
       "title": "body forms 6",
+      "title_sort": "body forms 006",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1352,7 +1510,9 @@
     "00080": {
       "work_id": "00080",
       "title": "body forms 7",
+      "title_sort": "body forms 007",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1369,7 +1529,9 @@
     "00081": {
       "work_id": "00081",
       "title": "body forms 8",
+      "title_sort": "body forms 008",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1386,7 +1548,9 @@
     "00082": {
       "work_id": "00082",
       "title": "body series dissected 1",
+      "title_sort": "body series dissected 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1403,7 +1567,9 @@
     "00083": {
       "work_id": "00083",
       "title": "body series dissected 2",
+      "title_sort": "body series dissected 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1420,7 +1586,9 @@
     "00084": {
       "work_id": "00084",
       "title": "body series dissected 3",
+      "title_sort": "body series dissected 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1437,7 +1605,9 @@
     "00085": {
       "work_id": "00085",
       "title": "body series dissected 4",
+      "title_sort": "body series dissected 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1454,7 +1624,9 @@
     "00086": {
       "work_id": "00086",
       "title": "body series opened 1",
+      "title_sort": "body series opened 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1471,7 +1643,9 @@
     "00087": {
       "work_id": "00087",
       "title": "body series opened 2",
+      "title_sort": "body series opened 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1488,7 +1662,9 @@
     "00088": {
       "work_id": "00088",
       "title": "body series opened 3",
+      "title_sort": "body series opened 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1505,7 +1681,9 @@
     "00089": {
       "work_id": "00089",
       "title": "body series opened 4",
+      "title_sort": "body series opened 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1522,7 +1700,9 @@
     "00090": {
       "work_id": "00090",
       "title": "dissection (identification of points on a surface)",
+      "title_sort": "dissection (identification of points on a surface)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1539,7 +1719,9 @@
     "00091": {
       "work_id": "00091",
       "title": "dissection",
+      "title_sort": "dissection",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1556,7 +1738,9 @@
     "00092": {
       "work_id": "00092",
       "title": "healing dissection",
+      "title_sort": "healing dissection",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1573,7 +1757,9 @@
     "00093": {
       "work_id": "00093",
       "title": "3 elements of a body",
+      "title_sort": "003 elements of a body",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1590,7 +1776,9 @@
     "00094": {
       "work_id": "00094",
       "title": "body forms 1",
+      "title_sort": "body forms 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1607,7 +1795,9 @@
     "00095": {
       "work_id": "00095",
       "title": "death",
+      "title_sort": "death",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1624,7 +1814,9 @@
     "00096": {
       "work_id": "00096",
       "title": "dissection (prepared body 1)",
+      "title_sort": "dissection (prepared body 001)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1641,7 +1833,9 @@
     "00097": {
       "work_id": "00097",
       "title": "dissection (prepared body 2)",
+      "title_sort": "dissection (prepared body 002)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1658,7 +1852,9 @@
     "00098": {
       "work_id": "00098",
       "title": "dissected body 1",
+      "title_sort": "dissected body 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1675,7 +1871,9 @@
     "00099": {
       "work_id": "00099",
       "title": "dissected body 2",
+      "title_sort": "dissected body 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1692,7 +1890,9 @@
     "00100": {
       "work_id": "00100",
       "title": "preparation for dissection",
+      "title_sort": "preparation for dissection",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1709,7 +1909,9 @@
     "00101": {
       "work_id": "00101",
       "title": "dissection in progress",
+      "title_sort": "dissection in progress",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1726,7 +1928,9 @@
     "00102": {
       "work_id": "00102",
       "title": "ink (front)",
+      "title_sort": "ink (front)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1743,7 +1947,9 @@
     "00103": {
       "work_id": "00103",
       "title": "ink (back)",
+      "title_sort": "ink (back)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1760,7 +1966,9 @@
     "00104": {
       "work_id": "00104",
       "title": "healing symbol",
+      "title_sort": "healing symbol",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1777,7 +1985,9 @@
     "00105": {
       "work_id": "00105",
       "title": "symbol frame",
+      "title_sort": "symbol frame",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1794,7 +2004,9 @@
     "00106": {
       "work_id": "00106",
       "title": "form 1",
+      "title_sort": "form 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1811,7 +2023,9 @@
     "00107": {
       "work_id": "00107",
       "title": "form 2",
+      "title_sort": "form 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1828,7 +2042,9 @@
     "00108": {
       "work_id": "00108",
       "title": "joined forms",
+      "title_sort": "joined forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1845,7 +2061,9 @@
     "00109": {
       "work_id": "00109",
       "title": "joined forms 2",
+      "title_sort": "joined forms 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1862,7 +2080,9 @@
     "00110": {
       "work_id": "00110",
       "title": "healing symbol joined",
+      "title_sort": "healing symbol joined",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1879,7 +2099,9 @@
     "00111": {
       "work_id": "00111",
       "title": "response to standing nude",
+      "title_sort": "response to standing nude",
       "year": 1990,
+      "year_display": "1990",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1896,7 +2118,9 @@
     "00112": {
       "work_id": "00112",
       "title": "life",
+      "title_sort": "life",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1913,7 +2137,9 @@
     "00113": {
       "work_id": "00113",
       "title": "gesture in grey 1",
+      "title_sort": "gesture in grey 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -1930,7 +2156,9 @@
     "00114": {
       "work_id": "00114",
       "title": "learning to draw landscapes 1",
+      "title_sort": "learning to draw landscapes 001",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -1947,7 +2175,9 @@
     "00115": {
       "work_id": "00115",
       "title": "learning to draw landscapes 2",
+      "title_sort": "learning to draw landscapes 002",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -1964,7 +2194,9 @@
     "00116": {
       "work_id": "00116",
       "title": "learning to draw landscapes 3",
+      "title_sort": "learning to draw landscapes 003",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -1981,7 +2213,9 @@
     "00117": {
       "work_id": "00117",
       "title": "learning to draw landscapes 4",
+      "title_sort": "learning to draw landscapes 004",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -1998,7 +2232,9 @@
     "00118": {
       "work_id": "00118",
       "title": "learning to draw landscapes 5",
+      "title_sort": "learning to draw landscapes 005",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2015,7 +2251,9 @@
     "00119": {
       "work_id": "00119",
       "title": "learning to draw landscapes 6",
+      "title_sort": "learning to draw landscapes 006",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2032,7 +2270,9 @@
     "00120": {
       "work_id": "00120",
       "title": "learning to draw landscapes 7",
+      "title_sort": "learning to draw landscapes 007",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2049,7 +2289,9 @@
     "00121": {
       "work_id": "00121",
       "title": "learning to draw landscapes 8",
+      "title_sort": "learning to draw landscapes 008",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2066,7 +2308,9 @@
     "00122": {
       "work_id": "00122",
       "title": "learning to draw landscapes 9",
+      "title_sort": "learning to draw landscapes 009",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2083,7 +2327,9 @@
     "00123": {
       "work_id": "00123",
       "title": "learning to draw landscapes 10",
+      "title_sort": "learning to draw landscapes 010",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2100,7 +2346,9 @@
     "00124": {
       "work_id": "00124",
       "title": "learning to draw landscapes 11",
+      "title_sort": "learning to draw landscapes 011",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2117,7 +2365,9 @@
     "00125": {
       "work_id": "00125",
       "title": "learning to draw landscapes 12",
+      "title_sort": "learning to draw landscapes 012",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2134,7 +2384,9 @@
     "00126": {
       "work_id": "00126",
       "title": "learning to draw landscapes 13",
+      "title_sort": "learning to draw landscapes 013",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2151,7 +2403,9 @@
     "00127": {
       "work_id": "00127",
       "title": "learning to draw landscapes 14",
+      "title_sort": "learning to draw landscapes 014",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2168,7 +2422,9 @@
     "00128": {
       "work_id": "00128",
       "title": "learning to draw landscapes 15",
+      "title_sort": "learning to draw landscapes 015",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2185,7 +2441,9 @@
     "00129": {
       "work_id": "00129",
       "title": "learning to draw landscapes 16",
+      "title_sort": "learning to draw landscapes 016",
       "year": 2010,
+      "year_display": "c. 2010?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -2199,27 +2457,12 @@
       "work_checksum": "blake2b-39d88e8fa8edd6101fae3c31d4dc2ea3",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
-    "00130": {
-      "work_id": "00130",
-      "title": null,
-      "year": 1994,
-      "series_id": "models",
-      "media": {
-        "primary": {
-          "kind": "image",
-          "thumb_96": "/assets/works/img/00130-thumb-96.webp",
-          "thumb_192": "/assets/works/img/00130-thumb-192.webp"
-        }
-      },
-      "has_details": false,
-      "details_count": 0,
-      "work_checksum": "blake2b-5a023953a95380661db84d144b2354f0",
-      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
-    },
     "00131": {
       "work_id": "00131",
       "title": "internal forms",
+      "title_sort": "internal forms",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2236,7 +2479,9 @@
     "00132": {
       "work_id": "00132",
       "title": "r 1",
+      "title_sort": "r 001",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2253,7 +2498,9 @@
     "00133": {
       "work_id": "00133",
       "title": "r 2",
+      "title_sort": "r 002",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2270,7 +2517,9 @@
     "00134": {
       "work_id": "00134",
       "title": "r 3",
+      "title_sort": "r 003",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2287,7 +2536,9 @@
     "00135": {
       "work_id": "00135",
       "title": "r 4",
+      "title_sort": "r 004",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2304,7 +2555,9 @@
     "00136": {
       "work_id": "00136",
       "title": "r 5",
+      "title_sort": "r 005",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2321,7 +2574,9 @@
     "00137": {
       "work_id": "00137",
       "title": "r 6",
+      "title_sort": "r 006",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2338,7 +2593,9 @@
     "00138": {
       "work_id": "00138",
       "title": "r 7",
+      "title_sort": "r 007",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2355,7 +2612,9 @@
     "00139": {
       "work_id": "00139",
       "title": "r 8",
+      "title_sort": "r 008",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2372,7 +2631,9 @@
     "00140": {
       "work_id": "00140",
       "title": "r 9",
+      "title_sort": "r 009",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2389,7 +2650,9 @@
     "00141": {
       "work_id": "00141",
       "title": "r 10",
+      "title_sort": "r 010",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2406,7 +2669,9 @@
     "00142": {
       "work_id": "00142",
       "title": "r 11",
+      "title_sort": "r 011",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2423,7 +2688,9 @@
     "00143": {
       "work_id": "00143",
       "title": "r 12",
+      "title_sort": "r 012",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2440,7 +2707,9 @@
     "00144": {
       "work_id": "00144",
       "title": "r 13",
+      "title_sort": "r 013",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2457,7 +2726,9 @@
     "00145": {
       "work_id": "00145",
       "title": "r 14",
+      "title_sort": "r 014",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2474,7 +2745,9 @@
     "00146": {
       "work_id": "00146",
       "title": "r 15",
+      "title_sort": "r 015",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2491,7 +2764,9 @@
     "00147": {
       "work_id": "00147",
       "title": "r 16",
+      "title_sort": "r 016",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2508,7 +2783,9 @@
     "00148": {
       "work_id": "00148",
       "title": "r 17",
+      "title_sort": "r 017",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2525,7 +2802,9 @@
     "00149": {
       "work_id": "00149",
       "title": "r 18",
+      "title_sort": "r 018",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2542,7 +2821,9 @@
     "00150": {
       "work_id": "00150",
       "title": "r 19",
+      "title_sort": "r 019",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2559,7 +2840,9 @@
     "00151": {
       "work_id": "00151",
       "title": "r 20",
+      "title_sort": "r 020",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2576,7 +2859,9 @@
     "00152": {
       "work_id": "00152",
       "title": "r 21",
+      "title_sort": "r 021",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2593,7 +2878,9 @@
     "00153": {
       "work_id": "00153",
       "title": "r 22",
+      "title_sort": "r 022",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2610,7 +2897,9 @@
     "00154": {
       "work_id": "00154",
       "title": "r 23",
+      "title_sort": "r 023",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2627,7 +2916,9 @@
     "00155": {
       "work_id": "00155",
       "title": "r 24",
+      "title_sort": "r 024",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2644,7 +2935,9 @@
     "00156": {
       "work_id": "00156",
       "title": "r 25",
+      "title_sort": "r 025",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2661,7 +2954,9 @@
     "00157": {
       "work_id": "00157",
       "title": "r 26",
+      "title_sort": "r 026",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -2678,7 +2973,9 @@
     "00158": {
       "work_id": "00158",
       "title": "grid dissection",
+      "title_sort": "grid dissection",
       "year": 1990,
+      "year_display": "1990",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2695,7 +2992,9 @@
     "00159": {
       "work_id": "00159",
       "title": "Michelle Pfeiffer",
+      "title_sort": "Michelle Pfeiffer",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2712,7 +3011,9 @@
     "00160": {
       "work_id": "00160",
       "title": "mouse story",
+      "title_sort": "mouse story",
       "year": 1991,
+      "year_display": "1991",
       "series_id": "mouse-story",
       "media": {
         "primary": {
@@ -2729,7 +3030,9 @@
     "00161": {
       "work_id": "00161",
       "title": "mouse story (extended version)",
+      "title_sort": "mouse story (extended version)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "mouse-story",
       "media": {
         "primary": {
@@ -2746,7 +3049,9 @@
     "00162": {
       "work_id": "00162",
       "title": "mouse story (fragment)",
+      "title_sort": "mouse story (fragment)",
       "year": 1993,
+      "year_display": "c. 1993?",
       "series_id": "mouse-story",
       "media": {
         "primary": {
@@ -2763,7 +3068,9 @@
     "00163": {
       "work_id": "00163",
       "title": "nerve (abattoir)",
+      "title_sort": "nerve (abattoir)",
       "year": 1995,
+      "year_display": "1990-95",
       "series_id": "nerve",
       "media": {
         "primary": {
@@ -2780,7 +3087,9 @@
     "00164": {
       "work_id": "00164",
       "title": "unrelated commentaries",
+      "title_sort": "unrelated commentaries",
       "year": 1997,
+      "year_display": "1997",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2797,7 +3106,9 @@
     "00165": {
       "work_id": "00165",
       "title": "angels",
+      "title_sort": "angels",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2814,7 +3125,9 @@
     "00166": {
       "work_id": "00166",
       "title": "nerve (formaldehyde form)",
+      "title_sort": "nerve (formaldehyde form)",
       "year": 1993,
+      "year_display": "1993",
       "series_id": "nerve",
       "media": {
         "primary": {
@@ -2831,7 +3144,9 @@
     "00167": {
       "work_id": "00167",
       "title": "hand life 1",
+      "title_sort": "hand life 001",
       "year": 1989,
+      "year_display": "1989",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2848,7 +3163,9 @@
     "00168": {
       "work_id": "00168",
       "title": "hand life 2",
+      "title_sort": "hand life 002",
       "year": 1989,
+      "year_display": "1989",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2865,7 +3182,9 @@
     "00169": {
       "work_id": "00169",
       "title": "hand life 3",
+      "title_sort": "hand life 003",
       "year": 1989,
+      "year_display": "1989",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2882,7 +3201,9 @@
     "00170": {
       "work_id": "00170",
       "title": "hand life 5",
+      "title_sort": "hand life 005",
       "year": 1989,
+      "year_display": "1989",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2899,7 +3220,9 @@
     "00171": {
       "work_id": "00171",
       "title": "hand life 7",
+      "title_sort": "hand life 007",
       "year": 1989,
+      "year_display": "1989",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2916,7 +3239,9 @@
     "00172": {
       "work_id": "00172",
       "title": "orange mesh",
+      "title_sort": "orange mesh",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2933,7 +3258,9 @@
     "00173": {
       "work_id": "00173",
       "title": "orange mesh compact",
+      "title_sort": "orange mesh compact",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2950,7 +3277,9 @@
     "00174": {
       "work_id": "00174",
       "title": "all chemical 1",
+      "title_sort": "all chemical 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2967,7 +3296,9 @@
     "00175": {
       "work_id": "00175",
       "title": "all chemical 2",
+      "title_sort": "all chemical 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -2984,7 +3315,9 @@
     "00176": {
       "work_id": "00176",
       "title": "all chemical 3",
+      "title_sort": "all chemical 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3001,7 +3334,9 @@
     "00177": {
       "work_id": "00177",
       "title": "all chemical 4",
+      "title_sort": "all chemical 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3018,7 +3353,9 @@
     "00178": {
       "work_id": "00178",
       "title": "carpet pattern",
+      "title_sort": "carpet pattern",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3035,7 +3372,9 @@
     "00179": {
       "work_id": "00179",
       "title": "body cast 1",
+      "title_sort": "body cast 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3052,7 +3391,9 @@
     "00180": {
       "work_id": "00180",
       "title": "body cast 2",
+      "title_sort": "body cast 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3069,7 +3410,9 @@
     "00181": {
       "work_id": "00181",
       "title": "body cast 3",
+      "title_sort": "body cast 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3086,7 +3429,9 @@
     "00182": {
       "work_id": "00182",
       "title": "drunken vultures",
+      "title_sort": "drunken vultures",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3103,7 +3448,9 @@
     "00183": {
       "work_id": "00183",
       "title": "little clear vessel",
+      "title_sort": "little clear vessel",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3120,7 +3467,9 @@
     "00184": {
       "work_id": "00184",
       "title": "heal us",
+      "title_sort": "heal us",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3137,7 +3486,9 @@
     "00185": {
       "work_id": "00185",
       "title": "cell 1",
+      "title_sort": "cell 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3154,7 +3505,9 @@
     "00186": {
       "work_id": "00186",
       "title": "cell 2",
+      "title_sort": "cell 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3171,7 +3524,9 @@
     "00187": {
       "work_id": "00187",
       "title": "cell 3",
+      "title_sort": "cell 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3188,7 +3543,9 @@
     "00188": {
       "work_id": "00188",
       "title": "cell 4",
+      "title_sort": "cell 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3205,7 +3562,9 @@
     "00189": {
       "work_id": "00189",
       "title": "cell 5",
+      "title_sort": "cell 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3222,7 +3581,9 @@
     "00190": {
       "work_id": "00190",
       "title": "cell 6",
+      "title_sort": "cell 006",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3239,7 +3600,9 @@
     "00191": {
       "work_id": "00191",
       "title": "nude frame",
+      "title_sort": "nude frame",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3256,7 +3619,9 @@
     "00192": {
       "work_id": "00192",
       "title": "nude frame a",
+      "title_sort": "nude frame a",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3273,7 +3638,9 @@
     "00193": {
       "work_id": "00193",
       "title": "nude frame b",
+      "title_sort": "nude frame b",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3290,7 +3657,9 @@
     "00194": {
       "work_id": "00194",
       "title": "nude frame c",
+      "title_sort": "nude frame c",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3307,7 +3676,9 @@
     "00195": {
       "work_id": "00195",
       "title": "nude frame d",
+      "title_sort": "nude frame d",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3324,7 +3695,9 @@
     "00196": {
       "work_id": "00196",
       "title": "nude frame e",
+      "title_sort": "nude frame e",
       "year": 1992,
+      "year_display": "1992",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3341,7 +3714,9 @@
     "00197": {
       "work_id": "00197",
       "title": "book of curves 0",
+      "title_sort": "book of curves 000",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3358,7 +3733,9 @@
     "00198": {
       "work_id": "00198",
       "title": "book of curves 1",
+      "title_sort": "book of curves 001",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3375,7 +3752,9 @@
     "00199": {
       "work_id": "00199",
       "title": "book of curves 2",
+      "title_sort": "book of curves 002",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3392,7 +3771,9 @@
     "00200": {
       "work_id": "00200",
       "title": "book of curves 3",
+      "title_sort": "book of curves 003",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3409,7 +3790,9 @@
     "00201": {
       "work_id": "00201",
       "title": "book of curves 4",
+      "title_sort": "book of curves 004",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3426,7 +3809,9 @@
     "00202": {
       "work_id": "00202",
       "title": "book of curves 5",
+      "title_sort": "book of curves 005",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3443,7 +3828,9 @@
     "00203": {
       "work_id": "00203",
       "title": "book of curves 6",
+      "title_sort": "book of curves 006",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3460,7 +3847,9 @@
     "00204": {
       "work_id": "00204",
       "title": "book of curves 7",
+      "title_sort": "book of curves 007",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3477,7 +3866,9 @@
     "00205": {
       "work_id": "00205",
       "title": "book of curves 8",
+      "title_sort": "book of curves 008",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3494,7 +3885,9 @@
     "00206": {
       "work_id": "00206",
       "title": "book of curves 9",
+      "title_sort": "book of curves 009",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3511,7 +3904,9 @@
     "00207": {
       "work_id": "00207",
       "title": "book of curves 10",
+      "title_sort": "book of curves 010",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3528,7 +3923,9 @@
     "00208": {
       "work_id": "00208",
       "title": "book of curves 11",
+      "title_sort": "book of curves 011",
       "year": 1994,
+      "year_display": "1994",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3545,7 +3942,9 @@
     "00209": {
       "work_id": "00209",
       "title": "internal form 1",
+      "title_sort": "internal form 001",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3562,7 +3961,9 @@
     "00210": {
       "work_id": "00210",
       "title": "internal form 2",
+      "title_sort": "internal form 002",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3579,7 +3980,9 @@
     "00211": {
       "work_id": "00211",
       "title": "internal form 3",
+      "title_sort": "internal form 003",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3596,7 +3999,9 @@
     "00212": {
       "work_id": "00212",
       "title": "internal form 4",
+      "title_sort": "internal form 004",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3613,7 +4018,9 @@
     "00213": {
       "work_id": "00213",
       "title": "internal form 5",
+      "title_sort": "internal form 005",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3630,7 +4037,9 @@
     "00214": {
       "work_id": "00214",
       "title": "mother and child",
+      "title_sort": "mother and child",
       "year": 1995,
+      "year_display": "c. 1995?",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3647,7 +4056,9 @@
     "00215": {
       "work_id": "00215",
       "title": "internal forms (body)",
+      "title_sort": "internal forms (body)",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3664,7 +4075,9 @@
     "00216": {
       "work_id": "00216",
       "title": "nature 1",
+      "title_sort": "nature 001",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3681,7 +4094,9 @@
     "00217": {
       "work_id": "00217",
       "title": "colouring book 1",
+      "title_sort": "colouring book 001",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3698,7 +4113,9 @@
     "00218": {
       "work_id": "00218",
       "title": "colouring book 2",
+      "title_sort": "colouring book 002",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3715,7 +4132,9 @@
     "00219": {
       "work_id": "00219",
       "title": "colouring book 3",
+      "title_sort": "colouring book 003",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3732,7 +4151,9 @@
     "00220": {
       "work_id": "00220",
       "title": "colouring book 4",
+      "title_sort": "colouring book 004",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3749,7 +4170,9 @@
     "00221": {
       "work_id": "00221",
       "title": "colouring book 5",
+      "title_sort": "colouring book 005",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3766,7 +4189,9 @@
     "00222": {
       "work_id": "00222",
       "title": "colouring book 6",
+      "title_sort": "colouring book 006",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3783,7 +4208,9 @@
     "00223": {
       "work_id": "00223",
       "title": "colouring book 7",
+      "title_sort": "colouring book 007",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3800,7 +4227,9 @@
     "00224": {
       "work_id": "00224",
       "title": "colouring book 8",
+      "title_sort": "colouring book 008",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3817,7 +4246,9 @@
     "00225": {
       "work_id": "00225",
       "title": "colouring book 9",
+      "title_sort": "colouring book 009",
       "year": 1996,
+      "year_display": "1996",
       "series_id": "colouring-book",
       "media": {
         "primary": {
@@ -3834,7 +4265,9 @@
     "00226": {
       "work_id": "00226",
       "title": "untitled [226]",
+      "title_sort": "untitled [226]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3851,7 +4284,9 @@
     "00227": {
       "work_id": "00227",
       "title": "untitled [227]",
+      "title_sort": "untitled [227]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3868,7 +4303,9 @@
     "00228": {
       "work_id": "00228",
       "title": "untitled [228]",
+      "title_sort": "untitled [228]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3885,7 +4322,9 @@
     "00229": {
       "work_id": "00229",
       "title": "untitled [229]",
+      "title_sort": "untitled [229]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3902,7 +4341,9 @@
     "00230": {
       "work_id": "00230",
       "title": "untitled [230]",
+      "title_sort": "untitled [230]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3919,7 +4360,9 @@
     "00231": {
       "work_id": "00231",
       "title": "untitled [231]",
+      "title_sort": "untitled [231]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3936,7 +4379,9 @@
     "00232": {
       "work_id": "00232",
       "title": "untitled [232]",
+      "title_sort": "untitled [232]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -3953,7 +4398,9 @@
     "00233": {
       "work_id": "00233",
       "title": "untitled [0233]",
+      "title_sort": "untitled [0233]",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3970,7 +4417,9 @@
     "00234": {
       "work_id": "00234",
       "title": "untitled [0234]",
+      "title_sort": "untitled [0234]",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -3987,7 +4436,9 @@
     "00235": {
       "work_id": "00235",
       "title": "untitled [235]",
+      "title_sort": "untitled [235]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4004,7 +4455,9 @@
     "00236": {
       "work_id": "00236",
       "title": "untitled [236]",
+      "title_sort": "untitled [236]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4021,7 +4474,9 @@
     "00237": {
       "work_id": "00237",
       "title": "untitled [237]",
+      "title_sort": "untitled [237]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4038,7 +4493,9 @@
     "00238": {
       "work_id": "00238",
       "title": "untitled [238]",
+      "title_sort": "untitled [238]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4055,7 +4512,9 @@
     "00239": {
       "work_id": "00239",
       "title": "untitled [239]",
+      "title_sort": "untitled [239]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4072,7 +4531,9 @@
     "00240": {
       "work_id": "00240",
       "title": "untitled [240]",
+      "title_sort": "untitled [240]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4089,7 +4550,9 @@
     "00241": {
       "work_id": "00241",
       "title": "untitled [241]",
+      "title_sort": "untitled [241]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4106,7 +4569,9 @@
     "00242": {
       "work_id": "00242",
       "title": "untitled [242]",
+      "title_sort": "untitled [242]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4123,7 +4588,9 @@
     "00243": {
       "work_id": "00243",
       "title": "untitled [243]",
+      "title_sort": "untitled [243]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4140,7 +4607,9 @@
     "00244": {
       "work_id": "00244",
       "title": "untitled [244]",
+      "title_sort": "untitled [244]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4157,7 +4626,9 @@
     "00245": {
       "work_id": "00245",
       "title": "untitled [245]",
+      "title_sort": "untitled [245]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4174,7 +4645,9 @@
     "00246": {
       "work_id": "00246",
       "title": "untitled [246]",
+      "title_sort": "untitled [246]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4191,7 +4664,9 @@
     "00247": {
       "work_id": "00247",
       "title": "untitled [0247]",
+      "title_sort": "untitled [0247]",
       "year": 1989,
+      "year_display": "c. 1989-98",
       "series_id": "collected-1989-1998",
       "media": {
         "primary": {
@@ -4208,7 +4683,9 @@
     "00248": {
       "work_id": "00248",
       "title": "untitled [248]",
+      "title_sort": "untitled [248]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4225,7 +4702,9 @@
     "00249": {
       "work_id": "00249",
       "title": "untitled [249]",
+      "title_sort": "untitled [249]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4242,7 +4721,9 @@
     "00250": {
       "work_id": "00250",
       "title": "untitled [250]",
+      "title_sort": "untitled [250]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4259,7 +4740,9 @@
     "00251": {
       "work_id": "00251",
       "title": "untitled [251]",
+      "title_sort": "untitled [251]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4276,7 +4759,9 @@
     "00252": {
       "work_id": "00252",
       "title": "untitled [252]",
+      "title_sort": "untitled [252]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4293,7 +4778,9 @@
     "00253": {
       "work_id": "00253",
       "title": "untitled [253]",
+      "title_sort": "untitled [253]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4310,7 +4797,9 @@
     "00254": {
       "work_id": "00254",
       "title": "untitled [254]",
+      "title_sort": "untitled [254]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4327,7 +4816,9 @@
     "00255": {
       "work_id": "00255",
       "title": "untitled [255]",
+      "title_sort": "untitled [255]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4344,7 +4835,9 @@
     "00256": {
       "work_id": "00256",
       "title": "untitled [256]",
+      "title_sort": "untitled [256]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4361,7 +4854,9 @@
     "00257": {
       "work_id": "00257",
       "title": "untitled [257]",
+      "title_sort": "untitled [257]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4378,7 +4873,9 @@
     "00258": {
       "work_id": "00258",
       "title": "untitled [258]",
+      "title_sort": "untitled [258]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4395,7 +4892,9 @@
     "00259": {
       "work_id": "00259",
       "title": "untitled [259]",
+      "title_sort": "untitled [259]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4412,7 +4911,9 @@
     "00260": {
       "work_id": "00260",
       "title": "untitled [260]",
+      "title_sort": "untitled [260]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4429,7 +4930,9 @@
     "00261": {
       "work_id": "00261",
       "title": "untitled [261]",
+      "title_sort": "untitled [261]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4446,7 +4949,9 @@
     "00262": {
       "work_id": "00262",
       "title": "untitled [262]",
+      "title_sort": "untitled [262]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4463,7 +4968,9 @@
     "00263": {
       "work_id": "00263",
       "title": "untitled [263]",
+      "title_sort": "untitled [263]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4480,7 +4987,9 @@
     "00264": {
       "work_id": "00264",
       "title": "untitled [264]",
+      "title_sort": "untitled [264]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4497,7 +5006,9 @@
     "00265": {
       "work_id": "00265",
       "title": "untitled [265]",
+      "title_sort": "untitled [265]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4514,7 +5025,9 @@
     "00266": {
       "work_id": "00266",
       "title": "untitled [266]",
+      "title_sort": "untitled [266]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4531,7 +5044,9 @@
     "00267": {
       "work_id": "00267",
       "title": "untitled [267]",
+      "title_sort": "untitled [267]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4548,7 +5063,9 @@
     "00268": {
       "work_id": "00268",
       "title": "untitled [268]",
+      "title_sort": "untitled [268]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4565,7 +5082,9 @@
     "00269": {
       "work_id": "00269",
       "title": "untitled [269]",
+      "title_sort": "untitled [269]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4582,7 +5101,9 @@
     "00270": {
       "work_id": "00270",
       "title": "untitled [270]",
+      "title_sort": "untitled [270]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4599,7 +5120,9 @@
     "00271": {
       "work_id": "00271",
       "title": "untitled [271]",
+      "title_sort": "untitled [271]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4616,7 +5139,9 @@
     "00272": {
       "work_id": "00272",
       "title": "untitled [272]",
+      "title_sort": "untitled [272]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4633,7 +5158,9 @@
     "00273": {
       "work_id": "00273",
       "title": "untitled [273]",
+      "title_sort": "untitled [273]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4650,7 +5177,9 @@
     "00274": {
       "work_id": "00274",
       "title": "untitled [274]",
+      "title_sort": "untitled [274]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4667,7 +5196,9 @@
     "00275": {
       "work_id": "00275",
       "title": "untitled [275]",
+      "title_sort": "untitled [275]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4684,7 +5215,9 @@
     "00276": {
       "work_id": "00276",
       "title": "untitled [276]",
+      "title_sort": "untitled [276]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4701,7 +5234,9 @@
     "00277": {
       "work_id": "00277",
       "title": "untitled [277]",
+      "title_sort": "untitled [277]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4718,7 +5253,9 @@
     "00278": {
       "work_id": "00278",
       "title": "untitled [278]",
+      "title_sort": "untitled [278]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4735,7 +5272,9 @@
     "00279": {
       "work_id": "00279",
       "title": "untitled [279]",
+      "title_sort": "untitled [279]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4752,7 +5291,9 @@
     "00280": {
       "work_id": "00280",
       "title": "untitled [280]",
+      "title_sort": "untitled [280]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4769,7 +5310,9 @@
     "00281": {
       "work_id": "00281",
       "title": "untitled [281]",
+      "title_sort": "untitled [281]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4786,7 +5329,9 @@
     "00282": {
       "work_id": "00282",
       "title": "untitled [282]",
+      "title_sort": "untitled [282]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4803,7 +5348,9 @@
     "00283": {
       "work_id": "00283",
       "title": "untitled [283]",
+      "title_sort": "untitled [283]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4820,7 +5367,9 @@
     "00284": {
       "work_id": "00284",
       "title": "untitled [284]",
+      "title_sort": "untitled [284]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4837,7 +5386,9 @@
     "00285": {
       "work_id": "00285",
       "title": "untitled [285]",
+      "title_sort": "untitled [285]",
       "year": 1998,
+      "year_display": "c. 1998",
       "series_id": "collected-digital-1998",
       "media": {
         "primary": {
@@ -4854,7 +5405,9 @@
     "00286": {
       "work_id": "00286",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4871,7 +5424,9 @@
     "00287": {
       "work_id": "00287",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4888,7 +5443,9 @@
     "00288": {
       "work_id": "00288",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4905,7 +5462,9 @@
     "00289": {
       "work_id": "00289",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4922,7 +5481,9 @@
     "00290": {
       "work_id": "00290",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4939,7 +5500,9 @@
     "00291": {
       "work_id": "00291",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4956,7 +5519,9 @@
     "00292": {
       "work_id": "00292",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4973,7 +5538,9 @@
     "00293": {
       "work_id": "00293",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -4990,7 +5557,9 @@
     "00294": {
       "work_id": "00294",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5007,7 +5576,9 @@
     "00295": {
       "work_id": "00295",
       "title": "64 symbols",
+      "title_sort": "064 symbols",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5024,7 +5595,9 @@
     "00296": {
       "work_id": "00296",
       "title": "4 things that are completely different but at the same time are the same",
+      "title_sort": "004 things that are completely different but at the same time are the same",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5041,7 +5614,9 @@
     "00297": {
       "work_id": "00297",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5058,7 +5633,9 @@
     "00298": {
       "work_id": "00298",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5075,7 +5652,9 @@
     "00299": {
       "work_id": "00299",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5092,7 +5671,9 @@
     "00300": {
       "work_id": "00300",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5109,7 +5690,9 @@
     "00301": {
       "work_id": "00301",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5126,7 +5709,9 @@
     "00302": {
       "work_id": "00302",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5143,7 +5728,9 @@
     "00303": {
       "work_id": "00303",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5160,7 +5747,9 @@
     "00304": {
       "work_id": "00304",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5177,7 +5766,9 @@
     "00305": {
       "work_id": "00305",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5194,7 +5785,9 @@
     "00306": {
       "work_id": "00306",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5211,7 +5804,9 @@
     "00307": {
       "work_id": "00307",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5228,7 +5823,9 @@
     "00308": {
       "work_id": "00308",
       "title": "our paths may cross",
+      "title_sort": "our paths may cross",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5245,7 +5842,9 @@
     "00309": {
       "work_id": "00309",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5262,7 +5861,9 @@
     "00310": {
       "work_id": "00310",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5279,7 +5880,9 @@
     "00311": {
       "work_id": "00311",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5296,7 +5899,9 @@
     "00312": {
       "work_id": "00312",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5313,7 +5918,9 @@
     "00313": {
       "work_id": "00313",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5330,7 +5937,9 @@
     "00314": {
       "work_id": "00314",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5347,7 +5956,9 @@
     "00315": {
       "work_id": "00315",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5364,7 +5975,9 @@
     "00316": {
       "work_id": "00316",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5381,7 +5994,9 @@
     "00317": {
       "work_id": "00317",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5398,7 +6013,9 @@
     "00318": {
       "work_id": "00318",
       "title": "grid",
+      "title_sort": "grid",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5415,7 +6032,9 @@
     "00319": {
       "work_id": "00319",
       "title": "it never ends",
+      "title_sort": "it never ends",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5432,7 +6051,9 @@
     "00320": {
       "work_id": "00320",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5449,7 +6070,9 @@
     "00321": {
       "work_id": "00321",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5466,7 +6089,9 @@
     "00322": {
       "work_id": "00322",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5483,7 +6108,9 @@
     "00323": {
       "work_id": "00323",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5500,7 +6127,9 @@
     "00324": {
       "work_id": "00324",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5517,7 +6146,9 @@
     "00325": {
       "work_id": "00325",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5534,7 +6165,9 @@
     "00326": {
       "work_id": "00326",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5551,7 +6184,9 @@
     "00327": {
       "work_id": "00327",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5568,7 +6203,9 @@
     "00328": {
       "work_id": "00328",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5585,7 +6222,9 @@
     "00329": {
       "work_id": "00329",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5602,7 +6241,9 @@
     "00330": {
       "work_id": "00330",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5619,7 +6260,9 @@
     "00331": {
       "work_id": "00331",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5636,7 +6279,9 @@
     "00332": {
       "work_id": "00332",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5653,7 +6298,9 @@
     "00333": {
       "work_id": "00333",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5670,7 +6317,9 @@
     "00334": {
       "work_id": "00334",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5687,7 +6336,9 @@
     "00335": {
       "work_id": "00335",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5704,7 +6355,9 @@
     "00336": {
       "work_id": "00336",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5721,7 +6374,9 @@
     "00337": {
       "work_id": "00337",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5738,7 +6393,9 @@
     "00338": {
       "work_id": "00338",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5755,7 +6412,9 @@
     "00339": {
       "work_id": "00339",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5772,7 +6431,9 @@
     "00340": {
       "work_id": "00340",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5789,7 +6450,9 @@
     "00341": {
       "work_id": "00341",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5806,7 +6469,9 @@
     "00342": {
       "work_id": "00342",
       "title": "9 moments that are exactly the same but different and unique",
+      "title_sort": "009 moments that are exactly the same but different and unique",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5823,7 +6488,9 @@
     "00343": {
       "work_id": "00343",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5840,7 +6507,9 @@
     "00344": {
       "work_id": "00344",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5857,7 +6526,9 @@
     "00345": {
       "work_id": "00345",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5874,7 +6545,9 @@
     "00346": {
       "work_id": "00346",
       "title": "for David Lynch",
+      "title_sort": "for David Lynch",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "for-david-lynch",
       "media": {
         "primary": {
@@ -5891,7 +6564,9 @@
     "00347": {
       "work_id": "00347",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5908,7 +6583,9 @@
     "00348": {
       "work_id": "00348",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5925,7 +6602,9 @@
     "00349": {
       "work_id": "00349",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5942,7 +6621,9 @@
     "00350": {
       "work_id": "00350",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5959,7 +6640,9 @@
     "00351": {
       "work_id": "00351",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5976,7 +6659,9 @@
     "00352": {
       "work_id": "00352",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -5993,7 +6678,9 @@
     "00353": {
       "work_id": "00353",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6010,7 +6697,9 @@
     "00354": {
       "work_id": "00354",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6027,7 +6716,9 @@
     "00355": {
       "work_id": "00355",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6044,7 +6735,9 @@
     "00356": {
       "work_id": "00356",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6061,7 +6754,9 @@
     "00357": {
       "work_id": "00357",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6078,7 +6773,9 @@
     "00358": {
       "work_id": "00358",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6095,7 +6792,9 @@
     "00359": {
       "work_id": "00359",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6112,7 +6811,9 @@
     "00360": {
       "work_id": "00360",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6129,7 +6830,9 @@
     "00361": {
       "work_id": "00361",
       "title": "83 particles",
+      "title_sort": "083 particles",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6146,7 +6849,9 @@
     "00362": {
       "work_id": "00362",
       "title": "13 particles",
+      "title_sort": "013 particles",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6163,7 +6868,9 @@
     "00363": {
       "work_id": "00363",
       "title": "7 particles",
+      "title_sort": "007 particles",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6180,7 +6887,9 @@
     "00364": {
       "work_id": "00364",
       "title": "grid",
+      "title_sort": "grid",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6197,7 +6906,9 @@
     "00365": {
       "work_id": "00365",
       "title": "the eye",
+      "title_sort": "the eye",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6214,7 +6925,9 @@
     "00366": {
       "work_id": "00366",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6231,7 +6944,9 @@
     "00367": {
       "work_id": "00367",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6248,7 +6963,9 @@
     "00368": {
       "work_id": "00368",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6265,7 +6982,9 @@
     "00369": {
       "work_id": "00369",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6282,7 +7001,9 @@
     "00370": {
       "work_id": "00370",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6299,7 +7020,9 @@
     "00371": {
       "work_id": "00371",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6316,7 +7039,9 @@
     "00372": {
       "work_id": "00372",
       "title": "untitled",
+      "title_sort": "untitled",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -6333,7 +7058,9 @@
     "00403": {
       "work_id": "00403",
       "title": "found form (2017-06-29)",
+      "title_sort": "found form (2017-006-029)",
       "year": 2017,
+      "year_display": "2017",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6350,7 +7077,9 @@
     "00404": {
       "work_id": "00404",
       "title": "found form (2017-07-09)",
+      "title_sort": "found form (2017-007-009)",
       "year": 2017,
+      "year_display": "2017",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6367,7 +7096,9 @@
     "00405": {
       "work_id": "00405",
       "title": "found form (2017-07-22)",
+      "title_sort": "found form (2017-007-022)",
       "year": 2017,
+      "year_display": "2017",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6384,7 +7115,9 @@
     "00406": {
       "work_id": "00406",
       "title": "found form (2017-07-29)",
+      "title_sort": "found form (2017-007-029)",
       "year": 2017,
+      "year_display": "2017",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6401,7 +7134,9 @@
     "00407": {
       "work_id": "00407",
       "title": "found form (2024-11-18 I)",
+      "title_sort": "found form (2024-011-018 I)",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6418,7 +7153,9 @@
     "00408": {
       "work_id": "00408",
       "title": "found form (2024-11-18 II)",
+      "title_sort": "found form (2024-011-018 II)",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6435,7 +7172,9 @@
     "00409": {
       "work_id": "00409",
       "title": "found form (2024-11-18 III)",
+      "title_sort": "found form (2024-011-018 III)",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6452,7 +7191,9 @@
     "00410": {
       "work_id": "00410",
       "title": "found form (2025-07-02)",
+      "title_sort": "found form (2025-007-002)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6469,7 +7210,9 @@
     "00411": {
       "work_id": "00411",
       "title": "found form (2025-07-15 I)",
+      "title_sort": "found form (2025-007-015 I)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6486,7 +7229,9 @@
     "00412": {
       "work_id": "00412",
       "title": "found form (2025-07-15 II)",
+      "title_sort": "found form (2025-007-015 II)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6503,7 +7248,9 @@
     "00413": {
       "work_id": "00413",
       "title": "found form (2025-07-26)",
+      "title_sort": "found form (2025-007-026)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6520,7 +7267,9 @@
     "00414": {
       "work_id": "00414",
       "title": "found form (2025-11-01 I)",
+      "title_sort": "found form (2025-011-001 I)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6537,7 +7286,9 @@
     "00415": {
       "work_id": "00415",
       "title": "found form (2025-11-01 II)",
+      "title_sort": "found form (2025-011-001 II)",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6554,7 +7305,9 @@
     "00416": {
       "work_id": "00416",
       "title": "found form 01",
+      "title_sort": "found form 001",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6571,7 +7324,9 @@
     "00417": {
       "work_id": "00417",
       "title": "found form 02",
+      "title_sort": "found form 002",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6588,7 +7343,9 @@
     "00418": {
       "work_id": "00418",
       "title": "found form 03",
+      "title_sort": "found form 003",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6605,7 +7362,9 @@
     "00419": {
       "work_id": "00419",
       "title": "found form 04",
+      "title_sort": "found form 004",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6622,7 +7381,9 @@
     "00420": {
       "work_id": "00420",
       "title": "found form 05",
+      "title_sort": "found form 005",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6639,7 +7400,9 @@
     "00421": {
       "work_id": "00421",
       "title": "found form 06",
+      "title_sort": "found form 006",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6656,7 +7419,9 @@
     "00422": {
       "work_id": "00422",
       "title": "found form 07",
+      "title_sort": "found form 007",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6673,7 +7438,9 @@
     "00423": {
       "work_id": "00423",
       "title": "found form 08",
+      "title_sort": "found form 008",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6690,7 +7457,9 @@
     "00424": {
       "work_id": "00424",
       "title": "found form 09",
+      "title_sort": "found form 009",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6707,7 +7476,9 @@
     "00425": {
       "work_id": "00425",
       "title": "found form 10",
+      "title_sort": "found form 010",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6724,7 +7495,9 @@
     "00426": {
       "work_id": "00426",
       "title": "found form 11",
+      "title_sort": "found form 011",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6741,7 +7514,9 @@
     "00427": {
       "work_id": "00427",
       "title": "found form 12",
+      "title_sort": "found form 012",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6758,7 +7533,9 @@
     "00428": {
       "work_id": "00428",
       "title": "found form 13 (mother and child)",
+      "title_sort": "found form 013 (mother and child)",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6775,7 +7552,9 @@
     "00429": {
       "work_id": "00429",
       "title": "found form 14",
+      "title_sort": "found form 014",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6792,7 +7571,9 @@
     "00430": {
       "work_id": "00430",
       "title": "found form 15",
+      "title_sort": "found form 015",
       "year": 2024,
+      "year_display": "2024",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6809,7 +7590,9 @@
     "00431": {
       "work_id": "00431",
       "title": "found form 16",
+      "title_sort": "found form 016",
       "year": 2021,
+      "year_display": "2021",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6826,7 +7609,9 @@
     "00432": {
       "work_id": "00432",
       "title": "found form 17",
+      "title_sort": "found form 017",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6843,7 +7628,9 @@
     "00433": {
       "work_id": "00433",
       "title": "found form 18",
+      "title_sort": "found form 018",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6860,7 +7647,9 @@
     "00434": {
       "work_id": "00434",
       "title": "found form 19",
+      "title_sort": "found form 019",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6877,7 +7666,9 @@
     "00435": {
       "work_id": "00435",
       "title": "found form 20",
+      "title_sort": "found form 020",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6894,7 +7685,9 @@
     "00436": {
       "work_id": "00436",
       "title": "found form 21",
+      "title_sort": "found form 021",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6911,7 +7704,9 @@
     "00437": {
       "work_id": "00437",
       "title": "found form 22",
+      "title_sort": "found form 022",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6928,7 +7723,9 @@
     "00438": {
       "work_id": "00438",
       "title": "found form 23",
+      "title_sort": "found form 023",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6945,7 +7742,9 @@
     "00439": {
       "work_id": "00439",
       "title": "found form 24",
+      "title_sort": "found form 024",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6962,7 +7761,9 @@
     "00440": {
       "work_id": "00440",
       "title": "found form 25",
+      "title_sort": "found form 025",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6979,7 +7780,9 @@
     "00441": {
       "work_id": "00441",
       "title": "found form 26",
+      "title_sort": "found form 026",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -6996,7 +7799,9 @@
     "00442": {
       "work_id": "00442",
       "title": "found form 27",
+      "title_sort": "found form 027",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7013,7 +7818,9 @@
     "00443": {
       "work_id": "00443",
       "title": "found form 28",
+      "title_sort": "found form 028",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7030,7 +7837,9 @@
     "00444": {
       "work_id": "00444",
       "title": "found form 29",
+      "title_sort": "found form 029",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7047,7 +7856,9 @@
     "00445": {
       "work_id": "00445",
       "title": "found form 30",
+      "title_sort": "found form 030",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7064,7 +7875,9 @@
     "00446": {
       "work_id": "00446",
       "title": "found form 31",
+      "title_sort": "found form 031",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7081,7 +7894,9 @@
     "00447": {
       "work_id": "00447",
       "title": "found form 32",
+      "title_sort": "found form 032",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7098,7 +7913,9 @@
     "00448": {
       "work_id": "00448",
       "title": "found form 33",
+      "title_sort": "found form 033",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7115,7 +7932,9 @@
     "00449": {
       "work_id": "00449",
       "title": "found form 34",
+      "title_sort": "found form 034",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7132,7 +7951,9 @@
     "00450": {
       "work_id": "00450",
       "title": "found form 35",
+      "title_sort": "found form 035",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7149,7 +7970,9 @@
     "00451": {
       "work_id": "00451",
       "title": "found form 36",
+      "title_sort": "found form 036",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7166,7 +7989,9 @@
     "00452": {
       "work_id": "00452",
       "title": "found form 37",
+      "title_sort": "found form 037",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7183,7 +8008,9 @@
     "00453": {
       "work_id": "00453",
       "title": "found form 38",
+      "title_sort": "found form 038",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "found-forms",
       "media": {
         "primary": {
@@ -7200,7 +8027,9 @@
     "00454": {
       "work_id": "00454",
       "title": "I bet you look good on the dancefloor",
+      "title_sort": "I bet you look good on the dancefloor",
       "year": 2025,
+      "year_display": "2025",
       "series_id": "curve-poems",
       "media": {
         "primary": {
@@ -7217,7 +8046,9 @@
     "00455": {
       "work_id": "00455",
       "title": "dotlineform (2021)",
+      "title_sort": "dotlineform (2021)",
       "year": 2021,
+      "year_display": "2021",
       "series_id": "dotlineform-2021",
       "media": {
         "primary": {
@@ -7234,7 +8065,9 @@
     "00456": {
       "work_id": "00456",
       "title": "dots",
+      "title_sort": "dots",
       "year": 2010,
+      "year_display": "2010",
       "series_id": "dots",
       "media": {
         "primary": {
@@ -7251,7 +8084,9 @@
     "00457": {
       "work_id": "00457",
       "title": "intuition (2020)",
+      "title_sort": "intuition (2020)",
       "year": 2020,
+      "year_display": "c. 2001-11",
       "series_id": "intuition-2020",
       "media": {
         "primary": {
@@ -7268,7 +8103,9 @@
     "00458": {
       "work_id": "00458",
       "title": "leaf",
+      "title_sort": "leaf",
       "year": 2016,
+      "year_display": "2016",
       "series_id": "leaf",
       "media": {
         "primary": {
@@ -7285,7 +8122,9 @@
     "00459": {
       "work_id": "00459",
       "title": "molecule forms",
+      "title_sort": "molecule forms",
       "year": 2013,
+      "year_display": "2013",
       "series_id": "molecules",
       "media": {
         "primary": {
@@ -7302,7 +8141,9 @@
     "00460": {
       "work_id": "00460",
       "title": "molecules",
+      "title_sort": "molecules",
       "year": 2013,
+      "year_display": "2013",
       "series_id": "molecules",
       "media": {
         "primary": {
@@ -7319,7 +8160,9 @@
     "00461": {
       "work_id": "00461",
       "title": "molecules symbols",
+      "title_sort": "molecules symbols",
       "year": 2013,
+      "year_display": "2013",
       "series_id": "molecules",
       "media": {
         "primary": {
@@ -7336,7 +8179,9 @@
     "00462": {
       "work_id": "00462",
       "title": "equilibrium",
+      "title_sort": "equilibrium",
       "year": 2013,
+      "year_display": "2013",
       "series_id": "molecules",
       "media": {
         "primary": {
@@ -7353,7 +8198,9 @@
     "00463": {
       "work_id": "00463",
       "title": "living surface hand form",
+      "title_sort": "living surface hand form",
       "year": 2004,
+      "year_display": "1989, 2004",
       "series_id": "living-surface-hand-form",
       "media": {
         "primary": {
@@ -7370,7 +8217,9 @@
     "00464": {
       "work_id": "00464",
       "title": "forest memories 1-48",
+      "title_sort": "forest memories 001-048",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "forest-memories-1-48",
       "media": {
         "primary": {
@@ -7387,7 +8236,9 @@
     "00465": {
       "work_id": "00465",
       "title": "forests (2023) - forest 1",
+      "title_sort": "forests (2023) - forest 001",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "forests-2023",
       "media": {
         "primary": {
@@ -7404,7 +8255,9 @@
     "00466": {
       "work_id": "00466",
       "title": "forests (2023) - forest 2",
+      "title_sort": "forests (2023) - forest 002",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "forests-2023",
       "media": {
         "primary": {
@@ -7421,7 +8274,9 @@
     "00467": {
       "work_id": "00467",
       "title": "forests (2023) - forest 3",
+      "title_sort": "forests (2023) - forest 003",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "forests-2023",
       "media": {
         "primary": {
@@ -7438,7 +8293,9 @@
     "00468": {
       "work_id": "00468",
       "title": "forests (2023) - forest 4",
+      "title_sort": "forests (2023) - forest 004",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "forests-2023",
       "media": {
         "primary": {
@@ -7455,7 +8312,9 @@
     "00469": {
       "work_id": "00469",
       "title": "heaven and earth",
+      "title_sort": "heaven and earth",
       "year": 2011,
+      "year_display": "2011",
       "series_id": "heaven-and-earth",
       "media": {
         "primary": {
@@ -7472,7 +8331,9 @@
     "00470": {
       "work_id": "00470",
       "title": "mm 2015-08-24 - 16-41-40",
+      "title_sort": "mm 2015-008-024 - 016-041-040",
       "year": 2015,
+      "year_display": "2015",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7489,7 +8350,9 @@
     "00471": {
       "work_id": "00471",
       "title": "mm 2015-08-24 - 17-09-32",
+      "title_sort": "mm 2015-008-024 - 017-009-032",
       "year": 2015,
+      "year_display": "2015",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7506,7 +8369,9 @@
     "00472": {
       "work_id": "00472",
       "title": "mm 2015-08-24 - 17-17-30",
+      "title_sort": "mm 2015-008-024 - 017-017-030",
       "year": 2015,
+      "year_display": "2015",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7523,7 +8388,9 @@
     "00473": {
       "work_id": "00473",
       "title": "mm 2015-08-24 - 19-14-50",
+      "title_sort": "mm 2015-008-024 - 019-014-050",
       "year": 2015,
+      "year_display": "2015",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7540,7 +8407,9 @@
     "00474": {
       "work_id": "00474",
       "title": "mm creased 1",
+      "title_sort": "mm creased 001",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7557,7 +8426,9 @@
     "00475": {
       "work_id": "00475",
       "title": "mm creased 2",
+      "title_sort": "mm creased 002",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7574,7 +8445,9 @@
     "00476": {
       "work_id": "00476",
       "title": "mm creased 3",
+      "title_sort": "mm creased 003",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7591,7 +8464,9 @@
     "00477": {
       "work_id": "00477",
       "title": "mm creased 4",
+      "title_sort": "mm creased 004",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7608,7 +8483,9 @@
     "00478": {
       "work_id": "00478",
       "title": "mm creased 5",
+      "title_sort": "mm creased 005",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7625,7 +8502,9 @@
     "00479": {
       "work_id": "00479",
       "title": "mm creased 6",
+      "title_sort": "mm creased 006",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7642,7 +8521,9 @@
     "00480": {
       "work_id": "00480",
       "title": "mm creased 7",
+      "title_sort": "mm creased 007",
       "year": 2007,
+      "year_display": "2007",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7659,7 +8540,9 @@
     "00481": {
       "work_id": "00481",
       "title": "mm negative future",
+      "title_sort": "mm negative future",
       "year": 2004,
+      "year_display": "2004",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7676,7 +8559,9 @@
     "00482": {
       "work_id": "00482",
       "title": "mm particles 1",
+      "title_sort": "mm particles 001",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7693,7 +8578,9 @@
     "00483": {
       "work_id": "00483",
       "title": "mm particles 2",
+      "title_sort": "mm particles 002",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7710,7 +8597,9 @@
     "00484": {
       "work_id": "00484",
       "title": "mm particles 3",
+      "title_sort": "mm particles 003",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7727,7 +8616,9 @@
     "00485": {
       "work_id": "00485",
       "title": "mm particles 4",
+      "title_sort": "mm particles 004",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7744,7 +8635,9 @@
     "00486": {
       "work_id": "00486",
       "title": "mm particles 5",
+      "title_sort": "mm particles 005",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7761,7 +8654,9 @@
     "00487": {
       "work_id": "00487",
       "title": "mm particles 6",
+      "title_sort": "mm particles 006",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7778,7 +8673,9 @@
     "00488": {
       "work_id": "00488",
       "title": "mm quantum 1",
+      "title_sort": "mm quantum 001",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7795,7 +8692,9 @@
     "00489": {
       "work_id": "00489",
       "title": "mm quantum 1.1",
+      "title_sort": "mm quantum 001.001",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7812,7 +8711,9 @@
     "00490": {
       "work_id": "00490",
       "title": "mm quantum 1.2",
+      "title_sort": "mm quantum 001.002",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7829,7 +8730,9 @@
     "00491": {
       "work_id": "00491",
       "title": "mm quantum 1.3",
+      "title_sort": "mm quantum 001.003",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7846,7 +8749,9 @@
     "00492": {
       "work_id": "00492",
       "title": "mm quantum 1.4",
+      "title_sort": "mm quantum 001.004",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7863,7 +8768,9 @@
     "00493": {
       "work_id": "00493",
       "title": "mm quantum 1.5",
+      "title_sort": "mm quantum 001.005",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7880,7 +8787,9 @@
     "00494": {
       "work_id": "00494",
       "title": "mm quantum 1.6",
+      "title_sort": "mm quantum 001.006",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7897,7 +8806,9 @@
     "00495": {
       "work_id": "00495",
       "title": "mm quantum 1.7",
+      "title_sort": "mm quantum 001.007",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7914,7 +8825,9 @@
     "00496": {
       "work_id": "00496",
       "title": "mm quantum 1.8",
+      "title_sort": "mm quantum 001.008",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7931,7 +8844,9 @@
     "00497": {
       "work_id": "00497",
       "title": "mm quantum 1.9",
+      "title_sort": "mm quantum 001.009",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7948,7 +8863,9 @@
     "00498": {
       "work_id": "00498",
       "title": "mm quantum 1.10",
+      "title_sort": "mm quantum 001.010",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7965,7 +8882,9 @@
     "00499": {
       "work_id": "00499",
       "title": "mm quantum 1.11",
+      "title_sort": "mm quantum 001.011",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7982,7 +8901,9 @@
     "00500": {
       "work_id": "00500",
       "title": "mm quantum 1.12",
+      "title_sort": "mm quantum 001.012",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -7999,7 +8920,9 @@
     "00501": {
       "work_id": "00501",
       "title": "mm quantum 1.13",
+      "title_sort": "mm quantum 001.013",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8016,7 +8939,9 @@
     "00502": {
       "work_id": "00502",
       "title": "mm quantum 2",
+      "title_sort": "mm quantum 002",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8033,7 +8958,9 @@
     "00503": {
       "work_id": "00503",
       "title": "mm quantum 2.1",
+      "title_sort": "mm quantum 002.001",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8050,7 +8977,9 @@
     "00504": {
       "work_id": "00504",
       "title": "mm quantum 2.2",
+      "title_sort": "mm quantum 002.002",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8067,7 +8996,9 @@
     "00505": {
       "work_id": "00505",
       "title": "mm quantum 2.3",
+      "title_sort": "mm quantum 002.003",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8084,7 +9015,9 @@
     "00506": {
       "work_id": "00506",
       "title": "mm quantum 2.4",
+      "title_sort": "mm quantum 002.004",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8101,7 +9034,9 @@
     "00507": {
       "work_id": "00507",
       "title": "mm quantum 2.5",
+      "title_sort": "mm quantum 002.005",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8118,7 +9053,9 @@
     "00508": {
       "work_id": "00508",
       "title": "mm quantum 2.6",
+      "title_sort": "mm quantum 002.006",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8135,7 +9072,9 @@
     "00509": {
       "work_id": "00509",
       "title": "mm quantum 2.7",
+      "title_sort": "mm quantum 002.007",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8152,7 +9091,9 @@
     "00510": {
       "work_id": "00510",
       "title": "mm quantum 2.8",
+      "title_sort": "mm quantum 002.008",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8169,7 +9110,9 @@
     "00511": {
       "work_id": "00511",
       "title": "mm quantum 2.9",
+      "title_sort": "mm quantum 002.009",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8186,7 +9129,9 @@
     "00512": {
       "work_id": "00512",
       "title": "mm quantum 2.10",
+      "title_sort": "mm quantum 002.010",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8203,7 +9148,9 @@
     "00513": {
       "work_id": "00513",
       "title": "mm quantum 2.11",
+      "title_sort": "mm quantum 002.011",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8220,7 +9167,9 @@
     "00514": {
       "work_id": "00514",
       "title": "mm quantum 2.12",
+      "title_sort": "mm quantum 002.012",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8237,7 +9186,9 @@
     "00515": {
       "work_id": "00515",
       "title": "mm quantum 2.13",
+      "title_sort": "mm quantum 002.013",
       "year": 2009,
+      "year_display": "2009",
       "series_id": "mm",
       "media": {
         "primary": {
@@ -8254,7 +9205,9 @@
     "00516": {
       "work_id": "00516",
       "title": "landscape 1",
+      "title_sort": "landscape 001",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "landscapes",
       "media": {
         "primary": {
@@ -8271,7 +9224,9 @@
     "00517": {
       "work_id": "00517",
       "title": "landscape 2",
+      "title_sort": "landscape 002",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "landscapes",
       "media": {
         "primary": {
@@ -8288,7 +9243,9 @@
     "00518": {
       "work_id": "00518",
       "title": "landscape 2.1",
+      "title_sort": "landscape 002.001",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "landscapes",
       "media": {
         "primary": {
@@ -8305,7 +9262,9 @@
     "00519": {
       "work_id": "00519",
       "title": "learning to draw landscapes (versions)",
+      "title_sort": "learning to draw landscapes (versions)",
       "year": 2022,
+      "year_display": "c. 2022?",
       "series_id": "learning-to-draw-landscapes",
       "media": {
         "primary": {
@@ -8322,7 +9281,9 @@
     "00520": {
       "work_id": "00520",
       "title": "kylie structure 1",
+      "title_sort": "kylie structure 001",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "kylie-structures",
       "media": {
         "primary": {
@@ -8339,7 +9300,9 @@
     "00521": {
       "work_id": "00521",
       "title": "kylie structure 2",
+      "title_sort": "kylie structure 002",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "kylie-structures",
       "media": {
         "primary": {
@@ -8356,7 +9319,9 @@
     "00522": {
       "work_id": "00522",
       "title": "kylie structure 3",
+      "title_sort": "kylie structure 003",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "kylie-structures",
       "media": {
         "primary": {
@@ -8373,7 +9338,9 @@
     "00523": {
       "work_id": "00523",
       "title": "kylie structure 4",
+      "title_sort": "kylie structure 004",
       "year": 2023,
+      "year_display": "2023",
       "series_id": "kylie-structures",
       "media": {
         "primary": {
@@ -8390,7 +9357,9 @@
     "00524": {
       "work_id": "00524",
       "title": "r grid",
+      "title_sort": "r grid",
       "year": 2001,
+      "year_display": "2001",
       "series_id": "r",
       "media": {
         "primary": {
@@ -8402,6 +9371,25 @@
       "has_details": false,
       "details_count": 0,
       "work_checksum": "blake2b-e7f715ec42b6b881cb613eb3391f0c45",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00130": {
+      "work_id": "00130",
+      "title": null,
+      "title_sort": "",
+      "year": 1994,
+      "year_display": "1994",
+      "series_id": "models",
+      "media": {
+        "primary": {
+          "kind": "image",
+          "thumb_96": "/assets/works/img/00130-thumb-96.webp",
+          "thumb_192": "/assets/works/img/00130-thumb-192.webp"
+        }
+      },
+      "has_details": false,
+      "details_count": 0,
+      "work_checksum": "blake2b-5a023953a95380661db84d144b2354f0",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
