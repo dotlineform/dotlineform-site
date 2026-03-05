@@ -46,7 +46,29 @@ If you later serve images only from external media_base (CDN/R2), this check won
   {%- assign src2400 = src2400 | relative_url -%}
 {%- endunless -%}
 
-<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}">
+{%- capture fallback_work_json -%}
+{
+  "work_id": {{ wid | jsonify }},
+  "title": {{ title_txt | jsonify }},
+  "year": {{ page.year | jsonify }},
+  "year_display": {{ page.year_display | jsonify }},
+  "series_id": {{ page.series_id | jsonify }},
+  "series_title": {{ page.series_title | jsonify }},
+  "medium_type": {{ page.medium_type | jsonify }},
+  "medium_caption": {{ page.medium_caption | jsonify }},
+  "duration": {{ page.duration | jsonify }},
+  "vimeo_url": {{ page.vimeo_url | jsonify }},
+  "youtube_url": {{ page.youtube_url | jsonify }},
+  "bandcamp_url": {{ page.bandcamp_url | jsonify }},
+  "height_cm": {{ page.height_cm | jsonify }},
+  "width_cm": {{ page.width_cm | jsonify }},
+  "depth_cm": {{ page.depth_cm | jsonify }},
+  "download": {{ page.download | jsonify }},
+  "has_primary_2400": {{ page.has_primary_2400 | default: false | jsonify }}
+}
+{%- endcapture -%}
+
+<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}">
 
   <h1 class="visually-hidden" id="workTitleHidden">{{ wid }}</h1>
 
@@ -143,6 +165,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     id="workDetailsSection"
     class="workDetails"
     data-work-id="{{ wid | escape }}"
+    data-work-title="{{ wid | escape }}"
     data-baseurl="{{ site.baseurl | default: '' }}"
     data-thumb-base="{{ site.thumb_base | default: '' }}"
     data-thumb-prefix="{{ site.thumb_prefix | default: '/assets' }}"
@@ -198,25 +221,13 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var workId = String(root.getAttribute('data-work-id') || '').trim();
     if (!workId) return;
 
-    var fallback = {
-      work_id: {{ wid | jsonify }},
-      title: {{ title_txt | jsonify }},
-      year: {{ page.year | jsonify }},
-      year_display: {{ page.year_display | jsonify }},
-      series_id: {{ page.series_id | jsonify }},
-      series_title: {{ page.series_title | jsonify }},
-      medium_type: {{ page.medium_type | jsonify }},
-      medium_caption: {{ page.medium_caption | jsonify }},
-      duration: {{ page.duration | jsonify }},
-      vimeo_url: {{ page.vimeo_url | jsonify }},
-      youtube_url: {{ page.youtube_url | jsonify }},
-      bandcamp_url: {{ page.bandcamp_url | jsonify }},
-      height_cm: {{ page.height_cm | jsonify }},
-      width_cm: {{ page.width_cm | jsonify }},
-      depth_cm: {{ page.depth_cm | jsonify }},
-      download: {{ page.download | jsonify }},
-      has_primary_2400: {{ page.has_primary_2400 | default: false | jsonify }}
-    };
+    var fallbackRaw = root.getAttribute('data-fallback-json') || '{}';
+    var fallback = {};
+    try {
+      fallback = JSON.parse(fallbackRaw);
+    } catch (e) {
+      fallback = {};
+    }
 
     function text(v) {
       return String(v == null ? '' : v).trim();
@@ -477,7 +488,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     if (!section || !content) return;
 
     var workId = String(section.getAttribute('data-work-id') || '').trim();
-    var workTitle = {{ wid | jsonify }};
+    var workTitle = String(section.getAttribute('data-work-title') || '').trim();
     if (!workId) return;
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
