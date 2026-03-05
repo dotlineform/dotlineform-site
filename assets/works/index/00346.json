@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-f18c175009e49c225cd367cf9f6cfc8a",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-515eb23bd73b4fdb598b1b20ecd58748",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00346",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f31de4b74bbbb999728a957a0fac21db",
+    "work_checksum": "blake2b-a8db83f1a2a4c6d6a0d7395dd9fc9085",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f18c175009e49c225cd367cf9f6cfc8a"
+    "record_checksum": "blake2b-515eb23bd73b4fdb598b1b20ecd58748"
   },
   "work": {
     "work_id": "00346",
@@ -19,6 +19,7 @@
     "series_id": "for-david-lynch",
     "series_title": "for David Lynch (2025)",
     "series_sort": "00346",
+    "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "f31de4b74bbbb999728a957a0fac21db"
+    "checksum": "a8db83f1a2a4c6d6a0d7395dd9fc9085"
   },
   "sections": []
 }

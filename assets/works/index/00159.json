@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-b5fb3c213eac66a0263f5e9adbcf6271",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-d950f1e638931dd00dbcceb63d62de40",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00159",
     "count": 2,
     "hash": "blake2b-34d0b6c5570b819ca1f543d129750a70",
-    "work_checksum": "blake2b-89e5c20d8dd1a3702298de425edc0d14",
+    "work_checksum": "blake2b-91989294f7637bfff5508e524d3a4186",
     "details_checksum": "blake2b-34d0b6c5570b819ca1f543d129750a70",
-    "record_checksum": "blake2b-b5fb3c213eac66a0263f5e9adbcf6271"
+    "record_checksum": "blake2b-d950f1e638931dd00dbcceb63d62de40"
   },
   "work": {
     "work_id": "00159",
@@ -19,6 +19,7 @@
     "series_id": "collected-1989-1998",
     "series_title": "collected 1989-1998",
     "series_sort": "116-00159",
+    "storage": "1",
     "medium_type": "photograph",
     "medium_caption": "colour photographs mounted in A4 booklet",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "89e5c20d8dd1a3702298de425edc0d14"
+    "checksum": "91989294f7637bfff5508e524d3a4186"
   },
   "sections": [
     {

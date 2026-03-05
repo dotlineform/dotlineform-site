@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-51bc3e8c4d81585f25961e1f2ad1cda4",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-40838199673911cc0b0dde510d2f3b54",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00289",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8a8ea459592897bddf33f5b617600641",
+    "work_checksum": "blake2b-920425550785b5d3198335c9a8d941f7",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-51bc3e8c4d81585f25961e1f2ad1cda4"
+    "record_checksum": "blake2b-40838199673911cc0b0dde510d2f3b54"
   },
   "work": {
     "work_id": "00289",
@@ -19,6 +19,7 @@
     "series_id": "curve-poems",
     "series_title": "curve poems",
     "series_sort": "00289",
+    "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "8a8ea459592897bddf33f5b617600641"
+    "checksum": "920425550785b5d3198335c9a8d941f7"
   },
   "sections": []
 }

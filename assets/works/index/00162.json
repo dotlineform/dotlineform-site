@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-b0add2ff983a16e262f192d26bdf3e7a",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-6022c38e68681c64dd19c77f601aca5c",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00162",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-834bb7efb87f8b167035daa73ec9ef2e",
+    "work_checksum": "blake2b-d826719bde829b97afb3632699362d8b",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b0add2ff983a16e262f192d26bdf3e7a"
+    "record_checksum": "blake2b-6022c38e68681c64dd19c77f601aca5c"
   },
   "work": {
     "work_id": "00162",
@@ -19,6 +19,7 @@
     "series_id": "mouse-story",
     "series_title": "mouse story",
     "series_sort": "00162",
+    "storage": "1",
     "medium_type": "writing",
     "medium_caption": "printed page",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "834bb7efb87f8b167035daa73ec9ef2e"
+    "checksum": "d826719bde829b97afb3632699362d8b"
   },
   "sections": []
 }

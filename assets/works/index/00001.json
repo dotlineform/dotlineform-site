@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-646c4f459f44f8da0d20a05662d01215",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-8fbf3543f45d6d37ae2ef84209c0b353",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00001",
     "count": 17,
     "hash": "blake2b-94577bcc95de1b1af020f38f28a60a41",
-    "work_checksum": "blake2b-6cdfa414c907b633410aa687088cc793",
+    "work_checksum": "blake2b-862b3be59e0add2fa33da5c99b5036fd",
     "details_checksum": "blake2b-94577bcc95de1b1af020f38f28a60a41",
-    "record_checksum": "blake2b-646c4f459f44f8da0d20a05662d01215"
+    "record_checksum": "blake2b-8fbf3543f45d6d37ae2ef84209c0b353"
   },
   "work": {
     "work_id": "00001",
@@ -19,6 +19,7 @@
     "series_id": "a-poem-divided-into-4-parts",
     "series_title": "a poem divided into 4 parts",
     "series_sort": "00001",
+    "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on tracing paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "6cdfa414c907b633410aa687088cc793"
+    "checksum": "862b3be59e0add2fa33da5c99b5036fd"
   },
   "sections": [
     {

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-316b6f4e38b39c20750786860f8feecb",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-9c3b8f2a7353a717cf8f4ae5550c97cb",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00314",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-47204c791edd6ba63ba88266a7c6acf6",
+    "work_checksum": "blake2b-649efc1fa3c26f8583bdde1ea849a2ff",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-316b6f4e38b39c20750786860f8feecb"
+    "record_checksum": "blake2b-9c3b8f2a7353a717cf8f4ae5550c97cb"
   },
   "work": {
     "work_id": "00314",
@@ -19,6 +19,7 @@
     "series_id": "curve-poems",
     "series_title": "curve poems",
     "series_sort": "00314",
+    "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "carbon paper impressions on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "47204c791edd6ba63ba88266a7c6acf6"
+    "checksum": "649efc1fa3c26f8583bdde1ea849a2ff"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-31bd470de15e3fad3c437555fdbc8239",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-15a48f72234ac872e53c1a5ab73198bc",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00521",
     "count": 6,
     "hash": "blake2b-36be852fc901b373dfe3e64a66f9384f",
-    "work_checksum": "blake2b-70aefab3a8f626beae806f44654f6dba",
+    "work_checksum": "blake2b-fdd35824b52ea08902a5b346a8707718",
     "details_checksum": "blake2b-36be852fc901b373dfe3e64a66f9384f",
-    "record_checksum": "blake2b-31bd470de15e3fad3c437555fdbc8239"
+    "record_checksum": "blake2b-15a48f72234ac872e53c1a5ab73198bc"
   },
   "work": {
     "work_id": "00521",
@@ -19,6 +19,7 @@
     "series_id": "kylie-structures",
     "series_title": "kylie structures",
     "series_sort": "00521",
+    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "70aefab3a8f626beae806f44654f6dba"
+    "checksum": "fdd35824b52ea08902a5b346a8707718"
   },
   "sections": [
     {

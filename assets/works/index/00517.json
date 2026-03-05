@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-44e15c17399654ced7ee902d985a46b6",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-937f79886e84c4d153907c7fe136dc2d",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00517",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-204893c415d967abdcdfc7456bbbd195",
+    "work_checksum": "blake2b-965b1d69c2b13f6623e2b3af32d0f209",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-44e15c17399654ced7ee902d985a46b6"
+    "record_checksum": "blake2b-937f79886e84c4d153907c7fe136dc2d"
   },
   "work": {
     "work_id": "00517",
@@ -19,6 +19,7 @@
     "series_id": "landscapes",
     "series_title": "landscapes",
     "series_sort": "00517",
+    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "204893c415d967abdcdfc7456bbbd195"
+    "checksum": "965b1d69c2b13f6623e2b3af32d0f209"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-586112e1556e52f863a16a60b3a361e3",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-0c1f8e9f9f893d6892d7d3919904587a",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00216",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7789dda43bc529ffbaf5fef722d2d5ed",
+    "work_checksum": "blake2b-e630327c5fc7b79a0ea245cffac1c065",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-586112e1556e52f863a16a60b3a361e3"
+    "record_checksum": "blake2b-0c1f8e9f9f893d6892d7d3919904587a"
   },
   "work": {
     "work_id": "00216",
@@ -19,6 +19,7 @@
     "series_id": "collected-1989-1998",
     "series_title": "collected 1989-1998",
     "series_sort": "119-00216",
+    "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "7789dda43bc529ffbaf5fef722d2d5ed"
+    "checksum": "e630327c5fc7b79a0ea245cffac1c065"
   },
   "sections": []
 }

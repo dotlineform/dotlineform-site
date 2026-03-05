@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-a2fd0776c1ba2da4d552b4b00fd3b43a",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-c68a88165a0cb617cba7b3122c18263b",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00465",
     "count": 3,
     "hash": "blake2b-f0a382231cac2745a7d0eac5ff4efc9f",
-    "work_checksum": "blake2b-af97a9855b66c388e0dcba8393c74b27",
+    "work_checksum": "blake2b-3c80037518649e79ac2863fa7fc0e677",
     "details_checksum": "blake2b-f0a382231cac2745a7d0eac5ff4efc9f",
-    "record_checksum": "blake2b-a2fd0776c1ba2da4d552b4b00fd3b43a"
+    "record_checksum": "blake2b-c68a88165a0cb617cba7b3122c18263b"
   },
   "work": {
     "work_id": "00465",
@@ -19,6 +19,7 @@
     "series_id": "forests-2023",
     "series_title": "forests (2023)",
     "series_sort": "00465",
+    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "af97a9855b66c388e0dcba8393c74b27"
+    "checksum": "3c80037518649e79ac2863fa7fc0e677"
   },
   "sections": [
     {

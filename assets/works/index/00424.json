@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-c08c9d35031bd370cfa37853a60abbd2",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-ef6e85aa09e2dd3ce224443a92a18e9e",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00424",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7c79b9bcaed3fcec0d94ef60336ba1be",
+    "work_checksum": "blake2b-56b73b09ed27cf323a05e558f375f48c",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c08c9d35031bd370cfa37853a60abbd2"
+    "record_checksum": "blake2b-ef6e85aa09e2dd3ce224443a92a18e9e"
   },
   "work": {
     "work_id": "00424",
@@ -19,6 +19,7 @@
     "series_id": "found-forms",
     "series_title": "found forms",
     "series_sort": "00424",
+    "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "7c79b9bcaed3fcec0d94ef60336ba1be"
+    "checksum": "56b73b09ed27cf323a05e558f375f48c"
   },
   "sections": []
 }

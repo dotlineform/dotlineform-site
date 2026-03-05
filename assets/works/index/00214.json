@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-a68b4dd65545547fd4d23ae8e01c7e37",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-21f96ef68e9988d250ee9743fb184d5d",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00214",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-323ec540a6bab37cbf716ea5797e0dd6",
+    "work_checksum": "blake2b-3a1766224460e5906416573684979036",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a68b4dd65545547fd4d23ae8e01c7e37"
+    "record_checksum": "blake2b-21f96ef68e9988d250ee9743fb184d5d"
   },
   "work": {
     "work_id": "00214",
@@ -19,6 +19,7 @@
     "series_id": "collected-1989-1998",
     "series_title": "collected 1989-1998",
     "series_sort": "118-00214",
+    "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil and pen on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "323ec540a6bab37cbf716ea5797e0dd6"
+    "checksum": "3a1766224460e5906416573684979036"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-a57d252e8a0e9b8cbae5487996b59676",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-ebd4b3ddb709c494924098685276ff78",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00220",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2255c1df0c8dd2134b3f87931be44c67",
+    "work_checksum": "blake2b-7c8d53482e54b5d0bc59549e02f36762",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a57d252e8a0e9b8cbae5487996b59676"
+    "record_checksum": "blake2b-ebd4b3ddb709c494924098685276ff78"
   },
   "work": {
     "work_id": "00220",
@@ -19,6 +19,7 @@
     "series_id": "colouring-book",
     "series_title": "colouring book",
     "series_sort": "00220",
+    "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "2255c1df0c8dd2134b3f87931be44c67"
+    "checksum": "7c8d53482e54b5d0bc59549e02f36762"
   },
   "sections": []
 }

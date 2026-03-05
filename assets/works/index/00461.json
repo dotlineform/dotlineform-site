@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-4819f27ec52da45e7d96f5fa8250ec42",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-92d3c272a58dda3a8236494ad6612df5",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00461",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3fc9a21ecbe34dfc330607394e155ca5",
+    "work_checksum": "blake2b-9a22658b94924b96758139edb989f26d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4819f27ec52da45e7d96f5fa8250ec42"
+    "record_checksum": "blake2b-92d3c272a58dda3a8236494ad6612df5"
   },
   "work": {
     "work_id": "00461",
@@ -19,6 +19,7 @@
     "series_id": "molecules",
     "series_title": "molecules",
     "series_sort": "00461",
+    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "3fc9a21ecbe34dfc330607394e155ca5"
+    "checksum": "9a22658b94924b96758139edb989f26d"
   },
   "sections": []
 }

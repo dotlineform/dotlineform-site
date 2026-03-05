@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-f4aecfff07eb1bb6f43fd135237bd58a",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-f99bf3b32af2d36ca6b93aa8d6c3ec30",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00469",
     "count": 8,
     "hash": "blake2b-b9eeb533fcdd1faedb7c69f1439856cb",
-    "work_checksum": "blake2b-fa6e98d77f5dd4c2f10f6f88b8495e44",
+    "work_checksum": "blake2b-91586547ba4f591952a3da791bd08a5a",
     "details_checksum": "blake2b-b9eeb533fcdd1faedb7c69f1439856cb",
-    "record_checksum": "blake2b-f4aecfff07eb1bb6f43fd135237bd58a"
+    "record_checksum": "blake2b-f99bf3b32af2d36ca6b93aa8d6c3ec30"
   },
   "work": {
     "work_id": "00469",
@@ -19,6 +19,7 @@
     "series_id": "heaven-and-earth",
     "series_title": "heaven and earth",
     "series_sort": "00469",
+    "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "fa6e98d77f5dd4c2f10f6f88b8495e44"
+    "checksum": "91586547ba4f591952a3da791bd08a5a"
   },
   "sections": [
     {

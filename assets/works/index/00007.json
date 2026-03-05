@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-f81797d85f81df84bfaef12a9cce32cd",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-4525d96270d717aba9767309e3297fe1",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00007",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f05af9e8e0e7d000394396d2bc3c9e4c",
+    "work_checksum": "blake2b-af42a299607b5bde973bd716cb5901bf",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f81797d85f81df84bfaef12a9cce32cd"
+    "record_checksum": "blake2b-4525d96270d717aba9767309e3297fe1"
   },
   "work": {
     "work_id": "00007",
@@ -19,6 +19,7 @@
     "series_id": "collected-1989-1998",
     "series_title": "collected 1989-1998",
     "series_sort": "149-00007",
+    "storage": "1",
     "medium_type": "painting",
     "medium_caption": "acrylic on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "f05af9e8e0e7d000394396d2bc3c9e4c"
+    "checksum": "af42a299607b5bde973bd716cb5901bf"
   },
   "sections": []
 }

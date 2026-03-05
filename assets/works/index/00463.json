@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-700d221aae184d6f8fc5f5408d9dd85e",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-faa0c6960a06d78667abcc9151521317",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00463",
     "count": 7,
     "hash": "blake2b-08d6a30b9806aeff28d9646331c25f30",
-    "work_checksum": "blake2b-54050e6150b08ab3c5a2fd26ed418ac9",
+    "work_checksum": "blake2b-8de2f115f3fd2146cbb87860820f65d3",
     "details_checksum": "blake2b-08d6a30b9806aeff28d9646331c25f30",
-    "record_checksum": "blake2b-700d221aae184d6f8fc5f5408d9dd85e"
+    "record_checksum": "blake2b-faa0c6960a06d78667abcc9151521317"
   },
   "work": {
     "work_id": "00463",
@@ -19,6 +19,7 @@
     "series_id": "living-surface-hand-form",
     "series_title": "living surface hand form",
     "series_sort": "00463",
+    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "54050e6150b08ab3c5a2fd26ed418ac9"
+    "checksum": "8de2f115f3fd2146cbb87860820f65d3"
   },
   "sections": [
     {

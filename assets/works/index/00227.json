@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-023fe56800a5ed494ff1d1f64a63bccf",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-7e02d3ae48a41e2d042b52d5499cf40a",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00227",
     "count": 1,
     "hash": "blake2b-54692a67e7b5c22f65c701894b9f91c3",
-    "work_checksum": "blake2b-012bb4e3062df88b1b39720c026da6ca",
+    "work_checksum": "blake2b-b158df28bd9c6e3db49203bc41cff576",
     "details_checksum": "blake2b-54692a67e7b5c22f65c701894b9f91c3",
-    "record_checksum": "blake2b-023fe56800a5ed494ff1d1f64a63bccf"
+    "record_checksum": "blake2b-7e02d3ae48a41e2d042b52d5499cf40a"
   },
   "work": {
     "work_id": "00227",
@@ -19,6 +19,7 @@
     "series_id": "collected-digital-1998",
     "series_title": "collected digital c. 1998",
     "series_sort": "00227",
+    "storage": "3",
     "medium_type": "digital print",
     "medium_caption": "laserjet print",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "012bb4e3062df88b1b39720c026da6ca"
+    "checksum": "b158df28bd9c6e3db49203bc41cff576"
   },
   "sections": [
     {

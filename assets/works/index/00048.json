@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-f970ce52b0ec30b53482d18c0706d5a3",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-332ee803cc52f0d183772eb7d6bdc742",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00048",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4c324427575e1d17e14290c451e8b231",
+    "work_checksum": "blake2b-14a84e70e26fbc78f5f8815a8fc7dddf",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f970ce52b0ec30b53482d18c0706d5a3"
+    "record_checksum": "blake2b-332ee803cc52f0d183772eb7d6bdc742"
   },
   "work": {
     "work_id": "00048",
@@ -19,6 +19,7 @@
     "series_id": "collected-1989-1998",
     "series_title": "collected 1989-1998",
     "series_sort": "155-00048",
+    "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "4c324427575e1d17e14290c451e8b231"
+    "checksum": "14a84e70e26fbc78f5f8815a8fc7dddf"
   },
   "sections": []
 }

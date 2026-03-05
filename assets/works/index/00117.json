@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-8f49f427d00476f9ca4b31e9cf62ec9a",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-a6ee3a3f8be5687b8f94a57c17f01ced",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00117",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-cedfdd5d8df906e7fa23adfeb3ab6804",
+    "work_checksum": "blake2b-3f4a6b348e0c6c48a5acfd2e2c779dab",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-8f49f427d00476f9ca4b31e9cf62ec9a"
+    "record_checksum": "blake2b-a6ee3a3f8be5687b8f94a57c17f01ced"
   },
   "work": {
     "work_id": "00117",
@@ -19,6 +19,7 @@
     "series_id": "learning-to-draw-landscapes",
     "series_title": "learning to draw landscapes",
     "series_sort": "00117",
+    "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "cedfdd5d8df906e7fa23adfeb3ab6804"
+    "checksum": "3f4a6b348e0c6c48a5acfd2e2c779dab"
   },
   "sections": []
 }

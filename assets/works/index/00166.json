@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-16d2342d3366b546f136df555cec5f95",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
+    "version": "blake2b-a89df079c4346b4bd964450d58d28dea",
+    "generated_at_utc": "2026-03-05T15:26:45Z",
     "work_id": "00166",
     "count": 19,
     "hash": "blake2b-58e35b91b151c236c4bde9081ea60d3a",
-    "work_checksum": "blake2b-1e4b24e37c63926ded12f32ca081ad47",
+    "work_checksum": "blake2b-49511b3ca69561c24eed9d5794b5c872",
     "details_checksum": "blake2b-58e35b91b151c236c4bde9081ea60d3a",
-    "record_checksum": "blake2b-16d2342d3366b546f136df555cec5f95"
+    "record_checksum": "blake2b-a89df079c4346b4bd964450d58d28dea"
   },
   "work": {
     "work_id": "00166",
@@ -19,6 +19,7 @@
     "series_id": "nerve",
     "series_title": "nerve",
     "series_sort": "00166",
+    "storage": "1",
     "medium_type": "writing",
     "medium_caption": "bound printed pages, edition 9 [extant]",
     "duration": null,
@@ -31,7 +32,7 @@
     "download": null,
     "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "1e4b24e37c63926ded12f32ca081ad47"
+    "checksum": "49511b3ca69561c24eed9d5794b5c872"
   },
   "sections": [
     {
