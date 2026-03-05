@@ -287,7 +287,9 @@ section: works
       next.set('sort', key);
       next.set('dir', dir);
       var query = next.toString();
-      var nextUrl = window.location.pathname + (query ? ('?' + query) : '') + window.location.hash;
+      var path = String(window.location.pathname || '/');
+      path = '/' + path.replace(/^\/+/, '').replace(/\/{2,}/g, '/');
+      var nextUrl = path + (query ? ('?' + query) : '') + window.location.hash;
       window.history.replaceState({}, '', nextUrl);
     }
 
@@ -422,9 +424,14 @@ section: works
         }
         worksListRoot.hidden = false;
         emptyEl.hidden = true;
-        initSortUi();
+        try {
+          initSortUi();
+        } catch (err) {
+          console.error('works_curator: initSortUi failed', err);
+        }
       })
-      .catch(function () {
+      .catch(function (err) {
+        console.error('works_curator: render failed', err);
         worksListRoot.hidden = true;
         emptyEl.hidden = false;
       });

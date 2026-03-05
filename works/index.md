@@ -279,7 +279,9 @@ section: works
       next.set('sort', key);
       next.set('dir', dir);
       var query = next.toString();
-      var nextUrl = window.location.pathname + (query ? ('?' + query) : '') + window.location.hash;
+      var path = String(window.location.pathname || '/');
+      path = '/' + path.replace(/^\/+/, '').replace(/\/{2,}/g, '/');
+      var nextUrl = path + (query ? ('?' + query) : '') + window.location.hash;
       window.history.replaceState({}, '', nextUrl);
     }
 
