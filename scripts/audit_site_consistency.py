@@ -294,7 +294,6 @@ def check_schema(
 
     re_work_id = re.compile(r"^\d{5}$")
     re_detail_uid = re.compile(r"^\d{5}-\d{3}$")
-    re_series_sort = re.compile(r"^(?:\d{5}|\d{3,}-\d{5})$")
     allowed_sort_fields = {"title", "year", "work_id", "title_sort"}
 
     # Parse/validate series sort_fields once for downstream work-level checks.
@@ -366,7 +365,7 @@ def check_schema(
         sort_fields_by_series[sid] = parsed
 
     # _works
-    works_required = ["work_id", "title", "series_id", "series_sort"]
+    works_required = ["work_id", "checksum"]
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
@@ -381,27 +380,13 @@ def check_schema(
         if not re_work_id.fullmatch(normalize_text(fm.get("work_id"))):
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid work_id format (expected 5 digits)"}, max_samples)
+        layout = normalize_text(fm.get("layout"))
+        if layout not in {"", "work"}:
+            warnings += 1
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "works layout should be 'work'"}, max_samples)
         if sid != "" and not is_slug_safe(sid):
             errors += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
-        if not re_series_sort.fullmatch(normalize_text(fm.get("series_sort"))):
-            errors += 1
-            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_sort format"}, max_samples)
-        series_sort_value = normalize_text(fm.get("series_sort"))
-        sf = sort_fields_by_series.get(sid, ["work_id"])
-        if sf == ["work_id"]:
-            if series_sort_value != wid:
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "series_sort should equal work_id for default sort_fields"}, max_samples)
-        else:
-            if not series_sort_value.endswith(f"-{wid}"):
-                errors += 1
-                add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "series_sort should end with '-<work_id>' for custom sort_fields"}, max_samples)
-        title = normalize_text(fm.get("title"))
-        title_sort = normalize_text(fm.get("title_sort"))
-        if re.search(r"\d", title) and title_sort == "":
-            warnings += 1
-            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "missing title_sort for numeric title"}, max_samples)
 
     # _series
     series_required = ["series_id", "layout"]

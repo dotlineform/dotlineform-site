@@ -1251,18 +1251,26 @@ def main() -> None:
             prefix = f"[{processed}/{total}] "
             # Normalise download to a filename (basename only) for front matter/link text.
             download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
-            fm = build_canonical_work_record(wid)
-            if fm is None:
+            canonical_work_fm = build_canonical_work_record(wid)
+            if canonical_work_fm is None:
                 skipped += 1
                 continue
-            checksum = str(fm.get("checksum"))
+            checksum = str(canonical_work_fm.get("checksum"))
+            # Canonical work metadata lives in JSON artifacts; keep _works lightweight.
+            work_page_fm: Dict[str, Any] = {
+                "work_id": wid,
+                "title": coerce_string(canonical_work_fm.get("title")),
+                "layout": "work",
+                "checksum": checksum,
+            }
 
             prose_path = work_prose_dir / f"{wid}.md"
             work_body = ""
             if prose_path.exists():
                 work_body = f"{{% include work_prose/{wid}.md %}}\n"
 
-            content = build_front_matter(fm) + "\n" + work_body
+            work_page_content = build_front_matter(work_page_fm) + "\n" + work_body
+            print_page_content = build_front_matter(canonical_work_fm) + "\n" + work_body
 
             out_path = out_dir / f"{wid}.md"
             print_path = print_out_dir / f"{wid}.md"
@@ -1272,14 +1280,20 @@ def main() -> None:
                 works_print_value = r[works_print_idx]
             works_print = normalize_status(works_print_value) == "yes"
 
-            def write_page(path: Path, label: str) -> bool:
+            def write_page(path: Path, label: str, page_content: str) -> bool:
                 exists = path.exists()
                 existing_checksum = extract_existing_checksum(path) if exists else None
                 if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
-                    print(f"{prefix}SKIP ({label}; checksum match): {path}")
-                    return False
+                    existing_content: Optional[str] = None
+                    try:
+                        existing_content = path.read_text(encoding="utf-8")
+                    except Exception:
+                        existing_content = None
+                    if existing_content == page_content:
+                        print(f"{prefix}SKIP ({label}; checksum+content match): {path}")
+                        return False
                 if args.write:
-                    path.write_text(content, encoding="utf-8")
+                    path.write_text(page_content, encoding="utf-8")
                     print(f"{prefix}WRITE ({label}): {path}")
                 else:
                     print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
@@ -1304,7 +1318,7 @@ def main() -> None:
                 return True
 
             if run_work_pages:
-                if write_page(out_path, "work"):
+                if write_page(out_path, "work", work_page_content):
                     written += 1
                     if args.write:
                         status_idx = works_hi["status"]
@@ -1323,7 +1337,7 @@ def main() -> None:
                     skipped += 1
 
                 if works_print:
-                    if write_page(print_path, "print"):
+                    if write_page(print_path, "print", print_page_content):
                         print_written += 1
                     else:
                         print_skipped += 1

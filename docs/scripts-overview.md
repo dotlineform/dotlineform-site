@@ -138,6 +138,7 @@ Useful flags:
   - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `work-details-index-json`, `moments`
   - coupling:
     - selecting `work-pages` also includes `works-curator-pages`
+  - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`, `project_subfolder`, `has_primary_2400`, `layout`, `checksum`)
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
@@ -315,7 +316,7 @@ Or run multiple checks with repeated `--check-only`:
 Current checks:
 
 - `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, `assets/data/series_index.json`, and `assets/data/work_details_index.json` (including duplicate IDs)
-- `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last sourced from canonical `series_index.json` with `_series` fallback, and `detail_uid` prefix matching `work_id`)
+- `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last sourced from canonical `series_index.json` with `_series` fallback, optional `_works.series_id` slug format, and `detail_uid` prefix matching `work_id`)
 - `json_schema`: validates generated JSON structure/count consistency for:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
