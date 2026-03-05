@@ -6,7 +6,6 @@ This repo stores works as a Jekyll collection in `_works/`. The generator writes
 file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
 It can also emit a parallel print collection (e.g. `_works_print/00286.md`) for PDF rendering.
 
-Series JSON index files are written to assets/series/index/<series_id>.json (one per series_id in the Series sheet).
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
@@ -424,43 +423,9 @@ def extract_existing_checksum(path: Path) -> Optional[str]:
     return None
 
 
-def extract_existing_front_matter_scalar(path: Path, key: str) -> Optional[str]:
-    """Extract a scalar front-matter value by key from an existing Markdown file."""
-    try:
-        text = path.read_text(encoding="utf-8")
-    except Exception:
-        return None
-
-    if not text.startswith("---"):
-        return None
-
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return None
-
-    prefix = f"{key}:"
-    for line in parts[1].splitlines():
-        if not line.startswith(prefix):
-            continue
-        _, raw = line.split(":", 1)
-        raw = raw.strip()
-        if raw == "" or raw == "null":
-            return None
-        if raw.startswith('"') and raw.endswith('"') and len(raw) >= 2:
-            return raw[1:-1]
-        return raw
-
-    return None
-
 # ----------------------------
-# Series JSON helpers
+# JSON payload helpers
 # ----------------------------
-
-def compute_series_hash(series_id: str, work_ids: List[str], sort_fields: str) -> str:
-    """Compute deterministic hash for a series JSON payload."""
-    payload = {"series_id": series_id, "work_ids": list(work_ids), "sort_fields": sort_fields}
-    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    return hashlib.blake2b(canonical, digest_size=16).hexdigest()
 
 
 def compute_work_details_hash(work_id: str, sections: List[Dict[str, Any]]) -> str:
@@ -507,22 +472,6 @@ def compute_payload_hash_hex(payload: Any) -> str:
 def compute_payload_version(payload: Any) -> str:
     """Compute deterministic blake2b content version token."""
     return f"blake2b-{compute_payload_hash_hex(payload)}"
-
-
-def extract_existing_series_hash(path: Path) -> Optional[str]:
-    """Extract header.hash from an existing series JSON file."""
-    try:
-        obj = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-    header = obj.get("header") if isinstance(obj, dict) else None
-    if not isinstance(header, dict):
-        return None
-    hv = header.get("hash")
-    if hv is None:
-        return None
-    s = str(hv).strip()
-    return s or None
 
 
 def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
@@ -632,7 +581,6 @@ def main() -> None:
     ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Folder for optional manual work prose includes")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
-    ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON index files")
     ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
@@ -650,14 +598,6 @@ def main() -> None:
     ap.add_argument("--write", action="store_true", help="Actually write files (otherwise dry-run)")
     ap.add_argument("--force", action="store_true", help="Overwrite existing files")
     ap.add_argument(
-        "--no-series-sort-drift-guard",
-        action="store_true",
-        help=(
-            "Disable consistency guard that checks _works front-matter series_sort against "
-            "generator-computed canonical ordering before writing series JSON."
-        ),
-    )
-    ap.add_argument(
         "--work-ids",
         default="",
         help=(
@@ -673,7 +613,7 @@ def main() -> None:
     ap.add_argument(
         "--series-ids",
         default="",
-        help="Comma-separated series_ids to process for series page/JSON generation.",
+        help="Comma-separated series_ids to process for series page/index generation.",
     )
     ap.add_argument(
         "--series-ids-file",
@@ -696,7 +636,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-json,series-index-json,work-details-pages,work-json,works-index-json,moments. "
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments. "
             "Note: selecting work-pages also includes works-curator-pages."
         ),
     )
@@ -715,7 +655,6 @@ def main() -> None:
         "works-curator-pages",
         "work-files",
         "series-pages",
-        "series-json",
         "series-index-json",
         "work-details-pages",
         "work-json",
@@ -749,7 +688,6 @@ def main() -> None:
     run_works_curator_pages = artifact_enabled("works-curator-pages") or run_work_pages
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
-    run_series_json = artifact_enabled("series-json")
     run_series_index_json = artifact_enabled("series-index-json")
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
@@ -832,8 +770,6 @@ def main() -> None:
     tag_assignments_path = Path("assets/data/tag_assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
 
-    series_json_dir = Path(args.series_json_dir).expanduser()
-    series_json_dir.mkdir(parents=True, exist_ok=True)
     series_index_json_path = Path(args.series_index_json_path).expanduser()
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_details_out_dir = Path(args.work_details_output_dir).expanduser()
@@ -1480,76 +1416,12 @@ def main() -> None:
         print("Work pages/files skipped: not selected by --only.")
 
     # Determine series scope for this run:
-    # - If caller explicitly scoped series via --series-ids, honor that for both pages and JSON.
-    # - If caller scoped only works (--work-ids/--work-ids-file), skip series pages by default,
-    #   but still regenerate series JSON for affected series IDs so work prev/next nav stays fresh.
+    # - If caller explicitly scoped series via --series-ids, honor that.
+    # - If caller scoped only works (--work-ids/--work-ids-file), skip series pages by default.
     series_page_selected_ids = selected_series_ids
-    series_json_selected_ids = selected_series_ids
     if explicit_work_filter and selected_series_ids is None:
-        affected_series_ids: set[str] = set()
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            wid = slug_id(wid_raw)
-            if selected_ids is None or wid not in selected_ids:
-                continue
-            sid_raw = cell(wr, works_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = normalize_text(sid_raw)
-            if is_slug_safe(sid):
-                affected_series_ids.add(sid)
-        if run_series_json:
-            series_json_selected_ids = affected_series_ids
         if selected_artifacts is None:
             run_series_pages = False
-
-    # Guard against stale _works series_sort values when generating series JSON.
-    # Canonical order is computed in-memory above (series_sort_by_work_id) and written to series JSON.
-    # If _works/*.md series_sort drifts, pages that still read front matter can show different ordering.
-    if run_series_json and not args.no_series_sort_drift_guard:
-        guard_work_ids: set[str] = set()
-        if series_json_selected_ids is None:
-            guard_work_ids = set(work_meta_by_id.keys())
-        else:
-            for sid in series_json_selected_ids:
-                guard_work_ids.update(work_ids_by_series_all.get(sid, []))
-
-        mismatches: List[tuple[str, Optional[str], str]] = []
-        for wid in sorted(guard_work_ids):
-            expected = series_sort_by_work_id.get(wid, wid)
-            existing = extract_existing_front_matter_scalar(out_dir / f"{wid}.md", "series_sort")
-            if existing != expected:
-                mismatches.append((wid, existing, expected))
-
-        if mismatches:
-            sample = ", ".join(
-                f"{wid} (existing={repr(existing)}, expected={repr(expected)})"
-                for wid, existing, expected in mismatches[:8]
-            )
-            scope_hint = ""
-            if series_json_selected_ids:
-                scope_hint = " --series-ids " + ",".join(sorted(series_json_selected_ids))
-            suggested = (
-                f"./scripts/generate_work_pages.py --only work-pages,series-json{scope_hint} --force --write"
-            )
-            msg = (
-                f"series_sort drift detected for {len(mismatches)} work page(s); sample: {sample}. "
-                f"Canonical order (series JSON) and _works front matter are out of sync.\n"
-                f"Regenerate both artifacts together, e.g.: {suggested}\n"
-                f"Use --no-series-sort-drift-guard to bypass this check."
-            )
-            # In dry-run mode with work-pages selected, keep momentum by warning only.
-            if (not args.write) and run_work_pages:
-                print(
-                    "Warning: "
-                    + msg
-                    + "\nNote: in dry-run, this is expected when workbook changes affect ordering but "
-                    + "_works files have not been rewritten yet."
-                )
-            else:
-                raise SystemExit(msg)
 
     # ----------------------------
     # Series page generation (Series)
@@ -1782,122 +1654,6 @@ def main() -> None:
             f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
             f"{studio_series_written}. Skipped: {studio_series_skipped}."
         )
-
-        # ----------------------------
-        # Series JSON generation (Series + Works)
-        # ----------------------------
-        # Writes one JSON file per series_id listed in the Series sheet:
-        #   assets/series/index/<series_id>.json
-        # JSON structure:
-        # {
-        #   "header": {"series_id": "...", "count": N, "hash": "..."},
-        #   "work_ids": ["00286", "00361", ...]
-        # }
-
-        if run_series_json:
-            sj_written = 0
-            sj_skipped = 0
-            sj_total = 0
-            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-                sid_raw = cell(sr, series_hi, "series_id")
-                if is_empty(sid_raw):
-                    continue
-                sid = require_slug_safe("series_id", sid_raw)
-                if series_json_selected_ids is not None and sid not in series_json_selected_ids:
-                    continue
-                status_idx = series_hi.get("status")
-                status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
-                status = normalize_status(status_val)
-                if status != "draft":
-                    sj_total += 1
-            sj_processed = 0
-
-            # Build published work lists by series_id (from Works sheet, after any status updates).
-            # JSON order follows series_sort asc, then work_id asc for stability.
-            work_rows_by_series: Dict[str, List[tuple[str, str]]] = {}
-            status_idx = works_hi.get("status")
-            for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
-                status_val = wr_cells[status_idx].value if status_idx is not None else cell(wr, works_hi, "status")
-                if normalize_status(status_val) != "published":
-                    continue
-
-                sid_raw = cell(wr, works_hi, "series_id")
-                if is_empty(sid_raw):
-                    continue
-                sid = require_slug_safe("series_id", sid_raw)
-
-                wid_raw = cell(wr, works_hi, "work_id")
-                if is_empty(wid_raw):
-                    continue
-                wid = slug_id(wid_raw)
-
-                series_sort = series_sort_by_work_id.get(wid, wid)
-
-                work_rows_by_series.setdefault(sid, []).append((series_sort, wid))
-
-            # Ensure deterministic ordering matching series-page grid.
-            work_ids_by_series: Dict[str, List[str]] = {}
-            for sid, rows in work_rows_by_series.items():
-                rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
-                work_ids_by_series[sid] = [wid for _, wid in rows_sorted]
-
-            for sr, sr_cells in zip(series_rows[1:], series_ws.iter_rows(min_row=2), strict=False):
-                sid_raw = cell(sr, series_hi, "series_id")
-                if is_empty(sid_raw):
-                    sj_skipped += 1
-                    continue
-                series_id = require_slug_safe("series_id", sid_raw)
-                if series_json_selected_ids is not None and series_id not in series_json_selected_ids:
-                    sj_skipped += 1
-                    continue
-                status_idx = series_hi.get("status")
-                status_val = sr_cells[status_idx].value if status_idx is not None else cell(sr, series_hi, "status")
-                status = normalize_status(status_val)
-                if status == "draft":
-                    sj_skipped += 1
-                    continue
-
-                sj_processed += 1
-                prefix_j = f"[seriesjson {sj_processed}/{sj_total}] "
-
-                work_ids = work_ids_by_series.get(series_id, [])
-                sort_fields = ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"]))
-                series_hash = compute_series_hash(series_id, work_ids, sort_fields)
-
-                payload = {
-                    "header": {
-                        "series_id": series_id,
-                        "count": len(work_ids),
-                        "sort_fields": sort_fields,
-                        "hash": series_hash,
-                    },
-                    "work_ids": work_ids,
-                }
-
-                out_json_path = series_json_dir / f"{series_id}.json"
-                exists = out_json_path.exists()
-
-                existing_hash = extract_existing_series_hash(out_json_path) if exists else None
-                if (existing_hash is not None) and (existing_hash == series_hash) and (not args.force):
-                    sj_skipped += 1
-                    continue
-
-                if args.write:
-                    out_json_path.write_text(
-                        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                        encoding="utf-8",
-                    )
-                    print(f"{prefix_j}WRITE: {out_json_path}")
-                    sj_written += 1
-                else:
-                    print(f"{prefix_j}DRY-RUN: would write {out_json_path} (overwrite={exists})")
-                    sj_written += 1
-
-            print(
-                f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: {sj_written}. Skipped: {sj_skipped}."
-            )
-        else:
-            print("Series JSON skipped: not selected by --only.")
 
     if run_series_index_json:
         work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}

@@ -42,26 +42,8 @@ Recommended command:
 ./scripts/generate_work_pages.py --only work-pages,series-index-json,works-index-json --series-ids <series_id> --force --write
 ```
 
-Optional compatibility artifact:
-
-- `assets/series/index/<series_id>.json` (`--only series-json`) can still be generated for tooling/backward compatibility, but runtime pages are JSON-first on `assets/data/series_index.json`.
-
-## Generator-Enforced Consistency (Drift Guard)
-
-`scripts/generate_work_pages.py` enforces a drift guard during `series-json` runs:
-
-- It compares existing `_works/*.md` `series_sort` to generator-computed canonical values.
-- If drift exists, generation fails with a remediation command.
-- This prevents writing updated series JSON while leaving stale work front matter.
-
-Opt-out (not recommended):
-
-```bash
-./scripts/generate_work_pages.py ... --no-series-sort-drift-guard
-```
-
 ## Why This Hybrid Exists
 
 - `assets/data/series_index.json` order is the canonical cross-page runtime order.
 - Front-matter `series_sort` remains useful as a fast build-time cache for Liquid templates.
-- The drift guard + regeneration contract keeps both aligned.
+- The regeneration contract keeps both aligned.

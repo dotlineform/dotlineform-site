@@ -17,7 +17,7 @@ This file tracks deferred improvements and follow-up work.
 ## Later
 
 - Optional JSON content-integrity check:
-  - recompute/verify JSON `hash` fields in `assets/series/index/*.json` and `assets/works/index/*.json`.
+  - recompute/verify JSON `version`/checksum fields in `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/works/index/*.json`.
 - Extend orphan checks to additional content domains (`_themes`, `_research`, optional media domains).
 - Add automated tests for audit script behaviors (fixtures + expected findings).
 

@@ -133,10 +133,8 @@ Useful flags:
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
-- `--no-series-sort-drift-guard`: bypass series_sort/front-matter drift guard during `series-json` runs
-  - In dry-run mode, drift can be expected after sort-affecting workbook changes until `_works` files are regenerated with `--write`.
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-json`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
+  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - coupling:
     - selecting `work-pages` also includes `works-curator-pages`
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
@@ -144,7 +142,6 @@ Useful flags:
     - series map keyed by `series_id`
     - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `title_sort`, `sort_fields`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
-  - `series-json`: writes legacy compatibility payloads to `assets/series/index/<series_id>.json`
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
@@ -285,7 +282,7 @@ Scope and output options:
 
 ```bash
 ./scripts/audit_site_consistency.py \
-  --checks sort_drift,cross_refs,schema,json_schema,links,media,orphans \
+  --checks cross_refs,schema,json_schema,links,media,orphans \
   --series-ids collected-1989-1998 \
   --json-out /tmp/site-audit.json \
   --md-out docs/audit-latest.md \
@@ -304,17 +301,19 @@ Or run multiple checks with repeated `--check-only`:
 
 ```bash
 ./scripts/audit_site_consistency.py \
-  --check-only sort_drift \
+  --check-only cross_refs \
   --check-only json_schema \
   --series-ids collected-1989-1998
 ```
 
 Current checks:
 
-- `sort_drift`: compares `assets/series/index/<series_id>.json` `work_ids` order to `_works/*.md` `series_sort`-derived order
-- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, and series JSON (including duplicate IDs)
+- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, and `assets/data/series_index.json` (including duplicate IDs)
 - `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last, and `detail_uid` prefix matching `work_id`)
-- `json_schema`: validates generated JSON structure and count consistency for `assets/series/index/*.json` and `assets/works/index/*.json`
+- `json_schema`: validates generated JSON structure/count consistency for:
+  - `assets/data/series_index.json`
+  - `assets/data/works_index.json`
+  - `assets/works/index/*.json`
 - `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
 - `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)
 - `orphans`: reports orphan pages/JSON; optionally include orphan media files with `--orphans-media`
