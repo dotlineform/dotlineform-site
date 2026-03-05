@@ -137,7 +137,7 @@ Useful flags:
 - `--only`: limit generation to selected artifacts
   - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `work-details-index-json`, `moments`
   - coupling:
-    - selecting `work-pages` also includes `works-curator-pages`
+    - `works-curator-pages` runs only when explicitly included in `--only`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`, `project_subfolder`, `has_primary_2400`, `layout`, `checksum`)

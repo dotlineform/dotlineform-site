@@ -363,6 +363,7 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
     ("series_id", "series_id", coerce_string),
+    ("storage", "storage_location", coerce_string),
     ("medium_type", "medium_type", coerce_string),
     ("medium_caption", "medium_caption", coerce_string),
     ("duration", "duration", coerce_string),
@@ -650,7 +651,7 @@ def main() -> None:
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
             "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,work-details-index-json,moments. "
-            "Note: selecting work-pages also includes works-curator-pages."
+            "works-curator-pages is explicit-only; it does not run as part of work-pages."
         ),
     )
     args = ap.parse_args()
@@ -699,7 +700,7 @@ def main() -> None:
         return name in selected_artifacts
 
     run_work_pages = artifact_enabled("work-pages")
-    run_works_curator_pages = artifact_enabled("works-curator-pages") or run_work_pages
+    run_works_curator_pages = selected_artifacts is not None and artifact_enabled("works-curator-pages")
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
     run_series_index_json = artifact_enabled("series-index-json")
@@ -769,8 +770,10 @@ def main() -> None:
 
     print_out_dir = Path(args.print_output_dir).expanduser()
     print_out_dir.mkdir(parents=True, exist_ok=True)
-    works_curator_out_dir = Path("_works_curator").expanduser()
-    works_curator_out_dir.mkdir(parents=True, exist_ok=True)
+    works_curator_out_dir: Optional[Path] = None
+    if run_works_curator_pages:
+        works_curator_out_dir = Path("_works_curator").expanduser()
+        works_curator_out_dir.mkdir(parents=True, exist_ok=True)
 
     work_prose_dir = Path(args.work_prose_dir).expanduser()
     work_prose_dir.mkdir(parents=True, exist_ok=True)
@@ -981,6 +984,7 @@ def main() -> None:
         "series_id",
         "series_title",
         "series_sort",
+        "storage",
         "medium_type",
         "medium_caption",
         "duration",
@@ -1057,6 +1061,7 @@ def main() -> None:
         title_sort_value = coerce_string(work_record.get("title_sort"))
         year_value = work_record.get("year")
         year_display_value = coerce_string(work_record.get("year_display"))
+        storage_value = coerce_string(work_record.get("storage"))
         return {
             "work_id": wid,
             "title": title_value,
@@ -1064,6 +1069,7 @@ def main() -> None:
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_id": work_record.get("series_id"),
+            "storage": storage_value,
             "media": {
                 "primary": {
                     "kind": media_kind,
@@ -1411,6 +1417,8 @@ def main() -> None:
                     if key not in cfm_ordered:
                         cfm_ordered[key] = value
 
+                if works_curator_out_dir is None:
+                    raise RuntimeError("works_curator_out_dir is not initialized")
                 curator_path = works_curator_out_dir / f"{wid}.md"
                 curator_content = build_front_matter(cfm_ordered) + "\n"
                 if write_curator_page(curator_path, curator_content):
