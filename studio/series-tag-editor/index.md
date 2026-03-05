@@ -9,6 +9,29 @@ section: works
 
 <article class="page tagStudioPage" id="seriesTagEditorRoot" hidden>
   <header class="tagStudioPage__header">
+    <figure class="tagStudioPage__media" id="seriesTagEditorMedia" hidden>
+      <a
+        class="page__mediaLink"
+        id="seriesTagEditorMediaLink"
+        href="#"
+        target="_blank"
+        rel="noopener"
+        style="--work-ar: 4 / 3;"
+      >
+        <img
+          class="tagStudioPage__mediaImg"
+          id="seriesTagEditorMediaImg"
+          src=""
+          srcset=""
+          sizes="(max-width: 900px) 100vw, 40vw"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </a>
+    </figure>
+
     <section class="tagStudioPage__context">
       <h1 class="tagStudioPage__title" id="seriesTagEditorTitle">Series Tag Editor</h1>
       <div class="workCurator__rows" style="font-size:var(--meta-small-size);line-height:var(--meta-small-line);">
@@ -47,7 +70,13 @@ section: works
     var primaryWorkEl = document.getElementById('seriesTagEditorPrimaryWork');
     var foldersEl = document.getElementById('seriesTagEditorFolders');
     var notesEl = document.getElementById('seriesTagEditorNotes');
+    var mediaFigureEl = document.getElementById('seriesTagEditorMedia');
+    var mediaLinkEl = document.getElementById('seriesTagEditorMediaLink');
+    var mediaImgEl = document.getElementById('seriesTagEditorMediaImg');
     var baseurl = {{ site.baseurl | default: '' | jsonify }};
+    var mediaBase = {{ site.media_base | default: '' | jsonify }};
+    var mediaPrefixRaw = {{ site.media_prefix | jsonify }};
+    var mediaPrefix = (mediaPrefixRaw == null) ? '/assets' : String(mediaPrefixRaw);
     var params = new URLSearchParams(window.location.search);
     var seriesIdQuery = String(params.get('series') || '').trim().toLowerCase();
     var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
@@ -88,6 +117,66 @@ section: works
       return map;
     }
 
+    function applyBaseurl(url) {
+      if (/^[a-z]+:\/\//i.test(url)) return url;
+      if (url.charAt(0) === '/') return baseurl + url;
+      return url;
+    }
+
+    function worksImgBasePath() {
+      var base = String(mediaBase || '').replace(/\/+$/, '');
+      var prefix = String(mediaPrefix || '').replace(/\/+$/, '');
+      if (base) return base + prefix + '/works/img/';
+      return applyBaseurl((prefix || '') + '/works/img/').replace(/\/{2,}/g, '/');
+    }
+
+    function fetchWorkRecord(primaryWorkId) {
+      var url = baseurl + '/assets/works/index/' + encodeURIComponent(primaryWorkId) + '.json';
+      return fetch(url, { cache: 'default' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.json();
+        })
+        .then(function (payload) {
+          return payload && payload.work && typeof payload.work === 'object' ? payload.work : null;
+        })
+        .catch(function () {
+          return null;
+        });
+    }
+
+    function renderPrimaryMedia(primaryWorkId, seriesTitle) {
+      if (!mediaFigureEl || !mediaLinkEl || !mediaImgEl) return Promise.resolve();
+      if (!primaryWorkId) {
+        mediaFigureEl.hidden = true;
+        return Promise.resolve();
+      }
+
+      var imgBase = worksImgBasePath();
+      var src800 = imgBase + primaryWorkId + '-primary-800.webp';
+      var src1200 = imgBase + primaryWorkId + '-primary-1200.webp';
+      var src1600 = imgBase + primaryWorkId + '-primary-1600.webp';
+      var src2400 = imgBase + primaryWorkId + '-primary-2400.webp';
+
+      return fetchWorkRecord(primaryWorkId).then(function (work) {
+        var widthCm = Number(work && work.width_cm);
+        var heightCm = Number(work && work.height_cm);
+        if (!Number.isFinite(widthCm) || widthCm <= 0) widthCm = 4;
+        if (!Number.isFinite(heightCm) || heightCm <= 0) heightCm = 3;
+        var has2400 = !!(work && work.has_primary_2400 === true);
+        var fullSrc = has2400 ? src2400 : src1600;
+        var srcset = src800 + ' 800w, ' + src1200 + ' 1200w, ' + src1600 + ' 1600w';
+        if (has2400) srcset += ', ' + src2400 + ' 2400w';
+
+        mediaLinkEl.href = fullSrc;
+        mediaLinkEl.style.setProperty('--work-ar', String(widthCm) + ' / ' + String(heightCm));
+        mediaImgEl.src = src1600;
+        mediaImgEl.setAttribute('srcset', srcset);
+        mediaImgEl.alt = seriesTitle;
+        mediaFigureEl.hidden = false;
+      });
+    }
+
     if (!seriesIdQuery) {
       showError('Missing series id. Open this page with ?series=<series_id>.');
       return;
@@ -124,6 +213,10 @@ section: works
         var folders = Array.isArray(row.project_folders) ? row.project_folders.filter(Boolean) : [];
         foldersEl.textContent = folders.length ? folders.join(', ') : textOrDash(row.project_folders);
         notesEl.textContent = textOrDash(row.notes);
+        renderPrimaryMedia(primaryWorkId, seriesTitle).catch(function (err) {
+          console.error('series_tag_editor: failed to render primary media', err);
+          if (mediaFigureEl) mediaFigureEl.hidden = true;
+        });
 
         mount.setAttribute('data-series-id', seriesIdQuery);
         root.hidden = false;
