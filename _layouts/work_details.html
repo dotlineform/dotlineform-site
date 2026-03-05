@@ -48,6 +48,10 @@ layout: default
   data-fallback-work-id="{{ fallback_work_id | escape }}"
   data-fallback-work-title="{{ fallback_work_title | escape }}"
   data-fallback-section="{{ fallback_section | escape }}"
+  data-fallback-title="{{ title_txt | escape }}"
+  data-fallback-width-px="{{ page.width_px | default: 0 | escape }}"
+  data-fallback-height-px="{{ page.height_px | default: 0 | escape }}"
+  data-fallback-has-2400="{{ page.has_primary_2400 | default: false | escape }}"
 >
   <h1 class="visually-hidden" id="detailHiddenTitle">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
@@ -135,10 +139,10 @@ layout: default
     var fallbackWorkId = String(root.getAttribute('data-fallback-work-id') || '').trim();
     var fallbackWorkTitle = String(root.getAttribute('data-fallback-work-title') || '').trim();
     var fallbackSection = String(root.getAttribute('data-fallback-section') || '').trim();
-    var fallbackTitle = {{ title_txt | jsonify }};
-    var fallbackWidthPx = {{ page.width_px | default: 0 | jsonify }};
-    var fallbackHeightPx = {{ page.height_px | default: 0 | jsonify }};
-    var fallbackHas2400 = {{ page.has_primary_2400 | default: false | jsonify }};
+    var fallbackTitle = String(root.getAttribute('data-fallback-title') || '').trim();
+    var fallbackWidthPx = Number(root.getAttribute('data-fallback-width-px') || '0');
+    var fallbackHeightPx = Number(root.getAttribute('data-fallback-height-px') || '0');
+    var fallbackHas2400 = String(root.getAttribute('data-fallback-has-2400') || '').trim().toLowerCase() === 'true';
 
     var params = new URLSearchParams(window.location.search);
     var explicitFromWorkTitle = String(params.get('from_work_title') || '').trim() !== '';
@@ -157,7 +161,7 @@ layout: default
       title: String(fallbackTitle || detailUid || 'Untitled').trim(),
       widthPx: Number(fallbackWidthPx),
       heightPx: Number(fallbackHeightPx),
-      has2400: fallbackHas2400 === true
+      has2400: fallbackHas2400
     };
     if (!ctx.fromWorkTitle) ctx.fromWorkTitle = ctx.fromWork;
 

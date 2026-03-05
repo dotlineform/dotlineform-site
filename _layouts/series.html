@@ -3,11 +3,20 @@ layout: default
 ---
 
 {% assign series_id_fallback = page.series_id | default: page.slug %}
+{% assign thumb_base = site.thumb_base | default: "" %}
+{% assign thumb_prefix = site.thumb_prefix | default: "/assets" %}
+{% assign base = thumb_base | append: thumb_prefix | append: "/works/img/" %}
+{%- assign thumb_base_out = base -%}
+{%- unless base contains '://' -%}
+  {%- assign thumb_base_out = base | relative_url -%}
+{%- endunless -%}
+
 <article
   class="page series"
   id="seriesPageRoot"
   data-baseurl="{{ site.baseurl | default: '' }}"
   data-series-id="{{ series_id_fallback | default: '' | escape }}"
+  data-thumb-base="{{ thumb_base_out | escape }}"
 >
   <header class="page__header">
     <h1 class="page__title" id="seriesPageTitle">{{ page.title | default: series_id_fallback }}</h1>
@@ -15,10 +24,6 @@ layout: default
       {{ page.year_display | default: page.year }}
     </p>
   </header>
-
-{% assign thumb_base = site.thumb_base | default: "" %}
-{% assign thumb_prefix = site.thumb_prefix | default: "/assets" %}
-{% assign base = thumb_base | append: thumb_prefix | append: "/works/img/" %}
 
 {%- if series_id_fallback -%}
   {% comment %}
@@ -39,11 +44,6 @@ layout: default
     </nav>
   </div>
 
-  {%- assign thumb_base_out = base -%}
-  {%- unless base contains '://' -%}
-    {%- assign thumb_base_out = base | relative_url -%}
-  {%- endunless -%}
-
   <script>
     (function () {
       var grid = document.getElementById('seriesGrid');
@@ -61,7 +61,7 @@ layout: default
 
       var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
       var seriesId = String(root.getAttribute('data-series-id') || '').trim().toLowerCase();
-      var thumbBase = {{ thumb_base_out | jsonify }};
+      var thumbBase = String(root.getAttribute('data-thumb-base') || '').trim();
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
