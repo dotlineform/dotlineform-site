@@ -1,8 +1,8 @@
 # Audit Report
 
-- Run at: `2026-03-05T10:52:19+00:00`
-- Duration: `88ms`
-- Checks: `cross_refs, schema, json_schema`
+- Run at: `2026-03-05T10:58:52+00:00`
+- Duration: `54ms`
+- Checks: `cross_refs, schema`
 - Errors: `0`
 - Warnings: `132`
 
@@ -11,7 +11,7 @@
 | flag | value | default? |
 | --- | --- | --- |
 | `--site-root` | `.` | `yes` |
-| `--checks` | `cross_refs,schema,json_schema` | `no` |
+| `--checks` | `cross_refs,schema` | `yes` |
 | `--check-only` | `(none)` | `yes` |
 | `--series-ids` | `(empty)` | `yes` |
 | `--work-ids` | `(empty)` | `yes` |
@@ -25,7 +25,6 @@
 
 - `cross_refs`: errors=0 warnings=0
 - `schema`: errors=0 warnings=132
-- `json_schema`: errors=0 warnings=0
 
 ## Findings
 
@@ -55,7 +54,3 @@
 - `00127`: missing title_sort for numeric title (`_works/00127.md`)
 - `00128`: missing title_sort for numeric title (`_works/00128.md`)
 - `00129`: missing title_sort for numeric title (`_works/00129.md`)
-
-### json_schema
-
-- none
