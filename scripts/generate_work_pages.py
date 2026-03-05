@@ -4,7 +4,6 @@ Generate Jekyll work/moment pages from an Excel workbook.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
 file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
-It can also emit a parallel print collection (e.g. `_works_print/00286.md`) for PDF rendering.
 
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
@@ -589,7 +588,6 @@ def main() -> None:
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
-    ap.add_argument("--print-output-dir", default="_works_print", help="Output folder for generated print work pages")
     ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Folder for optional manual work prose includes")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
@@ -792,8 +790,6 @@ def main() -> None:
     out_dir = Path(args.output_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print_out_dir = Path(args.print_output_dir).expanduser()
-    print_out_dir.mkdir(parents=True, exist_ok=True)
     works_curator_out_dir: Optional[Path] = None
     if run_works_curator_pages:
         works_curator_out_dir = Path("_works_curator").expanduser()
@@ -1159,8 +1155,6 @@ def main() -> None:
 
     written = 0
     skipped = 0
-    print_written = 0
-    print_skipped = 0
     curator_written = 0
     curator_skipped = 0
     downloads_copied = 0
@@ -1312,15 +1306,7 @@ def main() -> None:
                 work_body = f"{{% include work_prose/{wid}.md %}}\n"
 
             work_page_content = build_front_matter(work_page_fm) + "\n" + work_body
-            print_page_content = build_front_matter(canonical_work_fm) + "\n" + work_body
-
             out_path = out_dir / f"{wid}.md"
-            print_path = print_out_dir / f"{wid}.md"
-            works_print_idx = works_hi.get("works_print")
-            works_print_value = None
-            if works_print_idx is not None and works_print_idx < len(r):
-                works_print_value = r[works_print_idx]
-            works_print = normalize_status(works_print_value) == "yes"
 
             def write_page(path: Path, label: str, page_content: str) -> bool:
                 exists = path.exists()
@@ -1378,12 +1364,6 @@ def main() -> None:
                 else:
                     skipped += 1
 
-                if works_print:
-                    if write_page(print_path, "print", print_page_content):
-                        print_written += 1
-                    else:
-                        print_skipped += 1
-
             if run_works_curator_pages:
                 curator_field_defs: List[tuple[str, List[str], Any]] = [
                     ("title", ["title"], coerce_string),
@@ -1399,7 +1379,6 @@ def main() -> None:
                     ("medium_caption", ["medium_caption"], coerce_string),
                     ("duration", ["duration"], coerce_string),
                     ("depth_cm", ["depth_cm"], coerce_numeric),
-                    ("works_print", ["works_print"], coerce_string),
                     ("has_primary_2400", ["has_primary_2400"], coerce_presence_bool),
                     ("download", ["download"], coerce_string),
                     ("provenance", ["provenance"], coerce_string),
@@ -1438,7 +1417,6 @@ def main() -> None:
                     "medium_caption",
                     "duration",
                     "depth_cm",
-                    "works_print",
                     "has_primary_2400",
                     "download",
                     "provenance",
@@ -1500,8 +1478,8 @@ def main() -> None:
     if run_works_loop:
         print(
             f"\nDone. {'Would write' if not args.write else 'Wrote'}: "
-            f"{written} works, {print_written} print, {curator_written} works-curator."
-            f" Skipped: {skipped} works, {print_skipped} print, {curator_skipped} works-curator."
+            f"{written} works, {curator_written} works-curator."
+            f" Skipped: {skipped} works, {curator_skipped} works-curator."
         )
         print(
             f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
