@@ -37,6 +37,9 @@ collections:
   series:
     output: true
     permalink: /series/:name/
+  studio_works:
+    output: true
+    permalink: /studio/studio-works/:name/
   studio_series:
     output: true
     permalink: /studio/studio-series/:name/

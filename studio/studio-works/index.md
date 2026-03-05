@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Works Curator
-permalink: /works_curator/
+title: Studio Works
+permalink: /studio/studio-works/
 section: works
 ---
 <div class="index worksList worksList--curator" id="worksCuratorRoot" hidden>
