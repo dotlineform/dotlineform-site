@@ -46,23 +46,29 @@ If you later serve images only from external media_base (CDN/R2), this check won
   {%- assign src2400 = src2400 | relative_url -%}
 {%- endunless -%}
 
-<article class="page work">
+<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}">
 
-  <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+  <h1 class="visually-hidden" id="workTitleHidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
   <figure class="page__media">
     <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
     <a class="page__mediaLink"
+      id="workMediaLink"
       href="{{ full_src }}" target="_blank" rel="noopener"
       style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
       <img
         class="page__mediaImg"
+        id="workPrimaryImg"
         src="{{ src1600 }}"
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
           {{ src1600 }} 1600w{% if has_2400 %},
           {{ src2400 }} 2400w{% endif %}"
+        data-src-800="{{ src800 | escape }}"
+        data-src-1200="{{ src1200 | escape }}"
+        data-src-1600="{{ src1600 | escape }}"
+        data-src-2400="{{ src2400 | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: 'Artwork' | escape }}"
         loading="eager"
@@ -78,7 +84,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     <div class="page__caption">
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
-          <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          <span id="workTitleMainText">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
         </span>
         {% comment %}
         Series navigation:
@@ -88,7 +94,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         {% endcomment %}
         <nav class="seriesNav seriesNav--title" id="seriesNav"
             aria-label="Series navigation"
-            data-work-id="{{ page.work_id | escape }}"
+            data-work-id="{{ wid | escape }}"
             data-series="{{ page.series_id | default: '' | escape }}"
             data-baseurl="{{ site.baseurl | default: '' }}"
             hidden>
@@ -98,67 +104,76 @@ If you later serve images only from external media_base (CDN/R2), this check won
         </nav>
       </div>
 
-      {% if page.year_display %}
-        <div class="page__row">{{ page.year_display }}</div>
-      {% endif %}
+      {% assign year_display_initial = page.year_display | default: page.year %}
+      <div class="page__row" id="workYearRow"{% if year_display_initial == blank %} hidden{% endif %}>
+        <span id="workYearText">{{ year_display_initial }}</span>
+      </div>
 
-      {% if page.medium_caption %}
-        <div class="page__row">{{ page.medium_caption }}</div>
-      {% endif %}
+      {% assign medium_caption_initial = page.medium_caption | default: "" | strip %}
+      <div class="page__row" id="workMediumRow"{% if medium_caption_initial == "" %} hidden{% endif %}>
+        <span id="workMediumText">{{ medium_caption_initial }}</span>
+      </div>
 
-      {% if page.duration %}
-        <div class="page__row">{{ page.duration }}</div>
-      {% endif %}
+      {% assign duration_initial = page.duration | default: "" | strip %}
+      <div class="page__row" id="workDurationRow"{% if duration_initial == "" %} hidden{% endif %}>
+        <span id="workDurationText">{{ duration_initial }}</span>
+      </div>
 
-      {% if page.vimeo_url or page.youtube_url or page.bandcamp_url %}
-        <div class="page__row">
-          published on
-          {% assign published_sep = "" %}
-          {% if page.vimeo_url %}
-            {{ published_sep }}<a href="{{ page.vimeo_url }}" target="_blank" rel="noopener">Vimeo</a>
-            {% assign published_sep = ", " %}
-          {% endif %}
-          {% if page.youtube_url %}
-            {{ published_sep }}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener">YouTube</a>
-            {% assign published_sep = ", " %}
-          {% endif %}
-          {% if page.bandcamp_url %}
-            {{ published_sep }}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener">Bandcamp</a>
-          {% endif %}
-        </div>
-      {% endif %}
-
-      {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
-      {% if medium_type_norm != "music" %}
-        {% if page.height_cm or page.width_cm or page.depth_cm %}
-          <div class="page__row">
-            {% if page.height_cm and page.width_cm %}
-              {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm %} × {{ page.depth_cm }}{% endif %} cm
-            {% elsif page.height_cm %}
-              {{ page.height_cm }} cm
-            {% elsif page.width_cm %}
-              {{ page.width_cm }} cm
-            {% endif %}
-          </div>
+      {% capture published_links_initial %}
+        {% assign published_sep = "" %}
+        {% if page.vimeo_url %}
+          {{ published_sep }}<a href="{{ page.vimeo_url }}" target="_blank" rel="noopener">Vimeo</a>
+          {% assign published_sep = ", " %}
         {% endif %}
-      {% endif %}
-
-      {% if page.work_id %}
-        {% if page.download %}
-          {% assign download_href = '/assets/works/files/' | append: page.work_id | append: '-' | append: page.download %}
-          <div class="page__row">
-            download <a href="{{ download_href | relative_url }}" target="_blank" rel="noopener">{{ page.download }}</a>
-          </div>
+        {% if page.youtube_url %}
+          {{ published_sep }}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener">YouTube</a>
+          {% assign published_sep = ", " %}
         {% endif %}
-        <div class="page__row">
-          cat. {{ page.work_id }}
-          {% if page.series_id %}
-            {% assign series_href = "/series/" | append: page.series_id | append: "/" %}
-            {% assign series_label = page.series_title | default: page.series_id %}
-            <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ series_href | relative_url }}">{{ series_label }}</a></span>
+        {% if page.bandcamp_url %}
+          {{ published_sep }}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener">Bandcamp</a>
+        {% endif %}
+      {% endcapture %}
+      {% assign published_links_initial = published_links_initial | strip %}
+      <div class="page__row" id="workPublishedRow"{% if published_links_initial == "" %} hidden{% endif %}>
+        published on <span id="workPublishedLinks">{{ published_links_initial }}</span>
+      </div>
+
+      {% capture dimensions_initial %}
+        {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
+        {% if medium_type_norm != "music" %}
+          {% if page.height_cm and page.width_cm %}
+            {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm and page.depth_cm > 0 %} × {{ page.depth_cm }}{% endif %} cm
+          {% elsif page.height_cm %}
+            {{ page.height_cm }} cm
+          {% elsif page.width_cm %}
+            {{ page.width_cm }} cm
           {% endif %}
-        </div>
+        {% endif %}
+      {% endcapture %}
+      {% assign dimensions_initial = dimensions_initial | strip %}
+      <div class="page__row" id="workDimensionsRow"{% if dimensions_initial == "" %} hidden{% endif %}>
+        <span id="workDimensionsText">{{ dimensions_initial }}</span>
+      </div>
+
+      {% assign work_id_initial = page.work_id | default: wid %}
+      {% assign download_name_initial = page.download | default: "" | strip %}
+      {% assign download_href_initial = "" %}
+      {% if work_id_initial and download_name_initial != "" %}
+        {% assign download_href_initial = '/assets/works/files/' | append: work_id_initial | append: '-' | append: download_name_initial | relative_url %}
       {% endif %}
+      <div class="page__row" id="workDownloadRow"{% if download_href_initial == "" %} hidden{% endif %}>
+        download <a id="workDownloadLink" href="{{ download_href_initial }}" target="_blank" rel="noopener">{{ download_name_initial }}</a>
+      </div>
+
+      {% assign series_href_initial = '/series/' %}
+      {% if page.series_id %}
+        {% assign series_href_initial = '/series/' | append: page.series_id | append: '/' %}
+      {% endif %}
+      {% assign series_label_initial = page.series_title | default: page.series_id | default: "" %}
+      <div class="page__row" id="workCatRow">
+        cat. <span id="workCatId">{{ work_id_initial }}</span>
+        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ series_href_initial | relative_url }}">{{ series_label_initial }}</a></span>
+      </div>
     </div>
   </section>
 
@@ -195,6 +210,244 @@ If you later serve images only from external media_base (CDN/R2), this check won
 
 </article>
 
+<script>
+  (function () {
+    if (window.__dlfGetWorkRecord) return;
+    var cache = {};
+    window.__dlfGetWorkRecord = function (workId, baseurl) {
+      var widLocal = String(workId || '').trim();
+      if (!widLocal) return Promise.resolve(null);
+      if (cache[widLocal]) return cache[widLocal];
+      var base = String(baseurl || '').replace(/\/$/, '');
+      var url = base + '/assets/works/index/' + encodeURIComponent(widLocal) + '.json';
+      cache[widLocal] = fetch(url, { cache: 'default' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        })
+        .catch(function () {
+          return null;
+        });
+      return cache[widLocal];
+    };
+  })();
+</script>
+<script>
+  (function () {
+    var root = document.getElementById('workPageRoot');
+    if (!root) return;
+
+    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var workId = String(root.getAttribute('data-work-id') || '').trim();
+    if (!workId) return;
+
+    var fallback = {
+      work_id: {{ wid | jsonify }},
+      title: {{ title_txt | jsonify }},
+      year: {{ page.year | jsonify }},
+      year_display: {{ page.year_display | jsonify }},
+      series_id: {{ page.series_id | jsonify }},
+      series_title: {{ page.series_title | jsonify }},
+      medium_type: {{ page.medium_type | jsonify }},
+      medium_caption: {{ page.medium_caption | jsonify }},
+      duration: {{ page.duration | jsonify }},
+      vimeo_url: {{ page.vimeo_url | jsonify }},
+      youtube_url: {{ page.youtube_url | jsonify }},
+      bandcamp_url: {{ page.bandcamp_url | jsonify }},
+      height_cm: {{ page.height_cm | jsonify }},
+      width_cm: {{ page.width_cm | jsonify }},
+      depth_cm: {{ page.depth_cm | jsonify }},
+      download: {{ page.download | jsonify }},
+      has_primary_2400: {{ page.has_primary_2400 | default: false | jsonify }}
+    };
+
+    function text(v) {
+      return String(v == null ? '' : v).trim();
+    }
+
+    function escAttr(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function toNumber(v) {
+      var n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function boolish(v) {
+      if (v === true) return true;
+      if (v === false) return false;
+      return text(v).toLowerCase() === 'true';
+    }
+
+    function setRowText(rowId, textId, value) {
+      var row = document.getElementById(rowId);
+      var textEl = document.getElementById(textId);
+      if (!row || !textEl) return;
+      var out = text(value);
+      if (!out) {
+        row.hidden = true;
+        textEl.textContent = '';
+        return;
+      }
+      textEl.textContent = out;
+      row.hidden = false;
+    }
+
+    function dimensionsText(meta) {
+      var mediumType = text(meta && meta.medium_type).toLowerCase();
+      if (mediumType === 'music') return '';
+      var h = toNumber(meta && meta.height_cm);
+      var w = toNumber(meta && meta.width_cm);
+      var d = toNumber(meta && meta.depth_cm);
+      if (h != null && w != null) {
+        var base = String(h) + ' × ' + String(w);
+        if (d != null && d > 0) base += ' × ' + String(d);
+        return base + ' cm';
+      }
+      if (h != null) return String(h) + ' cm';
+      if (w != null) return String(w) + ' cm';
+      return '';
+    }
+
+    function publishedHtml(meta) {
+      var links = [];
+      var vimeo = text(meta && meta.vimeo_url);
+      var youtube = text(meta && meta.youtube_url);
+      var bandcamp = text(meta && meta.bandcamp_url);
+      if (vimeo) links.push('<a href="' + escAttr(vimeo) + '" target="_blank" rel="noopener">Vimeo</a>');
+      if (youtube) links.push('<a href="' + escAttr(youtube) + '" target="_blank" rel="noopener">YouTube</a>');
+      if (bandcamp) links.push('<a href="' + escAttr(bandcamp) + '" target="_blank" rel="noopener">Bandcamp</a>');
+      return links.join(', ');
+    }
+
+    function updateMedia(meta) {
+      var mediaLink = document.getElementById('workMediaLink');
+      var img = document.getElementById('workPrimaryImg');
+      if (!mediaLink || !img) return;
+
+      var width = toNumber(meta && meta.width_cm);
+      var height = toNumber(meta && meta.height_cm);
+      if (width != null && height != null && width > 0 && height > 0) {
+        mediaLink.style.setProperty('--work-ar', String(width) + ' / ' + String(height));
+      }
+
+      var src800 = text(img.getAttribute('data-src-800'));
+      var src1200 = text(img.getAttribute('data-src-1200'));
+      var src1600 = text(img.getAttribute('data-src-1600'));
+      var src2400 = text(img.getAttribute('data-src-2400'));
+      if (!src1600) return;
+
+      var has2400 = boolish(meta && meta.has_primary_2400);
+      var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
+      if (has2400 && src2400) srcset.push(src2400 + ' 2400w');
+      img.setAttribute('src', src1600);
+      img.setAttribute('srcset', srcset.join(', '));
+      mediaLink.setAttribute('href', (has2400 && src2400) ? src2400 : src1600);
+    }
+
+    function applyMetadata(meta) {
+      var record = meta || {};
+      var currentWorkId = text(record.work_id) || workId;
+      var title = text(record.title) || currentWorkId || 'Untitled';
+      var yearDisplay = text(record.year_display) || text(record.year);
+      var mediumCaption = text(record.medium_caption);
+      var duration = text(record.duration);
+      var downloadName = text(record.download);
+      var seriesId = text(record.series_id).toLowerCase();
+      var seriesLabel = text(record.series_title) || seriesId;
+
+      var hiddenTitle = document.getElementById('workTitleHidden');
+      var mainTitle = document.getElementById('workTitleMainText');
+      var img = document.getElementById('workPrimaryImg');
+      if (hiddenTitle) hiddenTitle.textContent = title;
+      if (mainTitle) mainTitle.textContent = title;
+      if (img) img.setAttribute('alt', title || 'Artwork');
+
+      setRowText('workYearRow', 'workYearText', yearDisplay);
+      setRowText('workMediumRow', 'workMediumText', mediumCaption);
+      setRowText('workDurationRow', 'workDurationText', duration);
+      setRowText('workDimensionsRow', 'workDimensionsText', dimensionsText(record));
+
+      var publishedRow = document.getElementById('workPublishedRow');
+      var publishedLinks = document.getElementById('workPublishedLinks');
+      if (publishedRow && publishedLinks) {
+        var linksHtml = publishedHtml(record);
+        if (linksHtml) {
+          publishedLinks.innerHTML = linksHtml;
+          publishedRow.hidden = false;
+        } else {
+          publishedLinks.textContent = '';
+          publishedRow.hidden = true;
+        }
+      }
+
+      var catId = document.getElementById('workCatId');
+      if (catId) catId.textContent = currentWorkId;
+
+      var downloadRow = document.getElementById('workDownloadRow');
+      var downloadLink = document.getElementById('workDownloadLink');
+      if (downloadRow && downloadLink) {
+        if (downloadName && currentWorkId) {
+          downloadRow.hidden = false;
+          downloadLink.textContent = downloadName;
+          downloadLink.setAttribute('href', baseurl + '/assets/works/files/' + encodeURIComponent(currentWorkId + '-' + downloadName));
+        } else {
+          downloadRow.hidden = true;
+          downloadLink.textContent = '';
+          downloadLink.removeAttribute('href');
+        }
+      }
+
+      var seriesLink = document.getElementById('workSeriesLink');
+      if (seriesLink) {
+        if (seriesId) {
+          seriesLink.textContent = seriesLabel || seriesId;
+          seriesLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(seriesId) + '/');
+        } else {
+          seriesLink.textContent = '';
+          seriesLink.setAttribute('href', baseurl + '/series/');
+        }
+      }
+
+      var nav = document.getElementById('seriesNav');
+      if (nav) {
+        nav.setAttribute('data-work-id', currentWorkId);
+        nav.setAttribute('data-series', seriesId);
+      }
+
+      var backLink = document.getElementById('pageBackLink');
+      if (backLink && seriesLabel) {
+        backLink.setAttribute('data-series-label', seriesLabel);
+        var params = new URLSearchParams(window.location.search);
+        var currentSeries = text(params.get('series')).toLowerCase();
+        if (currentSeries && currentSeries === seriesId) {
+          backLink.textContent = '← ' + seriesLabel;
+        }
+      }
+
+      updateMedia(record);
+    }
+
+    applyMetadata(fallback);
+    window.__dlfGetWorkRecord(workId, baseurl)
+      .then(function (payload) {
+        var work = (payload && payload.work && typeof payload.work === 'object') ? payload.work : null;
+        if (!work) return;
+        var merged = {};
+        var key;
+        for (key in fallback) merged[key] = fallback[key];
+        for (key in work) merged[key] = work[key];
+        applyMetadata(merged);
+      })
+      .catch(function () {
+      });
+  })();
+</script>
 <script>
   (function () {
     var link = document.getElementById('pageBackLink');
@@ -265,10 +518,21 @@ If you later serve images only from external media_base (CDN/R2), this check won
     }
     var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
     if (!hasDetailsJson) return;
-    var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
     // Site-level toggle: when true, hash-based back-links from detail pages scroll
     // to the corresponding details section after async JSON content is inserted.
     var enableHashScroll = String(section.getAttribute('data-enable-hash-scroll') || 'true') !== 'false';
+
+    function loadWorkPayload() {
+      if (typeof window.__dlfGetWorkRecord === 'function') {
+        return window.__dlfGetWorkRecord(workId, baseurl);
+      }
+      var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(workId) + '.json';
+      return fetch(jsonUrl, { cache: 'default' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        });
+    }
 
     function esc(s) {
       return String(s == null ? '' : s)
@@ -350,12 +614,11 @@ If you later serve images only from external media_base (CDN/R2), this check won
       group.el.innerHTML = html;
     }
 
-    fetch(jsonUrl, { cache: 'default' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
+    loadWorkPayload()
       .then(function (data) {
+        var work = (data && data.work && typeof data.work === 'object') ? data.work : null;
+        var payloadTitle = String((work && work.title) || '').trim();
+        if (payloadTitle) workTitle = payloadTitle;
         var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
         if (!sections.length) return;
 
