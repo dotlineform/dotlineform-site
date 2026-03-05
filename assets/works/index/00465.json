@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v1",
-    "version": "blake2b-3cc0dde45422d50573db90fe073f5561",
-    "generated_at_utc": "2026-03-04T22:22:33Z",
+    "version": "blake2b-a2fd0776c1ba2da4d552b4b00fd3b43a",
+    "generated_at_utc": "2026-03-05T13:26:59Z",
     "work_id": "00465",
     "count": 3,
-    "hash": "blake2b-e0a685df2152dc7c350feb530508ab6b",
+    "hash": "blake2b-f0a382231cac2745a7d0eac5ff4efc9f",
     "work_checksum": "blake2b-af97a9855b66c388e0dcba8393c74b27",
-    "details_checksum": "blake2b-e0a685df2152dc7c350feb530508ab6b",
-    "record_checksum": "blake2b-3cc0dde45422d50573db90fe073f5561"
+    "details_checksum": "blake2b-f0a382231cac2745a7d0eac5ff4efc9f",
+    "record_checksum": "blake2b-a2fd0776c1ba2da4d552b4b00fd3b43a"
   },
   "work": {
     "work_id": "00465",
@@ -41,40 +41,40 @@
           "work_id": "00465",
           "detail_id": "001",
           "detail_uid": "00465-001",
-          "title": "forests (2023) - forest 1 - detail 1",
-          "title_sort": "forests (2023) - forest 001 - detail 001",
+          "title": "forest 1 - detail 1",
+          "title_sort": "forest 001 - detail 001",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
           "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f44d16521500b2449b244fb177ed991d"
+          "checksum": "caba3e38e66bd591684433edfd049ca7"
         },
         {
           "work_id": "00465",
           "detail_id": "002",
           "detail_uid": "00465-002",
-          "title": "forests (2023) - forest 1 - detail 2",
-          "title_sort": "forests (2023) - forest 001 - detail 002",
+          "title": "forest 1 - detail 2",
+          "title_sort": "forest 001 - detail 002",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
           "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2961da7988b961f37d9d8fa173b40fb2"
+          "checksum": "78636458062c5e61c1224f8b92d8be98"
         },
         {
           "work_id": "00465",
           "detail_id": "003",
           "detail_uid": "00465-003",
-          "title": "forests (2023) - forest 1 - detail 3",
-          "title_sort": "forests (2023) - forest 001 - detail 003",
+          "title": "forest 1 - detail 3",
+          "title_sort": "forest 001 - detail 003",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
           "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "54ac83ec3d713e654affe6405142b9ed"
+          "checksum": "fd0b841187a86c34cd3c477591ea985a"
         }
       ]
     }

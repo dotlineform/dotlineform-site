@@ -1,7 +1,7 @@
 # Audit Report
 
-- Run at: `2026-03-05T13:23:32+00:00`
-- Duration: `51ms`
+- Run at: `2026-03-05T13:27:06+00:00`
+- Duration: `44ms`
 - Checks: `cross_refs, schema`
 - Errors: `0`
 - Warnings: `0`

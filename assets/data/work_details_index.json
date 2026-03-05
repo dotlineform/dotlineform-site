@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_details_index_v1",
-    "version": "blake2b-4f9a4ee4e3655128c4d3d2b09dbce791",
-    "generated_at_utc": "2026-03-05T12:52:46Z",
+    "version": "blake2b-2abbe48ab62f5b4aef0c4a85ec949692",
+    "generated_at_utc": "2026-03-05T13:26:59Z",
     "count": 530
   },
   "details": {
@@ -4170,151 +4170,151 @@
       "detail_uid": "00465-001",
       "work_id": "00465",
       "detail_id": "001",
-      "title": "forests (2023) - forest 1 - detail 1",
-      "title_sort": "forests (2023) - forest 001 - detail 001",
+      "title": "forest 1 - detail 1",
+      "title_sort": "forest 001 - detail 001",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-f44d16521500b2449b244fb177ed991d"
+      "detail_checksum": "blake2b-caba3e38e66bd591684433edfd049ca7"
     },
     "00465-002": {
       "detail_uid": "00465-002",
       "work_id": "00465",
       "detail_id": "002",
-      "title": "forests (2023) - forest 1 - detail 2",
-      "title_sort": "forests (2023) - forest 001 - detail 002",
+      "title": "forest 1 - detail 2",
+      "title_sort": "forest 001 - detail 002",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-2961da7988b961f37d9d8fa173b40fb2"
+      "detail_checksum": "blake2b-78636458062c5e61c1224f8b92d8be98"
     },
     "00465-003": {
       "detail_uid": "00465-003",
       "work_id": "00465",
       "detail_id": "003",
-      "title": "forests (2023) - forest 1 - detail 3",
-      "title_sort": "forests (2023) - forest 001 - detail 003",
+      "title": "forest 1 - detail 3",
+      "title_sort": "forest 001 - detail 003",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-54ac83ec3d713e654affe6405142b9ed"
+      "detail_checksum": "blake2b-fd0b841187a86c34cd3c477591ea985a"
     },
     "00466-001": {
       "detail_uid": "00466-001",
       "work_id": "00466",
       "detail_id": "001",
-      "title": "forests (2023) - forest 2 - detail 1",
-      "title_sort": "forests (2023) - forest 002 - detail 001",
+      "title": "forest 2 - detail 1",
+      "title_sort": "forest 002 - detail 001",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-6f97df334c1f839f7df616aeb1eb14d9"
+      "detail_checksum": "blake2b-2a9782b0f26dbe3d22bfd2294787239d"
     },
     "00466-002": {
       "detail_uid": "00466-002",
       "work_id": "00466",
       "detail_id": "002",
-      "title": "forests (2023) - forest 2 - detail 2",
-      "title_sort": "forests (2023) - forest 002 - detail 002",
+      "title": "forest 2 - detail 2",
+      "title_sort": "forest 002 - detail 002",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-faa0bb15b3cd1c65be2f0a03fe727616"
+      "detail_checksum": "blake2b-e32a5735395bae69889c651398254160"
     },
     "00466-003": {
       "detail_uid": "00466-003",
       "work_id": "00466",
       "detail_id": "003",
-      "title": "forests (2023) - forest 2 - detail 3",
-      "title_sort": "forests (2023) - forest 002 - detail 003",
+      "title": "forest 2 - detail 3",
+      "title_sort": "forest 002 - detail 003",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-b9ff8859b36aea4c93b1f10f6a192eb2"
+      "detail_checksum": "blake2b-c4795805614bcb6b55031d6cba9a71d5"
     },
     "00467-001": {
       "detail_uid": "00467-001",
       "work_id": "00467",
       "detail_id": "001",
-      "title": "forests (2023) - forest 3 - detail 1",
-      "title_sort": "forests (2023) - forest 003 - detail 001",
+      "title": "forest 3 - detail 1",
+      "title_sort": "forest 003 - detail 001",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-9a567fe94961de1bef3f263d892b2834"
+      "detail_checksum": "blake2b-af19789de9d02dc6911adfb79b00531f"
     },
     "00467-002": {
       "detail_uid": "00467-002",
       "work_id": "00467",
       "detail_id": "002",
-      "title": "forests (2023) - forest 3 - detail 2",
-      "title_sort": "forests (2023) - forest 003 - detail 002",
+      "title": "forest 3 - detail 2",
+      "title_sort": "forest 003 - detail 002",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-7919e29537a568ccc29e7efbe646f65d"
+      "detail_checksum": "blake2b-80f1a8d7109f8b2a86f5629f2d079fea"
     },
     "00467-003": {
       "detail_uid": "00467-003",
       "work_id": "00467",
       "detail_id": "003",
-      "title": "forests (2023) - forest 3 - detail 3",
-      "title_sort": "forests (2023) - forest 003 - detail 003",
+      "title": "forest 3 - detail 3",
+      "title_sort": "forest 003 - detail 003",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-b270eb9b04ccc97bbc33a5eed5422773"
+      "detail_checksum": "blake2b-83312ce0cd413b8c909606d50a7ea14f"
     },
     "00468-001": {
       "detail_uid": "00468-001",
       "work_id": "00468",
       "detail_id": "001",
-      "title": "forests (2023) - forest 4 - detail 1",
-      "title_sort": "forests (2023) - forest 004 - detail 001",
+      "title": "forest 4 - detail 1",
+      "title_sort": "forest 004 - detail 001",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-c2a2ecd2de5b2fbb7c3520ec4a58e8e1"
+      "detail_checksum": "blake2b-9de056f465cbc5cee84130050fa3f0b9"
     },
     "00468-002": {
       "detail_uid": "00468-002",
       "work_id": "00468",
       "detail_id": "002",
-      "title": "forests (2023) - forest 4 - detail 2",
-      "title_sort": "forests (2023) - forest 004 - detail 002",
+      "title": "forest 4 - detail 2",
+      "title_sort": "forest 004 - detail 002",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-d5efb07270955792e797bc9050f25004"
+      "detail_checksum": "blake2b-e17f731f5c1e215a0dddb970671c98ec"
     },
     "00468-003": {
       "detail_uid": "00468-003",
       "work_id": "00468",
       "detail_id": "003",
-      "title": "forests (2023) - forest 4 - detail 3",
-      "title_sort": "forests (2023) - forest 004 - detail 003",
+      "title": "forest 4 - detail 3",
+      "title_sort": "forest 004 - detail 003",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-7e2994fb1bebb94739352147a3d2a91e"
+      "detail_checksum": "blake2b-6e9e7d1cef8cd98f4262cabcddd52647"
     },
     "00468-004": {
       "detail_uid": "00468-004",
       "work_id": "00468",
       "detail_id": "004",
-      "title": "forests (2023) - forest 4 - detail 4",
-      "title_sort": "forests (2023) - forest 004 - detail 004",
+      "title": "forest 4 - detail 4",
+      "title_sort": "forest 004 - detail 004",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-0eefb643a53e1f5a0f8a8d337f5e77ff"
+      "detail_checksum": "blake2b-315f72198a7f74415ee9cf544a58b947"
     },
     "00468-005": {
       "detail_uid": "00468-005",
       "work_id": "00468",
       "detail_id": "005",
-      "title": "forests (2023) - forest 4 - detail 5",
-      "title_sort": "forests (2023) - forest 004 - detail 005",
+      "title": "forest 4 - detail 5",
+      "title_sort": "forest 004 - detail 005",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-d9715bc61cc036483f4e9dae66662424"
+      "detail_checksum": "blake2b-468dcbdc630db5ef484c012f912d9ad4"
     },
     "00468-006": {
       "detail_uid": "00468-006",
       "work_id": "00468",
       "detail_id": "006",
-      "title": "forests (2023) - forest 4 - detail 6",
-      "title_sort": "forests (2023) - forest 004 - detail 006",
+      "title": "forest 4 - detail 6",
+      "title_sort": "forest 004 - detail 006",
       "project_subfolder": "details",
       "section_id": "details",
-      "detail_checksum": "blake2b-11167b28d7310b406ffb91f68f19bdf0"
+      "detail_checksum": "blake2b-87d0c1108e2d20c758818aafb9a9c96c"
     },
     "00469-001": {
       "detail_uid": "00469-001",

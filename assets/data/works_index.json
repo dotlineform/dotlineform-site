@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v1",
-    "version": "blake2b-34d4cb1d934da275e00a7dc4403bd430",
-    "generated_at_utc": "2026-03-05T12:52:46Z",
+    "version": "blake2b-068211ac607e31ee54b1043b6b75d8d9",
+    "generated_at_utc": "2026-03-05T13:26:59Z",
     "count": 494
   },
   "works": {
@@ -8250,7 +8250,7 @@
       "has_details": true,
       "details_count": 3,
       "work_checksum": "blake2b-af97a9855b66c388e0dcba8393c74b27",
-      "details_checksum": "blake2b-e0a685df2152dc7c350feb530508ab6b"
+      "details_checksum": "blake2b-f0a382231cac2745a7d0eac5ff4efc9f"
     },
     "00466": {
       "work_id": "00466",
@@ -8269,7 +8269,7 @@
       "has_details": true,
       "details_count": 3,
       "work_checksum": "blake2b-b08fd6be1e37524874c7e63d366bdfe6",
-      "details_checksum": "blake2b-4015484a30f5dcd959e9fa58156be1f7"
+      "details_checksum": "blake2b-229e2beba4d7b33aaded3e1f28486f55"
     },
     "00467": {
       "work_id": "00467",
@@ -8288,7 +8288,7 @@
       "has_details": true,
       "details_count": 3,
       "work_checksum": "blake2b-fd57930d6a4fd8022f7752935c6c7fe3",
-      "details_checksum": "blake2b-44afc869b4f927d1eb06a8bb3a69636e"
+      "details_checksum": "blake2b-e977a4151e60cbb84cd9936ce1b3ac24"
     },
     "00468": {
       "work_id": "00468",
@@ -8307,7 +8307,7 @@
       "has_details": true,
       "details_count": 6,
       "work_checksum": "blake2b-54b86bd12a94dcdbe4255aa251484f0e",
-      "details_checksum": "blake2b-c54a452697f2efa9a6ec2780f93249f9"
+      "details_checksum": "blake2b-b336179826f8c45c873a3b593b92a81d"
     },
     "00469": {
       "work_id": "00469",
