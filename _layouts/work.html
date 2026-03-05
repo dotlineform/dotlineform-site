@@ -419,6 +419,12 @@ If you later serve images only from external media_base (CDN/R2), this check won
         nav.setAttribute('data-work-id', currentWorkId);
         nav.setAttribute('data-series', seriesId);
       }
+      try {
+        document.dispatchEvent(new CustomEvent('dlf:work-metadata-applied', {
+          detail: { work_id: currentWorkId, series_id: seriesId }
+        }));
+      } catch (e) {
+      }
 
       var backLink = document.getElementById('pageBackLink');
       if (backLink && seriesLabel) {

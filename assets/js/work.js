@@ -19,8 +19,7 @@
   var prevA = document.getElementById('seriesNavPrev');
   var nextA = document.getElementById('seriesNavNext');
   var counterEl = document.getElementById('seriesNavCounter');
-  var pageSeriesId = (nav && nav.dataset) ? String(nav.dataset.series || '').trim() : '';
-  var currentId = (nav && nav.dataset) ? String(nav.dataset.workId || '').trim() : '';
+  var seriesIndexData = null;
 
   function fetchJson(url) {
     return fetch(url, { cache: 'default' })
@@ -47,7 +46,7 @@
     seriesLinkWrap.hidden = ids.length <= 1;
   }
 
-  function configureNav(ids) {
+  function configureNav(ids, currentId) {
     if (!nav || !prevA || !nextA || !seriesFromQuery || !currentId) return;
     var i = ids.indexOf(currentId);
     if (i === -1 || ids.length < 2) {
@@ -71,23 +70,38 @@
     nav.hidden = false;
   }
 
+  function refreshFromCurrentMeta() {
+    if (!seriesIndexData) return;
+    var pageSeriesId = (nav && nav.dataset) ? String(nav.dataset.series || '').trim() : '';
+    var currentId = (nav && nav.dataset) ? String(nav.dataset.workId || '').trim() : '';
+    if (pageSeriesId) {
+      setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
+    } else if (seriesLinkWrap) {
+      seriesLinkWrap.hidden = true;
+    }
+    if (!seriesFromQuery) {
+      if (nav) nav.hidden = true;
+      return;
+    }
+    var idsForNav = extractSeriesIndexIds(seriesIndexData, seriesFromQuery);
+    configureNav(idsForNav, currentId);
+  }
+
   var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
   fetchJson(seriesIndexUrl)
-    .then(function (seriesIndexData) {
-      if (pageSeriesId) {
-        setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
-      }
-      if (!seriesFromQuery) {
-        if (nav) nav.hidden = true;
-        return;
-      }
-      var idsForNav = extractSeriesIndexIds(seriesIndexData, seriesFromQuery);
-      configureNav(idsForNav);
+    .then(function (data) {
+      seriesIndexData = data;
+      // Local cache for fast refresh when work metadata is re-hydrated from JSON.
+      refreshFromCurrentMeta();
     })
     .catch(function () {
       if (seriesLinkWrap) seriesLinkWrap.hidden = true;
       if (nav) nav.hidden = true;
     });
+
+  document.addEventListener('dlf:work-metadata-applied', function () {
+    refreshFromCurrentMeta();
+  });
 })();
 
 (function () {
