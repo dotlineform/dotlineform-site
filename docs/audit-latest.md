@@ -1,7 +1,7 @@
 # Audit Report
 
-- Run at: `2026-03-05T10:22:22+00:00`
-- Duration: `78ms`
+- Run at: `2026-03-05T10:36:25+00:00`
+- Duration: `79ms`
 - Checks: `cross_refs, json_schema, links`
 - Errors: `0`
 - Warnings: `2`
@@ -11,7 +11,7 @@
 | flag | value | default? |
 | --- | --- | --- |
 | `--site-root` | `.` | `yes` |
-| `--checks` | `cross_refs,json_schema,links` | `no` |
+| `--checks` | `links,cross_refs,json_schema` | `no` |
 | `--check-only` | `(none)` | `yes` |
 | `--series-ids` | `(empty)` | `yes` |
 | `--work-ids` | `(empty)` | `yes` |

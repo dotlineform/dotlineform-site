@@ -6,8 +6,7 @@ layout: default
 {% assign title_txt = page.title | default: "" | strip %}
 {% assign fallback_work_id = page.work_id | default: "" %}
 {% assign fallback_section = page.project_subfolder | default: "details" | slugify %}
-{% assign fallback_work_doc = site.works | where: "work_id", fallback_work_id | first %}
-{% assign fallback_work_title = fallback_work_doc.title | default: fallback_work_id %}
+{% assign fallback_work_title = page.work_title | default: fallback_work_id %}
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_prefix = site.media_prefix %}
@@ -41,24 +40,38 @@ layout: default
   {%- assign src2400 = src2400 | relative_url -%}
 {%- endunless -%}
 
-<article class="page work">
-  <h1 class="visually-hidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+<article
+  class="page work"
+  id="detailPageRoot"
+  data-baseurl="{{ site.baseurl | default: '' }}"
+  data-detail-uid="{{ detail_uid | escape }}"
+  data-fallback-work-id="{{ fallback_work_id | escape }}"
+  data-fallback-work-title="{{ fallback_work_title | escape }}"
+  data-fallback-section="{{ fallback_section | escape }}"
+>
+  <h1 class="visually-hidden" id="detailHiddenTitle">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
   <figure class="page__media">
     <a
       class="page__mediaLink"
+      id="detailMediaLink"
       href="{{ full_src }}"
       target="_blank"
       rel="noopener"
       style="--work-ar: {{ page.width_px | default: 4 }} / {{ page.height_px | default: 3 }};">
       <img
         class="page__mediaImg"
+        id="detailPrimaryImg"
         src="{{ src1600 }}"
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
           {{ src1600 }} 1600w{% if has_2400 %},
           {{ src2400 }} 2400w{% endif %}"
+        data-src-800="{{ src800 | escape }}"
+        data-src-1200="{{ src1200 | escape }}"
+        data-src-1600="{{ src1600 | escape }}"
+        data-src-2400="{{ src2400 | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: detail_uid | escape }}"
         loading="eager"
@@ -73,7 +86,7 @@ layout: default
     <div class="page__caption">
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
-          <span>{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          <span id="detailTitleText">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
         </span>
         <nav class="seriesNav seriesNav--title" id="detailNav"
             aria-label="Detail navigation"
@@ -88,7 +101,7 @@ layout: default
           <a class="seriesNav__next" id="detailNavNext" href="#">→</a>
         </nav>
       </div>
-      <div class="page__row">cat. {{ detail_uid }}</div>
+      <div class="page__row">cat. <span id="detailCatText">{{ detail_uid }}</span></div>
     </div>
   </section>
 
@@ -107,137 +120,262 @@ layout: default
 
 <script>
   (function () {
+    var root = document.getElementById('detailPageRoot');
     var link = document.getElementById('detailBackLink');
-    if (!link) return;
-
-    var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var fallbackWorkId = String(link.getAttribute('data-fallback-work-id') || '').trim();
-    var fallbackWorkTitle = String(link.getAttribute('data-fallback-work-title') || '').trim();
-    var fallbackSection = String(link.getAttribute('data-fallback-section') || '').trim();
-    var params = new URLSearchParams(window.location.search);
-
-    var fromWork = (params.get('from_work') || fallbackWorkId || '').trim();
-    var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
-    var section = (params.get('section') || fallbackSection || '').trim();
-    var series = (params.get('series') || '').trim();
-    var seriesPageRaw = Number(params.get('series_page') || '0');
-    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
-    var detailsSection = (params.get('details_section') || section || '').trim();
-    var detailsPageRaw = Number(params.get('details_page') || '0');
-    var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
-
-    if (!fromWork) {
-      link.textContent = '← works';
-      link.setAttribute('href', baseurl + '/series/');
-      return;
-    }
-
-    var href = baseurl + '/works/' + encodeURIComponent(fromWork) + '/';
-    var query = [];
-    if (series) query.push('series=' + encodeURIComponent(series));
-    if (seriesPage > 0) query.push('series_page=' + encodeURIComponent(String(seriesPage)));
-    if (detailsSection) query.push('details_section=' + encodeURIComponent(detailsSection));
-    if (detailsPage > 0) query.push('details_page=' + encodeURIComponent(String(detailsPage)));
-    if (query.length) href += '?' + query.join('&');
-    if (section) {
-      href += '#details-' + encodeURIComponent(section);
-    }
-    link.textContent = '← ' + fromWorkTitle;
-    link.setAttribute('href', href);
-  })();
-</script>
-<script>
-  (function () {
     var nav = document.getElementById('detailNav');
+    if (!root || !link || !nav) return;
+
     var titleCounter = document.getElementById('detailTitleCounter');
-    if (!nav) return;
     var prevA = document.getElementById('detailNavPrev');
     var nextA = document.getElementById('detailNavNext');
     if (!prevA || !nextA) return;
 
-    var baseurl = String(nav.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var detailUid = String(nav.getAttribute('data-detail-uid') || '').trim();
-    var fallbackWorkId = String(nav.getAttribute('data-work-id') || '').trim();
-    var fallbackWorkTitle = String(nav.getAttribute('data-work-title') || '').trim();
-    var fallbackSection = String(nav.getAttribute('data-default-section') || '').trim();
+    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var detailUid = String(root.getAttribute('data-detail-uid') || '').trim();
+    var fallbackWorkId = String(root.getAttribute('data-fallback-work-id') || '').trim();
+    var fallbackWorkTitle = String(root.getAttribute('data-fallback-work-title') || '').trim();
+    var fallbackSection = String(root.getAttribute('data-fallback-section') || '').trim();
+    var fallbackTitle = {{ title_txt | jsonify }};
+    var fallbackWidthPx = {{ page.width_px | default: 0 | jsonify }};
+    var fallbackHeightPx = {{ page.height_px | default: 0 | jsonify }};
+    var fallbackHas2400 = {{ page.has_primary_2400 | default: false | jsonify }};
 
     var params = new URLSearchParams(window.location.search);
-    var fromWork = (params.get('from_work') || fallbackWorkId).trim();
-    var fromWorkTitle = (params.get('from_work_title') || fallbackWorkTitle || fromWork).trim();
-    var section = (params.get('section') || fallbackSection).trim();
+    var explicitFromWorkTitle = String(params.get('from_work_title') || '').trim() !== '';
+    var explicitSection = String(params.get('section') || '').trim() !== '';
+    var explicitDetailsSection = String(params.get('details_section') || '').trim() !== '';
+
+    var ctx = {
+      detailUid: detailUid,
+      fromWork: (params.get('from_work') || fallbackWorkId || '').trim(),
+      fromWorkTitle: (params.get('from_work_title') || fallbackWorkTitle || '').trim(),
+      section: (params.get('section') || fallbackSection || '').trim().toLowerCase(),
+      detailsSection: '',
+      detailsPage: 1,
+      series: (params.get('series') || '').trim(),
+      seriesPage: 0,
+      title: String(fallbackTitle || detailUid || 'Untitled').trim(),
+      widthPx: Number(fallbackWidthPx),
+      heightPx: Number(fallbackHeightPx),
+      has2400: fallbackHas2400 === true
+    };
+    if (!ctx.fromWorkTitle) ctx.fromWorkTitle = ctx.fromWork;
+
+    var detailsSectionRaw = String(params.get('details_section') || '').trim().toLowerCase();
+    ctx.detailsSection = detailsSectionRaw || ctx.section;
+    var detailsPageRaw = Number(params.get('details_page') || '0');
+    ctx.detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
+
     var series = (params.get('series') || '').trim();
     var seriesPageRaw = Number(params.get('series_page') || '0');
-    var seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
-    var detailsSection = (params.get('details_section') || section).trim();
-    var detailsPageRaw = Number(params.get('details_page') || '0');
-    var detailsPage = (Number.isFinite(detailsPageRaw) && detailsPageRaw > 0) ? Math.floor(detailsPageRaw) : 1;
-    if (!fromWork) return;
+    ctx.series = series;
+    ctx.seriesPage = (Number.isFinite(seriesPageRaw) && seriesPageRaw > 0) ? Math.floor(seriesPageRaw) : 0;
 
-    var jsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(fromWork) + '.json';
+    function normalize(v) {
+      return String(v == null ? '' : v).trim();
+    }
 
-    function buildHref(uid) {
-      var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(fromWork);
-      if (fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(fromWorkTitle);
-      if (section) href += '&section=' + encodeURIComponent(section);
-      if (series) href += '&series=' + encodeURIComponent(series);
-      if (seriesPage > 0) href += '&series_page=' + encodeURIComponent(String(seriesPage));
-      if (detailsSection) href += '&details_section=' + encodeURIComponent(detailsSection);
-      if (detailsPage > 0) href += '&details_page=' + encodeURIComponent(String(detailsPage));
+    function slug(v) {
+      return normalize(v)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function fetchJson(url) {
+      return fetch(url, { cache: 'default' })
+        .then(function (r) {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        });
+    }
+
+    function updateTitleAndCat() {
+      var hiddenTitle = document.getElementById('detailHiddenTitle');
+      var titleText = document.getElementById('detailTitleText');
+      var catText = document.getElementById('detailCatText');
+      if (hiddenTitle) hiddenTitle.textContent = ctx.title || 'Untitled';
+      if (titleText) titleText.textContent = ctx.title || 'Untitled';
+      if (catText) catText.textContent = ctx.detailUid;
+    }
+
+    function updateMedia() {
+      var mediaLink = document.getElementById('detailMediaLink');
+      var img = document.getElementById('detailPrimaryImg');
+      if (!mediaLink || !img) return;
+
+      if (Number.isFinite(ctx.widthPx) && Number.isFinite(ctx.heightPx) && ctx.widthPx > 0 && ctx.heightPx > 0) {
+        mediaLink.style.setProperty('--work-ar', String(ctx.widthPx) + ' / ' + String(ctx.heightPx));
+      }
+
+      var src800 = normalize(img.getAttribute('data-src-800'));
+      var src1200 = normalize(img.getAttribute('data-src-1200'));
+      var src1600 = normalize(img.getAttribute('data-src-1600'));
+      var src2400 = normalize(img.getAttribute('data-src-2400'));
+      if (!src1600) return;
+
+      var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
+      if (ctx.has2400 && src2400) srcset.push(src2400 + ' 2400w');
+      img.setAttribute('src', src1600);
+      img.setAttribute('srcset', srcset.join(', '));
+      img.setAttribute('alt', ctx.title || ctx.detailUid);
+      mediaLink.setAttribute('href', (ctx.has2400 && src2400) ? src2400 : src1600);
+    }
+
+    function updateBackLink() {
+      if (!ctx.fromWork) {
+        link.textContent = '← works';
+        link.setAttribute('href', baseurl + '/series/');
+        return;
+      }
+      var href = baseurl + '/works/' + encodeURIComponent(ctx.fromWork) + '/';
+      var query = [];
+      if (ctx.series) query.push('series=' + encodeURIComponent(ctx.series));
+      if (ctx.seriesPage > 0) query.push('series_page=' + encodeURIComponent(String(ctx.seriesPage)));
+      if (ctx.detailsSection) query.push('details_section=' + encodeURIComponent(ctx.detailsSection));
+      if (ctx.detailsPage > 0) query.push('details_page=' + encodeURIComponent(String(ctx.detailsPage)));
+      if (query.length) href += '?' + query.join('&');
+      if (ctx.section) href += '#details-' + encodeURIComponent(ctx.section);
+      link.textContent = '← ' + (ctx.fromWorkTitle || ctx.fromWork);
+      link.setAttribute('href', href);
+    }
+
+    function buildDetailHref(uid) {
+      var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(ctx.fromWork);
+      if (ctx.fromWorkTitle) href += '&from_work_title=' + encodeURIComponent(ctx.fromWorkTitle);
+      if (ctx.section) href += '&section=' + encodeURIComponent(ctx.section);
+      if (ctx.series) href += '&series=' + encodeURIComponent(ctx.series);
+      if (ctx.seriesPage > 0) href += '&series_page=' + encodeURIComponent(String(ctx.seriesPage));
+      if (ctx.detailsSection) href += '&details_section=' + encodeURIComponent(ctx.detailsSection);
+      if (ctx.detailsPage > 0) href += '&details_page=' + encodeURIComponent(String(ctx.detailsPage));
       return href;
     }
 
-    fetch(jsonUrl, { cache: 'default' })
-      .then(function (r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
+    function findDetailRecord(workPayload) {
+      var sections = (workPayload && Array.isArray(workPayload.sections)) ? workPayload.sections : [];
+      for (var i = 0; i < sections.length; i += 1) {
+        var sec = sections[i] || {};
+        var details = Array.isArray(sec.details) ? sec.details : [];
+        for (var j = 0; j < details.length; j += 1) {
+          var d = details[j] || {};
+          if (normalize(d.detail_uid) === ctx.detailUid) {
+            return { detail: d, section_id: slug(sec.project_subfolder || 'details') };
+          }
+        }
+      }
+      return { detail: null, section_id: '' };
+    }
+
+    function setNavFromWorkPayload(workPayload) {
+      var sections = (workPayload && Array.isArray(workPayload.sections)) ? workPayload.sections : [];
+      if (!sections.length || !ctx.fromWork) {
+        nav.hidden = true;
+        if (titleCounter) titleCounter.hidden = true;
+        return;
+      }
+
+      var details = [];
+      if (ctx.section) {
+        for (var i = 0; i < sections.length; i += 1) {
+          var sec = sections[i] || {};
+          if (slug(sec.project_subfolder || '') === ctx.section) {
+            details = Array.isArray(sec.details) ? sec.details : [];
+            break;
+          }
+        }
+      }
+      if (!details.length) {
+        for (var s = 0; s < sections.length; s += 1) {
+          var secAll = sections[s] || {};
+          var list = Array.isArray(secAll.details) ? secAll.details : [];
+          for (var d = 0; d < list.length; d += 1) details.push(list[d]);
+        }
+      }
+      var ids = details
+        .map(function (d) { return normalize(d && d.detail_uid); })
+        .filter(Boolean);
+      if (ids.length < 2) {
+        nav.hidden = true;
+        if (titleCounter) titleCounter.hidden = true;
+        return;
+      }
+      var idx = ids.indexOf(ctx.detailUid);
+      if (idx === -1) {
+        nav.hidden = true;
+        if (titleCounter) titleCounter.hidden = true;
+        return;
+      }
+      var prevId = ids[(idx - 1 + ids.length) % ids.length];
+      var nextId = ids[(idx + 1) % ids.length];
+      prevA.href = buildDetailHref(prevId);
+      nextA.href = buildDetailHref(nextId);
+      if (titleCounter) {
+        titleCounter.textContent = String(idx + 1) + '/' + String(ids.length);
+        titleCounter.hidden = false;
+      }
+      nav.hidden = false;
+    }
+
+    updateTitleAndCat();
+    updateMedia();
+    updateBackLink();
+
+    var detailsIndexUrl = baseurl + '/assets/data/work_details_index.json';
+    fetchJson(detailsIndexUrl)
+      .then(function (detailsIndex) {
+        var detailsMap = (detailsIndex && detailsIndex.details && typeof detailsIndex.details === 'object')
+          ? detailsIndex.details
+          : {};
+        var detailRow = detailsMap[ctx.detailUid] || null;
+        if (detailRow) {
+          if (!ctx.fromWork) ctx.fromWork = normalize(detailRow.work_id);
+          if (!explicitSection) ctx.section = normalize(detailRow.section_id).toLowerCase() || ctx.section;
+          if (!explicitDetailsSection) ctx.detailsSection = normalize(detailRow.section_id).toLowerCase() || ctx.detailsSection;
+          var maybeTitle = normalize(detailRow.title);
+          if (maybeTitle) ctx.title = maybeTitle;
+        }
+        if (!ctx.fromWork) return null;
+        var workJsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(ctx.fromWork) + '.json';
+        return fetchJson(workJsonUrl);
       })
-      .then(function (data) {
-        var sections = (data && Array.isArray(data.sections)) ? data.sections : [];
-        if (!sections.length) return;
-
-        var details = [];
-        if (section) {
-          for (var i = 0; i < sections.length; i += 1) {
-            var sec = sections[i] || {};
-            var subfolder = String(sec.project_subfolder || '')
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-+|-+$/g, '');
-            if (subfolder === section) {
-              details = Array.isArray(sec.details) ? sec.details : [];
-              break;
-            }
-          }
+      .then(function (workPayload) {
+        if (!workPayload || typeof workPayload !== 'object') {
+          updateTitleAndCat();
+          updateMedia();
+          updateBackLink();
+          nav.hidden = true;
+          return;
         }
 
-        // Fallback: if section is missing/unmatched, cycle through all details.
-        if (!details.length) {
-          for (var s = 0; s < sections.length; s += 1) {
-            var secAll = sections[s] || {};
-            var list = Array.isArray(secAll.details) ? secAll.details : [];
-            for (var d = 0; d < list.length; d += 1) details.push(list[d]);
-          }
+        var work = (workPayload.work && typeof workPayload.work === 'object') ? workPayload.work : null;
+        var workTitle = normalize(work && work.title);
+        if (!explicitFromWorkTitle && workTitle) {
+          ctx.fromWorkTitle = workTitle;
+        } else if (!ctx.fromWorkTitle) {
+          ctx.fromWorkTitle = workTitle || ctx.fromWork;
         }
 
-        var ids = details
-          .map(function (d) { return d && d.detail_uid ? String(d.detail_uid) : ''; })
-          .filter(Boolean);
-
-        if (ids.length < 2) return;
-        var idx = ids.indexOf(detailUid);
-        if (idx === -1) return;
-        if (titleCounter) {
-          titleCounter.textContent = String(idx + 1) + '/' + String(ids.length);
-          titleCounter.hidden = false;
+        var detailCtx = findDetailRecord(workPayload);
+        var detailRecord = detailCtx.detail;
+        if (detailRecord) {
+          var recordTitle = normalize(detailRecord.title);
+          if (recordTitle) ctx.title = recordTitle;
+          var w = Number(detailRecord.width_px);
+          var h = Number(detailRecord.height_px);
+          if (Number.isFinite(w) && w > 0) ctx.widthPx = w;
+          if (Number.isFinite(h) && h > 0) ctx.heightPx = h;
+          if (detailRecord.has_primary_2400 === true) ctx.has2400 = true;
+          if (!explicitSection && detailCtx.section_id) ctx.section = detailCtx.section_id;
+          if (!explicitDetailsSection && detailCtx.section_id) ctx.detailsSection = detailCtx.section_id;
         }
 
-        var prevId = ids[(idx - 1 + ids.length) % ids.length];
-        var nextId = ids[(idx + 1) % ids.length];
-        prevA.href = buildHref(prevId);
-        nextA.href = buildHref(nextId);
-        nav.hidden = false;
+        updateTitleAndCat();
+        updateMedia();
+        updateBackLink();
+        setNavFromWorkPayload(workPayload);
       })
       .catch(function () {
+        updateBackLink();
         nav.hidden = true;
       });
   })();
