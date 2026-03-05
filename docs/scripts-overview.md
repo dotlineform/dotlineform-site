@@ -144,13 +144,15 @@ Useful flags:
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
-    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `title_sort`, `sort_fields`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
+    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `title_sort`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
+    - each work keeps backward-compatible `series_id` as the first series and adds ordered `series_ids`
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-details-index-json`: writes `assets/data/work_details_index.json` as a lightweight object keyed by `detail_uid`
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
+    - `work.series_id` remains the first series and `work.series_ids` preserves the full ordered membership list from the workbook
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
 
 Runtime canonical data flow:

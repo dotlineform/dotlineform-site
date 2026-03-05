@@ -362,7 +362,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("title", "title", coerce_string),
     ("year", "year", coerce_int),
     ("year_display", "year_display", coerce_string),
-    ("series_id", "series_id", coerce_string),
     ("storage", "storage_location", coerce_string),
     ("medium_type", "medium_type", coerce_string),
     ("medium_caption", "medium_caption", coerce_string),
@@ -763,6 +762,30 @@ def main() -> None:
                 return n
         return None
 
+    def parse_work_series_ids(row: tuple) -> List[str]:
+        parsed_values: List[str] = []
+        series_ids_col = first_present_col(works_hi, ["series_ids"])
+        if series_ids_col is not None:
+            parsed_values = parse_list(cell(row, works_hi, series_ids_col))
+        if not parsed_values:
+            legacy_series_id_col = first_present_col(works_hi, ["series_id"])
+            if legacy_series_id_col is not None:
+                legacy_series_id = coerce_string(cell(row, works_hi, legacy_series_id_col))
+                if legacy_series_id is not None:
+                    parsed_values = [legacy_series_id]
+
+        series_ids: List[str] = []
+        seen_series_ids: set[str] = set()
+        for raw_series_id in parsed_values:
+            sid = normalize_text(raw_series_id)
+            if not sid:
+                continue
+            if sid in seen_series_ids:
+                continue
+            seen_series_ids.add(sid)
+            series_ids.append(sid)
+        return series_ids
+
     # Output directory:
     # - Use `works` for a normal pages folder.
     # - Use `_works` if you're using a Jekyll collection.
@@ -856,14 +879,15 @@ def main() -> None:
 
     # Pre-index unique project folders by series_id from Works.
     series_project_folders_by_id: Dict[str, List[str]] = {}
-    if "series_id" in works_hi and "project_folder" in works_hi:
+    if first_present_col(works_hi, ["series_ids", "series_id"]) is not None and "project_folder" in works_hi:
         project_folder_sets_by_series: Dict[str, set[str]] = {}
         for wr in works_rows[1:]:
-            sid = coerce_string(cell(wr, works_hi, "series_id"))
             folder = coerce_string(cell(wr, works_hi, "project_folder"))
-            if sid is None or folder is None:
+            series_ids = parse_work_series_ids(wr)
+            if not series_ids or folder is None:
                 continue
-            project_folder_sets_by_series.setdefault(sid, set()).add(folder)
+            for sid in series_ids:
+                project_folder_sets_by_series.setdefault(sid, set()).add(folder)
         for sid, folder_set in project_folder_sets_by_series.items():
             series_project_folders_by_id[sid] = sorted(folder_set, key=lambda v: v.lower())
 
@@ -886,16 +910,21 @@ def main() -> None:
             continue
         wid = slug_id(wid_raw)
         meta = build_works_front_matter(wr, works_hi)
-        sid = coerce_string(cell(wr, works_hi, "series_id")) or ""
+        series_ids = parse_work_series_ids(wr)
+        sid = series_ids[0] if series_ids else ""
         meta["work_id"] = wid
+        meta["series_ids"] = series_ids
         meta["series_id"] = sid
         meta["series_title"] = series_title_by_id.get(sid) if sid else None
         meta["title_sort"] = numeric_aware_sort_key(meta.get("title"))
         work_meta_by_id[wid] = meta
-        if sid:
-            work_ids_by_series_all.setdefault(sid, []).append(wid)
+        for series_id in series_ids:
+            work_ids_by_series_all.setdefault(series_id, []).append(wid)
 
-    series_sort_by_work_id: Dict[str, str] = {wid: wid for wid in work_meta_by_id.keys()}
+    series_sort_by_series_id: Dict[str, Dict[str, str]] = {
+        sid: {wid: wid for wid in work_ids}
+        for sid, work_ids in work_ids_by_series_all.items()
+    }
     # Effective per-series sort_fields in user-facing terms (e.g. "title,work_id").
     # Defaults to work_id when no custom SeriesSort row exists.
     series_sort_fields_by_series_id: Dict[str, List[str]] = {
@@ -965,7 +994,8 @@ def main() -> None:
 
             rank_width = max(3, len(str(len(series_work_ids))))
             for idx, wid in enumerate(series_work_ids, start=1):
-                series_sort_by_work_id[wid] = f"{idx:0{rank_width}d}-{wid}"
+                series_sort_value = f"{idx:0{rank_width}d}-{wid}"
+                series_sort_by_series_id.setdefault(sid, {})[wid] = series_sort_value
 
     # Pre-index project folder by work_id (for WorkDetails source image lookup).
     work_project_folder_by_id: Dict[str, str] = {}
@@ -985,6 +1015,7 @@ def main() -> None:
         "year",
         "year_display",
         "series_id",
+        "series_ids",
         "series_title",
         "series_sort",
         "storage",
@@ -1010,10 +1041,14 @@ def main() -> None:
         fm.update(base)
         download_rel = coerce_string(fm.get("download"))
         fm["download"] = Path(download_rel).name if download_rel is not None else None
-        sid = coerce_string(fm.get("series_id"))
+        raw_series_ids = fm.get("series_ids")
+        series_ids = [coerce_string(item) for item in raw_series_ids] if isinstance(raw_series_ids, list) else []
+        series_ids = [item for item in series_ids if item is not None]
+        sid = series_ids[0] if series_ids else coerce_string(fm.get("series_id"))
         fm["series_id"] = sid
+        fm["series_ids"] = series_ids
         fm["series_title"] = series_title_by_id.get(sid) if sid is not None else None
-        fm["series_sort"] = series_sort_by_work_id.get(wid, wid)
+        fm["series_sort"] = series_sort_by_series_id.get(sid, {}).get(wid, wid) if sid is not None else wid
         fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
 
         fm_ordered: Dict[str, Any] = {}
@@ -1072,6 +1107,7 @@ def main() -> None:
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_id": work_record.get("series_id"),
+            "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
             "storage": storage_value,
             "media": {
                 "primary": {
@@ -1200,11 +1236,8 @@ def main() -> None:
                 if is_empty(raw_work_id):
                     continue
                 wid = slug_id(raw_work_id)
-                sid_raw = cell(r, works_hi, "series_id")
-                if is_empty(sid_raw):
-                    continue
-                sid = normalize_text(sid_raw).lower()
-                if sid in selected_series_ids:
+                series_ids = parse_work_series_ids(r)
+                if any(sid in selected_series_ids for sid in series_ids):
                     selected_ids.add(wid)
         else:
             selected_ids = set()
@@ -1385,6 +1418,8 @@ def main() -> None:
                     col_name = first_present_col(works_hi, aliases)
                     raw_value = cell(r, works_hi, col_name) if col_name is not None else None
                     cfm[out_key] = coercer(raw_value)
+                curator_series_ids = parse_work_series_ids(r)
+                cfm["series_id"] = curator_series_ids[0] if curator_series_ids else None
 
                 curator_field_order = [
                     "layout",
@@ -1573,6 +1608,7 @@ def main() -> None:
                     "title": series_title,
                     "title_sort": numeric_aware_sort_key(series_title),
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
+                    "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                     "year": year,
                     "year_display": year_display,
                     "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
@@ -1738,13 +1774,10 @@ def main() -> None:
             status = normalize_status(cell(wr, works_hi, "status"))
             if status not in {"draft", "published"}:
                 continue
-            sid_raw = cell(wr, works_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = require_slug_safe("series_id", sid_raw)
             wid = slug_id(wid_raw)
-            series_sort = series_sort_by_work_id.get(wid, wid)
-            work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
+            for sid in parse_work_series_ids(wr):
+                series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
+                work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
 
         ordered_work_ids_by_series_for_index: Dict[str, List[str]] = {}
         for sid, rows in work_rows_by_series_for_index.items():
@@ -1813,6 +1846,7 @@ def main() -> None:
                 "title": series_title,
                 "title_sort": numeric_aware_sort_key(series_title),
                 "sort_fields": sort_fields,
+                "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                 "year": year,
                 "year_display": year_display,
                 "primary_work_id": primary_work_id,
@@ -1828,13 +1862,13 @@ def main() -> None:
         }
 
         series_version_payload = {
-            "schema": "series_index_v1",
+            "schema": "series_index_v2",
             "series": series_payload,
         }
         series_version = compute_payload_version(series_version_payload)
         series_index_payload = {
             "header": {
-                "schema": "series_index_v1",
+                "schema": "series_index_v2",
                 "version": series_version,
                 "generated_at_utc": utc_timestamp_now(),
                 "count": len(series_payload),
@@ -2119,7 +2153,7 @@ def main() -> None:
 
                 payload = {
                     "header": {
-                        "schema": "work_record_v1",
+                        "schema": "work_record_v2",
                         "version": record_checksum,
                         "generated_at_utc": generated_at_utc,
                         "work_id": wid,
@@ -2283,13 +2317,13 @@ def main() -> None:
             item["details_checksum"] = compute_payload_version({"sections": detail_sections})
 
         version_payload = {
-            "schema": "works_index_v1",
+            "schema": "works_index_v2",
             "works": works_payload,
         }
         version = compute_payload_version(version_payload)
         payload = {
             "header": {
-                "schema": "works_index_v1",
+                "schema": "works_index_v2",
                 "version": version,
                 "generated_at_utc": utc_timestamp_now(),
                 "count": len(works_payload),

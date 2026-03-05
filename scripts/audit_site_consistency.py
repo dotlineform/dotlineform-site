@@ -507,6 +507,9 @@ def check_json_schema(
                 if sort_fields == "":
                     warnings += 1
                     add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index entry missing sort_fields"}, max_samples)
+                if "series_type" in row and row.get("series_type") is not None and not isinstance(row.get("series_type"), str):
+                    warnings += 1
+                    add_sample(samples, {"check": "json_schema", "id": sid_norm, "path": str(series_index_path), "message": "series index series_type should be string or null"}, max_samples)
 
     # Works index JSON
     works_index_path = site_root / "assets/data/works_index.json"
@@ -551,6 +554,19 @@ def check_json_schema(
                 if normalize_text(row.get("work_id")) == "":
                     errors += 1
                     add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing work_id"}, max_samples)
+                if "series_ids" in row:
+                    if not isinstance(row.get("series_ids"), list):
+                        errors += 1
+                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must be list when present"}, max_samples)
+                    else:
+                        series_ids = [normalize_text(item) for item in row.get("series_ids", [])]
+                        if any(item == "" for item in series_ids):
+                            errors += 1
+                            add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
+                        primary_series_id = normalize_text(row.get("series_id"))
+                        if primary_series_id and series_ids and series_ids[0] != primary_series_id:
+                            errors += 1
+                            add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_id must match first series_ids value"}, max_samples)
                 media = row.get("media")
                 if not isinstance(media, dict):
                     warnings += 1
@@ -632,6 +648,17 @@ def check_json_schema(
             if key not in header:
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
+        work_obj = obj.get("work")
+        if isinstance(work_obj, dict) and "series_ids" in work_obj:
+            if not isinstance(work_obj.get("series_ids"), list):
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids must be list when present"}, max_samples)
+            else:
+                series_ids = [normalize_text(item) for item in work_obj.get("series_ids", [])]
+                primary_series_id = normalize_text(work_obj.get("series_id"))
+                if primary_series_id and series_ids and series_ids[0] != primary_series_id:
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_id must match first work.series_ids value"}, max_samples)
         if not isinstance(sections, list):
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work sections must be list"}, max_samples)
