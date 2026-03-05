@@ -1957,7 +1957,6 @@ def main() -> None:
                 did = slug_id(did_raw, width=3)
                 detail_uid = f"{wid}-{did}"
                 title = coerce_string(cell(dr, work_details_hi, "title"))
-                has_primary_2400 = coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400"))
                 project_subfolder = coerce_string(cell(dr, work_details_hi, "project_subfolder"))
                 project_filename = coerce_string(cell(dr, work_details_hi, "project_filename"))
                 width_px = coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None
@@ -1996,36 +1995,22 @@ def main() -> None:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
                 # Canonical detail metadata stays in per-work JSON/index artifacts.
-                # Keep _work_details pages lightweight (routing + fallback + checksum).
-                detail_front_matter_like = build_canonical_detail_record(
-                    wid=wid,
-                    did=did,
-                    title=title,
-                    project_subfolder=project_subfolder,
-                    width_px=width_px,
-                    height_px=height_px,
-                    has_primary_2400=has_primary_2400,
-                )
-                d_checksum = str(detail_front_matter_like.get("checksum"))
+                # Keep _work_details pages minimal (routing identifiers + title only).
                 dfm: Dict[str, Any] = {
                     "work_id": wid,
                     "detail_id": did,
                     "detail_uid": detail_uid,
                     "title": title,
-                    "project_subfolder": project_subfolder,
-                    "has_primary_2400": has_primary_2400,
-                    "layout": "work_details",
-                    "checksum": d_checksum,
                 }
 
                 d_content = build_front_matter(dfm)
                 d_path = work_details_out_dir / f"{detail_uid}.md"
                 d_exists = d_path.exists()
-                existing_checksum = extract_existing_checksum(d_path) if d_exists else None
-
-                if (existing_checksum is not None) and (existing_checksum == d_checksum) and (not args.force):
-                    details_skipped += 1
-                    continue
+                if d_exists and not args.force:
+                    existing_content = d_path.read_text(encoding="utf-8")
+                    if existing_content == d_content:
+                        details_skipped += 1
+                        continue
 
                 if args.write:
                     d_path.write_text(d_content, encoding="utf-8")
