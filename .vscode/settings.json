@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "_layouts/*.html": "liquid",
+    "_includes/*.html": "liquid"
+  }
+}
