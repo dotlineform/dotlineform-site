@@ -11,7 +11,7 @@ async function initSeriesTagsPage() {
   const mount = document.getElementById("series-tags");
   if (!mount) return;
 
-  const seriesData = parseSeriesData();
+  const seriesData = await getSeriesData();
   if (!seriesData.length) {
     mount.innerHTML = `<p class="tagStudio__empty">none</p>`;
     return;
@@ -54,7 +54,13 @@ async function initSeriesTagsPage() {
   }
 }
 
-function parseSeriesData() {
+async function getSeriesData() {
+  const inline = parseSeriesDataFromInline();
+  if (inline.length) return inline;
+  return fetchSeriesDataFromIndex();
+}
+
+function parseSeriesDataFromInline() {
   const node = document.getElementById("series-tags-series-data");
   if (!node) return [];
   try {
@@ -71,6 +77,36 @@ function parseSeriesData() {
   } catch (error) {
     return [];
   }
+}
+
+async function fetchSeriesDataFromIndex() {
+  const baseEl = document.querySelector("base[href]");
+  const baseHref = String((baseEl && baseEl.getAttribute("href")) || "/").trim();
+  let basePath = "/";
+  try {
+    basePath = new URL(baseHref, window.location.origin).pathname || "/";
+  } catch (error) {
+    basePath = "/";
+  }
+  basePath = basePath.replace(/\/+$/, "");
+  const seriesIndexUrl = `${basePath}/assets/data/series_index.json`.replace(/\/{2,}/g, "/");
+  const payload = await fetchJson(seriesIndexUrl);
+  const seriesMap = payload && typeof payload.series === "object" && payload.series !== null
+    ? payload.series
+    : {};
+  return Object.keys(seriesMap)
+    .map((seriesId) => {
+      const row = seriesMap[seriesId];
+      const sid = normalize(seriesId);
+      const title = String((row && row.title) || sid).trim();
+      return {
+        seriesId: sid,
+        title,
+        url: `${basePath}/studio/studio-series/${encodeURIComponent(sid)}/`.replace(/\/{2,}/g, "/")
+      };
+    })
+    .filter((entry) => entry.seriesId && entry.title)
+    .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
 }
 
 async function fetchJson(url) {

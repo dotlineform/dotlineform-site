@@ -412,7 +412,12 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 
 ## Series Tags Page
 
-The Series Tags page (`/studio/series-tags/`) reads `assets/data/tag_assignments.json` and:
+The Series Tags page (`/studio/series-tags/`) reads:
+
+- `assets/data/series_index.json` for the series list/title/link target
+- `assets/data/tag_assignments.json` for assigned tags per series
+
+It then:
 
 - lists series in alphabetical order by title
 - links each series title to its Studio Series page
