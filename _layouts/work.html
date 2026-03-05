@@ -48,14 +48,14 @@ If you later serve images only from external media_base (CDN/R2), this check won
 
 <article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}">
 
-  <h1 class="visually-hidden" id="workTitleHidden">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
+  <h1 class="visually-hidden" id="workTitleHidden">{{ wid }}</h1>
 
   <figure class="page__media">
     <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
     <a class="page__mediaLink"
       id="workMediaLink"
       href="{{ full_src }}" target="_blank" rel="noopener"
-      style="--work-ar: {{ page.width_cm | default: 4 }} / {{ page.height_cm | default: 3 }};">
+      style="--work-ar: 4 / 3;">
       <img
         class="page__mediaImg"
         id="workPrimaryImg"
@@ -70,7 +70,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         data-src-1600="{{ src1600 | escape }}"
         data-src-2400="{{ src2400 | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
-        alt="{{ title_txt | default: 'Artwork' | escape }}"
+        alt="{{ wid | escape }}"
         loading="eager"
         fetchpriority="high"
         decoding="async"
@@ -84,7 +84,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     <div class="page__caption">
       <div class="page__row work__titleRow">
         <span class="work__titleMain">
-          <span id="workTitleMainText">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</span>
+          <span id="workTitleMainText">{{ wid }}</span>
         </span>
         {% comment %}
         Series navigation:
@@ -95,7 +95,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         <nav class="seriesNav seriesNav--title" id="seriesNav"
             aria-label="Series navigation"
             data-work-id="{{ wid | escape }}"
-            data-series="{{ page.series_id | default: '' | escape }}"
+            data-series=""
             data-baseurl="{{ site.baseurl | default: '' }}"
             hidden>
           <span class="navCounter" id="seriesNavCounter" hidden></span>
@@ -104,75 +104,33 @@ If you later serve images only from external media_base (CDN/R2), this check won
         </nav>
       </div>
 
-      {% assign year_display_initial = page.year_display | default: page.year %}
-      <div class="page__row" id="workYearRow"{% if year_display_initial == blank %} hidden{% endif %}>
-        <span id="workYearText">{{ year_display_initial }}</span>
+      <div class="page__row" id="workYearRow" hidden>
+        <span id="workYearText"></span>
       </div>
 
-      {% assign medium_caption_initial = page.medium_caption | default: "" | strip %}
-      <div class="page__row" id="workMediumRow"{% if medium_caption_initial == "" %} hidden{% endif %}>
-        <span id="workMediumText">{{ medium_caption_initial }}</span>
+      <div class="page__row" id="workMediumRow" hidden>
+        <span id="workMediumText"></span>
       </div>
 
-      {% assign duration_initial = page.duration | default: "" | strip %}
-      <div class="page__row" id="workDurationRow"{% if duration_initial == "" %} hidden{% endif %}>
-        <span id="workDurationText">{{ duration_initial }}</span>
+      <div class="page__row" id="workDurationRow" hidden>
+        <span id="workDurationText"></span>
       </div>
 
-      {% capture published_links_initial %}
-        {% assign published_sep = "" %}
-        {% if page.vimeo_url %}
-          {{ published_sep }}<a href="{{ page.vimeo_url }}" target="_blank" rel="noopener">Vimeo</a>
-          {% assign published_sep = ", " %}
-        {% endif %}
-        {% if page.youtube_url %}
-          {{ published_sep }}<a href="{{ page.youtube_url }}" target="_blank" rel="noopener">YouTube</a>
-          {% assign published_sep = ", " %}
-        {% endif %}
-        {% if page.bandcamp_url %}
-          {{ published_sep }}<a href="{{ page.bandcamp_url }}" target="_blank" rel="noopener">Bandcamp</a>
-        {% endif %}
-      {% endcapture %}
-      {% assign published_links_initial = published_links_initial | strip %}
-      <div class="page__row" id="workPublishedRow"{% if published_links_initial == "" %} hidden{% endif %}>
-        published on <span id="workPublishedLinks">{{ published_links_initial }}</span>
+      <div class="page__row" id="workPublishedRow" hidden>
+        published on <span id="workPublishedLinks"></span>
       </div>
 
-      {% capture dimensions_initial %}
-        {% assign medium_type_norm = page.medium_type | default: "" | downcase %}
-        {% if medium_type_norm != "music" %}
-          {% if page.height_cm and page.width_cm %}
-            {{ page.height_cm }} × {{ page.width_cm }}{% if page.depth_cm and page.depth_cm > 0 %} × {{ page.depth_cm }}{% endif %} cm
-          {% elsif page.height_cm %}
-            {{ page.height_cm }} cm
-          {% elsif page.width_cm %}
-            {{ page.width_cm }} cm
-          {% endif %}
-        {% endif %}
-      {% endcapture %}
-      {% assign dimensions_initial = dimensions_initial | strip %}
-      <div class="page__row" id="workDimensionsRow"{% if dimensions_initial == "" %} hidden{% endif %}>
-        <span id="workDimensionsText">{{ dimensions_initial }}</span>
+      <div class="page__row" id="workDimensionsRow" hidden>
+        <span id="workDimensionsText"></span>
       </div>
 
-      {% assign work_id_initial = page.work_id | default: wid %}
-      {% assign download_name_initial = page.download | default: "" | strip %}
-      {% assign download_href_initial = "" %}
-      {% if work_id_initial and download_name_initial != "" %}
-        {% assign download_href_initial = '/assets/works/files/' | append: work_id_initial | append: '-' | append: download_name_initial | relative_url %}
-      {% endif %}
-      <div class="page__row" id="workDownloadRow"{% if download_href_initial == "" %} hidden{% endif %}>
-        download <a id="workDownloadLink" href="{{ download_href_initial }}" target="_blank" rel="noopener">{{ download_name_initial }}</a>
+      <div class="page__row" id="workDownloadRow" hidden>
+        download <a id="workDownloadLink" target="_blank" rel="noopener"></a>
       </div>
 
-      {% assign series_href_initial = '/series/' %}
-      {% if page.series_id %}
-        {% assign series_href_initial = '/series/' | append: page.series_id | append: '/' %}
-      {% endif %}
-      {% assign series_label_initial = page.series_title | default: page.series_id | default: "" %}
       <div class="page__row" id="workCatRow">
-        cat. <span id="workCatId">{{ work_id_initial }}</span>
-        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ series_href_initial | relative_url }}">{{ series_label_initial }}</a></span>
+        cat. <span id="workCatId">{{ wid }}</span>
+        <span id="workSeriesLinkWrap" hidden>| <a id="workSeriesLink" class="work__seriesLink" href="{{ '/series/' | relative_url }}"></a></span>
       </div>
     </div>
   </section>
@@ -197,14 +155,13 @@ If you later serve images only from external media_base (CDN/R2), this check won
   </section>
 
   <nav class="page__nav">
-    {% assign back_series_label = page.series_title | default: page.series_id | default: "series" %}
     <a
       id="pageBackLink"
       class="page__back"
       href="{{ '/series/' | relative_url }}"
       data-fallback="{{ '/series/' | relative_url }}"
       data-baseurl="{{ site.baseurl | default: '' }}"
-      data-series-label="{{ back_series_label | escape }}"
+      data-series-label="series"
     >← index</a>
   </nav>
 
@@ -439,11 +396,13 @@ If you later serve images only from external media_base (CDN/R2), this check won
       updateMedia(record);
     }
 
-    applyMetadata(fallback);
     window.__dlfGetWorkRecord(workId, baseurl)
       .then(function (payload) {
         var work = (payload && payload.work && typeof payload.work === 'object') ? payload.work : null;
-        if (!work) return;
+        if (!work) {
+          applyMetadata(fallback);
+          return;
+        }
         var merged = {};
         var key;
         for (key in fallback) merged[key] = fallback[key];
@@ -451,6 +410,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
         applyMetadata(merged);
       })
       .catch(function () {
+        applyMetadata(fallback);
       });
   })();
 </script>
@@ -503,7 +463,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     if (!section || !content) return;
 
     var workId = String(section.getAttribute('data-work-id') || '').trim();
-    var workTitle = {{ title_txt | jsonify }};
+    var workTitle = {{ wid | jsonify }};
     if (!workId) return;
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
