@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v1",
-    "version": "blake2b-1175e27e39a2fab52b49450fa4067b85",
-    "generated_at_utc": "2026-03-05T09:52:05Z",
+    "version": "blake2b-34d4cb1d934da275e00a7dc4403bd430",
+    "generated_at_utc": "2026-03-05T12:52:46Z",
     "count": 494
   },
   "works": {
@@ -8125,7 +8125,7 @@
       "title_sort": "molecule forms",
       "year": 2013,
       "year_display": "2013",
-      "series_id": "molecules",
+      "series_id": "molecule-forms",
       "media": {
         "primary": {
           "kind": "image",
@@ -8135,7 +8135,7 @@
       },
       "has_details": true,
       "details_count": 256,
-      "work_checksum": "blake2b-e843c382e0b5b7d4faf76bcb0b037bad",
+      "work_checksum": "blake2b-485b0411d6ddfdb6d5af77463eb1f0dd",
       "details_checksum": "blake2b-376ef707ce6de204ae2bd5e34f385c77"
     },
     "00460": {
