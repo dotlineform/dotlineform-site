@@ -1,0 +1,5310 @@
+{
+  "header": {
+    "schema": "work_details_index_v1",
+    "version": "blake2b-4f9a4ee4e3655128c4d3d2b09dbce791",
+    "generated_at_utc": "2026-03-05T10:22:04Z",
+    "count": 530
+  },
+  "details": {
+    "00001-001": {
+      "detail_uid": "00001-001",
+      "work_id": "00001",
+      "detail_id": "001",
+      "title": "a poem divided into 4 parts - end 1",
+      "title_sort": "a poem divided into 004 parts - end 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-aa476efc10aa41bc9d1c985a241d5206"
+    },
+    "00001-002": {
+      "detail_uid": "00001-002",
+      "work_id": "00001",
+      "detail_id": "002",
+      "title": "a poem divided into 4 parts - end 2",
+      "title_sort": "a poem divided into 004 parts - end 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d2cda945fdab42560e04b3b9e3c3dd27"
+    },
+    "00001-003": {
+      "detail_uid": "00001-003",
+      "work_id": "00001",
+      "detail_id": "003",
+      "title": "a poem divided into 4 parts - end 3",
+      "title_sort": "a poem divided into 004 parts - end 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-2931bffea02675603655ac2c2b9a2329"
+    },
+    "00001-004": {
+      "detail_uid": "00001-004",
+      "work_id": "00001",
+      "detail_id": "004",
+      "title": "a poem divided into 4 parts - end 4",
+      "title_sort": "a poem divided into 004 parts - end 004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c916583556c9bf745049ba9a242839b8"
+    },
+    "00001-005": {
+      "detail_uid": "00001-005",
+      "work_id": "00001",
+      "detail_id": "005",
+      "title": "a poem divided into 4 parts - end 5",
+      "title_sort": "a poem divided into 004 parts - end 005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7a44e06052b797dd2f52ebf022012b49"
+    },
+    "00001-006": {
+      "detail_uid": "00001-006",
+      "work_id": "00001",
+      "detail_id": "006",
+      "title": "a poem divided into 4 parts - end 6",
+      "title_sort": "a poem divided into 004 parts - end 006",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-4687b92a85bd78f83eb3e4213cf8986f"
+    },
+    "00001-007": {
+      "detail_uid": "00001-007",
+      "work_id": "00001",
+      "detail_id": "007",
+      "title": "a poem divided into 4 parts - end 7",
+      "title_sort": "a poem divided into 004 parts - end 007",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8e960d00644181eb90b2ec9e6d308e9d"
+    },
+    "00001-008": {
+      "detail_uid": "00001-008",
+      "work_id": "00001",
+      "detail_id": "008",
+      "title": "a poem divided into 4 parts - end 8",
+      "title_sort": "a poem divided into 004 parts - end 008",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-1d5b7bae064168b1f52b7efcb2b08beb"
+    },
+    "00001-009": {
+      "detail_uid": "00001-009",
+      "work_id": "00001",
+      "detail_id": "009",
+      "title": "a poem divided into 4 parts - end 9",
+      "title_sort": "a poem divided into 004 parts - end 009",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-ae38a565723986d612004c2582daf4cb"
+    },
+    "00001-010": {
+      "detail_uid": "00001-010",
+      "work_id": "00001",
+      "detail_id": "010",
+      "title": "a poem divided into 4 parts - end 10",
+      "title_sort": "a poem divided into 004 parts - end 010",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-07b7bb7fb3c5c956450498a7c065911a"
+    },
+    "00001-011": {
+      "detail_uid": "00001-011",
+      "work_id": "00001",
+      "detail_id": "011",
+      "title": "a poem divided into 4 parts - end 11",
+      "title_sort": "a poem divided into 004 parts - end 011",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d043b43a524adeeda93fe276657f67d4"
+    },
+    "00001-012": {
+      "detail_uid": "00001-012",
+      "work_id": "00001",
+      "detail_id": "012",
+      "title": "a poem divided into 4 parts - end 12",
+      "title_sort": "a poem divided into 004 parts - end 012",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-97ad384efc2249684e6bdadeeb994469"
+    },
+    "00001-013": {
+      "detail_uid": "00001-013",
+      "work_id": "00001",
+      "detail_id": "013",
+      "title": "a poem divided into 4 parts - end 13",
+      "title_sort": "a poem divided into 004 parts - end 013",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b9210b8eec89eb98ba3afe60be99ae2c"
+    },
+    "00001-014": {
+      "detail_uid": "00001-014",
+      "work_id": "00001",
+      "detail_id": "014",
+      "title": "a poem divided into 4 parts - end 14",
+      "title_sort": "a poem divided into 004 parts - end 014",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-41a272b0955a1b775e6647ee356f4015"
+    },
+    "00001-015": {
+      "detail_uid": "00001-015",
+      "work_id": "00001",
+      "detail_id": "015",
+      "title": "a poem divided into 4 parts - end 15",
+      "title_sort": "a poem divided into 004 parts - end 015",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-20ac4c67b6b08ce01bd525ee8434e6fc"
+    },
+    "00001-016": {
+      "detail_uid": "00001-016",
+      "work_id": "00001",
+      "detail_id": "016",
+      "title": "a poem divided into 4 parts - end 16",
+      "title_sort": "a poem divided into 004 parts - end 016",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8b97d7673dd660f00e677bdcf4f17e04"
+    },
+    "00001-017": {
+      "detail_uid": "00001-017",
+      "work_id": "00001",
+      "detail_id": "017",
+      "title": "a poem divided into 4 parts - end 17",
+      "title_sort": "a poem divided into 004 parts - end 017",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c9b794c09e14a3e7e7b613ff159162e9"
+    },
+    "00158-001": {
+      "detail_uid": "00158-001",
+      "work_id": "00158",
+      "detail_id": "001",
+      "title": "grid dissection - cover",
+      "title_sort": "grid dissection - cover",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8fea7b1694a05f1ab602cc9581dd1667"
+    },
+    "00158-002": {
+      "detail_uid": "00158-002",
+      "work_id": "00158",
+      "detail_id": "002",
+      "title": "grid dissection - detail 1",
+      "title_sort": "grid dissection - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-29e70f2a56ccbc198200b3a2f25a7938"
+    },
+    "00158-003": {
+      "detail_uid": "00158-003",
+      "work_id": "00158",
+      "detail_id": "003",
+      "title": "grid dissection - detail 2",
+      "title_sort": "grid dissection - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-3476dfe739c6c9a604c3fe8a75c2c50e"
+    },
+    "00158-004": {
+      "detail_uid": "00158-004",
+      "work_id": "00158",
+      "detail_id": "004",
+      "title": "grid dissection - detail 3",
+      "title_sort": "grid dissection - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-baa8c764def0d92e400df71599757219"
+    },
+    "00158-005": {
+      "detail_uid": "00158-005",
+      "work_id": "00158",
+      "detail_id": "005",
+      "title": "grid dissection - detail 4",
+      "title_sort": "grid dissection - detail 004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8020799342d79ceaf18889bcb930f382"
+    },
+    "00158-006": {
+      "detail_uid": "00158-006",
+      "work_id": "00158",
+      "detail_id": "006",
+      "title": "grid dissection - detail 5",
+      "title_sort": "grid dissection - detail 005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7ac2e55bec7b3a742ad14b8bc27fd91f"
+    },
+    "00158-007": {
+      "detail_uid": "00158-007",
+      "work_id": "00158",
+      "detail_id": "007",
+      "title": "grid dissection - detail 6",
+      "title_sort": "grid dissection - detail 006",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-2b945aedbd860923f1b2aeb7d4e2e031"
+    },
+    "00158-008": {
+      "detail_uid": "00158-008",
+      "work_id": "00158",
+      "detail_id": "008",
+      "title": "grid dissection - detail 7",
+      "title_sort": "grid dissection - detail 007",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d06d15f02037291439e0d4d06d0224e7"
+    },
+    "00158-009": {
+      "detail_uid": "00158-009",
+      "work_id": "00158",
+      "detail_id": "009",
+      "title": "grid dissection - detail 8",
+      "title_sort": "grid dissection - detail 008",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-e6c9450c71fad297d299a9748a9fe95a"
+    },
+    "00159-001": {
+      "detail_uid": "00159-001",
+      "work_id": "00159",
+      "detail_id": "001",
+      "title": "Michelle Pfeiffer - page 1",
+      "title_sort": "Michelle Pfeiffer - page 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-89aab23ea6d88f38fcbafdccf13f93ef"
+    },
+    "00159-002": {
+      "detail_uid": "00159-002",
+      "work_id": "00159",
+      "detail_id": "002",
+      "title": "Michelle Pfeiffer - pages 2-3",
+      "title_sort": "Michelle Pfeiffer - pages 002-003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-51f045d0fbade96b252ff51e875eed89"
+    },
+    "00160-001": {
+      "detail_uid": "00160-001",
+      "work_id": "00160",
+      "detail_id": "001",
+      "title": "mouse story - 1",
+      "title_sort": "mouse story - 001",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-cb6284b76df1147c4c5d044ea7f72da9"
+    },
+    "00160-002": {
+      "detail_uid": "00160-002",
+      "work_id": "00160",
+      "detail_id": "002",
+      "title": "mouse story - 2",
+      "title_sort": "mouse story - 002",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-706f3b9d3a9faa967fbe8aeb44576566"
+    },
+    "00160-003": {
+      "detail_uid": "00160-003",
+      "work_id": "00160",
+      "detail_id": "003",
+      "title": "mouse story - 3",
+      "title_sort": "mouse story - 003",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-272b2693726290989b6dca9601898660"
+    },
+    "00160-004": {
+      "detail_uid": "00160-004",
+      "work_id": "00160",
+      "detail_id": "004",
+      "title": "mouse story - 4",
+      "title_sort": "mouse story - 004",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-1508f632f1fc4ea15124ff1b48379bf0"
+    },
+    "00160-005": {
+      "detail_uid": "00160-005",
+      "work_id": "00160",
+      "detail_id": "005",
+      "title": "mouse story - 5",
+      "title_sort": "mouse story - 005",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-c026c7208eeaaef34c9e2cac86f656e0"
+    },
+    "00160-006": {
+      "detail_uid": "00160-006",
+      "work_id": "00160",
+      "detail_id": "006",
+      "title": "mouse story - detail 1",
+      "title_sort": "mouse story - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b2882ebe348981d51bb5cda7ce516a05"
+    },
+    "00160-007": {
+      "detail_uid": "00160-007",
+      "work_id": "00160",
+      "detail_id": "007",
+      "title": "mouse story - detail 2",
+      "title_sort": "mouse story - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7f8d9d591f8221e4311065aad4ca82a4"
+    },
+    "00160-008": {
+      "detail_uid": "00160-008",
+      "work_id": "00160",
+      "detail_id": "008",
+      "title": "mouse story - detail 3",
+      "title_sort": "mouse story - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-764ca995839b1f27511bb071601bb795"
+    },
+    "00160-009": {
+      "detail_uid": "00160-009",
+      "work_id": "00160",
+      "detail_id": "009",
+      "title": "mouse story - detail 4",
+      "title_sort": "mouse story - detail 004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-e35d286c6a7757760417cc8aa3c0be04"
+    },
+    "00160-010": {
+      "detail_uid": "00160-010",
+      "work_id": "00160",
+      "detail_id": "010",
+      "title": "mouse story - detail 5",
+      "title_sort": "mouse story - detail 005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-4006bd21db0f19a5034e6cfb9e44ea20"
+    },
+    "00163-001": {
+      "detail_uid": "00163-001",
+      "work_id": "00163",
+      "detail_id": "001",
+      "title": "nerve (abattoir) - front cover",
+      "title_sort": "nerve (abattoir) - front cover",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-4f06cf9d7afda5a0c6944fa1270a6339"
+    },
+    "00163-002": {
+      "detail_uid": "00163-002",
+      "work_id": "00163",
+      "detail_id": "002",
+      "title": "nerve (abattoir) - inside cover",
+      "title_sort": "nerve (abattoir) - inside cover",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-8e1c10149bd6b0e7accf16e0901a8d3c"
+    },
+    "00163-003": {
+      "detail_uid": "00163-003",
+      "work_id": "00163",
+      "detail_id": "003",
+      "title": "nerve (abattoir) - 1",
+      "title_sort": "nerve (abattoir) - 001",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-6d3d8bd87bedfea0c63aba9de015bb23"
+    },
+    "00163-004": {
+      "detail_uid": "00163-004",
+      "work_id": "00163",
+      "detail_id": "004",
+      "title": "nerve (abattoir) - 2",
+      "title_sort": "nerve (abattoir) - 002",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-501cb9129f0299b3e75d914d05752958"
+    },
+    "00163-005": {
+      "detail_uid": "00163-005",
+      "work_id": "00163",
+      "detail_id": "005",
+      "title": "nerve (abattoir) - 3",
+      "title_sort": "nerve (abattoir) - 003",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-7db76bc41150d759ef5f24e3e9dfc9cd"
+    },
+    "00163-006": {
+      "detail_uid": "00163-006",
+      "work_id": "00163",
+      "detail_id": "006",
+      "title": "nerve (abattoir) - 4",
+      "title_sort": "nerve (abattoir) - 004",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-b705a724420ca3ce1f905cc358179c48"
+    },
+    "00163-007": {
+      "detail_uid": "00163-007",
+      "work_id": "00163",
+      "detail_id": "007",
+      "title": "nerve (abattoir) - 5",
+      "title_sort": "nerve (abattoir) - 005",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-f1916624a385f587ebc8247979312114"
+    },
+    "00163-008": {
+      "detail_uid": "00163-008",
+      "work_id": "00163",
+      "detail_id": "008",
+      "title": "nerve (abattoir) - 6",
+      "title_sort": "nerve (abattoir) - 006",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-978aab8b2cf7aab117e4030be3f77317"
+    },
+    "00163-009": {
+      "detail_uid": "00163-009",
+      "work_id": "00163",
+      "detail_id": "009",
+      "title": "nerve (abattoir) - 7",
+      "title_sort": "nerve (abattoir) - 007",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-75f5abad7a1192c5b42f67537c4f9e11"
+    },
+    "00163-010": {
+      "detail_uid": "00163-010",
+      "work_id": "00163",
+      "detail_id": "010",
+      "title": "nerve (abattoir) - back cover",
+      "title_sort": "nerve (abattoir) - back cover",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-cef46781deb04f7da561120e156e3584"
+    },
+    "00166-001": {
+      "detail_uid": "00166-001",
+      "work_id": "00166",
+      "detail_id": "001",
+      "title": "nerve (formaldehyde form) - front cover",
+      "title_sort": "nerve (formaldehyde form) - front cover",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-9a2bfd7337cd1051d7ad08511ee77a40"
+    },
+    "00166-002": {
+      "detail_uid": "00166-002",
+      "work_id": "00166",
+      "detail_id": "002",
+      "title": "nerve (formaldehyde form) - 1",
+      "title_sort": "nerve (formaldehyde form) - 001",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-0f042c4d0a3198a235ab5ef70275bff9"
+    },
+    "00166-003": {
+      "detail_uid": "00166-003",
+      "work_id": "00166",
+      "detail_id": "003",
+      "title": "nerve (formaldehyde form) - 2",
+      "title_sort": "nerve (formaldehyde form) - 002",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-6d2681a1824711eb9fc586aefe2c4283"
+    },
+    "00166-004": {
+      "detail_uid": "00166-004",
+      "work_id": "00166",
+      "detail_id": "004",
+      "title": "nerve (formaldehyde form) - 3",
+      "title_sort": "nerve (formaldehyde form) - 003",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-a232f0f54c8cc19ed878e69e0eebe001"
+    },
+    "00166-005": {
+      "detail_uid": "00166-005",
+      "work_id": "00166",
+      "detail_id": "005",
+      "title": "nerve (formaldehyde form) - 4",
+      "title_sort": "nerve (formaldehyde form) - 004",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-0fe94d2981f1c13cb94f111e6a202eb3"
+    },
+    "00166-006": {
+      "detail_uid": "00166-006",
+      "work_id": "00166",
+      "detail_id": "006",
+      "title": "nerve (formaldehyde form) - 5",
+      "title_sort": "nerve (formaldehyde form) - 005",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-9dc97fb3f0b78b68fbf11cbd0870da58"
+    },
+    "00166-007": {
+      "detail_uid": "00166-007",
+      "work_id": "00166",
+      "detail_id": "007",
+      "title": "nerve (formaldehyde form) - 6",
+      "title_sort": "nerve (formaldehyde form) - 006",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-a2e058d7a7186f9a1059e44d4a09b78f"
+    },
+    "00166-008": {
+      "detail_uid": "00166-008",
+      "work_id": "00166",
+      "detail_id": "008",
+      "title": "nerve (formaldehyde form) - 7",
+      "title_sort": "nerve (formaldehyde form) - 007",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-5af1a744066e405102fce0f409388f12"
+    },
+    "00166-009": {
+      "detail_uid": "00166-009",
+      "work_id": "00166",
+      "detail_id": "009",
+      "title": "nerve (formaldehyde form) - 8",
+      "title_sort": "nerve (formaldehyde form) - 008",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-b18f42df31de9287fd68e18924027e4e"
+    },
+    "00166-010": {
+      "detail_uid": "00166-010",
+      "work_id": "00166",
+      "detail_id": "010",
+      "title": "nerve (formaldehyde form) - 9",
+      "title_sort": "nerve (formaldehyde form) - 009",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-1b9fcec320862a6de5e2f91098cd8c06"
+    },
+    "00166-011": {
+      "detail_uid": "00166-011",
+      "work_id": "00166",
+      "detail_id": "011",
+      "title": "nerve (formaldehyde form) - 10",
+      "title_sort": "nerve (formaldehyde form) - 010",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-428b08c3925bd19e257a20eac2f8530f"
+    },
+    "00166-012": {
+      "detail_uid": "00166-012",
+      "work_id": "00166",
+      "detail_id": "012",
+      "title": "nerve (formaldehyde form) - 11",
+      "title_sort": "nerve (formaldehyde form) - 011",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-650c644548eb77e11463edd1b520d616"
+    },
+    "00166-013": {
+      "detail_uid": "00166-013",
+      "work_id": "00166",
+      "detail_id": "013",
+      "title": "nerve (formaldehyde form) - 12",
+      "title_sort": "nerve (formaldehyde form) - 012",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-8216961d46364648b15646e7797ea77b"
+    },
+    "00166-014": {
+      "detail_uid": "00166-014",
+      "work_id": "00166",
+      "detail_id": "014",
+      "title": "nerve (formaldehyde form) - 13",
+      "title_sort": "nerve (formaldehyde form) - 013",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-2a1bbcc814c5b5fae8283f9d1c74ff3d"
+    },
+    "00166-015": {
+      "detail_uid": "00166-015",
+      "work_id": "00166",
+      "detail_id": "015",
+      "title": "nerve (formaldehyde form) - 14",
+      "title_sort": "nerve (formaldehyde form) - 014",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-0461c6d48a3a17a2eb78f4581a8ab7bf"
+    },
+    "00166-016": {
+      "detail_uid": "00166-016",
+      "work_id": "00166",
+      "detail_id": "016",
+      "title": "nerve (formaldehyde form) - 15",
+      "title_sort": "nerve (formaldehyde form) - 015",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-ad6e19a5057423cb4403444d9e98ead5"
+    },
+    "00166-017": {
+      "detail_uid": "00166-017",
+      "work_id": "00166",
+      "detail_id": "017",
+      "title": "nerve (formaldehyde form) - 16",
+      "title_sort": "nerve (formaldehyde form) - 016",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-f4d78c9328e7fbce2b437c3142d2fdef"
+    },
+    "00166-018": {
+      "detail_uid": "00166-018",
+      "work_id": "00166",
+      "detail_id": "018",
+      "title": "nerve (formaldehyde form) - 17",
+      "title_sort": "nerve (formaldehyde form) - 017",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-66f344ef9757ed3ddc07af84c2ec3a75"
+    },
+    "00166-019": {
+      "detail_uid": "00166-019",
+      "work_id": "00166",
+      "detail_id": "019",
+      "title": "nerve (formaldehyde form) - back cover",
+      "title_sort": "nerve (formaldehyde form) - back cover",
+      "project_subfolder": "pages",
+      "section_id": "pages",
+      "detail_checksum": "blake2b-8556e2d69505a960dafb5e9ca27c17ad"
+    },
+    "00227-001": {
+      "detail_uid": "00227-001",
+      "work_id": "00227",
+      "detail_id": "001",
+      "title": "untitled [227] reverse",
+      "title_sort": "untitled [227] reverse",
+      "project_subfolder": "reverse",
+      "section_id": "reverse",
+      "detail_checksum": "blake2b-19547cc8bbad657662919835b8475082"
+    },
+    "00456-001": {
+      "detail_uid": "00456-001",
+      "work_id": "00456",
+      "detail_id": "001",
+      "title": "dots [detail 1]",
+      "title_sort": "dots [detail 001]",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-39f127338e07912e3c03163f75000fe4"
+    },
+    "00456-002": {
+      "detail_uid": "00456-002",
+      "work_id": "00456",
+      "detail_id": "002",
+      "title": "dots [detail 2]",
+      "title_sort": "dots [detail 002]",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-2402d81888045fff3d328bf53d79a9d3"
+    },
+    "00456-003": {
+      "detail_uid": "00456-003",
+      "work_id": "00456",
+      "detail_id": "003",
+      "title": "dots [detail 3]",
+      "title_sort": "dots [detail 003]",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-74d026fd7fc73978ce54be16dc5f41b9"
+    },
+    "00456-004": {
+      "detail_uid": "00456-004",
+      "work_id": "00456",
+      "detail_id": "004",
+      "title": "dots [detail 4]",
+      "title_sort": "dots [detail 004]",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c85b3c641e19995dd4390d28f4bde3ee"
+    },
+    "00456-005": {
+      "detail_uid": "00456-005",
+      "work_id": "00456",
+      "detail_id": "005",
+      "title": "dots [detail 5]",
+      "title_sort": "dots [detail 005]",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f6c856da5f275b116b45945d7bbf5633"
+    },
+    "00459-001": {
+      "detail_uid": "00459-001",
+      "work_id": "00459",
+      "detail_id": "001",
+      "title": "molecule form 1 (2004-06-25)",
+      "title_sort": "molecule form 001 (2004-006-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-df5debae35963e4aa859fadb5ffa77b8"
+    },
+    "00459-002": {
+      "detail_uid": "00459-002",
+      "work_id": "00459",
+      "detail_id": "002",
+      "title": "molecule form 2 (2004-06-25)",
+      "title_sort": "molecule form 002 (2004-006-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ffb369dde9f41306a15e89c0ccef7b44"
+    },
+    "00459-003": {
+      "detail_uid": "00459-003",
+      "work_id": "00459",
+      "detail_id": "003",
+      "title": "molecule form 3 (2004-06-25)",
+      "title_sort": "molecule form 003 (2004-006-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ccd8db00f1f4621e9af1a15e01cd5c91"
+    },
+    "00459-004": {
+      "detail_uid": "00459-004",
+      "work_id": "00459",
+      "detail_id": "004",
+      "title": "molecule form 4 (2006-05-06)",
+      "title_sort": "molecule form 004 (2006-005-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-97f328d6cb22f9e2b8536425b7e76edb"
+    },
+    "00459-005": {
+      "detail_uid": "00459-005",
+      "work_id": "00459",
+      "detail_id": "005",
+      "title": "molecule form 5 (2006-05-21)",
+      "title_sort": "molecule form 005 (2006-005-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-51c164e59bb9b6fb26aae8354f8aaf88"
+    },
+    "00459-006": {
+      "detail_uid": "00459-006",
+      "work_id": "00459",
+      "detail_id": "006",
+      "title": "molecule form 6 (2006-05-21)",
+      "title_sort": "molecule form 006 (2006-005-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d19418645f7a1c98a13c835e5e2f9324"
+    },
+    "00459-007": {
+      "detail_uid": "00459-007",
+      "work_id": "00459",
+      "detail_id": "007",
+      "title": "molecule form 7 (2006-05-28)",
+      "title_sort": "molecule form 007 (2006-005-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-616076b430462aa75b0e06a28c528907"
+    },
+    "00459-008": {
+      "detail_uid": "00459-008",
+      "work_id": "00459",
+      "detail_id": "008",
+      "title": "molecule form 8 (2006-06-25)",
+      "title_sort": "molecule form 008 (2006-006-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3ebc13d324adabb405241bf2b78750a9"
+    },
+    "00459-009": {
+      "detail_uid": "00459-009",
+      "work_id": "00459",
+      "detail_id": "009",
+      "title": "molecule form 9 (2006-08-06)",
+      "title_sort": "molecule form 009 (2006-008-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-783d1fd6b3458988f6f55a6a09151c60"
+    },
+    "00459-010": {
+      "detail_uid": "00459-010",
+      "work_id": "00459",
+      "detail_id": "010",
+      "title": "molecule form 10 (2006-08-15)",
+      "title_sort": "molecule form 010 (2006-008-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-905f18a99c526ffc3c3ecf748354fcc8"
+    },
+    "00459-011": {
+      "detail_uid": "00459-011",
+      "work_id": "00459",
+      "detail_id": "011",
+      "title": "molecule form 11 (2006-09-30)",
+      "title_sort": "molecule form 011 (2006-009-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d1efeaca65909eee1079cacf74f3a994"
+    },
+    "00459-012": {
+      "detail_uid": "00459-012",
+      "work_id": "00459",
+      "detail_id": "012",
+      "title": "molecule form 12 (2006-10-22)",
+      "title_sort": "molecule form 012 (2006-010-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5131bbed76a65cbca820b62d33527035"
+    },
+    "00459-013": {
+      "detail_uid": "00459-013",
+      "work_id": "00459",
+      "detail_id": "013",
+      "title": "molecule form 13 (2006-10-29)",
+      "title_sort": "molecule form 013 (2006-010-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b57091f1995e7005a282e5866a401b02"
+    },
+    "00459-014": {
+      "detail_uid": "00459-014",
+      "work_id": "00459",
+      "detail_id": "014",
+      "title": "molecule form 14 (2006-11-05)",
+      "title_sort": "molecule form 014 (2006-011-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-213d6ef2ad1083e80c33857d968f76d3"
+    },
+    "00459-015": {
+      "detail_uid": "00459-015",
+      "work_id": "00459",
+      "detail_id": "015",
+      "title": "molecule form 15 (2006-11-05)",
+      "title_sort": "molecule form 015 (2006-011-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8c0bcf8398d6121401ff6a5ceead4d8c"
+    },
+    "00459-016": {
+      "detail_uid": "00459-016",
+      "work_id": "00459",
+      "detail_id": "016",
+      "title": "molecule form 16 (2006-11-05)",
+      "title_sort": "molecule form 016 (2006-011-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-224b95b99ce1d7aa548bc68d1e463a03"
+    },
+    "00459-017": {
+      "detail_uid": "00459-017",
+      "work_id": "00459",
+      "detail_id": "017",
+      "title": "molecule form 17 (2006-11-05)",
+      "title_sort": "molecule form 017 (2006-011-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d1281ef6c115a9519ebc84a4f8219a99"
+    },
+    "00459-018": {
+      "detail_uid": "00459-018",
+      "work_id": "00459",
+      "detail_id": "018",
+      "title": "molecule form 18 (2006-11-06)",
+      "title_sort": "molecule form 018 (2006-011-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-dd8c83213158b62f25af6671cc70a8f3"
+    },
+    "00459-019": {
+      "detail_uid": "00459-019",
+      "work_id": "00459",
+      "detail_id": "019",
+      "title": "molecule form 19 (2006-11-06)",
+      "title_sort": "molecule form 019 (2006-011-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e02cb75acae93ed4257560220ad737ec"
+    },
+    "00459-020": {
+      "detail_uid": "00459-020",
+      "work_id": "00459",
+      "detail_id": "020",
+      "title": "molecule form 20 (2006-11-09)",
+      "title_sort": "molecule form 020 (2006-011-009)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f3d1ebb393467d47911aedce2e1a4688"
+    },
+    "00459-021": {
+      "detail_uid": "00459-021",
+      "work_id": "00459",
+      "detail_id": "021",
+      "title": "molecule form 21 (2006-12-02)",
+      "title_sort": "molecule form 021 (2006-012-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ebbb106d1e98501f4afdffcb1d3d4fdf"
+    },
+    "00459-022": {
+      "detail_uid": "00459-022",
+      "work_id": "00459",
+      "detail_id": "022",
+      "title": "molecule form 22 (2006-12-26)",
+      "title_sort": "molecule form 022 (2006-012-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9a2b139d6525d2ae05f3e8103f1fba28"
+    },
+    "00459-023": {
+      "detail_uid": "00459-023",
+      "work_id": "00459",
+      "detail_id": "023",
+      "title": "molecule form 23 (2006-12-27)",
+      "title_sort": "molecule form 023 (2006-012-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a19259d341d7b180f68e199f0cf70086"
+    },
+    "00459-024": {
+      "detail_uid": "00459-024",
+      "work_id": "00459",
+      "detail_id": "024",
+      "title": "molecule form 24 (2006-12-29)",
+      "title_sort": "molecule form 024 (2006-012-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3f2e467812b7d12fe2ebb35ecbc88b4d"
+    },
+    "00459-025": {
+      "detail_uid": "00459-025",
+      "work_id": "00459",
+      "detail_id": "025",
+      "title": "molecule form 25 (2006-12-29)",
+      "title_sort": "molecule form 025 (2006-012-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6437e3bd318c4cafa9e72c4d02b7611f"
+    },
+    "00459-026": {
+      "detail_uid": "00459-026",
+      "work_id": "00459",
+      "detail_id": "026",
+      "title": "molecule form 26 (2006-12-31)",
+      "title_sort": "molecule form 026 (2006-012-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e67129e4446ff53782eb870478c3807a"
+    },
+    "00459-027": {
+      "detail_uid": "00459-027",
+      "work_id": "00459",
+      "detail_id": "027",
+      "title": "molecule form 27 (2007-01-02)",
+      "title_sort": "molecule form 027 (2007-001-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2c16fea63e9753f476b8e3f125b016c6"
+    },
+    "00459-028": {
+      "detail_uid": "00459-028",
+      "work_id": "00459",
+      "detail_id": "028",
+      "title": "molecule form 28 (2007-03-18)",
+      "title_sort": "molecule form 028 (2007-003-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-7cd587a8684f13f77b95b79477b1a2bc"
+    },
+    "00459-029": {
+      "detail_uid": "00459-029",
+      "work_id": "00459",
+      "detail_id": "029",
+      "title": "molecule form 29 (2007-03-18)",
+      "title_sort": "molecule form 029 (2007-003-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-773f9bdbb5c2b3c714c2df7b7aa396cf"
+    },
+    "00459-030": {
+      "detail_uid": "00459-030",
+      "work_id": "00459",
+      "detail_id": "030",
+      "title": "molecule form 30 (2007-04-05)",
+      "title_sort": "molecule form 030 (2007-004-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-7b56a27e6e2224fa66b3cf281ade2b35"
+    },
+    "00459-031": {
+      "detail_uid": "00459-031",
+      "work_id": "00459",
+      "detail_id": "031",
+      "title": "molecule form 31 (2007-04-05)",
+      "title_sort": "molecule form 031 (2007-004-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-30d6c70f1e3e5f57924272057f4784b6"
+    },
+    "00459-032": {
+      "detail_uid": "00459-032",
+      "work_id": "00459",
+      "detail_id": "032",
+      "title": "molecule form 32 (2007-04-08)",
+      "title_sort": "molecule form 032 (2007-004-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c259f25343fb246a5c574f3d9026aaac"
+    },
+    "00459-033": {
+      "detail_uid": "00459-033",
+      "work_id": "00459",
+      "detail_id": "033",
+      "title": "molecule form 33 (2007-04-21)",
+      "title_sort": "molecule form 033 (2007-004-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-321e3c3ec2d3bb01986fa368876df3be"
+    },
+    "00459-034": {
+      "detail_uid": "00459-034",
+      "work_id": "00459",
+      "detail_id": "034",
+      "title": "molecule form 34 (2007-04-28)",
+      "title_sort": "molecule form 034 (2007-004-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-975894c0dd8571c3d0de30e88d340bae"
+    },
+    "00459-035": {
+      "detail_uid": "00459-035",
+      "work_id": "00459",
+      "detail_id": "035",
+      "title": "molecule form 35 (2007-04-29)",
+      "title_sort": "molecule form 035 (2007-004-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e0b4f031c1e11fd05d03912a025b786f"
+    },
+    "00459-036": {
+      "detail_uid": "00459-036",
+      "work_id": "00459",
+      "detail_id": "036",
+      "title": "molecule form 36 (2007-04-30)",
+      "title_sort": "molecule form 036 (2007-004-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6893d55c696482da529f0de331f5f199"
+    },
+    "00459-037": {
+      "detail_uid": "00459-037",
+      "work_id": "00459",
+      "detail_id": "037",
+      "title": "molecule form 37 (2007-05-02)",
+      "title_sort": "molecule form 037 (2007-005-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-76b0f178c05e074ab9a9fcf118532dee"
+    },
+    "00459-038": {
+      "detail_uid": "00459-038",
+      "work_id": "00459",
+      "detail_id": "038",
+      "title": "molecule form 38 (2007-05-18)",
+      "title_sort": "molecule form 038 (2007-005-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-19414a68e0227cef3e412d624f891f88"
+    },
+    "00459-039": {
+      "detail_uid": "00459-039",
+      "work_id": "00459",
+      "detail_id": "039",
+      "title": "molecule form 39 (2007-05-19)",
+      "title_sort": "molecule form 039 (2007-005-019)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-205275806c58c2f3f66cea2eac63fc45"
+    },
+    "00459-040": {
+      "detail_uid": "00459-040",
+      "work_id": "00459",
+      "detail_id": "040",
+      "title": "molecule form 40 (2007-05-24)",
+      "title_sort": "molecule form 040 (2007-005-024)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-78b7105ff3cfdcdceeaf851afff0c370"
+    },
+    "00459-041": {
+      "detail_uid": "00459-041",
+      "work_id": "00459",
+      "detail_id": "041",
+      "title": "molecule form 41 (2007-05-24)",
+      "title_sort": "molecule form 041 (2007-005-024)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e96ed3133bad6a5f13e16fdefc8b621b"
+    },
+    "00459-042": {
+      "detail_uid": "00459-042",
+      "work_id": "00459",
+      "detail_id": "042",
+      "title": "molecule form 42 (2007-06-28)",
+      "title_sort": "molecule form 042 (2007-006-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e334193c6d62c0fabed8ea742942bfd4"
+    },
+    "00459-043": {
+      "detail_uid": "00459-043",
+      "work_id": "00459",
+      "detail_id": "043",
+      "title": "molecule form 43 (2007-07-16)",
+      "title_sort": "molecule form 043 (2007-007-016)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-bff8b303da76b02fa9c3405f57dfbab3"
+    },
+    "00459-044": {
+      "detail_uid": "00459-044",
+      "work_id": "00459",
+      "detail_id": "044",
+      "title": "molecule form 44 (2007-07-18)",
+      "title_sort": "molecule form 044 (2007-007-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ccccd2f4bba7f33e248afeaf7ac32073"
+    },
+    "00459-045": {
+      "detail_uid": "00459-045",
+      "work_id": "00459",
+      "detail_id": "045",
+      "title": "molecule form 45 (2007-09-02)",
+      "title_sort": "molecule form 045 (2007-009-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-fba652e87a2e63f4867519039cd28b3d"
+    },
+    "00459-046": {
+      "detail_uid": "00459-046",
+      "work_id": "00459",
+      "detail_id": "046",
+      "title": "molecule form 46 (2007-09-02)",
+      "title_sort": "molecule form 046 (2007-009-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-7110e24b72c27cd87602e9f631337f28"
+    },
+    "00459-047": {
+      "detail_uid": "00459-047",
+      "work_id": "00459",
+      "detail_id": "047",
+      "title": "molecule form 47 (2007-09-04)",
+      "title_sort": "molecule form 047 (2007-009-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6b35292cb9e399717dc1b9e9625e2671"
+    },
+    "00459-048": {
+      "detail_uid": "00459-048",
+      "work_id": "00459",
+      "detail_id": "048",
+      "title": "molecule form 48 (2007-09-04)",
+      "title_sort": "molecule form 048 (2007-009-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-01f4f1251f6777dc7be88d02482b9070"
+    },
+    "00459-049": {
+      "detail_uid": "00459-049",
+      "work_id": "00459",
+      "detail_id": "049",
+      "title": "molecule form 49 (2007-09-15)",
+      "title_sort": "molecule form 049 (2007-009-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c1562e3f7a7d0d4ccbdb167ae5d1d29c"
+    },
+    "00459-050": {
+      "detail_uid": "00459-050",
+      "work_id": "00459",
+      "detail_id": "050",
+      "title": "molecule form 50 (2008-05-29)",
+      "title_sort": "molecule form 050 (2008-005-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-144aed082b106bb59ea0094bf1b92f3e"
+    },
+    "00459-051": {
+      "detail_uid": "00459-051",
+      "work_id": "00459",
+      "detail_id": "051",
+      "title": "molecule form 51 (2008-06-08)",
+      "title_sort": "molecule form 051 (2008-006-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3fc8f39d63cdb734e5d7055be906029a"
+    },
+    "00459-052": {
+      "detail_uid": "00459-052",
+      "work_id": "00459",
+      "detail_id": "052",
+      "title": "molecule form 52 (2008-07-21)",
+      "title_sort": "molecule form 052 (2008-007-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a420e7472e7e50907f1576951006a0e4"
+    },
+    "00459-053": {
+      "detail_uid": "00459-053",
+      "work_id": "00459",
+      "detail_id": "053",
+      "title": "molecule form 53 (2008-07-21)",
+      "title_sort": "molecule form 053 (2008-007-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-319c0b43371dc3b761f3ccdb29fdb035"
+    },
+    "00459-054": {
+      "detail_uid": "00459-054",
+      "work_id": "00459",
+      "detail_id": "054",
+      "title": "molecule form 54 (2008-07-21)",
+      "title_sort": "molecule form 054 (2008-007-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-afe11efc70913c2aa1528d1edcf6e96f"
+    },
+    "00459-055": {
+      "detail_uid": "00459-055",
+      "work_id": "00459",
+      "detail_id": "055",
+      "title": "molecule form 55 (2008-10-02)",
+      "title_sort": "molecule form 055 (2008-010-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6a2b8c97a713b038244d516fdc7bfbee"
+    },
+    "00459-056": {
+      "detail_uid": "00459-056",
+      "work_id": "00459",
+      "detail_id": "056",
+      "title": "molecule form 56 (2009-02-03)",
+      "title_sort": "molecule form 056 (2009-002-003)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-49e31f57764621c185b6286086d5b0a0"
+    },
+    "00459-057": {
+      "detail_uid": "00459-057",
+      "work_id": "00459",
+      "detail_id": "057",
+      "title": "molecule form 57 (2009-06-28)",
+      "title_sort": "molecule form 057 (2009-006-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3c1ba1ab3934526b8ae1b09ac37de0ad"
+    },
+    "00459-058": {
+      "detail_uid": "00459-058",
+      "work_id": "00459",
+      "detail_id": "058",
+      "title": "molecule form 58 (2009-07-06)",
+      "title_sort": "molecule form 058 (2009-007-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-7535916f58f90befc52ddec70ea50000"
+    },
+    "00459-059": {
+      "detail_uid": "00459-059",
+      "work_id": "00459",
+      "detail_id": "059",
+      "title": "molecule form 59 (2009-07-07)",
+      "title_sort": "molecule form 059 (2009-007-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-650f4ae5d6301e6b4f47d9efb35ecc4a"
+    },
+    "00459-060": {
+      "detail_uid": "00459-060",
+      "work_id": "00459",
+      "detail_id": "060",
+      "title": "molecule form 60 (2009-09-05)",
+      "title_sort": "molecule form 060 (2009-009-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-19ad6c969d96791bc195d01b0e5f77a0"
+    },
+    "00459-061": {
+      "detail_uid": "00459-061",
+      "work_id": "00459",
+      "detail_id": "061",
+      "title": "molecule form 61 (2010-01-23)",
+      "title_sort": "molecule form 061 (2010-001-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a92304e6fbb54358b0bcead3eca32fa0"
+    },
+    "00459-062": {
+      "detail_uid": "00459-062",
+      "work_id": "00459",
+      "detail_id": "062",
+      "title": "molecule form 62 (2010-01-23)",
+      "title_sort": "molecule form 062 (2010-001-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5cc0633d98ba58d67d482ecc20b0cbc1"
+    },
+    "00459-063": {
+      "detail_uid": "00459-063",
+      "work_id": "00459",
+      "detail_id": "063",
+      "title": "molecule form 63 (2010-02-09)",
+      "title_sort": "molecule form 063 (2010-002-009)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6ae0bb38ca07a50459fb5901288e9961"
+    },
+    "00459-064": {
+      "detail_uid": "00459-064",
+      "work_id": "00459",
+      "detail_id": "064",
+      "title": "molecule form 64 (2010-02-09)",
+      "title_sort": "molecule form 064 (2010-002-009)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-76e02c7e94de37e7c10649945ae2e907"
+    },
+    "00459-065": {
+      "detail_uid": "00459-065",
+      "work_id": "00459",
+      "detail_id": "065",
+      "title": "molecule form 65 (2010-03-01)",
+      "title_sort": "molecule form 065 (2010-003-001)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-802a2c085133ae65a1fbaea3df1c4341"
+    },
+    "00459-066": {
+      "detail_uid": "00459-066",
+      "work_id": "00459",
+      "detail_id": "066",
+      "title": "molecule form 66 (2010-04-21)",
+      "title_sort": "molecule form 066 (2010-004-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-05586f0c1cce61c207700aff20472e2b"
+    },
+    "00459-067": {
+      "detail_uid": "00459-067",
+      "work_id": "00459",
+      "detail_id": "067",
+      "title": "molecule form 67 (2010-05-26)",
+      "title_sort": "molecule form 067 (2010-005-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-30f81c0a6a194bb9f1d269921c89210b"
+    },
+    "00459-068": {
+      "detail_uid": "00459-068",
+      "work_id": "00459",
+      "detail_id": "068",
+      "title": "molecule form 68 (2010-05-30)",
+      "title_sort": "molecule form 068 (2010-005-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-91f2c8f49f89f6185089aecd2b58bed7"
+    },
+    "00459-069": {
+      "detail_uid": "00459-069",
+      "work_id": "00459",
+      "detail_id": "069",
+      "title": "molecule form 69 (2010-05-30)",
+      "title_sort": "molecule form 069 (2010-005-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-7d6b5ff83e5d33cae4d75dbc0c8ba313"
+    },
+    "00459-070": {
+      "detail_uid": "00459-070",
+      "work_id": "00459",
+      "detail_id": "070",
+      "title": "molecule form 70 (2010-06-02)",
+      "title_sort": "molecule form 070 (2010-006-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0235166252c2fa6acd0b2fd48cac0406"
+    },
+    "00459-071": {
+      "detail_uid": "00459-071",
+      "work_id": "00459",
+      "detail_id": "071",
+      "title": "molecule form 71 (2010-07-20)",
+      "title_sort": "molecule form 071 (2010-007-020)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b81215e6ee887d6ee99707b0edc5bed8"
+    },
+    "00459-072": {
+      "detail_uid": "00459-072",
+      "work_id": "00459",
+      "detail_id": "072",
+      "title": "molecule form 72 (2010-07-21)",
+      "title_sort": "molecule form 072 (2010-007-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-dc3d63ec659f03cb7309bd4686e89ce9"
+    },
+    "00459-073": {
+      "detail_uid": "00459-073",
+      "work_id": "00459",
+      "detail_id": "073",
+      "title": "molecule form 73 (2010-08-14)",
+      "title_sort": "molecule form 073 (2010-008-014)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5556c0ee92d212a44ae99e259c419b7c"
+    },
+    "00459-074": {
+      "detail_uid": "00459-074",
+      "work_id": "00459",
+      "detail_id": "074",
+      "title": "molecule form 74 (2010-10-25)",
+      "title_sort": "molecule form 074 (2010-010-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8b1dc54c3494bfc07c15d7e8b72285ee"
+    },
+    "00459-075": {
+      "detail_uid": "00459-075",
+      "work_id": "00459",
+      "detail_id": "075",
+      "title": "molecule form 75 (2010-11-17)",
+      "title_sort": "molecule form 075 (2010-011-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e056539566a1666df0ee74370e85416b"
+    },
+    "00459-076": {
+      "detail_uid": "00459-076",
+      "work_id": "00459",
+      "detail_id": "076",
+      "title": "molecule form 76 (2010-12-30)",
+      "title_sort": "molecule form 076 (2010-012-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-96ea4aaf204794bf1e6e923a2644778b"
+    },
+    "00459-077": {
+      "detail_uid": "00459-077",
+      "work_id": "00459",
+      "detail_id": "077",
+      "title": "molecule form 77 (2011-01-06)",
+      "title_sort": "molecule form 077 (2011-001-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e8c18f1b411ea23e25f9554e3651b388"
+    },
+    "00459-078": {
+      "detail_uid": "00459-078",
+      "work_id": "00459",
+      "detail_id": "078",
+      "title": "molecule form 78 (2011-02-19)",
+      "title_sort": "molecule form 078 (2011-002-019)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8da2bc361063b8f1a2e12235091dc781"
+    },
+    "00459-079": {
+      "detail_uid": "00459-079",
+      "work_id": "00459",
+      "detail_id": "079",
+      "title": "molecule form 79 (2011-03-13)",
+      "title_sort": "molecule form 079 (2011-003-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0916387761fae9626d8344ca7f6ee051"
+    },
+    "00459-080": {
+      "detail_uid": "00459-080",
+      "work_id": "00459",
+      "detail_id": "080",
+      "title": "molecule form 80 (2011-04-13)",
+      "title_sort": "molecule form 080 (2011-004-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-76663ecab80b170a76fc1e09164b0ed8"
+    },
+    "00459-081": {
+      "detail_uid": "00459-081",
+      "work_id": "00459",
+      "detail_id": "081",
+      "title": "molecule form 81 (2011-04-13)",
+      "title_sort": "molecule form 081 (2011-004-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-1c1eb2fa949530410b8dd9d49ad81b94"
+    },
+    "00459-082": {
+      "detail_uid": "00459-082",
+      "work_id": "00459",
+      "detail_id": "082",
+      "title": "molecule form 82 (2011-04-24)",
+      "title_sort": "molecule form 082 (2011-004-024)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-eff675a25fdbd90ca2ae14758386cf1b"
+    },
+    "00459-083": {
+      "detail_uid": "00459-083",
+      "work_id": "00459",
+      "detail_id": "083",
+      "title": "molecule form 83 (2011-05-01)",
+      "title_sort": "molecule form 083 (2011-005-001)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d24cb408c18bc4ba1617724a990b3497"
+    },
+    "00459-084": {
+      "detail_uid": "00459-084",
+      "work_id": "00459",
+      "detail_id": "084",
+      "title": "molecule form 84 (2011-05-21)",
+      "title_sort": "molecule form 084 (2011-005-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9c3e046767f064420c7c59a780b1fe34"
+    },
+    "00459-085": {
+      "detail_uid": "00459-085",
+      "work_id": "00459",
+      "detail_id": "085",
+      "title": "molecule form 85 (2011-08-13)",
+      "title_sort": "molecule form 085 (2011-008-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e8a98cd00254ac6666ca0e8eb3ae35d8"
+    },
+    "00459-086": {
+      "detail_uid": "00459-086",
+      "work_id": "00459",
+      "detail_id": "086",
+      "title": "molecule form 86 (2011-12-14)",
+      "title_sort": "molecule form 086 (2011-012-014)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-01482574070f6cff8bb22301f9f4505a"
+    },
+    "00459-087": {
+      "detail_uid": "00459-087",
+      "work_id": "00459",
+      "detail_id": "087",
+      "title": "molecule form 87 (2011-12-17)",
+      "title_sort": "molecule form 087 (2011-012-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9368e2ba52cc3eaa0d36b610258c24a3"
+    },
+    "00459-088": {
+      "detail_uid": "00459-088",
+      "work_id": "00459",
+      "detail_id": "088",
+      "title": "molecule form 88 (2011-12-21)",
+      "title_sort": "molecule form 088 (2011-012-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-235c4655fbf9e801f35bbeebdbbc5ba9"
+    },
+    "00459-089": {
+      "detail_uid": "00459-089",
+      "work_id": "00459",
+      "detail_id": "089",
+      "title": "molecule form 89 (2011-12-30)",
+      "title_sort": "molecule form 089 (2011-012-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b8285ea8dbb571c2062451d8b6fde731"
+    },
+    "00459-090": {
+      "detail_uid": "00459-090",
+      "work_id": "00459",
+      "detail_id": "090",
+      "title": "molecule form 90 (2011-12-31)",
+      "title_sort": "molecule form 090 (2011-012-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e5342f36449eb8406a6ec4a24b372f9a"
+    },
+    "00459-091": {
+      "detail_uid": "00459-091",
+      "work_id": "00459",
+      "detail_id": "091",
+      "title": "molecule form 91 (2011-12-31)",
+      "title_sort": "molecule form 091 (2011-012-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6c9dfe162bbbf4c10c38d46f2e923803"
+    },
+    "00459-092": {
+      "detail_uid": "00459-092",
+      "work_id": "00459",
+      "detail_id": "092",
+      "title": "molecule form 92 (2012-01-02)",
+      "title_sort": "molecule form 092 (2012-001-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9084e0c28853a28aa8e65789b58e1c87"
+    },
+    "00459-093": {
+      "detail_uid": "00459-093",
+      "work_id": "00459",
+      "detail_id": "093",
+      "title": "molecule form 93 (2012-01-06)",
+      "title_sort": "molecule form 093 (2012-001-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3c9c9604cb4d93779860f5fd432b6b34"
+    },
+    "00459-094": {
+      "detail_uid": "00459-094",
+      "work_id": "00459",
+      "detail_id": "094",
+      "title": "molecule form 94 (2012-01-18)",
+      "title_sort": "molecule form 094 (2012-001-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-55e341ba58465f715cec5925b12b6f15"
+    },
+    "00459-095": {
+      "detail_uid": "00459-095",
+      "work_id": "00459",
+      "detail_id": "095",
+      "title": "molecule form 95 (2012-01-22)",
+      "title_sort": "molecule form 095 (2012-001-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-83490ef9e8847be75a3995f98b39ac61"
+    },
+    "00459-096": {
+      "detail_uid": "00459-096",
+      "work_id": "00459",
+      "detail_id": "096",
+      "title": "molecule form 96 (2012-01-29)",
+      "title_sort": "molecule form 096 (2012-001-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-129983aca70f7a98aaa3d8a5b4bfb141"
+    },
+    "00459-097": {
+      "detail_uid": "00459-097",
+      "work_id": "00459",
+      "detail_id": "097",
+      "title": "molecule form 97 (2012-02-04)",
+      "title_sort": "molecule form 097 (2012-002-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0c09b0746832f51b973f694ab2f159f9"
+    },
+    "00459-098": {
+      "detail_uid": "00459-098",
+      "work_id": "00459",
+      "detail_id": "098",
+      "title": "molecule form 98 (2012-02-04)",
+      "title_sort": "molecule form 098 (2012-002-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-50cdbc11aeae95f6e35418bd066a3f9f"
+    },
+    "00459-099": {
+      "detail_uid": "00459-099",
+      "work_id": "00459",
+      "detail_id": "099",
+      "title": "molecule form 99 (2012-02-27)",
+      "title_sort": "molecule form 099 (2012-002-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e01510719eca66a2dab0810887e1c37f"
+    },
+    "00459-100": {
+      "detail_uid": "00459-100",
+      "work_id": "00459",
+      "detail_id": "100",
+      "title": "molecule form 100 (2012-03-05)",
+      "title_sort": "molecule form 100 (2012-003-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-35bd2e327e9276f00c550f1d9994d9e3"
+    },
+    "00459-101": {
+      "detail_uid": "00459-101",
+      "work_id": "00459",
+      "detail_id": "101",
+      "title": "molecule form 101 (2012-03-05)",
+      "title_sort": "molecule form 101 (2012-003-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-fbe50a406be541a0b0bafdff5cfe1396"
+    },
+    "00459-102": {
+      "detail_uid": "00459-102",
+      "work_id": "00459",
+      "detail_id": "102",
+      "title": "molecule form 102 (2012-03-27)",
+      "title_sort": "molecule form 102 (2012-003-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-09e794499ff6dfb25c1c4152c1693b81"
+    },
+    "00459-103": {
+      "detail_uid": "00459-103",
+      "work_id": "00459",
+      "detail_id": "103",
+      "title": "molecule form 103 (2012-03-30)",
+      "title_sort": "molecule form 103 (2012-003-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-41626c38afb651e263228027fdd13264"
+    },
+    "00459-104": {
+      "detail_uid": "00459-104",
+      "work_id": "00459",
+      "detail_id": "104",
+      "title": "molecule form 104 (2012-03-30)",
+      "title_sort": "molecule form 104 (2012-003-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-962c4e22651f579a6b917641bf564ba9"
+    },
+    "00459-105": {
+      "detail_uid": "00459-105",
+      "work_id": "00459",
+      "detail_id": "105",
+      "title": "molecule form 105 (2012-04-25)",
+      "title_sort": "molecule form 105 (2012-004-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c1f5155d2cd77463780fb3f716784510"
+    },
+    "00459-106": {
+      "detail_uid": "00459-106",
+      "work_id": "00459",
+      "detail_id": "106",
+      "title": "molecule form 106 (2012-05-05)",
+      "title_sort": "molecule form 106 (2012-005-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b4008258bdf7e34b77626bd0488caf31"
+    },
+    "00459-107": {
+      "detail_uid": "00459-107",
+      "work_id": "00459",
+      "detail_id": "107",
+      "title": "molecule form 107 (2012-05-22)",
+      "title_sort": "molecule form 107 (2012-005-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f9eb718aa17e4576b36287a1d7773a50"
+    },
+    "00459-108": {
+      "detail_uid": "00459-108",
+      "work_id": "00459",
+      "detail_id": "108",
+      "title": "molecule form 108 (2012-05-22)",
+      "title_sort": "molecule form 108 (2012-005-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6664ce682ac0f7c5ade9667d6c773854"
+    },
+    "00459-109": {
+      "detail_uid": "00459-109",
+      "work_id": "00459",
+      "detail_id": "109",
+      "title": "molecule form 109 (2012-05-22)",
+      "title_sort": "molecule form 109 (2012-005-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0025147880ee40e741ee4b035cd218d2"
+    },
+    "00459-110": {
+      "detail_uid": "00459-110",
+      "work_id": "00459",
+      "detail_id": "110",
+      "title": "molecule form 110 (2012-05-26)",
+      "title_sort": "molecule form 110 (2012-005-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-33325b9eaaa6fbc953fd4b4287526a40"
+    },
+    "00459-111": {
+      "detail_uid": "00459-111",
+      "work_id": "00459",
+      "detail_id": "111",
+      "title": "molecule form 111 (2012-05-26)",
+      "title_sort": "molecule form 111 (2012-005-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d47fa6de11b2ba8dd92c3dab85222c18"
+    },
+    "00459-112": {
+      "detail_uid": "00459-112",
+      "work_id": "00459",
+      "detail_id": "112",
+      "title": "molecule form 112 (2012-05-26)",
+      "title_sort": "molecule form 112 (2012-005-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-53e25f519cdae689b4b5d0a85d4cf878"
+    },
+    "00459-113": {
+      "detail_uid": "00459-113",
+      "work_id": "00459",
+      "detail_id": "113",
+      "title": "molecule form 113 (2012-05-28)",
+      "title_sort": "molecule form 113 (2012-005-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3e269a6d3a4f613488f8030bb40c417f"
+    },
+    "00459-114": {
+      "detail_uid": "00459-114",
+      "work_id": "00459",
+      "detail_id": "114",
+      "title": "molecule form 114 (2012-06-08)",
+      "title_sort": "molecule form 114 (2012-006-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4313591a0dec2f0d8f0e935a28d67bbf"
+    },
+    "00459-115": {
+      "detail_uid": "00459-115",
+      "work_id": "00459",
+      "detail_id": "115",
+      "title": "molecule form 115 (2012-06-22)",
+      "title_sort": "molecule form 115 (2012-006-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b1e8b30fb18c0250080502ec5642fcc8"
+    },
+    "00459-116": {
+      "detail_uid": "00459-116",
+      "work_id": "00459",
+      "detail_id": "116",
+      "title": "molecule form 116 (2012-06-29)",
+      "title_sort": "molecule form 116 (2012-006-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ada2ad11d922f56dc4dfcb7326c13404"
+    },
+    "00459-117": {
+      "detail_uid": "00459-117",
+      "work_id": "00459",
+      "detail_id": "117",
+      "title": "molecule form 117 (2012-07-13)",
+      "title_sort": "molecule form 117 (2012-007-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-efa5eca7b4f6b1b413a06b0809bec23b"
+    },
+    "00459-118": {
+      "detail_uid": "00459-118",
+      "work_id": "00459",
+      "detail_id": "118",
+      "title": "molecule form 118 (2012-07-14)",
+      "title_sort": "molecule form 118 (2012-007-014)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8b77ff3d19318e17f49b6d7600eb4fea"
+    },
+    "00459-119": {
+      "detail_uid": "00459-119",
+      "work_id": "00459",
+      "detail_id": "119",
+      "title": "molecule form 119 (2012-07-15)",
+      "title_sort": "molecule form 119 (2012-007-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e1dd12bf94fcddc9c26f58050169a2e3"
+    },
+    "00459-120": {
+      "detail_uid": "00459-120",
+      "work_id": "00459",
+      "detail_id": "120",
+      "title": "molecule form 120 (2012-07-29)",
+      "title_sort": "molecule form 120 (2012-007-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d52314985c85435b985bf4266851aa06"
+    },
+    "00459-121": {
+      "detail_uid": "00459-121",
+      "work_id": "00459",
+      "detail_id": "121",
+      "title": "molecule form 121 (2012-07-29)",
+      "title_sort": "molecule form 121 (2012-007-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a7346d3742d55868d88a1ba14024fc9c"
+    },
+    "00459-122": {
+      "detail_uid": "00459-122",
+      "work_id": "00459",
+      "detail_id": "122",
+      "title": "molecule form 122 (2012-08-11)",
+      "title_sort": "molecule form 122 (2012-008-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2ac1515c9bcfa1d79cacb6e89a9513cc"
+    },
+    "00459-123": {
+      "detail_uid": "00459-123",
+      "work_id": "00459",
+      "detail_id": "123",
+      "title": "molecule form 123 (2012-08-22)",
+      "title_sort": "molecule form 123 (2012-008-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e668ffe7f76447d6cd70b4977e32bc53"
+    },
+    "00459-124": {
+      "detail_uid": "00459-124",
+      "work_id": "00459",
+      "detail_id": "124",
+      "title": "molecule form 124 (2012-08-28)",
+      "title_sort": "molecule form 124 (2012-008-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-96f068bc80a1f7cee02201e502af67b3"
+    },
+    "00459-125": {
+      "detail_uid": "00459-125",
+      "work_id": "00459",
+      "detail_id": "125",
+      "title": "molecule form 125 (2012-09-11)",
+      "title_sort": "molecule form 125 (2012-009-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a4e13ff92981e5ea6d982c7eef7af189"
+    },
+    "00459-126": {
+      "detail_uid": "00459-126",
+      "work_id": "00459",
+      "detail_id": "126",
+      "title": "molecule form 126 (2012-09-15)",
+      "title_sort": "molecule form 126 (2012-009-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-633cc0aaca04f061e90fb30e3e65f0bc"
+    },
+    "00459-127": {
+      "detail_uid": "00459-127",
+      "work_id": "00459",
+      "detail_id": "127",
+      "title": "molecule form 127 (2012-09-17)",
+      "title_sort": "molecule form 127 (2012-009-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9958028ae10d94c95a6fdf9b7834621d"
+    },
+    "00459-128": {
+      "detail_uid": "00459-128",
+      "work_id": "00459",
+      "detail_id": "128",
+      "title": "molecule form 128 (2012-09-18)",
+      "title_sort": "molecule form 128 (2012-009-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-77b09bf8ec52ff5c5683f493ac9fac67"
+    },
+    "00459-129": {
+      "detail_uid": "00459-129",
+      "work_id": "00459",
+      "detail_id": "129",
+      "title": "molecule form 129 (2012-09-27)",
+      "title_sort": "molecule form 129 (2012-009-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-32887d33381cc1fa2c670032933db0a2"
+    },
+    "00459-130": {
+      "detail_uid": "00459-130",
+      "work_id": "00459",
+      "detail_id": "130",
+      "title": "molecule form 130 (2012-09-27)",
+      "title_sort": "molecule form 130 (2012-009-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-72f11e97a89825a83f61f29c4b547d06"
+    },
+    "00459-131": {
+      "detail_uid": "00459-131",
+      "work_id": "00459",
+      "detail_id": "131",
+      "title": "molecule form 131 (2012-09-28)",
+      "title_sort": "molecule form 131 (2012-009-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-64a1c64b179a3f309246ecbc2f2de1d6"
+    },
+    "00459-132": {
+      "detail_uid": "00459-132",
+      "work_id": "00459",
+      "detail_id": "132",
+      "title": "molecule form 132 (2012-09-30)",
+      "title_sort": "molecule form 132 (2012-009-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-fc0eb645e39bca80b654445657b8788f"
+    },
+    "00459-133": {
+      "detail_uid": "00459-133",
+      "work_id": "00459",
+      "detail_id": "133",
+      "title": "molecule form 133 (2012-10-05)",
+      "title_sort": "molecule form 133 (2012-010-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2f7eece7c3221ddb53c5b9858110afc9"
+    },
+    "00459-134": {
+      "detail_uid": "00459-134",
+      "work_id": "00459",
+      "detail_id": "134",
+      "title": "molecule form 134 (2012-10-06)",
+      "title_sort": "molecule form 134 (2012-010-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-198281f886f2a902e32e9b45a3437f6b"
+    },
+    "00459-135": {
+      "detail_uid": "00459-135",
+      "work_id": "00459",
+      "detail_id": "135",
+      "title": "molecule form 135 (2012-10-07)",
+      "title_sort": "molecule form 135 (2012-010-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8c9a8255059eb5dd11a2e8d9e9bc9df2"
+    },
+    "00459-136": {
+      "detail_uid": "00459-136",
+      "work_id": "00459",
+      "detail_id": "136",
+      "title": "molecule form 136 (2012-10-10)",
+      "title_sort": "molecule form 136 (2012-010-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4be56cd3ea1833cbde906ab14b78fd83"
+    },
+    "00459-137": {
+      "detail_uid": "00459-137",
+      "work_id": "00459",
+      "detail_id": "137",
+      "title": "molecule form 137 (2012-10-17)",
+      "title_sort": "molecule form 137 (2012-010-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6e2e8e16e8adc608f838d9e75dd418a0"
+    },
+    "00459-138": {
+      "detail_uid": "00459-138",
+      "work_id": "00459",
+      "detail_id": "138",
+      "title": "molecule form 138 (2012-10-18)",
+      "title_sort": "molecule form 138 (2012-010-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d30419b84e77fcfa8f6ab249c3e7f4f4"
+    },
+    "00459-139": {
+      "detail_uid": "00459-139",
+      "work_id": "00459",
+      "detail_id": "139",
+      "title": "molecule form 139 (2012-10-21)",
+      "title_sort": "molecule form 139 (2012-010-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-bb057d360fb7f566d23ae055fbf2c633"
+    },
+    "00459-140": {
+      "detail_uid": "00459-140",
+      "work_id": "00459",
+      "detail_id": "140",
+      "title": "molecule form 140 (2012-10-25)",
+      "title_sort": "molecule form 140 (2012-010-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-93f761113b27540ccb4fc9d1460f31ef"
+    },
+    "00459-141": {
+      "detail_uid": "00459-141",
+      "work_id": "00459",
+      "detail_id": "141",
+      "title": "molecule form 141 (2012-10-26)",
+      "title_sort": "molecule form 141 (2012-010-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5a9318104984fa84739812ba433d026c"
+    },
+    "00459-142": {
+      "detail_uid": "00459-142",
+      "work_id": "00459",
+      "detail_id": "142",
+      "title": "molecule form 142 (2012-10-31)",
+      "title_sort": "molecule form 142 (2012-010-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ba9d709551b19d1c5d666d4e61616f16"
+    },
+    "00459-143": {
+      "detail_uid": "00459-143",
+      "work_id": "00459",
+      "detail_id": "143",
+      "title": "molecule form 143 (2012-11-03)",
+      "title_sort": "molecule form 143 (2012-011-003)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-bc15a1054baf979679b5923ecf366611"
+    },
+    "00459-144": {
+      "detail_uid": "00459-144",
+      "work_id": "00459",
+      "detail_id": "144",
+      "title": "molecule form 144 (2012-11-06)",
+      "title_sort": "molecule form 144 (2012-011-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-219233a1f5754bed69529a03be2fb1cb"
+    },
+    "00459-145": {
+      "detail_uid": "00459-145",
+      "work_id": "00459",
+      "detail_id": "145",
+      "title": "molecule form 145 (2012-11-25)",
+      "title_sort": "molecule form 145 (2012-011-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b2526d9a6d069b0e81eee50aa1644c88"
+    },
+    "00459-146": {
+      "detail_uid": "00459-146",
+      "work_id": "00459",
+      "detail_id": "146",
+      "title": "molecule form 146 (2012-12-06)",
+      "title_sort": "molecule form 146 (2012-012-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2b55fca3815634820c4a41a5db55786f"
+    },
+    "00459-147": {
+      "detail_uid": "00459-147",
+      "work_id": "00459",
+      "detail_id": "147",
+      "title": "molecule form 147 (2012-12-13)",
+      "title_sort": "molecule form 147 (2012-012-013)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b742c8a04746f14c744ef3ff0a6ac944"
+    },
+    "00459-148": {
+      "detail_uid": "00459-148",
+      "work_id": "00459",
+      "detail_id": "148",
+      "title": "molecule form 148 (2012-12-22)",
+      "title_sort": "molecule form 148 (2012-012-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ebad96e8abb110b1d44a79ba4910e7d9"
+    },
+    "00459-149": {
+      "detail_uid": "00459-149",
+      "work_id": "00459",
+      "detail_id": "149",
+      "title": "molecule form 149 (2012-12-22)",
+      "title_sort": "molecule form 149 (2012-012-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b28670aea15dc579627fdef14ccc9dfd"
+    },
+    "00459-150": {
+      "detail_uid": "00459-150",
+      "work_id": "00459",
+      "detail_id": "150",
+      "title": "molecule form 150 (2012-12-23)",
+      "title_sort": "molecule form 150 (2012-012-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-404040eb2fd6cd8813b8582115688236"
+    },
+    "00459-151": {
+      "detail_uid": "00459-151",
+      "work_id": "00459",
+      "detail_id": "151",
+      "title": "molecule form 151 (2012-12-25)",
+      "title_sort": "molecule form 151 (2012-012-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6d33846c88d47d68c24cbc51bcef31d7"
+    },
+    "00459-152": {
+      "detail_uid": "00459-152",
+      "work_id": "00459",
+      "detail_id": "152",
+      "title": "molecule form 152 (2012-12-26)",
+      "title_sort": "molecule form 152 (2012-012-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3669a005f85ceae427aa62a4e5710d9a"
+    },
+    "00459-153": {
+      "detail_uid": "00459-153",
+      "work_id": "00459",
+      "detail_id": "153",
+      "title": "molecule form 153 (2012-12-26)",
+      "title_sort": "molecule form 153 (2012-012-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-87428610511865d85660061d1a5d1c7f"
+    },
+    "00459-154": {
+      "detail_uid": "00459-154",
+      "work_id": "00459",
+      "detail_id": "154",
+      "title": "molecule form 154 (2012-12-26)",
+      "title_sort": "molecule form 154 (2012-012-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-326aa123f2eedfe08d7342d77a01dd1d"
+    },
+    "00459-155": {
+      "detail_uid": "00459-155",
+      "work_id": "00459",
+      "detail_id": "155",
+      "title": "molecule form 155 (2012-12-26)",
+      "title_sort": "molecule form 155 (2012-012-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-33649722ab0aa2dd3608d1ae17121916"
+    },
+    "00459-156": {
+      "detail_uid": "00459-156",
+      "work_id": "00459",
+      "detail_id": "156",
+      "title": "molecule form 156 (2012-12-27)",
+      "title_sort": "molecule form 156 (2012-012-027)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c7eeff2bbdc771248029a873a14c723c"
+    },
+    "00459-157": {
+      "detail_uid": "00459-157",
+      "work_id": "00459",
+      "detail_id": "157",
+      "title": "molecule form 157 (2012-12-28)",
+      "title_sort": "molecule form 157 (2012-012-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8f2492176db97e3b4a88bfdb5c615814"
+    },
+    "00459-158": {
+      "detail_uid": "00459-158",
+      "work_id": "00459",
+      "detail_id": "158",
+      "title": "molecule form 158 (2012-12-31)",
+      "title_sort": "molecule form 158 (2012-012-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5ad7044815f4dc30397719b134019d3e"
+    },
+    "00459-159": {
+      "detail_uid": "00459-159",
+      "work_id": "00459",
+      "detail_id": "159",
+      "title": "molecule form 159 (2012-12-31)",
+      "title_sort": "molecule form 159 (2012-012-031)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4b39322d0c4457254dc8e9a937721ff6"
+    },
+    "00459-160": {
+      "detail_uid": "00459-160",
+      "work_id": "00459",
+      "detail_id": "160",
+      "title": "molecule form 160 (2013-01-04)",
+      "title_sort": "molecule form 160 (2013-001-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-58f73939a38f31bd048e41beb6cbb9d3"
+    },
+    "00459-161": {
+      "detail_uid": "00459-161",
+      "work_id": "00459",
+      "detail_id": "161",
+      "title": "molecule form 161 (2013-01-04)",
+      "title_sort": "molecule form 161 (2013-001-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-292d88d0a7f90586fc036855942368f0"
+    },
+    "00459-162": {
+      "detail_uid": "00459-162",
+      "work_id": "00459",
+      "detail_id": "162",
+      "title": "molecule form 162 (2013-01-04)",
+      "title_sort": "molecule form 162 (2013-001-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0ff70143ef98ce5c2bebcb16927fb09d"
+    },
+    "00459-163": {
+      "detail_uid": "00459-163",
+      "work_id": "00459",
+      "detail_id": "163",
+      "title": "molecule form 163 (2013-01-08)",
+      "title_sort": "molecule form 163 (2013-001-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a1159af7c831734b54717af518fa2c76"
+    },
+    "00459-164": {
+      "detail_uid": "00459-164",
+      "work_id": "00459",
+      "detail_id": "164",
+      "title": "molecule form 164 (2013-01-16)",
+      "title_sort": "molecule form 164 (2013-001-016)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-1833e477a5e3815affe99b6e52c197b3"
+    },
+    "00459-165": {
+      "detail_uid": "00459-165",
+      "work_id": "00459",
+      "detail_id": "165",
+      "title": "molecule form 165 (2013-01-20)",
+      "title_sort": "molecule form 165 (2013-001-020)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ed49069c8cc94f192a51a74de888c96c"
+    },
+    "00459-166": {
+      "detail_uid": "00459-166",
+      "work_id": "00459",
+      "detail_id": "166",
+      "title": "molecule form 166 (2013-01-25)",
+      "title_sort": "molecule form 166 (2013-001-025)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-161e91ffda2d52cca6e22f7d5824c57b"
+    },
+    "00459-167": {
+      "detail_uid": "00459-167",
+      "work_id": "00459",
+      "detail_id": "167",
+      "title": "molecule form 167 (2013-01-28)",
+      "title_sort": "molecule form 167 (2013-001-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-85f691ee487b27bf06b83e78a90f7861"
+    },
+    "00459-168": {
+      "detail_uid": "00459-168",
+      "work_id": "00459",
+      "detail_id": "168",
+      "title": "molecule form 168 (2013-01-28)",
+      "title_sort": "molecule form 168 (2013-001-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-206417138117ef8c5491411c72da1ceb"
+    },
+    "00459-169": {
+      "detail_uid": "00459-169",
+      "work_id": "00459",
+      "detail_id": "169",
+      "title": "molecule form 169 (2013-01-29)",
+      "title_sort": "molecule form 169 (2013-001-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-65f94190a27c5b1c30177952fa4765b5"
+    },
+    "00459-170": {
+      "detail_uid": "00459-170",
+      "work_id": "00459",
+      "detail_id": "170",
+      "title": "molecule form 170 (2013-02-08)",
+      "title_sort": "molecule form 170 (2013-002-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f69abd397ac288c4bb6677343db81dce"
+    },
+    "00459-171": {
+      "detail_uid": "00459-171",
+      "work_id": "00459",
+      "detail_id": "171",
+      "title": "molecule form 171 (2013-02-16)",
+      "title_sort": "molecule form 171 (2013-002-016)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-dea709d186d7b5910ff4c10aec8ca052"
+    },
+    "00459-172": {
+      "detail_uid": "00459-172",
+      "work_id": "00459",
+      "detail_id": "172",
+      "title": "molecule form 172 (2013-02-21)",
+      "title_sort": "molecule form 172 (2013-002-021)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-83256d4f781a4781820d0fc50966ecbe"
+    },
+    "00459-173": {
+      "detail_uid": "00459-173",
+      "work_id": "00459",
+      "detail_id": "173",
+      "title": "molecule form 173 (2013-02-28)",
+      "title_sort": "molecule form 173 (2013-002-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-484e91622c4e1cc1d02cc9020e500f2c"
+    },
+    "00459-174": {
+      "detail_uid": "00459-174",
+      "work_id": "00459",
+      "detail_id": "174",
+      "title": "molecule form 174 (2013-02-28)",
+      "title_sort": "molecule form 174 (2013-002-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-1d039b13c1c404b4e9fe161e459d1377"
+    },
+    "00459-175": {
+      "detail_uid": "00459-175",
+      "work_id": "00459",
+      "detail_id": "175",
+      "title": "molecule form 175 (2013-03-02)",
+      "title_sort": "molecule form 175 (2013-003-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f99f4d09e5b2de78bede22380b2fbf34"
+    },
+    "00459-176": {
+      "detail_uid": "00459-176",
+      "work_id": "00459",
+      "detail_id": "176",
+      "title": "molecule form 176 (2013-03-02)",
+      "title_sort": "molecule form 176 (2013-003-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c30e824275ff0d1cec21cc2dd43d8184"
+    },
+    "00459-177": {
+      "detail_uid": "00459-177",
+      "work_id": "00459",
+      "detail_id": "177",
+      "title": "molecule form 177 (2013-03-02)",
+      "title_sort": "molecule form 177 (2013-003-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-03eb175a85597ad78249abe253a2246a"
+    },
+    "00459-178": {
+      "detail_uid": "00459-178",
+      "work_id": "00459",
+      "detail_id": "178",
+      "title": "molecule form 178 (2013-03-02)",
+      "title_sort": "molecule form 178 (2013-003-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-28bb3e7244cf151fe4d6d589f9e9baa6"
+    },
+    "00459-179": {
+      "detail_uid": "00459-179",
+      "work_id": "00459",
+      "detail_id": "179",
+      "title": "molecule form 179 (2013-03-02)",
+      "title_sort": "molecule form 179 (2013-003-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-232dc3ce37539e33c874ef9523923a47"
+    },
+    "00459-180": {
+      "detail_uid": "00459-180",
+      "work_id": "00459",
+      "detail_id": "180",
+      "title": "molecule form 180 (2013-03-10)",
+      "title_sort": "molecule form 180 (2013-003-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5aeb033a83eafc51ec03baf5a86b2330"
+    },
+    "00459-181": {
+      "detail_uid": "00459-181",
+      "work_id": "00459",
+      "detail_id": "181",
+      "title": "molecule form 181 (2013-03-11)",
+      "title_sort": "molecule form 181 (2013-003-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0edfbc06b6bdb2be3edb4b355bc52b41"
+    },
+    "00459-182": {
+      "detail_uid": "00459-182",
+      "work_id": "00459",
+      "detail_id": "182",
+      "title": "molecule form 182 (2013-03-11)",
+      "title_sort": "molecule form 182 (2013-003-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-74d6c1b75b2fbbc774711a8acffd91fa"
+    },
+    "00459-183": {
+      "detail_uid": "00459-183",
+      "work_id": "00459",
+      "detail_id": "183",
+      "title": "molecule form 183 (2013-03-15)",
+      "title_sort": "molecule form 183 (2013-003-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-43b30dae33f4e44234dca77efacbd7e5"
+    },
+    "00459-184": {
+      "detail_uid": "00459-184",
+      "work_id": "00459",
+      "detail_id": "184",
+      "title": "molecule form 184 (2013-03-16)",
+      "title_sort": "molecule form 184 (2013-003-016)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b55b1d418a7f26bffed9e66addaf4f09"
+    },
+    "00459-185": {
+      "detail_uid": "00459-185",
+      "work_id": "00459",
+      "detail_id": "185",
+      "title": "molecule form 185 (2013-03-17)",
+      "title_sort": "molecule form 185 (2013-003-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f5d37ff3bb060b5046ea8a0adada9746"
+    },
+    "00459-186": {
+      "detail_uid": "00459-186",
+      "work_id": "00459",
+      "detail_id": "186",
+      "title": "molecule form 186 (2013-03-17)",
+      "title_sort": "molecule form 186 (2013-003-017)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-517189b98598bcf9278ec2de74c86e08"
+    },
+    "00459-187": {
+      "detail_uid": "00459-187",
+      "work_id": "00459",
+      "detail_id": "187",
+      "title": "molecule form 187 (2013-03-18)",
+      "title_sort": "molecule form 187 (2013-003-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-525fb4f81b2a7c2ae7e2b88e34ebbfe4"
+    },
+    "00459-188": {
+      "detail_uid": "00459-188",
+      "work_id": "00459",
+      "detail_id": "188",
+      "title": "molecule form 188 (2013-03-22)",
+      "title_sort": "molecule form 188 (2013-003-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0c4f1310d04a6529d0a8fcf476c37a73"
+    },
+    "00459-189": {
+      "detail_uid": "00459-189",
+      "work_id": "00459",
+      "detail_id": "189",
+      "title": "molecule form 189 (2013-03-23)",
+      "title_sort": "molecule form 189 (2013-003-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e193a12e09fa4efa1b32d6e151207ef1"
+    },
+    "00459-190": {
+      "detail_uid": "00459-190",
+      "work_id": "00459",
+      "detail_id": "190",
+      "title": "molecule form 190 (2013-04-02)",
+      "title_sort": "molecule form 190 (2013-004-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-67167f9cf7d5c9c7143e54366276e69c"
+    },
+    "00459-191": {
+      "detail_uid": "00459-191",
+      "work_id": "00459",
+      "detail_id": "191",
+      "title": "molecule form 191 (2013-04-02)",
+      "title_sort": "molecule form 191 (2013-004-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-1b0233febe8d772a608d2d65e7ce70d8"
+    },
+    "00459-192": {
+      "detail_uid": "00459-192",
+      "work_id": "00459",
+      "detail_id": "192",
+      "title": "molecule form 192 (2013-04-02)",
+      "title_sort": "molecule form 192 (2013-004-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f715db8b1664c28454bb3277e47b9a30"
+    },
+    "00459-193": {
+      "detail_uid": "00459-193",
+      "work_id": "00459",
+      "detail_id": "193",
+      "title": "molecule form 193 (2013-04-02)",
+      "title_sort": "molecule form 193 (2013-004-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-acfa349231e13c47e5e601b510e757c7"
+    },
+    "00459-194": {
+      "detail_uid": "00459-194",
+      "work_id": "00459",
+      "detail_id": "194",
+      "title": "molecule form 194 (2013-04-02)",
+      "title_sort": "molecule form 194 (2013-004-002)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-85602cb8fcb8eda86158b10a62d545c8"
+    },
+    "00459-195": {
+      "detail_uid": "00459-195",
+      "work_id": "00459",
+      "detail_id": "195",
+      "title": "molecule form 195 (2013-04-04)",
+      "title_sort": "molecule form 195 (2013-004-004)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-838d26501a28d2638da771caee42f39d"
+    },
+    "00459-196": {
+      "detail_uid": "00459-196",
+      "work_id": "00459",
+      "detail_id": "196",
+      "title": "molecule form 196 (2013-04-06)",
+      "title_sort": "molecule form 196 (2013-004-006)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0d8725fca4d8433c442a782ae9ee6190"
+    },
+    "00459-197": {
+      "detail_uid": "00459-197",
+      "work_id": "00459",
+      "detail_id": "197",
+      "title": "molecule form 197 (2013-04-12)",
+      "title_sort": "molecule form 197 (2013-004-012)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a1f91a6a17b8681298aa441934660d79"
+    },
+    "00459-198": {
+      "detail_uid": "00459-198",
+      "work_id": "00459",
+      "detail_id": "198",
+      "title": "molecule form 198 (2013-04-12)",
+      "title_sort": "molecule form 198 (2013-004-012)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ef95b605cd42d0175ff7998e7564b92e"
+    },
+    "00459-199": {
+      "detail_uid": "00459-199",
+      "work_id": "00459",
+      "detail_id": "199",
+      "title": "molecule form 199 (2013-04-12)",
+      "title_sort": "molecule form 199 (2013-004-012)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0d306d3013068a8b49957575bd8a8d97"
+    },
+    "00459-200": {
+      "detail_uid": "00459-200",
+      "work_id": "00459",
+      "detail_id": "200",
+      "title": "molecule form 200 (2013-04-15)",
+      "title_sort": "molecule form 200 (2013-004-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-ea08e6bdb34a7a0bf55cac536dee9557"
+    },
+    "00459-201": {
+      "detail_uid": "00459-201",
+      "work_id": "00459",
+      "detail_id": "201",
+      "title": "molecule form 201 (2013-04-15)",
+      "title_sort": "molecule form 201 (2013-004-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-93d66fa8524a20378ae07d7370b32432"
+    },
+    "00459-202": {
+      "detail_uid": "00459-202",
+      "work_id": "00459",
+      "detail_id": "202",
+      "title": "molecule form 202 (2013-04-18)",
+      "title_sort": "molecule form 202 (2013-004-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-75c0eec7b10bb100836a4b8476d226eb"
+    },
+    "00459-203": {
+      "detail_uid": "00459-203",
+      "work_id": "00459",
+      "detail_id": "203",
+      "title": "molecule form 203 (2013-04-18)",
+      "title_sort": "molecule form 203 (2013-004-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e14e0ff7d2f599df4d016b6530670d87"
+    },
+    "00459-204": {
+      "detail_uid": "00459-204",
+      "work_id": "00459",
+      "detail_id": "204",
+      "title": "molecule form 204 (2013-04-18)",
+      "title_sort": "molecule form 204 (2013-004-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0932e630c5e3b90c95827006a5a32529"
+    },
+    "00459-205": {
+      "detail_uid": "00459-205",
+      "work_id": "00459",
+      "detail_id": "205",
+      "title": "molecule form 205 (2013-04-18)",
+      "title_sort": "molecule form 205 (2013-004-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-11cd083fe8b909a48e1b3d10ec0ca9d8"
+    },
+    "00459-206": {
+      "detail_uid": "00459-206",
+      "work_id": "00459",
+      "detail_id": "206",
+      "title": "molecule form 206 (2013-04-18)",
+      "title_sort": "molecule form 206 (2013-004-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b48b6bb3bf8c1e2ecbada468978548b6"
+    },
+    "00459-207": {
+      "detail_uid": "00459-207",
+      "work_id": "00459",
+      "detail_id": "207",
+      "title": "molecule form 207 (2013-04-28)",
+      "title_sort": "molecule form 207 (2013-004-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-9e4a90a94c41cc1d5b18e0323681aa26"
+    },
+    "00459-208": {
+      "detail_uid": "00459-208",
+      "work_id": "00459",
+      "detail_id": "208",
+      "title": "molecule form 208 (2013-04-30)",
+      "title_sort": "molecule form 208 (2013-004-030)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-57990c5612dc792fdfe6a50368ff8846"
+    },
+    "00459-209": {
+      "detail_uid": "00459-209",
+      "work_id": "00459",
+      "detail_id": "209",
+      "title": "molecule form 209 (2013-05-03)",
+      "title_sort": "molecule form 209 (2013-005-003)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5d033d185f81cb01d1fe867817ca98a0"
+    },
+    "00459-210": {
+      "detail_uid": "00459-210",
+      "work_id": "00459",
+      "detail_id": "210",
+      "title": "molecule form 210 (2013-05-03)",
+      "title_sort": "molecule form 210 (2013-005-003)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-bd887c2725b55d67861b6b2936f95676"
+    },
+    "00459-211": {
+      "detail_uid": "00459-211",
+      "work_id": "00459",
+      "detail_id": "211",
+      "title": "molecule form 211 (2013-05-07)",
+      "title_sort": "molecule form 211 (2013-005-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e7ccd0a63f58d9773f86cd90caae2e30"
+    },
+    "00459-212": {
+      "detail_uid": "00459-212",
+      "work_id": "00459",
+      "detail_id": "212",
+      "title": "molecule form 212 (2013-05-07)",
+      "title_sort": "molecule form 212 (2013-005-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5cc6743bf557e9d418ca555c855c4b83"
+    },
+    "00459-213": {
+      "detail_uid": "00459-213",
+      "work_id": "00459",
+      "detail_id": "213",
+      "title": "molecule form 213 (2013-05-09)",
+      "title_sort": "molecule form 213 (2013-005-009)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-adcb89064da03cd5e0b5d00b557a9bbc"
+    },
+    "00459-214": {
+      "detail_uid": "00459-214",
+      "work_id": "00459",
+      "detail_id": "214",
+      "title": "molecule form 214 (2013-05-09)",
+      "title_sort": "molecule form 214 (2013-005-009)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a22dedf244a4be8889a9571b2c2b496c"
+    },
+    "00459-215": {
+      "detail_uid": "00459-215",
+      "work_id": "00459",
+      "detail_id": "215",
+      "title": "molecule form 215 (2013-05-10)",
+      "title_sort": "molecule form 215 (2013-005-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-dd5759e3e6fe2f3a72b40d93c6d43133"
+    },
+    "00459-216": {
+      "detail_uid": "00459-216",
+      "work_id": "00459",
+      "detail_id": "216",
+      "title": "molecule form 216 (2013-05-10)",
+      "title_sort": "molecule form 216 (2013-005-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e71536a6c0036ef7864c3687432b99c4"
+    },
+    "00459-217": {
+      "detail_uid": "00459-217",
+      "work_id": "00459",
+      "detail_id": "217",
+      "title": "molecule form 217 (2013-05-11)",
+      "title_sort": "molecule form 217 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-918f572019d5f88d89566c72b30d4b36"
+    },
+    "00459-218": {
+      "detail_uid": "00459-218",
+      "work_id": "00459",
+      "detail_id": "218",
+      "title": "molecule form 218 (2013-05-11)",
+      "title_sort": "molecule form 218 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f257d55511f0a745e33a433c0f00465f"
+    },
+    "00459-219": {
+      "detail_uid": "00459-219",
+      "work_id": "00459",
+      "detail_id": "219",
+      "title": "molecule form 219 (2013-05-11)",
+      "title_sort": "molecule form 219 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d8646747c04acf8ae6aeb70d27d10357"
+    },
+    "00459-220": {
+      "detail_uid": "00459-220",
+      "work_id": "00459",
+      "detail_id": "220",
+      "title": "molecule form 220 (2013-05-11)",
+      "title_sort": "molecule form 220 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-572896bc21071f2c94cae8b122ca0df3"
+    },
+    "00459-221": {
+      "detail_uid": "00459-221",
+      "work_id": "00459",
+      "detail_id": "221",
+      "title": "molecule form 221 (2013-05-11)",
+      "title_sort": "molecule form 221 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b0761d48b2b46006dff3f44ab718794d"
+    },
+    "00459-222": {
+      "detail_uid": "00459-222",
+      "work_id": "00459",
+      "detail_id": "222",
+      "title": "molecule form 222 (2013-05-11)",
+      "title_sort": "molecule form 222 (2013-005-011)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-701aeae4dfa0e667b41907302ed91012"
+    },
+    "00459-223": {
+      "detail_uid": "00459-223",
+      "work_id": "00459",
+      "detail_id": "223",
+      "title": "molecule form 223 (2013-05-15)",
+      "title_sort": "molecule form 223 (2013-005-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3adcbd40e56e7434a8f27d70ed52d31a"
+    },
+    "00459-224": {
+      "detail_uid": "00459-224",
+      "work_id": "00459",
+      "detail_id": "224",
+      "title": "molecule form 224 (2013-05-15)",
+      "title_sort": "molecule form 224 (2013-005-015)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2d30b3bddb9c1a6f1f88426b61360dc6"
+    },
+    "00459-225": {
+      "detail_uid": "00459-225",
+      "work_id": "00459",
+      "detail_id": "225",
+      "title": "molecule form 225 (2013-06-07)",
+      "title_sort": "molecule form 225 (2013-006-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3c6e09113ffdcc9c1fdff0c832120d07"
+    },
+    "00459-226": {
+      "detail_uid": "00459-226",
+      "work_id": "00459",
+      "detail_id": "226",
+      "title": "molecule form 226 (2013-06-07)",
+      "title_sort": "molecule form 226 (2013-006-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-8432dae151c369dc12b38ab4a940a858"
+    },
+    "00459-227": {
+      "detail_uid": "00459-227",
+      "work_id": "00459",
+      "detail_id": "227",
+      "title": "molecule form 227 (2013-06-07)",
+      "title_sort": "molecule form 227 (2013-006-007)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6adaace0c7c4fa01bb6617ecbbda8f89"
+    },
+    "00459-228": {
+      "detail_uid": "00459-228",
+      "work_id": "00459",
+      "detail_id": "228",
+      "title": "molecule form 228 (2013-06-10)",
+      "title_sort": "molecule form 228 (2013-006-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-a967144b2ecc554a970093f4f340af02"
+    },
+    "00459-229": {
+      "detail_uid": "00459-229",
+      "work_id": "00459",
+      "detail_id": "229",
+      "title": "molecule form 229 (2013-06-10)",
+      "title_sort": "molecule form 229 (2013-006-010)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-832fb4a1c4bd98cd5fb9369fe93b0a96"
+    },
+    "00459-230": {
+      "detail_uid": "00459-230",
+      "work_id": "00459",
+      "detail_id": "230",
+      "title": "molecule form 230 (2013-06-12)",
+      "title_sort": "molecule form 230 (2013-006-012)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-3043d3eb3ae3f91ffc7420710e2c9a89"
+    },
+    "00459-231": {
+      "detail_uid": "00459-231",
+      "work_id": "00459",
+      "detail_id": "231",
+      "title": "molecule form 231 (2013-06-20)",
+      "title_sort": "molecule form 231 (2013-006-020)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-d06021c4ee2316dc478d9efee1d7f611"
+    },
+    "00459-232": {
+      "detail_uid": "00459-232",
+      "work_id": "00459",
+      "detail_id": "232",
+      "title": "molecule form 232 (2013-06-22)",
+      "title_sort": "molecule form 232 (2013-006-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0ff726515fc3d66dc10287c69de32f74"
+    },
+    "00459-233": {
+      "detail_uid": "00459-233",
+      "work_id": "00459",
+      "detail_id": "233",
+      "title": "molecule form 233 (2013-06-28)",
+      "title_sort": "molecule form 233 (2013-006-028)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f2fc4da53e705af57fea0fe752e5b58b"
+    },
+    "00459-234": {
+      "detail_uid": "00459-234",
+      "work_id": "00459",
+      "detail_id": "234",
+      "title": "molecule form 234 (2013-07-22)",
+      "title_sort": "molecule form 234 (2013-007-022)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-1b68987cf59b47b48a14c615649bca31"
+    },
+    "00459-235": {
+      "detail_uid": "00459-235",
+      "work_id": "00459",
+      "detail_id": "235",
+      "title": "molecule form 235 (2013-07-23)",
+      "title_sort": "molecule form 235 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-555689e0eface8caf07bebe8ea6d190a"
+    },
+    "00459-236": {
+      "detail_uid": "00459-236",
+      "work_id": "00459",
+      "detail_id": "236",
+      "title": "molecule form 236 (2013-07-23)",
+      "title_sort": "molecule form 236 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-540b4283591fd828d4b6de194accd8d4"
+    },
+    "00459-237": {
+      "detail_uid": "00459-237",
+      "work_id": "00459",
+      "detail_id": "237",
+      "title": "molecule form 237 (2013-07-23)",
+      "title_sort": "molecule form 237 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-df8f3cb236958b7b64d4a647cc6f1372"
+    },
+    "00459-238": {
+      "detail_uid": "00459-238",
+      "work_id": "00459",
+      "detail_id": "238",
+      "title": "molecule form 238 (2013-07-23)",
+      "title_sort": "molecule form 238 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-aaba6fde96b81b8364643f9f7fe00870"
+    },
+    "00459-239": {
+      "detail_uid": "00459-239",
+      "work_id": "00459",
+      "detail_id": "239",
+      "title": "molecule form 239 (2013-07-23)",
+      "title_sort": "molecule form 239 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-e3a7f21f7b2c1b902e3bd3dba7404cec"
+    },
+    "00459-240": {
+      "detail_uid": "00459-240",
+      "work_id": "00459",
+      "detail_id": "240",
+      "title": "molecule form 240 (2013-07-23)",
+      "title_sort": "molecule form 240 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4adbd20be8261baa559fbb927f2d8218"
+    },
+    "00459-241": {
+      "detail_uid": "00459-241",
+      "work_id": "00459",
+      "detail_id": "241",
+      "title": "molecule form 241 (2013-07-23)",
+      "title_sort": "molecule form 241 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-6d796cd893be15f9607ea7b3f47dbd5a"
+    },
+    "00459-242": {
+      "detail_uid": "00459-242",
+      "work_id": "00459",
+      "detail_id": "242",
+      "title": "molecule form 242 (2013-07-23)",
+      "title_sort": "molecule form 242 (2013-007-023)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b09f9a15f76d6f56b6249c028dc94f99"
+    },
+    "00459-243": {
+      "detail_uid": "00459-243",
+      "work_id": "00459",
+      "detail_id": "243",
+      "title": "molecule form 243 (2013-07-26)",
+      "title_sort": "molecule form 243 (2013-007-026)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-abb59c10b28d926b404e0462ce799bfe"
+    },
+    "00459-244": {
+      "detail_uid": "00459-244",
+      "work_id": "00459",
+      "detail_id": "244",
+      "title": "molecule form 244 (2013-07-29)",
+      "title_sort": "molecule form 244 (2013-007-029)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f2d72fb7164809d789b79ce95c56f14a"
+    },
+    "00459-245": {
+      "detail_uid": "00459-245",
+      "work_id": "00459",
+      "detail_id": "245",
+      "title": "molecule form 245 (2013-08-01)",
+      "title_sort": "molecule form 245 (2013-008-001)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-5cdb567ce1e6818fb3a75c5ffc0e696c"
+    },
+    "00459-246": {
+      "detail_uid": "00459-246",
+      "work_id": "00459",
+      "detail_id": "246",
+      "title": "molecule form 246 (2013-08-01)",
+      "title_sort": "molecule form 246 (2013-008-001)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4e71153f6d82c8d633dcbd07fa10edec"
+    },
+    "00459-247": {
+      "detail_uid": "00459-247",
+      "work_id": "00459",
+      "detail_id": "247",
+      "title": "molecule form 247 (2013-08-03)",
+      "title_sort": "molecule form 247 (2013-008-003)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-398bb25fe6c74f89f874892bf68d66bb"
+    },
+    "00459-248": {
+      "detail_uid": "00459-248",
+      "work_id": "00459",
+      "detail_id": "248",
+      "title": "molecule form 248 (2013-08-05)",
+      "title_sort": "molecule form 248 (2013-008-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-453ffb9c504af16351f1fe5679a3e415"
+    },
+    "00459-249": {
+      "detail_uid": "00459-249",
+      "work_id": "00459",
+      "detail_id": "249",
+      "title": "molecule form 249 (2013-08-05)",
+      "title_sort": "molecule form 249 (2013-008-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-0c1f2328c1c931ebef6cd80f280ceea7"
+    },
+    "00459-250": {
+      "detail_uid": "00459-250",
+      "work_id": "00459",
+      "detail_id": "250",
+      "title": "molecule form 250 (2013-08-05)",
+      "title_sort": "molecule form 250 (2013-008-005)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-f8d409b36d7aa73cfb936f7fef2bd385"
+    },
+    "00459-251": {
+      "detail_uid": "00459-251",
+      "work_id": "00459",
+      "detail_id": "251",
+      "title": "molecule form 251 (2013-08-08)",
+      "title_sort": "molecule form 251 (2013-008-008)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-2167a161281a9f27be4f71d353453a85"
+    },
+    "00459-252": {
+      "detail_uid": "00459-252",
+      "work_id": "00459",
+      "detail_id": "252",
+      "title": "molecule form 252 (2013-08-16)",
+      "title_sort": "molecule form 252 (2013-008-016)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-c9b7cfe8f42b0a7f6ffa63018f7f79ae"
+    },
+    "00459-253": {
+      "detail_uid": "00459-253",
+      "work_id": "00459",
+      "detail_id": "253",
+      "title": "molecule form 253 (2013-08-18)",
+      "title_sort": "molecule form 253 (2013-008-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-4814916af369ce8ddc21f60a389391d6"
+    },
+    "00459-254": {
+      "detail_uid": "00459-254",
+      "work_id": "00459",
+      "detail_id": "254",
+      "title": "molecule form 254 (2013-08-18)",
+      "title_sort": "molecule form 254 (2013-008-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-b7482a5f53c2b06557fcdea1e12a28a6"
+    },
+    "00459-255": {
+      "detail_uid": "00459-255",
+      "work_id": "00459",
+      "detail_id": "255",
+      "title": "molecule form 255 (2013-08-18)",
+      "title_sort": "molecule form 255 (2013-008-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-16a27f1f4823d3b83c0233445a4fff67"
+    },
+    "00459-256": {
+      "detail_uid": "00459-256",
+      "work_id": "00459",
+      "detail_id": "256",
+      "title": "molecule form 256 (2013-08-18)",
+      "title_sort": "molecule form 256 (2013-008-018)",
+      "project_subfolder": "molecules",
+      "section_id": "molecules",
+      "detail_checksum": "blake2b-09a49e646e7e1a81a00eb787ae22d325"
+    },
+    "00460-001": {
+      "detail_uid": "00460-001",
+      "work_id": "00460",
+      "detail_id": "001",
+      "title": "molecules (positive)",
+      "title_sort": "molecules (positive)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-97d7f60fb564656a556c16eae919a7d2"
+    },
+    "00460-002": {
+      "detail_uid": "00460-002",
+      "work_id": "00460",
+      "detail_id": "002",
+      "title": "molecules (negative)",
+      "title_sort": "molecules (negative)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-9485cfa23f653e0f1a2ea1b98d899f88"
+    },
+    "00460-003": {
+      "detail_uid": "00460-003",
+      "work_id": "00460",
+      "detail_id": "003",
+      "title": "molecules mist (positive)",
+      "title_sort": "molecules mist (positive)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-39624cc7fa9da8716b0466f85c81b0f6"
+    },
+    "00460-004": {
+      "detail_uid": "00460-004",
+      "work_id": "00460",
+      "detail_id": "004",
+      "title": "molecules mist (negative)",
+      "title_sort": "molecules mist (negative)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-cbd28ee61f035d4ab444b69e842a1384"
+    },
+    "00460-005": {
+      "detail_uid": "00460-005",
+      "work_id": "00460",
+      "detail_id": "005",
+      "title": "molecules (detail 1)",
+      "title_sort": "molecules (detail 001)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8ba6e41ed00144b20107d64464350afc"
+    },
+    "00460-006": {
+      "detail_uid": "00460-006",
+      "work_id": "00460",
+      "detail_id": "006",
+      "title": "molecules (detail 2)",
+      "title_sort": "molecules (detail 002)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-59a59695d6bd7fdf27e2be5d17ac7050"
+    },
+    "00460-007": {
+      "detail_uid": "00460-007",
+      "work_id": "00460",
+      "detail_id": "007",
+      "title": "molecules (detail 3)",
+      "title_sort": "molecules (detail 003)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-43d792d9a222addefe44102ec961e2a7"
+    },
+    "00460-008": {
+      "detail_uid": "00460-008",
+      "work_id": "00460",
+      "detail_id": "008",
+      "title": "molecules (detail 4)",
+      "title_sort": "molecules (detail 004)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-ece9459a6686e8ae6fe3be74be02ad16"
+    },
+    "00460-009": {
+      "detail_uid": "00460-009",
+      "work_id": "00460",
+      "detail_id": "009",
+      "title": "molecules (detail 5)",
+      "title_sort": "molecules (detail 005)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-6ca16127ce63b2c40db1fd26e725dff7"
+    },
+    "00460-010": {
+      "detail_uid": "00460-010",
+      "work_id": "00460",
+      "detail_id": "010",
+      "title": "molecules (detail 6)",
+      "title_sort": "molecules (detail 006)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-3d844d77c44ed7f4fc4f97d115fae842"
+    },
+    "00460-011": {
+      "detail_uid": "00460-011",
+      "work_id": "00460",
+      "detail_id": "011",
+      "title": "molecules (detail 7)",
+      "title_sort": "molecules (detail 007)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-34d33825edfb20d1e48950d9291a83c4"
+    },
+    "00460-012": {
+      "detail_uid": "00460-012",
+      "work_id": "00460",
+      "detail_id": "012",
+      "title": "molecules (detail 8)",
+      "title_sort": "molecules (detail 008)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-40c0d1ded9bb91b3aa48f11ed660a3f1"
+    },
+    "00460-013": {
+      "detail_uid": "00460-013",
+      "work_id": "00460",
+      "detail_id": "013",
+      "title": "molecules (detail 9)",
+      "title_sort": "molecules (detail 009)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-3bac82b69823e4ae32c326dd94fd9d90"
+    },
+    "00460-014": {
+      "detail_uid": "00460-014",
+      "work_id": "00460",
+      "detail_id": "014",
+      "title": "molecules (detail 10)",
+      "title_sort": "molecules (detail 010)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-e115dc95ccac69a4f598baa0b6854afb"
+    },
+    "00460-015": {
+      "detail_uid": "00460-015",
+      "work_id": "00460",
+      "detail_id": "015",
+      "title": "molecules (detail 11)",
+      "title_sort": "molecules (detail 011)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-9a6a7c3b26120b41bfabd77e90558080"
+    },
+    "00460-016": {
+      "detail_uid": "00460-016",
+      "work_id": "00460",
+      "detail_id": "016",
+      "title": "molecules (detail 12)",
+      "title_sort": "molecules (detail 012)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-0409154809f4c9a4dc91d5aa9374e917"
+    },
+    "00460-017": {
+      "detail_uid": "00460-017",
+      "work_id": "00460",
+      "detail_id": "017",
+      "title": "molecules (detail 13)",
+      "title_sort": "molecules (detail 013)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-e06d42d8d96bd5a3da5db9c9180b8104"
+    },
+    "00460-018": {
+      "detail_uid": "00460-018",
+      "work_id": "00460",
+      "detail_id": "018",
+      "title": "molecules (detail 14)",
+      "title_sort": "molecules (detail 014)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-77e34323bd65956aebff2c5afbdfcff5"
+    },
+    "00460-019": {
+      "detail_uid": "00460-019",
+      "work_id": "00460",
+      "detail_id": "019",
+      "title": "molecules (detail 15)",
+      "title_sort": "molecules (detail 015)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-709dfb1d0d85da7b0ba361cfee697e71"
+    },
+    "00460-020": {
+      "detail_uid": "00460-020",
+      "work_id": "00460",
+      "detail_id": "020",
+      "title": "molecules (detail 16)",
+      "title_sort": "molecules (detail 016)",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-cddc5dfdae76c35baf789357cd634fee"
+    },
+    "00463-001": {
+      "detail_uid": "00463-001",
+      "work_id": "00463",
+      "detail_id": "001",
+      "title": "living surface hand form (original painting, 1989)",
+      "title_sort": "living surface hand form (original painting, 1989)",
+      "project_subfolder": "original painting",
+      "section_id": "original-painting",
+      "detail_checksum": "blake2b-de3e711bb9cca805f30fa92ccd806df1"
+    },
+    "00463-002": {
+      "detail_uid": "00463-002",
+      "work_id": "00463",
+      "detail_id": "002",
+      "title": "living surface (version 1)",
+      "title_sort": "living surface (version 001)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-ceabfaa2c7f2881f4c274f9caccc0912"
+    },
+    "00463-003": {
+      "detail_uid": "00463-003",
+      "work_id": "00463",
+      "detail_id": "003",
+      "title": "living surface (version 2)",
+      "title_sort": "living surface (version 002)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-8a0b58527e9b9edcfeb88bf9f1157d2d"
+    },
+    "00463-004": {
+      "detail_uid": "00463-004",
+      "work_id": "00463",
+      "detail_id": "004",
+      "title": "living surface (version 3)",
+      "title_sort": "living surface (version 003)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-05fbc1fd51739a8111707ebee6af3ebe"
+    },
+    "00463-005": {
+      "detail_uid": "00463-005",
+      "work_id": "00463",
+      "detail_id": "005",
+      "title": "living surface (version 3) detail",
+      "title_sort": "living surface (version 003) detail",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-3e93d5f3128de881fd409f0259f83856"
+    },
+    "00463-006": {
+      "detail_uid": "00463-006",
+      "work_id": "00463",
+      "detail_id": "006",
+      "title": "living surface (version 4)",
+      "title_sort": "living surface (version 004)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-c3ee5939acf2225382bf529dc30a3bf4"
+    },
+    "00463-007": {
+      "detail_uid": "00463-007",
+      "work_id": "00463",
+      "detail_id": "007",
+      "title": "living surface (version 4) detail",
+      "title_sort": "living surface (version 004) detail",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-da195667f5177c77c65deb3cd99ee285"
+    },
+    "00464-001": {
+      "detail_uid": "00464-001",
+      "work_id": "00464",
+      "detail_id": "001",
+      "title": "memories of the forest 1",
+      "title_sort": "memories of the forest 001",
+      "project_subfolder": "moments",
+      "section_id": "moments",
+      "detail_checksum": "blake2b-d75680cb3fdf7988af4509a50e45bf35"
+    },
+    "00464-002": {
+      "detail_uid": "00464-002",
+      "work_id": "00464",
+      "detail_id": "002",
+      "title": "memories of the forest 2",
+      "title_sort": "memories of the forest 002",
+      "project_subfolder": "moments",
+      "section_id": "moments",
+      "detail_checksum": "blake2b-29e788317ea2adcb1c6c317971732adf"
+    },
+    "00464-003": {
+      "detail_uid": "00464-003",
+      "work_id": "00464",
+      "detail_id": "003",
+      "title": "memories of the forest 3",
+      "title_sort": "memories of the forest 003",
+      "project_subfolder": "moments",
+      "section_id": "moments",
+      "detail_checksum": "blake2b-0f975899800a59eb74eca6b7ae39acea"
+    },
+    "00464-004": {
+      "detail_uid": "00464-004",
+      "work_id": "00464",
+      "detail_id": "004",
+      "title": "3 moments",
+      "title_sort": "003 moments",
+      "project_subfolder": "moments",
+      "section_id": "moments",
+      "detail_checksum": "blake2b-bd33e5fe3439959800ae8339a0f0a2de"
+    },
+    "00464-005": {
+      "detail_uid": "00464-005",
+      "work_id": "00464",
+      "detail_id": "005",
+      "title": "memory - 1.1",
+      "title_sort": "memory - 001.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-30cec114f3db2bf0e0f9f8d43dff7d7c"
+    },
+    "00464-006": {
+      "detail_uid": "00464-006",
+      "work_id": "00464",
+      "detail_id": "006",
+      "title": "memory - 1.2",
+      "title_sort": "memory - 001.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-d42d5df9747fac423873cf21558b6dac"
+    },
+    "00464-007": {
+      "detail_uid": "00464-007",
+      "work_id": "00464",
+      "detail_id": "007",
+      "title": "memory - 1.3",
+      "title_sort": "memory - 001.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-ff2ef597ba5767834d9f48e200a3cf41"
+    },
+    "00464-008": {
+      "detail_uid": "00464-008",
+      "work_id": "00464",
+      "detail_id": "008",
+      "title": "memory - 2.1",
+      "title_sort": "memory - 002.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-63c48b2af962983781881626a4f3656a"
+    },
+    "00464-009": {
+      "detail_uid": "00464-009",
+      "work_id": "00464",
+      "detail_id": "009",
+      "title": "memory - 2.2",
+      "title_sort": "memory - 002.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-901071f2c9259ccc4fab58e5d20c8a6f"
+    },
+    "00464-010": {
+      "detail_uid": "00464-010",
+      "work_id": "00464",
+      "detail_id": "010",
+      "title": "memory - 2.3",
+      "title_sort": "memory - 002.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-61551c507f5323623a3535f9be637beb"
+    },
+    "00464-011": {
+      "detail_uid": "00464-011",
+      "work_id": "00464",
+      "detail_id": "011",
+      "title": "memory - 3.1",
+      "title_sort": "memory - 003.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-aa028269b0e22c02dd29e96403323bd6"
+    },
+    "00464-012": {
+      "detail_uid": "00464-012",
+      "work_id": "00464",
+      "detail_id": "012",
+      "title": "memory - 3.2",
+      "title_sort": "memory - 003.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-0bef5bf84b4799dada85875cd9501d2a"
+    },
+    "00464-013": {
+      "detail_uid": "00464-013",
+      "work_id": "00464",
+      "detail_id": "013",
+      "title": "memory - 3.3",
+      "title_sort": "memory - 003.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-d45e2b38910ba6b5d2dd331c949279d8"
+    },
+    "00464-014": {
+      "detail_uid": "00464-014",
+      "work_id": "00464",
+      "detail_id": "014",
+      "title": "memory - 4.1",
+      "title_sort": "memory - 004.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-70b2d4c77685212172d16b95cfaed556"
+    },
+    "00464-015": {
+      "detail_uid": "00464-015",
+      "work_id": "00464",
+      "detail_id": "015",
+      "title": "memory - 4.2",
+      "title_sort": "memory - 004.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-09e06533f0ed3f333bc042306f55b988"
+    },
+    "00464-016": {
+      "detail_uid": "00464-016",
+      "work_id": "00464",
+      "detail_id": "016",
+      "title": "memory - 4.3",
+      "title_sort": "memory - 004.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-6c00e2cf2fd6ad5b92c63f966eaa794f"
+    },
+    "00464-017": {
+      "detail_uid": "00464-017",
+      "work_id": "00464",
+      "detail_id": "017",
+      "title": "memory - 5.1",
+      "title_sort": "memory - 005.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-ba03ba66d4e2075c40a0e3094ba974c5"
+    },
+    "00464-018": {
+      "detail_uid": "00464-018",
+      "work_id": "00464",
+      "detail_id": "018",
+      "title": "memory - 5.2",
+      "title_sort": "memory - 005.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-d070fb65fc43521656adad1477947048"
+    },
+    "00464-019": {
+      "detail_uid": "00464-019",
+      "work_id": "00464",
+      "detail_id": "019",
+      "title": "memory - 5.3",
+      "title_sort": "memory - 005.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-2dc83c8d03f84b866bbab4114926fb3c"
+    },
+    "00464-020": {
+      "detail_uid": "00464-020",
+      "work_id": "00464",
+      "detail_id": "020",
+      "title": "memory - 6.1",
+      "title_sort": "memory - 006.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-a070f20fa2a65a5d5d59f0e698966285"
+    },
+    "00464-021": {
+      "detail_uid": "00464-021",
+      "work_id": "00464",
+      "detail_id": "021",
+      "title": "memory - 6.2",
+      "title_sort": "memory - 006.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-89bb511001124421ae0164ae768e2d13"
+    },
+    "00464-022": {
+      "detail_uid": "00464-022",
+      "work_id": "00464",
+      "detail_id": "022",
+      "title": "memory - 6.3",
+      "title_sort": "memory - 006.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-95902abb590ab6e88c548b764e3bd086"
+    },
+    "00464-023": {
+      "detail_uid": "00464-023",
+      "work_id": "00464",
+      "detail_id": "023",
+      "title": "memory - 7.1",
+      "title_sort": "memory - 007.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-36282a36943a5b3ce28bd88316328950"
+    },
+    "00464-024": {
+      "detail_uid": "00464-024",
+      "work_id": "00464",
+      "detail_id": "024",
+      "title": "memory - 7.2",
+      "title_sort": "memory - 007.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-9d3a98634756cd095a37ed9584aec2f0"
+    },
+    "00464-025": {
+      "detail_uid": "00464-025",
+      "work_id": "00464",
+      "detail_id": "025",
+      "title": "memory - 7.3",
+      "title_sort": "memory - 007.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-1ded74d3948fab9d0a37ef51d92ca7ad"
+    },
+    "00464-026": {
+      "detail_uid": "00464-026",
+      "work_id": "00464",
+      "detail_id": "026",
+      "title": "memory - 8.1",
+      "title_sort": "memory - 008.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-f139e1e40849a18e648f4b27771094c6"
+    },
+    "00464-027": {
+      "detail_uid": "00464-027",
+      "work_id": "00464",
+      "detail_id": "027",
+      "title": "memory - 8.2",
+      "title_sort": "memory - 008.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-c1bf02edd940e5236ae919eecddb7a43"
+    },
+    "00464-028": {
+      "detail_uid": "00464-028",
+      "work_id": "00464",
+      "detail_id": "028",
+      "title": "memory - 8.3",
+      "title_sort": "memory - 008.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-e4bc802313c43a8718f0c5ef80e251a6"
+    },
+    "00464-029": {
+      "detail_uid": "00464-029",
+      "work_id": "00464",
+      "detail_id": "029",
+      "title": "memory - 9.1",
+      "title_sort": "memory - 009.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-6c60a8d98db2ac6e9dc77cc65386007a"
+    },
+    "00464-030": {
+      "detail_uid": "00464-030",
+      "work_id": "00464",
+      "detail_id": "030",
+      "title": "memory - 9.2",
+      "title_sort": "memory - 009.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-fff3b339e87f1261124ce813a2f47e44"
+    },
+    "00464-031": {
+      "detail_uid": "00464-031",
+      "work_id": "00464",
+      "detail_id": "031",
+      "title": "memory - 9.3",
+      "title_sort": "memory - 009.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-ea1dd603b59cfffdedd08c851bd5f590"
+    },
+    "00464-032": {
+      "detail_uid": "00464-032",
+      "work_id": "00464",
+      "detail_id": "032",
+      "title": "memory - 10.1",
+      "title_sort": "memory - 010.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-7698a9353ff3d9c2c76acde840156624"
+    },
+    "00464-033": {
+      "detail_uid": "00464-033",
+      "work_id": "00464",
+      "detail_id": "033",
+      "title": "memory - 10.2",
+      "title_sort": "memory - 010.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-f60164c8ac5a76a0affb0ac7cde7f2ce"
+    },
+    "00464-034": {
+      "detail_uid": "00464-034",
+      "work_id": "00464",
+      "detail_id": "034",
+      "title": "memory - 10.3",
+      "title_sort": "memory - 010.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-c819f026ea060ada78d009a00664c495"
+    },
+    "00464-035": {
+      "detail_uid": "00464-035",
+      "work_id": "00464",
+      "detail_id": "035",
+      "title": "memory - 11.1",
+      "title_sort": "memory - 011.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-22e3239482871f00ae126b5f4f798db2"
+    },
+    "00464-036": {
+      "detail_uid": "00464-036",
+      "work_id": "00464",
+      "detail_id": "036",
+      "title": "memory - 11.2",
+      "title_sort": "memory - 011.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-d39e09dad1a7ed479fec22738bb5fd8a"
+    },
+    "00464-037": {
+      "detail_uid": "00464-037",
+      "work_id": "00464",
+      "detail_id": "037",
+      "title": "memory - 11.3",
+      "title_sort": "memory - 011.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-e9f524bbbff53dd2274fedd2941cf962"
+    },
+    "00464-038": {
+      "detail_uid": "00464-038",
+      "work_id": "00464",
+      "detail_id": "038",
+      "title": "memory - 12.1",
+      "title_sort": "memory - 012.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-49b1e0d6fc8de2a0d0b32381851a2ea7"
+    },
+    "00464-039": {
+      "detail_uid": "00464-039",
+      "work_id": "00464",
+      "detail_id": "039",
+      "title": "memory - 12.2",
+      "title_sort": "memory - 012.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-0c092e4731896168feab626ae997ca51"
+    },
+    "00464-040": {
+      "detail_uid": "00464-040",
+      "work_id": "00464",
+      "detail_id": "040",
+      "title": "memory - 12.3",
+      "title_sort": "memory - 012.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-af2cfc74239d407896f8acdb42f758d7"
+    },
+    "00464-041": {
+      "detail_uid": "00464-041",
+      "work_id": "00464",
+      "detail_id": "041",
+      "title": "memory - 13.1",
+      "title_sort": "memory - 013.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-c407ac9023f8fd9f16a3869ed327eff1"
+    },
+    "00464-042": {
+      "detail_uid": "00464-042",
+      "work_id": "00464",
+      "detail_id": "042",
+      "title": "memory - 13.2",
+      "title_sort": "memory - 013.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-ace8b5bee9545464aec7a302db43ebf3"
+    },
+    "00464-043": {
+      "detail_uid": "00464-043",
+      "work_id": "00464",
+      "detail_id": "043",
+      "title": "memory - 13.3",
+      "title_sort": "memory - 013.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-db4209607572b18391565e5e884ab5d9"
+    },
+    "00464-044": {
+      "detail_uid": "00464-044",
+      "work_id": "00464",
+      "detail_id": "044",
+      "title": "memory - 14.1",
+      "title_sort": "memory - 014.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-80d39dde3ca5295d174e91aae83d95b4"
+    },
+    "00464-045": {
+      "detail_uid": "00464-045",
+      "work_id": "00464",
+      "detail_id": "045",
+      "title": "memory - 14.2",
+      "title_sort": "memory - 014.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-0a0b39404717981a7b4421635673c68e"
+    },
+    "00464-046": {
+      "detail_uid": "00464-046",
+      "work_id": "00464",
+      "detail_id": "046",
+      "title": "memory - 14.3",
+      "title_sort": "memory - 014.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-9476fbaa5a550bdc4b229b5f1f82c0fd"
+    },
+    "00464-047": {
+      "detail_uid": "00464-047",
+      "work_id": "00464",
+      "detail_id": "047",
+      "title": "memory - 15.1",
+      "title_sort": "memory - 015.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-3870c61c78a1c33f2952fe3d539633ee"
+    },
+    "00464-048": {
+      "detail_uid": "00464-048",
+      "work_id": "00464",
+      "detail_id": "048",
+      "title": "memory - 15.2",
+      "title_sort": "memory - 015.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-232b1e93bac3e75d459d10c42ce0f938"
+    },
+    "00464-049": {
+      "detail_uid": "00464-049",
+      "work_id": "00464",
+      "detail_id": "049",
+      "title": "memory - 15.3",
+      "title_sort": "memory - 015.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-67b91381126ae4e6543056d44585d217"
+    },
+    "00464-050": {
+      "detail_uid": "00464-050",
+      "work_id": "00464",
+      "detail_id": "050",
+      "title": "memory - 16.1",
+      "title_sort": "memory - 016.001",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-dd6d1f79453803215d9de7c0b1be55c2"
+    },
+    "00464-051": {
+      "detail_uid": "00464-051",
+      "work_id": "00464",
+      "detail_id": "051",
+      "title": "memory - 16.2",
+      "title_sort": "memory - 016.002",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-23bb20e3b38c59459550d2525ae6e6bf"
+    },
+    "00464-052": {
+      "detail_uid": "00464-052",
+      "work_id": "00464",
+      "detail_id": "052",
+      "title": "memory - 16.3",
+      "title_sort": "memory - 016.003",
+      "project_subfolder": "memories",
+      "section_id": "memories",
+      "detail_checksum": "blake2b-a904092137e3e03568612d0393181f1e"
+    },
+    "00464-053": {
+      "detail_uid": "00464-053",
+      "work_id": "00464",
+      "detail_id": "053",
+      "title": "memories 1-6",
+      "title_sort": "memories 001-006",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-dc6e40b33a1f655d5730111e34691a16"
+    },
+    "00464-054": {
+      "detail_uid": "00464-054",
+      "work_id": "00464",
+      "detail_id": "054",
+      "title": "memories 7-12",
+      "title_sort": "memories 007-012",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-9ad1aa6f1ea6515d9445afa23d9d1966"
+    },
+    "00464-055": {
+      "detail_uid": "00464-055",
+      "work_id": "00464",
+      "detail_id": "055",
+      "title": "memories 13-18",
+      "title_sort": "memories 013-018",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-80217d1d5e5cee53ff8e4d274b2e45b2"
+    },
+    "00464-056": {
+      "detail_uid": "00464-056",
+      "work_id": "00464",
+      "detail_id": "056",
+      "title": "memories 19-24",
+      "title_sort": "memories 019-024",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-7b3297d68f11363e4ca96af5a349323d"
+    },
+    "00464-057": {
+      "detail_uid": "00464-057",
+      "work_id": "00464",
+      "detail_id": "057",
+      "title": "memories 25-30",
+      "title_sort": "memories 025-030",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-05536bacb8517e927dd36e5485dfd18e"
+    },
+    "00464-058": {
+      "detail_uid": "00464-058",
+      "work_id": "00464",
+      "detail_id": "058",
+      "title": "memories 31-36",
+      "title_sort": "memories 031-036",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-63dee33054249bea512a81d6835eda03"
+    },
+    "00464-059": {
+      "detail_uid": "00464-059",
+      "work_id": "00464",
+      "detail_id": "059",
+      "title": "memories 37-42",
+      "title_sort": "memories 037-042",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-c3fd1c939a2ee56ecb649f5f195988eb"
+    },
+    "00464-060": {
+      "detail_uid": "00464-060",
+      "work_id": "00464",
+      "detail_id": "060",
+      "title": "memories 43-48",
+      "title_sort": "memories 043-048",
+      "project_subfolder": "composite memories",
+      "section_id": "composite-memories",
+      "detail_checksum": "blake2b-21012645b1e51a904b976be52a431128"
+    },
+    "00465-001": {
+      "detail_uid": "00465-001",
+      "work_id": "00465",
+      "detail_id": "001",
+      "title": "forests (2023) - forest 1 - detail 1",
+      "title_sort": "forests (2023) - forest 001 - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f44d16521500b2449b244fb177ed991d"
+    },
+    "00465-002": {
+      "detail_uid": "00465-002",
+      "work_id": "00465",
+      "detail_id": "002",
+      "title": "forests (2023) - forest 1 - detail 2",
+      "title_sort": "forests (2023) - forest 001 - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-2961da7988b961f37d9d8fa173b40fb2"
+    },
+    "00465-003": {
+      "detail_uid": "00465-003",
+      "work_id": "00465",
+      "detail_id": "003",
+      "title": "forests (2023) - forest 1 - detail 3",
+      "title_sort": "forests (2023) - forest 001 - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-54ac83ec3d713e654affe6405142b9ed"
+    },
+    "00466-001": {
+      "detail_uid": "00466-001",
+      "work_id": "00466",
+      "detail_id": "001",
+      "title": "forests (2023) - forest 2 - detail 1",
+      "title_sort": "forests (2023) - forest 002 - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-6f97df334c1f839f7df616aeb1eb14d9"
+    },
+    "00466-002": {
+      "detail_uid": "00466-002",
+      "work_id": "00466",
+      "detail_id": "002",
+      "title": "forests (2023) - forest 2 - detail 2",
+      "title_sort": "forests (2023) - forest 002 - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-faa0bb15b3cd1c65be2f0a03fe727616"
+    },
+    "00466-003": {
+      "detail_uid": "00466-003",
+      "work_id": "00466",
+      "detail_id": "003",
+      "title": "forests (2023) - forest 2 - detail 3",
+      "title_sort": "forests (2023) - forest 002 - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b9ff8859b36aea4c93b1f10f6a192eb2"
+    },
+    "00467-001": {
+      "detail_uid": "00467-001",
+      "work_id": "00467",
+      "detail_id": "001",
+      "title": "forests (2023) - forest 3 - detail 1",
+      "title_sort": "forests (2023) - forest 003 - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-9a567fe94961de1bef3f263d892b2834"
+    },
+    "00467-002": {
+      "detail_uid": "00467-002",
+      "work_id": "00467",
+      "detail_id": "002",
+      "title": "forests (2023) - forest 3 - detail 2",
+      "title_sort": "forests (2023) - forest 003 - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7919e29537a568ccc29e7efbe646f65d"
+    },
+    "00467-003": {
+      "detail_uid": "00467-003",
+      "work_id": "00467",
+      "detail_id": "003",
+      "title": "forests (2023) - forest 3 - detail 3",
+      "title_sort": "forests (2023) - forest 003 - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b270eb9b04ccc97bbc33a5eed5422773"
+    },
+    "00468-001": {
+      "detail_uid": "00468-001",
+      "work_id": "00468",
+      "detail_id": "001",
+      "title": "forests (2023) - forest 4 - detail 1",
+      "title_sort": "forests (2023) - forest 004 - detail 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c2a2ecd2de5b2fbb7c3520ec4a58e8e1"
+    },
+    "00468-002": {
+      "detail_uid": "00468-002",
+      "work_id": "00468",
+      "detail_id": "002",
+      "title": "forests (2023) - forest 4 - detail 2",
+      "title_sort": "forests (2023) - forest 004 - detail 002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d5efb07270955792e797bc9050f25004"
+    },
+    "00468-003": {
+      "detail_uid": "00468-003",
+      "work_id": "00468",
+      "detail_id": "003",
+      "title": "forests (2023) - forest 4 - detail 3",
+      "title_sort": "forests (2023) - forest 004 - detail 003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7e2994fb1bebb94739352147a3d2a91e"
+    },
+    "00468-004": {
+      "detail_uid": "00468-004",
+      "work_id": "00468",
+      "detail_id": "004",
+      "title": "forests (2023) - forest 4 - detail 4",
+      "title_sort": "forests (2023) - forest 004 - detail 004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-0eefb643a53e1f5a0f8a8d337f5e77ff"
+    },
+    "00468-005": {
+      "detail_uid": "00468-005",
+      "work_id": "00468",
+      "detail_id": "005",
+      "title": "forests (2023) - forest 4 - detail 5",
+      "title_sort": "forests (2023) - forest 004 - detail 005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d9715bc61cc036483f4e9dae66662424"
+    },
+    "00468-006": {
+      "detail_uid": "00468-006",
+      "work_id": "00468",
+      "detail_id": "006",
+      "title": "forests (2023) - forest 4 - detail 6",
+      "title_sort": "forests (2023) - forest 004 - detail 006",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-11167b28d7310b406ffb91f68f19bdf0"
+    },
+    "00469-001": {
+      "detail_uid": "00469-001",
+      "work_id": "00469",
+      "detail_id": "001",
+      "title": "water colour series",
+      "title_sort": "water colour series",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-d3072a543bb2ba837d15053c030097a2"
+    },
+    "00469-002": {
+      "detail_uid": "00469-002",
+      "work_id": "00469",
+      "detail_id": "002",
+      "title": "water blue",
+      "title_sort": "water blue",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-c83edd42ac0a1c5c6adcb4b4adea3b92"
+    },
+    "00469-003": {
+      "detail_uid": "00469-003",
+      "work_id": "00469",
+      "detail_id": "003",
+      "title": "water green",
+      "title_sort": "water green",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-dc6cd492b4fe218aeaf083b492a4789e"
+    },
+    "00469-004": {
+      "detail_uid": "00469-004",
+      "work_id": "00469",
+      "detail_id": "004",
+      "title": "water cyan",
+      "title_sort": "water cyan",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-6d7d5aec8633714f160ddcd1a521d1d2"
+    },
+    "00469-005": {
+      "detail_uid": "00469-005",
+      "work_id": "00469",
+      "detail_id": "005",
+      "title": "water grey series",
+      "title_sort": "water grey series",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-7c5447977535e51adcca859dfc1eece0"
+    },
+    "00469-006": {
+      "detail_uid": "00469-006",
+      "work_id": "00469",
+      "detail_id": "006",
+      "title": "water grey 1",
+      "title_sort": "water grey 001",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-9b82742020fae848deb82fe4ea3d5bcf"
+    },
+    "00469-007": {
+      "detail_uid": "00469-007",
+      "work_id": "00469",
+      "detail_id": "007",
+      "title": "water grey 2",
+      "title_sort": "water grey 002",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-4e0200b1cfb8fd2f0053a8649e2dcdda"
+    },
+    "00469-008": {
+      "detail_uid": "00469-008",
+      "work_id": "00469",
+      "detail_id": "008",
+      "title": "water grey 3",
+      "title_sort": "water grey 003",
+      "project_subfolder": "water series",
+      "section_id": "water-series",
+      "detail_checksum": "blake2b-18bb42c390e3411069bf30c7b8b7f9be"
+    },
+    "00519-001": {
+      "detail_uid": "00519-001",
+      "work_id": "00519",
+      "detail_id": "001",
+      "title": "version dall-e - 1.0 (run source)",
+      "title_sort": "version dall-e - 001.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-816d7d0e435ab470e6f7cd502581fc8c"
+    },
+    "00519-002": {
+      "detail_uid": "00519-002",
+      "work_id": "00519",
+      "detail_id": "002",
+      "title": "version dall-e - 1.1",
+      "title_sort": "version dall-e - 001.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-c4dfcf94364308cc284e1fdcd33bb8be"
+    },
+    "00519-003": {
+      "detail_uid": "00519-003",
+      "work_id": "00519",
+      "detail_id": "003",
+      "title": "version dall-e - 1.2",
+      "title_sort": "version dall-e - 001.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-cfd887656ecae9e082dd674df764126d"
+    },
+    "00519-004": {
+      "detail_uid": "00519-004",
+      "work_id": "00519",
+      "detail_id": "004",
+      "title": "version dall-e - 1.3",
+      "title_sort": "version dall-e - 001.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-40dd70bf087797ecd3ba6ee3aa5725e0"
+    },
+    "00519-005": {
+      "detail_uid": "00519-005",
+      "work_id": "00519",
+      "detail_id": "005",
+      "title": "version dall-e - 1.4",
+      "title_sort": "version dall-e - 001.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-64ac995e40f5c2f3069742fd69866c7e"
+    },
+    "00519-006": {
+      "detail_uid": "00519-006",
+      "work_id": "00519",
+      "detail_id": "006",
+      "title": "version dall-e - 2.0 (run source)",
+      "title_sort": "version dall-e - 002.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-55d541f31e229d6d108a60c89f16292f"
+    },
+    "00519-007": {
+      "detail_uid": "00519-007",
+      "work_id": "00519",
+      "detail_id": "007",
+      "title": "version dall-e - 2.1",
+      "title_sort": "version dall-e - 002.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-8f368303b03b530ff7c219d421d299ea"
+    },
+    "00519-008": {
+      "detail_uid": "00519-008",
+      "work_id": "00519",
+      "detail_id": "008",
+      "title": "version dall-e - 2.2",
+      "title_sort": "version dall-e - 002.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-e12a28bdc60f91c0d9241fe08a00c254"
+    },
+    "00519-009": {
+      "detail_uid": "00519-009",
+      "work_id": "00519",
+      "detail_id": "009",
+      "title": "version dall-e - 2.3",
+      "title_sort": "version dall-e - 002.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-3cba7e5ec0660f7ecdd4fabfae333850"
+    },
+    "00519-010": {
+      "detail_uid": "00519-010",
+      "work_id": "00519",
+      "detail_id": "010",
+      "title": "version dall-e - 2.4",
+      "title_sort": "version dall-e - 002.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-8c54eae16a3140afef87e62f1c30c8c9"
+    },
+    "00519-011": {
+      "detail_uid": "00519-011",
+      "work_id": "00519",
+      "detail_id": "011",
+      "title": "version dall-e - 3.0 (run source)",
+      "title_sort": "version dall-e - 003.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-80d319420e965c5352ae9dc8ca1be634"
+    },
+    "00519-012": {
+      "detail_uid": "00519-012",
+      "work_id": "00519",
+      "detail_id": "012",
+      "title": "version dall-e - 3.1",
+      "title_sort": "version dall-e - 003.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-15d0835f23bc35fb164e76993087a7d9"
+    },
+    "00519-013": {
+      "detail_uid": "00519-013",
+      "work_id": "00519",
+      "detail_id": "013",
+      "title": "version dall-e - 3.2",
+      "title_sort": "version dall-e - 003.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-a78cc1ca2bf6a936ec47f29e925763e3"
+    },
+    "00519-014": {
+      "detail_uid": "00519-014",
+      "work_id": "00519",
+      "detail_id": "014",
+      "title": "version dall-e - 3.3",
+      "title_sort": "version dall-e - 003.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-6fd03abc85358181380f15230ec0c4aa"
+    },
+    "00519-015": {
+      "detail_uid": "00519-015",
+      "work_id": "00519",
+      "detail_id": "015",
+      "title": "version dall-e - 3.4",
+      "title_sort": "version dall-e - 003.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-590bc2a469fc8ff39df0343b96e31763"
+    },
+    "00519-016": {
+      "detail_uid": "00519-016",
+      "work_id": "00519",
+      "detail_id": "016",
+      "title": "version dall-e - 4.0 (run source)",
+      "title_sort": "version dall-e - 004.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-dea06f7e66f11013531e94b909e0101c"
+    },
+    "00519-017": {
+      "detail_uid": "00519-017",
+      "work_id": "00519",
+      "detail_id": "017",
+      "title": "version dall-e - 4.1",
+      "title_sort": "version dall-e - 004.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-fdf3d6ec6fa949a678ce6d295f4ad417"
+    },
+    "00519-018": {
+      "detail_uid": "00519-018",
+      "work_id": "00519",
+      "detail_id": "018",
+      "title": "version dall-e - 4.2",
+      "title_sort": "version dall-e - 004.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-9a4cb346e25d7691e79322fc1ce1a9b9"
+    },
+    "00519-019": {
+      "detail_uid": "00519-019",
+      "work_id": "00519",
+      "detail_id": "019",
+      "title": "version dall-e - 4.3",
+      "title_sort": "version dall-e - 004.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-aee6bafb9a192891858dff7a34d66bb9"
+    },
+    "00519-020": {
+      "detail_uid": "00519-020",
+      "work_id": "00519",
+      "detail_id": "020",
+      "title": "version dall-e - 4.4",
+      "title_sort": "version dall-e - 004.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-15d0170bde4f275d09284a397c2ea8a5"
+    },
+    "00519-021": {
+      "detail_uid": "00519-021",
+      "work_id": "00519",
+      "detail_id": "021",
+      "title": "version dall-e - 5.0 (run source)",
+      "title_sort": "version dall-e - 005.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-07bc84344e9142309e9b23df012aa746"
+    },
+    "00519-022": {
+      "detail_uid": "00519-022",
+      "work_id": "00519",
+      "detail_id": "022",
+      "title": "version dall-e - 5.1",
+      "title_sort": "version dall-e - 005.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-63c6237a1ec99c07a57213e39c9d350e"
+    },
+    "00519-023": {
+      "detail_uid": "00519-023",
+      "work_id": "00519",
+      "detail_id": "023",
+      "title": "version dall-e - 5.2",
+      "title_sort": "version dall-e - 005.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-fb1fc4fbae608bf06eed5e52ffd3c7c8"
+    },
+    "00519-024": {
+      "detail_uid": "00519-024",
+      "work_id": "00519",
+      "detail_id": "024",
+      "title": "version dall-e - 5.3",
+      "title_sort": "version dall-e - 005.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-ea5b3dca086a918028d23c77f370f67f"
+    },
+    "00519-025": {
+      "detail_uid": "00519-025",
+      "work_id": "00519",
+      "detail_id": "025",
+      "title": "version dall-e - 5.4",
+      "title_sort": "version dall-e - 005.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-7cd0ecda11f4ea6ca6c3fdf5faee5070"
+    },
+    "00519-026": {
+      "detail_uid": "00519-026",
+      "work_id": "00519",
+      "detail_id": "026",
+      "title": "version dall-e - 6.0 (run source)",
+      "title_sort": "version dall-e - 006.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-2386183d4861495c777fea43328eebce"
+    },
+    "00519-027": {
+      "detail_uid": "00519-027",
+      "work_id": "00519",
+      "detail_id": "027",
+      "title": "version dall-e - 6.1",
+      "title_sort": "version dall-e - 006.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-7ca02b47fdd1cf54b2fa4ed92a622720"
+    },
+    "00519-028": {
+      "detail_uid": "00519-028",
+      "work_id": "00519",
+      "detail_id": "028",
+      "title": "version dall-e - 6.2",
+      "title_sort": "version dall-e - 006.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-078767cea8b0a101a9aea593765a6183"
+    },
+    "00519-029": {
+      "detail_uid": "00519-029",
+      "work_id": "00519",
+      "detail_id": "029",
+      "title": "version dall-e - 6.3",
+      "title_sort": "version dall-e - 006.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-2575788a6867e0e0a0fd259d2febfc63"
+    },
+    "00519-030": {
+      "detail_uid": "00519-030",
+      "work_id": "00519",
+      "detail_id": "030",
+      "title": "version dall-e - 6.4",
+      "title_sort": "version dall-e - 006.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-f49e514dc190dd383b14e4048abfb18f"
+    },
+    "00519-031": {
+      "detail_uid": "00519-031",
+      "work_id": "00519",
+      "detail_id": "031",
+      "title": "version dall-e - 7.0 (run source)",
+      "title_sort": "version dall-e - 007.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-07ce0cc5fa02007c70c638a79a275c4f"
+    },
+    "00519-032": {
+      "detail_uid": "00519-032",
+      "work_id": "00519",
+      "detail_id": "032",
+      "title": "version dall-e - 7.1",
+      "title_sort": "version dall-e - 007.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-8fa78bc67c428a61d6aaaabefe01b4d6"
+    },
+    "00519-033": {
+      "detail_uid": "00519-033",
+      "work_id": "00519",
+      "detail_id": "033",
+      "title": "version dall-e - 7.2",
+      "title_sort": "version dall-e - 007.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-d868bc939bf0a65114ea83e0eda9d898"
+    },
+    "00519-034": {
+      "detail_uid": "00519-034",
+      "work_id": "00519",
+      "detail_id": "034",
+      "title": "version dall-e - 7.3",
+      "title_sort": "version dall-e - 007.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-b941a529411c677c3b0a0aece7827987"
+    },
+    "00519-035": {
+      "detail_uid": "00519-035",
+      "work_id": "00519",
+      "detail_id": "035",
+      "title": "version dall-e - 7.4",
+      "title_sort": "version dall-e - 007.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-432a3d0f15efd2f1b5f59517ba330692"
+    },
+    "00519-036": {
+      "detail_uid": "00519-036",
+      "work_id": "00519",
+      "detail_id": "036",
+      "title": "version dall-e - 8.0 (run source)",
+      "title_sort": "version dall-e - 008.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-5569cfff53072bd38df7a94e1ba08bee"
+    },
+    "00519-037": {
+      "detail_uid": "00519-037",
+      "work_id": "00519",
+      "detail_id": "037",
+      "title": "version dall-e - 8.1",
+      "title_sort": "version dall-e - 008.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-52dd73be076e841a1fe79003837a00a4"
+    },
+    "00519-038": {
+      "detail_uid": "00519-038",
+      "work_id": "00519",
+      "detail_id": "038",
+      "title": "version dall-e - 8.2",
+      "title_sort": "version dall-e - 008.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-668461a1e4c647e3ea59d0f1a60993ee"
+    },
+    "00519-039": {
+      "detail_uid": "00519-039",
+      "work_id": "00519",
+      "detail_id": "039",
+      "title": "version dall-e - 8.3",
+      "title_sort": "version dall-e - 008.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-19dc1824dd59e9bdc607af526d6c1a79"
+    },
+    "00519-040": {
+      "detail_uid": "00519-040",
+      "work_id": "00519",
+      "detail_id": "040",
+      "title": "version dall-e - 8.4",
+      "title_sort": "version dall-e - 008.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-1b04625b9fe0e911ee305f37ca0b795f"
+    },
+    "00519-041": {
+      "detail_uid": "00519-041",
+      "work_id": "00519",
+      "detail_id": "041",
+      "title": "version dall-e - 9.0 (run source)",
+      "title_sort": "version dall-e - 009.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-92bfc2d03d230494dc6aa851480d5a7f"
+    },
+    "00519-042": {
+      "detail_uid": "00519-042",
+      "work_id": "00519",
+      "detail_id": "042",
+      "title": "version dall-e - 9.1",
+      "title_sort": "version dall-e - 009.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-04a57ef8835bea6510647f4188f8a775"
+    },
+    "00519-043": {
+      "detail_uid": "00519-043",
+      "work_id": "00519",
+      "detail_id": "043",
+      "title": "version dall-e - 9.2",
+      "title_sort": "version dall-e - 009.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-4732dafcb0e0df925dc2a93c624d36d8"
+    },
+    "00519-044": {
+      "detail_uid": "00519-044",
+      "work_id": "00519",
+      "detail_id": "044",
+      "title": "version dall-e - 9.3",
+      "title_sort": "version dall-e - 009.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-fc9682d2bdc5d316247a6926c1c1896a"
+    },
+    "00519-045": {
+      "detail_uid": "00519-045",
+      "work_id": "00519",
+      "detail_id": "045",
+      "title": "version dall-e - 9.4",
+      "title_sort": "version dall-e - 009.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-834783fa77e0c3eeb59eec76325b697d"
+    },
+    "00519-046": {
+      "detail_uid": "00519-046",
+      "work_id": "00519",
+      "detail_id": "046",
+      "title": "version dall-e - 10.0 (run source)",
+      "title_sort": "version dall-e - 010.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-6a9335cacf5252b636c23d5e6f8d0a39"
+    },
+    "00519-047": {
+      "detail_uid": "00519-047",
+      "work_id": "00519",
+      "detail_id": "047",
+      "title": "version dall-e - 10.1",
+      "title_sort": "version dall-e - 010.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-7f2f2057bb5a36b3279e458558630ae2"
+    },
+    "00519-048": {
+      "detail_uid": "00519-048",
+      "work_id": "00519",
+      "detail_id": "048",
+      "title": "version dall-e - 10.2",
+      "title_sort": "version dall-e - 010.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-6debe80998f3c820484369f676dc2a64"
+    },
+    "00519-049": {
+      "detail_uid": "00519-049",
+      "work_id": "00519",
+      "detail_id": "049",
+      "title": "version dall-e - 10.3",
+      "title_sort": "version dall-e - 010.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-97cb1579c14ba1a06506ac97462eaa48"
+    },
+    "00519-050": {
+      "detail_uid": "00519-050",
+      "work_id": "00519",
+      "detail_id": "050",
+      "title": "version dall-e - 10.4",
+      "title_sort": "version dall-e - 010.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-02186c7a1b53a52f7fa95d2fd4518acb"
+    },
+    "00519-051": {
+      "detail_uid": "00519-051",
+      "work_id": "00519",
+      "detail_id": "051",
+      "title": "version dall-e - 11.0 (run source)",
+      "title_sort": "version dall-e - 011.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-0f92f02a2c11c66f61ea7c2d81e3832f"
+    },
+    "00519-052": {
+      "detail_uid": "00519-052",
+      "work_id": "00519",
+      "detail_id": "052",
+      "title": "version dall-e - 11.1",
+      "title_sort": "version dall-e - 011.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-209714fddbedaac78f152c9122acc65d"
+    },
+    "00519-053": {
+      "detail_uid": "00519-053",
+      "work_id": "00519",
+      "detail_id": "053",
+      "title": "version dall-e - 11.2",
+      "title_sort": "version dall-e - 011.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-25a70cb725f4730ba31bbe0d8780260a"
+    },
+    "00519-054": {
+      "detail_uid": "00519-054",
+      "work_id": "00519",
+      "detail_id": "054",
+      "title": "version dall-e - 11.3",
+      "title_sort": "version dall-e - 011.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-1787ee157f07d24e17b050fa6d7d6c3b"
+    },
+    "00519-055": {
+      "detail_uid": "00519-055",
+      "work_id": "00519",
+      "detail_id": "055",
+      "title": "version dall-e - 11.4",
+      "title_sort": "version dall-e - 011.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-45c240032af7685f549cd675e5cd2ea2"
+    },
+    "00519-056": {
+      "detail_uid": "00519-056",
+      "work_id": "00519",
+      "detail_id": "056",
+      "title": "version dall-e - 12.0 (run source)",
+      "title_sort": "version dall-e - 012.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-be4353a31161a49108c5ed0e9e95207b"
+    },
+    "00519-057": {
+      "detail_uid": "00519-057",
+      "work_id": "00519",
+      "detail_id": "057",
+      "title": "version dall-e - 12.1",
+      "title_sort": "version dall-e - 012.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-3b86ed9fcf92fd8782eb4f7a898c4067"
+    },
+    "00519-058": {
+      "detail_uid": "00519-058",
+      "work_id": "00519",
+      "detail_id": "058",
+      "title": "version dall-e - 12.2",
+      "title_sort": "version dall-e - 012.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-2edbb7e448a93702b3bce61f13e8b048"
+    },
+    "00519-059": {
+      "detail_uid": "00519-059",
+      "work_id": "00519",
+      "detail_id": "059",
+      "title": "version dall-e - 12.3",
+      "title_sort": "version dall-e - 012.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-3d4daad43a55fbcfb44655d2746ed9f4"
+    },
+    "00519-060": {
+      "detail_uid": "00519-060",
+      "work_id": "00519",
+      "detail_id": "060",
+      "title": "version dall-e - 12.4",
+      "title_sort": "version dall-e - 012.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-c7d4beffcab70f406489ac0a0e8e9a28"
+    },
+    "00519-061": {
+      "detail_uid": "00519-061",
+      "work_id": "00519",
+      "detail_id": "061",
+      "title": "version dall-e - 13.0 (run source)",
+      "title_sort": "version dall-e - 013.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-9261a60fc4a59110cdfa709f430c0099"
+    },
+    "00519-062": {
+      "detail_uid": "00519-062",
+      "work_id": "00519",
+      "detail_id": "062",
+      "title": "version dall-e - 13.1",
+      "title_sort": "version dall-e - 013.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-498972636cd7c3f501c1c7cd8bfe6ba4"
+    },
+    "00519-063": {
+      "detail_uid": "00519-063",
+      "work_id": "00519",
+      "detail_id": "063",
+      "title": "version dall-e - 13.2",
+      "title_sort": "version dall-e - 013.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-33bc8f3324e2b9dd365ab4a3e543d9cf"
+    },
+    "00519-064": {
+      "detail_uid": "00519-064",
+      "work_id": "00519",
+      "detail_id": "064",
+      "title": "version dall-e - 13.3",
+      "title_sort": "version dall-e - 013.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-a3c3c21c0345c35ae83fc3df027361e2"
+    },
+    "00519-065": {
+      "detail_uid": "00519-065",
+      "work_id": "00519",
+      "detail_id": "065",
+      "title": "version dall-e - 13.4",
+      "title_sort": "version dall-e - 013.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-56147f87e4882dca435271562b4255e6"
+    },
+    "00519-066": {
+      "detail_uid": "00519-066",
+      "work_id": "00519",
+      "detail_id": "066",
+      "title": "version dall-e - 14.0 (run source)",
+      "title_sort": "version dall-e - 014.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-c3794c0c0d40dd104959107b6a7e4a93"
+    },
+    "00519-067": {
+      "detail_uid": "00519-067",
+      "work_id": "00519",
+      "detail_id": "067",
+      "title": "version dall-e - 14.1",
+      "title_sort": "version dall-e - 014.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-8be22934346724121585cd25f0da94da"
+    },
+    "00519-068": {
+      "detail_uid": "00519-068",
+      "work_id": "00519",
+      "detail_id": "068",
+      "title": "version dall-e - 14.2",
+      "title_sort": "version dall-e - 014.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-2dd7857ca9195d8dc7573d58642ff315"
+    },
+    "00519-069": {
+      "detail_uid": "00519-069",
+      "work_id": "00519",
+      "detail_id": "069",
+      "title": "version dall-e - 14.3",
+      "title_sort": "version dall-e - 014.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-b8068dd745ae48eee118af2f2c0effd9"
+    },
+    "00519-070": {
+      "detail_uid": "00519-070",
+      "work_id": "00519",
+      "detail_id": "070",
+      "title": "version dall-e - 14.4",
+      "title_sort": "version dall-e - 014.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-bf147ff9294535240ce15bb88a0a9e1b"
+    },
+    "00519-071": {
+      "detail_uid": "00519-071",
+      "work_id": "00519",
+      "detail_id": "071",
+      "title": "version dall-e - 15.0 (run source)",
+      "title_sort": "version dall-e - 015.000 (run source)",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-900abe449235e5ba7c0a14b3025a5f9a"
+    },
+    "00519-072": {
+      "detail_uid": "00519-072",
+      "work_id": "00519",
+      "detail_id": "072",
+      "title": "version dall-e - 15.1",
+      "title_sort": "version dall-e - 015.001",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-72d895bdf9d511def2ff9ee4ae39e480"
+    },
+    "00519-073": {
+      "detail_uid": "00519-073",
+      "work_id": "00519",
+      "detail_id": "073",
+      "title": "version dall-e - 15.2",
+      "title_sort": "version dall-e - 015.002",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-2c96e27c42e2f534a640609705901bde"
+    },
+    "00519-074": {
+      "detail_uid": "00519-074",
+      "work_id": "00519",
+      "detail_id": "074",
+      "title": "version dall-e - 15.3",
+      "title_sort": "version dall-e - 015.003",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-5ad2a99117cf479e606c28b5295528ea"
+    },
+    "00519-075": {
+      "detail_uid": "00519-075",
+      "work_id": "00519",
+      "detail_id": "075",
+      "title": "version dall-e - 15.4",
+      "title_sort": "version dall-e - 015.004",
+      "project_subfolder": "versions",
+      "section_id": "versions",
+      "detail_checksum": "blake2b-bfe8eabf7b37a3c7e798f038cebebad9"
+    },
+    "00520-001": {
+      "detail_uid": "00520-001",
+      "work_id": "00520",
+      "detail_id": "001",
+      "title": "kylie structure 1.1",
+      "title_sort": "kylie structure 001.001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-110e8c38dd09a446ad2faf75a41b7f99"
+    },
+    "00520-002": {
+      "detail_uid": "00520-002",
+      "work_id": "00520",
+      "detail_id": "002",
+      "title": "kylie structure 1.2",
+      "title_sort": "kylie structure 001.002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b08a21221af76eadccb0b1917556571c"
+    },
+    "00520-003": {
+      "detail_uid": "00520-003",
+      "work_id": "00520",
+      "detail_id": "003",
+      "title": "kylie structure 1.3",
+      "title_sort": "kylie structure 001.003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-4fb13cded7a7154bec93fba118c31221"
+    },
+    "00520-004": {
+      "detail_uid": "00520-004",
+      "work_id": "00520",
+      "detail_id": "004",
+      "title": "kylie structure 1.4",
+      "title_sort": "kylie structure 001.004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7f37c99291c253f194380d3398874d40"
+    },
+    "00520-005": {
+      "detail_uid": "00520-005",
+      "work_id": "00520",
+      "detail_id": "005",
+      "title": "kylie structure 1.5",
+      "title_sort": "kylie structure 001.005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b47d0e99bfe08cba82ffefe5a4cd0cab"
+    },
+    "00520-006": {
+      "detail_uid": "00520-006",
+      "work_id": "00520",
+      "detail_id": "006",
+      "title": "kylie structure 1.6",
+      "title_sort": "kylie structure 001.006",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-9c3561216ec7850614f36eb771d550e8"
+    },
+    "00521-007": {
+      "detail_uid": "00521-007",
+      "work_id": "00521",
+      "detail_id": "007",
+      "title": "kylie structure 2.1",
+      "title_sort": "kylie structure 002.001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-aae7679f5f95c561eb9cc7f625e19008"
+    },
+    "00521-008": {
+      "detail_uid": "00521-008",
+      "work_id": "00521",
+      "detail_id": "008",
+      "title": "kylie structure 2.2",
+      "title_sort": "kylie structure 002.002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-23ce4d17d388a141dbfa74d48fb685a8"
+    },
+    "00521-009": {
+      "detail_uid": "00521-009",
+      "work_id": "00521",
+      "detail_id": "009",
+      "title": "kylie structure 2.3",
+      "title_sort": "kylie structure 002.003",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-86e2db738fb42624ccdf1f221e1e36d8"
+    },
+    "00521-010": {
+      "detail_uid": "00521-010",
+      "work_id": "00521",
+      "detail_id": "010",
+      "title": "kylie structure 2.4",
+      "title_sort": "kylie structure 002.004",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-0673a3084aa30e79e9733da3fee41409"
+    },
+    "00521-011": {
+      "detail_uid": "00521-011",
+      "work_id": "00521",
+      "detail_id": "011",
+      "title": "kylie structure 2.5",
+      "title_sort": "kylie structure 002.005",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7e7a0e1d16a1a0eaa01b4188935bde06"
+    },
+    "00521-012": {
+      "detail_uid": "00521-012",
+      "work_id": "00521",
+      "detail_id": "012",
+      "title": "kylie structure 2.6",
+      "title_sort": "kylie structure 002.006",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-5ed20c161bb2f0bea7712a1a80270292"
+    },
+    "00522-013": {
+      "detail_uid": "00522-013",
+      "work_id": "00522",
+      "detail_id": "013",
+      "title": "kylie structure 3.1",
+      "title_sort": "kylie structure 003.001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-aefcf2a25caf74f3a996b89147511890"
+    },
+    "00522-014": {
+      "detail_uid": "00522-014",
+      "work_id": "00522",
+      "detail_id": "014",
+      "title": "kylie structure 3.2",
+      "title_sort": "kylie structure 003.002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-5abb41c2a6132361723ca51473050568"
+    },
+    "00523-015": {
+      "detail_uid": "00523-015",
+      "work_id": "00523",
+      "detail_id": "015",
+      "title": "kylie structure 4.1",
+      "title_sort": "kylie structure 004.001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-79607606548e05c707028fd43ef0f011"
+    },
+    "00523-016": {
+      "detail_uid": "00523-016",
+      "work_id": "00523",
+      "detail_id": "016",
+      "title": "kylie structure 4.2",
+      "title_sort": "kylie structure 004.002",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-7ea1296818f7545990f5632eb167aaff"
+    }
+  }
+}

@@ -239,6 +239,42 @@ def check_cross_refs(
                         errors += 1
                         add_sample(samples, {"check": "cross_refs", "id": sid_norm, "path": str(series_index_path), "message": f"series_index references missing work_id '{wid}'"}, max_samples)
 
+    # work_details_index -> _work_details/_works references
+    details_index_path = site_root / "assets/data/work_details_index.json"
+    if not details_index_path.exists():
+        errors += 1
+        add_sample(samples, {"check": "cross_refs", "id": "work_details_index", "path": str(details_index_path), "message": "missing work details index JSON"}, max_samples)
+    else:
+        try:
+            obj = json.loads(details_index_path.read_text(encoding="utf-8"))
+        except Exception as e:
+            errors += 1
+            add_sample(samples, {"check": "cross_refs", "id": "work_details_index", "path": str(details_index_path), "message": f"invalid json: {e}"}, max_samples)
+            obj = {}
+
+        details_map = obj.get("details") if isinstance(obj, dict) else None
+        if not isinstance(details_map, dict):
+            errors += 1
+            add_sample(samples, {"check": "cross_refs", "id": "work_details_index", "path": str(details_index_path), "message": "missing/invalid details map"}, max_samples)
+        else:
+            for detail_uid, drow in details_map.items():
+                detail_uid_norm = normalize_text(detail_uid)
+                if detail_uid_norm == "":
+                    continue
+                if not isinstance(drow, dict):
+                    errors += 1
+                    add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": str(details_index_path), "message": "work_details_index entry must be object"}, max_samples)
+                    continue
+                wid = normalize_text(drow.get("work_id"))
+                if work_ids_scope is not None and wid not in work_ids_scope:
+                    continue
+                if wid not in works:
+                    errors += 1
+                    add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": str(details_index_path), "message": f"work_details_index references missing work_id '{wid}'"}, max_samples)
+                if detail_uid_norm not in work_details:
+                    errors += 1
+                    add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": str(details_index_path), "message": "work_details_index references missing work detail page"}, max_samples)
+
     return {"name": "cross_refs", "error_count": errors, "warning_count": warnings, "samples": samples}
 
 
@@ -502,6 +538,57 @@ def check_json_schema(
                 if not isinstance(media, dict):
                     warnings += 1
                     add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing/invalid media object"}, max_samples)
+
+    # Work details index JSON
+    details_index_path = site_root / "assets/data/work_details_index.json"
+    try:
+        details_index_obj = json.loads(details_index_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        errors += 1
+        add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": f"invalid json: {e}"}, max_samples)
+        details_index_obj = None
+
+    if not isinstance(details_index_obj, dict):
+        errors += 1
+        add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": "work details index root must be object"}, max_samples)
+    else:
+        header = details_index_obj.get("header")
+        details_map = details_index_obj.get("details")
+        if not isinstance(header, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": "missing/invalid header object"}, max_samples)
+        else:
+            for key in ("schema", "version", "generated_at_utc", "count"):
+                if key not in header:
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": f"work details index header missing '{key}'"}, max_samples)
+        if not isinstance(details_map, dict):
+            errors += 1
+            add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": "work details index details must be object map"}, max_samples)
+        else:
+            if isinstance(header, dict) and isinstance(header.get("count"), int) and header["count"] != len(details_map):
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": "work_details_index", "path": str(details_index_path), "message": "work details index header.count does not match details map size"}, max_samples)
+            for detail_uid, row in details_map.items():
+                detail_uid_norm = normalize_text(detail_uid)
+                if detail_uid_norm == "":
+                    continue
+                if not isinstance(row, dict):
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": detail_uid_norm, "path": str(details_index_path), "message": "work details index entry must be object"}, max_samples)
+                    continue
+                if normalize_text(row.get("detail_uid")) == "":
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": detail_uid_norm, "path": str(details_index_path), "message": "work details index entry missing detail_uid"}, max_samples)
+                if normalize_text(row.get("work_id")) == "":
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": detail_uid_norm, "path": str(details_index_path), "message": "work details index entry missing work_id"}, max_samples)
+                if normalize_text(row.get("title")) == "":
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": detail_uid_norm, "path": str(details_index_path), "message": "work details index entry missing title"}, max_samples)
+                if normalize_text(row.get("section_id")) == "":
+                    warnings += 1
+                    add_sample(samples, {"check": "json_schema", "id": detail_uid_norm, "path": str(details_index_path), "message": "work details index entry missing section_id"}, max_samples)
 
     # Work detail JSON
     for p in sorted((site_root / "assets/works/index").glob("*.json")):
