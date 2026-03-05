@@ -2,19 +2,25 @@
 layout: default
 ---
 
-<article class="page series">
+{% assign series_id_fallback = page.series_id | default: page.slug %}
+<article
+  class="page series"
+  id="seriesPageRoot"
+  data-baseurl="{{ site.baseurl | default: '' }}"
+  data-series-id="{{ series_id_fallback | default: '' | escape }}"
+>
   <header class="page__header">
-    <h1 class="page__title">{{ page.title }}</h1>
-    {% if page.year_display %}
-      <p class="page__meta muted small">{{ page.year_display }}</p>
-    {% endif %}
+    <h1 class="page__title" id="seriesPageTitle">{{ page.title | default: series_id_fallback }}</h1>
+    <p class="page__meta muted small" id="seriesPageMeta"{% if page.year_display == blank and page.year == blank %} hidden{% endif %}>
+      {{ page.year_display | default: page.year }}
+    </p>
   </header>
 
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_prefix = site.thumb_prefix | default: "/assets" %}
 {% assign base = thumb_base | append: thumb_prefix | append: "/works/img/" %}
 
-{%- if page.series_id -%}
+{%- if series_id_fallback -%}
   {% comment %}
   Include ?series=<series_id> in work links so the work page can fetch
   series context and render Prev/Next navigation.
@@ -23,7 +29,8 @@ layout: default
   <div class="seriesGridFooter">
     <a
       class="seriesGridFooter__indexLink"
-      href="{{ '/works/' | relative_url }}?series={{ page.series_id | url_encode }}"
+      id="seriesGridIndexLink"
+      href="{{ '/works/' | relative_url }}?series={{ series_id_fallback | url_encode }}"
     >series index</a>
     <nav class="gridPager gridPager--series" id="seriesGridPager" aria-label="series pagination" hidden>
       <span class="gridPager__status" id="seriesGridPagerStatus"></span>
@@ -46,14 +53,48 @@ layout: default
       var nextBtn = document.getElementById('seriesGridNext');
       if (!grid || !pager || !statusEl || !prevBtn || !nextBtn) return;
 
-      var baseurl = {{ site.baseurl | default: '' | jsonify }};
-      var seriesId = {{ page.series_id | jsonify }};
+      var root = document.getElementById('seriesPageRoot');
+      if (!root) return;
+      var titleEl = document.getElementById('seriesPageTitle');
+      var metaEl = document.getElementById('seriesPageMeta');
+      var indexLink = document.getElementById('seriesGridIndexLink');
+
+      var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+      var seriesId = String(root.getAttribute('data-series-id') || '').trim().toLowerCase();
       var thumbBase = {{ thumb_base_out | jsonify }};
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
       var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
       var worksIndexUrl = baseurl + '/assets/data/works_index.json';
+      if (!seriesId) {
+        pager.hidden = true;
+        grid.innerHTML = '';
+        return;
+      }
+      if (indexLink) {
+        indexLink.setAttribute('href', baseurl + '/works/?series=' + encodeURIComponent(seriesId));
+      }
+
+      function text(v) {
+        return String(v == null ? '' : v).trim();
+      }
+
+      function updateHeaderFromSeries(row) {
+        if (!row || typeof row !== 'object') return;
+        var title = text(row.title) || seriesId;
+        var yearTxt = text(row.year_display) || text(row.year);
+        if (titleEl) titleEl.textContent = title;
+        if (metaEl) {
+          if (yearTxt) {
+            metaEl.textContent = yearTxt;
+            metaEl.hidden = false;
+          } else {
+            metaEl.textContent = '';
+            metaEl.hidden = true;
+          }
+        }
+      }
 
       function workUrl(id) {
         return baseurl + '/works/' + encodeURIComponent(id) + '/';
@@ -176,6 +217,7 @@ layout: default
       function extractWorkIds(seriesIndexData) {
         if (!seriesIndexData || !seriesIndexData.series || typeof seriesIndexData.series !== 'object') return [];
         var sr = seriesIndexData.series[seriesId];
+        updateHeaderFromSeries(sr);
         if (!sr || !Array.isArray(sr.works)) return [];
         return sr.works;
       }
