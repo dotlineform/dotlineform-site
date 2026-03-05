@@ -6,6 +6,7 @@ This document is the central reference for series-level tag editing in the Serie
 
 - UI/editor logic: `assets/js/tag-studio.js`
 - Index status logic (RAG): `assets/js/tag-studio-index.js`
+- Shared Studio config loader: `assets/js/studio-config.js`
 - Layout/page wiring:
   - `studio/series-tag-editor/index.md`
 - Registry browsing page:
@@ -22,13 +23,48 @@ This document is the central reference for series-level tag editing in the Serie
   - `assets/js/tag-groups.js`
 - Tag write service: `scripts/tag_write_server.py`
 - Data contracts:
+  - `assets/data/studio/studio_config.json`
   - `assets/data/tag_registry.json`
   - `assets/data/tag_aliases.json`
   - `assets/data/tag_assignments.json`
 
+## Studio Config
+
+`assets/data/studio/studio_config.json` is the Studio-specific config file for:
+
+- public data paths used by Studio pages
+- public route paths used across Studio links
+- RAG scoring thresholds and completeness math
+
+The file is loaded by `assets/js/studio-config.js`, which also resolves configured root-relative paths against the site base path at runtime.
+
+Current config scope:
+
+- `paths.data.studio`
+  - `tag_registry`
+  - `tag_aliases`
+  - `tag_assignments`
+  - `tag_groups`
+- `paths.data.site`
+  - `series_index`
+  - `works_index`
+- `paths.routes`
+  - `series_tag_editor`
+  - `tag_groups`
+  - additional Studio/site route bases reserved for future wiring
+- `analysis.groups`
+  - ordered group list
+  - coverage group list
+- `analysis.rag`
+  - deprecated-status handling
+  - completeness formula parameters
+  - red/amber thresholds
+
+The config is intended to decouple Studio from current file placement. Studio-owned JSON files may still physically live alongside site data for now, but their locations are no longer hard-coded in the Studio JS.
+
 ## Group Model
 
-Groups are fixed and ordered in the editor code:
+Groups are configured in `studio_config.json` and currently ordered as:
 
 - `subject`
 - `domain`
@@ -37,7 +73,16 @@ Groups are fixed and ordered in the editor code:
 
 Tags are canonical IDs in the format `<group>:<slug>`, for example `form:curvilinear`.
 
-Source of truth for groups and tag definitions is `tag_registry.json`:
+Source of truth is split as follows:
+
+- `studio_config.json`
+  - Studio group ordering used by the UI and analysis logic
+- `tag_registry.json`
+  - allowed vocabulary and tag definitions
+- `tag_groups.json`
+  - group descriptions and long-form guidance
+
+`tag_registry.json` remains the vocabulary source of truth:
 
 - `policy.allowed_groups` defines allowed groups.
 - `tags[]` defines tag entries:
@@ -120,21 +165,20 @@ Each chip includes a `w_manual` dot control:
 
 ### 2) Index metrics / RAG (`tag-studio-index.js`)
 
-Computed per series from `tag_assignments.json` and registry lookup:
+Computed per series from `tag_assignments.json`, registry lookup, and `studio_config.json`:
 
 - `nTotal`: unique assigned tags
 - group counts: `subject`, `domain`, `form`, `theme`
 - `groupsPresent`
 - `nUnknown`: tags not found in registry
-- `nDeprecated`: tags with registry status not equal to `active`
+- `nDeprecated`: tags whose registry status is listed in `studio_config.json` as deprecated-like (currently `deprecated` and `candidate`)
 - `completeness`:
-  - base = `groupsPresent / 4`
-  - tag bonus = up to `+0.25` capped by tag count
+  - denominator, tag-bonus cap, and score cap come from `studio_config.json`
 
-RAG rules in code:
+RAG rules are configured in `studio_config.json`:
 
-- Red: `nTotal == 0` or `nUnknown > 0`
-- Amber: one-group-only, too few tags (`nTotal < 3`), deprecated present, or both form+theme missing
+- Red: currently `nTotal == 0` or `nUnknown > 0`
+- Amber: currently one-group-only, too few tags (`nTotal < 3`), deprecated present, or both form+theme missing
 - Green: otherwise
 
 Tooltip includes tags/groups/missing/unknown/deprecated/completeness.
@@ -191,6 +235,18 @@ Save mode is probed at page load:
 - Copy button uses `navigator.clipboard.writeText`
 
 ## Data Files: Purpose and Governance
+
+### `assets/data/studio/studio_config.json`
+
+Purpose:
+
+- Central Studio config for public path resolution and analysis policy.
+
+Governance:
+
+- Maintain deliberately with review when Studio data locations or scoring behavior change.
+- Prefer moving thresholds and path changes into this file instead of editing multiple Studio scripts.
+- `updated_at_utc` should be bumped when changing config behavior.
 
 ### `assets/data/tag_registry.json`
 

@@ -1,4 +1,10 @@
-const GROUPS = ["subject", "domain", "form", "theme"];
+import {
+  getStudioDataPath,
+  getStudioGroups,
+  loadStudioConfig
+} from "./studio-config.js";
+
+let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagGroupsPage);
@@ -11,7 +17,9 @@ async function initTagGroupsPage() {
   if (!mount) return;
 
   try {
-    const data = await fetchJson("/assets/data/tag_groups.json");
+    const config = await loadStudioConfig();
+    STUDIO_GROUPS = getStudioGroups(config);
+    const data = await fetchJson(getStudioDataPath(config, "tag_groups"));
     const groups = normalizeGroups(data);
     renderGroups(mount, groups);
   } catch (error) {
@@ -33,14 +41,14 @@ function normalizeGroups(data) {
   for (const raw of rows) {
     if (!raw || typeof raw !== "object") continue;
     const groupId = normalize(raw.group_id);
-    if (!GROUPS.includes(groupId)) continue;
+    if (!STUDIO_GROUPS.includes(groupId)) continue;
     byId.set(groupId, {
       groupId,
       description: String(raw.description || "").trim(),
       descriptionLong: String(raw.description_long || "").trim()
     });
   }
-  return GROUPS.map((groupId) => byId.get(groupId)).filter(Boolean);
+  return STUDIO_GROUPS.map((groupId) => byId.get(groupId)).filter(Boolean);
 }
 
 function renderGroups(mount, groups) {

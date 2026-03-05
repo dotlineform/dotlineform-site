@@ -1,4 +1,10 @@
-const GROUPS = ["subject", "domain", "form", "theme"];
+import {
+  buildStudioRagTooltip,
+  computeStudioRag,
+  computeStudioTagMetrics,
+  getStudioDataPath,
+  loadStudioConfig
+} from "./studio-config.js";
 
 initTagStudioIndexRag();
 
@@ -10,9 +16,10 @@ async function initTagStudioIndexRag() {
   if (!rows.length) return;
 
   try {
+    const config = await loadStudioConfig();
     const [assignmentsData, registryData] = await Promise.all([
-      fetchJson("/assets/data/tag_assignments.json"),
-      fetchJson("/assets/data/tag_registry.json"),
+      fetchJson(getStudioDataPath(config, "tag_assignments")),
+      fetchJson(getStudioDataPath(config, "tag_registry")),
     ]);
 
     const registry = buildRegistryLookup(registryData);
@@ -26,9 +33,9 @@ async function initTagStudioIndexRag() {
       if (!indicator) continue;
 
       const assignedTags = getSeriesTags(assignmentsSeries, seriesId);
-      const metrics = computeMetrics(assignedTags, registry);
-      const rag = computeRag(metrics);
-      const tooltip = buildTooltip(metrics);
+      const metrics = computeStudioTagMetrics(assignedTags, registry, config);
+      const rag = computeStudioRag(metrics, config);
+      const tooltip = buildStudioRagTooltip(metrics);
       const label = `status ${rag.toUpperCase()}: ${tooltip}`;
 
       indicator.classList.remove("rag--red", "rag--amber", "rag--green");
@@ -111,81 +118,6 @@ function normalizeAssignmentTagId(rawTag) {
     return normalize(rawTag.tag_id);
   }
   return "";
-}
-
-function computeMetrics(assignedTags, registry) {
-  const counts = {
-    subject: 0,
-    domain: 0,
-    form: 0,
-    theme: 0,
-  };
-  let nUnknown = 0;
-  let nDeprecated = 0;
-  let nTotal = 0;
-
-  const uniqueTags = Array.from(
-    new Set((Array.isArray(assignedTags) ? assignedTags : []).map((tag) => normalize(tag)).filter(Boolean))
-  );
-
-  for (const tagId of uniqueTags) {
-    nTotal += 1;
-    const reg = registry.get(tagId);
-    if (!reg) {
-      nUnknown += 1;
-      continue;
-    }
-
-    if (reg.group in counts) counts[reg.group] += 1;
-    if (reg.status !== "active") nDeprecated += 1;
-  }
-
-  const presentGroups = GROUPS.filter((group) => counts[group] > 0);
-  const missingGroups = GROUPS.filter((group) => counts[group] === 0);
-  const groupsPresent = presentGroups.length;
-  const completenessBase = groupsPresent / 4;
-  const tagBonus = (Math.min(nTotal, 6) / 6) * 0.25;
-  const completeness = Math.min(1, completenessBase + tagBonus);
-
-  return {
-    nTotal,
-    nUnknown,
-    nDeprecated,
-    counts,
-    groupsPresent,
-    presentGroups,
-    missingGroups,
-    completeness,
-  };
-}
-
-function computeRag(metrics) {
-  if (metrics.nTotal === 0 || metrics.nUnknown > 0) {
-    return "red";
-  }
-
-  const missingForm = metrics.counts.form === 0;
-  const missingTheme = metrics.counts.theme === 0;
-  if (
-    metrics.groupsPresent === 1 ||
-    metrics.nTotal < 3 ||
-    metrics.nDeprecated > 0 ||
-    (missingForm && missingTheme)
-  ) {
-    return "amber";
-  }
-
-  return "green";
-}
-
-function buildTooltip(metrics) {
-  const groupsLabel = metrics.presentGroups.length ? metrics.presentGroups.join(", ") : "none";
-  const missingLabel = metrics.missingGroups.length ? metrics.missingGroups.join(", ") : "none";
-  return (
-    `tags: ${metrics.nTotal}; groups: ${groupsLabel}; missing: ${missingLabel}; ` +
-    `unknown: ${metrics.nUnknown}; deprecated: ${metrics.nDeprecated}; ` +
-    `completeness: ${metrics.completeness.toFixed(2)}`
-  );
 }
 
 function normalize(value) {

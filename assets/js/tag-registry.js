@@ -1,4 +1,11 @@
-const GROUPS = ["subject", "domain", "form", "theme"];
+import {
+  getStudioDataPath,
+  getStudioGroups,
+  getStudioRoute,
+  loadStudioConfig
+} from "./studio-config.js";
+
+let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-registry";
 const MUTATE_ENDPOINT = "http://127.0.0.1:8787/mutate-tag";
@@ -8,7 +15,7 @@ const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
 const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
-const GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -20,8 +27,13 @@ async function initTagRegistryPage() {
   const mount = document.getElementById("tag-registry");
   if (!mount) return;
 
+  const config = await loadStudioConfig();
+  STUDIO_GROUPS = getStudioGroups(config);
+  GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+
   const state = {
     mount,
+    config,
     tags: [],
     filterGroup: "all",
     searchQuery: "",
@@ -362,7 +374,7 @@ function wireEvents(state) {
     const groupButton = event.target.closest("button[data-new-group]");
     if (!groupButton || !state.newTagState) return;
     const group = normalize(groupButton.getAttribute("data-new-group"));
-    if (!GROUPS.includes(group)) return;
+    if (!STUDIO_GROUPS.includes(group)) return;
     state.newTagState.group = group;
     updateNewTagUi(state);
   });
@@ -478,12 +490,12 @@ function renderImportMode(state) {
 
 async function loadRegistry(state) {
   const [registryData, aliasesData] = await Promise.all([
-    fetchJson("/assets/data/tag_registry.json"),
-    fetchJson("/assets/data/tag_aliases.json")
+    fetchJson(getStudioDataPath(state.config, "tag_registry")),
+    fetchJson(getStudioDataPath(state.config, "tag_aliases"))
   ]);
   let groupsData = null;
   try {
-    groupsData = await fetchJson("/assets/data/tag_groups.json");
+    groupsData = await fetchJson(getStudioDataPath(state.config, "tag_groups"));
   } catch (error) {
     groupsData = null;
   }
@@ -515,7 +527,7 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
     const status = normalize(raw.status || "active");
     const updatedAtUtc = normalizeTimestamp(raw.updated_at_utc) || fallbackUpdatedAt;
 
-    if (!GROUPS.includes(group) || !tagId || !label) continue;
+    if (!STUDIO_GROUPS.includes(group) || !tagId || !label) continue;
     tags.push({
       group,
       tagId,
@@ -533,7 +545,7 @@ function normalizeRegistryTags(data, fallbackUpdatedAt) {
 function buildRegistryOptions(tags) {
   const options = [];
   for (const tag of tags || []) {
-    if (!tag || !tag.tagId || !GROUPS.includes(tag.group)) continue;
+    if (!tag || !tag.tagId || !STUDIO_GROUPS.includes(tag.group)) continue;
     options.push({
       tagId: tag.tagId,
       group: tag.group,
@@ -566,7 +578,7 @@ function buildGroupDescriptionMap(data) {
     if (!raw || typeof raw !== "object") continue;
     const groupId = normalize(raw.group_id);
     const description = String(raw.description || "").trim();
-    if (!GROUPS.includes(groupId) || !description) continue;
+    if (!STUDIO_GROUPS.includes(groupId) || !description) continue;
     out.set(groupId, description);
   }
   return out;
@@ -576,7 +588,7 @@ function renderControls(state) {
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
   const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
-  const groupButtons = GROUPS.map((group) => {
+  const groupButtons = STUDIO_GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(groupCounts[group] || 0);
     const titleAttr = groupTitleAttr(state, group);
@@ -603,7 +615,7 @@ function countTagsByGroup(tags) {
   const counts = { subject: 0, domain: 0, form: 0, theme: 0 };
   for (const tag of tags || []) {
     const group = normalize(tag && tag.group);
-    if (GROUPS.includes(group)) {
+    if (STUDIO_GROUPS.includes(group)) {
       counts[group] += 1;
     }
   }
@@ -796,7 +808,7 @@ function renderNewTagGroupKey(state) {
     state.refs.newGroupKey.innerHTML = "";
     return;
   }
-  state.refs.newGroupKey.innerHTML = GROUPS.map((group) => {
+  state.refs.newGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
     const activeClass = state.newTagState.group === group ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
     return `
@@ -821,7 +833,7 @@ function getNewTagValidation(state) {
   const description = String(state.refs.newTagDescription.value || "").trim();
   let warning = "";
 
-  if (!GROUPS.includes(group)) {
+  if (!STUDIO_GROUPS.includes(group)) {
     warning = "Select a tag group.";
   } else if (!slug) {
     warning = "Tag slug is required.";
@@ -1111,7 +1123,7 @@ function renderDemoteGroupKey(state) {
     return;
   }
   const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
-  state.refs.demoteGroupKey.innerHTML = GROUPS.map((group) => {
+  state.refs.demoteGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
     const activeClass = selected.has(group) ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}" ${titleAttr}>${escapeHtml(group)}</span>`;
@@ -1125,7 +1137,7 @@ function renderDemoteTagList(state) {
   }
   const rows = state.demoteState.tags.map((tagId) => {
     const info = findTagById(state, tagId);
-    const group = info && GROUPS.includes(info.group) ? info.group : "warning";
+    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
     const label = info ? info.label : tagId;
     return `
       <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
@@ -1504,7 +1516,7 @@ function normalizeImportTag(raw, idx) {
   if (!tagId || tagId.indexOf(":") <= 0) {
     throw new Error(`Import tag ${idx} has invalid tag_id.`);
   }
-  if (!GROUPS.includes(group)) {
+  if (!STUDIO_GROUPS.includes(group)) {
     throw new Error(`Import tag ${idx} has invalid group.`);
   }
   if (!["active", "deprecated", "candidate"].includes(status)) {

@@ -1,4 +1,11 @@
-const GROUPS = ["subject", "domain", "form", "theme"];
+import {
+  getStudioDataPath,
+  getStudioGroups,
+  getStudioRoute,
+  loadStudioConfig
+} from "./studio-config.js";
+
+let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
@@ -11,7 +18,7 @@ const PROMOTE_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias";
 const PROMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias-preview";
 const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
 const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
-const GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -23,8 +30,13 @@ async function initTagAliasesPage() {
   const mount = document.getElementById("tag-aliases");
   if (!mount) return;
 
+  const config = await loadStudioConfig();
+  STUDIO_GROUPS = getStudioGroups(config);
+  GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
+
   const state = {
     mount,
+    config,
     aliases: [],
     registryById: new Map(),
     aliasesUpdatedAt: "",
@@ -342,12 +354,12 @@ function syncImportModeFromControl(state) {
 
 async function loadData(state) {
   const [registryData, aliasesData] = await Promise.all([
-    fetchJson("/assets/data/tag_registry.json"),
-    fetchJson("/assets/data/tag_aliases.json")
+    fetchJson(getStudioDataPath(state.config, "tag_registry")),
+    fetchJson(getStudioDataPath(state.config, "tag_aliases"))
   ]);
   let groupsData = null;
   try {
-    groupsData = await fetchJson("/assets/data/tag_groups.json");
+    groupsData = await fetchJson(getStudioDataPath(state.config, "tag_groups"));
   } catch (error) {
     groupsData = null;
   }
@@ -366,7 +378,7 @@ function buildRegistryLookup(data) {
     const tagId = normalize(raw.tag_id);
     const group = normalize(raw.group);
     const label = normalize(raw.label);
-    if (!tagId || !GROUPS.includes(group) || !label) continue;
+    if (!tagId || !STUDIO_GROUPS.includes(group) || !label) continue;
     map.set(tagId, { group, label });
   }
   return map;
@@ -379,7 +391,7 @@ function buildGroupDescriptionMap(data) {
     if (!raw || typeof raw !== "object") continue;
     const groupId = normalize(raw.group_id);
     const description = String(raw.description || "").trim();
-    if (!GROUPS.includes(groupId) || !description) continue;
+    if (!STUDIO_GROUPS.includes(groupId) || !description) continue;
     out.set(groupId, description);
   }
   return out;
@@ -495,7 +507,7 @@ function normalizeAliasTagsArray(rawValue) {
 function buildRegistryOptions(registryById) {
   const out = [];
   for (const [tagId, info] of registryById.entries()) {
-    if (!info || !GROUPS.includes(info.group)) continue;
+    if (!info || !STUDIO_GROUPS.includes(info.group)) continue;
     out.push({
       tagId,
       group: info.group,
@@ -510,7 +522,7 @@ function renderControls(state) {
   const counts = countAliasesByGroup(state.aliases);
   const totalCount = state.aliases.length;
   const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
-  const groupButtons = GROUPS.map((group) => {
+  const groupButtons = STUDIO_GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(counts[group] || 0);
     const titleAttr = groupTitleAttr(state, group);
@@ -537,7 +549,7 @@ function countAliasesByGroup(aliases) {
   const counts = { subject: 0, domain: 0, form: 0, theme: 0 };
   for (const entry of aliases || []) {
     for (const group of entry.groups || []) {
-      if (GROUPS.includes(group)) {
+      if (STUDIO_GROUPS.includes(group)) {
         counts[group] += 1;
       }
     }
@@ -653,7 +665,7 @@ function getAliasClass(entry) {
     return "tagStudio__chip--warning";
   }
   const group = entry.groups[0];
-  return GROUPS.includes(group) ? `tagStudio__chip--${group}` : "tagStudio__chip--warning";
+  return STUDIO_GROUPS.includes(group) ? `tagStudio__chip--${group}` : "tagStudio__chip--warning";
 }
 
 function getVisibleAliases(state) {
@@ -862,7 +874,7 @@ function renderEditGroupKey(state) {
     return;
   }
   const selected = new Set((state.editState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
-  state.refs.editGroupKey.innerHTML = GROUPS.map((group) => {
+  state.refs.editGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
     const activeClass = selected.has(group) ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
     return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}" ${titleAttr}>${escapeHtml(group)}</span>`;
@@ -876,7 +888,7 @@ function renderEditTagList(state) {
   }
   const rows = state.editState.tags.map((tagId) => {
     const info = state.registryById.get(tagId);
-    const group = info && GROUPS.includes(info.group) ? info.group : "warning";
+    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
     const label = info ? info.label : tagId;
     return `
       <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
@@ -1156,7 +1168,7 @@ async function handleAliasPromote(state, alias) {
     clearImportResult(state);
     return;
   }
-  if (!GROUPS.includes(group)) {
+  if (!STUDIO_GROUPS.includes(group)) {
     setImportResult(state, "error", "Promotion group must be one of: subject, domain, form, theme.");
     return;
   }

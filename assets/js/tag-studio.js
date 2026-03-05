@@ -1,5 +1,11 @@
-const GROUPS = ["subject", "domain", "form", "theme"];
-const GROUP_INDEX = new Map(GROUPS.map((group, index) => [group, index]));
+import {
+  getStudioDataPath,
+  getStudioGroups,
+  loadStudioConfig
+} from "./studio-config.js";
+
+let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
+let GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
 const POST_ENDPOINT = "http://127.0.0.1:8787/save-tags";
 const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const POPUP_TAG_MATCH_CAP = 12;
@@ -17,6 +23,10 @@ async function initTagStudio() {
   const mount = document.getElementById("tag-studio");
   if (!mount) return;
 
+  const config = await loadStudioConfig();
+  STUDIO_GROUPS = getStudioGroups(config);
+  GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
+
   const seriesId = String(mount.dataset.seriesId || "").trim();
   if (!seriesId) {
     renderFatalError(mount, "Tag Studio error: missing series id.");
@@ -25,12 +35,12 @@ async function initTagStudio() {
 
   try {
     const [registryJson, aliasesJson, assignmentsJson] = await Promise.all([
-      fetchJson("/assets/data/tag_registry.json"),
-      fetchJson("/assets/data/tag_aliases.json"),
-      fetchJson("/assets/data/tag_assignments.json")
+      fetchJson(getStudioDataPath(config, "tag_registry")),
+      fetchJson(getStudioDataPath(config, "tag_aliases")),
+      fetchJson(getStudioDataPath(config, "tag_assignments"))
     ]);
 
-    const state = buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson);
+    const state = buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, config);
     renderShell(state);
     wireEvents(state);
     renderAll(state);
@@ -51,7 +61,7 @@ async function fetchJson(url) {
   return response.json();
 }
 
-function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson) {
+function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, config) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const tagsById = new Map();
   const slugMap = new Map();
@@ -106,6 +116,7 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson)
 
   return {
     mount,
+    config,
     seriesId,
     tagsById,
     slugMap,
@@ -606,20 +617,20 @@ function buildAliasOptions(aliases, tagsById) {
 }
 
 function renderGroups(state) {
-  const groupedEntries = new Map(GROUPS.map((group) => [group, []]));
+  const groupedEntries = new Map(STUDIO_GROUPS.map((group) => [group, []]));
   for (const entry of state.entries) {
     if (entry.type !== "resolved") continue;
     if (!groupedEntries.has(entry.group)) continue;
     groupedEntries.get(entry.group).push(entry);
   }
-  for (const group of GROUPS) {
+  for (const group of STUDIO_GROUPS) {
     groupedEntries.get(group).sort((a, b) => {
       if (b.wManual !== a.wManual) return b.wManual - a.wManual;
       return slugFromTagId(a.canonicalId).localeCompare(slugFromTagId(b.canonicalId), undefined, { sensitivity: "base" });
     });
   }
 
-  const rowsHtml = GROUPS.map((group) => {
+  const rowsHtml = STUDIO_GROUPS.map((group) => {
     const entries = groupedEntries.get(group) || [];
     const chipsHtml = entries.map((entry) => `
       <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}">
@@ -659,7 +670,7 @@ function renderSaveMode(state) {
 }
 
 function computeMetrics(state) {
-  const groupCounts = Object.fromEntries(GROUPS.map((group) => [group, 0]));
+  const groupCounts = Object.fromEntries(STUDIO_GROUPS.map((group) => [group, 0]));
   const canonicalCounts = new Map();
   let unresolvedCount = 0;
 
