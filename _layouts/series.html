@@ -201,9 +201,8 @@ layout: default
           var id = String(rawId || '').trim();
           if (!id) return null;
           var wr = worksMap[id] || {};
-          var primaryMedia = (wr.media && wr.media.primary && typeof wr.media.primary === 'object') ? wr.media.primary : {};
-          var thumb96 = toAssetUrl(primaryMedia.thumb_96) || thumbUrl(id, '96');
-          var thumb192 = toAssetUrl(primaryMedia.thumb_192) || thumbUrl(id, '192');
+          var thumb96 = thumbUrl(id, '96');
+          var thumb192 = thumbUrl(id, '192');
           return {
             work_id: id,
             title: String(wr.title || id),

@@ -20,7 +20,7 @@ This document defines canonical sorting behavior across generated artifacts and 
 
 - `series` page grid (`_layouts/series.html`):
   - Uses `assets/data/series_index.json` for ordered works in series.
-  - Uses `assets/data/works_index.json` for card title/thumb metadata.
+  - Uses `assets/data/works_index.json` for card text metadata; thumb URLs are derived from `work_id`.
 - Work page series navigation (`_layouts/work.html`):
   - Runtime prev/next and counter use `assets/data/series_index.json`.
   - Runtime series-link visibility (`| series`) uses `assets/data/series_index.json`.
@@ -34,7 +34,7 @@ Whenever series ordering might change (new work in series, title/year edits affe
 
 1. Regenerate `work-pages` for affected series (refresh `_works` `series_sort` cache).
 2. Regenerate `series-index-json` (refresh canonical runtime JSON order).
-3. Regenerate `works-index-json` when work card metadata changes (title/year/media/thumb fields).
+3. Regenerate `works-index-json` when work card metadata changes (for example title/year/series fields).
 
 Recommended command:
 

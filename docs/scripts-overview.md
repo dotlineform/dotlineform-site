@@ -148,6 +148,7 @@ Useful flags:
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - each work keeps backward-compatible `series_id` as the first series and adds ordered `series_ids`
+    - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-details-index-json`: writes `assets/data/work_details_index.json` as a lightweight object keyed by `detail_uid`
     - always rebuilt as a full index (not scoped by `--work-ids`)

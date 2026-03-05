@@ -1086,11 +1086,6 @@ def main() -> None:
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         wid = str(work_record.get("work_id", ""))
         work_checksum_raw = coerce_string(work_record.get("checksum"))
-        media_kind = "image"
-        if coerce_string(work_record.get("vimeo_url")) or coerce_string(work_record.get("youtube_url")):
-            media_kind = "video"
-        elif coerce_string(work_record.get("bandcamp_url")):
-            media_kind = "audio"
         title_value = coerce_string(work_record.get("title"))
         title_sort_value = coerce_string(work_record.get("title_sort"))
         year_value = work_record.get("year")
@@ -1105,15 +1100,6 @@ def main() -> None:
             "series_id": work_record.get("series_id"),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
             "storage": storage_value,
-            "media": {
-                "primary": {
-                    "kind": media_kind,
-                    "thumb_96": f"/assets/works/img/{wid}-thumb-96.webp",
-                    "thumb_192": f"/assets/works/img/{wid}-thumb-192.webp",
-                }
-            },
-            "has_details": False,
-            "details_count": 0,
             "work_checksum": f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None,
             "details_checksum": None,
         }
@@ -2289,19 +2275,16 @@ def main() -> None:
             item = works_payload[wid]
             detail_records = detail_records_by_work.get(wid, [])
             detail_sections = build_sections_from_detail_records(detail_records)
-            details_count = sum(len(sec.get("details", [])) for sec in detail_sections)
-            item["has_details"] = details_count > 0
-            item["details_count"] = details_count
             item["details_checksum"] = compute_payload_version({"sections": detail_sections})
 
         version_payload = {
-            "schema": "works_index_v2",
+            "schema": "works_index_v3",
             "works": works_payload,
         }
         version = compute_payload_version(version_payload)
         payload = {
             "header": {
-                "schema": "works_index_v2",
+                "schema": "works_index_v3",
                 "version": version,
                 "generated_at_utc": utc_timestamp_now(),
                 "count": len(works_payload),

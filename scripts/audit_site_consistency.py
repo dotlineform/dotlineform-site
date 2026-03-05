@@ -567,11 +567,6 @@ def check_json_schema(
                         if primary_series_id and series_ids and series_ids[0] != primary_series_id:
                             errors += 1
                             add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_id must match first series_ids value"}, max_samples)
-                media = row.get("media")
-                if not isinstance(media, dict):
-                    warnings += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing/invalid media object"}, max_samples)
-
     # Work details index JSON
     details_index_path = site_root / "assets/data/work_details_index.json"
     try:
