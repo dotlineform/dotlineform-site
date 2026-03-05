@@ -28,9 +28,6 @@ collections:
   works:
     output: true
     permalink: /works/:name/
-  works_print:
-    output: true
-    permalink: /works/:name-print/
   work_details:
     output: true
     permalink: /work_details/:name/
@@ -64,11 +61,6 @@ defaults:
       type: work_details
     values:
       layout: work_details
-  - scope:
-      path: ""
-      type: works_print
-    values:
-      layout: work_print
   - scope:
       path: ""
       type: series
