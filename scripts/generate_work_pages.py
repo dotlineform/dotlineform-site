@@ -709,6 +709,7 @@ def main() -> None:
     run_works_index_json = artifact_enabled("works-index-json")
     run_work_details_index_json = artifact_enabled("work-details-index-json")
     run_moments_artifact = artifact_enabled("moments")
+    run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
     needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
@@ -780,8 +781,10 @@ def main() -> None:
 
     series_out_dir = Path(args.series_output_dir).expanduser()
     series_out_dir.mkdir(parents=True, exist_ok=True)
-    studio_series_out_dir = Path("_studio_series").expanduser()
-    studio_series_out_dir.mkdir(parents=True, exist_ok=True)
+    studio_series_out_dir: Optional[Path] = None
+    if run_studio_series_pages:
+        studio_series_out_dir = Path("_studio_series").expanduser()
+        studio_series_out_dir.mkdir(parents=True, exist_ok=True)
 
     series_prose_dir = Path(args.series_prose_dir).expanduser()
     series_prose_dir.mkdir(parents=True, exist_ok=True)
@@ -1638,41 +1641,44 @@ def main() -> None:
                     if series_work_ids_sorted:
                         primary_work_id = series_work_ids_sorted[-1]
 
-                tsm: Dict[str, Any] = {
-                    "layout": "studio_series",
-                    "series_id": series_id,
-                    "title": series_title,
-                    "title_sort": numeric_aware_sort_key(series_title),
-                    "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
-                    "year": year,
-                    "year_display": year_display,
-                    "project_folders": series_project_folders_by_id.get(series_id, []),
-                    "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
-                    "primary_work_id": primary_work_id,
-                }
-                studio_series_content = build_front_matter(tsm) + "\n"
-                studio_series_path = studio_series_out_dir / f"{series_id}.md"
+                if run_studio_series_pages:
+                    if studio_series_out_dir is None:
+                        raise RuntimeError("studio_series_out_dir is not initialized")
+                    tsm: Dict[str, Any] = {
+                        "layout": "studio_series",
+                        "series_id": series_id,
+                        "title": series_title,
+                        "title_sort": numeric_aware_sort_key(series_title),
+                        "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
+                        "year": year,
+                        "year_display": year_display,
+                        "project_folders": series_project_folders_by_id.get(series_id, []),
+                        "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                        "primary_work_id": primary_work_id,
+                    }
+                    studio_series_content = build_front_matter(tsm) + "\n"
+                    studio_series_path = studio_series_out_dir / f"{series_id}.md"
 
-                existing_studio_series_text = None
-                if studio_series_path.exists():
-                    try:
-                        existing_studio_series_text = studio_series_path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_studio_series_text = None
+                    existing_studio_series_text = None
+                    if studio_series_path.exists():
+                        try:
+                            existing_studio_series_text = studio_series_path.read_text(encoding="utf-8")
+                        except Exception:
+                            existing_studio_series_text = None
 
-                studio_series_needs_write = (existing_studio_series_text != studio_series_content)
-                prefix_ts = f"[studio-series {s_processed}/{s_total}] "
-                if (not studio_series_needs_write) and (not args.force):
-                    print(f"{prefix_ts}SKIP (no change): {studio_series_path}")
-                    studio_series_skipped += 1
-                else:
-                    if args.write:
-                        studio_series_path.write_text(studio_series_content, encoding="utf-8")
-                        print(f"{prefix_ts}WRITE: {studio_series_path}")
-                        studio_series_written += 1
+                    studio_series_needs_write = (existing_studio_series_text != studio_series_content)
+                    prefix_ts = f"[studio-series {s_processed}/{s_total}] "
+                    if (not studio_series_needs_write) and (not args.force):
+                        print(f"{prefix_ts}SKIP (no change): {studio_series_path}")
+                        studio_series_skipped += 1
                     else:
-                        print(f"{prefix_ts}DRY-RUN: would write {studio_series_path} (overwrite={studio_series_path.exists()})")
-                        studio_series_written += 1
+                        if args.write:
+                            studio_series_path.write_text(studio_series_content, encoding="utf-8")
+                            print(f"{prefix_ts}WRITE: {studio_series_path}")
+                            studio_series_written += 1
+                        else:
+                            print(f"{prefix_ts}DRY-RUN: would write {studio_series_path} (overwrite={studio_series_path.exists()})")
+                            studio_series_written += 1
 
                 if series_id not in tag_assignments_series:
                     tag_assignments_series[series_id] = {
@@ -1686,7 +1692,7 @@ def main() -> None:
                 print("Series pages skipped: not selected by --only.")
             else:
                 print("Series pages skipped: --work-ids scope active (use --series-ids to include series page rebuild).")
-            print("Studio series pages skipped: follows series-pages selection.")
+            print("Studio series pages retired: skipped.")
             print("Tag assignments sync skipped: follows series-pages selection.")
 
         if run_series_pages:
@@ -1715,10 +1721,13 @@ def main() -> None:
             if series_published_date_updated > 0:
                 print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
-        print(
-            f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
-            f"{studio_series_written}. Skipped: {studio_series_skipped}."
-        )
+        if run_studio_series_pages:
+            print(
+                f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
+                f"{studio_series_written}. Skipped: {studio_series_skipped}."
+            )
+        else:
+            print("Studio series pages retired: skipped.")
 
     if run_series_index_json:
         work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}

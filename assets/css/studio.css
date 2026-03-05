@@ -1262,6 +1262,6 @@
   }
 
   .seriesTags__col--count::before {
-    content: "count: ";
+    content: "status: ";
   }
 }

@@ -420,7 +420,7 @@ It then:
 
 - lists series in alphabetical order by title
 - links each series title to its Series Tag Editor page (`/studio/series-tag-editor/?series=<series_id>`)
-- shows assigned-tag count per series
+- shows per-series status (RAG dot) using the same rules as Studio Series
 - renders assigned tags as color-coded pills
 - sorts tags alphabetically by label (fallback: tag id)
 - uses an inline header key (`All tags` + group pills) in the tags column

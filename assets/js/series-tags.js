@@ -139,8 +139,9 @@ function buildRegistryLookup(registryJson) {
     const tagId = normalize(raw.tag_id);
     const group = normalize(raw.group);
     const label = String(raw.label || "").trim();
+    const status = normalize(raw.status || "active");
     if (!tagId || !label) continue;
-    lookup.set(tagId, { group, label });
+    lookup.set(tagId, { group, label, status });
   }
   return lookup;
 }
@@ -161,6 +162,10 @@ function buildGroupDescriptionMap(groupsJson) {
 function renderTable(state) {
   const rowsHtml = state.seriesData.map((series) => {
     const assigned = getSeriesTags(state.assignmentsSeries, series.seriesId);
+    const metrics = computeMetrics(assigned, state.registry);
+    const rag = computeRag(metrics);
+    const tooltip = buildTooltip(metrics);
+    const ragLabel = `status ${rag.toUpperCase()}: ${tooltip}`;
     const tags = assigned
       .map((tagId) => toTagDisplay(tagId, state.registry))
       .sort((a, b) => a.sortLabel.localeCompare(b.sortLabel, undefined, { sensitivity: "base" }));
@@ -179,7 +184,11 @@ function renderTable(state) {
         <div class="seriesTags__col seriesTags__col--title">
           <a href="${escapeHtml(series.url)}">${escapeHtml(series.title)}</a>
         </div>
-        <div class="seriesTags__col seriesTags__col--count">${assigned.length}</div>
+        <div class="seriesTags__col seriesTags__col--count">
+          <span class="tagStudioIndex__statusWrap">
+            <span class="rag rag--${escapeHtml(rag)}" title="${escapeHtml(tooltip)}" aria-label="${escapeHtml(ragLabel)}"></span>
+          </span>
+        </div>
         <div class="seriesTags__col seriesTags__col--tags">
           <ul class="seriesTags__chipList">${chips}</ul>
         </div>
@@ -191,7 +200,7 @@ function renderTable(state) {
     <div class="seriesTags">
       <div class="seriesTags__head">
         <div class="seriesTags__col seriesTags__col--title">series</div>
-        <div class="seriesTags__col seriesTags__col--count">count</div>
+        <div class="seriesTags__col seriesTags__col--count">status</div>
         <div class="seriesTags__col seriesTags__col--tags">
           ${renderFilters(state)}
         </div>
@@ -295,6 +304,80 @@ function toTagDisplay(rawTagId, registry) {
     sortLabel: tagId,
     className
   };
+}
+
+function computeMetrics(assignedTags, registry) {
+  const counts = {
+    subject: 0,
+    domain: 0,
+    form: 0,
+    theme: 0
+  };
+  let nUnknown = 0;
+  let nDeprecated = 0;
+  let nTotal = 0;
+
+  const uniqueTags = Array.from(
+    new Set((Array.isArray(assignedTags) ? assignedTags : []).map((tag) => normalize(tag)).filter(Boolean))
+  );
+
+  for (const tagId of uniqueTags) {
+    nTotal += 1;
+    const reg = registry.get(tagId);
+    if (!reg) {
+      nUnknown += 1;
+      continue;
+    }
+    if (reg.group in counts) counts[reg.group] += 1;
+    if (reg.status !== "active") nDeprecated += 1;
+  }
+
+  const presentGroups = GROUPS.filter((group) => counts[group] > 0);
+  const missingGroups = GROUPS.filter((group) => counts[group] === 0);
+  const groupsPresent = presentGroups.length;
+  const completenessBase = groupsPresent / 4;
+  const tagBonus = (Math.min(nTotal, 6) / 6) * 0.25;
+  const completeness = Math.min(1, completenessBase + tagBonus);
+
+  return {
+    nTotal,
+    nUnknown,
+    nDeprecated,
+    counts,
+    groupsPresent,
+    presentGroups,
+    missingGroups,
+    completeness
+  };
+}
+
+function computeRag(metrics) {
+  if (metrics.nTotal === 0 || metrics.nUnknown > 0) {
+    return "red";
+  }
+
+  const missingForm = metrics.counts.form === 0;
+  const missingTheme = metrics.counts.theme === 0;
+  if (
+    metrics.groupsPresent === 1 ||
+    metrics.nTotal < 3 ||
+    metrics.nDeprecated > 0 ||
+    (missingForm && missingTheme)
+  ) {
+    return "amber";
+  }
+
+  return "green";
+}
+
+function buildTooltip(metrics) {
+  const groupsLabel = metrics.presentGroups.length ? metrics.presentGroups.join(", ") : "none";
+  const missingLabel = metrics.missingGroups.length ? metrics.missingGroups.join(", ") : "none";
+  return (
+    `tags: ${metrics.nTotal}; groups: ${groupsLabel}; missing: ${missingLabel}; ` +
+    `unknown: ${metrics.nUnknown}; deprecated: ${metrics.nDeprecated}; ` +
+    `completeness: ${metrics.completeness.toFixed(2)}`
+  );
 }
 
 function groupFromTagId(tagId) {

@@ -40,9 +40,6 @@ collections:
   studio_works:
     output: true
     permalink: /studio/studio-works/:name/
-  studio_series:
-    output: true
-    permalink: /studio/studio-series/:name/
   themes:
     output: true
     permalink: /themes/:name/
