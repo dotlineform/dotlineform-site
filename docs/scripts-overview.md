@@ -138,6 +138,7 @@ Useful flags:
   - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `work-details-index-json`, `moments`
   - coupling:
     - selecting `work-pages` also includes `works-curator-pages`
+  - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
@@ -312,11 +313,12 @@ Or run multiple checks with repeated `--check-only`:
 
 Current checks:
 
-- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, and `assets/data/series_index.json` (including duplicate IDs)
-- `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last, and `detail_uid` prefix matching `work_id`)
+- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, `assets/data/series_index.json`, and `assets/data/work_details_index.json` (including duplicate IDs)
+- `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `series_sort`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last sourced from canonical `series_index.json` with `_series` fallback, and `detail_uid` prefix matching `work_id`)
 - `json_schema`: validates generated JSON structure/count consistency for:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
+  - `assets/data/work_details_index.json`
   - `assets/works/index/*.json`
 - `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
 - `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)

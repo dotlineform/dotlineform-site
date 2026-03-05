@@ -1541,7 +1541,9 @@ def main() -> None:
                     # Fall back to numeric year rendered as text
                     year_display = str(year) if year is not None else None
 
-                sfm: Dict[str, Any] = {
+                # Canonical series metadata stays in series_index.json.
+                # Keep _series pages lightweight (routing + prose include + checksum).
+                series_front_matter_like: Dict[str, Any] = {
                     "series_id": series_id,
                     "title": series_title,
                     "title_sort": numeric_aware_sort_key(series_title),
@@ -1551,9 +1553,12 @@ def main() -> None:
                     "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
                     "layout": "series",
                 }
-
-                s_checksum = compute_work_checksum(sfm)
-                sfm["checksum"] = s_checksum
+                sfm: Dict[str, Any] = {
+                    "series_id": series_id,
+                    "title": series_title,
+                    "layout": "series",
+                }
+                sfm["checksum"] = compute_work_checksum(series_front_matter_like)
 
                 body = f"{{% include series_prose/{series_id}.md %}}\n"
                 series_content = build_front_matter(sfm) + "\n" + body

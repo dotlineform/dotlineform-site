@@ -279,6 +279,7 @@ def check_cross_refs(
 
 
 def check_schema(
+    site_root: Path,
     works: Dict[str, Dict[str, Any]],
     series: Dict[str, Dict[str, Any]],
     work_details: Dict[str, Dict[str, Any]],
@@ -297,14 +298,42 @@ def check_schema(
     allowed_sort_fields = {"title", "year", "work_id", "title_sort"}
 
     # Parse/validate series sort_fields once for downstream work-level checks.
+    # Prefer canonical series_index.json data; fall back to _series front matter.
     sort_fields_by_series: Dict[str, List[str]] = {}
+    sort_fields_raw_by_series: Dict[str, tuple[str, str]] = {}
+    series_index_path = site_root / "assets/data/series_index.json"
+    try:
+        series_index_obj = json.loads(series_index_path.read_text(encoding="utf-8"))
+    except Exception:
+        series_index_obj = None
+
+    series_index_map = series_index_obj.get("series") if isinstance(series_index_obj, dict) else None
+    if isinstance(series_index_map, dict):
+        for sid, row in series_index_map.items():
+            sid_norm = normalize_text(sid)
+            if sid_norm == "":
+                continue
+            raw = normalize_text((row or {}).get("sort_fields") if isinstance(row, dict) else "")
+            if raw == "":
+                continue
+            sort_fields_raw_by_series[sid_norm] = (raw, str(series_index_path))
+
     for sid, row in series.items():
-        if series_ids_scope is not None and sid not in series_ids_scope:
+        sid_norm = normalize_text(sid)
+        if sid_norm == "":
+            continue
+        if sid_norm in sort_fields_raw_by_series:
             continue
         fm = row["fm"]
         raw = normalize_text(fm.get("sort_fields"))
         if raw == "":
             continue
+        sort_fields_raw_by_series[sid_norm] = (raw, row["path"])
+
+    for sid, source in sort_fields_raw_by_series.items():
+        if series_ids_scope is not None and sid not in series_ids_scope:
+            continue
+        raw, source_path = source
         parsed: List[str] = []
         bad = False
         for token in raw.split(","):
@@ -318,7 +347,7 @@ def check_schema(
                 t = "title"
             if t not in allowed_sort_fields:
                 errors += 1
-                add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": f"sort_fields has unsupported token '{t}'"}, max_samples)
+                add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": f"sort_fields has unsupported token '{t}'"}, max_samples)
                 bad = True
                 continue
             parsed.append(t)
@@ -326,14 +355,14 @@ def check_schema(
             continue
         if not parsed:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields resolves to empty token list"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": "sort_fields resolves to empty token list"}, max_samples)
             continue
         if parsed[-1] != "work_id":
             errors += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields must end with work_id"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": "sort_fields must end with work_id"}, max_samples)
         if parsed.count("work_id") != 1:
             errors += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "sort_fields must include work_id exactly once"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": source_path, "message": "sort_fields must include work_id exactly once"}, max_samples)
         sort_fields_by_series[sid] = parsed
 
     # _works
@@ -375,7 +404,7 @@ def check_schema(
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "missing title_sort for numeric title"}, max_samples)
 
     # _series
-    series_required = ["series_id", "title", "title_sort", "sort_fields"]
+    series_required = ["series_id", "layout"]
     for sid, row in series.items():
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
@@ -387,6 +416,9 @@ def check_schema(
         if not is_slug_safe(normalize_text(fm.get("series_id"))):
             errors += 1
             add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
+        if normalize_text(fm.get("layout")) != "series":
+            warnings += 1
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series layout should be 'series'"}, max_samples)
 
     # _work_details
     detail_required = ["work_id", "detail_id", "detail_uid", "title"]
@@ -1024,6 +1056,7 @@ def main() -> None:
         if "schema" in checks_requested:
             checks.append(
                 check_schema(
+                    site_root=site_root,
                     works=works,
                     series=series,
                     work_details=work_details,
