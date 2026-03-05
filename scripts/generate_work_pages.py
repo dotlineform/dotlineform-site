@@ -1964,7 +1964,9 @@ def main() -> None:
                 elif project_filename:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
-                dfm = build_canonical_detail_record(
+                # Canonical detail metadata stays in per-work JSON/index artifacts.
+                # Keep _work_details pages lightweight (routing + fallback + checksum).
+                detail_front_matter_like = build_canonical_detail_record(
                     wid=wid,
                     did=did,
                     title=title,
@@ -1973,7 +1975,17 @@ def main() -> None:
                     height_px=height_px,
                     has_primary_2400=has_primary_2400,
                 )
-                d_checksum = str(dfm.get("checksum"))
+                d_checksum = str(detail_front_matter_like.get("checksum"))
+                dfm: Dict[str, Any] = {
+                    "work_id": wid,
+                    "detail_id": did,
+                    "detail_uid": detail_uid,
+                    "title": title,
+                    "project_subfolder": project_subfolder,
+                    "has_primary_2400": has_primary_2400,
+                    "layout": "work_details",
+                    "checksum": d_checksum,
+                }
 
                 d_content = build_front_matter(dfm)
                 d_path = work_details_out_dir / f"{detail_uid}.md"
