@@ -144,10 +144,17 @@ Useful flags:
     - series map keyed by `series_id`
     - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `title_sort`, `sort_fields`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
+  - `series-json`: writes legacy compatibility payloads to `assets/series/index/<series_id>.json`
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
+
+Runtime canonical data flow:
+
+- `/series/` and `/series/<series_id>/` read `assets/data/series_index.json`.
+- `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
+- `/works/<work_id>/` series nav/counter/link visibility read `assets/data/series_index.json`.
 
 ### 3b) Tag Studio local save server
 

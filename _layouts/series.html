@@ -54,7 +54,6 @@ layout: default
       var rawPage = Number(params.get('series_page') || '0');
       var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
       var worksIndexUrl = baseurl + '/assets/data/works_index.json';
-      var legacySeriesUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json';
 
       function workUrl(id) {
         return baseurl + '/works/' + encodeURIComponent(id) + '/';
@@ -185,7 +184,7 @@ layout: default
         return fetchJson(seriesIndexUrl)
           .then(function (seriesIndexData) {
             var workIds = extractWorkIds(seriesIndexData);
-            if (!workIds.length) throw new Error('no series work ids');
+            if (!workIds.length) return [];
             return fetchJson(worksIndexUrl)
               .then(function (worksIndexData) {
                 return buildItems(workIds, worksIndexData);
@@ -196,24 +195,7 @@ layout: default
           });
       }
 
-      function loadFromLegacySeriesJson() {
-        return fetchJson(legacySeriesUrl)
-          .then(function (legacyData) {
-            var legacyIds = (legacyData && Array.isArray(legacyData.work_ids)) ? legacyData.work_ids : [];
-            return fetchJson(worksIndexUrl)
-              .then(function (worksIndexData) {
-                return buildItems(legacyIds, worksIndexData);
-              })
-              .catch(function () {
-                return buildItems(legacyIds, null);
-              });
-          });
-      }
-
       loadFromSeriesIndex()
-        .catch(function () {
-          return loadFromLegacySeriesJson();
-        })
         .then(function (items) {
           render(items);
         })

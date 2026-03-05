@@ -42,13 +42,6 @@
     return normalizeIds(row.works);
   }
 
-  function extractLegacyIds(payload) {
-    if (Array.isArray(payload)) return normalizeIds(payload);
-    if (payload && Array.isArray(payload.work_ids)) return normalizeIds(payload.work_ids);
-    if (payload && Array.isArray(payload.items)) return normalizeIds(payload.items);
-    return [];
-  }
-
   function setSeriesLinkVisibilityFromIds(ids) {
     if (!seriesLinkWrap) return;
     seriesLinkWrap.hidden = ids.length <= 1;
@@ -78,14 +71,6 @@
     nav.hidden = false;
   }
 
-  function loadLegacySeriesIds() {
-    if (!seriesFromQuery) return Promise.resolve([]);
-    var legacyUrl = baseurl + '/assets/series/index/' + encodeURIComponent(seriesFromQuery) + '.json';
-    return fetchJson(legacyUrl)
-      .then(extractLegacyIds)
-      .catch(function () { return []; });
-  }
-
   var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
   fetchJson(seriesIndexUrl)
     .then(function (seriesIndexData) {
@@ -97,19 +82,11 @@
         return;
       }
       var idsForNav = extractSeriesIndexIds(seriesIndexData, seriesFromQuery);
-      if (idsForNav.length) {
-        configureNav(idsForNav);
-        return;
-      }
-      return loadLegacySeriesIds().then(configureNav);
+      configureNav(idsForNav);
     })
     .catch(function () {
       if (seriesLinkWrap) seriesLinkWrap.hidden = true;
-      if (!seriesFromQuery) {
-        if (nav) nav.hidden = true;
-        return;
-      }
-      return loadLegacySeriesIds().then(configureNav);
+      if (nav) nav.hidden = true;
     });
 })();
 
