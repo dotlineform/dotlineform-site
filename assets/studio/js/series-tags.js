@@ -6,6 +6,7 @@ import {
   getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
+  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 
@@ -28,7 +29,7 @@ async function initSeriesTagsPage() {
 
   const seriesData = await getSeriesData(config);
   if (!seriesData.length) {
-    mount.innerHTML = `<p class="tagStudio__empty">none</p>`;
+    mount.innerHTML = `<p class="tagStudio__empty">${escapeHtml(seriesTagsText(config, "empty_state", "none"))}</p>`;
     return;
   }
 
@@ -66,7 +67,7 @@ async function initSeriesTagsPage() {
       renderTable(state);
     });
   } catch (error) {
-    mount.innerHTML = `<div class="tagStudioError">Failed to load series tag data.</div>`;
+    mount.innerHTML = `<div class="tagStudioError">${escapeHtml(seriesTagsText(config, "load_failed_error", "Failed to load series tag data."))}</div>`;
   }
 }
 
@@ -181,7 +182,7 @@ function renderTable(state) {
       ? visibleTags.map((tag) => (
         `<li class="tagStudio__chip ${escapeHtml(tag.className)}" title="${escapeHtml(tag.tagId)}">${escapeHtml(tag.label)}</li>`
       )).join("")
-      : `<li class="tagStudio__empty">none</li>`;
+      : `<li class="tagStudio__empty">${escapeHtml(seriesTagsText(state.config, "empty_state", "none"))}</li>`;
 
     return `
       <li class="seriesTags__row">
@@ -203,8 +204,8 @@ function renderTable(state) {
   state.mount.innerHTML = `
     <div class="seriesTags">
       <div class="seriesTags__head">
-        <div class="seriesTags__col seriesTags__col--title">series</div>
-        <div class="seriesTags__col seriesTags__col--count">status</div>
+        <div class="seriesTags__col seriesTags__col--title">${escapeHtml(seriesTagsText(state.config, "table_heading_series", "series"))}</div>
+        <div class="seriesTags__col seriesTags__col--count">${escapeHtml(seriesTagsText(state.config, "table_heading_status", "status"))}</div>
         <div class="seriesTags__col seriesTags__col--tags">
           ${renderFilters(state)}
         </div>
@@ -233,7 +234,7 @@ function renderFilters(state) {
 
   return `
     <div class="tagStudio__key seriesTags__filters">
-      <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags</button>
+      <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
       ${renderGroupInfoControl(state)}
     </div>
@@ -253,8 +254,8 @@ function renderGroupInfoControl(state) {
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
-      title="Open group descriptions in a new tab"
-      aria-label="Open group descriptions in a new tab"
+      title="${escapeHtml(seriesTagsText(state.config, "group_info_title", "Open group descriptions in a new tab"))}"
+      aria-label="${escapeHtml(seriesTagsText(state.config, "group_info_aria_label", "Open group descriptions in a new tab"))}"
     >
       <em>i</em>
     </a>
@@ -327,4 +328,8 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function seriesTagsText(config, key, fallback, tokens) {
+  return getStudioText(config, `series_tags.${key}`, fallback, tokens);
 }

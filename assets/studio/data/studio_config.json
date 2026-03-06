@@ -128,6 +128,20 @@
       "patch_edit_rename_note": " Also remove old alias key \"{alias_key}\" from assets/studio/data/tag_aliases.json.",
       "patch_edit_message": "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}",
       "patch_demote_message": "Patch mode: section snippets prepared for demoting \"{tag_id}\"."
+    },
+    "series_tags": {
+      "load_failed_error": "Failed to load series tag data.",
+      "empty_state": "none",
+      "table_heading_series": "series",
+      "table_heading_status": "status",
+      "filter_all_tags": "All tags",
+      "group_info_title": "Open group descriptions in a new tab",
+      "group_info_aria_label": "Open group descriptions in a new tab"
+    },
+    "tag_groups": {
+      "load_failed_error": "Failed to load group descriptions from /assets/studio/data/tag_groups.json.",
+      "empty_state": "No group descriptions available.",
+      "description_long_fallback": "No long description available."
     }
   }
 }

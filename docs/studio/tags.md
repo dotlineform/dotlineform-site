@@ -73,8 +73,14 @@ Current config scope:
   - import controls
   - patch modal labels
   - import-mode/status/patch-result strings
+- `ui_text.series_tags`
+  - table headings
+  - filter/empty/error text
+- `ui_text.tag_groups`
+  - empty/error text
+  - long-description fallback copy
 
-The config is intended to decouple Studio from current file placement and from selected UI copy. Studio-owned JSON files and key copy on the Series Tag Editor, Tag Registry, and Tag Aliases pages are no longer hard-coded in those modules.
+The config is intended to decouple Studio from current file placement and from selected UI copy. Studio-owned JSON files and key copy on the Series Tag Editor, Series Tags, Tag Registry, Tag Aliases, and Tag Groups pages are no longer hard-coded in those modules.
 
 `assets/studio/js/studio-config.js` exports `getStudioText(config, key, fallback, tokens)` for Studio pages:
 

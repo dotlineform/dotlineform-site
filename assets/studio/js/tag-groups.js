@@ -1,6 +1,7 @@
 import {
   getStudioDataPath,
   getStudioGroups,
+  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 
@@ -21,9 +22,9 @@ async function initTagGroupsPage() {
     STUDIO_GROUPS = getStudioGroups(config);
     const data = await fetchJson(getStudioDataPath(config, "tag_groups"));
     const groups = normalizeGroups(data);
-    renderGroups(mount, groups);
+    renderGroups(mount, groups, config);
   } catch (error) {
-    mount.innerHTML = '<div class="tagStudioError">Failed to load group descriptions from /assets/studio/data/tag_groups.json.</div>';
+    mount.innerHTML = `<div class="tagStudioError">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
   }
 }
 
@@ -51,9 +52,9 @@ function normalizeGroups(data) {
   return STUDIO_GROUPS.map((groupId) => byId.get(groupId)).filter(Boolean);
 }
 
-function renderGroups(mount, groups) {
+function renderGroups(mount, groups, config) {
   if (!groups.length) {
-    mount.innerHTML = '<p class="tagStudio__empty">No group descriptions available.</p>';
+    mount.innerHTML = `<p class="tagStudio__empty">${escapeHtml(tagGroupsText(config, "empty_state", "No group descriptions available."))}</p>`;
     return;
   }
 
@@ -66,7 +67,7 @@ function renderGroups(mount, groups) {
               <span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group.groupId)}">${escapeHtml(group.groupId)}</span>
             </p>
             ${group.description ? `<p class="tagGroups__short">${escapeHtml(group.description)}</p>` : ""}
-            <p class="tagStudio__groupInfoText">${escapeHtml(group.descriptionLong || "No long description available.")}</p>
+            <p class="tagStudio__groupInfoText">${escapeHtml(group.descriptionLong || tagGroupsText(config, "description_long_fallback", "No long description available."))}</p>
           </section>
         `).join("")}
       </div>
@@ -85,4 +86,8 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+function tagGroupsText(config, key, fallback, tokens) {
+  return getStudioText(config, `tag_groups.${key}`, fallback, tokens);
 }
