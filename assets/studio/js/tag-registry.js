@@ -83,6 +83,9 @@ async function initTagRegistryPage() {
 function renderShell(state) {
   const importFileLabel = registryText(state.config, "import_file_label", "import file");
   const importModeFieldLabel = registryText(state.config, "import_mode_label", "mode");
+  const importModeOptionAdd = registryText(state.config, "import_mode_option_add", "add (no overwrite)");
+  const importModeOptionMerge = registryText(state.config, "import_mode_option_merge", "add + overwrite");
+  const importModeOptionReplace = registryText(state.config, "import_mode_option_replace", "replace entire registry");
   const chooseFileLabel = registryText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = registryText(state.config, "import_button", "Import");
   const importModeLabel = buildRegistryImportModeText(state, "patch");
@@ -127,9 +130,9 @@ function renderShell(state) {
           <label class="tagRegistry__modeWrap">
             <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
             <select class="tagRegistry__modeSelect" data-role="import-mode">
-              <option value="add">add (no overwrite)</option>
-              <option value="merge">add + overwrite</option>
-              <option value="replace">replace entire registry</option>
+              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
+              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
+              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
             </select>
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
@@ -694,13 +697,15 @@ function renderGroupInfoControl(state, scope) {
 
 function renderList(state) {
   const visible = getVisibleSortedTags(state);
+  const tagHeading = registryText(state.config, "table_heading_tag", "tag");
+  const descriptionHeading = registryText(state.config, "table_heading_description", "description");
   const headerHtml = `
     <div class="tagRegistry__head">
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "label")}" data-sort-key="label">
-        tag${sortIndicator(state, "label")}
+        ${escapeHtml(tagHeading)}${sortIndicator(state, "label")}
       </button>
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "description")}" data-sort-key="description">
-        description${sortIndicator(state, "description")}
+        ${escapeHtml(descriptionHeading)}${sortIndicator(state, "description")}
       </button>
     </div>
   `;

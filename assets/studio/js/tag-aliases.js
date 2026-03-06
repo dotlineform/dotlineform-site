@@ -77,6 +77,9 @@ async function initTagAliasesPage() {
 function renderShell(state) {
   const importFileLabel = aliasesText(state.config, "import_file_label", "import file");
   const importModeFieldLabel = aliasesText(state.config, "import_mode_label", "mode");
+  const importModeOptionAdd = aliasesText(state.config, "import_mode_option_add", "add (no overwrite)");
+  const importModeOptionMerge = aliasesText(state.config, "import_mode_option_merge", "add + overwrite");
+  const importModeOptionReplace = aliasesText(state.config, "import_mode_option_replace", "replace entire aliases");
   const chooseFileLabel = aliasesText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = aliasesText(state.config, "import_button", "Import");
   const importModeLabel = buildAliasesImportModeText(state, "patch");
@@ -106,9 +109,9 @@ function renderShell(state) {
           <label class="tagRegistry__modeWrap">
             <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
             <select class="tagRegistry__modeSelect" data-role="import-mode">
-              <option value="add">add (no overwrite)</option>
-              <option value="merge">add + overwrite</option>
-              <option value="replace">replace entire aliases</option>
+              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
+              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
+              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
             </select>
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
@@ -608,11 +611,12 @@ function renderGroupInfoControl(state, scope) {
 
 function renderList(state) {
   const visible = getVisibleAliases(state);
+  const aliasHeading = aliasesText(state.config, "table_heading_alias", "alias");
 
   const headerHtml = `
     <div class="tagAliases__head">
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
-        alias${sortIndicator(state, "alias")}
+        ${escapeHtml(aliasHeading)}${sortIndicator(state, "alias")}
       </button>
       <span class="tagAliases__headLabel">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
     </div>

@@ -66,12 +66,12 @@ Current config scope:
   - save-mode/status/error strings
   - tokenized templates such as `{mode}` and `{saved_at}`
 - `ui_text.tag_registry`
-  - import, search, filter, and modal labels
+  - import, search, filter, table-heading, and modal labels
   - edit/delete/demote validation and status strings
   - confirm and import-parser error text
   - import-mode/status/patch-result strings
 - `ui_text.tag_aliases`
-  - import, search, filter, and modal labels
+  - import, search, filter, table-heading, and modal labels
   - edit/promote/demote validation and status strings
   - confirm/prompt and import-parser error text
   - import-mode/status/patch-result strings
