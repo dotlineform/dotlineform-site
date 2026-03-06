@@ -288,7 +288,7 @@ def check_cross_refs(
                     add_sample(samples, {"check": "cross_refs", "id": detail_uid_norm, "path": str(details_index_path), "message": "work_details_index references missing work detail page"}, max_samples)
 
     # tag_assignments -> series_index / works_index references
-    assignments_path = site_root / "assets/data/tag_assignments.json"
+    assignments_path = site_root / "assets/studio/data/tag_assignments.json"
     if not assignments_path.exists():
         warnings += 1
         add_sample(samples, {"check": "cross_refs", "id": "tag_assignments", "path": str(assignments_path), "message": "missing tag assignments JSON"}, max_samples)
@@ -637,7 +637,7 @@ def check_json_schema(
                             errors += 1
                             add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_id must match first series_ids value"}, max_samples)
 
-    tag_assignments_path = site_root / "assets/data/tag_assignments.json"
+    tag_assignments_path = site_root / "assets/studio/data/tag_assignments.json"
     try:
         tag_assignments_obj = json.loads(tag_assignments_path.read_text(encoding="utf-8"))
     except Exception as e:

@@ -200,7 +200,7 @@ Behavior:
     - series save payload: `{ "series_id": "<series>", "tags": [...] }`
     - work override save payload: `{ "series_id": "<series>", "work_id": "<work_id>", "keep_work": true|false, "tags": [...] }`
     - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
-  - save writes `assets/data/tag_assignments.json` with object-only tag rows (no string tags)
+  - save writes `assets/studio/data/tag_assignments.json` with object-only tag rows (no string tags)
   - save is diff-based in the Series Tag Editor: the UI compares current work state against the last loaded/saved baseline and sends one `/save-tags` request per changed work row
   - when multiple work pills are selected in the Series Tag Editor, the active work's current override set is used as the persisted state for all selected work pills
   - work override saves strip tags already inherited from `series[*].tags`
@@ -267,9 +267,9 @@ Security constraints:
 - Binds to loopback interface only (local machine only)
 - CORS allows loopback origins only
 - Write target is allowlisted to these files only:
-  - `assets/data/tag_assignments.json`
-  - `assets/data/tag_registry.json`
-  - `assets/data/tag_aliases.json`
+  - `assets/studio/data/tag_assignments.json`
+  - `assets/studio/data/tag_registry.json`
+  - `assets/studio/data/tag_aliases.json`
   - timestamped backups are created in `var/studio/backups/`:
     - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
     - `tag_registry.json.bak-YYYYMMDD-HHMMSS`

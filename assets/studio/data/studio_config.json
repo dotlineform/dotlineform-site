@@ -15,10 +15,10 @@
     },
     "data": {
       "studio": {
-        "tag_registry": "/assets/data/tag_registry.json",
-        "tag_aliases": "/assets/data/tag_aliases.json",
-        "tag_assignments": "/assets/data/tag_assignments.json",
-        "tag_groups": "/assets/data/tag_groups.json"
+        "tag_registry": "/assets/studio/data/tag_registry.json",
+        "tag_aliases": "/assets/studio/data/tag_aliases.json",
+        "tag_assignments": "/assets/studio/data/tag_assignments.json",
+        "tag_groups": "/assets/studio/data/tag_groups.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",

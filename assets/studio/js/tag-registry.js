@@ -65,7 +65,7 @@ async function initTagRegistryPage() {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    renderError(state, "Failed to load tag data from /assets/data/tag_registry.json and /assets/data/tag_aliases.json.");
+    renderError(state, "Failed to load tag data from /assets/studio/data/tag_registry.json and /assets/studio/data/tag_aliases.json.");
     return;
   }
 
@@ -1557,7 +1557,7 @@ function buildManualPatchForCreateTag(tagRow) {
   );
   return {
     kind: "warn",
-    message: `Patch mode: new tag row prepared for assets/data/tag_registry.json tags[].`,
+    message: `Patch mode: new tag row prepared for assets/studio/data/tag_registry.json tags[].`,
     snippet
   };
 }
@@ -1594,7 +1594,7 @@ function buildManualPatchForNewTags(state, importRegistry) {
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importTags.length} imported; ${newTags.length} new tag rows prepared for assets/data/tag_registry.json tags[].`,
+    message: `Patch mode (${state.importMode}): ${importTags.length} imported; ${newTags.length} new tag rows prepared for assets/studio/data/tag_registry.json tags[].`,
     snippet
   };
 }

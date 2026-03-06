@@ -23,7 +23,7 @@ async function initTagGroupsPage() {
     const groups = normalizeGroups(data);
     renderGroups(mount, groups);
   } catch (error) {
-    mount.innerHTML = '<div class="tagStudioError">Failed to load group descriptions from /assets/data/tag_groups.json.</div>';
+    mount.innerHTML = '<div class="tagStudioError">Failed to load group descriptions from /assets/studio/data/tag_groups.json.</div>';
   }
 }
 

@@ -5,7 +5,7 @@ permalink: /studio/series-tag-editor/
 section: works
 ---
 
-<link rel="stylesheet" href="{{ '/assets/css/studio.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <article class="page tagStudioPage" id="seriesTagEditorRoot" hidden>
   <header class="tagStudioPage__header">
@@ -248,7 +248,7 @@ section: works
         mount.setAttribute('data-series-id', seriesIdQuery);
         root.hidden = false;
         emptyEl.hidden = true;
-        import('{{ '/assets/js/tag-studio.js' | relative_url }}').catch(function (err) {
+        import('{{ '/assets/studio/js/tag-studio.js' | relative_url }}').catch(function (err) {
           console.error('series_tag_editor: failed to load tag-studio.js', err);
           showError('Failed to load tag editor module.');
         });

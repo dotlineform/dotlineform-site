@@ -4,10 +4,10 @@ title: Tag Groups
 permalink: /studio/tag-groups/
 ---
 
-<link rel="stylesheet" href="{{ '/assets/css/studio.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <div class="tagStudioPage tagGroupsPage">
   <div id="tag-groups"></div>
 </div>
 
-<script type="module" src="{{ '/assets/js/tag-groups.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/studio/js/tag-groups.js' | relative_url }}"></script>

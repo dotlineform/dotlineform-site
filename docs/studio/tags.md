@@ -4,39 +4,39 @@ This document is the central reference for series-level tags plus per-work overr
 
 ## Scope
 
-- UI/editor logic: `assets/js/tag-studio.js`
-- Index status logic (RAG): `assets/js/tag-studio-index.js`
-- Shared Studio config loader: `assets/js/studio-config.js`
+- UI/editor logic: `assets/studio/js/tag-studio.js`
+- Index status logic (RAG): `assets/studio/js/tag-studio-index.js`
+- Shared Studio config loader: `assets/studio/js/studio-config.js`
 - Layout/page wiring:
   - `studio/series-tag-editor/index.md`
 - Registry browsing page:
   - `studio/tag-registry/index.md`
-  - `assets/js/tag-registry.js`
+  - `assets/studio/js/tag-registry.js`
 - Alias browsing page:
   - `studio/tag-aliases/index.md`
-  - `assets/js/tag-aliases.js`
+  - `assets/studio/js/tag-aliases.js`
 - Series assignments overview page:
   - `studio/series-tags/index.md`
-  - `assets/js/series-tags.js`
+  - `assets/studio/js/series-tags.js`
 - Group descriptions reference page:
   - `studio/tag-groups/index.md`
-  - `assets/js/tag-groups.js`
+  - `assets/studio/js/tag-groups.js`
 - Tag write service: `scripts/studio/tag_write_server.py`
 - Data contracts:
-  - `assets/data/studio/studio_config.json`
-  - `assets/data/tag_registry.json`
-  - `assets/data/tag_aliases.json`
-  - `assets/data/tag_assignments.json`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/data/tag_registry.json`
+  - `assets/studio/data/tag_aliases.json`
+  - `assets/studio/data/tag_assignments.json`
 
 ## Studio Config
 
-`assets/data/studio/studio_config.json` is the Studio-specific config file for:
+`assets/studio/data/studio_config.json` is the Studio-specific config file for:
 
 - public data paths used by Studio pages
 - public route paths used across Studio links
 - RAG scoring thresholds and completeness math
 
-The file is loaded by `assets/js/studio-config.js`, which also resolves configured root-relative paths against the site base path at runtime.
+The file is loaded by `assets/studio/js/studio-config.js`, which also resolves configured root-relative paths against the site base path at runtime.
 
 Current config scope:
 
@@ -250,7 +250,7 @@ Save mode is probed at page load:
 
 ## Data Files: Purpose and Governance
 
-### `assets/data/studio/studio_config.json`
+### `assets/studio/data/studio_config.json`
 
 Purpose:
 
@@ -262,7 +262,7 @@ Governance:
 - Prefer moving thresholds and path changes into this file instead of editing multiple Studio scripts.
 - `updated_at_utc` should be bumped when changing config behavior.
 
-### `assets/data/tag_registry.json`
+### `assets/studio/data/tag_registry.json`
 
 Purpose:
 
@@ -274,7 +274,7 @@ Governance:
 - Should be updated deliberately with review because it defines allowed semantics used across editor/index.
 - `updated_at_utc` should be bumped when changing tags/policy.
 
-### `assets/data/tag_aliases.json`
+### `assets/studio/data/tag_aliases.json`
 
 Purpose:
 
@@ -290,7 +290,7 @@ Governance:
   - max one tag per group (`subject/domain/form/theme`)
 - `updated_at_utc` should be bumped when aliases change.
 
-### `assets/data/tag_assignments.json`
+### `assets/studio/data/tag_assignments.json`
 
 Purpose:
 
@@ -363,7 +363,7 @@ Keep `docs/scripts-overview.md` updated as well for command-level usage and scri
 
 ## Tag Registry Page
 
-The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_registry.json` and:
+The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/studio/data/tag_registry.json` and:
 
 - lists tags with columns: tag, description
 - default sort is alphabetical by tag label
@@ -435,7 +435,7 @@ Tag Registry import modes:
 
 ## Tag Aliases Page
 
-The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_aliases.json` and:
+The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/tag_aliases.json` and:
 
 - lists aliases with columns: alias, group tags
 - renders alias values inline as color-coded pills in the `group tags` column
@@ -497,7 +497,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
 The Series Tags page (`/studio/series-tags/`) reads:
 
 - `assets/data/series_index.json` for the series list/title/link target
-- `assets/data/tag_assignments.json` for assigned tags per series
+- `assets/studio/data/tag_assignments.json` for assigned tags per series
 
 It then:
 

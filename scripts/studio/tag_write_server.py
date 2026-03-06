@@ -24,9 +24,9 @@ What it does:
     - POST /mutate-tag-preview
     - POST /mutate-tag
   - Updates:
-    - assets/data/tag_assignments.json (series and work tag saves)
-    - assets/data/tag_registry.json (registry import replace/merge)
-    - assets/data/tag_aliases.json (aliases import replace/merge/add)
+    - assets/studio/data/tag_assignments.json (series and work tag saves)
+    - assets/studio/data/tag_registry.json (registry import replace/merge)
+    - assets/studio/data/tag_aliases.json (aliases import replace/merge/add)
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -34,9 +34,9 @@ Security constraints:
       http://localhost:*
       http://127.0.0.1:*
   - Hard allowlist for data writes permits only:
-      <repo-root>/assets/data/tag_assignments.json
-      <repo-root>/assets/data/tag_registry.json
-      <repo-root>/assets/data/tag_aliases.json
+      <repo-root>/assets/studio/data/tag_assignments.json
+      <repo-root>/assets/studio/data/tag_registry.json
+      <repo-root>/assets/studio/data/tag_aliases.json
       <repo-root>/var/studio/backups/*
   - Change event logs are written only to:
       <repo-root>/var/studio/logs/tag_write_server.log
@@ -81,9 +81,9 @@ DEFAULT_ALLOWED_GROUPS = ["subject", "domain", "form", "theme"]
 MANUAL_WEIGHT_VALUES = [0.3, 0.6, 0.9]
 DEFAULT_TAG_WEIGHT = 0.6
 
-ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/data/tag_assignments.json")
-ALLOWED_REGISTRY_REL_PATH = Path("assets/data/tag_registry.json")
-ALLOWED_ALIASES_REL_PATH = Path("assets/data/tag_aliases.json")
+ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/studio/data/tag_assignments.json")
+ALLOWED_REGISTRY_REL_PATH = Path("assets/studio/data/tag_registry.json")
+ALLOWED_ALIASES_REL_PATH = Path("assets/studio/data/tag_aliases.json")
 BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 

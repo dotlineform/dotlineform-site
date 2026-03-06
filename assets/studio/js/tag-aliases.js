@@ -63,7 +63,7 @@ async function initTagAliasesPage() {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    renderError(state, "Failed to load aliases from /assets/data/tag_aliases.json.");
+    renderError(state, "Failed to load aliases from /assets/studio/data/tag_aliases.json.");
     return;
   }
 
@@ -1346,7 +1346,7 @@ function buildManualPatchForNewAliases(state, importAliases) {
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importRows.length} imported; ${newCount} alias rows prepared for assets/data/tag_aliases.json aliases object.`,
+    message: `Patch mode (${state.importMode}): ${importRows.length} imported; ${newCount} alias rows prepared for assets/studio/data/tag_aliases.json aliases object.`,
     snippet
   };
 }
@@ -1411,7 +1411,7 @@ function buildManualPatchForAliasDelete(aliasKey) {
 
   return {
     kind: "warn",
-    message: `Patch mode: remove this alias key from assets/data/tag_aliases.json aliases object.`,
+    message: `Patch mode: remove this alias key from assets/studio/data/tag_aliases.json aliases object.`,
     snippet
   };
 }
@@ -1443,7 +1443,7 @@ function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description, tags) 
   };
   const snippet = JSON.stringify(fragment, null, 2);
   const renameNote = normalizedOld !== normalizedNew
-    ? ` Also remove old alias key "${normalizedOld}" from assets/data/tag_aliases.json.`
+    ? ` Also remove old alias key "${normalizedOld}" from assets/studio/data/tag_aliases.json.`
     : "";
 
   return {

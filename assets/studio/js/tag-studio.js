@@ -61,7 +61,7 @@ async function initTagStudio() {
   } catch (error) {
     renderFatalError(
       mount,
-      "Failed to load tag data. Check /assets/data/tag_registry.json, /assets/data/tag_aliases.json, /assets/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
+      "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
     );
   }
 }

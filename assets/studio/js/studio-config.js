@@ -15,10 +15,10 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     data: {
       studio: {
-        tag_registry: "/assets/data/tag_registry.json",
-        tag_aliases: "/assets/data/tag_aliases.json",
-        tag_assignments: "/assets/data/tag_assignments.json",
-        tag_groups: "/assets/data/tag_groups.json"
+        tag_registry: "/assets/studio/data/tag_registry.json",
+        tag_aliases: "/assets/studio/data/tag_aliases.json",
+        tag_assignments: "/assets/studio/data/tag_assignments.json",
+        tag_groups: "/assets/studio/data/tag_groups.json"
       },
       site: {
         series_index: "/assets/data/series_index.json",
@@ -58,7 +58,7 @@ const DEFAULT_STUDIO_CONFIG = {
   }
 };
 
-const CONFIG_URL = new URL("../data/studio/studio_config.json", import.meta.url);
+const CONFIG_URL = new URL("../data/studio_config.json", import.meta.url);
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let studioConfigPromise = null;
 
@@ -210,7 +210,7 @@ export function buildStudioRagTooltip(metrics) {
 
 function deriveSiteBasePath(importUrl) {
   const pathname = new URL(importUrl).pathname || "";
-  const marker = "/assets/js/";
+  const marker = "/assets/studio/js/";
   const index = pathname.indexOf(marker);
   if (index < 0) return "";
   return pathname.slice(0, index).replace(/\/+$/, "");
