@@ -35,6 +35,7 @@ This document is the central reference for series-level tags plus per-work overr
 - public data paths used by Studio pages
 - public route paths used across Studio links
 - RAG scoring thresholds and completeness math
+- Studio UI copy overrides
 
 The file is loaded by `assets/studio/js/studio-config.js`, which also resolves configured root-relative paths against the site base path at runtime.
 
@@ -59,8 +60,19 @@ Current config scope:
   - deprecated-status handling
   - completeness formula parameters
   - red/amber thresholds
+- `ui_text.series_tag_editor`
+  - editor shell labels/placeholders
+  - contextual hint copy
+  - save-mode/status/error strings
+  - tokenized templates such as `{mode}` and `{saved_at}`
 
-The config is intended to decouple Studio from current file placement. Studio-owned JSON files may still physically live alongside site data for now, but their locations are no longer hard-coded in the Studio JS.
+The config is intended to decouple Studio from current file placement and from selected UI copy. Studio-owned JSON files and Series Tag Editor copy are no longer hard-coded in the editor JS.
+
+`assets/studio/js/studio-config.js` exports `getStudioText(config, key, fallback, tokens)` for Studio pages:
+
+- `key` is a dot-path under `ui_text`, for example `series_tag_editor.context_hint_default`
+- `fallback` is used when the config key is missing
+- `tokens` optionally replaces placeholders like `{mode}` or `{saved_count}`
 
 ## Group Model
 

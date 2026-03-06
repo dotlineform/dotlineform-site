@@ -2,6 +2,7 @@ import {
   getSiteDataPath,
   getStudioDataPath,
   getStudioGroups,
+  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 
@@ -31,7 +32,7 @@ async function initTagStudio() {
 
   const seriesId = String(mount.dataset.seriesId || "").trim();
   if (!seriesId) {
-    renderFatalError(mount, "Tag Studio error: missing series id.");
+    renderFatalError(mount, studioText(config, "missing_series_id_error", "Tag Studio error: missing series id."));
     return;
   }
 
@@ -61,7 +62,11 @@ async function initTagStudio() {
   } catch (error) {
     renderFatalError(
       mount,
-      "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
+      studioText(
+        config,
+        "load_failed_error",
+        "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json."
+      )
     );
   }
 }
@@ -265,6 +270,16 @@ function createResolvedEntries(rows, tagsById, nextEntryId = 1) {
 }
 
 function renderShell(state) {
+  const workInputPlaceholder = studioText(state.config, "work_input_placeholder", "work_id(s) in this series");
+  const tagInputPlaceholder = studioText(state.config, "tag_input_placeholder", "tag slug or alias");
+  const addButtonLabel = studioText(state.config, "add_button", "Add");
+  const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
+  const saveModeLabel = buildSaveModeText(state, "patch");
+  const modalTitle = studioText(state.config, "modal_title", "Work Tag Patch Preview");
+  const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved work override tags");
+  const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
+  const modalCopyButton = studioText(state.config, "modal_copy_button", "Copy");
+  const modalCloseButton = studioText(state.config, "modal_close_button", "Close");
   state.mount.innerHTML = `
     <div class="tagStudio">
       <section class="tagStudio__panel tagStudio__panel--editor">
@@ -274,7 +289,7 @@ function renderShell(state) {
             class="tagStudio__input"
             type="text"
             autocomplete="off"
-            placeholder="work_id(s) in this series"
+            placeholder="${escapeHtml(workInputPlaceholder)}"
           >
           <div class="tagStudio__workSelection" data-role="selected-work"></div>
         </div>
@@ -285,10 +300,10 @@ function renderShell(state) {
 
         <div data-role="groups"></div>
         <div class="tagStudio__inputRow tagStudio__inputRow--editor">
-          <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="tag slug or alias">
-          <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
-          <span class="tagStudio__saveMode" data-role="save-mode">Save mode: Patch</span>
+          <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="${escapeHtml(tagInputPlaceholder)}">
+          <button type="button" class="tagStudio__button" data-role="add-tag">${escapeHtml(addButtonLabel)}</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">${escapeHtml(saveButtonLabel)}</button>
+          <span class="tagStudio__saveMode" data-role="save-mode">${escapeHtml(saveModeLabel)}</span>
         </div>
         <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
           <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>
@@ -302,14 +317,14 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagStudioModalTitle">
-        <h3 id="tagStudioModalTitle">Work Tag Patch Preview</h3>
-        <p class="tagStudioModal__label">Resolved work override tags</p>
+        <h3 id="tagStudioModalTitle">${escapeHtml(modalTitle)}</h3>
+        <p class="tagStudioModal__label">${escapeHtml(modalResolvedLabel)}</p>
         <pre class="tagStudioModal__pre" data-role="modal-tags"></pre>
-        <p class="tagStudioModal__label">Patch guidance for <code>tag_assignments.json</code></p>
+        <p class="tagStudioModal__label">${escapeHtml(modalPatchGuidanceLabel)}</p>
         <pre class="tagStudioModal__pre" data-role="modal-snippet"></pre>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-snippet">Copy</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-snippet">${escapeHtml(modalCopyButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(modalCloseButton)}</button>
         </div>
       </div>
     </div>
@@ -477,7 +492,7 @@ function wireEvents(state) {
     if (!state.modalSnippet) return;
     try {
       await navigator.clipboard.writeText(state.modalSnippet);
-      setStatus(state, "success", "Patch guidance copied to clipboard.");
+      setStatus(state, "success", studioText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
     } catch (error) {
       setStatus(state, "error", "Copy failed. Select and copy the patch guidance manually.");
     }
@@ -792,10 +807,18 @@ function renderSelectedWork(state) {
 function renderContextHint(state) {
   if (!state.refs.contextHint) return;
   if (!state.selectedWorkId) {
-    state.refs.contextHint.textContent = "Select one or more works to add per-work tag overrides. Series tags shown below are context only.";
+    state.refs.contextHint.textContent = studioText(
+      state.config,
+      "context_hint_default",
+      "Select one or more works to add per-work tag overrides. Series tags shown below are context only."
+    );
     return;
   }
-  state.refs.contextHint.textContent = "Monochrome pills are inherited from the series. Colored pills are saved as work-only overrides.";
+  state.refs.contextHint.textContent = studioText(
+    state.config,
+    "context_hint_selected",
+    "Monochrome pills are inherited from the series. Colored pills are saved as work-only overrides."
+  );
 }
 
 function renderWorkPopup(state) {
@@ -1067,13 +1090,14 @@ function renderSaveState(state) {
     state.refs.saveWarning.textContent = "Save to persist the current work-row diff.";
     return;
   }
-  state.refs.saveWarning.textContent = metrics.unresolvedCount > 0 ? "Resolve unknown tags before saving." : "";
+  state.refs.saveWarning.textContent = metrics.unresolvedCount > 0
+    ? studioText(state.config, "save_warning_unresolved", "Resolve unknown tags before saving.")
+    : "";
 }
 
 function renderSaveMode(state) {
   if (!state.refs.saveMode) return;
-  const label = state.saveMode === "post" ? "Local server" : "Patch";
-  state.refs.saveMode.textContent = `Save mode: ${label}`;
+  state.refs.saveMode.textContent = buildSaveModeText(state, state.saveMode);
 }
 
 function computeMetrics(state) {
@@ -1104,7 +1128,7 @@ async function isLocalSaveAvailable(timeoutMs) {
 async function handleSave(state) {
   const diff = buildWorkStateDiff(state);
   if (!diff.changedWorkIds.length) {
-    setStatus(state, "warn", "No changes to save.");
+    setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
     return;
   }
@@ -1121,8 +1145,7 @@ async function handleSave(state) {
       const savedAt = String(lastResult.updated_at_utc || utcTimestamp());
       const removedCount = results.filter((result) => result && result.deleted).length;
       const savedCount = diff.changedWorkIds.length - removedCount;
-      const action = `Saved ${savedCount} work row${savedCount === 1 ? "" : "s"}${removedCount ? `; removed ${removedCount} row${removedCount === 1 ? "" : "s"}` : ""}`;
-      setStatus(state, "success", `${action} at ${savedAt}.`);
+      setStatus(state, "success", buildSaveSuccessMessage(state, savedCount, removedCount, savedAt));
       setSaveResult(state, "", "");
       renderStatus(state);
       state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
@@ -1132,8 +1155,8 @@ async function handleSave(state) {
     } catch (error) {
       state.saveMode = "patch";
       renderSaveMode(state);
-      setStatus(state, "error", "Local save failed. Switched to Patch mode.");
-      setSaveResult(state, "error", "Local server save failed. Showing patch fallback.");
+      setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to Patch mode."));
+      setSaveResult(state, "error", studioText(state.config, "save_result_local_failed", "Local server save failed. Showing patch fallback."));
       renderStatus(state);
       openSaveModal(state);
       return;
@@ -1180,7 +1203,7 @@ async function postTags(seriesId, workId, tags, keepWork) {
 function openSaveModal(state) {
   const diff = buildWorkStateDiff(state);
   if (!diff.changedWorkIds.length) {
-    setStatus(state, "warn", "No changes to save.");
+    setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
     return;
   }
@@ -1565,4 +1588,45 @@ function escapeHtml(value) {
 
 function renderFatalError(mount, message) {
   mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
+}
+
+function studioText(config, key, fallback, tokens) {
+  return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
+}
+
+function buildSaveModeText(state, mode) {
+  const label = mode === "post"
+    ? studioText(state.config, "save_mode_local_server", "Local server")
+    : studioText(state.config, "save_mode_patch", "Patch");
+  return studioText(state.config, "save_mode_template", "Save mode: {mode}", { mode: label });
+}
+
+function buildSaveSuccessMessage(state, savedCount, removedCount, savedAt) {
+  const base = studioText(
+    state.config,
+    "save_status_success_base",
+    "Saved {saved_count} work row{saved_plural}",
+    {
+      saved_count: savedCount,
+      saved_plural: savedCount === 1 ? "" : "s"
+    }
+  );
+  const removed = removedCount > 0
+    ? studioText(
+        state.config,
+        "save_status_success_removed_suffix",
+        "; removed {removed_count} row{removed_plural}",
+        {
+          removed_count: removedCount,
+          removed_plural: removedCount === 1 ? "" : "s"
+        }
+      )
+    : "";
+  const at = studioText(
+    state.config,
+    "save_status_success_at_suffix",
+    " at {saved_at}.",
+    { saved_at: savedAt }
+  );
+  return `${base}${removed}${at}`;
 }

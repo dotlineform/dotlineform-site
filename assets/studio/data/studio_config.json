@@ -55,5 +55,33 @@
         }
       }
     }
+  },
+  "ui_text": {
+    "series_tag_editor": {
+      "missing_series_id_error": "Tag Studio error: missing series id.",
+      "load_failed_error": "Failed to load tag data. Check /assets/studio/data/tag_registry.json, /assets/studio/data/tag_aliases.json, /assets/studio/data/tag_assignments.json, /assets/data/series_index.json, and /assets/data/works_index.json.",
+      "work_input_placeholder": "work_id(s) in this series",
+      "tag_input_placeholder": "tag slug or alias",
+      "add_button": "Add",
+      "save_button": "Save Tags",
+      "save_mode_template": "Save mode: {mode}",
+      "save_mode_local_server": "Local server",
+      "save_mode_patch": "Patch",
+      "modal_title": "Work Tag Patch Preview",
+      "modal_resolved_label": "Resolved work override tags",
+      "modal_patch_guidance_label": "Patch guidance for tag_assignments.json",
+      "modal_copy_button": "Copy",
+      "modal_close_button": "Close",
+      "context_hint_default": "Select one or more works to add per-work tag overrides. Series tags shown below are context only.",
+      "context_hint_selected": "Monochrome pills are inherited from the series. Colored pills are saved as work-only overrides.",
+      "save_warning_unresolved": "Resolve unknown tags before saving.",
+      "save_status_no_changes": "No changes to save.",
+      "save_status_copy": "Patch guidance copied to clipboard.",
+      "save_status_local_failed": "Local save failed. Switched to Patch mode.",
+      "save_result_local_failed": "Local server save failed. Showing patch fallback.",
+      "save_status_success_base": "Saved {saved_count} work row{saved_plural}",
+      "save_status_success_removed_suffix": "; removed {removed_count} row{removed_plural}",
+      "save_status_success_at_suffix": " at {saved_at}."
+    }
   }
 }
