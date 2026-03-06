@@ -1429,7 +1429,17 @@ async function handleTagDemote(state) {
       return;
     }
     const ok = window.confirm(
-      `Demote "${tag.tagId}" to alias "${aliasKey}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
+      registryText(
+        state.config,
+        "demote_confirm_template",
+        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}\n\nImpact:\n{preview_summary}",
+        {
+          tag_id: tag.tagId,
+          alias_key: aliasKey,
+          targets: aliasTargets.join(", "),
+          preview_summary: previewSummary
+        }
+      )
     );
     if (!ok) {
       clearImportResult(state);
@@ -1513,7 +1523,7 @@ async function handleImport(state) {
   try {
     importRegistry = await readImportRegistryFromFile(state.selectedFile);
   } catch (error) {
-    setImportResult(state, "error", String(error.message || "Invalid import file."));
+    setImportResult(state, "error", String(error.message || registryText(state.config, "invalid_import_file", "Invalid import file.")));
     return;
   }
 
@@ -1615,7 +1625,7 @@ async function readImportRegistryFromFile(file) {
 
 function normalizeImportTag(raw, idx) {
   if (!raw || typeof raw !== "object") {
-    throw new Error(`Import tag at index ${idx} must be an object.`);
+    throw new Error(registryText(null, "import_tag_object_invalid", "Import tag at index {index} must be an object.", { index: idx }));
   }
 
   const tagId = normalize(raw.tag_id);
@@ -1624,18 +1634,18 @@ function normalizeImportTag(raw, idx) {
   const description = String(raw.description || "").trim();
 
   if (!tagId || tagId.indexOf(":") <= 0) {
-    throw new Error(`Import tag ${idx} has invalid tag_id.`);
+    throw new Error(registryText(null, "import_tag_invalid_tag_id", "Import tag {index} has invalid tag_id.", { index: idx }));
   }
   if (!STUDIO_GROUPS.includes(group)) {
-    throw new Error(`Import tag ${idx} has invalid group.`);
+    throw new Error(registryText(null, "import_tag_invalid_group", "Import tag {index} has invalid group.", { index: idx }));
   }
   if (!["active", "deprecated", "candidate"].includes(status)) {
-    throw new Error(`Import tag ${idx} has invalid status.`);
+    throw new Error(registryText(null, "import_tag_invalid_status", "Import tag {index} has invalid status.", { index: idx }));
   }
 
   const tagGroup = tagId.split(":", 1)[0];
   if (tagGroup !== group) {
-    throw new Error(`Import tag ${idx} group must match tag_id prefix.`);
+    throw new Error(registryText(null, "import_tag_group_prefix_mismatch", "Import tag {index} group must match tag_id prefix.", { index: idx }));
   }
 
   const [, slug = ""] = tagId.split(":", 2);

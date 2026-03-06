@@ -479,7 +479,7 @@ function normalizeAliasValue(rawValue) {
   if (typeof rawValue === "string") {
     const value = normalize(rawValue);
     if (!TAG_ID_RE.test(value)) {
-      throw new Error("Invalid alias tag_id value.");
+      throw new Error(aliasesText(null, "alias_value_invalid_tag_id", "Invalid alias tag_id value."));
     }
     return {
       description: "",
@@ -497,13 +497,13 @@ function normalizeAliasValue(rawValue) {
 
 function normalizeAliasTagsArray(rawValue) {
   if (!Array.isArray(rawValue)) {
-    throw new Error("Alias tags must be an array.");
+    throw new Error(aliasesText(null, "alias_tags_array_required", "Alias tags must be an array."));
   }
   if (!rawValue.length) {
-    throw new Error("Alias tags must include at least one tag_id.");
+    throw new Error(aliasesText(null, "alias_tags_required", "Alias tags must include at least one tag_id."));
   }
   if (rawValue.length > MAX_ALIAS_TAGS) {
-    throw new Error(`Alias tags may include at most ${MAX_ALIAS_TAGS} tags.`);
+    throw new Error(aliasesText(null, "alias_tags_max", "Alias tags may include at most {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
   }
 
   const out = [];
@@ -512,19 +512,19 @@ function normalizeAliasTagsArray(rawValue) {
   for (const raw of rawValue) {
     const value = normalize(raw);
     if (!value || !TAG_ID_RE.test(value)) {
-      throw new Error("Invalid alias tag_id array value.");
+      throw new Error(aliasesText(null, "alias_tag_array_invalid_value", "Invalid alias tag_id array value."));
     }
     if (seen.has(value)) continue;
     const group = value.split(":", 1)[0];
     if (seenGroups.has(group)) {
-      throw new Error(`Alias tags may include only one tag per group: ${group}`);
+      throw new Error(aliasesText(null, "alias_tags_one_per_group", "Alias tags may include only one tag per group: {group}", { group }));
     }
     seen.add(value);
     seenGroups.add(group);
     out.push(value);
   }
   if (!out.length) {
-    throw new Error("Alias tags must include at least one tag_id.");
+    throw new Error(aliasesText(null, "alias_tags_required", "Alias tags must include at least one tag_id."));
   }
   return out;
 }
@@ -757,7 +757,7 @@ async function handleImport(state) {
   try {
     importAliases = await readImportAliasesFromFile(state.selectedFile);
   } catch (error) {
-    setImportResult(state, "error", String(error.message || "Invalid import file."));
+    setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_import_file", "Invalid import file.")));
     return;
   }
 
@@ -801,7 +801,9 @@ async function handleAliasDelete(state, alias) {
   const aliasKey = normalize(alias);
   if (!aliasKey) return;
 
-  const ok = window.confirm(`Delete alias "${aliasKey}"?`);
+  const ok = window.confirm(
+    aliasesText(state.config, "delete_confirm_template", "Delete alias \"{alias_key}\"?", { alias_key: aliasKey })
+  );
   if (!ok) {
     clearImportResult(state);
     return;
@@ -813,7 +815,12 @@ async function handleAliasDelete(state, alias) {
         alias: aliasKey,
         client_time_utc: utcTimestamp()
       });
-      const summary = String(response.summary_text || "").trim() || `deleted alias ${aliasKey}`;
+      const summary = String(response.summary_text || "").trim() || aliasesText(
+        state.config,
+        "delete_success_summary",
+        "deleted alias {alias_key}",
+        { alias_key: aliasKey }
+      );
       setImportResult(state, "success", summary);
       await loadData(state);
       renderControls(state);
@@ -1260,7 +1267,16 @@ async function handleAliasPromote(state, alias) {
 
     const previewSummary = String(preview.summary_text || "").trim() || `alias ${aliasKey} -> ${group}:${aliasKey}`;
     const ok = window.confirm(
-      `Promote alias "${aliasKey}" to canonical tag "${group}:${aliasKey}"?\n\nImpact:\n${previewSummary}`
+      aliasesText(
+        state.config,
+        "promotion_confirm_template",
+        "Promote alias \"{alias_key}\" to canonical tag \"{new_tag_id}\"?\n\nImpact:\n{preview_summary}",
+        {
+          alias_key: aliasKey,
+          new_tag_id: `${group}:${aliasKey}`,
+          preview_summary: previewSummary
+        }
+      )
     );
     if (!ok) {
       clearImportResult(state);
@@ -1294,23 +1310,23 @@ function parseTagIdCsv(input) {
   const seen = new Set();
   for (const value of values) {
     if (!TAG_ID_RE.test(value)) {
-      throw new Error(`Invalid tag_id: ${value}`);
+      throw new Error(aliasesText(null, "target_tag_invalid", "Invalid tag_id: {value}", { value }));
     }
     if (seen.has(value)) continue;
     seen.add(value);
     out.push(value);
   }
   if (!out.length) {
-    throw new Error("At least one canonical target tag_id is required.");
+    throw new Error(aliasesText(null, "target_tag_required", "At least one canonical target tag_id is required."));
   }
   if (out.length > MAX_ALIAS_TAGS) {
-    throw new Error(`At most ${MAX_ALIAS_TAGS} target tags are allowed.`);
+    throw new Error(aliasesText(null, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS }));
   }
   const seenGroups = new Set();
   for (const value of out) {
     const group = value.split(":", 1)[0];
     if (seenGroups.has(group)) {
-      throw new Error(`Only one target tag per group is allowed (${group}).`);
+      throw new Error(aliasesText(null, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group }));
     }
     seenGroups.add(group);
   }
@@ -1363,7 +1379,17 @@ async function handleTagDemoteFromAliases(state, tagId) {
     const previewSummary = String(preview.summary_text || "").trim() || `demote ${canonicalTagId}`;
     const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
     const ok = window.confirm(
-      `Demote "${canonicalTagId}" to alias "${aliasKey}"?\n\nTargets: ${aliasTargets.join(", ")}\n\nImpact:\n${previewSummary}`
+      aliasesText(
+        state.config,
+        "demotion_confirm_template",
+        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}\n\nImpact:\n{preview_summary}",
+        {
+          tag_id: canonicalTagId,
+          alias_key: aliasKey,
+          targets: aliasTargets.join(", "),
+          preview_summary: previewSummary
+        }
+      )
     );
     if (!ok) {
       clearImportResult(state);
