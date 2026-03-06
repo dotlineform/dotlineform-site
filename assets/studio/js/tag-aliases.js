@@ -75,25 +75,36 @@ async function initTagAliasesPage() {
 }
 
 function renderShell(state) {
+  const importFileLabel = aliasesText(state.config, "import_file_label", "import file");
+  const importModeFieldLabel = aliasesText(state.config, "import_mode_label", "mode");
   const chooseFileLabel = aliasesText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = aliasesText(state.config, "import_button", "Import");
   const importModeLabel = buildAliasesImportModeText(state, "patch");
   const newAliasButtonLabel = aliasesText(state.config, "new_alias_button", "New alias");
+  const searchLabel = aliasesText(state.config, "search_label", "Search aliases");
+  const searchPlaceholder = aliasesText(state.config, "search_placeholder", "search");
   const patchModalTitle = aliasesText(state.config, "patch_modal_title", "Aliases Patch Preview");
   const patchModalLabel = aliasesText(state.config, "patch_modal_label", "Manual patch snippet");
   const patchModalCopy = aliasesText(state.config, "patch_modal_copy_button", "Copy");
   const patchModalClose = aliasesText(state.config, "patch_modal_close_button", "Close");
+  const editModalTitle = aliasesText(state.config, "edit_modal_title", "Edit Alias");
+  const editAliasLabel = aliasesText(state.config, "edit_alias_label", "alias");
+  const editDescriptionLabel = aliasesText(state.config, "edit_description_label", "description");
+  const editSearchLabel = aliasesText(state.config, "edit_search_label", "find tags");
+  const editSearchPlaceholder = aliasesText(state.config, "edit_search_placeholder", "search tags");
+  const editSaveButton = aliasesText(state.config, "edit_save_button", "Save");
+  const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagRegistry__importBox">
         <div class="tagRegistry__importRow">
           <label class="tagRegistry__fileWrap">
-            <span class="tagRegistry__importLabel">import file</span>
+            <span class="tagRegistry__importLabel">${escapeHtml(importFileLabel)}</span>
             <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagRegistry__modeWrap">
-            <span class="tagRegistry__importLabel">mode</span>
+            <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
             <select class="tagRegistry__modeSelect" data-role="import-mode">
               <option value="add">add (no overwrite)</option>
               <option value="merge">add + overwrite</option>
@@ -111,12 +122,12 @@ function renderShell(state) {
       <div class="tagAliases__controls">
         <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
         <label class="tagRegistry__searchWrap">
-          <span class="visually-hidden">Search aliases</span>
+          <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
           <input
             type="text"
             class="tagStudio__input tagRegistry__searchInput"
             data-role="search"
-            placeholder="search"
+            placeholder="${escapeHtml(searchPlaceholder)}"
             autocomplete="off"
           >
         </label>
@@ -141,20 +152,20 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="edit-modal" hidden>
       <div class="tagStudioModal__backdrop"></div>
       <div class="tagStudioModal__dialog tagAliasesEdit__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
-        <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">Edit Alias</h3>
+        <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">${escapeHtml(editModalTitle)}</h3>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">alias</span>
+            <span class="tagRegistryEdit__label">${escapeHtml(editAliasLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
           </label>
           <p class="tagAliasesEdit__warning" data-role="edit-alias-warning"></p>
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">description</span>
+            <span class="tagRegistryEdit__label">${escapeHtml(editDescriptionLabel)}</span>
             <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
           </label>
           <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
-            <span class="tagRegistryEdit__label">find tags</span>
-            <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="search tags">
+            <span class="tagRegistryEdit__label">${escapeHtml(editSearchLabel)}</span>
+            <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
             <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
               <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
             </div>
@@ -164,8 +175,8 @@ function renderShell(state) {
         <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="edit-tag-list"></div>
         <p class="tagRegistryEdit__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>Save</button>
-          <button type="button" class="tagStudio__button" data-role="close-edit-modal">Cancel</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>${escapeHtml(editSaveButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCancelButton)}</button>
         </div>
       </div>
     </div>
@@ -214,7 +225,9 @@ function wireEvents(state) {
   state.refs.importFile.addEventListener("change", () => {
     const files = state.refs.importFile.files;
     state.selectedFile = files && files.length ? files[0] : null;
-    state.refs.selectedFile.textContent = state.selectedFile ? `Selected: ${state.selectedFile.name}` : "";
+    state.refs.selectedFile.textContent = state.selectedFile
+      ? aliasesText(state.config, "selected_file_template", "Selected: {filename}", { filename: state.selectedFile.name })
+      : "";
     if (state.selectedFile) clearImportResult(state);
   });
 
@@ -534,6 +547,7 @@ function renderControls(state) {
   const counts = countAliasesByGroup(state.aliases);
   const totalCount = state.aliases.length;
   const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
+  const allTagsLabel = aliasesText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
   const groupButtons = STUDIO_GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(counts[group] || 0);
@@ -551,7 +565,7 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags [${totalCount}]</button>
+    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
     ${renderGroupInfoControl(state, "aliases")}
   `;
@@ -576,14 +590,16 @@ function groupTitleAttr(state, group) {
 }
 
 function renderGroupInfoControl(state, scope) {
+  const title = aliasesText(state.config, "group_info_title", "Open group descriptions in a new tab");
+  const ariaLabel = aliasesText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
   return `
     <a
       class="tagStudio__keyPill tagStudio__keyInfoBtn"
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
-      title="Open group descriptions in a new tab"
-      aria-label="Open group descriptions in a new tab"
+      title="${escapeHtml(title)}"
+      aria-label="${escapeHtml(ariaLabel)}"
     >
       <em>i</em>
     </a>
@@ -598,12 +614,12 @@ function renderList(state) {
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
         alias${sortIndicator(state, "alias")}
       </button>
-      <span class="tagAliases__headLabel">group tags</span>
+      <span class="tagAliases__headLabel">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
     </div>
   `;
 
   if (!visible.length) {
-    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">none</p>`;
+    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</p>`;
     return;
   }
 
@@ -620,8 +636,8 @@ function renderList(state) {
                 type="button"
                 class="tagAliases__aliasBtn"
                 data-edit-alias="${escapeHtml(entry.alias)}"
-                title="Edit alias ${escapeHtml(entry.alias)}"
-                aria-label="Edit alias ${escapeHtml(entry.alias)}"
+                title="${escapeHtml(aliasesText(state.config, "alias_edit_title", "Edit alias {alias}", { alias: entry.alias }))}"
+                aria-label="${escapeHtml(aliasesText(state.config, "alias_edit_aria_label", "Edit alias {alias}", { alias: entry.alias }))}"
               >
                 ${escapeHtml(entry.alias)}
               </button>
@@ -629,8 +645,8 @@ function renderList(state) {
                 type="button"
                 class="tagStudio__chipRemove"
                 data-promote-alias="${escapeHtml(entry.alias)}"
-                aria-label="Promote alias ${escapeHtml(entry.alias)}"
-                title="Promote alias to canonical tag"
+                aria-label="${escapeHtml(aliasesText(state.config, "alias_promote_aria_label", "Promote alias {alias}", { alias: entry.alias }))}"
+                title="${escapeHtml(aliasesText(state.config, "alias_promote_title", "Promote alias to canonical tag"))}"
               >
                 →
               </button>
@@ -638,8 +654,8 @@ function renderList(state) {
                 type="button"
                 class="tagStudio__chipRemove"
                 data-delete-alias="${escapeHtml(entry.alias)}"
-                aria-label="Delete alias ${escapeHtml(entry.alias)}"
-                title="Delete alias"
+                aria-label="${escapeHtml(aliasesText(state.config, "alias_delete_aria_label", "Delete alias {alias}", { alias: entry.alias }))}"
+                title="${escapeHtml(aliasesText(state.config, "alias_delete_title", "Delete alias"))}"
               >
                 ×
               </button>
@@ -655,8 +671,8 @@ function renderList(state) {
                       type="button"
                       class="tagStudio__chipRemove"
                       data-demote-tag-id="${escapeHtml(target.tagId)}"
-                      title="Demote canonical tag to alias"
-                      aria-label="Demote ${escapeHtml(target.tagId)}"
+                      title="${escapeHtml(aliasesText(state.config, "tag_demote_title", "Demote canonical tag to alias"))}"
+                      aria-label="${escapeHtml(aliasesText(state.config, "tag_demote_aria_label", "Demote {tag_id}", { tag_id: target.tagId }))}"
                     >
                       ←
                     </button>
@@ -806,7 +822,16 @@ async function handleAliasDelete(state, alias) {
     } catch (error) {
       state.saveMode = "patch";
       renderImportMode(state);
-      setImportResult(state, "error", `Server delete failed; switched to patch mode. ${error.message || ""}`.trim());
+      setImportResult(
+        state,
+        "error",
+        aliasesText(
+          state.config,
+          "server_delete_failed",
+          "Server delete failed; switched to patch mode. {message}",
+          { message: String(error.message || "").trim() }
+        ).trim()
+      );
     }
   }
 
@@ -826,15 +851,19 @@ function isCreateAliasFlow(state) {
 
 function setAliasEditModalMode(state, mode) {
   const normalizedMode = mode === "new" ? "new" : "edit";
-  state.refs.editModalTitle.textContent = normalizedMode === "new" ? "New Alias" : "Edit Alias";
-  state.refs.saveEditAlias.textContent = normalizedMode === "new" ? "Create" : "Save";
+  state.refs.editModalTitle.textContent = normalizedMode === "new"
+    ? aliasesText(state.config, "new_modal_title", "New Alias")
+    : aliasesText(state.config, "edit_modal_title", "Edit Alias");
+  state.refs.saveEditAlias.textContent = normalizedMode === "new"
+    ? aliasesText(state.config, "edit_create_button", "Create")
+    : aliasesText(state.config, "edit_save_button", "Save");
 }
 
 function openAliasEditModal(state, aliasKey) {
   clearImportResult(state);
   const entry = findAliasEntry(state, aliasKey);
   if (!entry) {
-    setImportResult(state, "error", `Alias not found: ${aliasKey}`);
+    setImportResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
     return;
   }
 
@@ -917,7 +946,7 @@ function renderEditTagList(state) {
           type="button"
           class="tagStudio__chipRemove"
           data-remove-edit-tag="${escapeHtml(tagId)}"
-          aria-label="Remove ${escapeHtml(tagId)}"
+          aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
         >
           x
         </button>
@@ -925,7 +954,7 @@ function renderEditTagList(state) {
     `;
   }).join("");
 
-  state.refs.editTagList.innerHTML = rows || '<span class="tagStudio__empty">none</span>';
+  state.refs.editTagList.innerHTML = rows || `<span class="tagStudio__empty">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</span>`;
 }
 
 function getAliasEditValidation(state) {
@@ -938,29 +967,29 @@ function getAliasEditValidation(state) {
 
   let warning = "";
   if (!alias) {
-    warning = "Alias is required.";
+    warning = aliasesText(state.config, "alias_required", "Alias is required.");
   } else if (!ALIAS_RE.test(alias)) {
-    warning = "Alias must be lowercase letters, numbers, or hyphens.";
+    warning = aliasesText(state.config, "alias_invalid", "Alias must be lowercase letters, numbers, or hyphens.");
   } else {
     const conflict = state.aliases.some((entry) => entry.alias !== edit.originalAlias && entry.alias === alias);
-    if (conflict) warning = "Alias already exists.";
+    if (conflict) warning = aliasesText(state.config, "alias_exists_warning", "Alias already exists.");
   }
 
   let tagsWarning = "";
   if (!tags.length) {
-    tagsWarning = "Select at least one tag.";
+    tagsWarning = aliasesText(state.config, "select_one_tag_warning", "Select at least one tag.");
   } else if (tags.length > MAX_ALIAS_TAGS) {
-    tagsWarning = `Select up to ${MAX_ALIAS_TAGS} tags.`;
+    tagsWarning = aliasesText(state.config, "max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS });
   } else {
     const seenGroups = new Set();
     for (const tagId of tags) {
       if (!state.registryById.has(tagId)) {
-        tagsWarning = `Unknown tag selected: ${tagId}`;
+        tagsWarning = aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
         break;
       }
       const group = tagId.split(":", 1)[0];
       if (seenGroups.has(group)) {
-        tagsWarning = `Only one tag per group is allowed (${group}).`;
+        tagsWarning = aliasesText(state.config, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group });
         break;
       }
       seenGroups.add(group);
@@ -1002,7 +1031,7 @@ function updateAliasEditUi(state) {
   if (validation.tagsWarning) {
     setAliasEditStatus(state, "error", validation.tagsWarning);
   } else if (!validation.changed && !isCreateAliasFlow(state)) {
-    setAliasEditStatus(state, "", "No changes.");
+    setAliasEditStatus(state, "", aliasesText(state.config, "edit_no_changes", "No changes."));
   } else if (!validation.warning) {
     setAliasEditStatus(state, "", "");
   }
@@ -1047,7 +1076,7 @@ function renderEditTagPopup(state) {
     </button>
   `);
   if (result.truncated) {
-    chips.push('<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="More matches available">…</span>');
+    chips.push(`<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
   }
   state.refs.editTagPopup.innerHTML = chips.join("");
   state.refs.editTagPopupWrap.hidden = false;
@@ -1064,14 +1093,14 @@ function addEditTag(state, tagId) {
   if (!normalizedTagId || !state.registryById.has(normalizedTagId)) return;
   if (state.editState.tags.includes(normalizedTagId)) return;
   if (state.editState.tags.length >= MAX_ALIAS_TAGS) {
-    setAliasEditStatus(state, "error", `Select up to ${MAX_ALIAS_TAGS} tags.`);
+    setAliasEditStatus(state, "error", aliasesText(state.config, "max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
     return;
   }
 
   const nextGroup = normalizedTagId.split(":", 1)[0];
   const groupConflict = state.editState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
   if (groupConflict) {
-    setAliasEditStatus(state, "error", `Only one tag per group is allowed (${nextGroup}).`);
+    setAliasEditStatus(state, "error", aliasesText(state.config, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group: nextGroup }));
     return;
   }
 
@@ -1109,7 +1138,16 @@ async function saveAliasEdit(state) {
       } catch (error) {
         state.saveMode = "patch";
         renderImportMode(state);
-        setAliasEditStatus(state, "error", `Server create failed; switched to patch mode. ${error.message || ""}`.trim());
+        setAliasEditStatus(
+          state,
+          "error",
+          aliasesText(
+            state.config,
+            "server_create_failed",
+            "Server create failed; switched to patch mode. {message}",
+            { message: String(error.message || "").trim() }
+          ).trim()
+        );
       }
     }
 
@@ -1142,7 +1180,16 @@ async function saveAliasEdit(state) {
     } catch (error) {
       state.saveMode = "patch";
       renderImportMode(state);
-      setAliasEditStatus(state, "error", `Server save failed; switched to patch mode. ${error.message || ""}`.trim());
+      setAliasEditStatus(
+        state,
+        "error",
+        aliasesText(
+          state.config,
+          "server_save_failed",
+          "Server save failed; switched to patch mode. {message}",
+          { message: String(error.message || "").trim() }
+        ).trim()
+      );
     }
   }
 
@@ -1166,9 +1213,12 @@ function sameStringArray(a, b) {
   return true;
 }
 
-function promptPromotionGroup(entry) {
+function promptPromotionGroup(state, entry) {
   const suggested = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
-  const raw = window.prompt("Promote alias: choose group (subject/domain/form/theme)", suggested || "subject");
+  const raw = window.prompt(
+    aliasesText(state.config, "promotion_group_prompt", "Promote alias: choose group (subject/domain/form/theme)"),
+    suggested || "subject"
+  );
   if (raw === null) return "";
   return normalize(raw);
 }
@@ -1179,17 +1229,17 @@ async function handleAliasPromote(state, alias) {
 
   const entry = findAliasEntry(state, aliasKey);
   if (!entry) {
-    setImportResult(state, "error", `Alias not found: ${aliasKey}`);
+    setImportResult(state, "error", aliasesText(state.config, "alias_not_found", "Alias not found: {alias_key}", { alias_key: aliasKey }));
     return;
   }
 
-  const group = promptPromotionGroup(entry);
+  const group = promptPromotionGroup(state, entry);
   if (!group) {
     clearImportResult(state);
     return;
   }
   if (!STUDIO_GROUPS.includes(group)) {
-    setImportResult(state, "error", "Promotion group must be one of: subject, domain, form, theme.");
+    setImportResult(state, "error", aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme."));
     return;
   }
 
@@ -1204,7 +1254,7 @@ async function handleAliasPromote(state, alias) {
     try {
       preview = await postJson(PROMOTE_PREVIEW_ENDPOINT, payload);
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Promotion preview failed."));
+      setImportResult(state, "error", String(error.message || aliasesText(state.config, "promotion_preview_failed", "Promotion preview failed.")));
       return;
     }
 
@@ -1219,13 +1269,13 @@ async function handleAliasPromote(state, alias) {
 
     try {
       const response = await postJson(PROMOTE_ENDPOINT, payload);
-      setImportResult(state, "success", String(response.summary_text || "Promoted."));
+      setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "promoted_success", "Promoted.")));
       await loadData(state);
       renderControls(state);
       renderList(state);
       return;
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Promotion failed."));
+      setImportResult(state, "error", String(error.message || aliasesText(state.config, "promotion_failed", "Promotion failed.")));
       return;
     }
   }
@@ -1267,11 +1317,11 @@ function parseTagIdCsv(input) {
   return out;
 }
 
-function promptDemotionTargets(tagId) {
+function promptDemotionTargets(state, tagId) {
   const promptText = [
-    `Demote ${tagId} to alias.`,
-    "Enter canonical target tag_ids (comma-separated).",
-    "Example: form:line,theme:emergence"
+    aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: tagId }),
+    aliasesText(state.config, "demotion_prompt_line_2", "Enter canonical target tag_ids (comma-separated)."),
+    aliasesText(state.config, "demotion_prompt_line_3", "Example: form:line,theme:emergence")
   ].join("\n");
   return window.prompt(promptText, "");
 }
@@ -1280,18 +1330,18 @@ async function handleTagDemoteFromAliases(state, tagId) {
   const canonicalTagId = normalize(tagId);
   if (!canonicalTagId) return;
 
-  const input = promptDemotionTargets(canonicalTagId);
+  const input = promptDemotionTargets(state, canonicalTagId);
   if (input === null) return;
 
   let aliasTargets = [];
   try {
     aliasTargets = parseTagIdCsv(input);
   } catch (error) {
-    setImportResult(state, "error", String(error.message || "Invalid target tags."));
+    setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_target_tags", "Invalid target tags.")));
     return;
   }
   if (aliasTargets.includes(canonicalTagId)) {
-    setImportResult(state, "error", "Target list must not include the demoted tag.");
+    setImportResult(state, "error", aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag."));
     return;
   }
 
@@ -1306,7 +1356,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
     try {
       preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Demotion preview failed."));
+      setImportResult(state, "error", String(error.message || aliasesText(state.config, "demotion_preview_failed", "Demotion preview failed.")));
       return;
     }
 
@@ -1322,13 +1372,13 @@ async function handleTagDemoteFromAliases(state, tagId) {
 
     try {
       const response = await postJson(DEMOTE_ENDPOINT, payload);
-      setImportResult(state, "success", String(response.summary_text || "Demoted."));
+      setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
       await loadData(state);
       renderControls(state);
       renderList(state);
       return;
     } catch (error) {
-      setImportResult(state, "error", String(error.message || "Demotion failed."));
+      setImportResult(state, "error", String(error.message || aliasesText(state.config, "demotion_failed", "Demotion failed.")));
       return;
     }
   }
@@ -1592,15 +1642,15 @@ async function readImportAliasesFromFile(file) {
   try {
     payload = JSON.parse(rawText);
   } catch (error) {
-    throw new Error("Import file is not valid JSON.");
+    throw new Error(aliasesText(null, "import_invalid_json", "Import file is not valid JSON."));
   }
 
   if (!payload || typeof payload !== "object") {
-    throw new Error("Import file must be a JSON object.");
+    throw new Error(aliasesText(null, "import_invalid_object", "Import file must be a JSON object."));
   }
   const rows = normalizeImportAliasRows(payload.aliases);
   if (!rows.length) {
-    throw new Error("Import file must include aliases object with at least one alias.");
+    throw new Error(aliasesText(null, "import_missing_aliases_object", "Import file must include aliases object with at least one alias."));
   }
 
   const aliasesObj = {};

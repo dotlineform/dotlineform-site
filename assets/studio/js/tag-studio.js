@@ -466,7 +466,19 @@ function wireEvents(state) {
       const entry = getSelectedWorkEntries(state).find((item) => item.entryId === entryId);
       if (!entry) return;
       entry.wManual = nextWeight(entry.wManual);
-      setStatus(state, "success", `Updated ${entry.canonicalId} w_manual to ${entry.wManual.toFixed(1)}.`);
+      setStatus(
+        state,
+        "success",
+        studioText(
+          state.config,
+          "weight_updated",
+          "Updated {tag_id} w_manual to {weight}.",
+          {
+            tag_id: entry.canonicalId,
+            weight: entry.wManual.toFixed(1)
+          }
+        )
+      );
       setSaveResult(state, "", "");
       renderAll(state);
       return;
@@ -494,7 +506,7 @@ function wireEvents(state) {
       await navigator.clipboard.writeText(state.modalSnippet);
       setStatus(state, "success", studioText(state.config, "save_status_copy", "Patch guidance copied to clipboard."));
     } catch (error) {
-      setStatus(state, "error", "Copy failed. Select and copy the patch guidance manually.");
+      setStatus(state, "error", studioText(state.config, "save_status_copy_failed", "Copy failed. Select and copy the patch guidance manually."));
     }
     renderStatus(state);
   });
@@ -503,7 +515,7 @@ function wireEvents(state) {
 function selectWorkFromInput(state) {
   const rawInput = String(state.refs.workInput.value || "").trim();
   if (!rawInput) {
-    setStatus(state, "warn", "Enter a work_id from this series.");
+    setStatus(state, "warn", studioText(state.config, "work_input_required", "Enter a work_id from this series."));
     renderStatus(state);
     return;
   }
@@ -517,7 +529,12 @@ function selectWorkFromInput(state) {
   const normalizedWorkId = normalizeWorkId(rawInput);
   const matches = getMatchingWorkOptions(state, rawInput);
   if (!matches.length) {
-    setStatus(state, "error", `Unknown work_id for this series: "${rawInput}".`);
+    setStatus(state, "error", studioText(
+      state.config,
+      "work_unknown_error",
+      "Unknown work_id for this series: \"{input}\".",
+      { input: rawInput }
+    ));
     renderStatus(state);
     return;
   }
@@ -533,14 +550,19 @@ function selectWorkFromInput(state) {
     return;
   }
 
-  setStatus(state, "warn", `Multiple works match "${rawInput}". Choose one from the popup.`);
+  setStatus(state, "warn", studioText(
+    state.config,
+    "work_multiple_matches",
+    "Multiple works match \"{input}\". Choose one from the popup.",
+    { input: rawInput }
+  ));
   renderStatus(state);
   renderWorkPopup(state);
 }
 
 function addWorksFromTokens(state, tokens) {
   if (!tokens.length) {
-    setStatus(state, "warn", "Enter at least one work_id from this series.");
+    setStatus(state, "warn", studioText(state.config, "work_input_required_multiple", "Enter at least one work_id from this series."));
     renderStatus(state);
     return;
   }
@@ -571,16 +593,7 @@ function addWorksFromTokens(state, tokens) {
   hideWorkPopup(state);
   setSaveResult(state, "", "");
 
-  const messageParts = [];
-  if (added.length) {
-    messageParts.push(`Added ${added.length} work${added.length === 1 ? "" : "s"}.`);
-  }
-  if (unknown.length) {
-    messageParts.push(`Not in this series: ${unknown.join(", ")}.`);
-  }
-  if (invalid.length) {
-    messageParts.push(`Invalid work_id: ${invalid.join(", ")}.`);
-  }
+  const messageParts = buildWorkSelectionSummary(state, added, unknown, invalid);
   const kind = (unknown.length || invalid.length) ? (added.length ? "warn" : "error") : "success";
   setStatus(state, kind, messageParts.join(" "));
   renderAll(state);
@@ -588,7 +601,12 @@ function addWorksFromTokens(state, tokens) {
 
 function addWorkSelection(state, workId, activate = true) {
   if (!state.seriesWorkIds.has(workId)) {
-    setStatus(state, "error", `Work ${workId} is not in this series.`);
+    setStatus(state, "error", studioText(
+      state.config,
+      "work_not_in_series_error",
+      "Work {work_id} is not in this series.",
+      { work_id: workId }
+    ));
     renderStatus(state);
     return false;
   }
@@ -601,7 +619,12 @@ function addWorkSelection(state, workId, activate = true) {
   }
   if (activate) {
     activateSelectedWork(state, workId, false);
-    setStatus(state, "success", `Selected work ${workId}.`);
+    setStatus(state, "success", studioText(
+      state.config,
+      "work_selected_success",
+      "Selected work {work_id}.",
+      { work_id: workId }
+    ));
   }
   state.refs.workInput.value = "";
   hideWorkPopup(state);
@@ -635,14 +658,14 @@ function clearSelectedWork(state, workId) {
 
 function addFromInput(state) {
   if (!state.selectedWorkId) {
-    setStatus(state, "warn", "Select a work before adding tags.");
+    setStatus(state, "warn", studioText(state.config, "select_work_before_tags", "Select a work before adding tags."));
     renderStatus(state);
     return;
   }
 
   const rawInput = String(state.refs.input.value || "").trim();
   if (!rawInput) {
-    setStatus(state, "warn", "Enter a tag slug, tag id, or alias.");
+    setStatus(state, "warn", studioText(state.config, "tag_input_required", "Enter a tag slug, tag id, or alias."));
     renderStatus(state);
     return;
   }
@@ -659,12 +682,26 @@ function addFromInput(state) {
   if (resolved.type === "ambiguous") {
     const candidateIds = resolved.candidates.map((tag) => tag.tag_id).slice(0, 6);
     const suffix = resolved.candidates.length > 6 ? ", ..." : "";
-    setStatus(state, "warn", `Multiple matches for "${rawInput}": ${candidateIds.join(", ")}${suffix}. Choose one from autocomplete.`);
+    setStatus(state, "warn", studioText(
+      state.config,
+      "tag_multiple_matches",
+      "Multiple matches for \"{input}\": {candidate_ids}{suffix}. Choose one from autocomplete.",
+      {
+        input: rawInput,
+        candidate_ids: candidateIds.join(", "),
+        suffix
+      }
+    ));
     renderStatus(state);
     return;
   }
 
-  setStatus(state, "error", `Unknown tag: "${rawInput}".`);
+  setStatus(state, "error", studioText(
+    state.config,
+    "tag_unknown_error",
+    "Unknown tag: \"{input}\".",
+    { input: rawInput }
+  ));
   renderStatus(state);
 }
 
@@ -722,19 +759,40 @@ function addResolvedTag(state, tag, rawInput) {
 
   const tagId = normalize(tag.tag_id);
   if (getSeriesTagIdSet(state).has(tagId)) {
-    setStatus(state, "warn", `Inherited from series already: ${tagId}.`);
+    setStatus(state, "warn", studioText(
+      state.config,
+      "tag_inherited_warning",
+      "Inherited from series already: {tag_id}.",
+      { tag_id: tagId }
+    ));
     return;
   }
 
   const entries = getSelectedWorkEntries(state);
   const alreadyExists = entries.some((entry) => entry.canonicalId === tagId);
   if (alreadyExists) {
-    setStatus(state, "warn", `Already added for ${state.selectedWorkId}: ${tagId}.`);
+    setStatus(state, "warn", studioText(
+      state.config,
+      "tag_already_added_warning",
+      "Already added for {work_id}: {tag_id}.",
+      {
+        work_id: state.selectedWorkId,
+        tag_id: tagId
+      }
+    ));
     return;
   }
 
   entries.push(makeResolvedEntry(nextEntryId(state), rawInput, tag, DEFAULT_WEIGHT));
-  setStatus(state, "success", `Added ${tagId} to ${state.selectedWorkId}.`);
+  setStatus(state, "success", studioText(
+    state.config,
+    "tag_added_success",
+    "Added {tag_id} to {work_id}.",
+    {
+      work_id: state.selectedWorkId,
+      tag_id: tagId
+    }
+  ));
   setSaveResult(state, "", "");
 }
 
@@ -755,7 +813,7 @@ function removeSelectedWorkEntry(state, entryId) {
   const nextEntries = entries.filter((entry) => entry.entryId !== entryId);
   state.workEntriesById.set(state.selectedWorkId, nextEntries);
   if (nextEntries.length < sizeBefore) {
-    setStatus(state, "success", "Work tag removed.");
+    setStatus(state, "success", studioText(state.config, "work_tag_removed", "Work tag removed."));
     setSaveResult(state, "", "");
   }
 }
@@ -798,7 +856,12 @@ function renderSelectedWork(state) {
         <button type="button" class="tagStudio__selectedWorkBtn" data-activate-work-id="${escapeHtml(item.workId)}" aria-pressed="${item.workId === state.selectedWorkId ? "true" : "false"}">
           <span class="tagStudio__selectedWorkId">${escapeHtml(item.workId)}</span>
         </button>
-        <button type="button" class="tagStudio__chipRemove" data-clear-selected-work="${escapeHtml(item.workId)}" aria-label="Remove selected work ${escapeHtml(item.workId)}">x</button>
+        <button
+          type="button"
+          class="tagStudio__chipRemove"
+          data-clear-selected-work="${escapeHtml(item.workId)}"
+          aria-label="${escapeHtml(studioText(state.config, "remove_selected_work_aria_label", "Remove selected work {work_id}", { work_id: item.workId }))}"
+        >x</button>
       </span>
     `;
   }).join("");
@@ -837,7 +900,7 @@ function renderWorkPopup(state) {
   state.refs.workPopupList.innerHTML = `
     <div class="tagStudioSuggest">
       <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">works</p>
+        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_works", "works"))}</p>
         <div class="tagStudioSuggest__workRows">
           ${matches.map((item) => `
             <button type="button" class="tagStudioSuggest__workButton" data-popup-work-id="${escapeHtml(item.workId)}">
@@ -889,7 +952,7 @@ function renderPopup(state) {
   const tagSection = tagMatches.length
     ? `
       <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">tags</p>
+        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_tags", "tags"))}</p>
         <div class="tagStudioSuggest__tagRows">
           ${tagMatches.map((tag) => `
             <button
@@ -909,7 +972,7 @@ function renderPopup(state) {
   const aliasSection = aliasMatches.length
     ? `
       <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">aliases</p>
+        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_aliases", "aliases"))}</p>
         <div class="tagStudioSuggest__aliasRows">
           ${aliasMatches.map((entry) => `
             <div class="tagStudioSuggest__aliasRow">
@@ -1029,7 +1092,9 @@ function renderGroups(state) {
     const overrides = overrideByGroup.get(group) || [];
     const inheritedHtml = inherited.map((entry) => renderInheritedChip(entry, !selectedWorkId)).join("");
     const overrideHtml = overrides.map((entry) => renderOverrideChip(entry)).join("");
-    const emptyHtml = (!inheritedHtml && !overrideHtml) ? `<span class="tagStudio__empty">none</span>` : "";
+    const emptyHtml = (!inheritedHtml && !overrideHtml)
+      ? `<span class="tagStudio__empty">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
+      : "";
     return `
       <div class="tagStudioGroupRow">
         <span class="tagStudioGroupRow__label">${escapeHtml(group)}:</span>
@@ -1048,14 +1113,14 @@ function renderGroups(state) {
 function renderInheritedChip(entry, useColorChip) {
   if (useColorChip) {
     return `
-      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="Series tag ${escapeHtml(entry.canonicalId)}">
+      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
         <span class="tagStudio__weightDot ${weightDotClass(entry.wManual)}" aria-hidden="true"></span>
         <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
       </span>
     `;
   }
   return `
-    <span class="tagStudio__chip tagStudio__chip--inherited" title="Inherited from series: ${escapeHtml(entry.canonicalId)}">
+    <span class="tagStudio__chip tagStudio__chip--inherited" title="${escapeHtml(studioText(null, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
       <span class="tagStudio__weightDot ${weightDotClass(entry.wManual)}" aria-hidden="true"></span>
       <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
     </span>
@@ -1064,16 +1129,21 @@ function renderInheritedChip(entry, useColorChip) {
 
 function renderOverrideChip(entry) {
   return `
-    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="Work override ${escapeHtml(entry.canonicalId)}">
+    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="${escapeHtml(studioText(null, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
         class="tagStudio__weightDot ${weightDotClass(entry.wManual)}"
         data-cycle-weight-entry-id="${entry.entryId}"
-        title="w_manual ${entry.wManual.toFixed(1)}"
-        aria-label="w_manual ${entry.wManual.toFixed(1)}"
+        title="${escapeHtml(studioText(null, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(studioText(null, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
       <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
-      <button type="button" class="tagStudio__chipRemove" data-remove-entry-id="${entry.entryId}" aria-label="Remove ${escapeHtml(entry.canonicalId)}">x</button>
+      <button
+        type="button"
+        class="tagStudio__chipRemove"
+        data-remove-entry-id="${entry.entryId}"
+        aria-label="${escapeHtml(studioText(null, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+      >x</button>
     </span>
   `;
 }
@@ -1087,7 +1157,11 @@ function renderSaveState(state) {
   state.refs.saveButton.disabled = !isDirty || metrics.unresolvedCount > 0;
 
   if (!hasSelectedWork && isDirty) {
-    state.refs.saveWarning.textContent = "Save to persist the current work-row diff.";
+    state.refs.saveWarning.textContent = studioText(
+      state.config,
+      "save_warning_pending_diff",
+      "Save to persist the current work-row diff."
+    );
     return;
   }
   state.refs.saveWarning.textContent = metrics.unresolvedCount > 0
@@ -1588,6 +1662,38 @@ function escapeHtml(value) {
 
 function renderFatalError(mount, message) {
   mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
+}
+
+function buildWorkSelectionSummary(state, added, unknown, invalid) {
+  const parts = [];
+  if (added.length) {
+    parts.push(studioText(
+      state.config,
+      "work_summary_added",
+      "Added {count} work{plural}.",
+      {
+        count: added.length,
+        plural: added.length === 1 ? "" : "s"
+      }
+    ));
+  }
+  if (unknown.length) {
+    parts.push(studioText(
+      state.config,
+      "work_summary_not_in_series",
+      "Not in this series: {list}.",
+      { list: unknown.join(", ") }
+    ));
+  }
+  if (invalid.length) {
+    parts.push(studioText(
+      state.config,
+      "work_summary_invalid",
+      "Invalid work_id: {list}.",
+      { list: invalid.join(", ") }
+    ));
+  }
+  return parts;
 }
 
 function studioText(config, key, fallback, tokens) {

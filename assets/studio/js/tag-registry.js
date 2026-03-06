@@ -81,25 +81,51 @@ async function initTagRegistryPage() {
 }
 
 function renderShell(state) {
+  const importFileLabel = registryText(state.config, "import_file_label", "import file");
+  const importModeFieldLabel = registryText(state.config, "import_mode_label", "mode");
   const chooseFileLabel = registryText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = registryText(state.config, "import_button", "Import");
   const importModeLabel = buildRegistryImportModeText(state, "patch");
   const newTagButtonLabel = registryText(state.config, "new_tag_button", "New tag");
+  const searchLabel = registryText(state.config, "search_label", "Search tags");
+  const searchPlaceholder = registryText(state.config, "search_placeholder", "search");
   const patchModalTitle = registryText(state.config, "patch_modal_title", "Registry Patch Preview");
   const patchModalLabel = registryText(state.config, "patch_modal_label", "Manual patch snippet");
   const patchModalCopy = registryText(state.config, "patch_modal_copy_button", "Copy");
   const patchModalClose = registryText(state.config, "patch_modal_close_button", "Close");
+  const editModalTitle = registryText(state.config, "edit_modal_title", "Edit Tag");
+  const editDescriptionLabel = registryText(state.config, "edit_description_label", "description");
+  const editSaveButton = registryText(state.config, "edit_save_button", "Save");
+  const editCloseButton = registryText(state.config, "edit_close_button", "Close");
+  const newModalTitle = registryText(state.config, "new_modal_title", "New Tag");
+  const newSlugLabel = registryText(state.config, "new_slug_label", "slug");
+  const newDescriptionLabel = registryText(state.config, "new_description_label", "description");
+  const newCreateButton = registryText(state.config, "new_create_button", "Create");
+  const newCancelButton = registryText(state.config, "new_cancel_button", "Cancel");
+  const demoteModalTitle = registryText(state.config, "demote_modal_title", "Demote Tag to Alias");
+  const demoteSearchLabel = registryText(state.config, "demote_search_label", "find target tags");
+  const demoteSearchPlaceholder = registryText(state.config, "demote_search_placeholder", "search tags");
+  const demoteConfirmButton = registryText(state.config, "demote_confirm_button", "Demote");
+  const demoteCloseButton = registryText(state.config, "demote_close_button", "Close");
+  const deleteModalTitle = registryText(state.config, "delete_modal_title", "Delete Tag");
+  const deleteImpactIntro = registryText(
+    state.config,
+    "delete_impact_intro",
+    "Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted."
+  );
+  const deleteConfirmButton = registryText(state.config, "delete_confirm_button", "Delete");
+  const deleteCloseButton = registryText(state.config, "delete_close_button", "Close");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagRegistry__importBox">
         <div class="tagRegistry__importRow">
           <label class="tagRegistry__fileWrap">
-            <span class="tagRegistry__importLabel">import file</span>
+            <span class="tagRegistry__importLabel">${escapeHtml(importFileLabel)}</span>
             <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagRegistry__modeWrap">
-            <span class="tagRegistry__importLabel">mode</span>
+            <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
             <select class="tagRegistry__modeSelect" data-role="import-mode">
               <option value="add">add (no overwrite)</option>
               <option value="merge">add + overwrite</option>
@@ -117,12 +143,12 @@ function renderShell(state) {
       <div class="tagRegistry__controls">
         <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
         <label class="tagRegistry__searchWrap">
-          <span class="visually-hidden">Search tags</span>
+          <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
           <input
             type="text"
             class="tagStudio__input tagRegistry__searchInput"
             data-role="search"
-            placeholder="search"
+            placeholder="${escapeHtml(searchPlaceholder)}"
             autocomplete="off"
           >
         </label>
@@ -146,21 +172,21 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="edit-modal" hidden>
       <div class="tagStudioModal__backdrop"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryEditTitle">
-        <h3 id="tagRegistryEditTitle">Edit Tag</h3>
+        <h3 id="tagRegistryEditTitle">${escapeHtml(editModalTitle)}</h3>
         <p class="tagRegistryEdit__meta" data-role="edit-tag-id"></p>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
             <input type="text" class="tagStudio__input tagRegistryEdit__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
           </label>
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">description</span>
+            <span class="tagRegistryEdit__label">${escapeHtml(editDescriptionLabel)}</span>
             <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
           </label>
         </div>
         <p class="tagRegistryEdit__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">Save</button>
-          <button type="button" class="tagStudio__button" data-role="close-edit-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">${escapeHtml(editSaveButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCloseButton)}</button>
         </div>
       </div>
     </div>
@@ -168,23 +194,23 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="new-modal" hidden>
       <div class="tagStudioModal__backdrop"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryNewTitle">
-        <h3 id="tagRegistryNewTitle">New Tag</h3>
+        <h3 id="tagRegistryNewTitle">${escapeHtml(newModalTitle)}</h3>
         <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">slug</span>
+            <span class="tagRegistryEdit__label">${escapeHtml(newSlugLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
           </label>
           <p class="tagAliasesEdit__warning" data-role="new-tag-warning"></p>
           <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">description</span>
+            <span class="tagRegistryEdit__label">${escapeHtml(newDescriptionLabel)}</span>
             <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
           </label>
         </div>
         <p class="tagRegistryEdit__status" data-role="new-tag-status"></p>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="create-tag" disabled>Create</button>
-          <button type="button" class="tagStudio__button" data-role="close-new-modal">Cancel</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="create-tag" disabled>${escapeHtml(newCreateButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-new-modal">${escapeHtml(newCancelButton)}</button>
         </div>
       </div>
     </div>
@@ -192,12 +218,12 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="demote-modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-demote-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDemoteTitle">
-        <h3 id="tagRegistryDemoteTitle">Demote Tag to Alias</h3>
+        <h3 id="tagRegistryDemoteTitle">${escapeHtml(demoteModalTitle)}</h3>
         <p class="tagRegistryEdit__meta" data-role="demote-tag-meta"></p>
         <div class="tagRegistryEdit__fields">
           <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
-            <span class="tagRegistryEdit__label">find target tags</span>
-            <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="search tags">
+            <span class="tagRegistryEdit__label">${escapeHtml(demoteSearchLabel)}</span>
+            <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
             <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
               <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
             </div>
@@ -207,8 +233,8 @@ function renderShell(state) {
         <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="demote-tag-list"></div>
         <p class="tagRegistryEdit__status" data-role="demote-status"></p>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-demote" disabled>Demote</button>
-          <button type="button" class="tagStudio__button" data-role="close-demote-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-demote" disabled>${escapeHtml(demoteConfirmButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-demote-modal">${escapeHtml(demoteCloseButton)}</button>
         </div>
       </div>
     </div>
@@ -216,16 +242,16 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="delete-modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-delete-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDeleteTitle">
-        <h3 id="tagRegistryDeleteTitle">Delete Tag</h3>
+        <h3 id="tagRegistryDeleteTitle">${escapeHtml(deleteModalTitle)}</h3>
         <p class="tagRegistryEdit__meta" data-role="delete-tag-meta"></p>
         <p class="tagRegistryEdit__impact">
-          Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted.
+          ${escapeHtml(deleteImpactIntro)}
         </p>
         <p class="tagRegistryEdit__impact" data-role="delete-impact"></p>
         <p class="tagRegistryEdit__status" data-role="delete-status"></p>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-delete-tag">Delete</button>
-          <button type="button" class="tagStudio__button" data-role="close-delete-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-delete-tag">${escapeHtml(deleteConfirmButton)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-delete-modal">${escapeHtml(deleteCloseButton)}</button>
         </div>
       </div>
     </div>
@@ -290,7 +316,12 @@ function wireEvents(state) {
     const files = state.refs.importFile.files;
     state.selectedFile = files && files.length ? files[0] : null;
     if (state.selectedFile) {
-      state.refs.selectedFile.textContent = `Selected: ${state.selectedFile.name}`;
+      state.refs.selectedFile.textContent = registryText(
+        state.config,
+        "selected_file_template",
+        "Selected: {filename}",
+        { filename: state.selectedFile.name }
+      );
       clearImportResult(state);
     } else {
       state.refs.selectedFile.textContent = "";
@@ -603,6 +634,7 @@ function renderControls(state) {
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
   const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
+  const allTagsLabel = registryText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
   const groupButtons = STUDIO_GROUPS.map((group) => {
     const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(groupCounts[group] || 0);
@@ -620,7 +652,7 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">All tags [${totalCount}]</button>
+    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
     ${renderGroupInfoControl(state, "registry")}
   `;
@@ -644,14 +676,16 @@ function groupTitleAttr(state, group) {
 }
 
 function renderGroupInfoControl(state, scope) {
+  const title = registryText(state.config, "group_info_title", "Open group descriptions in a new tab");
+  const ariaLabel = registryText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
   return `
     <a
       class="tagStudio__keyPill tagStudio__keyInfoBtn"
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
-      title="Open group descriptions in a new tab"
-      aria-label="Open group descriptions in a new tab"
+      title="${escapeHtml(title)}"
+      aria-label="${escapeHtml(ariaLabel)}"
     >
       <em>i</em>
     </a>
@@ -672,7 +706,7 @@ function renderList(state) {
   `;
 
   if (!visible.length) {
-    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">none</p>`;
+    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">${escapeHtml(registryText(state.config, "empty_state", "none"))}</p>`;
     return;
   }
 
@@ -684,15 +718,15 @@ function renderList(state) {
           <div class="tagRegistry__tagCol">
             <div class="tagRegistry__tagActions">
               <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagChip" title="${escapeHtml(tag.tagId)}">
-                <button type="button" class="tagRegistry__tagInlineBtn" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="Edit ${escapeHtml(tag.tagId)}">
+                <button type="button" class="tagRegistry__tagInlineBtn" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="${escapeHtml(registryText(state.config, "tag_edit_aria_label", "Edit {tag_id}", { tag_id: tag.tagId }))}">
                   ${escapeHtml(tag.label)}
                 </button>
               <button
                 type="button"
                 class="tagStudio__chipRemove tagRegistry__demoteBtn"
                 data-demote-tag-id="${escapeHtml(tag.tagId)}"
-                title="Demote canonical tag to alias"
-                aria-label="Demote ${escapeHtml(tag.tagId)}"
+                title="${escapeHtml(registryText(state.config, "tag_demote_title", "Demote canonical tag to alias"))}"
+                aria-label="${escapeHtml(registryText(state.config, "tag_demote_aria_label", "Demote {tag_id}", { tag_id: tag.tagId }))}"
               >
                 ←
               </button>
@@ -700,8 +734,8 @@ function renderList(state) {
                 type="button"
                 class="tagStudio__chipRemove"
                 data-delete-tag-id="${escapeHtml(tag.tagId)}"
-                title="Delete canonical tag"
-                aria-label="Delete ${escapeHtml(tag.tagId)}"
+                title="${escapeHtml(registryText(state.config, "tag_delete_title", "Delete canonical tag"))}"
+                aria-label="${escapeHtml(registryText(state.config, "tag_delete_aria_label", "Delete {tag_id}", { tag_id: tag.tagId }))}"
               >
                 ×
               </button>
@@ -773,7 +807,7 @@ function openEditModal(state, tagId) {
   state.refs.editStatus.className = "tagRegistryEdit__status";
   state.refs.editStatus.textContent = state.saveMode === "post"
     ? ""
-    : "Local server is required for edit.";
+    : registryText(state.config, "local_edit_required", "Local server is required for edit.");
   state.refs.editModal.hidden = false;
 }
 
@@ -849,15 +883,15 @@ function getNewTagValidation(state) {
   let warning = "";
 
   if (!STUDIO_GROUPS.includes(group)) {
-    warning = "Select a tag group.";
+    warning = registryText(state.config, "select_group_warning", "Select a tag group.");
   } else if (!slug) {
-    warning = "Tag slug is required.";
+    warning = registryText(state.config, "tag_slug_required", "Tag slug is required.");
   } else if (!TAG_SLUG_RE.test(slug)) {
-    warning = "Tag slug must be lowercase letters, numbers, or hyphens.";
+    warning = registryText(state.config, "tag_slug_invalid", "Tag slug must be lowercase letters, numbers, or hyphens.");
   } else {
     const tagId = `${group}:${slug}`;
     const exists = state.tags.some((tag) => tag.tagId === tagId);
-    if (exists) warning = "Tag already exists.";
+    if (exists) warning = registryText(state.config, "tag_exists_warning", "Tag already exists.");
   }
 
   return {
@@ -912,12 +946,12 @@ function buildDeletePreviewPayload(tagId) {
 
 async function refreshDeleteImpactPreview(state) {
   if (state.saveMode !== "post") {
-    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable (local server required).");
+    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
     return;
   }
   const payload = buildDeletePreviewPayload(state.deleteTagId);
   if (!payload) {
-    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable.");
+    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable", "Delete impact: unavailable."));
     return;
   }
   const seq = ++state.deletePreviewSeq;
@@ -925,30 +959,38 @@ async function refreshDeleteImpactPreview(state) {
     const response = await postJson(MUTATE_PREVIEW_ENDPOINT, payload);
     if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
     state.deletePreview = buildMutationSummary(response);
-    setImpactPreview(state.refs.deleteImpact, "", `Delete impact: ${state.deletePreview}`);
+    setImpactPreview(
+      state.refs.deleteImpact,
+      "",
+      registryText(state.config, "delete_impact_template", "Delete impact: {summary}", { summary: state.deletePreview })
+    );
   } catch (error) {
     if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
     const message = String(error && error.message ? error.message : "preview failed");
-    setImpactPreview(state.refs.deleteImpact, "error", `Delete impact: ${message}`);
+    setImpactPreview(
+      state.refs.deleteImpact,
+      "error",
+      registryText(state.config, "delete_impact_error_template", "Delete impact: {message}", { message })
+    );
   }
 }
 
 async function handleTagEdit(state) {
   if (!state.editTagId) return;
   if (state.saveMode !== "post") {
-    setEditStatus(state, "error", "Local server is required for edit.");
+    setEditStatus(state, "error", registryText(state.config, "local_edit_required", "Local server is required for edit."));
     return;
   }
 
   const tag = findTagById(state, state.editTagId);
   if (!tag) {
-    setEditStatus(state, "error", "Selected tag is no longer available.");
+    setEditStatus(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
 
   const description = String(state.refs.editDescription.value || "").trim();
   if (description === String(tag.description || "").trim()) {
-    setEditStatus(state, "", "No changes to save.");
+    setEditStatus(state, "", registryText(state.config, "edit_no_changes", "No changes to save."));
     return;
   }
 
@@ -960,14 +1002,14 @@ async function handleTagEdit(state) {
       allow_canonical_rename: false,
       client_time_utc: utcTimestamp()
     });
-    setEditStatus(state, "success", "Saved.");
+    setEditStatus(state, "success", registryText(state.config, "edit_saved", "Saved."));
     setImportResult(state, "success", buildMutationSummary(response));
     await loadRegistry(state);
     renderControls(state);
     renderList(state);
     closeEditModal(state);
   } catch (error) {
-    setEditStatus(state, "error", String(error.message || "Save failed."));
+    setEditStatus(state, "error", String(error.message || registryText(state.config, "edit_save_failed", "Save failed.")));
   }
 }
 
@@ -1000,14 +1042,23 @@ async function handleCreateTag(state) {
       closeNewTagModal(state);
       setImportResult(state, "success", buildImportSummary(response));
       await loadRegistry(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      state.saveMode = "patch";
-      renderImportMode(state);
-      setNewTagStatus(state, "error", `Server create failed; switched to patch mode. ${error.message || ""}`.trim());
-    }
+        renderControls(state);
+        renderList(state);
+        return;
+      } catch (error) {
+        state.saveMode = "patch";
+        renderImportMode(state);
+        setNewTagStatus(
+          state,
+          "error",
+          registryText(
+            state.config,
+            "server_create_failed",
+            "Server create failed; switched to patch mode. {message}",
+            { message: String(error.message || "").trim() }
+          ).trim()
+        );
+      }
   }
 
   const patchResult = buildManualPatchForCreateTag(newTagRow);
@@ -1026,7 +1077,7 @@ function openDeleteModal(state, tagId) {
   clearImportResult(state);
   const tag = findTagById(state, tagId);
   if (!tag) {
-    setImportResult(state, "error", "Selected tag is no longer available.");
+    setImportResult(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
   state.deleteTagId = tag.tagId;
@@ -1040,8 +1091,8 @@ function openDeleteModal(state, tagId) {
   state.refs.deleteModal.hidden = false;
 
   if (state.saveMode !== "post") {
-    setDeleteStatus(state, "error", "Local server is required for delete.");
-    setImpactPreview(state.refs.deleteImpact, "error", "Delete impact: unavailable (local server required).");
+    setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
+    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
     return;
   }
 
@@ -1063,13 +1114,13 @@ function closeDeleteModal(state) {
 async function handleDeleteFromModal(state) {
   if (!state.deleteTagId) return;
   if (state.saveMode !== "post") {
-    setDeleteStatus(state, "error", "Local server is required for delete.");
+    setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
     return;
   }
 
   const tag = findTagById(state, state.deleteTagId);
   if (!tag) {
-    setDeleteStatus(state, "error", "Selected tag is no longer available.");
+    setDeleteStatus(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
 
@@ -1085,7 +1136,7 @@ async function handleDeleteFromModal(state) {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    setDeleteStatus(state, "error", String(error.message || "Delete failed."));
+    setDeleteStatus(state, "error", String(error.message || registryText(state.config, "delete_failed", "Delete failed.")));
   }
 }
 
@@ -1093,12 +1144,21 @@ function openDemoteModal(state, tagId) {
   clearImportResult(state);
   const tag = findTagById(state, tagId);
   if (!tag) {
-    setImportResult(state, "error", "Selected tag is no longer available.");
+    setImportResult(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
     return;
   }
   const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
   if (state.aliasKeys.has(aliasKey)) {
-    setImportResult(state, "error", `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`);
+    setImportResult(
+      state,
+      "error",
+      registryText(
+        state.config,
+        "alias_exists_demote_error",
+        "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
+        { alias_key: aliasKey }
+      )
+    );
     return;
   }
 
@@ -1161,14 +1221,14 @@ function renderDemoteTagList(state) {
           type="button"
           class="tagStudio__chipRemove"
           data-remove-demote-tag="${escapeHtml(tagId)}"
-          aria-label="Remove ${escapeHtml(tagId)}"
+          aria-label="${escapeHtml(registryText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
         >
           x
         </button>
       </span>
     `;
   }).join("");
-  state.refs.demoteTagList.innerHTML = rows || '<span class="tagStudio__empty">none</span>';
+  state.refs.demoteTagList.innerHTML = rows || `<span class="tagStudio__empty">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
 }
 
 function getDemoteValidation(state) {
@@ -1177,23 +1237,28 @@ function getDemoteValidation(state) {
 
   let warning = "";
   if (!tags.length) {
-    warning = "Select at least one target tag.";
+    warning = registryText(state.config, "demote_select_target_warning", "Select at least one target tag.");
   } else if (tags.length > MAX_ALIAS_TAGS) {
-    warning = `Select up to ${MAX_ALIAS_TAGS} tags.`;
+    warning = registryText(state.config, "demote_max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS });
   } else {
     const seenGroups = new Set();
     for (const tagId of tags) {
       if (tagId === state.demoteState.tagId) {
-        warning = "Target list must not include the demoted tag.";
+        warning = registryText(state.config, "demote_target_includes_self", "Target list must not include the demoted tag.");
         break;
       }
       const info = findTagById(state, tagId);
       if (!info) {
-        warning = `Unknown tag selected: ${tagId}`;
+        warning = registryText(state.config, "demote_unknown_tag_warning", "Unknown tag selected: {tag_id}", { tag_id: tagId });
         break;
       }
       if (seenGroups.has(info.group)) {
-        warning = `Only one target tag per group is allowed (${info.group}).`;
+        warning = registryText(
+          state.config,
+          "demote_one_per_group_warning",
+          "Only one target tag per group is allowed ({group}).",
+          { group: info.group }
+        );
         break;
       }
       seenGroups.add(info.group);
@@ -1214,7 +1279,8 @@ function updateDemoteUi(state) {
   const validation = getDemoteValidation(state);
   state.refs.confirmDemote.disabled = !validation.valid;
   if (validation.warning) {
-    const kind = validation.warning === "Select at least one target tag." ? "" : "error";
+    const emptyWarning = registryText(state.config, "demote_select_target_warning", "Select at least one target tag.");
+    const kind = validation.warning === emptyWarning ? "" : "error";
     setDemoteStatus(state, kind, validation.warning);
   } else {
     setDemoteStatus(state, "", "");
@@ -1260,7 +1326,7 @@ function renderDemoteTagPopup(state) {
     </button>
   `);
   if (result.truncated) {
-    chips.push('<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="More matches available">...</span>');
+    chips.push(`<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
   }
   state.refs.demoteTagPopup.innerHTML = chips.join("");
   state.refs.demoteTagPopupWrap.hidden = false;
@@ -1278,12 +1344,12 @@ function addDemoteTag(state, tagId) {
   const tag = findTagById(state, normalizedTagId);
   if (!tag) return;
   if (normalizedTagId === state.demoteState.tagId) {
-    setDemoteStatus(state, "error", "Target list must not include the demoted tag.");
+    setDemoteStatus(state, "error", registryText(state.config, "demote_target_includes_self", "Target list must not include the demoted tag."));
     return;
   }
   if (state.demoteState.tags.includes(normalizedTagId)) return;
   if (state.demoteState.tags.length >= MAX_ALIAS_TAGS) {
-    setDemoteStatus(state, "error", `Select up to ${MAX_ALIAS_TAGS} tags.`);
+    setDemoteStatus(state, "error", registryText(state.config, "demote_max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
     return;
   }
   const nextGroup = tag.group;
@@ -1292,7 +1358,11 @@ function addDemoteTag(state, tagId) {
     return Boolean(existing && existing.group === nextGroup);
   });
   if (groupConflict) {
-    setDemoteStatus(state, "error", `Only one target tag per group is allowed (${nextGroup}).`);
+    setDemoteStatus(
+      state,
+      "error",
+      registryText(state.config, "demote_one_per_group_warning", "Only one target tag per group is allowed ({group}).", { group: nextGroup })
+    );
     return;
   }
   state.demoteState.tags.push(normalizedTagId);
@@ -1302,14 +1372,20 @@ async function handleTagDemote(state) {
   if (!state.demoteState) return;
   const tag = findTagById(state, state.demoteState.tagId);
   if (!tag) {
-    setDemoteStatus(state, "error", "Selected tag is no longer available.");
-    setImportResult(state, "error", "Selected tag is no longer available.");
+    const message = registryText(state.config, "selected_tag_missing", "Selected tag is no longer available.");
+    setDemoteStatus(state, "error", message);
+    setImportResult(state, "error", message);
     return;
   }
 
   const aliasKey = tag.tagId.split(":")[1] || tag.tagId;
   if (state.aliasKeys.has(aliasKey)) {
-    const message = `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`;
+    const message = registryText(
+      state.config,
+      "alias_exists_demote_error",
+      "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
+      { alias_key: aliasKey }
+    );
     setDemoteStatus(state, "error", message);
     setImportResult(state, "error", message);
     return;
@@ -1317,7 +1393,7 @@ async function handleTagDemote(state) {
 
   const validation = getDemoteValidation(state);
   if (!validation.valid) {
-    setDemoteStatus(state, "error", validation.warning || "Invalid target tags.");
+    setDemoteStatus(state, "error", validation.warning || registryText(state.config, "demote_invalid_targets", "Invalid target tags."));
     return;
   }
 
@@ -1334,7 +1410,7 @@ async function handleTagDemote(state) {
     try {
       preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
     } catch (error) {
-      const message = String(error.message || "Demotion preview failed.");
+      const message = String(error.message || registryText(state.config, "demote_preview_failed", "Demotion preview failed."));
       setDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
@@ -1342,7 +1418,12 @@ async function handleTagDemote(state) {
 
     const previewSummary = String(preview.summary_text || "").trim() || `demote ${tag.tagId}`;
     if (Number(preview.demoted_alias_overwritten || 0) > 0) {
-      const message = `Alias already exists: ${aliasKey}. Demotion overwrite is not permitted.`;
+      const message = registryText(
+        state.config,
+        "alias_exists_demote_error",
+        "Alias already exists: {alias_key}. Demotion overwrite is not permitted.",
+        { alias_key: aliasKey }
+      );
       setDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
@@ -1358,13 +1439,13 @@ async function handleTagDemote(state) {
     try {
       const response = await postJson(DEMOTE_ENDPOINT, payload);
       closeDemoteModal(state);
-      setImportResult(state, "success", String(response.summary_text || "Demoted."));
+      setImportResult(state, "success", String(response.summary_text || registryText(state.config, "demoted_success", "Demoted.")));
       await loadRegistry(state);
       renderControls(state);
       renderList(state);
       return;
     } catch (error) {
-      const message = String(error.message || "Demotion failed.");
+      const message = String(error.message || registryText(state.config, "demotion_failed", "Demotion failed."));
       setDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
@@ -1499,15 +1580,15 @@ async function readImportRegistryFromFile(file) {
   try {
     payload = JSON.parse(rawText);
   } catch (error) {
-    throw new Error("Import file is not valid JSON.");
+    throw new Error(registryText(null, "import_invalid_json", "Import file is not valid JSON."));
   }
   if (!payload || typeof payload !== "object") {
-    throw new Error("Import file must be a JSON object.");
+    throw new Error(registryText(null, "import_invalid_object", "Import file must be a JSON object."));
   }
 
   const rawTags = Array.isArray(payload.tags) ? payload.tags : null;
   if (!rawTags) {
-    throw new Error("Import file must include a tags array.");
+    throw new Error(registryText(null, "import_missing_tags_array", "Import file must include a tags array."));
   }
 
   const normalizedTags = [];
