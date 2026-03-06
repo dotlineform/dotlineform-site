@@ -80,6 +80,9 @@ section: works
     var params = new URLSearchParams(window.location.search);
     var seriesIdQuery = String(params.get('series') || '').trim().toLowerCase();
     var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
+    var defaultMediaWorkId = '';
+    var defaultMediaTitle = '';
+    var currentMediaWorkId = '';
 
     function showError(message) {
       root.hidden = true;
@@ -145,7 +148,7 @@ section: works
         });
     }
 
-    function renderPrimaryMedia(primaryWorkId, seriesTitle) {
+    function renderPrimaryMedia(primaryWorkId, displayTitle) {
       if (!mediaFigureEl || !mediaLinkEl || !mediaImgEl) return Promise.resolve();
       if (!primaryWorkId) {
         mediaFigureEl.hidden = true;
@@ -172,8 +175,20 @@ section: works
         mediaLinkEl.style.setProperty('--work-ar', String(widthCm) + ' / ' + String(heightCm));
         mediaImgEl.src = src1600;
         mediaImgEl.setAttribute('srcset', srcset);
-        mediaImgEl.alt = seriesTitle;
+        mediaImgEl.alt = displayTitle;
         mediaFigureEl.hidden = false;
+      });
+    }
+
+    function syncHeaderMediaForWork(workId) {
+      var nextWorkId = String(workId || '').trim();
+      var targetWorkId = nextWorkId || defaultMediaWorkId;
+      var targetTitle = defaultMediaTitle || titleEl.textContent || 'Series Tag Editor';
+      if (!targetWorkId || currentMediaWorkId === targetWorkId) return;
+      currentMediaWorkId = targetWorkId;
+      renderPrimaryMedia(targetWorkId, targetTitle).catch(function (err) {
+        console.error('series_tag_editor: failed to render selected media', err);
+        if (mediaFigureEl) mediaFigureEl.hidden = true;
       });
     }
 
@@ -213,9 +228,21 @@ section: works
         var folders = Array.isArray(row.project_folders) ? row.project_folders.filter(Boolean) : [];
         foldersEl.textContent = folders.length ? folders.join(', ') : textOrDash(row.project_folders);
         notesEl.textContent = textOrDash(row.notes);
-        renderPrimaryMedia(primaryWorkId, seriesTitle).catch(function (err) {
+        defaultMediaWorkId = primaryWorkId;
+        defaultMediaTitle = seriesTitle;
+        currentMediaWorkId = '';
+        renderPrimaryMedia(primaryWorkId, seriesTitle).then(function () {
+          currentMediaWorkId = primaryWorkId;
+        }).catch(function (err) {
           console.error('series_tag_editor: failed to render primary media', err);
           if (mediaFigureEl) mediaFigureEl.hidden = true;
+        });
+
+        window.addEventListener('series-tag-editor:selected-work-change', function (event) {
+          var detail = event && event.detail && typeof event.detail === 'object' ? event.detail : {};
+          var detailSeriesId = String(detail.seriesId || '').trim().toLowerCase();
+          if (detailSeriesId !== seriesIdQuery) return;
+          syncHeaderMediaForWork(detail.workId);
         });
 
         mount.setAttribute('data-series-id', seriesIdQuery);

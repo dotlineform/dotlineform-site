@@ -564,6 +564,18 @@ def load_tag_assignments_payload(path: Path) -> Dict[str, Any]:
         payload["tag_assignments_version"] = "tag_assignments_v1"
     if not coerce_string(payload.get("updated_at_utc")):
         payload["updated_at_utc"] = utc_timestamp_now()
+    for series_id, row in list(payload["series"].items()):
+        if not isinstance(row, dict):
+            payload["series"][series_id] = {
+                "tags": [],
+                "works": {},
+                "updated_at_utc": utc_timestamp_now(),
+            }
+            continue
+        if not isinstance(row.get("tags"), list):
+            row["tags"] = []
+        if "works" not in row or not isinstance(row.get("works"), dict):
+            row["works"] = {}
     return payload
 
 # ----------------------------
@@ -1683,10 +1695,27 @@ def main() -> None:
                 if series_id not in tag_assignments_series:
                     tag_assignments_series[series_id] = {
                         "tags": [],
+                        "works": {},
                         "updated_at_utc": utc_timestamp_now(),
                     }
                     tag_assignments_changed = True
                     tag_assignments_added += 1
+                else:
+                    assignment_row = tag_assignments_series.get(series_id)
+                    if not isinstance(assignment_row, dict):
+                        tag_assignments_series[series_id] = {
+                            "tags": [],
+                            "works": {},
+                            "updated_at_utc": utc_timestamp_now(),
+                        }
+                        tag_assignments_changed = True
+                    else:
+                        if not isinstance(assignment_row.get("tags"), list):
+                            assignment_row["tags"] = []
+                            tag_assignments_changed = True
+                        if "works" not in assignment_row or not isinstance(assignment_row.get("works"), dict):
+                            assignment_row["works"] = {}
+                            tag_assignments_changed = True
         else:
             if selected_artifacts is not None and not artifact_enabled("series-pages"):
                 print("Series pages skipped: not selected by --only.")

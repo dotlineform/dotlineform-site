@@ -168,7 +168,7 @@ Runtime canonical data flow:
 Run:
 
 ```bash
-python3 scripts/tag_write_server.py
+python3 scripts/studio/tag_write_server.py
 ```
 
 Optional flags:
@@ -193,12 +193,19 @@ Behavior:
   - `POST /demote-tag`
   - `POST /mutate-tag-preview`
   - `POST /mutate-tag`
-- Tag Studio page probes `/health` and shows:
+  - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
   - `Save mode: Patch` when unavailable (fallback to patch modal)
   - `POST /save-tags` expects assignment objects in `tags`:
+    - series save payload: `{ "series_id": "<series>", "tags": [...] }`
+    - work override save payload: `{ "series_id": "<series>", "work_id": "<work_id>", "keep_work": true|false, "tags": [...] }`
     - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
   - save writes `assets/data/tag_assignments.json` with object-only tag rows (no string tags)
+  - save is diff-based in the Series Tag Editor: the UI compares current work state against the last loaded/saved baseline and sends one `/save-tags` request per changed work row
+  - when multiple work pills are selected in the Series Tag Editor, the active work's current override set is used as the persisted state for all selected work pills
+  - work override saves strip tags already inherited from `series[*].tags`
+  - `keep_work: false` plus empty tags deletes `series[*].works[work_id]`
+  - `keep_work: true` allows an explicit work row with `tags: []`
 - Tag Registry page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)
@@ -263,18 +270,18 @@ Security constraints:
   - `assets/data/tag_assignments.json`
   - `assets/data/tag_registry.json`
   - `assets/data/tag_aliases.json`
-  - timestamped backups are created in `assets/data/backups/`:
+  - timestamped backups are created in `var/studio/backups/`:
     - `tag_assignments.json.bak-YYYYMMDD-HHMMSS`
     - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
     - `tag_aliases.json.bak-YYYYMMDD-HHMMSS`
 
 Script logging:
 
-- Per-script logs are written to `logs/` at repo root (auto-created).
+- Per-script logs are written to repo-root log directories (auto-created).
 - Current pipeline/logged scripts include:
   - `scripts/run_draft_pipeline.py` -> `logs/run_draft_pipeline.log`
   - `scripts/generate_work_pages.py` -> `logs/generate_work_pages.log`
-  - `scripts/tag_write_server.py` -> `logs/tag_write_server.log`
+  - `scripts/studio/tag_write_server.py` -> `var/studio/logs/tag_write_server.log`
 - Log format is JSON Lines (one JSON object per line).
 - Retention policy:
   - keep entries from the last 30 days

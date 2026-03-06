@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Small JSONL logger for local scripts.
 
-Log files are written to <repo-root>/logs/<script-name>.log.
+Log files are written to <repo-root>/logs/<script-name>.log by default.
 Retention policy:
   - keep entries from the last 30 days
   - if none are within 30 days, keep the latest 1 day's worth (based on newest entry)
@@ -120,10 +120,14 @@ def append_script_log(
     event: str,
     details: Optional[Dict[str, Any]] = None,
     repo_root: Optional[str | Path] = None,
+    log_dir_rel: Optional[str | Path] = None,
 ) -> Path:
     script = Path(script_path).expanduser().resolve()
     resolved_repo_root = _resolve_repo_root(script, Path(repo_root) if repo_root is not None else None)
-    logs_dir = resolved_repo_root / "logs"
+    if log_dir_rel is None:
+        logs_dir = resolved_repo_root / "logs"
+    else:
+        logs_dir = resolved_repo_root / Path(log_dir_rel)
     logs_dir.mkdir(parents=True, exist_ok=True)
     log_path = logs_dir / f"{script.stem}.log"
 

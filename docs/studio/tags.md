@@ -1,6 +1,6 @@
 # Studio Tags
 
-This document is the central reference for series-level tag editing in the Series Tag Editor page (`/studio/series-tag-editor/?series=:series_id`).
+This document is the central reference for series-level tags plus per-work override editing in the Series Tag Editor page (`/studio/series-tag-editor/?series=:series_id`).
 
 ## Scope
 
@@ -21,7 +21,7 @@ This document is the central reference for series-level tag editing in the Serie
 - Group descriptions reference page:
   - `studio/tag-groups/index.md`
   - `assets/js/tag-groups.js`
-- Tag write service: `scripts/tag_write_server.py`
+- Tag write service: `scripts/studio/tag_write_server.py`
 - Data contracts:
   - `assets/data/studio/studio_config.json`
   - `assets/data/tag_registry.json`
@@ -145,19 +145,23 @@ Two metric sets are in use.
 
 ### 1) Editor metrics (`tag-studio.js`)
 
-Computed from current entry state:
+Computed from the selected work override state:
 
-- `groupCounts` by group
-- `collisions`: duplicate canonical IDs
 - `unresolvedCount`
 
 Current save gate:
 
+- Save disabled when no work is selected
 - Save disabled when `unresolvedCount > 0`
-- Message: `Resolve unknown tags before saving.`
 
-Current tags display only resolved tags, grouped into fixed rows (`subject`, `domain`, `form`, `theme`) with labels sorted by `w_manual` (desc) then slug (asc) within each group.
-Each chip includes a `w_manual` dot control:
+Current tags display in fixed rows (`subject`, `domain`, `form`, `theme`):
+
+- series tags are always shown for context
+- when no work is selected, series tags use the normal group color chips
+- when a work is selected, inherited series tags switch to monochrome chips
+- work override tags stay group-colored and removable
+
+Work override chips include a `w_manual` dot control:
 - white = `0.3`
 - amber = `0.6`
 - green = `0.9`
@@ -218,20 +222,30 @@ Save mode is probed at page load:
 - Endpoint: `POST /save-tags` on the local save service
 - Payload:
   - `series_id`
-  - `tags` (array of assignment objects; may be empty to clear):
+  - `work_id`
+  - `tags` (array of work-override assignment objects; may be empty to delete that work row):
     - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
   - `client_time_utc`
+- Save scope:
+  - `Save` compares the current editor state against the baseline from page load or last successful save, then persists only the diff
+  - when multiple work pills are present and one is active, the active work's current override set is the persisted state for all selected work pills
+- Save sanitization:
+  - inherited series tags are not persisted in work rows
+  - duplicate work tags are collapsed
+  - removing a work pill deletes that `series[series_id].works[work_id]` row entirely
+  - selected work rows may persist with `tags: []` when the work row itself is part of the saved diff
 - On success:
   - UI status message includes save timestamp
 - On failure:
   - UI falls back to Patch mode and opens patch modal
-- Local write operations are logged to `logs/tag_write_server.log` (JSONL).
+- Local write operations are logged to `var/studio/logs/tag_write_server.log` (JSONL).
 
 ### Patch mode
 
 - Shows modal with:
-  - canonical resolved assignment object array
-  - JSON snippet to paste under `series[series_id]` in `tag_assignments.json`
+  - canonical resolved work-override object array
+  - patch guidance to paste under `series[series_id].works` in `tag_assignments.json`
+  - delete guidance when the sanitized work delta is empty
 - Copy button uses `navigator.clipboard.writeText`
 
 ## Data Files: Purpose and Governance
@@ -280,33 +294,46 @@ Governance:
 
 Purpose:
 
-- Per-series canonical tag assignments used by studio pages and index RAG.
+- Per-series canonical tag assignments plus per-work delta overrides.
 - `series[*].tags` schema is object-only:
   - `tag_id`: canonical `<group>:<slug>`
   - `w_manual`: discrete manual weight (`0.3`, `0.6`, `0.9`)
   - effective weighting is derived at runtime and is not persisted in this file
+- `series[*].works[*].tags` uses the same object-only schema
+  - stores only the work delta, never a materialized inherited list
 
 Governance and maintenance:
 
-- Generated/synced by `scripts/generate_work_pages.py` to ensure all series IDs exist with default `tags: []`.
+- Generated/synced by `scripts/generate_work_pages.py` to ensure all series IDs exist with default `tags: []` and `works: {}`.
 - Updated interactively via:
   - patch workflow (manual paste), or
-  - local save service (`scripts/tag_write_server.py`).
-- Server writes are constrained to this file, with timestamped backups in `assets/data/backups/`.
-- Top-level `updated_at_utc` and per-series `updated_at_utc` must be kept current by writer flow.
+  - local save service (`scripts/studio/tag_write_server.py`).
+- Server writes are constrained to this file, with timestamped backups in `var/studio/backups/`.
+- Top-level `updated_at_utc`, per-series `updated_at_utc`, and touched work-row `updated_at_utc` values must be kept current by writer flow.
 - Script change events are logged in `logs/`:
-  - `logs/tag_write_server.log`
+  - `var/studio/logs/tag_write_server.log`
   - `logs/run_draft_pipeline.log`
   - `logs/generate_work_pages.log`
   - retention: 30 days, with fallback to keep the latest 1 day's entries when activity is older than 30 days.
+- `scripts/audit_site_consistency.py` reports drift when `tag_assignments.json` references series/work rows that no longer match `series_index.json` or `works_index.json`.
 
 ## Operational Notes
 
-- Editor stores canonical assignment objects (`tag_id`, `w_manual`) in save payload/snippet.
+- Editor starts with a `work_id` selector scoped to the current series membership from `series_index.json`.
+- Work selection accepts padded or unpadded IDs (`342` -> `00342`) and supports comma-separated entry for selecting multiple works at once.
+- Selected work pills are shown in series order; one pill is active at a time for editing, and inactive pills use a white/black outline style.
+- Saved work override rows are restored as work pills on page load; the page still opens with no active work selected until the curator clicks a pill.
+- When multiple work pills are present, editing happens on the active pill, and `Save` copies that active override set to all selected work pills.
+- Save enabled/disabled state is diff-based against the last persisted baseline.
+- Removing a restored work pill counts as a pending deletion and keeps `Save` enabled even if no work is currently active.
+- Editor stores canonical work-override assignment objects (`tag_id`, `w_manual`) in save payload/snippet.
 - Unknown/unresolved user inputs are blocked from save.
-- Empty tag array is valid and means clear all tags for that series.
+- Effective work tags are `series tags ∪ work override tags`.
+- A work cannot persist any tag already inherited from its series; inherited duplicates are dropped on save.
+- Empty work override arrays delete that work row from `tag_assignments.json`.
 - Editor layout shows four fixed group rows (`subject:`, `domain:`, `form:`, `theme:`); rows with no tags are left blank.
-- Add/search row places controls inline as: search input, `Add`, `Save Tags`, then save-mode text.
+- Series RAG remains driven by `series[*].tags` only.
+- Add/search controls now sit below the work selector row and above the save-mode text.
 - New assignments default to `w_manual: 0.6`.
 - UI only edits and persists `w_manual`.
 
@@ -347,7 +374,7 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
   - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
-- supports import from a local JSON file (recommended from `assets/data/import`)
+- supports import from a local JSON file (recommended from `var/studio/import`)
   - mode `add (no overwrite)`: add tags with new `tag_id` only, keep existing entries unchanged
   - mode `replace`: replace the full tag list
   - mode `add + overwrite`: add new tags and overwrite matching `tag_id` entries, leaving other entries untouched
@@ -355,7 +382,7 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/data/tag_re
 - local-server import writes update timestamps:
   - top-level `updated_at_utc`
   - per-tag `updated_at_utc` for added/overwritten tags
-- import response includes `summary_text` and the same summary is written to `logs/tag_write_server.log`
+- import response includes `summary_text` and the same summary is written to `var/studio/logs/tag_write_server.log`
 - import response/log includes `import_filename` (basename only)
 - clicking a tag pill opens an edit modal:
   - shows the tag group as a color-coded pill
@@ -430,14 +457,14 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/data/tag_alia
   - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - supports search by alias prefix
 - supports header sorting (alias, asc/desc)
-- supports import from a local JSON file (recommended from `assets/data/import`)
+- supports import from a local JSON file (recommended from `var/studio/import`)
   - mode `add (no overwrite)`: add aliases with new key only
   - mode `replace`: replace the full aliases map
   - mode `add + overwrite`: add new aliases and overwrite matching keys, leaving other aliases untouched
   - includes `New alias` button (right side of import controls) to open alias-create modal
 - local-server import uses `POST /import-tag-aliases`
   - response includes `summary_text` and `import_filename` (basename only)
-  - summary is written to `logs/tag_write_server.log`
+  - summary is written to `var/studio/logs/tag_write_server.log`
 - alias delete behavior:
   - local server mode uses `POST /delete-tag-alias`
   - patch mode provides copyable snippet with `aliases_to_remove`
