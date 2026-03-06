@@ -2,6 +2,7 @@ import {
   getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
+  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 
@@ -65,7 +66,14 @@ async function initTagRegistryPage() {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    renderError(state, "Failed to load tag data from /assets/studio/data/tag_registry.json and /assets/studio/data/tag_aliases.json.");
+    renderError(
+      state,
+      registryText(
+        state.config,
+        "load_failed_error",
+        "Failed to load tag data from /assets/studio/data/tag_registry.json and /assets/studio/data/tag_aliases.json."
+      )
+    );
     return;
   }
 
@@ -73,13 +81,21 @@ async function initTagRegistryPage() {
 }
 
 function renderShell(state) {
+  const chooseFileLabel = registryText(state.config, "choose_file_button", "Choose file");
+  const importButtonLabel = registryText(state.config, "import_button", "Import");
+  const importModeLabel = buildRegistryImportModeText(state, "patch");
+  const newTagButtonLabel = registryText(state.config, "new_tag_button", "New tag");
+  const patchModalTitle = registryText(state.config, "patch_modal_title", "Registry Patch Preview");
+  const patchModalLabel = registryText(state.config, "patch_modal_label", "Manual patch snippet");
+  const patchModalCopy = registryText(state.config, "patch_modal_copy_button", "Copy");
+  const patchModalClose = registryText(state.config, "patch_modal_close_button", "Close");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagRegistry__importBox">
         <div class="tagRegistry__importRow">
           <label class="tagRegistry__fileWrap">
             <span class="tagRegistry__importLabel">import file</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">Choose file</button>
+            <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagRegistry__modeWrap">
@@ -90,9 +106,9 @@ function renderShell(state) {
               <option value="replace">replace entire registry</option>
             </select>
           </label>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">Import</button>
-          <span class="tagRegistry__saveMode" data-role="save-mode">Import mode: Patch</span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__newTagBtn" data-role="open-new-tag">New tag</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
+          <span class="tagRegistry__saveMode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
+          <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__newTagBtn" data-role="open-new-tag">${escapeHtml(newTagButtonLabel)}</button>
         </div>
         <p class="tagRegistry__selected" data-role="selected-file"></p>
         <p class="tagRegistry__result" data-role="import-result"></p>
@@ -117,12 +133,12 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="patch-modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryPatchTitle">
-        <h3 id="tagRegistryPatchTitle">Registry Patch Preview</h3>
-        <p class="tagStudioModal__label">Manual patch snippet</p>
+        <h3 id="tagRegistryPatchTitle">${escapeHtml(patchModalTitle)}</h3>
+        <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
         <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">Copy</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">${escapeHtml(patchModalCopy)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(patchModalClose)}</button>
         </div>
       </div>
     </div>
@@ -351,9 +367,9 @@ function wireEvents(state) {
     if (!state.patchSnippet) return;
     try {
       await navigator.clipboard.writeText(state.patchSnippet);
-      setImportResult(state, "success", "Patch snippet copied to clipboard.");
+      setImportResult(state, "success", registryText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
     } catch (error) {
-      setImportResult(state, "error", "Copy failed. Select and copy the snippet manually.");
+      setImportResult(state, "error", registryText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
     }
   });
 
@@ -484,8 +500,7 @@ async function pingHealthEndpoint() {
 }
 
 function renderImportMode(state) {
-  const label = state.saveMode === "post" ? "Local server" : "Patch";
-  state.refs.saveMode.textContent = `Import mode: ${label}`;
+  state.refs.saveMode.textContent = buildRegistryImportModeText(state, state.saveMode);
 }
 
 async function loadRegistry(state) {
@@ -1397,14 +1412,19 @@ function buildManualPatchForDemote(tagId, aliasTargets) {
 
   return {
     kind: "warn",
-    message: `Patch mode: section snippets prepared for demoting "${tagId}".`,
+    message: registryText(
+      null,
+      "patch_demote_message",
+      "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
+      { tag_id: tagId }
+    ),
     snippet
   };
 }
 
 async function handleImport(state) {
   if (!state.selectedFile) {
-    setImportResult(state, "error", "Choose an import file first.");
+    setImportResult(state, "error", registryText(state.config, "choose_import_file_error", "Choose an import file first."));
     return;
   }
 
@@ -1432,7 +1452,16 @@ async function handleImport(state) {
     } catch (error) {
       state.saveMode = "patch";
       renderImportMode(state);
-      setImportResult(state, "error", `Server import failed; switched to patch mode. ${error.message || ""}`.trim());
+      setImportResult(
+        state,
+        "error",
+        registryText(
+          state.config,
+          "server_import_failed",
+          "Server import failed; switched to patch mode. {message}",
+          { message: String(error.message || "").trim() }
+        ).trim()
+      );
     }
   }
 
@@ -1557,7 +1586,11 @@ function buildManualPatchForCreateTag(tagRow) {
   );
   return {
     kind: "warn",
-    message: `Patch mode: new tag row prepared for assets/studio/data/tag_registry.json tags[].`,
+    message: registryText(
+      null,
+      "patch_create_message",
+      "Patch mode: new tag row prepared for assets/studio/data/tag_registry.json tags[]."
+    ),
     snippet
   };
 }
@@ -1581,7 +1614,15 @@ function buildManualPatchForNewTags(state, importRegistry) {
   if (!newTags.length) {
     return {
       kind: "warn",
-      message: `Patch mode (${state.importMode}): ${importTags.length} imported; 0 new tags to add.`,
+      message: registryText(
+        state.config,
+        "patch_import_none_message",
+        "Patch mode ({import_mode}): {imported_count} imported; 0 new tags to add.",
+        {
+          import_mode: state.importMode,
+          imported_count: importTags.length
+        }
+      ),
       snippet: ""
     };
   }
@@ -1594,7 +1635,16 @@ function buildManualPatchForNewTags(state, importRegistry) {
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importTags.length} imported; ${newTags.length} new tag rows prepared for assets/studio/data/tag_registry.json tags[].`,
+    message: registryText(
+      state.config,
+      "patch_import_message",
+      "Patch mode ({import_mode}): {imported_count} imported; {new_count} new tag rows prepared for assets/studio/data/tag_registry.json tags[].",
+      {
+        import_mode: state.importMode,
+        imported_count: importTags.length,
+        new_count: newTags.length
+      }
+    ),
     snippet
   };
 }
@@ -1655,6 +1705,17 @@ function buildMutationSummary(response) {
     `aliases removed-empty ${aliasesRemovedEmpty}`,
     `aliases removed-redundant ${aliasesRemovedRedundant}`
   ].join("; ");
+}
+
+function registryText(config, key, fallback, tokens) {
+  return getStudioText(config, `tag_registry.${key}`, fallback, tokens);
+}
+
+function buildRegistryImportModeText(state, mode) {
+  const label = mode === "post"
+    ? registryText(state.config, "import_mode_local_server", "Local server")
+    : registryText(state.config, "import_mode_patch", "Patch");
+  return registryText(state.config, "import_mode_template", "Import mode: {mode}", { mode: label });
 }
 
 function toTimestampMs(value) {

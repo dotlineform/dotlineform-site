@@ -2,6 +2,7 @@ import {
   getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
+  getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 
@@ -63,7 +64,10 @@ async function initTagAliasesPage() {
     renderControls(state);
     renderList(state);
   } catch (error) {
-    renderError(state, "Failed to load aliases from /assets/studio/data/tag_aliases.json.");
+    renderError(
+      state,
+      aliasesText(state.config, "load_failed_error", "Failed to load aliases from /assets/studio/data/tag_aliases.json.")
+    );
     return;
   }
 
@@ -71,13 +75,21 @@ async function initTagAliasesPage() {
 }
 
 function renderShell(state) {
+  const chooseFileLabel = aliasesText(state.config, "choose_file_button", "Choose file");
+  const importButtonLabel = aliasesText(state.config, "import_button", "Import");
+  const importModeLabel = buildAliasesImportModeText(state, "patch");
+  const newAliasButtonLabel = aliasesText(state.config, "new_alias_button", "New alias");
+  const patchModalTitle = aliasesText(state.config, "patch_modal_title", "Aliases Patch Preview");
+  const patchModalLabel = aliasesText(state.config, "patch_modal_label", "Manual patch snippet");
+  const patchModalCopy = aliasesText(state.config, "patch_modal_copy_button", "Copy");
+  const patchModalClose = aliasesText(state.config, "patch_modal_close_button", "Close");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagRegistry__importBox">
         <div class="tagRegistry__importRow">
           <label class="tagRegistry__fileWrap">
             <span class="tagRegistry__importLabel">import file</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">Choose file</button>
+            <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagRegistry__modeWrap">
@@ -88,9 +100,9 @@ function renderShell(state) {
               <option value="replace">replace entire aliases</option>
             </select>
           </label>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">Import</button>
-          <span class="tagRegistry__saveMode" data-role="save-mode">Import mode: Patch</span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagAliases__newAliasBtn" data-role="open-new-alias">New alias</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
+          <span class="tagRegistry__saveMode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
+          <button type="button" class="tagStudio__button tagStudio__button--primary tagAliases__newAliasBtn" data-role="open-new-alias">${escapeHtml(newAliasButtonLabel)}</button>
         </div>
         <p class="tagRegistry__selected" data-role="selected-file"></p>
         <p class="tagRegistry__result" data-role="import-result"></p>
@@ -116,12 +128,12 @@ function renderShell(state) {
     <div class="tagStudioModal" data-role="patch-modal" hidden>
       <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesPatchTitle">
-        <h3 id="tagAliasesPatchTitle">Aliases Patch Preview</h3>
-        <p class="tagStudioModal__label">Manual patch snippet</p>
+        <h3 id="tagAliasesPatchTitle">${escapeHtml(patchModalTitle)}</h3>
+        <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
         <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
         <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">Copy</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">Close</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">${escapeHtml(patchModalCopy)}</button>
+          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(patchModalClose)}</button>
         </div>
       </div>
     </div>
@@ -280,9 +292,9 @@ function wireEvents(state) {
     if (!state.patchSnippet) return;
     try {
       await navigator.clipboard.writeText(state.patchSnippet);
-      setImportResult(state, "success", "Patch snippet copied to clipboard.");
+      setImportResult(state, "success", aliasesText(state.config, "patch_copy_success", "Patch snippet copied to clipboard."));
     } catch (error) {
-      setImportResult(state, "error", "Copy failed. Select and copy the snippet manually.");
+      setImportResult(state, "error", aliasesText(state.config, "patch_copy_failed", "Copy failed. Select and copy the snippet manually."));
     }
   });
 
@@ -701,8 +713,7 @@ async function probeImportMode(state) {
 }
 
 function renderImportMode(state) {
-  const label = state.saveMode === "post" ? "Local server" : "Patch";
-  state.refs.saveMode.textContent = `Import mode: ${label}`;
+  state.refs.saveMode.textContent = buildAliasesImportModeText(state, state.saveMode);
 }
 
 async function pingHealthEndpoint() {
@@ -722,7 +733,7 @@ async function pingHealthEndpoint() {
 
 async function handleImport(state) {
   if (!state.selectedFile) {
-    setImportResult(state, "error", "Choose an import file first.");
+    setImportResult(state, "error", aliasesText(state.config, "choose_import_file_error", "Choose an import file first."));
     return;
   }
 
@@ -750,7 +761,16 @@ async function handleImport(state) {
     } catch (error) {
       state.saveMode = "patch";
       renderImportMode(state);
-      setImportResult(state, "error", `Server import failed; switched to patch mode. ${error.message || ""}`.trim());
+      setImportResult(
+        state,
+        "error",
+        aliasesText(
+          state.config,
+          "server_import_failed",
+          "Server import failed; switched to patch mode. {message}",
+          { message: String(error.message || "").trim() }
+        ).trim()
+      );
     }
   }
 
@@ -1333,7 +1353,15 @@ function buildManualPatchForNewAliases(state, importAliases) {
   if (newCount === 0) {
     return {
       kind: "warn",
-      message: `Patch mode (${state.importMode}): ${importRows.length} imported; 0 new aliases to add.`,
+      message: aliasesText(
+        state.config,
+        "patch_import_none_message",
+        "Patch mode ({import_mode}): {imported_count} imported; 0 new aliases to add.",
+        {
+          import_mode: state.importMode,
+          imported_count: importRows.length
+        }
+      ),
       snippet: ""
     };
   }
@@ -1346,7 +1374,16 @@ function buildManualPatchForNewAliases(state, importAliases) {
 
   return {
     kind: "warn",
-    message: `Patch mode (${state.importMode}): ${importRows.length} imported; ${newCount} alias rows prepared for assets/studio/data/tag_aliases.json aliases object.`,
+    message: aliasesText(
+      state.config,
+      "patch_import_message",
+      "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for assets/studio/data/tag_aliases.json aliases object.",
+      {
+        import_mode: state.importMode,
+        imported_count: importRows.length,
+        new_count: newCount
+      }
+    ),
     snippet
   };
 }
@@ -1395,7 +1432,12 @@ function buildManualPatchForAliasPromote(state, aliasKey, group) {
 
   return {
     kind: "warn",
-    message: `Patch mode: section snippets prepared for promoting "${aliasKey}".`,
+    message: aliasesText(
+      null,
+      "patch_promote_message",
+      "Patch mode: section snippets prepared for promoting \"{alias_key}\".",
+      { alias_key: aliasKey }
+    ),
     snippet
   };
 }
@@ -1411,7 +1453,11 @@ function buildManualPatchForAliasDelete(aliasKey) {
 
   return {
     kind: "warn",
-    message: `Patch mode: remove this alias key from assets/studio/data/tag_aliases.json aliases object.`,
+    message: aliasesText(
+      null,
+      "patch_delete_message",
+      "Patch mode: remove this alias key from assets/studio/data/tag_aliases.json aliases object."
+    ),
     snippet
   };
 }
@@ -1427,7 +1473,12 @@ function buildManualPatchForAliasCreate(aliasKey, description, tags) {
   const snippet = JSON.stringify(fragment, null, 2);
   return {
     kind: "warn",
-    message: `Patch mode: alias fragment prepared for new alias "${normalizedAlias}". Paste inside aliases object.`,
+    message: aliasesText(
+      null,
+      "patch_create_message",
+      "Patch mode: alias fragment prepared for new alias \"{alias_key}\". Paste inside aliases object.",
+      { alias_key: normalizedAlias }
+    ),
     snippet
   };
 }
@@ -1443,12 +1494,25 @@ function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description, tags) 
   };
   const snippet = JSON.stringify(fragment, null, 2);
   const renameNote = normalizedOld !== normalizedNew
-    ? ` Also remove old alias key "${normalizedOld}" from assets/studio/data/tag_aliases.json.`
+    ? aliasesText(
+        null,
+        "patch_edit_rename_note",
+        " Also remove old alias key \"{alias_key}\" from assets/studio/data/tag_aliases.json.",
+        { alias_key: normalizedOld }
+      )
     : "";
 
   return {
     kind: "warn",
-    message: `Patch mode: alias fragment prepared for "${normalizedOld}". Paste inside aliases object.${renameNote}`,
+    message: aliasesText(
+      null,
+      "patch_edit_message",
+      "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}",
+      {
+        alias_key: normalizedOld,
+        rename_note: renameNote
+      }
+    ),
     snippet
   };
 }
@@ -1488,7 +1552,12 @@ function buildManualPatchForDemote(tagId, aliasTargets) {
 
   return {
     kind: "warn",
-    message: `Patch mode: section snippets prepared for demoting "${tagId}".`,
+    message: aliasesText(
+      null,
+      "patch_demote_message",
+      "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
+      { tag_id: tagId }
+    ),
     snippet
   };
 }
@@ -1594,6 +1663,17 @@ function toTimestampMs(value) {
   if (!value) return null;
   const ms = Date.parse(value);
   return Number.isFinite(ms) ? ms : null;
+}
+
+function aliasesText(config, key, fallback, tokens) {
+  return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
+}
+
+function buildAliasesImportModeText(state, mode) {
+  const label = mode === "post"
+    ? aliasesText(state.config, "import_mode_local_server", "Local server")
+    : aliasesText(state.config, "import_mode_patch", "Patch");
+  return aliasesText(state.config, "import_mode_template", "Import mode: {mode}", { mode: label });
 }
 
 function normalizeTimestamp(value) {

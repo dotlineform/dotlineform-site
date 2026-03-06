@@ -65,8 +65,16 @@ Current config scope:
   - contextual hint copy
   - save-mode/status/error strings
   - tokenized templates such as `{mode}` and `{saved_at}`
+- `ui_text.tag_registry`
+  - import controls
+  - patch modal labels
+  - import-mode/status/patch-result strings
+- `ui_text.tag_aliases`
+  - import controls
+  - patch modal labels
+  - import-mode/status/patch-result strings
 
-The config is intended to decouple Studio from current file placement and from selected UI copy. Studio-owned JSON files and Series Tag Editor copy are no longer hard-coded in the editor JS.
+The config is intended to decouple Studio from current file placement and from selected UI copy. Studio-owned JSON files and key copy on the Series Tag Editor, Tag Registry, and Tag Aliases pages are no longer hard-coded in those modules.
 
 `assets/studio/js/studio-config.js` exports `getStudioText(config, key, fallback, tokens)` for Studio pages:
 
