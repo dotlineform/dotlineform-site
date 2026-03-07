@@ -243,6 +243,23 @@ The shared controller is not responsible for:
 - patch generation
 - save/delete/promote/demote behavior
 
+### Shared Shell Renderer
+
+The same module also provides shared modal shell renderers for page-controlled modals:
+
+- `renderStudioModalFrame(...)`
+- `renderStudioModalActions(...)`
+
+Use these when a page needs to keep its own refs, visibility toggling, or multi-step workflow, but should still render the same modal chrome:
+
+- backdrop
+- dialog surface
+- title placement
+- body slot
+- action row layout
+
+This keeps modal shell markup consistent without forcing all Studio modals into the same promise-based interaction flow.
+
 ### Integration Pattern
 
 Each page/controller should follow this flow:
@@ -264,7 +281,7 @@ This keeps modal rendering in the UI layer while keeping business rules in the e
 - `form`
   Phase 2: used for aliases promote group selection and demote target entry
 - `patch-preview`
-  Phase 1: controller scaffold only
+  Phase 4: shared shell renderer used for registry, aliases, and editor patch/save preview modals
 
 Later phases should replace native `confirm(...)` and `prompt(...)` calls with these modal types rather than adding new one-off dialogs.
 
@@ -280,7 +297,10 @@ Later phases should replace native `confirm(...)` and `prompt(...)` calls with t
 - Phase 3
   Replaced registry demote native confirm with Studio `confirm-detail`, using page-root host placement.
 - Phase 4
-  Planned: normalize existing custom modal implementations onto the shared controller contract.
+  Normalized existing custom modal shells onto the shared controller contract:
+  - registry patch, edit, new, delete, and demote shells use `renderStudioModalFrame(...)`
+  - aliases patch and edit shells use `renderStudioModalFrame(...)`
+  - editor save/patch shell uses `renderStudioModalFrame(...)`
 - Phase 5
   Planned: complete regression coverage and close out modal-system docs.
 
@@ -308,6 +328,22 @@ Current interaction boundary:
 3. `tag-registry.js` handles the returned confirm/cancel result and then calls the mutation service.
 
 This phase intentionally leaves registry demote validation and mutation logic outside the modal controller.
+
+### Shared Shell Integration Notes
+
+Registry, aliases, and the editor now use the shared shell renderer for their persistent custom modals.
+
+Current interaction boundary:
+
+1. Page controllers decide when the modal is shown or hidden.
+2. `studio-modal.js` provides the common frame and action-row markup.
+3. Page controllers keep their own refs, field wiring, preview text, and status rendering.
+4. Domain/service modules continue to own validation, preview data, and mutations.
+
+This preserves the clean separation:
+
+- shared modal shell in the UI framework
+- application-specific contents and behavior in page/domain/service code
 
 ## What Stays Page-Specific
 

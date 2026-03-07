@@ -92,6 +92,43 @@ function renderActions(options = {}) {
   `;
 }
 
+function renderActionList(actions = []) {
+  if (!Array.isArray(actions) || !actions.length) return "";
+  return actions.map((action, index) => {
+    const label = String(action && action.label ? action.label : `Action ${index + 1}`);
+    const classes = ["tagStudio__button"];
+    if (action && action.primary) classes.push("tagStudio__button--primary");
+    const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
+    const disabledAttr = action && action.disabled ? " disabled" : "";
+    return `<button type="button" class="${classes.join(" ")}"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;
+  }).join("");
+}
+
+export function renderStudioModalActions(actions = []) {
+  return `<div class="tagStudioModal__actions">${renderActionList(actions)}</div>`;
+}
+
+export function renderStudioModalFrame(options = {}) {
+  const modalRole = options.modalRole ? ` data-role="${escapeHtml(options.modalRole)}"` : "";
+  const backdropRole = options.backdropRole ? ` data-role="${escapeHtml(options.backdropRole)}"` : "";
+  const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
+  const hiddenAttr = options.hidden === false ? "" : " hidden";
+  const titleId = String(options.titleId || "studioModalTitle");
+  const title = String(options.title || "");
+  const bodyHtml = String(options.bodyHtml || "");
+  const actionsHtml = options.actionsHtml || renderStudioModalActions(options.actions || []);
+  return `
+    <div class="tagStudioModal"${modalRole}${hiddenAttr}>
+      <div class="tagStudioModal__backdrop"${backdropRole}></div>
+      <div class="tagStudioModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
+        <h3 id="${escapeHtml(titleId)}">${escapeHtml(title)}</h3>
+        ${bodyHtml}
+        ${actionsHtml}
+      </div>
+    </div>
+  `;
+}
+
 function renderModal(type, options = {}) {
   const title = String(options.title || "");
   const bodyHtml = renderBodyText(options.body);

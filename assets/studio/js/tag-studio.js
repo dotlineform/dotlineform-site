@@ -44,6 +44,10 @@ import {
   postTags,
   utcTimestamp
 } from "./tag-studio-save.js";
+import {
+  renderStudioModalActions,
+  renderStudioModalFrame
+} from "./studio-modal.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const POPUP_TAG_MATCH_CAP = 12;
@@ -277,6 +281,22 @@ function renderShell(state) {
   const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
   const modalCopyButton = studioText(state.config, "modal_copy_button", "Copy");
   const modalCloseButton = studioText(state.config, "modal_close_button", "Close");
+  const saveModalHtml = renderStudioModalFrame({
+    modalRole: "modal",
+    backdropRole: "close-modal",
+    titleId: "tagStudioModalTitle",
+    title: modalTitle,
+    bodyHtml: `
+      <p class="tagStudioModal__label">${escapeHtml(modalResolvedLabel)}</p>
+      <pre class="tagStudioModal__pre" data-role="modal-tags"></pre>
+      <p class="tagStudioModal__label">${escapeHtml(modalPatchGuidanceLabel)}</p>
+      <pre class="tagStudioModal__pre" data-role="modal-snippet"></pre>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "copy-snippet", label: modalCopyButton, primary: true },
+      { role: "close-modal", label: modalCloseButton }
+    ])
+  });
   state.mount.innerHTML = `
     <div class="tagStudio">
       <section class="tagStudio__panel tagStudio__panel--editor">
@@ -311,20 +331,7 @@ function renderShell(state) {
       </section>
     </div>
 
-    <div class="tagStudioModal" data-role="modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagStudioModalTitle">
-        <h3 id="tagStudioModalTitle">${escapeHtml(modalTitle)}</h3>
-        <p class="tagStudioModal__label">${escapeHtml(modalResolvedLabel)}</p>
-        <pre class="tagStudioModal__pre" data-role="modal-tags"></pre>
-        <p class="tagStudioModal__label">${escapeHtml(modalPatchGuidanceLabel)}</p>
-        <pre class="tagStudioModal__pre" data-role="modal-snippet"></pre>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-snippet">${escapeHtml(modalCopyButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(modalCloseButton)}</button>
-        </div>
-      </div>
-    </div>
+    ${saveModalHtml}
   `;
 
   state.refs = {

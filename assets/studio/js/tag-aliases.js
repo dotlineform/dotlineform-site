@@ -50,7 +50,9 @@ import {
 import {
   openConfirmDetailModal,
   openConfirmModal,
-  openFormModal
+  openFormModal,
+  renderStudioModalActions,
+  renderStudioModalFrame
 } from "./studio-modal.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
@@ -139,6 +141,53 @@ function renderShell(state) {
   const editSearchPlaceholder = aliasesText(state.config, "edit_search_placeholder", "search tags");
   const editSaveButton = aliasesText(state.config, "edit_save_button", "Save");
   const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
+  const patchModalHtml = renderStudioModalFrame({
+    modalRole: "patch-modal",
+    backdropRole: "close-modal",
+    titleId: "tagAliasesPatchTitle",
+    title: patchModalTitle,
+    bodyHtml: `
+      <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
+      <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "copy-patch", label: patchModalCopy, primary: true },
+      { role: "close-modal", label: patchModalClose }
+    ])
+  });
+  const editModalHtml = renderStudioModalFrame({
+    modalRole: "edit-modal",
+    titleId: "tagAliasesEditTitle",
+    title: editModalTitle,
+    dialogClass: "tagAliasesEdit__dialog",
+    bodyHtml: `
+      <div class="tagStudioForm__fields">
+        <label class="tagStudioForm__field">
+          <span class="tagStudioForm__label">${escapeHtml(editAliasLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
+        </label>
+        <p class="tagStudioForm__warning" data-role="edit-alias-warning"></p>
+        <label class="tagStudioForm__field">
+          <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
+          <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
+        </label>
+        <label class="tagStudioForm__field tagStudioForm__searchWrap">
+          <span class="tagStudioForm__label">${escapeHtml(editSearchLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
+          <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
+            <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
+          </div>
+        </label>
+      </div>
+      <div class="tagStudio__key tagStudioForm__key" data-role="edit-group-key"></div>
+      <div class="tagStudio__chipList tagStudioForm__selected" data-role="edit-tag-list"></div>
+      <p class="tagStudioForm__status" data-role="edit-status"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "save-edit-alias", label: editSaveButton, primary: true, disabled: true },
+      { role: "close-edit-modal", label: editCancelButton }
+    ])
+  });
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagStudioToolbar">
@@ -181,50 +230,8 @@ function renderShell(state) {
       <div data-role="list"></div>
     </section>
 
-    <div class="tagStudioModal" data-role="patch-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesPatchTitle">
-        <h3 id="tagAliasesPatchTitle">${escapeHtml(patchModalTitle)}</h3>
-        <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
-        <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">${escapeHtml(patchModalCopy)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(patchModalClose)}</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tagStudioModal" data-role="edit-modal" hidden>
-      <div class="tagStudioModal__backdrop"></div>
-        <div class="tagStudioModal__dialog tagAliasesEdit__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
-          <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">${escapeHtml(editModalTitle)}</h3>
-        <div class="tagStudioForm__fields">
-          <label class="tagStudioForm__field">
-            <span class="tagStudioForm__label">${escapeHtml(editAliasLabel)}</span>
-            <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
-          </label>
-          <p class="tagStudioForm__warning" data-role="edit-alias-warning"></p>
-          <label class="tagStudioForm__field">
-            <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
-            <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
-          </label>
-          <label class="tagStudioForm__field tagStudioForm__searchWrap">
-            <span class="tagStudioForm__label">${escapeHtml(editSearchLabel)}</span>
-            <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
-            <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
-              <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
-            </div>
-          </label>
-        </div>
-        <div class="tagStudio__key tagStudioForm__key" data-role="edit-group-key"></div>
-        <div class="tagStudio__chipList tagStudioForm__selected" data-role="edit-tag-list"></div>
-        <p class="tagStudioForm__status" data-role="edit-status"></p>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>${escapeHtml(editSaveButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCancelButton)}</button>
-        </div>
-      </div>
-    </div>
+    ${patchModalHtml}
+    ${editModalHtml}
   `;
 
   state.refs = {

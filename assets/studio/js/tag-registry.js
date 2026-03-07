@@ -44,7 +44,9 @@ import {
   submitTagEdit
 } from "./tag-registry-service.js";
 import {
-  openConfirmDetailModal
+  openConfirmDetailModal,
+  renderStudioModalActions,
+  renderStudioModalFrame
 } from "./studio-modal.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
@@ -154,6 +156,109 @@ function renderShell(state) {
   );
   const deleteConfirmButton = registryText(state.config, "delete_confirm_button", "Delete");
   const deleteCloseButton = registryText(state.config, "delete_close_button", "Close");
+  const patchModalHtml = renderStudioModalFrame({
+    modalRole: "patch-modal",
+    backdropRole: "close-modal",
+    titleId: "tagRegistryPatchTitle",
+    title: patchModalTitle,
+    bodyHtml: `
+      <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
+      <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "copy-patch", label: patchModalCopy, primary: true },
+      { role: "close-modal", label: patchModalClose }
+    ])
+  });
+  const editModalHtml = renderStudioModalFrame({
+    modalRole: "edit-modal",
+    titleId: "tagRegistryEditTitle",
+    title: editModalTitle,
+    bodyHtml: `
+      <p class="tagStudioForm__meta" data-role="edit-tag-id"></p>
+      <div class="tagStudioForm__fields">
+        <label class="tagStudioForm__field">
+          <input type="text" class="tagStudio__input tagStudioForm__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
+        </label>
+        <label class="tagStudioForm__field">
+          <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
+          <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
+        </label>
+      </div>
+      <p class="tagStudioForm__status" data-role="edit-status"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "save-edit", label: editSaveButton, primary: true },
+      { role: "close-edit-modal", label: editCloseButton }
+    ])
+  });
+  const newModalHtml = renderStudioModalFrame({
+    modalRole: "new-modal",
+    titleId: "tagRegistryNewTitle",
+    title: newModalTitle,
+    bodyHtml: `
+      <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
+      <div class="tagStudioForm__fields">
+        <label class="tagStudioForm__field">
+          <span class="tagStudioForm__label">${escapeHtml(newSlugLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
+        </label>
+        <p class="tagStudioForm__warning" data-role="new-tag-warning"></p>
+        <label class="tagStudioForm__field">
+          <span class="tagStudioForm__label">${escapeHtml(newDescriptionLabel)}</span>
+          <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
+        </label>
+      </div>
+      <p class="tagStudioForm__status" data-role="new-tag-status"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "create-tag", label: newCreateButton, primary: true, disabled: true },
+      { role: "close-new-modal", label: newCancelButton }
+    ])
+  });
+  const demoteModalHtml = renderStudioModalFrame({
+    modalRole: "demote-modal",
+    backdropRole: "close-demote-modal",
+    titleId: "tagRegistryDemoteTitle",
+    title: demoteModalTitle,
+    bodyHtml: `
+      <p class="tagStudioForm__meta" data-role="demote-tag-meta"></p>
+      <div class="tagStudioForm__fields">
+        <label class="tagStudioForm__field tagStudioForm__searchWrap">
+          <span class="tagStudioForm__label">${escapeHtml(demoteSearchLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
+          <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
+            <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
+          </div>
+        </label>
+      </div>
+      <div class="tagStudio__key tagStudioForm__key" data-role="demote-group-key"></div>
+      <div class="tagStudio__chipList tagStudioForm__selected" data-role="demote-tag-list"></div>
+      <p class="tagStudioForm__status" data-role="demote-status"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "confirm-demote", label: demoteConfirmButton, primary: true, disabled: true },
+      { role: "close-demote-modal", label: demoteCloseButton }
+    ])
+  });
+  const deleteModalHtml = renderStudioModalFrame({
+    modalRole: "delete-modal",
+    backdropRole: "close-delete-modal",
+    titleId: "tagRegistryDeleteTitle",
+    title: deleteModalTitle,
+    bodyHtml: `
+      <p class="tagStudioForm__meta" data-role="delete-tag-meta"></p>
+      <p class="tagStudioForm__impact">
+        ${escapeHtml(deleteImpactIntro)}
+      </p>
+      <p class="tagStudioForm__impact" data-role="delete-impact"></p>
+      <p class="tagStudioForm__status" data-role="delete-status"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: "confirm-delete-tag", label: deleteConfirmButton, primary: true },
+      { role: "close-delete-modal", label: deleteCloseButton }
+    ])
+  });
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
       <div class="tagStudioToolbar">
@@ -195,105 +300,11 @@ function renderShell(state) {
       <div data-role="list"></div>
     </section>
 
-    <div class="tagStudioModal" data-role="patch-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryPatchTitle">
-        <h3 id="tagRegistryPatchTitle">${escapeHtml(patchModalTitle)}</h3>
-        <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
-        <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="copy-patch">${escapeHtml(patchModalCopy)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-modal">${escapeHtml(patchModalClose)}</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tagStudioModal" data-role="edit-modal" hidden>
-      <div class="tagStudioModal__backdrop"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryEditTitle">
-        <h3 id="tagRegistryEditTitle">${escapeHtml(editModalTitle)}</h3>
-        <p class="tagStudioForm__meta" data-role="edit-tag-id"></p>
-        <div class="tagStudioForm__fields">
-          <label class="tagStudioForm__field">
-            <input type="text" class="tagStudio__input tagStudioForm__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
-          </label>
-          <label class="tagStudioForm__field">
-            <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
-            <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
-          </label>
-        </div>
-        <p class="tagStudioForm__status" data-role="edit-status"></p>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">${escapeHtml(editSaveButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCloseButton)}</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tagStudioModal" data-role="new-modal" hidden>
-      <div class="tagStudioModal__backdrop"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryNewTitle">
-        <h3 id="tagRegistryNewTitle">${escapeHtml(newModalTitle)}</h3>
-        <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
-        <div class="tagStudioForm__fields">
-          <label class="tagStudioForm__field">
-            <span class="tagStudioForm__label">${escapeHtml(newSlugLabel)}</span>
-            <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
-          </label>
-          <p class="tagStudioForm__warning" data-role="new-tag-warning"></p>
-          <label class="tagStudioForm__field">
-            <span class="tagStudioForm__label">${escapeHtml(newDescriptionLabel)}</span>
-            <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
-          </label>
-        </div>
-        <p class="tagStudioForm__status" data-role="new-tag-status"></p>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="create-tag" disabled>${escapeHtml(newCreateButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-new-modal">${escapeHtml(newCancelButton)}</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tagStudioModal" data-role="demote-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-demote-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDemoteTitle">
-        <h3 id="tagRegistryDemoteTitle">${escapeHtml(demoteModalTitle)}</h3>
-        <p class="tagStudioForm__meta" data-role="demote-tag-meta"></p>
-        <div class="tagStudioForm__fields">
-          <label class="tagStudioForm__field tagStudioForm__searchWrap">
-            <span class="tagStudioForm__label">${escapeHtml(demoteSearchLabel)}</span>
-            <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
-            <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
-              <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
-            </div>
-          </label>
-        </div>
-        <div class="tagStudio__key tagStudioForm__key" data-role="demote-group-key"></div>
-        <div class="tagStudio__chipList tagStudioForm__selected" data-role="demote-tag-list"></div>
-        <p class="tagStudioForm__status" data-role="demote-status"></p>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-demote" disabled>${escapeHtml(demoteConfirmButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-demote-modal">${escapeHtml(demoteCloseButton)}</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="tagStudioModal" data-role="delete-modal" hidden>
-      <div class="tagStudioModal__backdrop" data-role="close-delete-modal"></div>
-      <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDeleteTitle">
-        <h3 id="tagRegistryDeleteTitle">${escapeHtml(deleteModalTitle)}</h3>
-        <p class="tagStudioForm__meta" data-role="delete-tag-meta"></p>
-        <p class="tagStudioForm__impact">
-          ${escapeHtml(deleteImpactIntro)}
-        </p>
-        <p class="tagStudioForm__impact" data-role="delete-impact"></p>
-        <p class="tagStudioForm__status" data-role="delete-status"></p>
-        <div class="tagStudioModal__actions">
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-delete-tag">${escapeHtml(deleteConfirmButton)}</button>
-          <button type="button" class="tagStudio__button" data-role="close-delete-modal">${escapeHtml(deleteCloseButton)}</button>
-        </div>
-      </div>
-    </div>
+    ${patchModalHtml}
+    ${editModalHtml}
+    ${newModalHtml}
+    ${demoteModalHtml}
+    ${deleteModalHtml}
   `;
 
   state.refs = {
