@@ -555,14 +555,14 @@ function renderImportMode(state) {
   state.refs.saveMode.textContent = buildRegistryImportModeText(state, state.saveMode);
 }
 
-async function loadRegistry(state) {
+async function loadRegistry(state, options = {}) {
   const [registryData, aliasesData] = await Promise.all([
-    loadStudioRegistryJson(state.config),
-    loadStudioAliasesJson(state.config)
+    loadStudioRegistryJson(state.config, options),
+    loadStudioAliasesJson(state.config, options)
   ]);
   let groupsData = null;
   try {
-    groupsData = await loadStudioGroupsJson(state.config);
+    groupsData = await loadStudioGroupsJson(state.config, options);
   } catch (error) {
     groupsData = null;
   }
@@ -840,10 +840,12 @@ async function refreshDeleteImpactPreview(state) {
 
 async function handleTagEdit(state) {
   if (!state.editTagId) return;
+  const tagId = state.editTagId;
+  const description = String(state.refs.editDescription.value || "").trim();
   const result = await submitTagEdit({
     saveMode: state.saveMode,
-    tag: findTagById(state, state.editTagId),
-    description: String(state.refs.editDescription.value || "").trim(),
+    tag: findTagById(state, tagId),
+    description,
     config: state.config
   });
   if (!result.ok) {
@@ -853,7 +855,19 @@ async function handleTagEdit(state) {
 
   setEditStatus(state, "success", result.message);
   setImportResult(state, "success", result.summary);
-  await loadRegistry(state);
+  const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
+  const updatedAtMs = updatedAtUtc ? Date.parse(updatedAtUtc) : null;
+  state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
+  state.tags = state.tags.map((tag) => {
+    if (!tag || tag.tagId !== tagId) return tag;
+    return {
+      ...tag,
+      description,
+      updatedAtUtc,
+      updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : tag.updatedAtMs
+    };
+  });
+  state.registryOptions = buildRegistryOptions(state.tags);
   renderControls(state);
   renderList(state);
   closeEditModal(state);
@@ -884,7 +898,21 @@ async function handleCreateTag(state) {
   if (result.ok && result.mode === "post") {
     closeNewTagModal(state);
     setImportResult(state, "success", result.summary);
-    await loadRegistry(state);
+    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
+    const updatedAtMs = updatedAtUtc ? Date.parse(updatedAtUtc) : null;
+    state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
+    state.tags = state.tags
+      .filter((tag) => tag && tag.tagId !== validation.tagId)
+      .concat([{
+        group: validation.group,
+        tagId: validation.tagId,
+        label: validation.slug,
+        description: validation.description,
+        status: "active",
+        updatedAtUtc,
+        updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
+      }]);
+    state.registryOptions = buildRegistryOptions(state.tags);
     renderControls(state);
     renderList(state);
     return;
@@ -948,9 +976,10 @@ function closeDeleteModal(state) {
 
 async function handleDeleteFromModal(state) {
   if (!state.deleteTagId) return;
+  const deletedTagId = state.deleteTagId;
   const result = await submitDeleteTag({
     saveMode: state.saveMode,
-    tag: findTagById(state, state.deleteTagId),
+    tag: findTagById(state, deletedTagId),
     config: state.config
   });
   if (!result.ok) {
@@ -960,7 +989,9 @@ async function handleDeleteFromModal(state) {
 
   closeDeleteModal(state);
   setImportResult(state, "success", result.summary);
-  await loadRegistry(state);
+  state.registryUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
+  state.tags = state.tags.filter((tag) => tag && tag.tagId !== deletedTagId);
+  state.registryOptions = buildRegistryOptions(state.tags);
   renderControls(state);
   renderList(state);
 }
@@ -1238,7 +1269,11 @@ async function handleTagDemote(state) {
   if (result.mode === "post") {
     closeDemoteModal(state);
     setImportResult(state, "success", result.summary);
-    await loadRegistry(state);
+    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.registryUpdatedAt;
+    state.registryUpdatedAt = updatedAtUtc || state.registryUpdatedAt;
+    state.tags = state.tags.filter((item) => item && item.tagId !== tag.tagId);
+    state.aliasKeys.add(aliasKey);
+    state.registryOptions = buildRegistryOptions(state.tags);
     renderControls(state);
     renderList(state);
     return;
@@ -1274,7 +1309,7 @@ async function handleImport(state) {
   });
   if (result.ok && result.mode === "post") {
     setImportResult(state, "success", result.summary);
-    await loadRegistry(state);
+    await loadRegistry(state, { cache: "no-store" });
     renderControls(state);
     renderList(state);
     return;

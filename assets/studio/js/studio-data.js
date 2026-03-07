@@ -3,36 +3,37 @@ import {
   getStudioDataPath
 } from "./studio-config.js";
 
-export async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
+export async function fetchJson(url, options = {}) {
+  const cache = String(options.cache || "default");
+  const response = await fetch(url, { cache });
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}${url ? ` for ${url}` : ""}`);
   }
   return response.json();
 }
 
-export async function loadStudioRegistryJson(config) {
-  return fetchJson(getStudioDataPath(config, "tag_registry"));
+export async function loadStudioRegistryJson(config, options) {
+  return fetchJson(getStudioDataPath(config, "tag_registry"), options);
 }
 
-export async function loadStudioAliasesJson(config) {
-  return fetchJson(getStudioDataPath(config, "tag_aliases"));
+export async function loadStudioAliasesJson(config, options) {
+  return fetchJson(getStudioDataPath(config, "tag_aliases"), options);
 }
 
-export async function loadStudioAssignmentsJson(config) {
-  return fetchJson(getStudioDataPath(config, "tag_assignments"));
+export async function loadStudioAssignmentsJson(config, options) {
+  return fetchJson(getStudioDataPath(config, "tag_assignments"), options);
 }
 
-export async function loadStudioGroupsJson(config) {
-  return fetchJson(getStudioDataPath(config, "tag_groups"));
+export async function loadStudioGroupsJson(config, options) {
+  return fetchJson(getStudioDataPath(config, "tag_groups"), options);
 }
 
-export async function loadSiteSeriesIndexJson(config) {
-  return fetchJson(getSiteDataPath(config, "series_index"));
+export async function loadSiteSeriesIndexJson(config, options) {
+  return fetchJson(getSiteDataPath(config, "series_index"), options);
 }
 
-export async function loadSiteWorksIndexJson(config) {
-  return fetchJson(getSiteDataPath(config, "works_index"));
+export async function loadSiteWorksIndexJson(config, options) {
+  return fetchJson(getSiteDataPath(config, "works_index"), options);
 }
 
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {

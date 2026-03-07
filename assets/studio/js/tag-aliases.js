@@ -440,6 +440,50 @@ async function loadData(state) {
   );
 }
 
+function makeAliasEntry(state, alias, description, targets, updatedAtUtc) {
+  const normalizedAlias = normalize(alias);
+  const normalizedDescription = String(description || "").trim();
+  const normalizedTargets = Array.isArray(targets) ? targets.map((tagId) => normalize(tagId)).filter(Boolean) : [];
+  const resolvedTargets = normalizedTargets.map((tagId) => {
+    const info = state.registryById.get(tagId);
+    return {
+      tagId,
+      group: info ? info.group : "",
+      label: info ? info.label : tagId,
+      known: Boolean(info)
+    };
+  });
+  const groups = Array.from(new Set(resolvedTargets.filter((item) => item.known).map((item) => item.group)));
+  const hasUnknown = resolvedTargets.some((item) => !item.known);
+  const normalizedUpdatedAt = normalizeTimestamp(updatedAtUtc) || state.aliasesUpdatedAt;
+  const updatedAtMs = normalizedUpdatedAt ? Date.parse(normalizedUpdatedAt) : null;
+  return {
+    alias: normalizedAlias,
+    value: {
+      description: normalizedDescription,
+      tags: normalizedTargets.slice()
+    },
+    description: normalizedDescription,
+    targets: normalizedTargets.slice(),
+    resolvedTargets,
+    groups,
+    hasUnknown,
+    updatedAtUtc: normalizedUpdatedAt,
+    updatedAtMs: Number.isFinite(updatedAtMs) ? updatedAtMs : null
+  };
+}
+
+function replaceAliasEntry(state, entry, originalAlias = "") {
+  const normalizedOriginal = normalize(originalAlias);
+  state.aliases = state.aliases
+    .filter((item) => item && item.alias !== entry.alias && item.alias !== normalizedOriginal)
+    .concat([entry]);
+}
+
+function syncAliasDerivedState(state) {
+  state.registryOptions = buildRegistryOptions(state.registryById);
+}
+
 function renderControls(state) {
   const counts = countAliasesByGroup(state.aliases);
   const totalCount = state.aliases.length;
@@ -663,7 +707,8 @@ async function handleAliasDelete(state, alias) {
   });
   if (result.ok && result.mode === "post") {
     setImportResult(state, "success", result.summary);
-    await loadData(state);
+    state.aliasesUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
+    state.aliases = state.aliases.filter((entry) => entry && entry.alias !== aliasKey);
     renderControls(state);
     renderList(state);
     return;
@@ -908,7 +953,12 @@ async function saveAliasEdit(state) {
     if (result.summary) {
       setImportResult(state, "success", result.summary);
     }
-    await loadData(state);
+    state.aliasesUpdatedAt = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
+    replaceAliasEntry(
+      state,
+      makeAliasEntry(state, validation.alias, validation.description, validation.tags, state.aliasesUpdatedAt),
+      state.editState.originalAlias
+    );
     renderControls(state);
     renderList(state);
     closeAliasEditModal(state);
@@ -1008,7 +1058,11 @@ async function handleAliasPromote(state, alias) {
   }
   if (result.mode === "post") {
     setImportResult(state, "success", result.summary);
-    await loadData(state);
+    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
+    state.aliasesUpdatedAt = updatedAtUtc || state.aliasesUpdatedAt;
+    state.aliases = state.aliases.filter((entry) => entry && entry.alias !== aliasKey);
+    state.registryById.set(`${group}:${aliasKey}`, { group, label: aliasKey });
+    syncAliasDerivedState(state);
     renderControls(state);
     renderList(state);
     return;
@@ -1089,7 +1143,14 @@ async function handleTagDemoteFromAliases(state, tagId) {
   }
   if (result.mode === "post") {
     setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
-    await loadData(state);
+    const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
+    state.aliasesUpdatedAt = updatedAtUtc || state.aliasesUpdatedAt;
+    state.registryById.delete(canonicalTagId);
+    replaceAliasEntry(
+      state,
+      makeAliasEntry(state, canonicalTagId.split(":")[1] || canonicalTagId, "", aliasTargets, updatedAtUtc)
+    );
+    syncAliasDerivedState(state);
     renderControls(state);
     renderList(state);
     return;
