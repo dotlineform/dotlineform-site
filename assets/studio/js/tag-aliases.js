@@ -47,6 +47,11 @@ import {
   submitAliasesImport,
   submitTagDemoteFromAliases
 } from "./tag-aliases-service.js";
+import {
+  openConfirmDetailModal,
+  openConfirmModal,
+  openFormModal
+} from "./studio-modal.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -697,10 +702,13 @@ async function handleAliasDelete(state, alias) {
   const aliasKey = normalize(alias);
   if (!aliasKey) return;
 
-  const ok = window.confirm(
-    aliasesText(state.config, "delete_confirm_template", "Delete alias \"{alias_key}\"?", { alias_key: aliasKey })
-  );
-  if (!ok) {
+  const modalResult = await openConfirmModal({
+    title: aliasesText(state.config, "delete_modal_title", "Delete Alias"),
+    body: aliasesText(state.config, "delete_confirm_template", "Delete alias \"{alias_key}\"?", { alias_key: aliasKey }),
+    primaryLabel: aliasesText(state.config, "delete_confirm_button", "Delete"),
+    cancelLabel: aliasesText(state.config, "delete_cancel_button", "Cancel")
+  });
+  if (!modalResult.confirmed) {
     clearImportResult(state);
     return;
   }
@@ -992,16 +1000,6 @@ async function saveAliasEdit(state) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function promptPromotionGroup(state, entry) {
-  const suggested = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
-  const raw = window.prompt(
-    aliasesText(state.config, "promotion_group_prompt", "Promote alias: choose group (subject/domain/form/theme)"),
-    suggested || "subject"
-  );
-  if (raw === null) return "";
-  return normalize(raw);
-}
-
 async function handleAliasPromote(state, alias) {
   const aliasKey = normalize(alias);
   if (!aliasKey) return;
@@ -1012,15 +1010,45 @@ async function handleAliasPromote(state, alias) {
     return;
   }
 
-  const group = promptPromotionGroup(state, entry);
-  if (!group) {
+  let selectedGroup = "";
+  const suggestedGroup = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
+  const groupResult = await openFormModal({
+    title: aliasesText(state.config, "promotion_modal_title", "Promote Alias"),
+    body: aliasesText(state.config, "promotion_group_prompt", "Promote alias: choose group (subject/domain/form/theme)"),
+    primaryLabel: aliasesText(state.config, "promotion_next_button", "Next"),
+    cancelLabel: aliasesText(state.config, "promotion_cancel_button", "Cancel"),
+    fields: [
+      {
+        name: "group",
+        label: aliasesText(state.config, "promotion_group_label", "group"),
+        value: suggestedGroup || "subject"
+      }
+    ],
+    onSubmit(values) {
+      const group = normalize(values.group);
+      if (!group) {
+        return {
+          ok: false,
+          statusKind: "error",
+          status: aliasesText(state.config, "promotion_group_required", "Choose a group.")
+        };
+      }
+      if (!STUDIO_GROUPS.includes(group)) {
+        return {
+          ok: false,
+          statusKind: "error",
+          status: aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme.")
+        };
+      }
+      selectedGroup = group;
+      return true;
+    }
+  });
+  if (!groupResult.submitted) {
     clearImportResult(state);
     return;
   }
-  if (!STUDIO_GROUPS.includes(group)) {
-    setImportResult(state, "error", aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme."));
-    return;
-  }
+  const group = selectedGroup;
 
   if (state.saveMode === "post") {
     const preview = await previewAliasPromote({
@@ -1033,19 +1061,22 @@ async function handleAliasPromote(state, alias) {
       return;
     }
     const previewSummary = preview.summary;
-    const ok = window.confirm(
-      aliasesText(
+    const confirmResult = await openConfirmDetailModal({
+      title: aliasesText(state.config, "promotion_confirm_title", "Confirm Alias Promotion"),
+      body: aliasesText(
         state.config,
         "promotion_confirm_template",
-        "Promote alias \"{alias_key}\" to canonical tag \"{new_tag_id}\"?\n\nImpact:\n{preview_summary}",
+        "Promote alias \"{alias_key}\" to canonical tag \"{new_tag_id}\"?",
         {
           alias_key: aliasKey,
-          new_tag_id: `${group}:${aliasKey}`,
-          preview_summary: previewSummary
+          new_tag_id: `${group}:${aliasKey}`
         }
-      )
-    );
-    if (!ok) {
+      ),
+      impact: previewSummary,
+      primaryLabel: aliasesText(state.config, "promotion_confirm_button", "Promote"),
+      cancelLabel: aliasesText(state.config, "promotion_cancel_button", "Cancel")
+    });
+    if (!confirmResult.confirmed) {
       clearImportResult(state);
       return;
     }
@@ -1078,31 +1109,48 @@ async function handleAliasPromote(state, alias) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function promptDemotionTargets(state, tagId) {
-  const promptText = [
-    aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: tagId }),
-    aliasesText(state.config, "demotion_prompt_line_2", "Enter canonical target tag_ids (comma-separated)."),
-    aliasesText(state.config, "demotion_prompt_line_3", "Example: form:line,theme:emergence")
-  ].join("\n");
-  return window.prompt(promptText, "");
-}
-
 async function handleTagDemoteFromAliases(state, tagId) {
   const canonicalTagId = normalize(tagId);
   if (!canonicalTagId) return;
 
-  const input = promptDemotionTargets(state, canonicalTagId);
-  if (input === null) return;
-
   let aliasTargets = [];
-  try {
-    aliasTargets = parseTagIdCsv(input, (key, fallback, tokens) => aliasesText(null, key, fallback, tokens));
-  } catch (error) {
-    setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_target_tags", "Invalid target tags.")));
-    return;
-  }
-  if (aliasTargets.includes(canonicalTagId)) {
-    setImportResult(state, "error", aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag."));
+  const inputResult = await openFormModal({
+    title: aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias"),
+    body: [
+      aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: canonicalTagId }),
+      aliasesText(state.config, "demotion_prompt_line_2", "Enter canonical target tag_ids (comma-separated)."),
+      aliasesText(state.config, "demotion_prompt_line_3", "Example: form:line,theme:emergence")
+    ],
+    primaryLabel: aliasesText(state.config, "demotion_next_button", "Next"),
+    cancelLabel: aliasesText(state.config, "demotion_cancel_button", "Cancel"),
+    fields: [
+      {
+        name: "targets",
+        label: aliasesText(state.config, "demotion_targets_label", "target tag_ids")
+      }
+    ],
+    onSubmit(values) {
+      try {
+        aliasTargets = parseTagIdCsv(values.targets, (key, fallback, tokens) => aliasesText(null, key, fallback, tokens));
+      } catch (error) {
+        return {
+          ok: false,
+          statusKind: "error",
+          status: String(error.message || aliasesText(state.config, "invalid_target_tags", "Invalid target tags."))
+        };
+      }
+      if (aliasTargets.includes(canonicalTagId)) {
+        return {
+          ok: false,
+          statusKind: "error",
+          status: aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag.")
+        };
+      }
+      return true;
+    }
+  });
+  if (!inputResult.submitted) {
+    clearImportResult(state);
     return;
   }
 
@@ -1118,20 +1166,23 @@ async function handleTagDemoteFromAliases(state, tagId) {
     }
     const previewSummary = preview.summary;
     const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
-    const ok = window.confirm(
-      aliasesText(
+    const confirmResult = await openConfirmDetailModal({
+      title: aliasesText(state.config, "demotion_confirm_title", "Confirm Tag Demotion"),
+      body: aliasesText(
         state.config,
         "demotion_confirm_template",
-        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}\n\nImpact:\n{preview_summary}",
+        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}",
         {
           tag_id: canonicalTagId,
           alias_key: aliasKey,
-          targets: aliasTargets.join(", "),
-          preview_summary: previewSummary
+          targets: aliasTargets.join(", ")
         }
-      )
-    );
-    if (!ok) {
+      ),
+      impact: previewSummary,
+      primaryLabel: aliasesText(state.config, "demotion_confirm_button", "Demote"),
+      cancelLabel: aliasesText(state.config, "demotion_cancel_button", "Cancel")
+    });
+    if (!confirmResult.confirmed) {
       clearImportResult(state);
       return;
     }

@@ -128,6 +128,14 @@ function readFieldValues(host) {
   return values;
 }
 
+function setRoleMessage(host, role, className, kind, message) {
+  const target = host.querySelector(`[data-role="${role}"]`);
+  if (!target) return;
+  target.textContent = message || "";
+  target.className = className;
+  if (kind) target.classList.add(`is-${kind}`);
+}
+
 function closeActiveModal(host) {
   host.innerHTML = "";
 }
@@ -148,8 +156,29 @@ function openModal(type, options = {}) {
       document.removeEventListener("keydown", onKeydown);
     };
 
-    const submit = () => {
+    const api = {
+      setWarning(message) {
+        setRoleMessage(host, "modal-warning", "tagStudioForm__warning", "", message);
+      },
+      setStatus(kind, message) {
+        setRoleMessage(host, "modal-status", "tagStudioForm__status", kind, message);
+      },
+      readValues() {
+        return readFieldValues(host);
+      }
+    };
+
+    const submit = async () => {
       const values = readFieldValues(host);
+      if (typeof options.onSubmit === "function") {
+        const result = await options.onSubmit(values, api);
+        if (result === false) return;
+        if (result && typeof result === "object" && result.ok === false) {
+          if ("warning" in result) api.setWarning(result.warning || "");
+          if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
+          return;
+        }
+      }
       cleanup();
       if (type === "form") {
         resolve({ submitted: true, values });

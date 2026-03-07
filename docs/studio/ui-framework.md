@@ -258,11 +258,11 @@ This keeps modal rendering in the UI layer while keeping business rules in the e
 ### Supported Modal Types Implementation Status
 
 - `confirm`
-  Phase 1: controller scaffold only
+  Phase 2: used for aliases delete confirmation
 - `confirm-detail`
-  Phase 1: controller scaffold only
+  Phase 2: used for aliases promote/demote preview confirmation
 - `form`
-  Phase 1: controller scaffold only
+  Phase 2: used for aliases promote group selection and demote target entry
 - `patch-preview`
   Phase 1: controller scaffold only
 
@@ -273,13 +273,29 @@ Later phases should replace native `confirm(...)` and `prompt(...)` calls with t
 - Phase 1
   Added shared modal controller scaffold and documented modal contracts.
 - Phase 2
-  Planned: replace aliases native dialogs with Studio modal types.
+  Replaced aliases native dialogs with Studio modal types:
+  - alias delete uses `confirm`
+  - alias promote uses `form` then `confirm-detail`
+  - alias-side tag demote uses `form` then `confirm-detail`
 - Phase 3
   Planned: replace registry demote native confirm with Studio `confirm-detail`.
 - Phase 4
   Planned: normalize existing custom modal implementations onto the shared controller contract.
 - Phase 5
   Planned: complete regression coverage and close out modal-system docs.
+
+### Aliases Integration Notes
+
+Aliases now uses the shared modal controller for native-dialog replacement only.
+
+Current interaction boundary:
+
+1. `tag-aliases.js` prepares modal view-model data.
+2. `studio-modal.js` renders the modal shell and collects user decisions or field values.
+3. `tag-aliases.js` validates the returned values or preview requirements.
+4. `tag-aliases-service.js` performs the actual mutation.
+
+This phase intentionally keeps aliases business rules in the page/service layer rather than moving them into the modal controller.
 
 ## What Stays Page-Specific
 
