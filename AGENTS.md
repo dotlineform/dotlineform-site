@@ -77,6 +77,7 @@
 - Preserve existing Jekyll/Liquid conventions in this repo.
 - Prefer shared JS/CSS logic over duplicated inline logic.
 - Keep comments concise and implementation-focused.
+- use studio_config.json (ui_text section) to store UI copy such as labels. 
 
 ## Studio Documentation
 
