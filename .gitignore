@@ -23,3 +23,6 @@ __pycache__/
 
 # Script logs
 logs/
+
+# Studio local backup output
+var/studio/backups/
