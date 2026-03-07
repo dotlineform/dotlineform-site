@@ -11,31 +11,38 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  postJson,
   probeStudioHealth,
-  STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
 import {
   buildAliasKeySet,
   buildRegistryOptions,
   configureTagRegistryDomain,
   countTagsByGroup,
+  findTagById as findRegistryTagById,
+  getDemoteTagMatches as getRegistryDemoteTagMatches,
+  getDemoteValidation as getRegistryDemoteValidation,
+  getNewTagValidation as getRegistryNewTagValidation,
   getVisibleSortedTags,
   normalize,
   normalizeRegistryTags,
   normalizeTimestamp
 } from "./tag-registry-domain.js";
 import {
-  buildDeletePreviewPayload,
-  buildImportSummary,
   buildManualPatchForCreateTag,
   buildManualPatchForDemote,
   buildManualPatchForNewTags,
-  buildMutationSummary,
-  buildRegistryImportModeText,
-  readImportRegistryPayload,
-  utcTimestamp
+  buildRegistryImportModeText
 } from "./tag-registry-save.js";
+import {
+  previewDeleteImpact,
+  previewTagDemote,
+  readImportRegistryFromFile as readRegistryImportFromFile,
+  submitCreateTag,
+  submitDeleteTag,
+  submitRegistryImport,
+  submitTagDemote,
+  submitTagEdit
+} from "./tag-registry-service.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
@@ -688,7 +695,7 @@ function sortBtnClass(state, key) {
 }
 
 function findTagById(state, tagId) {
-  return state.tags.find((tag) => tag.tagId === normalize(tagId)) || null;
+  return findRegistryTagById(state.tags, tagId);
 }
 
 function openEditModal(state, tagId) {
@@ -774,34 +781,15 @@ function renderNewTagGroupKey(state) {
 }
 
 function getNewTagValidation(state) {
-  if (!state.newTagState) {
-    return { valid: false, warning: "", group: "", slug: "", description: "", tagId: "" };
-  }
-  const group = normalize(state.newTagState.group);
-  const slug = normalize(state.refs.newTagSlug.value);
-  const description = String(state.refs.newTagDescription.value || "").trim();
-  let warning = "";
-
-  if (!STUDIO_GROUPS.includes(group)) {
-    warning = registryText(state.config, "select_group_warning", "Select a tag group.");
-  } else if (!slug) {
-    warning = registryText(state.config, "tag_slug_required", "Tag slug is required.");
-  } else if (!TAG_SLUG_RE.test(slug)) {
-    warning = registryText(state.config, "tag_slug_invalid", "Tag slug must be lowercase letters, numbers, or hyphens.");
-  } else {
-    const tagId = `${group}:${slug}`;
-    const exists = state.tags.some((tag) => tag.tagId === tagId);
-    if (exists) warning = registryText(state.config, "tag_exists_warning", "Tag already exists.");
-  }
-
-  return {
-    valid: !warning,
-    warning,
-    group,
-    slug,
-    description,
-    tagId: group && slug ? `${group}:${slug}` : ""
-  };
+  return getRegistryNewTagValidation({
+    newTagState: state.newTagState,
+    slugInput: state.refs.newTagSlug.value,
+    descriptionInput: state.refs.newTagDescription.value,
+    tags: state.tags,
+    tagSlugRe: TAG_SLUG_RE,
+    studioGroups: STUDIO_GROUPS,
+    text: (key, fallback, tokens) => registryText(state.config, key, fallback, tokens)
+  });
 }
 
 function updateNewTagUi(state) {
@@ -835,72 +823,40 @@ function setImpactPreview(target, kind, message) {
 }
 
 async function refreshDeleteImpactPreview(state) {
-  if (state.saveMode !== "post") {
-    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable_local", "Delete impact: unavailable (local server required)."));
-    return;
-  }
-  const payload = buildDeletePreviewPayload(state.deleteTagId);
-  if (!payload) {
-    setImpactPreview(state.refs.deleteImpact, "error", registryText(state.config, "delete_impact_unavailable", "Delete impact: unavailable."));
-    return;
-  }
   const seq = ++state.deletePreviewSeq;
-  try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagPreview, payload);
-    if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
-    state.deletePreview = buildMutationSummary(response);
-    setImpactPreview(
-      state.refs.deleteImpact,
-      "",
-      registryText(state.config, "delete_impact_template", "Delete impact: {summary}", { summary: state.deletePreview })
-    );
-  } catch (error) {
-    if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
-    const message = String(error && error.message ? error.message : "preview failed");
-    setImpactPreview(
-      state.refs.deleteImpact,
-      "error",
-      registryText(state.config, "delete_impact_error_template", "Delete impact: {message}", { message })
-    );
+  const result = await previewDeleteImpact({
+    saveMode: state.saveMode,
+    tagId: state.deleteTagId,
+    config: state.config
+  });
+  if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
+  if (result.ok) {
+    state.deletePreview = result.summary;
+    setImpactPreview(state.refs.deleteImpact, "", result.message);
+    return;
   }
+  setImpactPreview(state.refs.deleteImpact, "error", result.message);
 }
 
 async function handleTagEdit(state) {
   if (!state.editTagId) return;
-  if (state.saveMode !== "post") {
-    setEditStatus(state, "error", registryText(state.config, "local_edit_required", "Local server is required for edit."));
+  const result = await submitTagEdit({
+    saveMode: state.saveMode,
+    tag: findTagById(state, state.editTagId),
+    description: String(state.refs.editDescription.value || "").trim(),
+    config: state.config
+  });
+  if (!result.ok) {
+    setEditStatus(state, result.code === "no_changes" ? "" : "error", result.message);
     return;
   }
 
-  const tag = findTagById(state, state.editTagId);
-  if (!tag) {
-    setEditStatus(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
-    return;
-  }
-
-  const description = String(state.refs.editDescription.value || "").trim();
-  if (description === String(tag.description || "").trim()) {
-    setEditStatus(state, "", registryText(state.config, "edit_no_changes", "No changes to save."));
-    return;
-  }
-
-  try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
-      action: "edit",
-      tag_id: tag.tagId,
-      description,
-      allow_canonical_rename: false,
-      client_time_utc: utcTimestamp()
-    });
-    setEditStatus(state, "success", registryText(state.config, "edit_saved", "Saved."));
-    setImportResult(state, "success", buildMutationSummary(response));
-    await loadRegistry(state);
-    renderControls(state);
-    renderList(state);
-    closeEditModal(state);
-  } catch (error) {
-    setEditStatus(state, "error", String(error.message || registryText(state.config, "edit_save_failed", "Save failed.")));
-  }
+  setEditStatus(state, "success", result.message);
+  setImportResult(state, "success", result.summary);
+  await loadRegistry(state);
+  renderControls(state);
+  renderList(state);
+  closeEditModal(state);
 }
 
 async function handleCreateTag(state) {
@@ -919,39 +875,28 @@ async function handleCreateTag(state) {
     description: validation.description
   };
 
-  if (state.saveMode === "post") {
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
-        mode: "add",
-        import_registry: {
-          tags: [newTagRow]
-        },
-        import_filename: "",
-        client_time_utc: utcTimestamp()
-      });
-      closeNewTagModal(state);
-      setImportResult(state, "success", buildImportSummary(response));
-      await loadRegistry(state);
-        renderControls(state);
-        renderList(state);
-        return;
-      } catch (error) {
-        state.saveMode = "patch";
-        renderImportMode(state);
-        setNewTagStatus(
-          state,
-          "error",
-          registryText(
-            state.config,
-            "server_create_failed",
-            "Server create failed; switched to patch mode. {message}",
-            { message: String(error.message || "").trim() }
-          ).trim()
-        );
-      }
+  const result = await submitCreateTag({
+    saveMode: state.saveMode,
+    newTagRow,
+    config: state.config,
+    importMode: "add"
+  });
+  if (result.ok && result.mode === "post") {
+    closeNewTagModal(state);
+    setImportResult(state, "success", result.summary);
+    await loadRegistry(state);
+    renderControls(state);
+    renderList(state);
+    return;
   }
 
-  const patchResult = buildManualPatchForCreateTag(newTagRow);
+  if (result.switchToPatch) {
+    state.saveMode = "patch";
+    renderImportMode(state);
+    setNewTagStatus(state, "error", result.message);
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForCreateTag(newTagRow);
   closeNewTagModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
@@ -1003,31 +948,21 @@ function closeDeleteModal(state) {
 
 async function handleDeleteFromModal(state) {
   if (!state.deleteTagId) return;
-  if (state.saveMode !== "post") {
-    setDeleteStatus(state, "error", registryText(state.config, "local_delete_required", "Local server is required for delete."));
+  const result = await submitDeleteTag({
+    saveMode: state.saveMode,
+    tag: findTagById(state, state.deleteTagId),
+    config: state.config
+  });
+  if (!result.ok) {
+    setDeleteStatus(state, "error", result.message);
     return;
   }
 
-  const tag = findTagById(state, state.deleteTagId);
-  if (!tag) {
-    setDeleteStatus(state, "error", registryText(state.config, "selected_tag_missing", "Selected tag is no longer available."));
-    return;
-  }
-
-  try {
-    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
-      action: "delete",
-      tag_id: tag.tagId,
-      client_time_utc: utcTimestamp()
-    });
-    closeDeleteModal(state);
-    setImportResult(state, "success", buildMutationSummary(response));
-    await loadRegistry(state);
-    renderControls(state);
-    renderList(state);
-  } catch (error) {
-    setDeleteStatus(state, "error", String(error.message || registryText(state.config, "delete_failed", "Delete failed.")));
-  }
+  closeDeleteModal(state);
+  setImportResult(state, "success", result.summary);
+  await loadRegistry(state);
+  renderControls(state);
+  renderList(state);
 }
 
 function openDemoteModal(state, tagId) {
@@ -1122,44 +1057,12 @@ function renderDemoteTagList(state) {
 }
 
 function getDemoteValidation(state) {
-  if (!state.demoteState) return { valid: false, tags: [], warning: "" };
-  const tags = Array.isArray(state.demoteState.tags) ? state.demoteState.tags.slice() : [];
-
-  let warning = "";
-  if (!tags.length) {
-    warning = registryText(state.config, "demote_select_target_warning", "Select at least one target tag.");
-  } else if (tags.length > MAX_ALIAS_TAGS) {
-    warning = registryText(state.config, "demote_max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS });
-  } else {
-    const seenGroups = new Set();
-    for (const tagId of tags) {
-      if (tagId === state.demoteState.tagId) {
-        warning = registryText(state.config, "demote_target_includes_self", "Target list must not include the demoted tag.");
-        break;
-      }
-      const info = findTagById(state, tagId);
-      if (!info) {
-        warning = registryText(state.config, "demote_unknown_tag_warning", "Unknown tag selected: {tag_id}", { tag_id: tagId });
-        break;
-      }
-      if (seenGroups.has(info.group)) {
-        warning = registryText(
-          state.config,
-          "demote_one_per_group_warning",
-          "Only one target tag per group is allowed ({group}).",
-          { group: info.group }
-        );
-        break;
-      }
-      seenGroups.add(info.group);
-    }
-  }
-
-  return {
-    valid: !warning,
-    tags,
-    warning
-  };
+  return getRegistryDemoteValidation({
+    demoteState: state.demoteState,
+    tags: state.tags,
+    maxAliasTags: MAX_ALIAS_TAGS,
+    text: (key, fallback, tokens) => registryText(state.config, key, fallback, tokens)
+  });
 }
 
 function updateDemoteUi(state) {
@@ -1178,24 +1081,12 @@ function updateDemoteUi(state) {
 }
 
 function getDemoteTagMatches(state, query) {
-  const normalizedQuery = normalize(query);
-  if (!normalizedQuery || !state.demoteState) {
-    return { matches: [], truncated: false };
-  }
-  const selected = new Set(state.demoteState.tags || []);
-  const allMatches = state.registryOptions.filter((item) => {
-    if (selected.has(item.tagId)) return false;
-    if (item.tagId === state.demoteState.tagId) return false;
-    const slug = item.tagId.split(":", 2)[1] || "";
-    return (
-      normalize(item.label).startsWith(normalizedQuery) ||
-      normalize(slug).startsWith(normalizedQuery)
-    );
+  return getRegistryDemoteTagMatches({
+    query,
+    demoteState: state.demoteState,
+    registryOptions: state.registryOptions,
+    cap: DEMOTE_TAG_MATCH_CAP
   });
-  return {
-    matches: allMatches.slice(0, DEMOTE_TAG_MATCH_CAP),
-    truncated: allMatches.length > DEMOTE_TAG_MATCH_CAP
-  };
 }
 
 function renderDemoteTagPopup(state) {
@@ -1289,25 +1180,21 @@ async function handleTagDemote(state) {
 
   const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
 
-  const payload = {
-    tag_id: tag.tagId,
-    alias_targets: aliasTargets,
-    client_time_utc: utcTimestamp()
-  };
-
   if (state.saveMode === "post") {
-    let preview = null;
-    try {
-      preview = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, payload);
-    } catch (error) {
-      const message = String(error.message || registryText(state.config, "demote_preview_failed", "Demotion preview failed."));
+    const preview = await previewTagDemote({
+      tagId: tag.tagId,
+      aliasTargets,
+      config: state.config
+    });
+    if (!preview.ok) {
+      const message = preview.message;
       setDemoteStatus(state, "error", message);
       setImportResult(state, "error", message);
       return;
     }
 
-    const previewSummary = String(preview.summary_text || "").trim() || `demote ${tag.tagId}`;
-    if (Number(preview.demoted_alias_overwritten || 0) > 0) {
+    const previewSummary = preview.summary;
+    if (Number(preview.response && preview.response.demoted_alias_overwritten || 0) > 0) {
       const message = registryText(
         state.config,
         "alias_exists_demote_error",
@@ -1335,24 +1222,29 @@ async function handleTagDemote(state) {
       clearImportResult(state);
       return;
     }
-
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, payload);
-      closeDemoteModal(state);
-      setImportResult(state, "success", String(response.summary_text || registryText(state.config, "demoted_success", "Demoted.")));
-      await loadRegistry(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      const message = String(error.message || registryText(state.config, "demotion_failed", "Demotion failed."));
-      setDemoteStatus(state, "error", message);
-      setImportResult(state, "error", message);
-      return;
-    }
   }
 
-  const patchResult = buildManualPatchForDemote(tag.tagId, aliasTargets);
+  const result = await submitTagDemote({
+    saveMode: state.saveMode,
+    tagId: tag.tagId,
+    aliasTargets,
+    config: state.config
+  });
+  if (!result.ok) {
+    setDemoteStatus(state, "error", result.message);
+    setImportResult(state, "error", result.message);
+    return;
+  }
+  if (result.mode === "post") {
+    closeDemoteModal(state);
+    setImportResult(state, "success", result.summary);
+    await loadRegistry(state);
+    renderControls(state);
+    renderList(state);
+    return;
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForDemote(tag.tagId, aliasTargets);
   closeDemoteModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
@@ -1372,36 +1264,29 @@ async function handleImport(state) {
     return;
   }
 
-  if (state.saveMode === "post") {
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
-        mode: state.importMode,
-        import_registry: importRegistry,
-        import_filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
-        client_time_utc: utcTimestamp()
-      });
-      setImportResult(state, "success", buildImportSummary(response));
-      await loadRegistry(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      state.saveMode = "patch";
-      renderImportMode(state);
-      setImportResult(
-        state,
-        "error",
-        registryText(
-          state.config,
-          "server_import_failed",
-          "Server import failed; switched to patch mode. {message}",
-          { message: String(error.message || "").trim() }
-        ).trim()
-      );
-    }
+  const result = await submitRegistryImport({
+    saveMode: state.saveMode,
+    importMode: state.importMode,
+    importRegistry,
+    filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
+    config: state.config,
+    state
+  });
+  if (result.ok && result.mode === "post") {
+    setImportResult(state, "success", result.summary);
+    await loadRegistry(state);
+    renderControls(state);
+    renderList(state);
+    return;
   }
 
-  const patchResult = buildManualPatchForNewTags(state, importRegistry);
+  if (result.switchToPatch) {
+    state.saveMode = "patch";
+    renderImportMode(state);
+    setImportResult(state, "error", result.message);
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForNewTags(state, importRegistry);
   setImportResult(state, patchResult.kind, patchResult.message);
   if (patchResult.snippet) {
     openPatchModal(state, patchResult.snippet);
@@ -1409,14 +1294,7 @@ async function handleImport(state) {
 }
 
 async function readImportRegistryFromFile(file) {
-  const rawText = await file.text();
-  let payload = null;
-  try {
-    payload = JSON.parse(rawText);
-  } catch (error) {
-    throw new Error(registryText(null, "import_invalid_json", "Import file is not valid JSON."));
-  }
-  return readImportRegistryPayload(payload, STUDIO_GROUPS);
+  return readRegistryImportFromFile(file, STUDIO_GROUPS);
 }
 
 function openPatchModal(state, snippet) {

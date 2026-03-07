@@ -75,6 +75,13 @@ export function countTagsByGroup(tags) {
   return counts;
 }
 
+export function findTagById(tags, tagId) {
+  const normalizedTagId = normalize(tagId);
+  return Array.isArray(tags)
+    ? tags.find((tag) => tag && tag.tagId === normalizedTagId) || null
+    : null;
+}
+
 export function getVisibleSortedTags(state) {
   const filtered = state.tags.filter((tag) => {
     const groupMatch = state.filterGroup === "all" ? true : tag.group === state.filterGroup;
@@ -129,4 +136,123 @@ export function labelFromTagId(tagId) {
 
 export function labelFromSlug(slug) {
   return normalize(slug);
+}
+
+export function getNewTagValidation(options) {
+  const {
+    newTagState,
+    slugInput,
+    descriptionInput,
+    tags,
+    tagSlugRe,
+    text,
+    studioGroups = STUDIO_GROUPS
+  } = options || {};
+
+  if (!newTagState) {
+    return { valid: false, warning: "", group: "", slug: "", description: "", tagId: "" };
+  }
+
+  const group = normalize(newTagState.group);
+  const slug = normalize(slugInput);
+  const description = String(descriptionInput || "").trim();
+  let warning = "";
+
+  if (!studioGroups.includes(group)) {
+    warning = text("select_group_warning", "Select a tag group.");
+  } else if (!slug) {
+    warning = text("tag_slug_required", "Tag slug is required.");
+  } else if (!(tagSlugRe instanceof RegExp) || !tagSlugRe.test(slug)) {
+    warning = text("tag_slug_invalid", "Tag slug must be lowercase letters, numbers, or hyphens.");
+  } else {
+    const tagId = `${group}:${slug}`;
+    const exists = Array.isArray(tags) && tags.some((tag) => tag && tag.tagId === tagId);
+    if (exists) warning = text("tag_exists_warning", "Tag already exists.");
+  }
+
+  return {
+    valid: !warning,
+    warning,
+    group,
+    slug,
+    description,
+    tagId: group && slug ? `${group}:${slug}` : ""
+  };
+}
+
+export function getDemoteValidation(options) {
+  const {
+    demoteState,
+    tags,
+    maxAliasTags,
+    text
+  } = options || {};
+
+  if (!demoteState) return { valid: false, tags: [], warning: "" };
+  const selectedTags = Array.isArray(demoteState.tags) ? demoteState.tags.slice() : [];
+
+  let warning = "";
+  if (!selectedTags.length) {
+    warning = text("demote_select_target_warning", "Select at least one target tag.");
+  } else if (selectedTags.length > maxAliasTags) {
+    warning = text("demote_max_tags_warning", "Select up to {max_tags} tags.", { max_tags: maxAliasTags });
+  } else {
+    const seenGroups = new Set();
+    for (const tagId of selectedTags) {
+      if (tagId === demoteState.tagId) {
+        warning = text("demote_target_includes_self", "Target list must not include the demoted tag.");
+        break;
+      }
+      const info = findTagById(tags, tagId);
+      if (!info) {
+        warning = text("demote_unknown_tag_warning", "Unknown tag selected: {tag_id}", { tag_id: tagId });
+        break;
+      }
+      if (seenGroups.has(info.group)) {
+        warning = text(
+          "demote_one_per_group_warning",
+          "Only one target tag per group is allowed ({group}).",
+          { group: info.group }
+        );
+        break;
+      }
+      seenGroups.add(info.group);
+    }
+  }
+
+  return {
+    valid: !warning,
+    tags: selectedTags,
+    warning
+  };
+}
+
+export function getDemoteTagMatches(options) {
+  const {
+    query,
+    demoteState,
+    registryOptions,
+    cap
+  } = options || {};
+
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery || !demoteState) {
+    return { matches: [], truncated: false };
+  }
+  const selected = new Set(demoteState.tags || []);
+  const allMatches = (Array.isArray(registryOptions) ? registryOptions : []).filter((item) => {
+    if (selected.has(item.tagId)) return false;
+    if (item.tagId === demoteState.tagId) return false;
+    const slug = item.tagId.split(":", 2)[1] || "";
+    return (
+      normalize(item.label).startsWith(normalizedQuery) ||
+      normalize(slug).startsWith(normalizedQuery)
+    );
+  });
+
+  const limit = Number.isFinite(cap) ? cap : allMatches.length;
+  return {
+    matches: allMatches.slice(0, limit),
+    truncated: allMatches.length > limit
+  };
 }
