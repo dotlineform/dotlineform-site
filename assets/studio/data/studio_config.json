@@ -150,7 +150,7 @@
       "delete_modal_title": "Delete Tag",
       "delete_impact_intro": "Deleting this tag also removes matching tag assignments and removes this tag from aliases. Aliases left with no targets are deleted.",
       "delete_confirm_button": "Delete",
-      "delete_close_button": "Close",
+      "delete_close_button": "Cancel",
       "tag_edit_aria_label": "Edit {tag_id}",
       "tag_demote_title": "Demote canonical tag to alias",
       "tag_demote_aria_label": "Demote {tag_id}",

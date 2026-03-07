@@ -315,7 +315,12 @@ function wireEvents(state) {
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
       const group = normalize(groupButton.getAttribute("data-group"));
-      state.filterGroup = group && group !== "all" ? group : "all";
+      const isAllGroups = !group || group === "all";
+      state.filterGroup = isAllGroups ? "all" : group;
+      if (isAllGroups) {
+        state.searchQuery = "";
+        state.refs.search.value = "";
+      }
       renderControls(state);
       renderList(state);
       return;

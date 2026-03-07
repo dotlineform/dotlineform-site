@@ -1,6 +1,6 @@
 {
   "tag_aliases_version": "tag_aliases_v1",
-  "updated_at_utc": "2026-03-03T12:51:44Z",
+  "updated_at_utc": "2026-03-07T21:51:16Z",
   "aliases": {
     "floral": {
       "description": "",
@@ -401,7 +401,7 @@
     "angry": {
       "description": "",
       "tags": [
-        "theme:anger"
+        "theme:tension"
       ]
     },
     "fearful": {
@@ -492,6 +492,12 @@
       "description": "",
       "tags": [
         "theme:play"
+      ]
+    },
+    "anger": {
+      "description": "",
+      "tags": [
+        "theme:tension"
       ]
     }
   }

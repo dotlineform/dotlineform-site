@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-03T18:01:11Z",
+  "updated_at_utc": "2026-03-07T19:11:05Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -2091,14 +2091,6 @@
       "updated_at_utc": "2026-03-03T17:43:04Z"
     },
     {
-      "tag_id": "theme:anger",
-      "group": "theme",
-      "label": "anger",
-      "status": "active",
-      "description": "Theme anger: an inferred emphasis that helps articulate patterns across a series—tension, drift, emergence, repair. Interpretive and revisable; distinct from purely formal descriptors.",
-      "updated_at_utc": "2026-03-03T17:43:04Z"
-    },
-    {
       "tag_id": "theme:fear",
       "group": "theme",
       "label": "fear",
@@ -2193,6 +2185,22 @@
       "status": "active",
       "description": "play as motif thread: a conceptual/experiential reading that recurs across works. Useful for writing and clustering; keep separate from domain framing and subject depiction to avoid category drift.",
       "updated_at_utc": "2026-03-03T17:43:04Z"
+    },
+    {
+      "tag_id": "domain:i-ching",
+      "group": "domain",
+      "label": "i-ching",
+      "status": "active",
+      "description": "links to the idea of form+grid → I-Ching",
+      "updated_at_utc": "2026-03-07T18:43:45Z"
+    },
+    {
+      "tag_id": "theme:slaughter",
+      "group": "theme",
+      "label": "slaughter",
+      "status": "active",
+      "description": "originating from 'nerve', may be also represented literally or have moral/ethical meaning.",
+      "updated_at_utc": "2026-03-07T19:08:20Z"
     }
   ]
 }
