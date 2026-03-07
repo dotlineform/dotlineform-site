@@ -11,6 +11,7 @@ This document is the central reference for series-level tags plus per-work overr
 - Shared Studio transport helpers: `assets/studio/js/studio-transport.js`
 - Layout/page wiring:
   - `studio/series-tag-editor/index.md`
+  - `assets/studio/js/series-tag-editor-page.js`
 - Registry browsing page:
   - `studio/tag-registry/index.md`
   - `assets/studio/js/tag-registry.js`
@@ -20,6 +21,9 @@ This document is the central reference for series-level tags plus per-work overr
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
+- Works curator page:
+  - `studio/studio-works/index.md`
+  - `assets/studio/js/studio-works.js`
 - Group descriptions reference page:
   - `studio/tag-groups/index.md`
   - `assets/studio/js/tag-groups.js`
