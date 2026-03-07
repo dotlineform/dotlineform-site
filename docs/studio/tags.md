@@ -4,7 +4,9 @@ This document is the central reference for series-level tags plus per-work overr
 
 ## Scope
 
-- UI/editor logic: `assets/studio/js/tag-studio.js`
+- UI/editor controller: `assets/studio/js/tag-studio.js`
+- Editor domain/state helpers: `assets/studio/js/tag-studio-domain.js`
+- Editor save helpers: `assets/studio/js/tag-studio-save.js`
 - Index status logic (RAG): `assets/studio/js/tag-studio-index.js`
 - Shared Studio config loader: `assets/studio/js/studio-config.js`
 - Shared Studio data helpers: `assets/studio/js/studio-data.js`
@@ -111,7 +113,28 @@ The config is intended to decouple Studio from current file placement and from s
 - health probing for local write availability
 - shared JSON POST transport
 
-These modules are now used by the smaller Studio pages plus the larger `tag-registry.js`, `tag-aliases.js`, and `tag-studio.js` controllers. They are intended to reduce repeated fetch/parse and local-write transport logic before larger controller splits in those feature modules.
+These modules are now used by the smaller Studio pages plus the larger `tag-registry.js`, `tag-aliases.js`, and `tag-studio.js` controller. They are intended to reduce repeated fetch/parse and local-write transport logic before larger controller splits in those feature modules.
+
+## Series Tag Editor Module Split
+
+The Series Tag Editor now separates responsibilities across three modules:
+
+- `assets/studio/js/tag-studio.js`
+  - page controller
+  - initial data load
+  - shell rendering and event wiring
+  - modal open/close and status rendering
+- `assets/studio/js/tag-studio-domain.js`
+  - tag and assignment normalization
+  - registry/assignment lookups
+  - work-state cloning and diff calculation
+  - group-aware sorting and display comparisons
+- `assets/studio/js/tag-studio-save.js`
+  - local write POST call for tag saves
+  - patch snippet generation
+  - save-mode and save-success message formatting
+
+This split is intended to keep DOM concerns in the controller while isolating pure business/state logic and save mechanics into smaller, reusable modules.
 
 ## Group Model
 

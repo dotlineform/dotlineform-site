@@ -11,13 +11,41 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  postJson,
-  probeStudioHealth,
-  STUDIO_WRITE_ENDPOINTS
+  probeStudioHealth
 } from "./studio-transport.js";
+import {
+  buildSeriesWorkOptions,
+  cloneWorkStateMap,
+  compareEntries,
+  compareTagDisplay,
+  configureTagStudioDomain,
+  createResolvedEntries,
+  getSeriesAssignment,
+  getSeriesIndexRow,
+  makeResolvedEntry,
+  nextWeight,
+  normalize,
+  normalizeAliasTargets,
+  normalizeAssignmentRows,
+  normalizeAssignmentTags,
+  normalizeManualWeight,
+  normalizeWorkId,
+  pushMapList,
+  sanitizeTag,
+  splitWorkInputTokens,
+  syncWorkEntriesFromPersistedState,
+  workStateMapToObject,
+  buildWorkStateDiff as buildDomainWorkStateDiff
+} from "./tag-studio-domain.js";
+import {
+  buildPatchSnippet,
+  buildSaveModeText as buildTagStudioSaveModeText,
+  buildSaveSuccessMessage as buildTagStudioSaveSuccessMessage,
+  postTags,
+  utcTimestamp
+} from "./tag-studio-save.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-let GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
 const POPUP_TAG_MATCH_CAP = 12;
 const POPUP_ALIAS_MATCH_CAP = 12;
 const POPUP_WORK_MATCH_CAP = 12;
@@ -36,7 +64,11 @@ async function initTagStudio() {
 
   const config = await loadStudioConfig();
   STUDIO_GROUPS = getStudioGroups(config);
-  GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
+  configureTagStudioDomain({
+    groups: STUDIO_GROUPS,
+    weightValues: WEIGHT_VALUES,
+    defaultWeight: DEFAULT_WEIGHT
+  });
 
   const seriesId = String(mount.dataset.seriesId || "").trim();
   if (!seriesId) {
@@ -177,96 +209,8 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
   };
 }
 
-function sanitizeTag(rawTag) {
-  if (!rawTag || typeof rawTag !== "object") return null;
-
-  const tagId = normalize(rawTag.tag_id);
-  const group = normalize(rawTag.group);
-  const label = String(rawTag.label || "").trim();
-  const status = normalize(rawTag.status || "active");
-
-  if (!tagId || !group || !label) return null;
-  if (!GROUP_INDEX.has(group)) return null;
-
-  const splitIndex = tagId.indexOf(":");
-  const slug = splitIndex >= 0 ? tagId.slice(splitIndex + 1) : tagId;
-
-  return {
-    tag_id: tagId,
-    group,
-    label,
-    status,
-    slug
-  };
-}
-
-function pushMapList(map, key, value) {
-  if (!key) return;
-  if (!map.has(key)) map.set(key, []);
-  map.get(key).push(value);
-}
-
-function getSeriesIndexRow(seriesMap, seriesId) {
-  if (seriesMap[seriesId]) return seriesMap[seriesId];
-
-  const normalizedSeriesId = normalize(seriesId);
-  for (const [key, value] of Object.entries(seriesMap)) {
-    if (normalize(key) === normalizedSeriesId) return value;
-  }
-  return null;
-}
-
-function getSeriesAssignment(seriesAssignments, seriesId) {
-  if (seriesAssignments[seriesId]) return seriesAssignments[seriesId];
-
-  const lowerSeriesId = normalize(seriesId);
-  for (const [key, value] of Object.entries(seriesAssignments)) {
-    if (normalize(key) === lowerSeriesId) return value;
-  }
-  return null;
-}
-
-function buildSeriesWorkOptions(seriesId, seriesRow, worksIndexMap) {
-  const works = Array.isArray(seriesRow && seriesRow.works) ? seriesRow.works : [];
-  const out = [];
-  const seen = new Set();
-
-  for (const rawWorkId of works) {
-    const workId = normalizeWorkId(rawWorkId);
-    if (!workId || seen.has(workId)) continue;
-    seen.add(workId);
-    const workMeta = getWorkIndexRow(worksIndexMap, workId);
-    const title = String(workMeta && workMeta.title || "").trim();
-    const shortWorkId = String(Number(workId));
-    out.push({
-      workId,
-      shortWorkId,
-      title,
-      seriesId,
-      titleKey: normalize(title)
-    });
-  }
-
-  return out;
-}
-
-function getWorkIndexRow(worksMap, workId) {
-  if (worksMap[workId]) return worksMap[workId];
-  for (const [key, value] of Object.entries(worksMap)) {
-    if (normalizeWorkId(key) === workId) return value;
-  }
-  return null;
-}
-
-function createResolvedEntries(rows, tagsById, nextEntryId = 1) {
-  const entries = [];
-  let cursor = nextEntryId;
-  for (const row of rows) {
-    const tag = tagsById.get(row.tagId);
-    if (!tag) continue;
-    entries.push(makeResolvedEntry(cursor++, row.tagId, tag, row.wManual));
-  }
-  return { entries, nextEntryId: cursor };
+function buildStateDiff(state) {
+  return buildDomainWorkStateDiff(state, getOrderedSelectedWorkIds(state), getSeriesTagIdSet(state));
 }
 
 function renderShell(state) {
@@ -274,7 +218,7 @@ function renderShell(state) {
   const tagInputPlaceholder = studioText(state.config, "tag_input_placeholder", "tag slug or alias");
   const addButtonLabel = studioText(state.config, "add_button", "Add");
   const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
-  const saveModeLabel = buildSaveModeText(state, "patch");
+  const saveModeLabel = buildTagStudioSaveModeText(state.config, "patch", studioText);
   const modalTitle = studioText(state.config, "modal_title", "Work Tag Patch Preview");
   const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved work override tags");
   const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
@@ -818,18 +762,6 @@ function removeSelectedWorkEntry(state, entryId) {
   }
 }
 
-function makeResolvedEntry(entryId, rawInput, tag, wManual) {
-  const manual = normalizeManualWeight(wManual, DEFAULT_WEIGHT);
-  return {
-    entryId,
-    rawInput: String(rawInput || "").trim(),
-    canonicalId: normalize(tag.tag_id),
-    group: normalize(tag.group),
-    label: String(tag.label || tag.tag_id).trim(),
-    wManual: manual
-  };
-}
-
 function renderAll(state) {
   renderSelectedWork(state);
   renderContextHint(state);
@@ -1171,7 +1103,7 @@ function renderSaveState(state) {
 
 function renderSaveMode(state) {
   if (!state.refs.saveMode) return;
-  state.refs.saveMode.textContent = buildSaveModeText(state, state.saveMode);
+  state.refs.saveMode.textContent = buildTagStudioSaveModeText(state.config, state.saveMode, studioText);
 }
 
 function computeMetrics(state) {
@@ -1185,7 +1117,7 @@ async function probeSaveMode(state) {
 }
 
 async function handleSave(state) {
-  const diff = buildWorkStateDiff(state);
+  const diff = buildStateDiff(state);
   if (!diff.changedWorkIds.length) {
     setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
@@ -1198,13 +1130,13 @@ async function handleSave(state) {
       for (const workId of diff.changedWorkIds) {
         const nextTags = diff.nextWorkStateById.get(workId) || [];
         const keepWork = diff.nextWorkStateById.has(workId);
-        results.push(await postTags(state.seriesId, workId, nextTags, keepWork));
+        results.push(await postTags(state.seriesId, workId, nextTags, keepWork, utcTimestamp));
       }
       const lastResult = results[results.length - 1] || {};
       const savedAt = String(lastResult.updated_at_utc || utcTimestamp());
       const removedCount = results.filter((result) => result && result.deleted).length;
       const savedCount = diff.changedWorkIds.length - removedCount;
-      setStatus(state, "success", buildSaveSuccessMessage(state, savedCount, removedCount, savedAt));
+      setStatus(state, "success", buildTagStudioSaveSuccessMessage(state.config, savedCount, removedCount, savedAt, studioText));
       setSaveResult(state, "", "");
       renderStatus(state);
       state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
@@ -1225,28 +1157,8 @@ async function handleSave(state) {
   openSaveModal(state);
 }
 
-async function postTags(seriesId, workId, tags, keepWork) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 3000);
-  try {
-    return await postJson(
-      STUDIO_WRITE_ENDPOINTS.saveTags,
-      {
-        series_id: seriesId,
-        work_id: workId,
-        tags,
-        keep_work: Boolean(keepWork),
-        client_time_utc: utcTimestamp()
-      },
-      { signal: controller.signal }
-    );
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 function openSaveModal(state) {
-  const diff = buildWorkStateDiff(state);
+  const diff = buildStateDiff(state);
   if (!diff.changedWorkIds.length) {
     setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
@@ -1268,175 +1180,6 @@ function openSaveModal(state) {
 
 function closeModal(state) {
   state.refs.modal.hidden = true;
-}
-
-function getCanonicalTagAssignments(state) {
-  const inheritedTagIds = getSeriesTagIdSet(state);
-  const seen = new Set();
-  const tags = [];
-
-  for (const entry of getSelectedWorkEntries(state)) {
-    if (!entry || !entry.canonicalId) continue;
-    if (inheritedTagIds.has(entry.canonicalId) || seen.has(entry.canonicalId)) continue;
-    seen.add(entry.canonicalId);
-    tags.push({
-      tag_id: entry.canonicalId,
-      w_manual: entry.wManual
-    });
-  }
-
-  tags.sort(compareAssignmentRows);
-  return tags;
-}
-
-function getCanonicalTagAssignmentsForWork(state, workId) {
-  const entries = state.workEntriesById.get(workId) || [];
-  const inheritedTagIds = getSeriesTagIdSet(state);
-  const seen = new Set();
-  const tags = [];
-
-  for (const entry of entries) {
-    if (!entry || !entry.canonicalId) continue;
-    if (inheritedTagIds.has(entry.canonicalId) || seen.has(entry.canonicalId)) continue;
-    seen.add(entry.canonicalId);
-    tags.push({
-      tag_id: entry.canonicalId,
-      w_manual: entry.wManual
-    });
-  }
-
-  return normalizeAssignmentRows(tags);
-}
-
-function buildCurrentPersistWorkState(state) {
-  const out = new Map();
-  const selectedWorkIds = getOrderedSelectedWorkIds(state);
-  if (!selectedWorkIds.length) return out;
-
-  if (state.selectedWorkId) {
-    const activeAssignments = getCanonicalTagAssignmentsForWork(state, state.selectedWorkId);
-    for (const workId of selectedWorkIds) {
-      out.set(workId, activeAssignments.map((row) => ({ ...row })));
-    }
-    return out;
-  }
-
-  for (const workId of selectedWorkIds) {
-    out.set(workId, getCanonicalTagAssignmentsForWork(state, workId));
-  }
-  return out;
-}
-
-function buildWorkStateDiff(state) {
-  const nextWorkStateById = buildCurrentPersistWorkState(state);
-  const baseline = state.baselineWorkStateById instanceof Map ? state.baselineWorkStateById : new Map();
-  const keys = new Set([...baseline.keys(), ...nextWorkStateById.keys()]);
-  const changedWorkIds = [];
-
-  for (const workId of Array.from(keys).sort()) {
-    const prevRows = baseline.has(workId) ? baseline.get(workId) : null;
-    const nextRows = nextWorkStateById.has(workId) ? nextWorkStateById.get(workId) : null;
-    if (!equalAssignmentRows(prevRows, nextRows)) {
-      changedWorkIds.push(workId);
-    }
-  }
-
-  return { changedWorkIds, nextWorkStateById };
-}
-
-function cloneWorkStateMap(map) {
-  const out = new Map();
-  if (!(map instanceof Map)) return out;
-  for (const [workId, rows] of map.entries()) {
-    out.set(workId, normalizeAssignmentRows(rows));
-  }
-  return out;
-}
-
-function syncWorkEntriesFromPersistedState(state, workStateById) {
-  const nextSelectedWorkIds = [];
-  const nextWorkEntriesById = new Map();
-  let nextId = 1;
-
-  for (const option of state.seriesWorkOptions) {
-    if (!(workStateById instanceof Map) || !workStateById.has(option.workId)) continue;
-    const rows = workStateById.get(option.workId) || [];
-    const resolved = createResolvedEntries(rows, state.tagsById, nextId);
-    nextSelectedWorkIds.push(option.workId);
-    nextWorkEntriesById.set(option.workId, resolved.entries);
-    nextId = resolved.nextEntryId;
-  }
-
-  state.selectedWorkIds = nextSelectedWorkIds;
-  state.workEntriesById = nextWorkEntriesById;
-  if (state.selectedWorkId && !nextWorkEntriesById.has(state.selectedWorkId)) {
-    state.selectedWorkId = "";
-  }
-}
-
-function workStateMapToObject(map) {
-  const out = {};
-  if (!(map instanceof Map)) return out;
-  for (const [workId, rows] of map.entries()) {
-    out[workId] = normalizeAssignmentRows(rows);
-  }
-  return out;
-}
-
-function normalizeAssignmentRows(rows) {
-  const list = Array.isArray(rows) ? rows : [];
-  const seen = new Set();
-  const out = [];
-  for (const raw of list) {
-    if (!raw || typeof raw !== "object") continue;
-    const tagId = normalize(raw.tag_id || raw.tagId);
-    if (!tagId || seen.has(tagId)) continue;
-    seen.add(tagId);
-    out.push({
-      tag_id: tagId,
-      w_manual: normalizeManualWeight(raw.w_manual ?? raw.wManual, DEFAULT_WEIGHT)
-    });
-  }
-  out.sort(compareAssignmentRows);
-  return out;
-}
-
-function equalAssignmentRows(left, right) {
-  const a = normalizeAssignmentRows(left);
-  const b = normalizeAssignmentRows(right);
-  if (a.length !== b.length) return false;
-  for (let index = 0; index < a.length; index += 1) {
-    if (a[index].tag_id !== b[index].tag_id) return false;
-    if (a[index].w_manual !== b[index].w_manual) return false;
-  }
-  return true;
-}
-
-function buildPatchSnippet(seriesId, diff, timestamp) {
-  if (!diff || !diff.changedWorkIds.length) return "";
-  const setBlocks = diff.changedWorkIds
-    .filter((workId) => diff.nextWorkStateById.has(workId))
-    .map((workId) => {
-      const tagsText = JSON.stringify(diff.nextWorkStateById.get(workId) || [], null, 2).replace(/\n/g, "\n      ");
-      return [
-        `${JSON.stringify(workId)}: {`,
-        `  "tags": ${tagsText},`,
-        `  "updated_at_utc": ${JSON.stringify(timestamp)}`,
-        "}"
-      ].join("\n");
-    });
-  const deleteWorkIds = diff.changedWorkIds.filter((workId) => !diff.nextWorkStateById.has(workId));
-  return [
-    setBlocks.length ? `Under series[${JSON.stringify(seriesId)}].works, set:\n${setBlocks.join("\n")}` : "",
-    deleteWorkIds.length ? `Under series[${JSON.stringify(seriesId)}].works, delete: ${deleteWorkIds.map((workId) => JSON.stringify(workId)).join(", ")}` : "",
-    "If the works object becomes empty, delete the works object too.",
-    `Update series[${JSON.stringify(seriesId)}].updated_at_utc to ${JSON.stringify(timestamp)}.`,
-    `Update the top-level updated_at_utc to ${JSON.stringify(timestamp)}.`
-  ].filter(Boolean).join("\n\n");
-}
-
-function utcTimestamp() {
-  return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
 }
 
 function setStatus(state, kind, text) {
@@ -1479,7 +1222,7 @@ function getOrderedSelectedWorkIds(state) {
 }
 
 function hasPendingSaveChanges(state) {
-  return buildWorkStateDiff(state).changedWorkIds.length > 0;
+  return buildStateDiff(state).changedWorkIds.length > 0;
 }
 
 function broadcastSelectedWorkChange(state) {
@@ -1494,132 +1237,11 @@ function broadcastSelectedWorkChange(state) {
   }));
 }
 
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
-}
-
-function normalizeWorkId(value) {
-  const text = String(value || "").trim();
-  if (!/^\d{1,5}$/.test(text)) return "";
-  return text.padStart(5, "0");
-}
-
-function splitWorkInputTokens(value) {
-  return String(value || "")
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function normalizeAliasTargets(value) {
-  const rawTargets = (value && typeof value === "object" && !Array.isArray(value))
-    ? value.tags
-    : value;
-
-  if (Array.isArray(rawTargets)) {
-    const out = [];
-    const seen = new Set();
-    for (const item of rawTargets) {
-      const normalized = normalize(item);
-      if (!normalized || seen.has(normalized)) continue;
-      seen.add(normalized);
-      out.push(normalized);
-    }
-    return out;
-  }
-
-  const single = normalize(rawTargets);
-  return single ? [single] : [];
-}
-
-function normalizeAssignmentTags(rawTags) {
-  if (!Array.isArray(rawTags)) return [];
-  const out = [];
-  const seen = new Set();
-  for (const raw of rawTags) {
-    if (typeof raw === "string") {
-      const tagId = normalize(raw);
-      if (!tagId || seen.has(tagId)) continue;
-      seen.add(tagId);
-      out.push({
-        tagId,
-        wManual: DEFAULT_WEIGHT
-      });
-      continue;
-    }
-    if (!raw || typeof raw !== "object") continue;
-    const tagId = normalize(raw.tag_id);
-    if (!tagId || seen.has(tagId)) continue;
-    seen.add(tagId);
-    out.push({
-      tagId,
-      wManual: normalizeManualWeight(raw.w_manual, DEFAULT_WEIGHT)
-    });
-  }
-  return out;
-}
-
-function normalizeManualWeight(raw, fallback) {
-  const value = typeof raw === "number" ? raw : Number(raw);
-  if (!Number.isFinite(value)) return fallback;
-  let closest = WEIGHT_VALUES[0];
-  let diff = Math.abs(value - closest);
-  for (const candidate of WEIGHT_VALUES) {
-    const currentDiff = Math.abs(value - candidate);
-    if (currentDiff < diff) {
-      closest = candidate;
-      diff = currentDiff;
-    }
-  }
-  return closest;
-}
-
-function nextWeight(value) {
-  const normalized = normalizeManualWeight(value, DEFAULT_WEIGHT);
-  const index = WEIGHT_VALUES.indexOf(normalized);
-  if (index < 0) return DEFAULT_WEIGHT;
-  return WEIGHT_VALUES[(index + 1) % WEIGHT_VALUES.length];
-}
-
 function weightDotClass(weight) {
   const normalized = normalizeManualWeight(weight, DEFAULT_WEIGHT);
   if (normalized === 0.3) return "tagStudio__weightDot--low";
   if (normalized === 0.9) return "tagStudio__weightDot--high";
   return "tagStudio__weightDot--mid";
-}
-
-function groupFromTagId(tagId) {
-  const normalized = normalize(tagId);
-  const splitIndex = normalized.indexOf(":");
-  return splitIndex >= 0 ? normalized.slice(0, splitIndex) : normalized;
-}
-
-function slugFromTagId(tagId) {
-  const normalized = normalize(tagId);
-  const splitIndex = normalized.indexOf(":");
-  return splitIndex >= 0 ? normalized.slice(splitIndex + 1) : normalized;
-}
-
-function compareEntries(a, b) {
-  if (b.wManual !== a.wManual) return b.wManual - a.wManual;
-  return slugFromTagId(a.canonicalId).localeCompare(slugFromTagId(b.canonicalId), undefined, { sensitivity: "base" });
-}
-
-function compareTagDisplay(a, b) {
-  const aIndex = GROUP_INDEX.has(a.group) ? GROUP_INDEX.get(a.group) : Number.MAX_SAFE_INTEGER;
-  const bIndex = GROUP_INDEX.has(b.group) ? GROUP_INDEX.get(b.group) : Number.MAX_SAFE_INTEGER;
-  if (aIndex !== bIndex) return aIndex - bIndex;
-  return a.tagId.localeCompare(b.tagId);
-}
-
-function compareAssignmentRows(a, b) {
-  const ga = groupFromTagId(a.tag_id);
-  const gb = groupFromTagId(b.tag_id);
-  const ia = GROUP_INDEX.has(ga) ? GROUP_INDEX.get(ga) : Number.MAX_SAFE_INTEGER;
-  const ib = GROUP_INDEX.has(gb) ? GROUP_INDEX.get(gb) : Number.MAX_SAFE_INTEGER;
-  if (ia !== ib) return ia - ib;
-  if (b.w_manual !== a.w_manual) return b.w_manual - a.w_manual;
-  return slugFromTagId(a.tag_id).localeCompare(slugFromTagId(b.tag_id), undefined, { sensitivity: "base" });
 }
 
 function escapeHtml(value) {
@@ -1669,41 +1291,4 @@ function buildWorkSelectionSummary(state, added, unknown, invalid) {
 
 function studioText(config, key, fallback, tokens) {
   return getStudioText(config, `series_tag_editor.${key}`, fallback, tokens);
-}
-
-function buildSaveModeText(state, mode) {
-  const label = mode === "post"
-    ? studioText(state.config, "save_mode_local_server", "Local server")
-    : studioText(state.config, "save_mode_patch", "Patch");
-  return studioText(state.config, "save_mode_template", "Save mode: {mode}", { mode: label });
-}
-
-function buildSaveSuccessMessage(state, savedCount, removedCount, savedAt) {
-  const base = studioText(
-    state.config,
-    "save_status_success_base",
-    "Saved {saved_count} work row{saved_plural}",
-    {
-      saved_count: savedCount,
-      saved_plural: savedCount === 1 ? "" : "s"
-    }
-  );
-  const removed = removedCount > 0
-    ? studioText(
-        state.config,
-        "save_status_success_removed_suffix",
-        "; removed {removed_count} row{removed_plural}",
-        {
-          removed_count: removedCount,
-          removed_plural: removedCount === 1 ? "" : "s"
-        }
-      )
-    : "";
-  const at = studioText(
-    state.config,
-    "save_status_success_at_suffix",
-    " at {saved_at}.",
-    { saved_at: savedAt }
-  );
-  return `${base}${removed}${at}`;
 }
