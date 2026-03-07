@@ -1,5 +1,7 @@
 function ensureHost(options = {}) {
-  const root = options.root || document.body;
+  const root = options.root
+    || document.querySelector(".tagStudioPage, .tagRegistryPage, .tagAliasesPage, .seriesTagsPage")
+    || document.body;
   let host = root.querySelector('[data-studio-modal-host="true"]');
   if (host) return host;
 

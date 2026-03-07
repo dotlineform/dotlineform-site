@@ -703,6 +703,7 @@ async function handleAliasDelete(state, alias) {
   if (!aliasKey) return;
 
   const modalResult = await openConfirmModal({
+    root: state.mount,
     title: aliasesText(state.config, "delete_modal_title", "Delete Alias"),
     body: aliasesText(state.config, "delete_confirm_template", "Delete alias \"{alias_key}\"?", { alias_key: aliasKey }),
     primaryLabel: aliasesText(state.config, "delete_confirm_button", "Delete"),
@@ -1013,6 +1014,7 @@ async function handleAliasPromote(state, alias) {
   let selectedGroup = "";
   const suggestedGroup = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
   const groupResult = await openFormModal({
+    root: state.mount,
     title: aliasesText(state.config, "promotion_modal_title", "Promote Alias"),
     body: aliasesText(state.config, "promotion_group_prompt", "Promote alias: choose group (subject/domain/form/theme)"),
     primaryLabel: aliasesText(state.config, "promotion_next_button", "Next"),
@@ -1062,6 +1064,7 @@ async function handleAliasPromote(state, alias) {
     }
     const previewSummary = preview.summary;
     const confirmResult = await openConfirmDetailModal({
+      root: state.mount,
       title: aliasesText(state.config, "promotion_confirm_title", "Confirm Alias Promotion"),
       body: aliasesText(
         state.config,
@@ -1115,6 +1118,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
 
   let aliasTargets = [];
   const inputResult = await openFormModal({
+    root: state.mount,
     title: aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias"),
     body: [
       aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: canonicalTagId }),
@@ -1167,6 +1171,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
     const previewSummary = preview.summary;
     const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
     const confirmResult = await openConfirmDetailModal({
+      root: state.mount,
       title: aliasesText(state.config, "demotion_confirm_title", "Confirm Tag Demotion"),
       body: aliasesText(
         state.config,

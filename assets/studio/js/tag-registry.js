@@ -43,6 +43,9 @@ import {
   submitTagDemote,
   submitTagEdit
 } from "./tag-registry-service.js";
+import {
+  openConfirmDetailModal
+} from "./studio-modal.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
@@ -1236,20 +1239,24 @@ async function handleTagDemote(state) {
       setImportResult(state, "error", message);
       return;
     }
-    const ok = window.confirm(
-      registryText(
+    const confirmResult = await openConfirmDetailModal({
+      root: state.mount,
+      title: registryText(state.config, "demote_confirm_title", "Confirm Tag Demotion"),
+      body: registryText(
         state.config,
         "demote_confirm_template",
-        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}\n\nImpact:\n{preview_summary}",
+        "Demote \"{tag_id}\" to alias \"{alias_key}\"?\n\nTargets: {targets}",
         {
           tag_id: tag.tagId,
           alias_key: aliasKey,
-          targets: aliasTargets.join(", "),
-          preview_summary: previewSummary
+          targets: aliasTargets.join(", ")
         }
-      )
-    );
-    if (!ok) {
+      ),
+      impact: previewSummary,
+      primaryLabel: registryText(state.config, "demote_confirm_button", "Demote"),
+      cancelLabel: registryText(state.config, "demote_cancel_button", "Cancel")
+    });
+    if (!confirmResult.confirmed) {
       clearImportResult(state);
       return;
     }

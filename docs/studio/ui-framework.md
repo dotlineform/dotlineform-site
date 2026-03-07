@@ -260,7 +260,7 @@ This keeps modal rendering in the UI layer while keeping business rules in the e
 - `confirm`
   Phase 2: used for aliases delete confirmation
 - `confirm-detail`
-  Phase 2: used for aliases promote/demote preview confirmation
+  Phase 3: used for aliases promote/demote preview confirmation and registry demote confirmation
 - `form`
   Phase 2: used for aliases promote group selection and demote target entry
 - `patch-preview`
@@ -278,7 +278,7 @@ Later phases should replace native `confirm(...)` and `prompt(...)` calls with t
   - alias promote uses `form` then `confirm-detail`
   - alias-side tag demote uses `form` then `confirm-detail`
 - Phase 3
-  Planned: replace registry demote native confirm with Studio `confirm-detail`.
+  Replaced registry demote native confirm with Studio `confirm-detail`, using page-root host placement.
 - Phase 4
   Planned: normalize existing custom modal implementations onto the shared controller contract.
 - Phase 5
@@ -296,6 +296,18 @@ Current interaction boundary:
 4. `tag-aliases-service.js` performs the actual mutation.
 
 This phase intentionally keeps aliases business rules in the page/service layer rather than moving them into the modal controller.
+
+### Registry Integration Notes
+
+Registry demote now uses the shared modal controller for the final confirmation step only.
+
+Current interaction boundary:
+
+1. `tag-registry.js` keeps the existing target-tag selection workflow and preview generation.
+2. `studio-modal.js` renders the final `confirm-detail` shell inside the registry page root.
+3. `tag-registry.js` handles the returned confirm/cancel result and then calls the mutation service.
+
+This phase intentionally leaves registry demote validation and mutation logic outside the modal controller.
 
 ## What Stays Page-Specific
 
