@@ -2,13 +2,22 @@ import {
   buildStudioRagTooltip,
   computeStudioRag,
   computeStudioTagMetrics,
-  getSiteDataPath,
-  getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  buildStudioGroupDescriptionMap,
+  buildStudioRegistryLookup,
+  getSeriesAssignmentTagIds,
+  getStudioAssignmentsSeries,
+  loadSiteSeriesIndexJson,
+  loadStudioAssignmentsJson,
+  loadStudioGroupsJson,
+  loadStudioRegistryJson,
+  normalizeStudioValue as normalize
+} from "./studio-data.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
@@ -35,14 +44,12 @@ async function initSeriesTagsPage() {
 
   try {
     const [assignmentsJson, registryJson] = await Promise.all([
-      fetchJson(getStudioDataPath(config, "tag_assignments")),
-      fetchJson(getStudioDataPath(config, "tag_registry"))
+      loadStudioAssignmentsJson(config),
+      loadStudioRegistryJson(config)
     ]);
 
-    const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object"
-      ? assignmentsJson.series
-      : {};
-    const registry = buildRegistryLookup(registryJson);
+    const assignmentsSeries = getStudioAssignmentsSeries(assignmentsJson);
+    const registry = buildStudioRegistryLookup(registryJson, STUDIO_GROUPS, { requireLabel: true });
     const state = {
       mount,
       config,
@@ -53,8 +60,8 @@ async function initSeriesTagsPage() {
       filterGroup: "all"
     };
     try {
-      const groupsJson = await fetchJson(getStudioDataPath(config, "tag_groups"));
-      state.groupDescriptions = buildGroupDescriptionMap(groupsJson);
+      const groupsJson = await loadStudioGroupsJson(config);
+      state.groupDescriptions = buildStudioGroupDescriptionMap(groupsJson, STUDIO_GROUPS);
     } catch (error) {
       state.groupDescriptions = new Map();
     }
@@ -101,8 +108,7 @@ function parseSeriesDataFromInline(config) {
 }
 
 async function fetchSeriesDataFromIndex(config) {
-  const seriesIndexUrl = getSiteDataPath(config, "series_index");
-  const payload = await fetchJson(seriesIndexUrl);
+  const payload = await loadSiteSeriesIndexJson(config);
   const seriesMap = payload && typeof payload.series === "object" && payload.series !== null
     ? payload.series
     : {};
@@ -128,45 +134,9 @@ function buildSeriesEditorUrl(config, seriesId) {
   return `${base}?series=${encodeURIComponent(sid)}`;
 }
 
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-function buildRegistryLookup(registryJson) {
-  const lookup = new Map();
-  const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
-  for (const raw of tags) {
-    if (!raw || typeof raw !== "object") continue;
-    const tagId = normalize(raw.tag_id);
-    const group = normalize(raw.group);
-    const label = String(raw.label || "").trim();
-    const status = normalize(raw.status || "active");
-    if (!tagId || !label) continue;
-    lookup.set(tagId, { group, label, status });
-  }
-  return lookup;
-}
-
-function buildGroupDescriptionMap(groupsJson) {
-  const out = new Map();
-  const groups = Array.isArray(groupsJson && groupsJson.groups) ? groupsJson.groups : [];
-  for (const raw of groups) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    const description = String(raw.description || "").trim();
-    if (!STUDIO_GROUPS.includes(groupId) || !description) continue;
-    out.set(groupId, description);
-  }
-  return out;
-}
-
 function renderTable(state) {
   const rowsHtml = state.seriesData.map((series) => {
-    const assigned = getSeriesTags(state.assignmentsSeries, series.seriesId);
+    const assigned = getSeriesAssignmentTagIds(state.assignmentsSeries, series.seriesId, { exactMatchOnly: true });
     const metrics = computeStudioTagMetrics(assigned, state.registry, state.config);
     const rag = computeStudioRag(metrics, state.config);
     const tooltip = buildStudioRagTooltip(metrics);
@@ -262,26 +232,6 @@ function renderGroupInfoControl(state) {
   `;
 }
 
-function getSeriesTags(assignmentsSeries, seriesId) {
-  const row = assignmentsSeries && assignmentsSeries[seriesId];
-  if (!row || !Array.isArray(row.tags)) return [];
-  const out = [];
-  const seen = new Set();
-  for (const value of row.tags) {
-    let tagId = "";
-    if (typeof value === "string") {
-      tagId = String(value || "").trim();
-    } else if (value && typeof value === "object") {
-      tagId = String(value.tag_id || "").trim();
-    }
-    tagId = normalize(tagId);
-    if (!tagId || seen.has(tagId)) continue;
-    seen.add(tagId);
-    out.push(tagId);
-  }
-  return out;
-}
-
 function toTagDisplay(rawTagId, registry) {
   const tagId = normalize(rawTagId);
   const known = registry.get(tagId);
@@ -315,10 +265,6 @@ function groupFromTagId(tagId) {
   const idx = tagId.indexOf(":");
   if (idx < 0) return "";
   return tagId.slice(0, idx);
-}
-
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
 }
 
 function escapeHtml(value) {

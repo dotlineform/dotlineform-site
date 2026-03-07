@@ -1,9 +1,12 @@
 import {
-  getStudioDataPath,
   getStudioGroups,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  loadStudioGroupsJson,
+  normalizeStudioGroups
+} from "./studio-data.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 
@@ -20,36 +23,12 @@ async function initTagGroupsPage() {
   try {
     const config = await loadStudioConfig();
     STUDIO_GROUPS = getStudioGroups(config);
-    const data = await fetchJson(getStudioDataPath(config, "tag_groups"));
-    const groups = normalizeGroups(data);
+    const data = await loadStudioGroupsJson(config);
+    const groups = normalizeStudioGroups(data, STUDIO_GROUPS);
     renderGroups(mount, groups, config);
   } catch (error) {
     mount.innerHTML = `<div class="tagStudioError">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
   }
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
-}
-
-function normalizeGroups(data) {
-  const rows = Array.isArray(data && data.groups) ? data.groups : [];
-  const byId = new Map();
-  for (const raw of rows) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    if (!STUDIO_GROUPS.includes(groupId)) continue;
-    byId.set(groupId, {
-      groupId,
-      description: String(raw.description || "").trim(),
-      descriptionLong: String(raw.description_long || "").trim()
-    });
-  }
-  return STUDIO_GROUPS.map((groupId) => byId.get(groupId)).filter(Boolean);
 }
 
 function renderGroups(mount, groups, config) {
@@ -73,10 +52,6 @@ function renderGroups(mount, groups, config) {
       </div>
     </div>
   `;
-}
-
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
 }
 
 function escapeHtml(value) {

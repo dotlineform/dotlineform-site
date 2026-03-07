@@ -7,6 +7,8 @@ This document is the central reference for series-level tags plus per-work overr
 - UI/editor logic: `assets/studio/js/tag-studio.js`
 - Index status logic (RAG): `assets/studio/js/tag-studio-index.js`
 - Shared Studio config loader: `assets/studio/js/studio-config.js`
+- Shared Studio data helpers: `assets/studio/js/studio-data.js`
+- Shared Studio transport helpers: `assets/studio/js/studio-transport.js`
 - Layout/page wiring:
   - `studio/series-tag-editor/index.md`
 - Registry browsing page:
@@ -89,6 +91,23 @@ The config is intended to decouple Studio from current file placement and from s
 - `key` is a dot-path under `ui_text`, for example `series_tag_editor.context_hint_default`
 - `fallback` is used when the config key is missing
 - `tokens` optionally replaces placeholders like `{mode}` or `{saved_count}`
+
+## Shared Data and Transport Modules
+
+`assets/studio/js/studio-data.js` centralizes the low-level Studio JSON access and common data-shaping helpers used across Studio pages. Current shared responsibilities include:
+
+- fetching Studio/site JSON payloads from config-derived paths
+- registry lookup building
+- group description normalization
+- assignments-series access and series tag extraction
+
+`assets/studio/js/studio-transport.js` centralizes local write-service concerns. Current shared responsibilities include:
+
+- local endpoint definitions
+- health probing for local write availability
+- shared JSON POST transport
+
+These modules are intended to reduce repeated fetch/parse logic before larger controller splits in the Studio feature modules.
 
 ## Group Model
 
