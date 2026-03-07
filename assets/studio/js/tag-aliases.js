@@ -136,36 +136,36 @@ function renderShell(state) {
   const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
-      <div class="tagRegistry__importBox">
-        <div class="tagRegistry__importRow">
-          <label class="tagRegistry__fileWrap">
-            <span class="tagRegistry__importLabel">${escapeHtml(importFileLabel)}</span>
+      <div class="tagStudioToolbar">
+        <div class="tagStudioToolbar__row">
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label">${escapeHtml(importFileLabel)}</span>
             <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
-          <label class="tagRegistry__modeWrap">
-            <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
-            <select class="tagRegistry__modeSelect" data-role="import-mode">
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label">${escapeHtml(importModeFieldLabel)}</span>
+            <select class="tagStudioToolbar__select" data-role="import-mode">
               <option value="add">${escapeHtml(importModeOptionAdd)}</option>
               <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
               <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
             </select>
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
-          <span class="tagRegistry__saveMode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
+          <span class="tagStudioToolbar__mode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
           <button type="button" class="tagStudio__button tagStudio__button--primary tagAliases__newAliasBtn" data-role="open-new-alias">${escapeHtml(newAliasButtonLabel)}</button>
         </div>
-        <p class="tagRegistry__selected" data-role="selected-file"></p>
-        <p class="tagRegistry__result" data-role="import-result"></p>
+        <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
+        <p class="tagStudioToolbar__result" data-role="import-result"></p>
       </div>
 
-      <div class="tagAliases__controls">
-        <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
-        <label class="tagRegistry__searchWrap">
+      <div class="tagStudioFilters">
+        <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
+        <label class="tagStudioFilters__searchWrap">
           <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
           <input
             type="text"
-            class="tagStudio__input tagRegistry__searchInput"
+            class="tagStudio__input tagStudioFilters__searchInput"
             data-role="search"
             placeholder="${escapeHtml(searchPlaceholder)}"
             autocomplete="off"
@@ -191,29 +191,29 @@ function renderShell(state) {
 
     <div class="tagStudioModal" data-role="edit-modal" hidden>
       <div class="tagStudioModal__backdrop"></div>
-      <div class="tagStudioModal__dialog tagAliasesEdit__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
-        <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">${escapeHtml(editModalTitle)}</h3>
-        <div class="tagRegistryEdit__fields">
-          <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">${escapeHtml(editAliasLabel)}</span>
+        <div class="tagStudioModal__dialog tagAliasesEdit__dialog" role="dialog" aria-modal="true" aria-labelledby="tagAliasesEditTitle">
+          <h3 id="tagAliasesEditTitle" data-role="edit-modal-title">${escapeHtml(editModalTitle)}</h3>
+        <div class="tagStudioForm__fields">
+          <label class="tagStudioForm__field">
+            <span class="tagStudioForm__label">${escapeHtml(editAliasLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
           </label>
-          <p class="tagAliasesEdit__warning" data-role="edit-alias-warning"></p>
-          <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">${escapeHtml(editDescriptionLabel)}</span>
+          <p class="tagStudioForm__warning" data-role="edit-alias-warning"></p>
+          <label class="tagStudioForm__field">
+            <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
             <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
           </label>
-          <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
-            <span class="tagRegistryEdit__label">${escapeHtml(editSearchLabel)}</span>
+          <label class="tagStudioForm__field tagStudioForm__searchWrap">
+            <span class="tagStudioForm__label">${escapeHtml(editSearchLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
             <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
               <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
             </div>
           </label>
         </div>
-        <div class="tagStudio__key tagAliasesEdit__key" data-role="edit-group-key"></div>
-        <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="edit-tag-list"></div>
-        <p class="tagRegistryEdit__status" data-role="edit-status"></p>
+        <div class="tagStudio__key tagStudioForm__key" data-role="edit-group-key"></div>
+        <div class="tagStudio__chipList tagStudioForm__selected" data-role="edit-tag-list"></div>
+        <p class="tagStudioForm__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit-alias" disabled>${escapeHtml(editSaveButton)}</button>
           <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCancelButton)}</button>
@@ -501,7 +501,7 @@ function renderControls(state) {
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
+        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
         data-group="${escapeHtml(group)}"
         ${titleAttr}
       >
@@ -511,7 +511,7 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
+    <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
     ${renderGroupInfoControl(state, "aliases")}
   `;
@@ -861,7 +861,7 @@ function getAliasEditValidation(state) {
 
 function setAliasEditStatus(state, kind, message) {
   state.refs.editStatus.textContent = message || "";
-  state.refs.editStatus.className = "tagRegistryEdit__status";
+  state.refs.editStatus.className = "tagStudioForm__status";
   if (kind) state.refs.editStatus.classList.add(`is-${kind}`);
 }
 
@@ -1178,7 +1178,7 @@ function closePatchModal(state) {
 
 function setImportResult(state, kind, message) {
   state.refs.importResult.textContent = message || "";
-  state.refs.importResult.className = "tagRegistry__result";
+  state.refs.importResult.className = "tagStudioToolbar__result";
   if (kind) state.refs.importResult.classList.add(`is-${kind}`);
 }
 

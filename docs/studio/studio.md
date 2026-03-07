@@ -2,6 +2,11 @@
 
 This document is the central reference for series-level tags plus per-work override editing in the Series Tag Editor page (`/studio/series-tag-editor/?series=:series_id`).
 
+Related references:
+
+- `docs/studio/ui-framework.md` for shared Studio UI primitives and naming rules
+- `docs/studio/regression-checklist.md` for manual verification coverage
+
 ## Local Development
 
 Use the repo-local runner from `dotlineform-site/`:

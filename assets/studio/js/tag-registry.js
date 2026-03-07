@@ -153,36 +153,36 @@ function renderShell(state) {
   const deleteCloseButton = registryText(state.config, "delete_close_button", "Close");
   state.mount.innerHTML = `
     <section class="tagStudio__panel">
-      <div class="tagRegistry__importBox">
-        <div class="tagRegistry__importRow">
-          <label class="tagRegistry__fileWrap">
-            <span class="tagRegistry__importLabel">${escapeHtml(importFileLabel)}</span>
+      <div class="tagStudioToolbar">
+        <div class="tagStudioToolbar__row">
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label">${escapeHtml(importFileLabel)}</span>
             <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
             <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
           </label>
-          <label class="tagRegistry__modeWrap">
-            <span class="tagRegistry__importLabel">${escapeHtml(importModeFieldLabel)}</span>
-            <select class="tagRegistry__modeSelect" data-role="import-mode">
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label">${escapeHtml(importModeFieldLabel)}</span>
+            <select class="tagStudioToolbar__select" data-role="import-mode">
               <option value="add">${escapeHtml(importModeOptionAdd)}</option>
               <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
               <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
             </select>
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
-          <span class="tagRegistry__saveMode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
+          <span class="tagStudioToolbar__mode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
           <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__newTagBtn" data-role="open-new-tag">${escapeHtml(newTagButtonLabel)}</button>
         </div>
-        <p class="tagRegistry__selected" data-role="selected-file"></p>
-        <p class="tagRegistry__result" data-role="import-result"></p>
+        <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
+        <p class="tagStudioToolbar__result" data-role="import-result"></p>
       </div>
 
-      <div class="tagRegistry__controls">
-        <div class="tagStudio__key tagRegistry__key" data-role="key"></div>
-        <label class="tagRegistry__searchWrap">
+      <div class="tagStudioFilters">
+        <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
+        <label class="tagStudioFilters__searchWrap">
           <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
           <input
             type="text"
-            class="tagStudio__input tagRegistry__searchInput"
+            class="tagStudio__input tagStudioFilters__searchInput"
             data-role="search"
             placeholder="${escapeHtml(searchPlaceholder)}"
             autocomplete="off"
@@ -209,17 +209,17 @@ function renderShell(state) {
       <div class="tagStudioModal__backdrop"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryEditTitle">
         <h3 id="tagRegistryEditTitle">${escapeHtml(editModalTitle)}</h3>
-        <p class="tagRegistryEdit__meta" data-role="edit-tag-id"></p>
-        <div class="tagRegistryEdit__fields">
-          <label class="tagRegistryEdit__field">
-            <input type="text" class="tagStudio__input tagRegistryEdit__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
+        <p class="tagStudioForm__meta" data-role="edit-tag-id"></p>
+        <div class="tagStudioForm__fields">
+          <label class="tagStudioForm__field">
+            <input type="text" class="tagStudio__input tagStudioForm__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
           </label>
-          <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">${escapeHtml(editDescriptionLabel)}</span>
-            <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
+          <label class="tagStudioForm__field">
+            <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
+            <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
           </label>
         </div>
-        <p class="tagRegistryEdit__status" data-role="edit-status"></p>
+        <p class="tagStudioForm__status" data-role="edit-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save-edit">${escapeHtml(editSaveButton)}</button>
           <button type="button" class="tagStudio__button" data-role="close-edit-modal">${escapeHtml(editCloseButton)}</button>
@@ -232,18 +232,18 @@ function renderShell(state) {
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryNewTitle">
         <h3 id="tagRegistryNewTitle">${escapeHtml(newModalTitle)}</h3>
         <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
-        <div class="tagRegistryEdit__fields">
-          <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">${escapeHtml(newSlugLabel)}</span>
+        <div class="tagStudioForm__fields">
+          <label class="tagStudioForm__field">
+            <span class="tagStudioForm__label">${escapeHtml(newSlugLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
           </label>
-          <p class="tagAliasesEdit__warning" data-role="new-tag-warning"></p>
-          <label class="tagRegistryEdit__field">
-            <span class="tagRegistryEdit__label">${escapeHtml(newDescriptionLabel)}</span>
-            <textarea class="tagStudio__input tagRegistryEdit__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
+          <p class="tagStudioForm__warning" data-role="new-tag-warning"></p>
+          <label class="tagStudioForm__field">
+            <span class="tagStudioForm__label">${escapeHtml(newDescriptionLabel)}</span>
+            <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
           </label>
         </div>
-        <p class="tagRegistryEdit__status" data-role="new-tag-status"></p>
+        <p class="tagStudioForm__status" data-role="new-tag-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="create-tag" disabled>${escapeHtml(newCreateButton)}</button>
           <button type="button" class="tagStudio__button" data-role="close-new-modal">${escapeHtml(newCancelButton)}</button>
@@ -255,19 +255,19 @@ function renderShell(state) {
       <div class="tagStudioModal__backdrop" data-role="close-demote-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDemoteTitle">
         <h3 id="tagRegistryDemoteTitle">${escapeHtml(demoteModalTitle)}</h3>
-        <p class="tagRegistryEdit__meta" data-role="demote-tag-meta"></p>
-        <div class="tagRegistryEdit__fields">
-          <label class="tagRegistryEdit__field tagAliasesEdit__searchWrap">
-            <span class="tagRegistryEdit__label">${escapeHtml(demoteSearchLabel)}</span>
+        <p class="tagStudioForm__meta" data-role="demote-tag-meta"></p>
+        <div class="tagStudioForm__fields">
+          <label class="tagStudioForm__field tagStudioForm__searchWrap">
+            <span class="tagStudioForm__label">${escapeHtml(demoteSearchLabel)}</span>
             <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
             <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
               <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
             </div>
           </label>
         </div>
-        <div class="tagStudio__key tagAliasesEdit__key" data-role="demote-group-key"></div>
-        <div class="tagStudio__chipList tagAliasesEdit__selectedTags" data-role="demote-tag-list"></div>
-        <p class="tagRegistryEdit__status" data-role="demote-status"></p>
+        <div class="tagStudio__key tagStudioForm__key" data-role="demote-group-key"></div>
+        <div class="tagStudio__chipList tagStudioForm__selected" data-role="demote-tag-list"></div>
+        <p class="tagStudioForm__status" data-role="demote-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-demote" disabled>${escapeHtml(demoteConfirmButton)}</button>
           <button type="button" class="tagStudio__button" data-role="close-demote-modal">${escapeHtml(demoteCloseButton)}</button>
@@ -279,12 +279,12 @@ function renderShell(state) {
       <div class="tagStudioModal__backdrop" data-role="close-delete-modal"></div>
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="tagRegistryDeleteTitle">
         <h3 id="tagRegistryDeleteTitle">${escapeHtml(deleteModalTitle)}</h3>
-        <p class="tagRegistryEdit__meta" data-role="delete-tag-meta"></p>
-        <p class="tagRegistryEdit__impact">
+        <p class="tagStudioForm__meta" data-role="delete-tag-meta"></p>
+        <p class="tagStudioForm__impact">
           ${escapeHtml(deleteImpactIntro)}
         </p>
-        <p class="tagRegistryEdit__impact" data-role="delete-impact"></p>
-        <p class="tagRegistryEdit__status" data-role="delete-status"></p>
+        <p class="tagStudioForm__impact" data-role="delete-impact"></p>
+        <p class="tagStudioForm__status" data-role="delete-status"></p>
         <div class="tagStudioModal__actions">
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="confirm-delete-tag">${escapeHtml(deleteConfirmButton)}</button>
           <button type="button" class="tagStudio__button" data-role="close-delete-modal">${escapeHtml(deleteCloseButton)}</button>
@@ -585,7 +585,7 @@ function renderControls(state) {
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
+        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
         data-group="${escapeHtml(group)}"
         ${titleAttr}
       >
@@ -595,7 +595,7 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
+    <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
     ${renderGroupInfoControl(state, "registry")}
   `;
@@ -711,7 +711,7 @@ function openEditModal(state, tagId) {
   `;
   state.refs.editTagName.value = slug;
   state.refs.editDescription.value = String(tag.description || "");
-  state.refs.editStatus.className = "tagRegistryEdit__status";
+  state.refs.editStatus.className = "tagStudioForm__status";
   state.refs.editStatus.textContent = state.saveMode === "post"
     ? ""
     : registryText(state.config, "local_edit_required", "Local server is required for edit.");
@@ -755,7 +755,7 @@ function closeNewTagModal(state) {
 
 function setNewTagStatus(state, kind, message) {
   state.refs.newTagStatus.textContent = message || "";
-  state.refs.newTagStatus.className = "tagRegistryEdit__status";
+  state.refs.newTagStatus.className = "tagStudioForm__status";
   if (kind) state.refs.newTagStatus.classList.add(`is-${kind}`);
 }
 
@@ -812,13 +812,13 @@ function updateNewTagUi(state) {
 
 function setEditStatus(state, kind, message) {
   state.refs.editStatus.textContent = message || "";
-  state.refs.editStatus.className = "tagRegistryEdit__status";
+  state.refs.editStatus.className = "tagStudioForm__status";
   if (kind) state.refs.editStatus.classList.add(`is-${kind}`);
 }
 
 function setImpactPreview(target, kind, message) {
   target.textContent = message || "";
-  target.className = "tagRegistryEdit__impact";
+  target.className = "tagStudioForm__impact";
   if (kind) target.classList.add(`is-${kind}`);
 }
 
@@ -932,7 +932,7 @@ async function handleCreateTag(state) {
 
 function setDeleteStatus(state, kind, message) {
   state.refs.deleteStatus.textContent = message || "";
-  state.refs.deleteStatus.className = "tagRegistryEdit__status";
+  state.refs.deleteStatus.className = "tagStudioForm__status";
   if (kind) state.refs.deleteStatus.classList.add(`is-${kind}`);
 }
 
@@ -948,7 +948,7 @@ function openDeleteModal(state, tagId) {
   state.deletePreviewSeq += 1;
   state.refs.deleteTagMeta.textContent = `tag: ${tag.tagId}`;
   state.refs.deleteImpact.textContent = "";
-  state.refs.deleteImpact.className = "tagRegistryEdit__impact";
+  state.refs.deleteImpact.className = "tagStudioForm__impact";
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
   state.refs.deleteModal.hidden = false;
@@ -969,7 +969,7 @@ function closeDeleteModal(state) {
   state.deletePreviewSeq += 1;
   state.refs.deleteTagMeta.textContent = "";
   state.refs.deleteImpact.textContent = "";
-  state.refs.deleteImpact.className = "tagRegistryEdit__impact";
+  state.refs.deleteImpact.className = "tagStudioForm__impact";
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = false;
 }
@@ -1044,7 +1044,7 @@ function closeDemoteModal(state) {
 
 function setDemoteStatus(state, kind, message) {
   state.refs.demoteStatus.textContent = message || "";
-  state.refs.demoteStatus.className = "tagRegistryEdit__status";
+  state.refs.demoteStatus.className = "tagStudioForm__status";
   if (kind) state.refs.demoteStatus.classList.add(`is-${kind}`);
 }
 
@@ -1344,7 +1344,7 @@ function closePatchModal(state) {
 
 function setImportResult(state, kind, message) {
   state.refs.importResult.textContent = message || "";
-  state.refs.importResult.className = "tagRegistry__result";
+  state.refs.importResult.className = "tagStudioToolbar__result";
   if (kind) state.refs.importResult.classList.add(`is-${kind}`);
 }
 
