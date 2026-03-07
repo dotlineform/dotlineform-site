@@ -17,9 +17,14 @@ This document is the central reference for series-level tags plus per-work overr
 - Registry browsing page:
   - `studio/tag-registry/index.md`
   - `assets/studio/js/tag-registry.js`
+  - `assets/studio/js/tag-registry-domain.js`
+  - `assets/studio/js/tag-registry-save.js`
+  - `assets/studio/js/tag-registry-service.js`
 - Alias browsing page:
   - `studio/tag-aliases/index.md`
   - `assets/studio/js/tag-aliases.js`
+  - `assets/studio/js/tag-aliases-domain.js`
+  - `assets/studio/js/tag-aliases-save.js`
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
@@ -135,6 +140,43 @@ The Series Tag Editor now separates responsibilities across three modules:
   - save-mode and save-success message formatting
 
 This split is intended to keep DOM concerns in the controller while isolating pure business/state logic and save mechanics into smaller, reusable modules.
+
+## Registry Module Split
+
+The Tag Registry page now separates responsibilities across:
+
+- `assets/studio/js/tag-registry.js`
+  - page controller
+  - modal state
+  - render and event wiring
+- `assets/studio/js/tag-registry-domain.js`
+  - registry normalization
+  - filter/sort helpers
+  - validation/query helpers
+- `assets/studio/js/tag-registry-save.js`
+  - patch builders
+  - import payload parsing
+  - summary/message helpers
+- `assets/studio/js/tag-registry-service.js`
+  - async mutation and preview workflows
+
+## Alias Module Split
+
+The Tag Aliases page now separates responsibilities across:
+
+- `assets/studio/js/tag-aliases.js`
+  - page controller
+  - modal state
+  - render and event wiring
+- `assets/studio/js/tag-aliases-domain.js`
+  - alias normalization
+  - registry/group lookup shaping
+  - filter/sort helpers
+  - alias/tag validation helpers
+- `assets/studio/js/tag-aliases-save.js`
+  - patch builders
+  - alias import parsing
+  - import-mode and summary helpers
 
 ## Group Model
 

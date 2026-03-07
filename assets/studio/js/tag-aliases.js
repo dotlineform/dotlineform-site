@@ -14,6 +14,32 @@ import {
   probeStudioHealth,
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
+import {
+  buildGroupDescriptionMap,
+  buildRegistryLookup,
+  buildRegistryOptions,
+  configureTagAliasesDomain,
+  countAliasesByGroup,
+  findAliasEntry as findNormalizedAliasEntry,
+  getVisibleAliases,
+  normalize,
+  normalizeAliases,
+  normalizeTimestamp,
+  parseTagIdCsv,
+  sameStringArray
+} from "./tag-aliases-domain.js";
+import {
+  buildAliasesImportModeText,
+  buildImportSummary,
+  buildManualPatchForAliasCreate,
+  buildManualPatchForAliasDelete,
+  buildManualPatchForAliasEdit,
+  buildManualPatchForAliasPromote,
+  buildManualPatchForDemote,
+  buildManualPatchForNewAliases,
+  readImportAliasesFromFile,
+  utcTimestamp
+} from "./tag-aliases-save.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
@@ -34,6 +60,10 @@ async function initTagAliasesPage() {
 
   const config = await loadStudioConfig();
   STUDIO_GROUPS = getStudioGroups(config);
+  configureTagAliasesDomain({
+    groups: STUDIO_GROUPS,
+    maxAliasTags: MAX_ALIAS_TAGS
+  });
   GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
 
   const state = {
@@ -396,155 +426,12 @@ async function loadData(state) {
   state.registryOptions = buildRegistryOptions(state.registryById);
   state.groupDescriptions = buildGroupDescriptionMap(groupsData);
   state.aliasesUpdatedAt = normalizeTimestamp(aliasesData && aliasesData.updated_at_utc);
-  state.aliases = normalizeAliases(aliasesData, state.aliasesUpdatedAt, state.registryById);
-}
-
-function buildRegistryLookup(data) {
-  const map = new Map();
-  const tags = Array.isArray(data && data.tags) ? data.tags : [];
-  for (const raw of tags) {
-    if (!raw || typeof raw !== "object") continue;
-    const tagId = normalize(raw.tag_id);
-    const group = normalize(raw.group);
-    const label = normalize(raw.label);
-    if (!tagId || !STUDIO_GROUPS.includes(group) || !label) continue;
-    map.set(tagId, { group, label });
-  }
-  return map;
-}
-
-function buildGroupDescriptionMap(data) {
-  const out = new Map();
-  const groups = Array.isArray(data && data.groups) ? data.groups : [];
-  for (const raw of groups) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    const description = String(raw.description || "").trim();
-    if (!STUDIO_GROUPS.includes(groupId) || !description) continue;
-    out.set(groupId, description);
-  }
-  return out;
-}
-
-function normalizeAliases(data, fallbackUpdatedAt, registryById) {
-  const aliasesObj = data && typeof data.aliases === "object" && data.aliases ? data.aliases : {};
-  const entries = [];
-
-  for (const [rawAlias, rawValue] of Object.entries(aliasesObj)) {
-    const alias = normalize(rawAlias);
-    if (!alias) continue;
-    let normalizedValue = null;
-    try {
-      normalizedValue = normalizeAliasValue(rawValue);
-    } catch (error) {
-      continue;
-    }
-
-    const targets = normalizedValue.targets;
-    const resolvedTargets = targets.map((tagId) => {
-      const info = registryById.get(tagId);
-      return {
-        tagId,
-        group: info ? info.group : "",
-        label: info ? info.label : tagId,
-        known: Boolean(info)
-      };
-    });
-    const groups = Array.from(new Set(resolvedTargets.filter((item) => item.known).map((item) => item.group)));
-    const hasUnknown = resolvedTargets.some((item) => !item.known);
-    const updatedAtUtc = fallbackUpdatedAt;
-
-    entries.push({
-      alias,
-      value: normalizedValue.value,
-      description: normalizedValue.description,
-      targets,
-      resolvedTargets,
-      groups,
-      hasUnknown,
-      updatedAtUtc,
-      updatedAtMs: toTimestampMs(updatedAtUtc)
-    });
-  }
-  return entries;
-}
-
-function normalizeAliasValue(rawValue) {
-  if (rawValue && typeof rawValue === "object" && !Array.isArray(rawValue)) {
-    const description = String(rawValue.description || "").trim();
-    const tags = normalizeAliasTagsArray(rawValue.tags);
-    return {
-      description,
-      value: { description, tags },
-      targets: tags.slice()
-    };
-  }
-
-  if (typeof rawValue === "string") {
-    const value = normalize(rawValue);
-    if (!TAG_ID_RE.test(value)) {
-      throw new Error(aliasesText(null, "alias_value_invalid_tag_id", "Invalid alias tag_id value."));
-    }
-    return {
-      description: "",
-      value: { description: "", tags: [value] },
-      targets: [value]
-    };
-  }
-  const out = normalizeAliasTagsArray(rawValue);
-  return {
-    description: "",
-    value: { description: "", tags: out },
-    targets: out.slice()
-  };
-}
-
-function normalizeAliasTagsArray(rawValue) {
-  if (!Array.isArray(rawValue)) {
-    throw new Error(aliasesText(null, "alias_tags_array_required", "Alias tags must be an array."));
-  }
-  if (!rawValue.length) {
-    throw new Error(aliasesText(null, "alias_tags_required", "Alias tags must include at least one tag_id."));
-  }
-  if (rawValue.length > MAX_ALIAS_TAGS) {
-    throw new Error(aliasesText(null, "alias_tags_max", "Alias tags may include at most {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS }));
-  }
-
-  const out = [];
-  const seen = new Set();
-  const seenGroups = new Set();
-  for (const raw of rawValue) {
-    const value = normalize(raw);
-    if (!value || !TAG_ID_RE.test(value)) {
-      throw new Error(aliasesText(null, "alias_tag_array_invalid_value", "Invalid alias tag_id array value."));
-    }
-    if (seen.has(value)) continue;
-    const group = value.split(":", 1)[0];
-    if (seenGroups.has(group)) {
-      throw new Error(aliasesText(null, "alias_tags_one_per_group", "Alias tags may include only one tag per group: {group}", { group }));
-    }
-    seen.add(value);
-    seenGroups.add(group);
-    out.push(value);
-  }
-  if (!out.length) {
-    throw new Error(aliasesText(null, "alias_tags_required", "Alias tags must include at least one tag_id."));
-  }
-  return out;
-}
-
-function buildRegistryOptions(registryById) {
-  const out = [];
-  for (const [tagId, info] of registryById.entries()) {
-    if (!info || !STUDIO_GROUPS.includes(info.group)) continue;
-    out.push({
-      tagId,
-      group: info.group,
-      label: normalize(info.label) || tagId.split(":")[1] || tagId
-    });
-  }
-  out.sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
-  return out;
+  state.aliases = normalizeAliases(
+    aliasesData,
+    state.aliasesUpdatedAt,
+    state.registryById,
+    (key, fallback, tokens) => aliasesText(null, key, fallback, tokens)
+  );
 }
 
 function renderControls(state) {
@@ -573,18 +460,6 @@ function renderControls(state) {
     ${groupButtons}
     ${renderGroupInfoControl(state, "aliases")}
   `;
-}
-
-function countAliasesByGroup(aliases) {
-  const counts = { subject: 0, domain: 0, form: 0, theme: 0 };
-  for (const entry of aliases || []) {
-    for (const group of entry.groups || []) {
-      if (STUDIO_GROUPS.includes(group)) {
-        counts[group] += 1;
-      }
-    }
-  }
-  return counts;
 }
 
 function groupTitleAttr(state, group) {
@@ -699,23 +574,6 @@ function getAliasClass(entry) {
   }
   const group = entry.groups[0];
   return STUDIO_GROUPS.includes(group) ? `tagStudio__chip--${group}` : "tagStudio__chip--warning";
-}
-
-function getVisibleAliases(state) {
-  const filtered = state.aliases.filter((entry) => {
-    const searchMatch = !state.searchQuery || normalize(entry.alias).startsWith(state.searchQuery);
-    if (!searchMatch) return false;
-    if (state.filterGroup === "all") return true;
-    return Array.isArray(entry.groups) && entry.groups.includes(state.filterGroup);
-  });
-
-  const direction = state.sortDir === "desc" ? -1 : 1;
-  filtered.sort((a, b) => direction * compareAliases(a, b, state.sortKey));
-  return filtered;
-}
-
-function compareAliases(a, b, sortKey) {
-  return a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" });
 }
 
 function sortIndicator(state, key) {
@@ -838,8 +696,7 @@ async function handleAliasDelete(state, alias) {
 }
 
 function findAliasEntry(state, aliasKey) {
-  const normalized = normalize(aliasKey);
-  return state.aliases.find((entry) => normalize(entry.alias) === normalized) || null;
+  return findNormalizedAliasEntry(state.aliases, aliasKey);
 }
 
 function isCreateAliasFlow(state) {
@@ -1200,16 +1057,6 @@ async function saveAliasEdit(state) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function sameStringArray(a, b) {
-  const left = Array.isArray(a) ? a.map((item) => normalize(item)).slice().sort() : [];
-  const right = Array.isArray(b) ? b.map((item) => normalize(item)).slice().sort() : [];
-  if (left.length !== right.length) return false;
-  for (let idx = 0; idx < left.length; idx += 1) {
-    if (left[idx] !== right[idx]) return false;
-  }
-  return true;
-}
-
 function promptPromotionGroup(state, entry) {
   const suggested = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
   const raw = window.prompt(
@@ -1291,38 +1138,6 @@ async function handleAliasPromote(state, alias) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function parseTagIdCsv(input) {
-  const values = String(input || "")
-    .split(",")
-    .map((item) => normalize(item))
-    .filter((item) => Boolean(item));
-  const out = [];
-  const seen = new Set();
-  for (const value of values) {
-    if (!TAG_ID_RE.test(value)) {
-      throw new Error(aliasesText(null, "target_tag_invalid", "Invalid tag_id: {value}", { value }));
-    }
-    if (seen.has(value)) continue;
-    seen.add(value);
-    out.push(value);
-  }
-  if (!out.length) {
-    throw new Error(aliasesText(null, "target_tag_required", "At least one canonical target tag_id is required."));
-  }
-  if (out.length > MAX_ALIAS_TAGS) {
-    throw new Error(aliasesText(null, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS }));
-  }
-  const seenGroups = new Set();
-  for (const value of out) {
-    const group = value.split(":", 1)[0];
-    if (seenGroups.has(group)) {
-      throw new Error(aliasesText(null, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group }));
-    }
-    seenGroups.add(group);
-  }
-  return out;
-}
-
 function promptDemotionTargets(state, tagId) {
   const promptText = [
     aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: tagId }),
@@ -1341,7 +1156,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
 
   let aliasTargets = [];
   try {
-    aliasTargets = parseTagIdCsv(input);
+    aliasTargets = parseTagIdCsv(input, (key, fallback, tokens) => aliasesText(null, key, fallback, tokens));
   } catch (error) {
     setImportResult(state, "error", String(error.message || aliasesText(state.config, "invalid_target_tags", "Invalid target tags.")));
     return;
@@ -1404,282 +1219,6 @@ async function handleTagDemoteFromAliases(state, tagId) {
   openPatchModal(state, patchResult.snippet);
 }
 
-function buildManualPatchForNewAliases(state, importAliases) {
-  const importRows = normalizeImportAliasRows(importAliases.aliases || {});
-  const existing = new Set(state.aliases.map((entry) => entry.alias));
-  const aliasesToAdd = {};
-  let newCount = 0;
-
-  for (const row of importRows) {
-    if (existing.has(row.alias)) continue;
-    aliasesToAdd[row.alias] = row.value;
-    newCount += 1;
-  }
-
-  if (newCount === 0) {
-    return {
-      kind: "warn",
-      message: aliasesText(
-        state.config,
-        "patch_import_none_message",
-        "Patch mode ({import_mode}): {imported_count} imported; 0 new aliases to add.",
-        {
-          import_mode: state.importMode,
-          imported_count: importRows.length
-        }
-      ),
-      snippet: ""
-    };
-  }
-
-  const snippet = JSON.stringify(
-    aliasesToAdd,
-    null,
-    2
-  );
-
-  return {
-    kind: "warn",
-    message: aliasesText(
-      state.config,
-      "patch_import_message",
-      "Patch mode ({import_mode}): {imported_count} imported; {new_count} alias rows prepared for assets/studio/data/tag_aliases.json aliases object.",
-      {
-        import_mode: state.importMode,
-        imported_count: importRows.length,
-        new_count: newCount
-      }
-    ),
-    snippet
-  };
-}
-
-function buildImportSummary(response) {
-  const summaryText = String(response.summary_text || "").trim();
-  if (summaryText) return summaryText;
-  const mode = normalize(response.mode || "");
-  return [
-    `mode ${mode || "unknown"}`,
-    `Imported ${Number(response.imported_total || 0)} aliases`,
-    `added ${Number(response.added || 0)}`,
-    `overwritten ${Number(response.overwritten || 0)}`,
-    `unchanged ${Number(response.unchanged || 0)}`,
-    `removed ${Number(response.removed || 0)}`,
-    `final ${Number(response.final_total || 0)}`
-  ].join("; ");
-}
-
-function buildManualPatchForAliasPromote(state, aliasKey, group) {
-  const newTagId = `${group}:${aliasKey}`;
-  const canonicalExists = state.registryById.has(newTagId);
-  const sectionSnippet = {
-    tag_registry: {},
-    tag_aliases: {
-      remove_alias_keys: [aliasKey]
-    }
-  };
-
-  if (!canonicalExists) {
-    sectionSnippet.tag_registry = {
-      tags_append: [
-        {
-          tag_id: newTagId,
-          group,
-          label: aliasKey,
-          status: "active",
-          description: "",
-          updated_at_utc: utcTimestamp()
-        }
-      ]
-    };
-  }
-
-  const snippet = JSON.stringify(sectionSnippet, null, 2);
-
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_promote_message",
-      "Patch mode: section snippets prepared for promoting \"{alias_key}\".",
-      { alias_key: aliasKey }
-    ),
-    snippet
-  };
-}
-
-function buildManualPatchForAliasDelete(aliasKey) {
-  const snippet = JSON.stringify(
-    {
-      remove_alias_keys: [aliasKey]
-    },
-    null,
-    2
-  );
-
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_delete_message",
-      "Patch mode: remove this alias key from assets/studio/data/tag_aliases.json aliases object."
-    ),
-    snippet
-  };
-}
-
-function buildManualPatchForAliasCreate(aliasKey, description, tags) {
-  const normalizedAlias = normalize(aliasKey);
-  const fragment = {
-    [normalizedAlias]: {
-      description: String(description || "").trim(),
-      tags: Array.isArray(tags) ? tags.slice() : []
-    }
-  };
-  const snippet = JSON.stringify(fragment, null, 2);
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_create_message",
-      "Patch mode: alias fragment prepared for new alias \"{alias_key}\". Paste inside aliases object.",
-      { alias_key: normalizedAlias }
-    ),
-    snippet
-  };
-}
-
-function buildManualPatchForAliasEdit(aliasKey, newAliasKey, description, tags) {
-  const normalizedOld = normalize(aliasKey);
-  const normalizedNew = normalize(newAliasKey);
-  const fragment = {
-    [normalizedNew]: {
-      description: String(description || "").trim(),
-      tags: Array.isArray(tags) ? tags.slice() : []
-    }
-  };
-  const snippet = JSON.stringify(fragment, null, 2);
-  const renameNote = normalizedOld !== normalizedNew
-    ? aliasesText(
-        null,
-        "patch_edit_rename_note",
-        " Also remove old alias key \"{alias_key}\" from assets/studio/data/tag_aliases.json.",
-        { alias_key: normalizedOld }
-      )
-    : "";
-
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_edit_message",
-      "Patch mode: alias fragment prepared for \"{alias_key}\". Paste inside aliases object.{rename_note}",
-      {
-        alias_key: normalizedOld,
-        rename_note: renameNote
-      }
-    ),
-    snippet
-  };
-}
-
-function buildManualPatchForDemote(tagId, aliasTargets) {
-  const parts = String(tagId || "").split(":", 2);
-  const aliasKey = parts.length === 2 ? parts[1] : "";
-  const aliasValue = {
-    description: "",
-    tags: aliasTargets.slice()
-  };
-
-  const snippet = JSON.stringify(
-    {
-      tag_registry: {
-        remove_tag_ids: [tagId]
-      },
-      tag_aliases: {
-        set_aliases: {
-          [aliasKey]: aliasValue
-        },
-        replace_target_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      },
-      tag_assignments: {
-        replace_tag_refs: {
-          from: tagId,
-          to: aliasTargets
-        }
-      }
-    },
-    null,
-    2
-  );
-
-  return {
-    kind: "warn",
-    message: aliasesText(
-      null,
-      "patch_demote_message",
-      "Patch mode: section snippets prepared for demoting \"{tag_id}\".",
-      { tag_id: tagId }
-    ),
-    snippet
-  };
-}
-
-function normalizeImportAliasRows(rawAliases) {
-  if (!rawAliases || typeof rawAliases !== "object") return [];
-  const out = [];
-  const seen = new Set();
-  for (const [rawAlias, rawValue] of Object.entries(rawAliases)) {
-    const alias = normalize(rawAlias);
-    if (!alias) continue;
-    let normalized = null;
-    try {
-      normalized = normalizeAliasValue(rawValue);
-    } catch (error) {
-      continue;
-    }
-    if (seen.has(alias)) {
-      const idx = out.findIndex((item) => item.alias === alias);
-      if (idx >= 0) out[idx] = { alias, value: normalized.value, targets: normalized.targets };
-      continue;
-    }
-    seen.add(alias);
-    out.push({ alias, value: normalized.value, targets: normalized.targets });
-  }
-  return out;
-}
-
-async function readImportAliasesFromFile(file) {
-  const rawText = await file.text();
-  let payload = null;
-  try {
-    payload = JSON.parse(rawText);
-  } catch (error) {
-    throw new Error(aliasesText(null, "import_invalid_json", "Import file is not valid JSON."));
-  }
-
-  if (!payload || typeof payload !== "object") {
-    throw new Error(aliasesText(null, "import_invalid_object", "Import file must be a JSON object."));
-  }
-  const rows = normalizeImportAliasRows(payload.aliases);
-  if (!rows.length) {
-    throw new Error(aliasesText(null, "import_missing_aliases_object", "Import file must include aliases object with at least one alias."));
-  }
-
-  const aliasesObj = {};
-  for (const row of rows) {
-    aliasesObj[row.alias] = row.value;
-  }
-  return {
-    tag_aliases_version: String(payload.tag_aliases_version || "tag_aliases_v1"),
-    updated_at_utc: normalizeTimestamp(payload.updated_at_utc) || "",
-    aliases: aliasesObj
-  };
-}
-
 function openPatchModal(state, snippet) {
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;
@@ -1700,41 +1239,12 @@ function clearImportResult(state) {
   setImportResult(state, "", "");
 }
 
-function toTimestampMs(value) {
-  if (!value) return null;
-  const ms = Date.parse(value);
-  return Number.isFinite(ms) ? ms : null;
-}
-
 function aliasesText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_aliases.${key}`, fallback, tokens);
 }
 
-function buildAliasesImportModeText(state, mode) {
-  const label = mode === "post"
-    ? aliasesText(state.config, "import_mode_local_server", "Local server")
-    : aliasesText(state.config, "import_mode_patch", "Patch");
-  return aliasesText(state.config, "import_mode_template", "Import mode: {mode}", { mode: label });
-}
-
-function normalizeTimestamp(value) {
-  const raw = String(value || "").trim();
-  if (!raw) return "";
-  const ms = Date.parse(raw);
-  if (!Number.isFinite(ms)) return "";
-  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
-function utcTimestamp() {
-  return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
-}
-
 function renderError(state, message) {
   state.mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
-}
-
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
 }
 
 function escapeHtml(value) {
