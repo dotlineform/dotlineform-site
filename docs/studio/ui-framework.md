@@ -220,6 +220,67 @@ Choose the simplest modal type that fits the interaction:
 
 Do not introduce a new modal type unless one of the above cannot express the interaction without awkward conditional behavior or mixed responsibilities.
 
+## Modal Implementation
+
+### Shared Controller
+
+Studio modal behavior should be implemented through a shared controller module:
+
+- `assets/studio/js/studio-modal.js`
+
+The shared controller is responsible for:
+
+- mounting and unmounting modal DOM
+- rendering the modal shell for supported modal types
+- collecting generic user intent or field values
+- resolving confirm/cancel/submit results back to the caller
+
+The shared controller is not responsible for:
+
+- validation rules
+- preview computation
+- mutation logic
+- patch generation
+- save/delete/promote/demote behavior
+
+### Integration Pattern
+
+Each page/controller should follow this flow:
+
+1. Build the modal view model from current application state.
+2. Open the appropriate Studio modal type.
+3. Await the modal result.
+4. Pass the result into domain/service logic.
+5. Render the resulting success, warning, or error state back into the page.
+
+This keeps modal rendering in the UI layer while keeping business rules in the existing domain/service modules.
+
+### Supported Modal Types Implementation Status
+
+- `confirm`
+  Phase 1: controller scaffold only
+- `confirm-detail`
+  Phase 1: controller scaffold only
+- `form`
+  Phase 1: controller scaffold only
+- `patch-preview`
+  Phase 1: controller scaffold only
+
+Later phases should replace native `confirm(...)` and `prompt(...)` calls with these modal types rather than adding new one-off dialogs.
+
+### Migration Status
+
+- Phase 1
+  Added shared modal controller scaffold and documented modal contracts.
+- Phase 2
+  Planned: replace aliases native dialogs with Studio modal types.
+- Phase 3
+  Planned: replace registry demote native confirm with Studio `confirm-detail`.
+- Phase 4
+  Planned: normalize existing custom modal implementations onto the shared controller contract.
+- Phase 5
+  Planned: complete regression coverage and close out modal-system docs.
+
 ## What Stays Page-Specific
 
 These should remain page-specific unless another page genuinely needs the same structure:
