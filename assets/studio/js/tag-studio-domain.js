@@ -165,14 +165,6 @@ export function buildCurrentPersistWorkState(state, orderedSelectedWorkIds, inhe
   const out = new Map();
   if (!orderedSelectedWorkIds.length) return out;
 
-  if (state.selectedWorkId) {
-    const activeAssignments = getCanonicalTagAssignmentsForWork(state, state.selectedWorkId, inheritedTagIds);
-    for (const workId of orderedSelectedWorkIds) {
-      out.set(workId, activeAssignments.map((row) => ({ ...row })));
-    }
-    return out;
-  }
-
   for (const workId of orderedSelectedWorkIds) {
     out.set(workId, getCanonicalTagAssignmentsForWork(state, workId, inheritedTagIds));
   }
