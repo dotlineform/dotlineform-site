@@ -114,6 +114,7 @@ export function renderStudioModalFrame(options = {}) {
   const dialogClass = options.dialogClass ? ` ${escapeHtml(options.dialogClass)}` : "";
   const hiddenAttr = options.hidden === false ? "" : " hidden";
   const titleId = String(options.titleId || "studioModalTitle");
+  const titleRole = options.titleRole ? ` data-role="${escapeHtml(options.titleRole)}"` : "";
   const title = String(options.title || "");
   const bodyHtml = String(options.bodyHtml || "");
   const actionsHtml = options.actionsHtml || renderStudioModalActions(options.actions || []);
@@ -121,7 +122,7 @@ export function renderStudioModalFrame(options = {}) {
     <div class="tagStudioModal"${modalRole}${hiddenAttr}>
       <div class="tagStudioModal__backdrop"${backdropRole}></div>
       <div class="tagStudioModal__dialog${dialogClass}" role="dialog" aria-modal="true" aria-labelledby="${escapeHtml(titleId)}">
-        <h3 id="${escapeHtml(titleId)}">${escapeHtml(title)}</h3>
+        <h3 id="${escapeHtml(titleId)}"${titleRole}>${escapeHtml(title)}</h3>
         ${bodyHtml}
         ${actionsHtml}
       </div>

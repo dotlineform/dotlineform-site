@@ -28,6 +28,8 @@ Page: `studio/series-tag-editor/index.md`
 - [ ] Local-server save succeeds and status/result text is correct.
 - [ ] Patch fallback modal opens when local server is unavailable.
 - [ ] Patch modal JSON/snippet content looks correct.
+- [ ] Save/patch modal title, body spacing, and action row match the shared Studio modal shell.
+- [ ] Save/patch modal backdrop and dialog surface render correctly with no transparency issues.
 - [ ] No console errors during load or save flow.
 
 Notes:
@@ -52,6 +54,11 @@ Page: `assets/studio/js/tag-registry.js`
 - [ ] Demote modal opens and tag search works.
 - [ ] Demote confirm succeeds in local-server mode.
 - [ ] Import JSON succeeds in local-server mode.
+- [ ] New tag modal uses shared shell spacing, labels, and action row layout.
+- [ ] Edit tag modal uses shared shell spacing, labels, and action row layout.
+- [ ] Delete tag modal uses shared shell spacing, impact text placement, and action row layout.
+- [ ] Demote confirmation modal uses shared `confirm-detail` shell and renders inside the page styling context.
+- [ ] Patch preview modal uses shared shell spacing and action row layout.
 - [ ] Patch fallback works for create.
 - [ ] Patch fallback works for demote.
 - [ ] Patch fallback works for import.
@@ -76,9 +83,14 @@ Page: `assets/studio/js/tag-aliases.js`
 - [ ] Delete alias succeeds in local-server mode.
 - [ ] Promote alias preview appears correctly.
 - [ ] Promote alias confirm succeeds in local-server mode.
-- [ ] Demote-from-aliases prompt accepts valid target tags.
+- [ ] Demote-from-aliases form accepts valid target tags.
 - [ ] Demote-from-aliases confirm succeeds in local-server mode.
 - [ ] Import JSON succeeds in local-server mode.
+- [ ] New/edit alias modal uses shared shell spacing, labels, and action row layout.
+- [ ] Delete alias confirmation uses shared `confirm` shell and renders inside the page styling context.
+- [ ] Promote alias form and confirm-detail modals use shared shell spacing and warning/status placement.
+- [ ] Demote-from-aliases form and confirm-detail modals use shared shell spacing and warning/status placement.
+- [ ] Patch preview modal uses shared shell spacing and action row layout.
 - [ ] Patch fallback works for create/edit.
 - [ ] Patch fallback works for delete.
 - [ ] Patch fallback works for promote/demote.
@@ -96,3 +108,11 @@ Notes:
 - [ ] Status/result copy is still coherent across pages.
 - [ ] No unexpected layout regressions on desktop.
 - [ ] No obvious mobile layout breakage on key Studio pages.
+
+## Modal Cross-check
+
+- [ ] Modal backdrops, dialog surfaces, and title spacing look consistent across editor, registry, and aliases.
+- [ ] Modal action rows use consistent button ordering and spacing across modal types.
+- [ ] Form modals place labels, warnings, and status text consistently.
+- [ ] Confirm and confirm-detail modals use the shared shell instead of native browser dialogs.
+- [ ] Patch-preview modals present read-only output consistently across pages.

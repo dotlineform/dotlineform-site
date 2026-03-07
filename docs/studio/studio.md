@@ -7,6 +7,12 @@ Related references:
 - `docs/studio/ui-framework.md` for shared Studio UI primitives and naming rules
 - `docs/studio/regression-checklist.md` for manual verification coverage
 
+Current status:
+
+- Studio modularity refactor is structurally complete for the current build
+- modal framework migration is structurally complete through Phase 5 documentation
+- remaining work is manual browser verification using `docs/studio/regression-checklist.md`
+
 ## Local Development
 
 Use the repo-local runner from `dotlineform-site/`:

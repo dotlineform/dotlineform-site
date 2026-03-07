@@ -302,7 +302,9 @@ Later phases should replace native `confirm(...)` and `prompt(...)` calls with t
   - aliases patch and edit shells use `renderStudioModalFrame(...)`
   - editor save/patch shell uses `renderStudioModalFrame(...)`
 - Phase 5
-  Planned: complete regression coverage and close out modal-system docs.
+  Closed out documentation and regression coverage:
+  - modal-specific manual verification items live in `docs/studio/regression-checklist.md`
+  - the remaining open work is browser execution of that checklist, not further modal framework design
 
 ### Aliases Integration Notes
 
@@ -344,6 +346,21 @@ This preserves the clean separation:
 
 - shared modal shell in the UI framework
 - application-specific contents and behavior in page/domain/service code
+
+### Phase 5 Close-out
+
+The modal framework work is structurally complete for the current Studio build:
+
+- native browser dialogs have been replaced in the migrated registry/aliases flows
+- persistent custom modal shells now share the same Studio frame renderer
+- modal shell ownership is centralized in `studio-modal.js`
+- mutation, validation, preview, and patch logic remain outside the modal framework
+
+What remains is execution of the manual browser checklist, especially:
+
+- visual consistency across desktop/mobile
+- focus and dismissal behavior across modal types
+- confirmation that no page-specific modal regressed during the shared-shell migration
 
 ## What Stays Page-Specific
 

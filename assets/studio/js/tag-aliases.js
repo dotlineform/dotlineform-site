@@ -158,6 +158,7 @@ function renderShell(state) {
   const editModalHtml = renderStudioModalFrame({
     modalRole: "edit-modal",
     titleId: "tagAliasesEditTitle",
+    titleRole: "edit-modal-title",
     title: editModalTitle,
     dialogClass: "tagAliasesEdit__dialog",
     bodyHtml: `
