@@ -200,6 +200,10 @@ export function findAliasEntry(aliases, aliasKey) {
     : null;
 }
 
+export function isCreateAliasFlow(editState) {
+  return Boolean(editState && !normalize(editState.originalAlias));
+}
+
 export function sameStringArray(a, b) {
   const left = Array.isArray(a) ? a.map((item) => normalize(item)).slice().sort() : [];
   const right = Array.isArray(b) ? b.map((item) => normalize(item)).slice().sort() : [];
@@ -208,6 +212,103 @@ export function sameStringArray(a, b) {
     if (left[idx] !== right[idx]) return false;
   }
   return true;
+}
+
+export function getAliasEditValidation(options) {
+  const {
+    editState,
+    aliasInput,
+    descriptionInput,
+    aliases,
+    registryById,
+    aliasRe,
+    maxAliasTags = MAX_ALIAS_TAGS,
+    text
+  } = options || {};
+
+  const edit = editState;
+  if (!edit) return { valid: false, changed: false, alias: "", tags: [], description: "", warning: "" };
+
+  const alias = normalize(aliasInput);
+  const description = String(descriptionInput || "").trim();
+  const tags = Array.isArray(edit.tags) ? edit.tags.slice() : [];
+
+  let warning = "";
+  if (!alias) {
+    warning = textValue(text, "alias_required", "Alias is required.");
+  } else if (!(aliasRe instanceof RegExp) || !aliasRe.test(alias)) {
+    warning = textValue(text, "alias_invalid", "Alias must be lowercase letters, numbers, or hyphens.");
+  } else {
+    const conflict = Array.isArray(aliases)
+      && aliases.some((entry) => entry.alias !== edit.originalAlias && entry.alias === alias);
+    if (conflict) warning = textValue(text, "alias_exists_warning", "Alias already exists.");
+  }
+
+  let tagsWarning = "";
+  if (!tags.length) {
+    tagsWarning = textValue(text, "select_one_tag_warning", "Select at least one tag.");
+  } else if (tags.length > maxAliasTags) {
+    tagsWarning = textValue(text, "max_tags_warning", "Select up to {max_tags} tags.", { max_tags: maxAliasTags });
+  } else {
+    const seenGroups = new Set();
+    for (const tagId of tags) {
+      if (!(registryById instanceof Map) || !registryById.has(tagId)) {
+        tagsWarning = textValue(text, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
+        break;
+      }
+      const group = tagId.split(":", 1)[0];
+      if (seenGroups.has(group)) {
+        tagsWarning = textValue(text, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group });
+        break;
+      }
+      seenGroups.add(group);
+    }
+  }
+
+  const valid = !warning && !tagsWarning;
+  const changed = (
+    alias !== edit.originalAlias ||
+    description !== edit.originalDescription ||
+    !sameStringArray(tags, edit.originalTags)
+  );
+
+  return {
+    valid,
+    changed,
+    alias,
+    tags,
+    description,
+    warning,
+    tagsWarning
+  };
+}
+
+export function getEditTagMatches(options) {
+  const {
+    query,
+    editState,
+    registryOptions,
+    cap
+  } = options || {};
+
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery) return { matches: [], truncated: false };
+  const selected = new Set((editState && editState.tags) || []);
+  const allMatches = (Array.isArray(registryOptions) ? registryOptions : [])
+    .filter((item) => {
+      if (selected.has(item.tagId)) return false;
+      const slug = item.tagId.split(":", 2)[1] || "";
+      return (
+        normalize(item.label).startsWith(normalizedQuery) ||
+        normalize(slug).startsWith(normalizedQuery)
+      );
+    });
+
+  const limit = Number.isFinite(cap) ? cap : allMatches.length;
+  return {
+    matches: allMatches.slice(0, limit),
+    truncated: allMatches.length > limit
+  };
 }
 
 export function parseTagIdCsv(input, text) {

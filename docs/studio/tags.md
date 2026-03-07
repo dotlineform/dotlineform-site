@@ -25,6 +25,7 @@ This document is the central reference for series-level tags plus per-work overr
   - `assets/studio/js/tag-aliases.js`
   - `assets/studio/js/tag-aliases-domain.js`
   - `assets/studio/js/tag-aliases-save.js`
+  - `assets/studio/js/tag-aliases-service.js`
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
@@ -177,6 +178,8 @@ The Tag Aliases page now separates responsibilities across:
   - patch builders
   - alias import parsing
   - import-mode and summary helpers
+- `assets/studio/js/tag-aliases-service.js`
+  - async import, delete, edit, promote, and demote workflows
 
 ## Group Model
 

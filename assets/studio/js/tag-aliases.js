@@ -10,9 +10,7 @@ import {
   loadStudioRegistryJson
 } from "./studio-data.js";
 import {
-  postJson,
-  probeStudioHealth,
-  STUDIO_WRITE_ENDPOINTS
+  probeStudioHealth
 } from "./studio-transport.js";
 import {
   buildGroupDescriptionMap,
@@ -21,28 +19,36 @@ import {
   configureTagAliasesDomain,
   countAliasesByGroup,
   findAliasEntry as findNormalizedAliasEntry,
+  getAliasEditValidation as getNormalizedAliasEditValidation,
+  getEditTagMatches as getNormalizedEditTagMatches,
   getVisibleAliases,
+  isCreateAliasFlow as isCreateNormalizedAliasFlow,
   normalize,
   normalizeAliases,
   normalizeTimestamp,
-  parseTagIdCsv,
-  sameStringArray
+  parseTagIdCsv
 } from "./tag-aliases-domain.js";
 import {
   buildAliasesImportModeText,
-  buildImportSummary,
   buildManualPatchForAliasCreate,
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
   buildManualPatchForAliasPromote,
   buildManualPatchForDemote,
   buildManualPatchForNewAliases,
-  readImportAliasesFromFile,
-  utcTimestamp
+  readImportAliasesFromFile
 } from "./tag-aliases-save.js";
+import {
+  previewAliasPromote,
+  previewTagDemoteFromAliases,
+  submitAliasDelete,
+  submitAliasEdit,
+  submitAliasPromote,
+  submitAliasesImport,
+  submitTagDemoteFromAliases
+} from "./tag-aliases-service.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
@@ -609,36 +615,29 @@ async function handleImport(state) {
     return;
   }
 
-  if (state.saveMode === "post") {
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
-        mode: state.importMode,
-        import_aliases: importAliases,
-        import_filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
-        client_time_utc: utcTimestamp()
-      });
-      setImportResult(state, "success", buildImportSummary(response));
-      await loadData(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      state.saveMode = "patch";
-      renderImportMode(state);
-      setImportResult(
-        state,
-        "error",
-        aliasesText(
-          state.config,
-          "server_import_failed",
-          "Server import failed; switched to patch mode. {message}",
-          { message: String(error.message || "").trim() }
-        ).trim()
-      );
-    }
+  const result = await submitAliasesImport({
+    saveMode: state.saveMode,
+    importMode: state.importMode,
+    importAliases,
+    filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
+    config: state.config,
+    state
+  });
+  if (result.ok && result.mode === "post") {
+    setImportResult(state, "success", result.summary);
+    await loadData(state);
+    renderControls(state);
+    renderList(state);
+    return;
   }
 
-  const patchResult = buildManualPatchForNewAliases(state, importAliases);
+  if (result.switchToPatch) {
+    state.saveMode = "patch";
+    renderImportMode(state);
+    setImportResult(state, "error", result.message);
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForNewAliases(state, importAliases);
   setImportResult(state, patchResult.kind, patchResult.message);
   if (patchResult.snippet) {
     openPatchModal(state, patchResult.snippet);
@@ -657,40 +656,26 @@ async function handleAliasDelete(state, alias) {
     return;
   }
 
-  if (state.saveMode === "post") {
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.deleteTagAlias, {
-        alias: aliasKey,
-        client_time_utc: utcTimestamp()
-      });
-      const summary = String(response.summary_text || "").trim() || aliasesText(
-        state.config,
-        "delete_success_summary",
-        "deleted alias {alias_key}",
-        { alias_key: aliasKey }
-      );
-      setImportResult(state, "success", summary);
-      await loadData(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      state.saveMode = "patch";
-      renderImportMode(state);
-      setImportResult(
-        state,
-        "error",
-        aliasesText(
-          state.config,
-          "server_delete_failed",
-          "Server delete failed; switched to patch mode. {message}",
-          { message: String(error.message || "").trim() }
-        ).trim()
-      );
-    }
+  const result = await submitAliasDelete({
+    saveMode: state.saveMode,
+    aliasKey,
+    config: state.config
+  });
+  if (result.ok && result.mode === "post") {
+    setImportResult(state, "success", result.summary);
+    await loadData(state);
+    renderControls(state);
+    renderList(state);
+    return;
   }
 
-  const patchResult = buildManualPatchForAliasDelete(aliasKey);
+  if (result.switchToPatch) {
+    state.saveMode = "patch";
+    renderImportMode(state);
+    setImportResult(state, "error", result.message);
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForAliasDelete(aliasKey);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
@@ -700,7 +685,7 @@ function findAliasEntry(state, aliasKey) {
 }
 
 function isCreateAliasFlow(state) {
-  return Boolean(state.editState && !normalize(state.editState.originalAlias));
+  return isCreateNormalizedAliasFlow(state.editState);
 }
 
 function setAliasEditModalMode(state, mode) {
@@ -812,60 +797,16 @@ function renderEditTagList(state) {
 }
 
 function getAliasEditValidation(state) {
-  const edit = state.editState;
-  if (!edit) return { valid: false, changed: false, alias: "", tags: [], description: "", warning: "" };
-
-  const alias = normalize(state.refs.editAliasName.value);
-  const description = String(state.refs.editAliasDescription.value || "").trim();
-  const tags = Array.isArray(edit.tags) ? edit.tags.slice() : [];
-
-  let warning = "";
-  if (!alias) {
-    warning = aliasesText(state.config, "alias_required", "Alias is required.");
-  } else if (!ALIAS_RE.test(alias)) {
-    warning = aliasesText(state.config, "alias_invalid", "Alias must be lowercase letters, numbers, or hyphens.");
-  } else {
-    const conflict = state.aliases.some((entry) => entry.alias !== edit.originalAlias && entry.alias === alias);
-    if (conflict) warning = aliasesText(state.config, "alias_exists_warning", "Alias already exists.");
-  }
-
-  let tagsWarning = "";
-  if (!tags.length) {
-    tagsWarning = aliasesText(state.config, "select_one_tag_warning", "Select at least one tag.");
-  } else if (tags.length > MAX_ALIAS_TAGS) {
-    tagsWarning = aliasesText(state.config, "max_tags_warning", "Select up to {max_tags} tags.", { max_tags: MAX_ALIAS_TAGS });
-  } else {
-    const seenGroups = new Set();
-    for (const tagId of tags) {
-      if (!state.registryById.has(tagId)) {
-        tagsWarning = aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
-        break;
-      }
-      const group = tagId.split(":", 1)[0];
-      if (seenGroups.has(group)) {
-        tagsWarning = aliasesText(state.config, "one_tag_per_group_warning", "Only one tag per group is allowed ({group}).", { group });
-        break;
-      }
-      seenGroups.add(group);
-    }
-  }
-
-  const valid = !warning && !tagsWarning;
-  const changed = (
-    alias !== edit.originalAlias ||
-    description !== edit.originalDescription ||
-    !sameStringArray(tags, edit.originalTags)
-  );
-
-  return {
-    valid,
-    changed,
-    alias,
-    tags,
-    description,
-    warning,
-    tagsWarning
-  };
+  return getNormalizedAliasEditValidation({
+    editState: state.editState,
+    aliasInput: state.refs.editAliasName.value,
+    descriptionInput: state.refs.editAliasDescription.value,
+    aliases: state.aliases,
+    registryById: state.registryById,
+    aliasRe: ALIAS_RE,
+    maxAliasTags: MAX_ALIAS_TAGS,
+    text: (key, fallback, tokens) => aliasesText(state.config, key, fallback, tokens)
+  });
 }
 
 function setAliasEditStatus(state, kind, message) {
@@ -892,22 +833,12 @@ function updateAliasEditUi(state) {
 }
 
 function getEditTagMatches(state, query) {
-  const normalizedQuery = normalize(query);
-  if (!normalizedQuery) return { matches: [], truncated: false };
-  const selected = new Set((state.editState && state.editState.tags) || []);
-  const allMatches = state.registryOptions
-    .filter((item) => {
-      if (selected.has(item.tagId)) return false;
-      const slug = item.tagId.split(":", 2)[1] || "";
-      return (
-        normalize(item.label).startsWith(normalizedQuery) ||
-        normalize(slug).startsWith(normalizedQuery)
-      );
-    });
-  return {
-    matches: allMatches.slice(0, EDIT_TAG_MATCH_CAP),
-    truncated: allMatches.length > EDIT_TAG_MATCH_CAP
-  };
+  return getNormalizedEditTagMatches({
+    query,
+    editState: state.editState,
+    registryOptions: state.registryOptions,
+    cap: EDIT_TAG_MATCH_CAP
+  });
 }
 
 function renderEditTagPopup(state) {
@@ -966,93 +897,42 @@ async function saveAliasEdit(state) {
   const validation = getAliasEditValidation(state);
   if (!validation.valid || !validation.changed) return;
   const isCreate = isCreateAliasFlow(state);
-
-  if (isCreate) {
-    if (state.saveMode === "post") {
-      try {
-        const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
-          mode: "add",
-          import_aliases: {
-            aliases: {
-              [validation.alias]: {
-                description: validation.description,
-                tags: validation.tags
-              }
-            }
-          },
-          import_filename: "",
-          client_time_utc: utcTimestamp()
-        });
-        setImportResult(state, "success", buildImportSummary(response));
-        await loadData(state);
-        renderControls(state);
-        renderList(state);
-        closeAliasEditModal(state);
-        return;
-      } catch (error) {
-        state.saveMode = "patch";
-        renderImportMode(state);
-        setAliasEditStatus(
-          state,
-          "error",
-          aliasesText(
-            state.config,
-            "server_create_failed",
-            "Server create failed; switched to patch mode. {message}",
-            { message: String(error.message || "").trim() }
-          ).trim()
-        );
-      }
+  const result = await submitAliasEdit({
+    saveMode: state.saveMode,
+    isCreate,
+    originalAlias: state.editState.originalAlias,
+    validation,
+    config: state.config
+  });
+  if (result.ok && result.mode === "post") {
+    if (result.summary) {
+      setImportResult(state, "success", result.summary);
     }
-
-    const patchResult = buildManualPatchForAliasCreate(
-      validation.alias,
-      validation.description,
-      validation.tags
-    );
+    await loadData(state);
+    renderControls(state);
+    renderList(state);
     closeAliasEditModal(state);
-    openPatchModal(state, patchResult.snippet);
     return;
   }
 
-  const payload = {
-    alias: state.editState.originalAlias,
-    new_alias: validation.alias,
-    description: validation.description,
-    tags: validation.tags,
-    client_time_utc: utcTimestamp()
-  };
-
-  if (state.saveMode === "post") {
-    try {
-      await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagAlias, payload);
-      await loadData(state);
-      renderControls(state);
-      renderList(state);
-      closeAliasEditModal(state);
-      return;
-    } catch (error) {
-      state.saveMode = "patch";
-      renderImportMode(state);
-      setAliasEditStatus(
-        state,
-        "error",
-        aliasesText(
-          state.config,
-          "server_save_failed",
-          "Server save failed; switched to patch mode. {message}",
-          { message: String(error.message || "").trim() }
-        ).trim()
-      );
-    }
+  if (result.switchToPatch) {
+    state.saveMode = "patch";
+    renderImportMode(state);
+    setAliasEditStatus(state, "error", result.message);
   }
 
-  const patchResult = buildManualPatchForAliasEdit(
-    state.editState.originalAlias,
-    validation.alias,
-    validation.description,
-    validation.tags
-  );
+  const patchResult = result.patchResult || (isCreate
+    ? buildManualPatchForAliasCreate(
+        validation.alias,
+        validation.description,
+        validation.tags
+      )
+    : buildManualPatchForAliasEdit(
+        state.editState.originalAlias,
+        validation.alias,
+        validation.description,
+        validation.tags
+      ));
   closeAliasEditModal(state);
   openPatchModal(state, patchResult.snippet);
 }
@@ -1087,22 +967,17 @@ async function handleAliasPromote(state, alias) {
     return;
   }
 
-  const payload = {
-    alias: aliasKey,
-    group,
-    client_time_utc: utcTimestamp()
-  };
-
   if (state.saveMode === "post") {
-    let preview = null;
-    try {
-      preview = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAliasPreview, payload);
-    } catch (error) {
-      setImportResult(state, "error", String(error.message || aliasesText(state.config, "promotion_preview_failed", "Promotion preview failed.")));
+    const preview = await previewAliasPromote({
+      aliasKey,
+      group,
+      config: state.config
+    });
+    if (!preview.ok) {
+      setImportResult(state, "error", preview.message);
       return;
     }
-
-    const previewSummary = String(preview.summary_text || "").trim() || `alias ${aliasKey} -> ${group}:${aliasKey}`;
+    const previewSummary = preview.summary;
     const ok = window.confirm(
       aliasesText(
         state.config,
@@ -1119,21 +994,27 @@ async function handleAliasPromote(state, alias) {
       clearImportResult(state);
       return;
     }
-
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAlias, payload);
-      setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "promoted_success", "Promoted.")));
-      await loadData(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      setImportResult(state, "error", String(error.message || aliasesText(state.config, "promotion_failed", "Promotion failed.")));
-      return;
-    }
   }
 
-  const patchResult = buildManualPatchForAliasPromote(state, aliasKey, group);
+  const result = await submitAliasPromote({
+    saveMode: state.saveMode,
+    state,
+    aliasKey,
+    group
+  });
+  if (!result.ok) {
+    setImportResult(state, "error", result.message);
+    return;
+  }
+  if (result.mode === "post") {
+    setImportResult(state, "success", result.summary);
+    await loadData(state);
+    renderControls(state);
+    renderList(state);
+    return;
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForAliasPromote(state, aliasKey, group);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
@@ -1166,22 +1047,17 @@ async function handleTagDemoteFromAliases(state, tagId) {
     return;
   }
 
-  const payload = {
-    tag_id: canonicalTagId,
-    alias_targets: aliasTargets,
-    client_time_utc: utcTimestamp()
-  };
-
   if (state.saveMode === "post") {
-    let preview = null;
-    try {
-      preview = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, payload);
-    } catch (error) {
-      setImportResult(state, "error", String(error.message || aliasesText(state.config, "demotion_preview_failed", "Demotion preview failed.")));
+    const preview = await previewTagDemoteFromAliases({
+      canonicalTagId,
+      aliasTargets,
+      config: state.config
+    });
+    if (!preview.ok) {
+      setImportResult(state, "error", preview.message);
       return;
     }
-
-    const previewSummary = String(preview.summary_text || "").trim() || `demote ${canonicalTagId}`;
+    const previewSummary = preview.summary;
     const aliasKey = canonicalTagId.split(":")[1] || canonicalTagId;
     const ok = window.confirm(
       aliasesText(
@@ -1200,21 +1076,26 @@ async function handleTagDemoteFromAliases(state, tagId) {
       clearImportResult(state);
       return;
     }
-
-    try {
-      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, payload);
-      setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
-      await loadData(state);
-      renderControls(state);
-      renderList(state);
-      return;
-    } catch (error) {
-      setImportResult(state, "error", String(error.message || aliasesText(state.config, "demotion_failed", "Demotion failed.")));
-      return;
-    }
   }
 
-  const patchResult = buildManualPatchForDemote(canonicalTagId, aliasTargets);
+  const result = await submitTagDemoteFromAliases({
+    saveMode: state.saveMode,
+    canonicalTagId,
+    aliasTargets
+  });
+  if (!result.ok) {
+    setImportResult(state, "error", result.message || aliasesText(state.config, "demotion_failed", "Demotion failed."));
+    return;
+  }
+  if (result.mode === "post") {
+    setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
+    await loadData(state);
+    renderControls(state);
+    renderList(state);
+    return;
+  }
+
+  const patchResult = result.patchResult || buildManualPatchForDemote(canonicalTagId, aliasTargets);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
