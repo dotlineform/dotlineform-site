@@ -95,6 +95,7 @@ async function initTagStudio() {
       worksIndexJson,
       config
     );
+    restoreSelectionFromQuery(state);
     renderShell(state);
     wireEvents(state);
     renderAll(state);
@@ -211,6 +212,58 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
 
 function buildStateDiff(state) {
   return buildDomainWorkStateDiff(state, getOrderedSelectedWorkIds(state), getSeriesTagIdSet(state));
+}
+
+function restoreSelectionFromQuery(state) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const worksParam = String(searchParams.get("works") || "").trim();
+  if (!worksParam) {
+    writeSelectionToQuery(state);
+    return;
+  }
+
+  const selectedWorkIds = [];
+  const seen = new Set();
+  for (const rawPart of worksParam.split(",")) {
+    const workId = normalizeWorkId(rawPart);
+    if (!workId || seen.has(workId) || !state.seriesWorkIds.has(workId)) continue;
+    seen.add(workId);
+    selectedWorkIds.push(workId);
+    if (!state.workEntriesById.has(workId)) {
+      state.workEntriesById.set(workId, []);
+    }
+  }
+
+  state.selectedWorkIds = selectedWorkIds;
+
+  const activeWorkId = normalizeWorkId(searchParams.get("active"));
+  if (activeWorkId && selectedWorkIds.includes(activeWorkId)) {
+    state.selectedWorkId = activeWorkId;
+  } else {
+    state.selectedWorkId = selectedWorkIds.length ? selectedWorkIds[0] : "";
+  }
+
+  writeSelectionToQuery(state);
+}
+
+function writeSelectionToQuery(state) {
+  if (!window.history || typeof window.history.replaceState !== "function") return;
+
+  const url = new URL(window.location.href);
+  const selectedWorkIds = getOrderedSelectedWorkIds(state);
+  if (selectedWorkIds.length) {
+    url.searchParams.set("works", selectedWorkIds.join(","));
+    if (state.selectedWorkId && selectedWorkIds.includes(state.selectedWorkId)) {
+      url.searchParams.set("active", state.selectedWorkId);
+    } else {
+      url.searchParams.delete("active");
+    }
+  } else {
+    url.searchParams.delete("works");
+    url.searchParams.delete("active");
+  }
+
+  window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
 }
 
 function renderShell(state) {
@@ -570,6 +623,7 @@ function addWorkSelection(state, workId, activate = true) {
       { work_id: workId }
     ));
   }
+  writeSelectionToQuery(state);
   state.refs.workInput.value = "";
   hideWorkPopup(state);
   setSaveResult(state, "", "");
@@ -580,6 +634,7 @@ function addWorkSelection(state, workId, activate = true) {
 function activateSelectedWork(state, workId, render = true) {
   if (workId && !state.selectedWorkIds.includes(workId)) return;
   state.selectedWorkId = workId;
+  writeSelectionToQuery(state);
   if (render) renderAll(state);
 }
 
@@ -593,6 +648,7 @@ function clearSelectedWork(state, workId) {
   if (!state.selectedWorkIds.length) {
     state.refs.workInput.value = "";
   }
+  writeSelectionToQuery(state);
   hideWorkPopup(state);
   hidePopup(state);
   setStatus(state, "", "");

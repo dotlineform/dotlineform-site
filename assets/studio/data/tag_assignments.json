@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-07T16:49:00Z",
+  "updated_at_utc": "2026-03-07T18:04:27Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -17,7 +17,7 @@
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-03-07T16:49:00Z",
+      "updated_at_utc": "2026-03-07T18:04:27Z",
       "works": {
         "00293": {
           "tags": [
@@ -30,33 +30,16 @@
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T16:49:00Z"
+          "updated_at_utc": "2026-03-07T17:34:07Z"
         },
         "00294": {
           "tags": [
             {
               "tag_id": "subject:grid",
               "w_manual": 0.6
-            },
-            {
-              "tag_id": "theme:symbol",
-              "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T16:49:00Z"
-        },
-        "00295": {
-          "tags": [
-            {
-              "tag_id": "subject:grid",
-              "w_manual": 0.6
-            },
-            {
-              "tag_id": "theme:symbol",
-              "w_manual": 0.6
-            }
-          ],
-          "updated_at_utc": "2026-03-07T16:49:00Z"
+          "updated_at_utc": "2026-03-07T17:09:10Z"
         },
         "00296": {
           "tags": [
@@ -69,7 +52,7 @@
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T16:49:00Z"
+          "updated_at_utc": "2026-03-07T18:04:27Z"
         }
       }
     },

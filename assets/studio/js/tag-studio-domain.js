@@ -204,7 +204,7 @@ export function syncWorkEntriesFromPersistedState(state, workStateById) {
 
   for (const option of state.seriesWorkOptions) {
     if (!(workStateById instanceof Map) || !workStateById.has(option.workId)) continue;
-    const rows = workStateById.get(option.workId) || [];
+    const rows = normalizeAssignmentTags(workStateById.get(option.workId) || []);
     const resolved = createResolvedEntries(rows, state.tagsById, nextId);
     nextSelectedWorkIds.push(option.workId);
     nextWorkEntriesById.set(option.workId, resolved.entries);
