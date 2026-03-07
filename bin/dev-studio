@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
+if [ -x "$HOME/.rbenv/shims/bundle" ]; then
+  BUNDLE_BIN="$HOME/.rbenv/shims/bundle"
+else
+  BUNDLE_BIN="${BUNDLE_BIN:-bundle}"
+fi
+
+if [ -x "$HOME/miniconda3/bin/python3" ]; then
+  PYTHON_BIN="$HOME/miniconda3/bin/python3"
+else
+  PYTHON_BIN="${PYTHON_BIN:-python3}"
+fi
+
+JEKYLL_HOST="${JEKYLL_HOST:-127.0.0.1}"
+JEKYLL_PORT="${JEKYLL_PORT:-4000}"
+
+JEKYLL_PID=""
+WRITE_PID=""
+
+cleanup() {
+  trap - EXIT INT TERM
+  if [ -n "$JEKYLL_PID" ] && kill -0 "$JEKYLL_PID" 2>/dev/null; then
+    kill "$JEKYLL_PID" 2>/dev/null || true
+  fi
+  if [ -n "$WRITE_PID" ] && kill -0 "$WRITE_PID" 2>/dev/null; then
+    kill "$WRITE_PID" 2>/dev/null || true
+  fi
+  wait "$JEKYLL_PID" "$WRITE_PID" 2>/dev/null || true
+}
+
+trap cleanup EXIT INT TERM
+
+echo "Starting Studio development services from $ROOT_DIR"
+echo "Jekyll: http://$JEKYLL_HOST:$JEKYLL_PORT"
+echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
+echo
+echo "Press Ctrl+C to stop both processes."
+echo
+
+"$BUNDLE_BIN" exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
+JEKYLL_PID=$!
+
+"$PYTHON_BIN" scripts/studio/tag_write_server.py &
+WRITE_PID=$!
+
+while true; do
+  if ! kill -0 "$JEKYLL_PID" 2>/dev/null; then
+    wait "$JEKYLL_PID"
+    break
+  fi
+  if ! kill -0 "$WRITE_PID" 2>/dev/null; then
+    wait "$WRITE_PID"
+    break
+  fi
+  sleep 1
+done
