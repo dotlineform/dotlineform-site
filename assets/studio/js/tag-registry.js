@@ -1,18 +1,22 @@
 import {
-  getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  buildStudioGroupDescriptionMap,
+  loadStudioAliasesJson,
+  loadStudioGroupsJson,
+  loadStudioRegistryJson
+} from "./studio-data.js";
+import {
+  postJson,
+  probeStudioHealth,
+  STUDIO_WRITE_ENDPOINTS
+} from "./studio-transport.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
-const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
-const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-registry";
-const MUTATE_ENDPOINT = "http://127.0.0.1:8787/mutate-tag";
-const MUTATE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-preview";
-const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
-const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
 const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
@@ -513,24 +517,9 @@ function syncImportModeFromControl(state) {
 }
 
 async function probeImportMode(state) {
-  const ok = await pingHealthEndpoint();
+  const ok = await probeStudioHealth(500);
   state.saveMode = ok ? "post" : "patch";
   renderImportMode(state);
-}
-
-async function pingHealthEndpoint() {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 500);
-  try {
-    const response = await fetch(HEALTH_ENDPOINT, { signal: controller.signal, cache: "no-store" });
-    if (!response.ok) return false;
-    const payload = await response.json();
-    return Boolean(payload && payload.ok);
-  } catch (error) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
 }
 
 function renderImportMode(state) {
@@ -539,28 +528,20 @@ function renderImportMode(state) {
 
 async function loadRegistry(state) {
   const [registryData, aliasesData] = await Promise.all([
-    fetchJson(getStudioDataPath(state.config, "tag_registry")),
-    fetchJson(getStudioDataPath(state.config, "tag_aliases"))
+    loadStudioRegistryJson(state.config),
+    loadStudioAliasesJson(state.config)
   ]);
   let groupsData = null;
   try {
-    groupsData = await fetchJson(getStudioDataPath(state.config, "tag_groups"));
+    groupsData = await loadStudioGroupsJson(state.config);
   } catch (error) {
     groupsData = null;
   }
   state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
   state.aliasKeys = buildAliasKeySet(aliasesData);
-  state.groupDescriptions = buildGroupDescriptionMap(groupsData);
+  state.groupDescriptions = buildStudioGroupDescriptionMap(groupsData, STUDIO_GROUPS);
   state.registryOptions = buildRegistryOptions(state.tags);
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  return response.json();
 }
 
 function normalizeRegistryTags(data, fallbackUpdatedAt) {
@@ -616,19 +597,6 @@ function buildAliasKeySet(data) {
     const key = normalize(rawKey);
     if (!key) continue;
     out.add(key);
-  }
-  return out;
-}
-
-function buildGroupDescriptionMap(data) {
-  const out = new Map();
-  const groups = Array.isArray(data && data.groups) ? data.groups : [];
-  for (const raw of groups) {
-    if (!raw || typeof raw !== "object") continue;
-    const groupId = normalize(raw.group_id);
-    const description = String(raw.description || "").trim();
-    if (!STUDIO_GROUPS.includes(groupId) || !description) continue;
-    out.set(groupId, description);
   }
   return out;
 }
@@ -961,7 +929,7 @@ async function refreshDeleteImpactPreview(state) {
   }
   const seq = ++state.deletePreviewSeq;
   try {
-    const response = await postJson(MUTATE_PREVIEW_ENDPOINT, payload);
+    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagPreview, payload);
     if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
     state.deletePreview = buildMutationSummary(response);
     setImpactPreview(
@@ -1000,7 +968,7 @@ async function handleTagEdit(state) {
   }
 
   try {
-    const response = await postJson(MUTATE_ENDPOINT, {
+    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
       action: "edit",
       tag_id: tag.tagId,
       description,
@@ -1036,7 +1004,7 @@ async function handleCreateTag(state) {
 
   if (state.saveMode === "post") {
     try {
-      const response = await postJson(IMPORT_ENDPOINT, {
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
         mode: "add",
         import_registry: {
           tags: [newTagRow]
@@ -1130,7 +1098,7 @@ async function handleDeleteFromModal(state) {
   }
 
   try {
-    const response = await postJson(MUTATE_ENDPOINT, {
+    const response = await postJson(STUDIO_WRITE_ENDPOINTS.mutateTag, {
       action: "delete",
       tag_id: tag.tagId,
       client_time_utc: utcTimestamp()
@@ -1413,7 +1381,7 @@ async function handleTagDemote(state) {
   if (state.saveMode === "post") {
     let preview = null;
     try {
-      preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
+      preview = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, payload);
     } catch (error) {
       const message = String(error.message || registryText(state.config, "demote_preview_failed", "Demotion preview failed."));
       setDemoteStatus(state, "error", message);
@@ -1452,7 +1420,7 @@ async function handleTagDemote(state) {
     }
 
     try {
-      const response = await postJson(DEMOTE_ENDPOINT, payload);
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, payload);
       closeDemoteModal(state);
       setImportResult(state, "success", String(response.summary_text || registryText(state.config, "demoted_success", "Demoted.")));
       await loadRegistry(state);
@@ -1534,7 +1502,7 @@ async function handleImport(state) {
 
   if (state.saveMode === "post") {
     try {
-      const response = await postJson(IMPORT_ENDPOINT, {
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagRegistry, {
         mode: state.importMode,
         import_registry: importRegistry,
         import_filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
@@ -1566,27 +1534,6 @@ async function handleImport(state) {
   if (patchResult.snippet) {
     openPatchModal(state, patchResult.snippet);
   }
-}
-
-async function postJson(url, payload) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-
-  let responsePayload = null;
-  try {
-    responsePayload = await response.json();
-  } catch (error) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  if (!response.ok || !responsePayload || !responsePayload.ok) {
-    const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
-    throw new Error(message);
-  }
-  return responsePayload;
 }
 
 async function readImportRegistryFromFile(file) {

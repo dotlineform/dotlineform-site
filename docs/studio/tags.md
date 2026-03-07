@@ -107,7 +107,7 @@ The config is intended to decouple Studio from current file placement and from s
 - health probing for local write availability
 - shared JSON POST transport
 
-These modules are intended to reduce repeated fetch/parse logic before larger controller splits in the Studio feature modules.
+These modules are now used by the smaller Studio pages plus the larger `tag-registry.js`, `tag-aliases.js`, and `tag-studio.js` controllers. They are intended to reduce repeated fetch/parse and local-write transport logic before larger controller splits in those feature modules.
 
 ## Group Model
 

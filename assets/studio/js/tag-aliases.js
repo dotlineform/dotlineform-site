@@ -1,24 +1,25 @@
 import {
-  getStudioDataPath,
   getStudioGroups,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  loadStudioAliasesJson,
+  loadStudioGroupsJson,
+  loadStudioRegistryJson
+} from "./studio-data.js";
+import {
+  postJson,
+  probeStudioHealth,
+  STUDIO_WRITE_ENDPOINTS
+} from "./studio-transport.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const TAG_ID_RE = /^[a-z0-9][a-z0-9-]*:[a-z0-9][a-z0-9-]*$/;
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
-const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
-const IMPORT_ENDPOINT = "http://127.0.0.1:8787/import-tag-aliases";
-const DELETE_ENDPOINT = "http://127.0.0.1:8787/delete-tag-alias";
-const MUTATE_ALIAS_ENDPOINT = "http://127.0.0.1:8787/mutate-tag-alias";
-const PROMOTE_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias";
-const PROMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/promote-tag-alias-preview";
-const DEMOTE_ENDPOINT = "http://127.0.0.1:8787/demote-tag";
-const DEMOTE_PREVIEW_ENDPOINT = "http://127.0.0.1:8787/demote-tag-preview";
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 
 if (document.readyState === "loading") {
@@ -382,12 +383,12 @@ function syncImportModeFromControl(state) {
 
 async function loadData(state) {
   const [registryData, aliasesData] = await Promise.all([
-    fetchJson(getStudioDataPath(state.config, "tag_registry")),
-    fetchJson(getStudioDataPath(state.config, "tag_aliases"))
+    loadStudioRegistryJson(state.config),
+    loadStudioAliasesJson(state.config)
   ]);
   let groupsData = null;
   try {
-    groupsData = await fetchJson(getStudioDataPath(state.config, "tag_groups"));
+    groupsData = await loadStudioGroupsJson(state.config);
   } catch (error) {
     groupsData = null;
   }
@@ -727,28 +728,13 @@ function sortBtnClass(state, key) {
 }
 
 async function probeImportMode(state) {
-  const ok = await pingHealthEndpoint();
+  const ok = await probeStudioHealth(500);
   state.saveMode = ok ? "post" : "patch";
   renderImportMode(state);
 }
 
 function renderImportMode(state) {
   state.refs.saveMode.textContent = buildAliasesImportModeText(state, state.saveMode);
-}
-
-async function pingHealthEndpoint() {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 500);
-  try {
-    const response = await fetch(HEALTH_ENDPOINT, { signal: controller.signal, cache: "no-store" });
-    if (!response.ok) return false;
-    const payload = await response.json();
-    return Boolean(payload && payload.ok);
-  } catch (error) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
 }
 
 async function handleImport(state) {
@@ -767,7 +753,7 @@ async function handleImport(state) {
 
   if (state.saveMode === "post") {
     try {
-      const response = await postJson(IMPORT_ENDPOINT, {
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
         mode: state.importMode,
         import_aliases: importAliases,
         import_filename: state.selectedFile ? String(state.selectedFile.name || "") : "",
@@ -815,7 +801,7 @@ async function handleAliasDelete(state, alias) {
 
   if (state.saveMode === "post") {
     try {
-      const response = await postJson(DELETE_ENDPOINT, {
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.deleteTagAlias, {
         alias: aliasKey,
         client_time_utc: utcTimestamp()
       });
@@ -1127,7 +1113,7 @@ async function saveAliasEdit(state) {
   if (isCreate) {
     if (state.saveMode === "post") {
       try {
-        const response = await postJson(IMPORT_ENDPOINT, {
+        const response = await postJson(STUDIO_WRITE_ENDPOINTS.importTagAliases, {
           mode: "add",
           import_aliases: {
             aliases: {
@@ -1182,7 +1168,7 @@ async function saveAliasEdit(state) {
 
   if (state.saveMode === "post") {
     try {
-      await postJson(MUTATE_ALIAS_ENDPOINT, payload);
+      await postJson(STUDIO_WRITE_ENDPOINTS.mutateTagAlias, payload);
       await loadData(state);
       renderControls(state);
       renderList(state);
@@ -1263,7 +1249,7 @@ async function handleAliasPromote(state, alias) {
   if (state.saveMode === "post") {
     let preview = null;
     try {
-      preview = await postJson(PROMOTE_PREVIEW_ENDPOINT, payload);
+      preview = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAliasPreview, payload);
     } catch (error) {
       setImportResult(state, "error", String(error.message || aliasesText(state.config, "promotion_preview_failed", "Promotion preview failed.")));
       return;
@@ -1288,7 +1274,7 @@ async function handleAliasPromote(state, alias) {
     }
 
     try {
-      const response = await postJson(PROMOTE_ENDPOINT, payload);
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.promoteTagAlias, payload);
       setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "promoted_success", "Promoted.")));
       await loadData(state);
       renderControls(state);
@@ -1374,7 +1360,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
   if (state.saveMode === "post") {
     let preview = null;
     try {
-      preview = await postJson(DEMOTE_PREVIEW_ENDPOINT, payload);
+      preview = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTagPreview, payload);
     } catch (error) {
       setImportResult(state, "error", String(error.message || aliasesText(state.config, "demotion_preview_failed", "Demotion preview failed.")));
       return;
@@ -1401,7 +1387,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
     }
 
     try {
-      const response = await postJson(DEMOTE_ENDPOINT, payload);
+      const response = await postJson(STUDIO_WRITE_ENDPOINTS.demoteTag, payload);
       setImportResult(state, "success", String(response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
       await loadData(state);
       renderControls(state);
@@ -1694,25 +1680,6 @@ async function readImportAliasesFromFile(file) {
   };
 }
 
-async function postJson(url, payload) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
-  let responsePayload = null;
-  try {
-    responsePayload = await response.json();
-  } catch (error) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  if (!response.ok || !responsePayload || !responsePayload.ok) {
-    const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
-    throw new Error(message);
-  }
-  return responsePayload;
-}
-
 function openPatchModal(state, snippet) {
   state.patchSnippet = snippet;
   state.refs.patchSnippet.textContent = snippet;
@@ -1731,12 +1698,6 @@ function setImportResult(state, kind, message) {
 
 function clearImportResult(state) {
   setImportResult(state, "", "");
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
 }
 
 function toTimestampMs(value) {

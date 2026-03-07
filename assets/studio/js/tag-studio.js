@@ -1,15 +1,23 @@
 import {
-  getSiteDataPath,
-  getStudioDataPath,
   getStudioGroups,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
+import {
+  loadSiteSeriesIndexJson,
+  loadSiteWorksIndexJson,
+  loadStudioAliasesJson,
+  loadStudioAssignmentsJson,
+  loadStudioRegistryJson
+} from "./studio-data.js";
+import {
+  postJson,
+  probeStudioHealth,
+  STUDIO_WRITE_ENDPOINTS
+} from "./studio-transport.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let GROUP_INDEX = new Map(STUDIO_GROUPS.map((group, index) => [group, index]));
-const POST_ENDPOINT = "http://127.0.0.1:8787/save-tags";
-const HEALTH_ENDPOINT = "http://127.0.0.1:8787/health";
 const POPUP_TAG_MATCH_CAP = 12;
 const POPUP_ALIAS_MATCH_CAP = 12;
 const POPUP_WORK_MATCH_CAP = 12;
@@ -38,11 +46,11 @@ async function initTagStudio() {
 
   try {
     const [registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson] = await Promise.all([
-      fetchJson(getStudioDataPath(config, "tag_registry")),
-      fetchJson(getStudioDataPath(config, "tag_aliases")),
-      fetchJson(getStudioDataPath(config, "tag_assignments")),
-      fetchJson(getSiteDataPath(config, "series_index")),
-      fetchJson(getSiteDataPath(config, "works_index"))
+      loadStudioRegistryJson(config),
+      loadStudioAliasesJson(config),
+      loadStudioAssignmentsJson(config),
+      loadSiteSeriesIndexJson(config),
+      loadSiteWorksIndexJson(config)
     ]);
 
     const state = buildState(
@@ -69,14 +77,6 @@ async function initTagStudio() {
       )
     );
   }
-}
-
-async function fetchJson(url) {
-  const response = await fetch(url, { cache: "default" });
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status} for ${url}`);
-  }
-  return response.json();
 }
 
 function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson, config) {
@@ -1179,24 +1179,9 @@ function computeMetrics(state) {
 }
 
 async function probeSaveMode(state) {
-  const ok = await isLocalSaveAvailable(500);
+  const ok = await probeStudioHealth(500);
   state.saveMode = ok ? "post" : "patch";
   renderSaveMode(state);
-}
-
-async function isLocalSaveAvailable(timeoutMs) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(HEALTH_ENDPOINT, { signal: controller.signal });
-    if (!response.ok) return false;
-    const data = await response.json();
-    return Boolean(data && data.ok);
-  } catch (error) {
-    return false;
-  } finally {
-    clearTimeout(timer);
-  }
 }
 
 async function handleSave(state) {
@@ -1244,31 +1229,17 @@ async function postTags(seriesId, workId, tags, keepWork) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 3000);
   try {
-    const response = await fetch(POST_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
+    return await postJson(
+      STUDIO_WRITE_ENDPOINTS.saveTags,
+      {
         series_id: seriesId,
         work_id: workId,
         tags,
         keep_work: Boolean(keepWork),
         client_time_utc: utcTimestamp()
-      }),
-      signal: controller.signal
-    });
-
-    let body = null;
-    try {
-      body = await response.json();
-    } catch (error) {
-      body = null;
-    }
-
-    if (!response.ok || !body || !body.ok) {
-      const message = (body && body.error) ? String(body.error) : `HTTP ${response.status}`;
-      throw new Error(message);
-    }
-    return body;
+      },
+      { signal: controller.signal }
+    );
   } finally {
     clearTimeout(timer);
   }
