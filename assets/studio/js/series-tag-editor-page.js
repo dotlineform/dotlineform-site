@@ -27,7 +27,9 @@ function initSeriesTagEditorPage() {
   const mediaImgEl = document.getElementById("seriesTagEditorMediaImg");
   const baseurl = String(root.dataset.baseurl || "");
   const mediaBase = String(root.dataset.mediaBase || "");
-  const mediaPrefix = String(root.dataset.mediaPrefix || "/assets");
+  const mediaPrefix = root.dataset.mediaPrefix === undefined
+    ? "/assets"
+    : String(root.dataset.mediaPrefix);
   const seriesIndexUrl = String(root.dataset.seriesIndexUrl || "");
   const tagStudioModuleUrl = String(root.dataset.tagStudioModuleUrl || "");
   const params = new URLSearchParams(window.location.search);
