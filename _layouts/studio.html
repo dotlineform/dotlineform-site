@@ -3,7 +3,21 @@ layout: default
 ---
 
 <div class="studio">
-  <h2>{{ page.title | default: "Studio" }}</h2>
+  <div class="studio__headerRow">
+    <h2>{{ page.title | default: "Studio" }}</h2>
+    {% if page.studio_page_doc %}
+      <a
+        class="tagStudio__keyPill tagStudio__keyInfoBtn"
+        href="{{ page.studio_page_doc | relative_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Open Studio page implementation notes"
+        aria-label="Open Studio page implementation notes"
+      >
+        <em>i</em>
+      </a>
+    {% endif %}
+  </div>
   <div class="studio__content">
     {{ content }}
   </div>

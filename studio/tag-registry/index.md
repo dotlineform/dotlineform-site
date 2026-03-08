@@ -2,6 +2,7 @@
 layout: studio
 title: Tag Registry
 permalink: /studio/tag-registry/
+studio_page_doc: /docs/studio/pages/tag-registry/
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">

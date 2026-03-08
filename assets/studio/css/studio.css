@@ -1,3 +1,4 @@
+.studio,
 .tagStudioPage,
 .tagRegistryPage,
 .tagAliasesPage,
@@ -51,6 +52,16 @@
 .studio {
   max-width: 980px;
   margin: 0 auto;
+}
+
+.studio__headerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.studio__headerRow h2 {
+  margin: 0;
 }
 
 .studio__content {

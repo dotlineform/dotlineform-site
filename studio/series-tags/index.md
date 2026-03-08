@@ -2,6 +2,7 @@
 layout: studio
 title: Series Tags
 permalink: /studio/series-tags/
+studio_page_doc: /docs/studio/pages/series-tags/
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">

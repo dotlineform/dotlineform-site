@@ -1,8 +1,9 @@
 ---
-layout: default
+layout: studio
 title: Series Tag Editor
 permalink: /studio/series-tag-editor/
 section: works
+studio_page_doc: /docs/studio/pages/tag-editor/
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
