@@ -1,0 +1,421 @@
+# Tag Editor
+
+Route:
+
+- `/studio/series-tag-editor/`
+- required query param: `?series=<series_id>`
+- example: `/studio/series-tag-editor/?series=curve-poems`
+
+Purpose:
+
+- review and edit series-level tag assignments plus per-work override tags for one series
+
+## Page / Template Structure
+
+Primary template:
+
+- `studio/series-tag-editor/index.md`
+
+Page boot module:
+
+- `assets/studio/js/series-tag-editor-page.js`
+
+Editor controller:
+
+- `assets/studio/js/tag-studio.js`
+
+Supporting modules:
+
+- `assets/studio/js/tag-studio-domain.js`
+- `assets/studio/js/tag-studio-save.js`
+
+Top-level structure in the page template:
+
+- `#seriesTagEditorRoot.tagStudioPage`
+  - page shell and runtime data attributes
+- `.tagStudioPage__header`
+  - two-column series header area
+- `.tagStudioPage__media`
+  - primary image column
+- `.tagStudioPage__context`
+  - series metadata column
+- `.tagStudioPage__editor`
+  - container for the interactive tag editor
+- `#tag-studio`
+  - mount point used by `tag-studio.js`
+
+## Named UI Sections
+
+### Series header
+
+User-facing name:
+
+- series header
+
+DOM / CSS:
+
+- `.tagStudioPage__header`
+
+JS owner:
+
+- `assets/studio/js/series-tag-editor-page.js`
+
+This section contains:
+
+- primary image column
+- series metadata column
+
+### Primary image
+
+User-facing name:
+
+- primary image
+
+DOM / CSS:
+
+- `#seriesTagEditorMedia.tagStudioPage__media`
+- `#seriesTagEditorMediaLink`
+- `#seriesTagEditorMediaImg.tagStudioPage__mediaImg`
+
+JS owner:
+
+- `renderPrimaryMedia(...)`
+- `syncHeaderMediaForWork(...)`
+  in `assets/studio/js/series-tag-editor-page.js`
+
+Meaning:
+
+- the image area in column 1 of the series header
+- shows the series primary work by default
+- can switch to the currently selected work while editing
+
+### Series metadata
+
+User-facing name:
+
+- series metadata
+
+DOM / CSS:
+
+- `.tagStudioPage__context`
+- `#seriesTagEditorTitle`
+- `#seriesTagEditorCat`
+- `#seriesTagEditorYear`
+- `#seriesTagEditorYearDisplay`
+- `#seriesTagEditorSortFields`
+- `#seriesTagEditorPrimaryWork`
+- `#seriesTagEditorFolders`
+- `#seriesTagEditorNotes`
+
+JS owner:
+
+- `initSeriesTagEditorPage()`
+  in `assets/studio/js/series-tag-editor-page.js`
+
+Meaning:
+
+- the field list in column 2 of the series header
+
+### Editor panel
+
+User-facing name:
+
+- tag editor
+
+DOM / CSS:
+
+- `.tagStudioPage__editor`
+- `#tag-studio`
+- `.tagStudio__panel.tagStudio__panel--editor`
+
+JS owner:
+
+- `renderShell(state)`
+  in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- the interactive editing area rendered inside the mount point
+
+### Works
+
+User-facing name:
+
+- works
+
+DOM / CSS:
+
+- `.tagStudio__inputRow.tagStudio__inputRow--work`
+- `#tagStudioWorkInput`
+- `[data-role="selected-work"]`
+- `[data-role="work-popup"]`
+- `[data-role="work-popup-list"]`
+
+JS owner:
+
+- `renderShell(state)`
+- work-related handlers in `wireEvents(state)`
+  in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- the work search box and currently selected works area
+
+### Context hint
+
+User-facing name:
+
+- context hint
+
+DOM / CSS:
+
+- `[data-role="context-hint"]`
+- `.tagStudio__contextHint`
+
+JS owner:
+
+- `renderContextHint(state)`
+  in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- the line explaining whether edits apply to the series or to selected works
+
+### Group rows
+
+User-facing name:
+
+- group rows
+
+DOM / CSS:
+
+- `[data-role="groups"]`
+- `.tagStudioGroups`
+- `.tagStudioGroupRow`
+
+JS owner:
+
+- group rendering functions in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- the visible rows of tag chips grouped by `subject`, `domain`, `form`, and `theme`
+
+### Tag input row
+
+User-facing name:
+
+- tag input row
+
+DOM / CSS:
+
+- `.tagStudio__inputRow.tagStudio__inputRow--editor`
+- `#tagStudioInput`
+- `[data-role="add-tag"]`
+- `[data-role="save"]`
+- `[data-role="save-mode"]`
+
+JS owner:
+
+- `renderShell(state)`
+- input/save handlers in `wireEvents(state)`
+
+Meaning:
+
+- the main row used to add tags and save changes
+
+### Suggestions popup
+
+User-facing name:
+
+- tag suggestions popup
+
+DOM / CSS:
+
+- `[data-role="popup"]`
+- `[data-role="popup-list"]`
+- `.tagStudio__popup`
+- `.tagStudioSuggest__*`
+
+JS owner:
+
+- popup rendering functions in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- the autocomplete area for canonical tags, aliases, and work suggestions
+
+### Status and save feedback
+
+User-facing name:
+
+- editor status
+- save warning
+- save result
+
+DOM / CSS:
+
+- `[data-role="status"]` / `.tagStudio__status`
+- `[data-role="save-warning"]` / `.tagStudio__saveWarning`
+- `[data-role="save-result"]` / `.tagStudio__saveResult`
+
+JS owner:
+
+- status rendering helpers in `assets/studio/js/tag-studio.js`
+
+### Save / patch modal
+
+User-facing name:
+
+- save modal
+- patch preview modal
+
+DOM / CSS:
+
+- `[data-role="modal"]`
+- `[data-role="modal-tags"]`
+- `[data-role="modal-snippet"]`
+- `[data-role="copy-snippet"]`
+- shared shell from `tagStudioModal` / `tagStudioModal__*`
+
+JS owner:
+
+- modal shell in `renderShell(state)`
+- open/close/copy handling in `assets/studio/js/tag-studio.js`
+
+## UI Layout and Styling
+
+Primary CSS file:
+
+- `assets/studio/css/studio.css`
+
+Relevant shared classes:
+
+- `.tagStudioPage__*`
+- `.tagStudio__panel`
+- `.tagStudio__inputRow`
+- `.tagStudio__input`
+- `.tagStudio__button`
+- `.tagStudio__chip`
+- `.tagStudio__popup`
+- `.tagStudio__status`
+- `.tagStudioModal*`
+
+Layout model:
+
+- the page header is a two-column layout on larger screens
+- the editor is a panel rendered below the header
+- the editor itself uses stacked sections rather than a table/list shell
+
+## DOM Rendering and Event Wiring
+
+Page boot:
+
+- `initSeriesTagEditorPage()` in `assets/studio/js/series-tag-editor-page.js`
+
+Editor boot:
+
+- `initTagStudio()` in `assets/studio/js/tag-studio.js`
+
+Main render functions:
+
+- `renderShell(state)`
+- `renderAll(state)`
+
+Main event wiring:
+
+- `wireEvents(state)`
+
+Important event integration:
+
+- `series-tag-editor:selected-work-change`
+  - emitted by the editor state flow
+  - consumed by `series-tag-editor-page.js` to update the primary image
+
+## State Handling
+
+Primary page state:
+
+- series metadata and primary-image state live in `series-tag-editor-page.js`
+
+Primary editor state:
+
+- editor state object is created by `buildState(...)` in `tag-studio.js`
+
+Key editor state areas:
+
+- selected works
+- active work
+- resolved series entries
+- per-work entries
+- save mode
+- modal snippet/status fields
+
+Business/state helpers live in:
+
+- `assets/studio/js/tag-studio-domain.js`
+
+## Data Access / Query Params / JSON Parsing
+
+Query params:
+
+- `series`
+  - required page input
+- `works`
+  - selected work ids persisted by the editor
+- `active`
+  - active work id persisted by the editor
+
+Page data fetches:
+
+- series index JSON in `series-tag-editor-page.js`
+- work detail JSON for header media in `series-tag-editor-page.js`
+
+Editor data fetches:
+
+- registry
+- aliases
+- assignments
+- series index
+- works index
+
+These are loaded through:
+
+- `assets/studio/js/studio-data.js`
+
+## Business Logic
+
+Primary business logic modules:
+
+- `assets/studio/js/tag-studio-domain.js`
+- `assets/studio/js/tag-studio-save.js`
+
+Business responsibilities include:
+
+- tag normalization and resolution
+- alias resolution
+- work-state diffing
+- persisted assignment shape conversion
+- save/persist mode handling
+- patch snippet generation
+
+## Change Guidance
+
+If a change request refers to:
+
+- “primary image”
+  - start with `#seriesTagEditorMedia` and `series-tag-editor-page.js`
+- “series metadata”
+  - start with `.tagStudioPage__context` and `series-tag-editor-page.js`
+- “works”
+  - start with `.tagStudio__inputRow--work` and selected-work rendering in `tag-studio.js`
+- “tag suggestions”
+  - start with `.tagStudio__popup` / `.tagStudioSuggest__*`
+- “save modal”
+  - start with the shared modal shell in `tag-studio.js` plus shared modal styles in `studio.css`
+
+Clarify with the user when a request could mean:
+
+- page header metadata vs editor panel metadata
+- selected-work UI vs work-specific tag chips
+- context hint vs save/status messages
