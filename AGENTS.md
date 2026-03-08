@@ -48,6 +48,10 @@
 - After changing Python scripts, run a syntax check with the configured interpreter.
 - After generator changes, run a dry-run and summarize what would be written.
 - After layout/template changes, verify behavior on desktop and mobile.
+- Always define targeted verification for both:
+  - Codex-run checks
+  - manual checks
+- Manual testing in this repo is expected to be light-touch and pragmatic. There is no formal QA sign-off process.
 - Include changed file paths (and line references when useful) in summaries.
 
 ## Security and Sanitization
@@ -76,8 +80,34 @@
 
 - Preserve existing Jekyll/Liquid conventions in this repo.
 - Prefer shared JS/CSS logic over duplicated inline logic.
+- When modifying CSS, consider whether there is an opportunity to refactor or consolidate shared styles.
+- The primary purpose of refactoring is to improve readability, consistency, and reliability.
 - Keep comments concise and implementation-focused.
 - use studio_config.json (ui_text section) to store UI copy such as labels. 
+- Always state the main benefits and risks associated with:
+  - new changes
+  - new requirements
+  - refactors
+
+## Studio UI Guidance
+
+- `docs/studio/ui-framework.md` defines the core Studio UI elements and shared UI contracts.
+- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use `docs/studio/ui-framework.md` as the basis.
+- If Studio UI definitions, scope, or shared naming boundaries change, update `docs/studio/ui-framework.md` in the same change.
+- Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
+- Keep UI shell concerns separate from application logic, validation, and mutation behavior.
+
+## Project Priorities and Tradeoffs
+
+- This is a personal project. The user is effectively fulfilling developer, tester, and product roles together.
+- Optimize for decisions that help the user understand:
+  - clean and elegant UI design
+  - organized, conceptually simple code
+  - evolving or uncertain requirements
+  - best practice and where compromise is justified
+  - how Codex should best be used to implement requirements
+- Performance at large scale is less important than clarity, maintainability, and good product judgment for the current scope.
+- When discussing options, explain tradeoffs in a way that helps the user decide and iterate requirements, not just implement the first possible solution.
 
 ## Studio Documentation
 
