@@ -393,3 +393,105 @@ Current Studio cleanup standardizes:
 - modal form internals on `tagStudioForm__*`
 
 Further cleanup should continue in that direction rather than adding more page-to-page class borrowing.
+
+## Non-Modal UI Refactor Plan
+
+The modal refactor is structurally complete. The remaining UI-system work is a narrower consistency pass for shared non-modal elements.
+
+### Scope
+
+Focus on shared primitives for:
+
+- search inputs
+- filter bars and `All tags` controls
+- action/import toolbars
+- status and result message blocks
+- list container, header, and row-shell structure
+
+Do not use this pass to redesign page-specific row content or to move business logic into the shared UI layer.
+
+### Planned Phases
+
+#### Phase 1: UI Inventory
+
+Objective:
+
+- identify where the same UI intent still uses different markup or classes
+- classify each pattern as:
+  - already shared
+  - should become shared
+  - keep page-specific
+  - defer
+
+Primary review targets:
+
+- `assets/studio/css/studio.css`
+- `assets/studio/js/tag-registry.js`
+- `assets/studio/js/tag-aliases.js`
+- `assets/studio/js/series-tags.js`
+- `assets/studio/js/tag-studio.js`
+
+This phase is analysis only.
+
+#### Phase 2: Search / Filter Standardization
+
+Objective:
+
+- make list-page search and filter controls use one shared structure and naming contract
+
+Expected scope:
+
+- `tagStudioFilters__searchWrap`
+- `tagStudioFilters__searchInput`
+- `tagStudioFilters__allBtn`
+- `tagStudioFilters__groupBtn`
+
+Page-specific filter logic stays in page controllers.
+
+#### Phase 3: Toolbar / Status Standardization
+
+Objective:
+
+- make import/create/action rows and result/status messaging use one shared structure
+
+Expected scope:
+
+- `tagStudioToolbar__row`
+- `tagStudioToolbar__field`
+- `tagStudioToolbar__mode`
+- `tagStudioToolbar__selected`
+- `tagStudioToolbar__result`
+
+Page-specific actions, labels, and mutation flows stay local.
+
+#### Phase 4: List Shell Standardization
+
+Objective:
+
+- align shared list-shell structure while keeping row internals page-specific
+
+Expected scope:
+
+- list container spacing
+- shared header row treatment
+- empty-state placement
+- shared row-shell spacing
+
+Page-specific columns, chips, and row details stay local.
+
+#### Phase 5: Documentation And Regression Close-out
+
+Objective:
+
+- document the non-modal shared primitives explicitly
+- extend the regression checklist to cover the shared search/filter, toolbar/status, and list-shell patterns
+
+### Implementation Boundary
+
+The same rule used for modal refactoring applies here:
+
+- shared Studio UI modules and CSS own the shell and styling contract
+- page controllers own rendering decisions and event wiring
+- domain/service modules own validation, filtering rules, and mutation behavior
+
+Shared styling should not be implemented by borrowing another page's class names. If two pages use the same UI intent, the primitive belongs in the shared `tagStudio*` layer.
