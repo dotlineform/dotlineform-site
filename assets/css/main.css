@@ -251,6 +251,35 @@ th{ background: var(--panel-2); }
   padding: var(--space-6) 18px var(--space-7);
 }
 
+.studio{
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.studio__headerRow{
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.studio__headerRow h2{
+  margin: 0;
+}
+
+.studio__content{
+  margin-top: 1rem;
+}
+
+.studio__content ul{
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+}
+
+.studio__content li{
+  margin: 0 0 0.45rem;
+}
+
 /* 5.	Site chrome: header, footer, navigation */
 
 .site-header{
