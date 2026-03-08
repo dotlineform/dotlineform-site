@@ -643,7 +643,7 @@ function renderList(state) {
   const tagHeading = registryText(state.config, "table_heading_tag", "tag");
   const descriptionHeading = registryText(state.config, "table_heading_description", "description");
   const headerHtml = `
-    <div class="tagRegistry__head">
+    <div class="tagStudioList__head tagRegistry__head">
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "label")}" data-sort-key="label">
         ${escapeHtml(tagHeading)}${sortIndicator(state, "label")}
       </button>
@@ -660,9 +660,9 @@ function renderList(state) {
 
   state.refs.list.innerHTML = `
     ${headerHtml}
-    <ul class="tagRegistry__rows">
+    <ul class="tagStudioList__rows tagRegistry__rows">
       ${visible.map((tag) => `
-        <li class="tagRegistry__row">
+        <li class="tagStudioList__row tagRegistry__row">
           <div class="tagRegistry__tagCol">
             <div class="tagRegistry__tagActions">
               <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagChip" title="${escapeHtml(tag.tagId)}">

@@ -558,11 +558,11 @@ function renderList(state) {
   const aliasHeading = aliasesText(state.config, "table_heading_alias", "alias");
 
   const headerHtml = `
-    <div class="tagAliases__head">
+    <div class="tagStudioList__head tagAliases__head">
       <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
         ${escapeHtml(aliasHeading)}${sortIndicator(state, "alias")}
       </button>
-      <span class="tagAliases__headLabel">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
+      <span class="tagStudioList__headLabel tagAliases__headLabel">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
     </div>
   `;
 
@@ -573,11 +573,11 @@ function renderList(state) {
 
   state.refs.list.innerHTML = `
     ${headerHtml}
-    <ul class="tagAliases__rows">
+    <ul class="tagStudioList__rows tagAliases__rows">
       ${visible.map((entry) => {
         const sortedTargets = entry.resolvedTargets.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
         return `
-        <li class="tagAliases__row">
+        <li class="tagStudioList__row tagAliases__row">
           <div class="tagAliases__aliasCol">
             <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">
               <button

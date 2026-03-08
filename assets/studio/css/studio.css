@@ -911,13 +911,41 @@
   color: var(--studio-danger);
 }
 
-.tagRegistry__head {
+.tagStudioList__head {
   display: grid;
-  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
   gap: 0.56rem;
-  border-bottom: 1px solid var(--line, var(--studio-line));
+  border-bottom: 1px solid var(--studio-list-head-line, var(--line, var(--studio-line)));
   padding: 0 0 0.35rem;
   margin: 0 0 0.1rem;
+  align-items: baseline;
+}
+
+.tagStudioList__headLabel {
+  font-size: 0.78rem;
+  color: var(--muted, var(--studio-muted));
+  text-transform: lowercase;
+}
+
+.tagStudioList__rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tagStudioList__row {
+  display: grid;
+  gap: 0.56rem;
+  padding: 0.45rem 0;
+  border-top: 1px solid var(--studio-list-row-line, var(--line, var(--studio-line)));
+}
+
+.tagStudioList__row:first-child {
+  border-top: 0;
+}
+
+.tagRegistry__head {
+  --studio-list-head-line: var(--line, var(--studio-line));
+  grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
 }
 
 .tagRegistry__sortBtn {
@@ -937,23 +965,10 @@
   color: inherit;
 }
 
-.tagRegistry__rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
 .tagRegistry__row {
-  display: grid;
+  --studio-list-row-line: var(--line, var(--studio-line));
   grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
-  gap: 0.56rem;
   align-items: start;
-  padding: 0.45rem 0;
-  border-top: 1px solid var(--line, var(--studio-line));
-}
-
-.tagRegistry__row:first-child {
-  border-top: 0;
 }
 
 .tagRegistry__tagCol {
@@ -1088,37 +1103,13 @@
 }
 
 .tagAliases__head {
-  display: grid;
   grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
-  gap: 0.56rem;
-  border-bottom: 1px solid var(--line, var(--studio-line));
-  padding: 0 0 0.35rem;
-  margin: 0 0 0.1rem;
-}
-
-.tagAliases__headLabel {
-  font-size: 0.78rem;
-  color: var(--muted, var(--studio-muted));
-  text-transform: lowercase;
-}
-
-.tagAliases__rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 .tagAliases__row {
-  display: grid;
+  --studio-list-row-line: var(--line, var(--studio-line-soft));
   grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
-  gap: 0.56rem;
   align-items: baseline;
-  padding: 0.45rem 0;
-  border-top: 1px solid var(--line, var(--studio-line-soft));
-}
-
-.tagAliases__row:first-child {
-  border-top: 0;
 }
 
 .tagAliases__aliasCol {

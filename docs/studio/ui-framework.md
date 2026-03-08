@@ -73,6 +73,23 @@ Use `tagStudioFilters__*` for shared list filtering controls:
 
 This pattern is intended for registry-, aliases-, and similar list pages.
 
+### List shell pattern
+
+Use `tagStudioList__*` for shared outer list structure on list-style Studio pages:
+
+- `tagStudioList__head`
+- `tagStudioList__headLabel`
+- `tagStudioList__rows`
+- `tagStudioList__row`
+
+This pattern covers:
+
+- outer header row treatment
+- list container reset
+- shared row spacing and divider treatment
+
+Page-specific row internals, columns, chips, and actions should stay in the page namespace.
+
 ### Modal form pattern
 
 Use `tagStudioForm__*` for form-like modal content:
@@ -488,6 +505,11 @@ Expected scope:
 - shared row-shell spacing
 
 Page-specific columns, chips, and row details stay local.
+
+Current status:
+
+- complete for registry and aliases
+- series tags intentionally keeps a page-specific row model while sharing the broader Studio control primitives
 
 #### Phase 5: Documentation And Regression Close-out
 
