@@ -448,6 +448,11 @@ Expected scope:
 
 Page-specific filter logic stays in page controllers.
 
+Current status:
+
+- complete for registry, aliases, and series tags
+- remaining work is visual/manual verification rather than further search/filter renaming
+
 #### Phase 3: Toolbar / Status Standardization
 
 Objective:
@@ -463,6 +468,11 @@ Expected scope:
 - `tagStudioToolbar__result`
 
 Page-specific actions, labels, and mutation flows stay local.
+
+Current status:
+
+- complete for registry and aliases
+- shared toolbar action positioning now uses the Studio toolbar namespace rather than page-specific classes
 
 #### Phase 4: List Shell Standardization
 

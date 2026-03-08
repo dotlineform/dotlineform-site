@@ -195,8 +195,8 @@ function renderShell(state) {
         <div class="tagStudioToolbar__row">
           <label class="tagStudioToolbar__field">
             <span class="tagStudioToolbar__label">${escapeHtml(importFileLabel)}</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary tagRegistry__chooseBtn" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
-            <input type="file" class="tagRegistry__fileInput" data-role="import-file" accept=".json,application/json" hidden>
+            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
+            <input type="file" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagStudioToolbar__field">
             <span class="tagStudioToolbar__label">${escapeHtml(importModeFieldLabel)}</span>
@@ -208,7 +208,7 @@ function renderShell(state) {
           </label>
           <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
           <span class="tagStudioToolbar__mode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagAliases__newAliasBtn" data-role="open-new-alias">${escapeHtml(newAliasButtonLabel)}</button>
+          <button type="button" class="tagStudio__button tagStudio__button--primary tagStudioToolbar__action" data-role="open-new-alias">${escapeHtml(newAliasButtonLabel)}</button>
         </div>
         <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
         <p class="tagStudioToolbar__result" data-role="import-result"></p>

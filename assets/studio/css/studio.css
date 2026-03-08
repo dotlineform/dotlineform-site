@@ -793,19 +793,16 @@
   margin: 0 0 0.55rem;
 }
 
-.tagStudioFilters__key,
-.tagRegistry__key {
+.tagStudioFilters__key {
   flex: 0 0 auto;
   gap: 0.45rem;
 }
 
-.tagStudioFilters__searchWrap,
-.tagRegistry__searchWrap {
+.tagStudioFilters__searchWrap {
   flex: 0 0 13rem;
 }
 
-.tagStudioFilters__searchInput,
-.tagRegistry__searchInput {
+.tagStudioFilters__searchInput {
   min-width: 0;
   font-size: 0.78rem;
   line-height: 1;
@@ -814,28 +811,23 @@
   border-radius: 999px;
 }
 
-.tagStudioFilters__allBtn,
-.tagRegistry__allBtn {
+.tagStudioFilters__allBtn {
   border-radius: 999px;
   padding: 0.19rem 0.6rem;
   font-size: 0.78rem;
 }
 
-.tagStudioFilters__groupBtn,
-.tagRegistry__groupBtn {
+.tagStudioFilters__groupBtn {
   cursor: pointer;
 }
 
 .tagStudioFilters__allBtn.is-active,
-.tagStudioFilters__groupBtn.is-active,
-.tagRegistry__allBtn.is-active,
-.tagRegistry__groupBtn.is-active {
+.tagStudioFilters__groupBtn.is-active {
   border-color: var(--studio-control-active-border);
   box-shadow: var(--studio-control-active-ring);
 }
 
-.tagStudioToolbar__row,
-.tagRegistry__importRow {
+.tagStudioToolbar__row {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -843,31 +835,26 @@
   margin: 0;
 }
 
-.tagStudioToolbar,
-.tagRegistry__importBox {
+.tagStudioToolbar {
   border: 1px solid #d2d2d2;
   border-radius: 0.45rem;
   padding: 0.55rem;
   margin: 0 0 0.45rem;
 }
 
-.tagStudioToolbar__field,
-.tagRegistry__fileWrap,
-.tagRegistry__modeWrap {
+.tagStudioToolbar__field {
   display: inline-flex;
   flex-direction: column;
   gap: 0.18rem;
 }
 
-.tagStudioToolbar__label,
-.tagRegistry__importLabel {
+.tagStudioToolbar__label {
   font-size: 0.74rem;
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
 }
 
-.tagStudioToolbar__select,
-.tagRegistry__modeSelect {
+.tagStudioToolbar__select {
   font: inherit;
   font-size: 0.78rem;
   border: 1px solid var(--line, var(--studio-line-strong));
@@ -878,23 +865,20 @@
 }
 
 .tagStudioToolbar__row .tagStudio__button,
-.tagStudioToolbar__row .tagStudioToolbar__select,
-.tagRegistry__importRow .tagStudio__button,
-.tagRegistry__importRow .tagRegistry__modeSelect {
+.tagStudioToolbar__row .tagStudioToolbar__select {
   height: 2rem;
   display: inline-flex;
   align-items: center;
 }
 
-.tagStudioToolbar__mode,
-.tagRegistry__saveMode {
+.tagStudioToolbar__mode {
   font-size: 0.82rem;
   color: var(--muted, var(--studio-muted-soft));
   line-height: 2rem;
   align-self: flex-end;
 }
 
-.tagAliases__newAliasBtn {
+.tagStudioToolbar__action {
   margin-left: auto;
   height: 2rem;
   display: inline-flex;
@@ -902,41 +886,28 @@
   align-self: flex-end;
 }
 
-.tagRegistry__newTagBtn {
-  margin-left: auto;
-  height: 2rem;
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-end;
-}
-
-.tagStudioToolbar__selected,
-.tagRegistry__selected {
+.tagStudioToolbar__selected {
   margin: 0.4rem 0 0;
   font-size: 0.78rem;
   color: var(--muted, var(--studio-muted));
   text-align: left;
 }
 
-.tagStudioToolbar__result,
-.tagRegistry__result {
+.tagStudioToolbar__result {
   margin: 0.3rem 0 0;
   min-height: 1.1rem;
   font-size: 0.82rem;
 }
 
-.tagStudioToolbar__result.is-success,
-.tagRegistry__result.is-success {
+.tagStudioToolbar__result.is-success {
   color: var(--studio-success);
 }
 
-.tagStudioToolbar__result.is-warn,
-.tagRegistry__result.is-warn {
+.tagStudioToolbar__result.is-warn {
   color: var(--studio-warn);
 }
 
-.tagStudioToolbar__result.is-error,
-.tagRegistry__result.is-error {
+.tagStudioToolbar__result.is-error {
   color: var(--studio-danger);
 }
 
@@ -1273,36 +1244,27 @@
     gap: 0.4rem;
   }
 
-  .tagStudioFilters__searchWrap,
-  .tagRegistry__searchWrap {
+  .tagStudioFilters__searchWrap {
     flex: 1 1 100%;
   }
 
-  .tagStudioFilters__searchInput,
-  .tagRegistry__searchInput {
+  .tagStudioFilters__searchInput {
     min-width: 0;
   }
 
-  .tagStudioFilters__key,
-  .tagRegistry__key {
+  .tagStudioFilters__key {
     flex: 1 1 100%;
   }
 
-  .tagStudioToolbar__row,
-  .tagRegistry__importRow {
+  .tagStudioToolbar__row {
     align-items: start;
   }
 
-  .tagStudioToolbar__mode,
-  .tagRegistry__saveMode {
+  .tagStudioToolbar__mode {
     flex: 1 1 100%;
   }
 
-  .tagAliases__newAliasBtn {
-    margin-left: 0;
-  }
-
-  .tagRegistry__newTagBtn {
+  .tagStudioToolbar__action {
     margin-left: 0;
   }
 
@@ -1390,7 +1352,7 @@
 }
 
 .seriesTags__filters .tagStudio__keyPill,
-.seriesTags__filters .tagRegistry__allBtn {
+.seriesTags__filters .tagStudioFilters__allBtn {
   font-size: 0.78rem;
 }
 

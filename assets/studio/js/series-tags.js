@@ -193,7 +193,7 @@ function renderFilters(state) {
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagRegistry__groupBtn${activeClass}"
+        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
         data-group="${escapeHtml(group)}"
         ${titleAttr}
       >
@@ -204,7 +204,7 @@ function renderFilters(state) {
 
   return `
     <div class="tagStudio__key seriesTags__filters">
-      <button type="button" class="tagStudio__button tagRegistry__allBtn${allActiveClass}" data-group="all">${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
+      <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
       ${renderGroupInfoControl(state)}
     </div>
