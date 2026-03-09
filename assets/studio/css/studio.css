@@ -3,6 +3,15 @@
 .tagRegistryPage,
 .tagAliasesPage,
 .seriesTagsPage {
+  --studio-radius-sm: 0.35rem;
+  --studio-radius-md: 0.45rem;
+  --studio-radius-lg: 0.5rem;
+  --studio-surface-padding-sm: 0.55rem;
+  --studio-surface-padding-md: 0.6rem;
+  --studio-surface-padding-lg: 0.9rem;
+  --studio-control-height: 2rem;
+  --studio-shell-gap-sm: 0.45rem;
+  --studio-shell-gap-md: 0.6rem;
   --tag-subject-bg: #ecf5ef;
   --tag-subject-bd: #bfdcc8;
   --tag-subject-fg: #2e5a3f;
@@ -75,13 +84,13 @@
   width: 100%;
   display: block;
   height: auto;
-  border-radius: 0.35rem;
+  border-radius: var(--studio-radius-sm);
 }
 
 .tagStudioPage__context {
   border: 1px solid var(--line, var(--studio-line));
-  border-radius: 0.5rem;
-  padding: 0.9rem;
+  border-radius: var(--studio-radius-lg);
+  padding: var(--studio-surface-padding-lg);
   background: var(--surface, var(--studio-surface));
 }
 
@@ -112,8 +121,8 @@
 
 .tagStudio__panel {
   border: 1px solid var(--line, var(--studio-line));
-  border-radius: 0.5rem;
-  padding: 0.9rem;
+  border-radius: var(--studio-radius-lg);
+  padding: var(--studio-surface-padding-lg);
   background: var(--surface, var(--studio-surface));
 }
 
@@ -124,7 +133,7 @@
 
 .tagStudioEditorSection {
   display: grid;
-  gap: 0.45rem;
+  gap: var(--studio-shell-gap-sm);
 }
 
 .tagStudioEditorSection--messages {
@@ -157,7 +166,7 @@
 .tagStudio__inputRow {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--studio-shell-gap-sm);
 }
 
 .tagStudio__inputRow .tagStudio__input {
@@ -191,7 +200,7 @@
   width: 100%;
   max-width: 100%;
   border: 1px solid var(--studio-line-input);
-  border-radius: 0.4rem;
+  border-radius: var(--studio-radius-sm);
   padding: 0.48rem 0.55rem;
   font: inherit;
   background: var(--surface, var(--studio-surface));
@@ -207,7 +216,7 @@
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
   color: inherit;
-  border-radius: 0.38rem;
+  border-radius: var(--studio-radius-sm);
   padding: 0.42rem 0.7rem;
   font: inherit;
   cursor: pointer;
@@ -236,7 +245,7 @@
 
 .tagStudio__popupInner {
   position: absolute;
-  top: 0.45rem;
+  top: var(--studio-shell-gap-sm);
   left: 0;
   z-index: 20;
   min-width: 18rem;
@@ -245,9 +254,9 @@
   overflow: auto;
   background: var(--surface, var(--studio-surface));
   border: 1px solid var(--line, var(--studio-line));
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   box-shadow: var(--studio-shadow-pop);
-  padding: 0.45rem;
+  padding: var(--studio-surface-padding-sm);
   display: flex;
   flex-wrap: wrap;
   gap: 0.42rem;
@@ -324,7 +333,7 @@
 
 .tagStudioSuggest__workButton {
   border: 1px solid var(--line, var(--studio-line-chip));
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   background: var(--surface, var(--studio-surface));
   color: inherit;
   font: inherit;
@@ -645,11 +654,11 @@
   overflow: auto;
   background: var(--surface, var(--studio-surface));
   border: 1px solid var(--line, var(--studio-line));
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   box-shadow: var(--studio-shadow-pop);
-  padding: 0.6rem;
+  padding: var(--studio-surface-padding-md);
   display: grid;
-  gap: 0.6rem;
+  gap: var(--studio-shell-gap-md);
 }
 
 .tagStudioModal .tagStudio__keyInfoPopup {
@@ -710,7 +719,7 @@
   max-height: calc(100vh - 2rem);
   overflow: auto;
   border: 1px solid var(--line, var(--studio-line));
-  border-radius: 0.5rem;
+  border-radius: var(--studio-radius-lg);
   background: var(--surface, var(--studio-surface));
   padding: 1rem;
 }
@@ -723,7 +732,7 @@
 .tagStudioModal__pre {
   margin: 0;
   border: 1px solid var(--line, var(--studio-line-modal));
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   padding: 0.65rem;
   overflow: auto;
   background: var(--studio-surface-code);
@@ -739,7 +748,7 @@
 .tagStudioError {
   border: 1px solid var(--studio-error-border);
   background: var(--studio-error-bg);
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   padding: 0.75rem;
   color: var(--studio-error-text);
 }
@@ -826,15 +835,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 0.45rem 0.6rem;
+  gap: var(--studio-shell-gap-sm) var(--studio-shell-gap-md);
   margin: 0;
 }
 
 .tagStudioToolbar {
   border: 1px solid var(--line, var(--studio-line-soft));
-  border-radius: 0.45rem;
-  padding: 0.55rem;
-  margin: 0 0 0.45rem;
+  border-radius: var(--studio-radius-md);
+  padding: var(--studio-surface-padding-sm);
+  margin: 0 0 var(--studio-shell-gap-sm);
 }
 
 .tagStudioToolbar__field {
@@ -854,14 +863,14 @@
   font-size: var(--font-caption);
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
-  border-radius: 0.35rem;
+  border-radius: var(--studio-radius-sm);
   padding: 0.36rem 0.5rem;
-  height: 2rem;
+  height: var(--studio-control-height);
 }
 
 .tagStudioToolbar__row .tagStudio__button,
 .tagStudioToolbar__row .tagStudioToolbar__select {
-  height: 2rem;
+  height: var(--studio-control-height);
   display: inline-flex;
   align-items: center;
 }
@@ -869,13 +878,13 @@
 .tagStudioToolbar__mode {
   font-size: var(--font-small);
   color: var(--muted, var(--studio-muted-soft));
-  line-height: 2rem;
+  line-height: var(--studio-control-height);
   align-self: flex-end;
 }
 
 .tagStudioToolbar__action {
   margin-left: auto;
-  height: 2rem;
+  height: var(--studio-control-height);
   display: inline-flex;
   align-items: center;
   align-self: flex-end;
@@ -1112,7 +1121,7 @@
 
 .tagAliases__detail {
   border: 1px solid var(--line, var(--studio-line-soft));
-  border-radius: 0.45rem;
+  border-radius: var(--studio-radius-md);
   padding: 0.7rem;
   min-height: 12rem;
 }

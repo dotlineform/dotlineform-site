@@ -69,6 +69,15 @@
   --nav-grid-margin-top: 0.35rem;
   /* --meta-small-size: 0.875rem; replaced by --font-small */
   /* --meta-small-line: 1.2; replaced by --line-snug */
+
+  /* Shared list primitives */
+  --list-thumb-size: 48px;
+  --list-column-gap: 10px;
+  --list-row-padding: 8px;
+  --list-row-padding-compact: 3px;
+  --list-row-gap-tight: 2px;
+  --list-section-gap: 24px;
+  --list-caption-color: var(--muted);
 }
 
 /* Optional dark mode */
@@ -498,8 +507,8 @@ figure.diagram figcaption{
   display: grid;
   grid-template-columns: 1fr;
   align-items: baseline;
-  column-gap: 10px;
-  padding: 8px 0;
+  column-gap: var(--list-column-gap);
+  padding: var(--list-row-padding) 0;
 }
 
 /* Section-specific index column layouts */
@@ -515,7 +524,7 @@ figure.diagram figcaption{
 /* work_id column (used by works indexes) */
 .index__work_id{
   font-size: var(--font-caption);
-  color: var(--muted);
+  color: var(--list-caption-color);
   white-space: nowrap;
   text-align: left;
 }
@@ -523,7 +532,7 @@ figure.diagram figcaption{
 /* date/prefix column (used by moments indexes) */
 .index__date{
   font-size: var(--font-caption);
-  color: var(--muted);
+  color: var(--list-caption-color);
   white-space: nowrap;
   text-align: left;
 }
@@ -565,8 +574,8 @@ figure.diagram figcaption{
 }
 
 .index__thumb{
-  width: 48px;
-  height: 48px;
+  width: var(--list-thumb-size);
+  height: var(--list-thumb-size);
   object-fit: cover;
   flex: 0 0 auto;
   border-radius: 2px;
@@ -576,10 +585,10 @@ figure.diagram figcaption{
 .workIndexItem,
 .seriesIndexItem{
   display: grid;
-  grid-template-columns: 48px 1fr; /* thumb + text area */
+  grid-template-columns: var(--list-thumb-size) 1fr; /* thumb + text area */
   align-items: center;
-  column-gap: 10px;
-  padding: 8px 0;
+  column-gap: var(--list-column-gap);
+  padding: var(--list-row-padding) 0;
   justify-self: start;
   width: fit-content;
 }
@@ -593,14 +602,14 @@ figure.diagram figcaption{
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  min-height: 48px;
+  min-height: var(--list-thumb-size);
 }
 .seriesIndexItem__meta{
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 2px;
-  min-height: 48px;
+  min-height: var(--list-thumb-size);
 }
 .workIndexItem + .workIndexItem{ margin-top: 6px; }
 
@@ -1440,16 +1449,28 @@ note: works tags are not currently in use on the work pages themselves.
   display: grid;
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr) minmax(0, 1fr);
   align-items: baseline;
-  column-gap: 8px;
-  margin: 24px 0 4px;
-  padding-bottom: 8px;
+  column-gap: var(--list-column-gap);
+  margin: var(--list-section-gap) 0 4px;
+  padding-bottom: var(--list-row-padding);
   border-bottom: 1px solid var(--border);
 }
 
-.worksList__headLabel{
+.index__work_id,
+.index__date,
+.worksList__headLabel,
+.worksList__sortBtn,
+.worksList__cat,
+.worksList__year,
+.worksList__title,
+.worksList__series,
+.worksList__storage,
+.worksList__tags{
   font-size: var(--font-caption);
   line-height: 1.2;
-  color: var(--muted);
+}
+
+.worksList__headLabel{
+  color: var(--list-caption-color);
 }
 
 .worksList__sortBtn{
@@ -1458,9 +1479,7 @@ note: works tags are not currently in use on the work pages themselves.
   background: transparent;
   padding: 0;
   margin: 0;
-  font-size: var(--font-caption);
-  line-height: 1.2;
-  color: var(--muted);
+  color: var(--list-caption-color);
   text-align: left;
   cursor: pointer;
   width: fit-content;
@@ -1483,8 +1502,8 @@ note: works tags are not currently in use on the work pages themselves.
   display: grid;
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr) minmax(0, 1fr);
   align-items: baseline;
-  column-gap: 8px;
-  padding: 3px 0;
+  column-gap: var(--list-column-gap);
+  padding: var(--list-row-padding-compact) 0;
 }
 
 .worksList--curator .worksList__head{
@@ -1503,16 +1522,6 @@ note: works tags are not currently in use on the work pages themselves.
   grid-template-columns: 10.5ch minmax(0, 1.2fr) minmax(0, 1fr);
 }
 
-.worksList__cat,
-.worksList__year,
-.worksList__title,
-.worksList__series,
-.worksList__storage,
-.worksList__tags{
-  font-size: var(--font-caption);
-  line-height: 1.2;
-}
-
 .worksList__cat{
   display: inline-block;
   justify-self: start;
@@ -1521,7 +1530,7 @@ note: works tags are not currently in use on the work pages themselves.
 }
 
 .worksList__year{
-  color: var(--muted);
+  color: var(--list-caption-color);
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -1628,10 +1637,10 @@ note: works tags are not currently in use on the work pages themselves.
 @media (max-width: 720px){
   .worksList__head{
     grid-template-columns: 1fr;
-    row-gap: 2px;
+    row-gap: var(--list-row-gap-tight);
   }
   .worksList__item{
     grid-template-columns: 1fr;
-    row-gap: 2px;
+    row-gap: var(--list-row-gap-tight);
   }
 }
