@@ -53,6 +53,7 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__chip`
 - `tagStudio__key`
 - `tagStudio__popup`
+- `tagStudio__popupMore`
 - `tagStudio__popupInner`
 - `tagStudioModal`, `tagStudioModal__*`
 

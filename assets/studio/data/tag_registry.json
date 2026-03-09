@@ -1,6 +1,6 @@
 {
   "tag_registry_version": "tag_registry_v1",
-  "updated_at_utc": "2026-03-07T19:11:05Z",
+  "updated_at_utc": "2026-03-09T16:04:47Z",
   "policy": {
     "allowed_groups": [
       "subject",
@@ -2201,6 +2201,14 @@
       "status": "active",
       "description": "originating from 'nerve', may be also represented literally or have moral/ethical meaning.",
       "updated_at_utc": "2026-03-07T19:08:20Z"
+    },
+    {
+      "tag_id": "domain:nerve",
+      "group": "domain",
+      "label": "nerve",
+      "status": "active",
+      "description": "",
+      "updated_at_utc": "2026-03-09T16:04:47Z"
     }
   ]
 }

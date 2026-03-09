@@ -537,6 +537,7 @@ Keep `docs/scripts-overview.md` updated as well for command-level usage and scri
 
 The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/studio/data/tag_registry.json` and:
 
+- uses a template-owned page shell with JS-bound `data-role` hooks and a dedicated modal host
 - lists tags with columns: tag, description
 - default sort is alphabetical by tag label
 - supports header click sorting (tag/description, asc/desc)

@@ -48,12 +48,17 @@ import {
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  tagRegistryUi
+} from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const MAX_ALIAS_TAGS = 4;
 const DEMOTE_TAG_MATCH_CAP = 12;
 const TAG_SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+const UI = tagRegistryUi;
+const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagRegistryPage);
@@ -157,198 +162,180 @@ function renderShell(state) {
   const deleteConfirmButton = registryText(state.config, "delete_confirm_button", "Delete");
   const deleteCloseButton = registryText(state.config, "delete_close_button", "Close");
   const patchModalHtml = renderStudioModalFrame({
-    modalRole: "patch-modal",
-    backdropRole: "close-modal",
+    modalRole: UI.role.patchModal,
+    backdropRole: UI.role.patchModalClose,
     titleId: "tagRegistryPatchTitle",
     title: patchModalTitle,
     bodyHtml: `
-      <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
-      <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
+      <p class="${UI_CLASS.modalLabel}">${escapeHtml(patchModalLabel)}</p>
+      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "copy-patch", label: patchModalCopy, primary: true },
-      { role: "close-modal", label: patchModalClose }
+      { role: UI.role.copyPatch, label: patchModalCopy, primary: true },
+      { role: UI.role.patchModalClose, label: patchModalClose }
     ])
   });
   const editModalHtml = renderStudioModalFrame({
-    modalRole: "edit-modal",
+    modalRole: UI.role.editModal,
     titleId: "tagRegistryEditTitle",
     title: editModalTitle,
     bodyHtml: `
-      <p class="tagStudioForm__meta" data-role="edit-tag-id"></p>
-      <div class="tagStudioForm__fields">
-        <label class="tagStudioForm__field">
-          <input type="text" class="tagStudio__input tagStudioForm__readonly" data-role="edit-tag-name" autocomplete="off" readonly>
+      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.editTagId}"></p>
+      <div class="${UI_CLASS.formFields}">
+        <label class="${UI_CLASS.formField}">
+          <input type="text" class="tagStudio__input ${UI_CLASS.formReadonly}" data-role="${UI.role.editTagName}" autocomplete="off" readonly>
         </label>
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
-          <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="edit-description" rows="3" autocomplete="off"></textarea>
+        <label class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(editDescriptionLabel)}</span>
+          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.editDescription}" rows="3" autocomplete="off"></textarea>
         </label>
       </div>
-      <p class="tagStudioForm__status" data-role="edit-status"></p>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "save-edit", label: editSaveButton, primary: true },
-      { role: "close-edit-modal", label: editCloseButton }
+      { role: UI.role.saveEdit, label: editSaveButton, primary: true },
+      { role: UI.role.editModalClose, label: editCloseButton }
     ])
   });
   const newModalHtml = renderStudioModalFrame({
-    modalRole: "new-modal",
+    modalRole: UI.role.newModal,
     titleId: "tagRegistryNewTitle",
     title: newModalTitle,
     bodyHtml: `
-      <div class="tagStudio__key tagRegistryNew__key" data-role="new-group-key"></div>
-      <div class="tagStudioForm__fields">
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(newSlugLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="new-tag-slug" autocomplete="off">
+      <div class="tagStudio__key ${UI_CLASS.newGroupKey}" data-role="${UI.role.newGroupKey}"></div>
+      <div class="${UI_CLASS.formFields}">
+        <label class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(newSlugLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="${UI.role.newTagSlug}" autocomplete="off">
         </label>
-        <p class="tagStudioForm__warning" data-role="new-tag-warning"></p>
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(newDescriptionLabel)}</span>
-          <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="new-tag-description" rows="3" autocomplete="off"></textarea>
+        <p class="${UI_CLASS.formWarning}" data-role="${UI.role.newTagWarning}"></p>
+        <label class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(newDescriptionLabel)}</span>
+          <textarea class="tagStudio__input ${UI_CLASS.formDescriptionInput}" data-role="${UI.role.newTagDescription}" rows="3" autocomplete="off"></textarea>
         </label>
       </div>
-      <p class="tagStudioForm__status" data-role="new-tag-status"></p>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "create-tag", label: newCreateButton, primary: true, disabled: true },
-      { role: "close-new-modal", label: newCancelButton }
+      { role: UI.role.createTag, label: newCreateButton, primary: true, disabled: true },
+      { role: UI.role.newModalClose, label: newCancelButton }
     ])
   });
   const demoteModalHtml = renderStudioModalFrame({
-    modalRole: "demote-modal",
-    backdropRole: "close-demote-modal",
+    modalRole: UI.role.demoteModal,
+    backdropRole: UI.role.demoteModalClose,
     titleId: "tagRegistryDemoteTitle",
     title: demoteModalTitle,
     bodyHtml: `
-      <p class="tagStudioForm__meta" data-role="demote-tag-meta"></p>
-      <div class="tagStudioForm__fields">
-        <label class="tagStudioForm__field tagStudioForm__searchWrap">
-          <span class="tagStudioForm__label">${escapeHtml(demoteSearchLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="demote-tag-search" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
-          <div class="tagStudio__popup" data-role="demote-tag-popup-wrap" hidden>
-            <div class="tagStudio__popupInner" data-role="demote-tag-popup"></div>
+      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.demoteTagMeta}"></p>
+      <div class="${UI_CLASS.formFields}">
+        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(demoteSearchLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(demoteSearchPlaceholder)}">
+          <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
+            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__key tagStudioForm__key" data-role="demote-group-key"></div>
-      <div class="tagStudio__chipList tagStudioForm__selected" data-role="demote-tag-list"></div>
-      <p class="tagStudioForm__status" data-role="demote-status"></p>
+      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
+      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "confirm-demote", label: demoteConfirmButton, primary: true, disabled: true },
-      { role: "close-demote-modal", label: demoteCloseButton }
+      { role: UI.role.confirmDemote, label: demoteConfirmButton, primary: true, disabled: true },
+      { role: UI.role.demoteModalClose, label: demoteCloseButton }
     ])
   });
   const deleteModalHtml = renderStudioModalFrame({
-    modalRole: "delete-modal",
-    backdropRole: "close-delete-modal",
+    modalRole: UI.role.deleteModal,
+    backdropRole: UI.role.deleteModalClose,
     titleId: "tagRegistryDeleteTitle",
     title: deleteModalTitle,
     bodyHtml: `
-      <p class="tagStudioForm__meta" data-role="delete-tag-meta"></p>
-      <p class="tagStudioForm__impact">
+      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.deleteTagMeta}"></p>
+      <p class="${UI_CLASS.formImpact}">
         ${escapeHtml(deleteImpactIntro)}
       </p>
-      <p class="tagStudioForm__impact" data-role="delete-impact"></p>
-      <p class="tagStudioForm__status" data-role="delete-status"></p>
+      <p class="${UI_CLASS.formImpact}" data-role="${UI.role.deleteImpact}"></p>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "confirm-delete-tag", label: deleteConfirmButton, primary: true },
-      { role: "close-delete-modal", label: deleteCloseButton }
+      { role: UI.role.confirmDeleteTag, label: deleteConfirmButton, primary: true },
+      { role: UI.role.deleteModalClose, label: deleteCloseButton }
     ])
   });
-  state.mount.innerHTML = `
-    <section class="tagStudio__panel">
-      <div class="tagStudioToolbar">
-        <div class="tagStudioToolbar__row">
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label">${escapeHtml(importFileLabel)}</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
-            <input type="file" data-role="import-file" accept=".json,application/json" hidden>
-          </label>
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label">${escapeHtml(importModeFieldLabel)}</span>
-            <select class="tagStudioToolbar__select" data-role="import-mode">
-              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
-              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
-              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
-            </select>
-          </label>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
-          <span class="tagStudioToolbar__mode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagStudioToolbar__action" data-role="open-new-tag">${escapeHtml(newTagButtonLabel)}</button>
-        </div>
-        <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
-        <p class="tagStudioToolbar__result" data-role="import-result"></p>
-      </div>
+  const refs = {
+    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
+    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
+    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
+    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
+    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
+    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
+    openNewTag: state.mount.querySelector(UI_SELECTOR.openNewTag),
+    saveMode: state.mount.querySelector(UI_SELECTOR.saveMode),
+    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
+    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
+    key: state.mount.querySelector(UI_SELECTOR.key),
+    searchLabel: state.mount.querySelector(UI_SELECTOR.searchLabel),
+    search: state.mount.querySelector(UI_SELECTOR.search),
+    list: state.mount.querySelector(UI_SELECTOR.list),
+    modalHost: state.mount.querySelector(UI_SELECTOR.modalHost)
+  };
 
-      <div class="tagStudioFilters">
-        <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
-        <label class="tagStudioFilters__searchWrap">
-          <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
-          <input
-            type="text"
-            class="tagStudio__input tagStudioFilters__searchInput"
-            data-role="search"
-            placeholder="${escapeHtml(searchPlaceholder)}"
-            autocomplete="off"
-          >
-        </label>
-      </div>
-      <div data-role="list"></div>
-    </section>
+  const missingRef = Object.entries(refs).find(([, value]) => !value);
+  if (missingRef) {
+    renderError(
+      state,
+      registryText(state.config, "missing_template_shell_error", "Tag Registry error: missing template shell markup.")
+    );
+    return;
+  }
 
-    ${patchModalHtml}
-    ${editModalHtml}
-    ${newModalHtml}
-    ${demoteModalHtml}
-    ${deleteModalHtml}
-  `;
+  refs.importFileLabel.textContent = importFileLabel;
+  refs.chooseFile.textContent = chooseFileLabel;
+  refs.importModeLabel.textContent = importModeFieldLabel;
+  refs.importButton.textContent = importButtonLabel;
+  refs.openNewTag.textContent = newTagButtonLabel;
+  refs.saveMode.textContent = importModeLabel;
+  refs.searchLabel.textContent = searchLabel;
+  refs.search.setAttribute("placeholder", searchPlaceholder);
+  setSelectOptionLabel(refs.importMode, "add", importModeOptionAdd);
+  setSelectOptionLabel(refs.importMode, "merge", importModeOptionMerge);
+  setSelectOptionLabel(refs.importMode, "replace", importModeOptionReplace);
+  refs.modalHost.innerHTML = `${patchModalHtml}${editModalHtml}${newModalHtml}${demoteModalHtml}${deleteModalHtml}`;
 
   state.refs = {
-    key: state.mount.querySelector('[data-role="key"]'),
-    search: state.mount.querySelector('[data-role="search"]'),
-    chooseFile: state.mount.querySelector('[data-role="choose-file"]'),
-    importFile: state.mount.querySelector('[data-role="import-file"]'),
-    importMode: state.mount.querySelector('[data-role="import-mode"]'),
-    importButton: state.mount.querySelector('[data-role="import-btn"]'),
-    openNewTag: state.mount.querySelector('[data-role="open-new-tag"]'),
-    saveMode: state.mount.querySelector('[data-role="save-mode"]'),
-    selectedFile: state.mount.querySelector('[data-role="selected-file"]'),
-    importResult: state.mount.querySelector('[data-role="import-result"]'),
-    list: state.mount.querySelector('[data-role="list"]'),
-    patchModal: state.mount.querySelector('[data-role="patch-modal"]'),
-    patchSnippet: state.mount.querySelector('[data-role="patch-snippet"]'),
-    copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
-    editModal: state.mount.querySelector('[data-role="edit-modal"]'),
-    editTagId: state.mount.querySelector('[data-role="edit-tag-id"]'),
-    editTagName: state.mount.querySelector('[data-role="edit-tag-name"]'),
-    editDescription: state.mount.querySelector('[data-role="edit-description"]'),
-    editStatus: state.mount.querySelector('[data-role="edit-status"]'),
-    saveEdit: state.mount.querySelector('[data-role="save-edit"]'),
-    newModal: state.mount.querySelector('[data-role="new-modal"]'),
-    newGroupKey: state.mount.querySelector('[data-role="new-group-key"]'),
-    newTagSlug: state.mount.querySelector('[data-role="new-tag-slug"]'),
-    newTagWarning: state.mount.querySelector('[data-role="new-tag-warning"]'),
-    newTagDescription: state.mount.querySelector('[data-role="new-tag-description"]'),
-    newTagStatus: state.mount.querySelector('[data-role="new-tag-status"]'),
-    createTag: state.mount.querySelector('[data-role="create-tag"]'),
-    demoteModal: state.mount.querySelector('[data-role="demote-modal"]'),
-    demoteTagMeta: state.mount.querySelector('[data-role="demote-tag-meta"]'),
-    demoteTagSearch: state.mount.querySelector('[data-role="demote-tag-search"]'),
-    demoteTagPopupWrap: state.mount.querySelector('[data-role="demote-tag-popup-wrap"]'),
-    demoteTagPopup: state.mount.querySelector('[data-role="demote-tag-popup"]'),
-    demoteGroupKey: state.mount.querySelector('[data-role="demote-group-key"]'),
-    demoteTagList: state.mount.querySelector('[data-role="demote-tag-list"]'),
-    demoteStatus: state.mount.querySelector('[data-role="demote-status"]'),
-    confirmDemote: state.mount.querySelector('[data-role="confirm-demote"]'),
-    deleteModal: state.mount.querySelector('[data-role="delete-modal"]'),
-    deleteTagMeta: state.mount.querySelector('[data-role="delete-tag-meta"]'),
-    deleteImpact: state.mount.querySelector('[data-role="delete-impact"]'),
-    deleteStatus: state.mount.querySelector('[data-role="delete-status"]'),
-    confirmDeleteTag: state.mount.querySelector('[data-role="confirm-delete-tag"]')
+    ...refs,
+    patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
+    patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
+    copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
+    editModal: state.mount.querySelector(UI_SELECTOR.editModal),
+    editTagId: state.mount.querySelector(UI_SELECTOR.editTagId),
+    editTagName: state.mount.querySelector(UI_SELECTOR.editTagName),
+    editDescription: state.mount.querySelector(UI_SELECTOR.editDescription),
+    editStatus: state.mount.querySelector(UI_SELECTOR.editStatus),
+    saveEdit: state.mount.querySelector(UI_SELECTOR.saveEdit),
+    newModal: state.mount.querySelector(UI_SELECTOR.newModal),
+    newGroupKey: state.mount.querySelector(UI_SELECTOR.newGroupKey),
+    newTagSlug: state.mount.querySelector(UI_SELECTOR.newTagSlug),
+    newTagWarning: state.mount.querySelector(UI_SELECTOR.newTagWarning),
+    newTagDescription: state.mount.querySelector(UI_SELECTOR.newTagDescription),
+    newTagStatus: state.mount.querySelector(UI_SELECTOR.newTagStatus),
+    createTag: state.mount.querySelector(UI_SELECTOR.createTag),
+    demoteModal: state.mount.querySelector(UI_SELECTOR.demoteModal),
+    demoteTagMeta: state.mount.querySelector(UI_SELECTOR.demoteTagMeta),
+    demoteTagSearch: state.mount.querySelector(UI_SELECTOR.demoteTagSearch),
+    demoteTagPopupWrap: state.mount.querySelector(UI_SELECTOR.demoteTagPopupWrap),
+    demoteTagPopup: state.mount.querySelector(UI_SELECTOR.demoteTagPopup),
+    demoteGroupKey: state.mount.querySelector(UI_SELECTOR.demoteGroupKey),
+    demoteTagList: state.mount.querySelector(UI_SELECTOR.demoteTagList),
+    demoteStatus: state.mount.querySelector(UI_SELECTOR.demoteStatus),
+    confirmDemote: state.mount.querySelector(UI_SELECTOR.confirmDemote),
+    deleteModal: state.mount.querySelector(UI_SELECTOR.deleteModal),
+    deleteTagMeta: state.mount.querySelector(UI_SELECTOR.deleteTagMeta),
+    deleteImpact: state.mount.querySelector(UI_SELECTOR.deleteImpact),
+    deleteStatus: state.mount.querySelector(UI_SELECTOR.deleteStatus),
+    confirmDeleteTag: state.mount.querySelector(UI_SELECTOR.confirmDeleteTag)
   };
 }
 
@@ -440,7 +427,7 @@ function wireEvents(state) {
   });
 
   state.refs.patchModal.addEventListener("click", (event) => {
-    if (!event.target.closest('[data-role="close-modal"]')) return;
+    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
     closePatchModal(state);
   });
 
@@ -455,7 +442,7 @@ function wireEvents(state) {
   });
 
   state.refs.editModal.addEventListener("click", (event) => {
-    if (!event.target.closest('[data-role="close-edit-modal"]')) return;
+    if (!event.target.closest(UI_SELECTOR.editModalClose)) return;
     closeEditModal(state);
   });
 
@@ -464,7 +451,7 @@ function wireEvents(state) {
   });
 
   state.refs.newModal.addEventListener("click", (event) => {
-    if (event.target.closest('[data-role="close-new-modal"]')) {
+    if (event.target.closest(UI_SELECTOR.newModalClose)) {
       closeNewTagModal(state);
       return;
     }
@@ -489,12 +476,12 @@ function wireEvents(state) {
   });
 
   state.refs.demoteModal.addEventListener("click", (event) => {
-    if (event.target.closest('[data-role="close-demote-modal"]')) {
+    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
       closeDemoteModal(state);
       return;
     }
     if (state.refs.demoteTagPopupWrap.hidden) return;
-    if (!event.target.closest('[data-role="demote-tag-popup-wrap"]') && !event.target.closest('[data-role="demote-tag-search"]')) {
+    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
       hideDemoteTagPopup(state);
     }
   });
@@ -535,7 +522,7 @@ function wireEvents(state) {
   });
 
   state.refs.deleteModal.addEventListener("click", (event) => {
-    if (!event.target.closest('[data-role="close-delete-modal"]')) return;
+    if (!event.target.closest(UI_SELECTOR.deleteModalClose)) return;
     closeDeleteModal(state);
   });
 
@@ -590,17 +577,16 @@ async function loadRegistry(state, options = {}) {
 function renderControls(state) {
   const groupCounts = countTagsByGroup(state.tags);
   const totalCount = state.tags.length;
-  const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
   const allTagsLabel = registryText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
   const groupButtons = STUDIO_GROUPS.map((group) => {
-    const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(groupCounts[group] || 0);
     const titleAttr = groupTitleAttr(state, group);
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group), UI_CLASS.groupFilterButton)}"
         data-group="${escapeHtml(group)}"
+        ${stateAttr(state.filterGroup === group ? UI_STATE.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)} [${count}]
@@ -609,9 +595,9 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
+    <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
-    ${renderGroupInfoControl(state, "registry")}
+    ${renderGroupInfoControl(state)}
   `;
 }
 
@@ -621,12 +607,12 @@ function groupTitleAttr(state, group) {
   return `title="${escapeHtml(description)}"`;
 }
 
-function renderGroupInfoControl(state, scope) {
+function renderGroupInfoControl(state) {
   const title = registryText(state.config, "group_info_title", "Open group descriptions in a new tab");
   const ariaLabel = registryText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
   return `
     <a
-      class="tagStudio__keyPill tagStudio__keyInfoBtn"
+      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
@@ -643,35 +629,35 @@ function renderList(state) {
   const tagHeading = registryText(state.config, "table_heading_tag", "tag");
   const descriptionHeading = registryText(state.config, "table_heading_description", "description");
   const headerHtml = `
-    <div class="tagStudioList__head tagRegistry__head">
-      <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "label")}" data-sort-key="label">
+    <div class="${UI_CLASS.listHead}">
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="label"${stateAttr(state.sortKey === "label" ? UI_STATE.active : "")}>
         ${escapeHtml(tagHeading)}${sortIndicator(state, "label")}
       </button>
-      <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "description")}" data-sort-key="description">
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="description"${stateAttr(state.sortKey === "description" ? UI_STATE.active : "")}>
         ${escapeHtml(descriptionHeading)}${sortIndicator(state, "description")}
       </button>
     </div>
   `;
 
   if (!visible.length) {
-    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">${escapeHtml(registryText(state.config, "empty_state", "none"))}</p>`;
+    state.refs.list.innerHTML = `${headerHtml}<p class="${UI_CLASS.empty}">${escapeHtml(registryText(state.config, "empty_state", "none"))}</p>`;
     return;
   }
 
   state.refs.list.innerHTML = `
     ${headerHtml}
-    <ul class="tagStudioList__rows tagRegistry__rows">
+    <ul class="${UI_CLASS.listRows}">
       ${visible.map((tag) => `
-        <li class="tagStudioList__row tagRegistry__row">
-          <div class="tagRegistry__tagCol">
-            <div class="tagRegistry__tagActions">
-              <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)} tagRegistry__tagChip" title="${escapeHtml(tag.tagId)}">
-                <button type="button" class="tagRegistry__tagInlineBtn" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="${escapeHtml(registryText(state.config, "tag_edit_aria_label", "Edit {tag_id}", { tag_id: tag.tagId }))}">
+        <li class="${UI_CLASS.listRow}">
+          <div class="${UI_CLASS.tagCol}">
+            <div class="${UI_CLASS.tagActions}">
+              <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.tagChip)}" title="${escapeHtml(tag.tagId)}">
+                <button type="button" class="${UI_CLASS.tagInlineButton}" data-tag-id="${escapeHtml(tag.tagId)}" aria-label="${escapeHtml(registryText(state.config, "tag_edit_aria_label", "Edit {tag_id}", { tag_id: tag.tagId }))}">
                   ${escapeHtml(tag.label)}
                 </button>
               <button
                 type="button"
-                class="tagStudio__chipRemove tagRegistry__demoteBtn"
+                class="${classNames(UI_CLASS.chipRemove, UI_CLASS.demoteButton)}"
                 data-demote-tag-id="${escapeHtml(tag.tagId)}"
                 title="${escapeHtml(registryText(state.config, "tag_demote_title", "Demote canonical tag to alias"))}"
                 aria-label="${escapeHtml(registryText(state.config, "tag_demote_aria_label", "Demote {tag_id}", { tag_id: tag.tagId }))}"
@@ -680,7 +666,7 @@ function renderList(state) {
               </button>
               <button
                 type="button"
-                class="tagStudio__chipRemove"
+                class="${UI_CLASS.chipRemove}"
                 data-delete-tag-id="${escapeHtml(tag.tagId)}"
                 title="${escapeHtml(registryText(state.config, "tag_delete_title", "Delete canonical tag"))}"
                 aria-label="${escapeHtml(registryText(state.config, "tag_delete_aria_label", "Delete {tag_id}", { tag_id: tag.tagId }))}"
@@ -690,7 +676,7 @@ function renderList(state) {
               </span>
             </div>
           </div>
-          <div class="tagRegistry__descCol">
+          <div class="${UI_CLASS.descCol}">
             ${escapeHtml(tag.description || "—")}
           </div>
         </li>
@@ -704,10 +690,6 @@ function sortIndicator(state, key) {
   return state.sortDir === "asc" ? " ↑" : " ↓";
 }
 
-function sortBtnClass(state, key) {
-  return state.sortKey === key ? " is-active" : "";
-}
-
 function findTagById(state, tagId) {
   return findRegistryTagById(state.tags, tagId);
 }
@@ -719,16 +701,19 @@ function openEditModal(state, tagId) {
   const [, slug = ""] = String(tag.tagId || "").split(":", 2);
   state.editTagId = tag.tagId;
   state.refs.editTagId.innerHTML = `
-    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(tag.group)}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group))}" title="${escapeHtml(String(state.groupDescriptions.get(tag.group) || tag.tagId))}">
       ${escapeHtml(tag.group)}
     </span>
   `;
   state.refs.editTagName.value = slug;
   state.refs.editDescription.value = String(tag.description || "");
-  state.refs.editStatus.className = "tagStudioForm__status";
-  state.refs.editStatus.textContent = state.saveMode === "post"
+  setStatusText(
+    state.refs.editStatus,
+    "",
+    state.saveMode === "post"
     ? ""
-    : registryText(state.config, "local_edit_required", "Local server is required for edit.");
+    : registryText(state.config, "local_edit_required", "Local server is required for edit.")
+  );
   state.refs.editModal.hidden = false;
 }
 
@@ -768,9 +753,7 @@ function closeNewTagModal(state) {
 }
 
 function setNewTagStatus(state, kind, message) {
-  state.refs.newTagStatus.textContent = message || "";
-  state.refs.newTagStatus.className = "tagStudioForm__status";
-  if (kind) state.refs.newTagStatus.classList.add(`is-${kind}`);
+  setStatusText(state.refs.newTagStatus, kind, message);
 }
 
 function renderNewTagGroupKey(state) {
@@ -779,19 +762,19 @@ function renderNewTagGroupKey(state) {
     return;
   }
   state.refs.newGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const activeClass = state.newTagState.group === group ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
         data-new-group="${escapeHtml(group)}"
+        ${stateAttr(state.newTagState.group === group ? UI_STATE.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)}
       </button>
     `;
-  }).join("") + renderGroupInfoControl(state, "new");
+  }).join("") + renderGroupInfoControl(state);
 }
 
 function getNewTagValidation(state) {
@@ -825,15 +808,11 @@ function updateNewTagUi(state) {
 }
 
 function setEditStatus(state, kind, message) {
-  state.refs.editStatus.textContent = message || "";
-  state.refs.editStatus.className = "tagStudioForm__status";
-  if (kind) state.refs.editStatus.classList.add(`is-${kind}`);
+  setStatusText(state.refs.editStatus, kind, message);
 }
 
 function setImpactPreview(target, kind, message) {
-  target.textContent = message || "";
-  target.className = "tagStudioForm__impact";
-  if (kind) target.classList.add(`is-${kind}`);
+  setStatusText(target, kind, message, UI_CLASS.formImpact);
 }
 
 async function refreshDeleteImpactPreview(state) {
@@ -945,9 +924,7 @@ async function handleCreateTag(state) {
 }
 
 function setDeleteStatus(state, kind, message) {
-  state.refs.deleteStatus.textContent = message || "";
-  state.refs.deleteStatus.className = "tagStudioForm__status";
-  if (kind) state.refs.deleteStatus.classList.add(`is-${kind}`);
+  setStatusText(state.refs.deleteStatus, kind, message);
 }
 
 function openDeleteModal(state, tagId) {
@@ -961,8 +938,7 @@ function openDeleteModal(state, tagId) {
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
   state.refs.deleteTagMeta.textContent = `tag: ${tag.tagId}`;
-  state.refs.deleteImpact.textContent = "";
-  state.refs.deleteImpact.className = "tagStudioForm__impact";
+  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
   state.refs.deleteModal.hidden = false;
@@ -982,8 +958,7 @@ function closeDeleteModal(state) {
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
   state.refs.deleteTagMeta.textContent = "";
-  state.refs.deleteImpact.textContent = "";
-  state.refs.deleteImpact.className = "tagStudioForm__impact";
+  setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = false;
 }
@@ -1057,9 +1032,7 @@ function closeDemoteModal(state) {
 }
 
 function setDemoteStatus(state, kind, message) {
-  state.refs.demoteStatus.textContent = message || "";
-  state.refs.demoteStatus.className = "tagStudioForm__status";
-  if (kind) state.refs.demoteStatus.classList.add(`is-${kind}`);
+  setStatusText(state.refs.demoteStatus, kind, message);
 }
 
 function renderDemoteGroupKey(state) {
@@ -1069,10 +1042,9 @@ function renderDemoteGroupKey(state) {
   }
   const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
   state.refs.demoteGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const activeClass = selected.has(group) ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
-    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}" ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state, "demote");
+    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state);
 }
 
 function renderDemoteTagList(state) {
@@ -1085,11 +1057,11 @@ function renderDemoteTagList(state) {
     const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
     const label = info ? info.label : tagId;
     return `
-      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
+      <span class="${classNames(UI_CLASS.chip, chipGroupClass(group))}" title="${escapeHtml(tagId)}">
         ${escapeHtml(label)}
         <button
           type="button"
-          class="tagStudio__chipRemove"
+          class="${UI_CLASS.chipRemove}"
           data-remove-demote-tag="${escapeHtml(tagId)}"
           aria-label="${escapeHtml(registryText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
         >
@@ -1098,7 +1070,7 @@ function renderDemoteTagList(state) {
       </span>
     `;
   }).join("");
-  state.refs.demoteTagList.innerHTML = rows || `<span class="tagStudio__empty">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
+  state.refs.demoteTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(registryText(state.config, "empty_state", "none"))}</span>`;
 }
 
 function getDemoteValidation(state) {
@@ -1144,7 +1116,7 @@ function renderDemoteTagPopup(state) {
   const chips = result.matches.map((item) => `
     <button
       type="button"
-      class="tagStudio__popupPill tagStudio__chip--${escapeHtml(item.group)}"
+      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
       data-popup-demote-tag-id="${escapeHtml(item.tagId)}"
       title="${escapeHtml(item.tagId)}"
     >
@@ -1152,7 +1124,7 @@ function renderDemoteTagPopup(state) {
     </button>
   `);
   if (result.truncated) {
-    chips.push(`<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
+    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(registryText(state.config, "popup_more_title", "More matches available"))}">...</span>`);
   }
   state.refs.demoteTagPopup.innerHTML = chips.join("");
   state.refs.demoteTagPopupWrap.hidden = false;
@@ -1361,9 +1333,7 @@ function closePatchModal(state) {
 }
 
 function setImportResult(state, kind, message) {
-  state.refs.importResult.textContent = message || "";
-  state.refs.importResult.className = "tagStudioToolbar__result";
-  if (kind) state.refs.importResult.classList.add(`is-${kind}`);
+  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
 }
 
 function clearImportResult(state) {
@@ -1375,7 +1345,36 @@ function registryText(config, key, fallback, tokens) {
 }
 
 function renderError(state, message) {
-  state.mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
+  state.mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
+}
+
+function setSelectOptionLabel(select, value, label) {
+  if (!select) return;
+  const option = select.querySelector(`option[value="${value}"]`);
+  if (option) option.textContent = label;
+}
+
+function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
+  if (!target) return;
+  target.textContent = message || "";
+  target.className = baseClass;
+  if (kind) {
+    target.dataset.state = kind;
+    return;
+  }
+  delete target.dataset.state;
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
+}
+
+function stateAttr(stateValue) {
+  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
 }
 
 function escapeHtml(value) {

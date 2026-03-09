@@ -43,9 +43,10 @@ Notes:
 
 ## Tag Registry
 
-Page: `assets/studio/js/tag-registry.js`
+Page: `studio/tag-registry/index.md`
 
 - [ ] Registry page loads without error.
+- [ ] Registry shell layout renders correctly on desktop/mobile.
 - [ ] Search filters rows correctly.
 - [ ] Group filter buttons work.
 - [ ] Sort toggle works.
