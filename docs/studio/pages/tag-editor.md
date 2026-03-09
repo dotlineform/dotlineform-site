@@ -26,6 +26,7 @@ Editor controller:
 
 Supporting modules:
 
+- `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-studio-domain.js`
 - `assets/studio/js/tag-studio-save.js`
 
@@ -40,9 +41,13 @@ Top-level structure in the page template:
 - `.tagStudioPage__context`
   - series metadata column
 - `.tagStudioPage__editor`
-  - container for the interactive tag editor
-- `#tag-studio`
-  - mount point used by `tag-studio.js`
+  - container for the interactive tag editor shell
+- `#tag-studio.tagStudio[data-role="series-tag-editor"]`
+  - template-owned editor shell root
+- `[data-role="editor-shell"]`
+  - template-owned editor panel shell
+- `[data-role="modal-host"]`
+  - modal mount point used by `tag-studio.js`
 
 ## Named UI Sections
 
@@ -125,17 +130,17 @@ User-facing name:
 DOM / CSS:
 
 - `.tagStudioPage__editor`
-- `#tag-studio`
-- `.tagStudio__panel.tagStudio__panel--editor`
+- `#tag-studio[data-role="series-tag-editor"]`
+- `[data-role="editor-shell"]`
 
 JS owner:
 
-- `renderShell(state)`
-  in `assets/studio/js/tag-studio.js`
+- page template for shell markup
+- `renderShell(state)` in `assets/studio/js/tag-studio.js` for dynamic labels, refs, and modal DOM
 
 Meaning:
 
-- the interactive editing area rendered inside the mount point
+- the interactive editing area with template-owned outer structure and JS-owned dynamic content
 
 ### Works
 
@@ -145,8 +150,8 @@ User-facing name:
 
 DOM / CSS:
 
-- `.tagStudio__inputRow.tagStudio__inputRow--work`
-- `#tagStudioWorkInput`
+- `[data-role="work-section"]`
+- `[data-role="work-input"]`
 - `[data-role="selected-work"]`
 - `[data-role="work-popup"]`
 - `[data-role="work-popup-list"]`
@@ -169,8 +174,12 @@ User-facing name:
 
 DOM / CSS:
 
+- `[data-role="message-section"]`
 - `[data-role="context-hint"]`
 - `.tagStudio__contextHint`
+- `[data-role="status"]`
+- `[data-role="save-warning"]`
+- `[data-role="save-result"]`
 
 JS owner:
 
@@ -180,6 +189,7 @@ JS owner:
 Meaning:
 
 - the line explaining whether edits apply to the series or to selected works
+- with no active work, this section should make it clear that the editor is in series-tag mode
 
 ### Group rows
 
@@ -189,6 +199,7 @@ User-facing name:
 
 DOM / CSS:
 
+- `[data-role="groups-section"]`
 - `[data-role="groups"]`
 - `.tagStudioGroups`
 - `.tagStudioGroupRow`
@@ -200,6 +211,8 @@ JS owner:
 Meaning:
 
 - the visible rows of tag chips grouped by `subject`, `domain`, `form`, and `theme`
+- with no active work, these rows are editable series tags
+- with an active work, inherited series tags become monochrome context chips and work override tags remain editable
 
 ### Tag input row
 
@@ -209,8 +222,8 @@ User-facing name:
 
 DOM / CSS:
 
-- `.tagStudio__inputRow.tagStudio__inputRow--editor`
-- `#tagStudioInput`
+- `[data-role="search-section"]`
+- `[data-role="tag-input"]`
 - `[data-role="add-tag"]`
 - `[data-role="save"]`
 - `[data-role="save-mode"]`
@@ -223,6 +236,8 @@ JS owner:
 Meaning:
 
 - the main row used to add tags and save changes
+- with no active work, this row adds series tags
+- with an active work, this row adds work-only overrides
 
 ### Suggestions popup
 
@@ -244,6 +259,16 @@ JS owner:
 Meaning:
 
 - the autocomplete area for canonical tags, aliases, and work suggestions
+
+## UI Contract
+
+This page follows the shared Studio UI boundary documented in `docs/studio/ui-framework.md`:
+
+- classes define presentation
+- `data-role` defines JS selectors
+- `data-state` and ARIA define runtime state
+
+`assets/studio/js/studio-ui.js` holds the role selectors plus the generated style class tokens used by `tag-studio.js`.
 
 ### Status and save feedback
 

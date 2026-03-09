@@ -143,6 +143,10 @@ export function getCanonicalTagAssignments(state, inheritedTagIds, selectedEntri
   return tags;
 }
 
+export function getCanonicalSeriesTagAssignments(state) {
+  return getCanonicalTagAssignments(state, new Set(), state.seriesEntries);
+}
+
 export function getCanonicalTagAssignmentsForWork(state, workId, inheritedTagIds) {
   const entries = state.workEntriesById.get(workId) || [];
   const seen = new Set();
@@ -186,6 +190,22 @@ export function buildWorkStateDiff(state, orderedSelectedWorkIds, inheritedTagId
   }
 
   return { changedWorkIds, nextWorkStateById };
+}
+
+export function buildEditorStateDiff(state, orderedSelectedWorkIds) {
+  const nextSeriesRows = getCanonicalSeriesTagAssignments(state);
+  const baselineSeriesRows = normalizeAssignmentRows(state.baselineSeriesRows);
+  const seriesChanged = !equalAssignmentRows(baselineSeriesRows, nextSeriesRows);
+  const inheritedTagIds = new Set(nextSeriesRows.map((row) => row.tag_id));
+  const workDiff = buildWorkStateDiff(state, orderedSelectedWorkIds, inheritedTagIds);
+
+  return {
+    seriesChanged,
+    nextSeriesRows,
+    inheritedTagIds,
+    changedWorkIds: workDiff.changedWorkIds,
+    nextWorkStateById: workDiff.nextWorkStateById
+  };
 }
 
 export function cloneWorkStateMap(map) {

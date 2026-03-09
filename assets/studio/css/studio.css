@@ -90,6 +90,10 @@
   font-size: 1.3rem;
 }
 
+.tagStudioPage__editor {
+  display: grid;
+}
+
 .tagStudio {
   display: grid;
   gap: 1rem;
@@ -116,6 +120,15 @@
 .tagStudio__panel--editor {
   display: grid;
   gap: 0.7rem;
+}
+
+.tagStudioEditorSection {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.tagStudioEditorSection--messages {
+  gap: 0.2rem;
 }
 
 .tagStudio__heading {
@@ -377,15 +390,15 @@
   color: var(--muted, var(--studio-muted-body));
 }
 
-.tagStudio__status.is-success {
+.tagStudio__status[data-state="success"] {
   color: var(--studio-success);
 }
 
-.tagStudio__status.is-warn {
+.tagStudio__status[data-state="warn"] {
   color: var(--studio-warn);
 }
 
-.tagStudio__status.is-error {
+.tagStudio__status[data-state="error"] {
   color: var(--studio-danger);
 }
 
@@ -543,7 +556,7 @@
   font-size: 0.82rem;
 }
 
-.tagStudio__selectedWorkPill.is-active {
+.tagStudio__selectedWorkPill[data-state="active"] {
   border-color: var(--studio-primary);
   background: var(--studio-primary);
   color: var(--studio-surface);
@@ -574,11 +587,11 @@
   font-size: 0.86rem;
 }
 
-.tagStudio__saveResult.is-success {
+.tagStudio__saveResult[data-state="success"] {
   color: var(--studio-success);
 }
 
-.tagStudio__saveResult.is-error {
+.tagStudio__saveResult[data-state="error"] {
   color: var(--studio-danger);
 }
 

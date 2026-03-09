@@ -4,21 +4,23 @@ import {
 } from "./studio-transport.js";
 
 export async function postTags(seriesId, workId, tags, keepWork, utcTimestampFn = utcTimestamp, signal) {
-  return postJson(
-    STUDIO_WRITE_ENDPOINTS.saveTags,
-    {
-      series_id: seriesId,
-      work_id: workId,
-      tags,
-      keep_work: Boolean(keepWork),
-      client_time_utc: utcTimestampFn()
-    },
-    { signal }
-  );
+  const payload = {
+    series_id: seriesId,
+    tags,
+    client_time_utc: utcTimestampFn()
+  };
+  if (workId != null && workId !== "") {
+    payload.work_id = workId;
+    payload.keep_work = Boolean(keepWork);
+  }
+  return postJson(STUDIO_WRITE_ENDPOINTS.saveTags, payload, { signal });
 }
 
 export function buildPatchSnippet(seriesId, diff, timestamp) {
-  if (!diff || !diff.changedWorkIds.length) return "";
+  if (!diff || (!diff.seriesChanged && !diff.changedWorkIds.length)) return "";
+  const seriesBlock = diff.seriesChanged
+    ? `Set series[${JSON.stringify(seriesId)}].tags to:\n${JSON.stringify(diff.nextSeriesRows || [], null, 2)}`
+    : "";
   const setBlocks = diff.changedWorkIds
     .filter((workId) => diff.nextWorkStateById.has(workId))
     .map((workId) => {
@@ -32,9 +34,10 @@ export function buildPatchSnippet(seriesId, diff, timestamp) {
     });
   const deleteWorkIds = diff.changedWorkIds.filter((workId) => !diff.nextWorkStateById.has(workId));
   return [
+    seriesBlock,
     setBlocks.length ? `Under series[${JSON.stringify(seriesId)}].works, set:\n${setBlocks.join("\n")}` : "",
     deleteWorkIds.length ? `Under series[${JSON.stringify(seriesId)}].works, delete: ${deleteWorkIds.map((workId) => JSON.stringify(workId)).join(", ")}` : "",
-    "If the works object becomes empty, delete the works object too.",
+    (setBlocks.length || deleteWorkIds.length) ? "If the works object becomes empty, delete the works object too." : "",
     `Update series[${JSON.stringify(seriesId)}].updated_at_utc to ${JSON.stringify(timestamp)}.`,
     `Update the top-level updated_at_utc to ${JSON.stringify(timestamp)}.`
   ].filter(Boolean).join("\n\n");
@@ -52,6 +55,17 @@ export function buildSaveModeText(config, mode, studioText) {
 }
 
 export function buildSaveSuccessMessage(config, savedCount, removedCount, savedAt, studioText) {
+  return buildTagSaveSuccessMessage(config, { seriesSaved: false, savedCount, removedCount, savedAt }, studioText);
+}
+
+export function buildTagSaveSuccessMessage(config, summary, studioText) {
+  const seriesSaved = Boolean(summary && summary.seriesSaved);
+  const savedCount = Number(summary && summary.savedCount) || 0;
+  const removedCount = Number(summary && summary.removedCount) || 0;
+  const savedAt = String(summary && summary.savedAt || "");
+  const seriesPart = seriesSaved
+    ? studioText(config, "save_status_success_series", "Saved series tags")
+    : "";
   const base = studioText(
     config,
     "save_status_success_base",
@@ -78,5 +92,11 @@ export function buildSaveSuccessMessage(config, savedCount, removedCount, savedA
     " at {saved_at}.",
     { saved_at: savedAt }
   );
+  if (seriesPart && savedCount > 0) {
+    return `${seriesPart}; ${base.toLowerCase()}${removed}${at}`;
+  }
+  if (seriesPart) {
+    return `${seriesPart}${at}`;
+  }
   return `${base}${removed}${at}`;
 }

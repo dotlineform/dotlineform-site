@@ -20,6 +20,7 @@ import {
   compareTagDisplay,
   configureTagStudioDomain,
   createResolvedEntries,
+  buildEditorStateDiff,
   getSeriesAssignment,
   getSeriesIndexRow,
   makeResolvedEntry,
@@ -34,13 +35,12 @@ import {
   sanitizeTag,
   splitWorkInputTokens,
   syncWorkEntriesFromPersistedState,
-  workStateMapToObject,
-  buildWorkStateDiff as buildDomainWorkStateDiff
+  workStateMapToObject
 } from "./tag-studio-domain.js";
 import {
   buildPatchSnippet,
   buildSaveModeText as buildTagStudioSaveModeText,
-  buildSaveSuccessMessage as buildTagStudioSaveSuccessMessage,
+  buildTagSaveSuccessMessage,
   postTags,
   utcTimestamp
 } from "./tag-studio-save.js";
@@ -48,6 +48,9 @@ import {
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  seriesTagEditorUi
+} from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const POPUP_TAG_MATCH_CAP = 12;
@@ -55,6 +58,8 @@ const POPUP_ALIAS_MATCH_CAP = 12;
 const POPUP_WORK_MATCH_CAP = 12;
 const WEIGHT_VALUES = [0.3, 0.6, 0.9];
 const DEFAULT_WEIGHT = 0.6;
+const UI = seriesTagEditorUi;
+const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagStudio);
@@ -101,6 +106,7 @@ async function initTagStudio() {
     );
     restoreSelectionFromQuery(state);
     renderShell(state);
+    if (!state.refs) return;
     wireEvents(state);
     renderAll(state);
     void probeSaveMode(state);
@@ -199,6 +205,7 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
     activeTagsBySlug,
     aliasOptions,
     seriesEntries,
+    baselineSeriesRows: normalizeAssignmentRows(seriesAssignment && seriesAssignment.tags),
     workEntriesById,
     seriesWorkOptions,
     seriesWorkIds,
@@ -215,7 +222,29 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
 }
 
 function buildStateDiff(state) {
-  return buildDomainWorkStateDiff(state, getOrderedSelectedWorkIds(state), getSeriesTagIdSet(state));
+  return buildEditorStateDiff(state, getOrderedSelectedWorkIds(state));
+}
+
+function syncStateFromAssignments(state, assignmentsJson) {
+  const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
+  const seriesAssignment = getSeriesAssignment(assignmentsSeries, state.seriesId);
+  const seriesRows = normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags);
+  const resolvedSeries = createResolvedEntries(seriesRows, state.tagsById, 1);
+  state.seriesEntries = resolvedSeries.entries;
+  state.baselineSeriesRows = normalizeAssignmentRows(seriesRows);
+
+  const rawWorkAssignments = seriesAssignment && typeof seriesAssignment.works === "object" ? seriesAssignment.works : {};
+  const nextWorkStateById = new Map();
+  Object.keys(rawWorkAssignments).forEach((rawWorkId) => {
+    const workId = normalizeWorkId(rawWorkId);
+    if (!workId) return;
+    const workRow = rawWorkAssignments[rawWorkId];
+    const rows = normalizeAssignmentTags(workRow && typeof workRow === "object" ? workRow.tags : []);
+    nextWorkStateById.set(workId, rows);
+  });
+
+  state.baselineWorkStateById = cloneWorkStateMap(nextWorkStateById);
+  syncWorkEntriesFromPersistedState(state, nextWorkStateById);
 }
 
 function restoreSelectionFromQuery(state) {
@@ -276,8 +305,8 @@ function renderShell(state) {
   const addButtonLabel = studioText(state.config, "add_button", "Add");
   const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
   const saveModeLabel = buildTagStudioSaveModeText(state.config, "patch", studioText);
-  const modalTitle = studioText(state.config, "modal_title", "Work Tag Patch Preview");
-  const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved work override tags");
+  const modalTitle = studioText(state.config, "modal_title", "Tag Assignment Patch Preview");
+  const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved tag assignment payload");
   const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
   const modalCopyButton = studioText(state.config, "modal_copy_button", "Copy");
   const modalCloseButton = studioText(state.config, "modal_close_button", "Close");
@@ -287,73 +316,57 @@ function renderShell(state) {
     titleId: "tagStudioModalTitle",
     title: modalTitle,
     bodyHtml: `
-      <p class="tagStudioModal__label">${escapeHtml(modalResolvedLabel)}</p>
-      <pre class="tagStudioModal__pre" data-role="modal-tags"></pre>
-      <p class="tagStudioModal__label">${escapeHtml(modalPatchGuidanceLabel)}</p>
-      <pre class="tagStudioModal__pre" data-role="modal-snippet"></pre>
+      <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalResolvedLabel)}</p>
+      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalTags}"></pre>
+      <p class="${UI_CLASS.modalLabel}">${escapeHtml(modalPatchGuidanceLabel)}</p>
+      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "copy-snippet", label: modalCopyButton, primary: true },
+      { role: UI.role.copySnippet, label: modalCopyButton, primary: true },
       { role: "close-modal", label: modalCloseButton }
     ])
   });
-  state.mount.innerHTML = `
-    <div class="tagStudio">
-      <section class="tagStudio__panel tagStudio__panel--editor">
-        <div class="tagStudio__inputRow tagStudio__inputRow--work">
-          <input
-            id="tagStudioWorkInput"
-            class="tagStudio__input"
-            type="text"
-            autocomplete="off"
-            placeholder="${escapeHtml(workInputPlaceholder)}"
-          >
-          <div class="tagStudio__workSelection" data-role="selected-work"></div>
-        </div>
-        <div class="tagStudio__popup tagStudio__popup--work" data-role="work-popup" hidden>
-          <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="work-popup-list"></div>
-        </div>
-        <p class="tagStudio__contextHint" data-role="context-hint"></p>
+  const refs = {
+    workInput: state.mount.querySelector(UI_SELECTOR.workInput),
+    selectedWork: state.mount.querySelector(UI_SELECTOR.workSelection),
+    workPopup: state.mount.querySelector(UI_SELECTOR.workPopup),
+    workPopupList: state.mount.querySelector(UI_SELECTOR.workPopupList),
+    contextHint: state.mount.querySelector(UI_SELECTOR.contextHint),
+    input: state.mount.querySelector(UI_SELECTOR.tagInput),
+    addButton: state.mount.querySelector(UI_SELECTOR.addTag),
+    popup: state.mount.querySelector(UI_SELECTOR.popup),
+    popupList: state.mount.querySelector(UI_SELECTOR.popupList),
+    status: state.mount.querySelector(UI_SELECTOR.status),
+    groups: state.mount.querySelector(UI_SELECTOR.groups),
+    saveButton: state.mount.querySelector(UI_SELECTOR.save),
+    saveMode: state.mount.querySelector(UI_SELECTOR.saveMode),
+    saveWarning: state.mount.querySelector(UI_SELECTOR.saveWarning),
+    saveResult: state.mount.querySelector(UI_SELECTOR.saveResult),
+    modalHost: state.mount.querySelector(UI_SELECTOR.modalHost)
+  };
 
-        <div data-role="groups"></div>
-        <div class="tagStudio__inputRow tagStudio__inputRow--editor">
-          <input id="tagStudioInput" class="tagStudio__input" type="text" autocomplete="off" placeholder="${escapeHtml(tagInputPlaceholder)}">
-          <button type="button" class="tagStudio__button" data-role="add-tag">${escapeHtml(addButtonLabel)}</button>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">${escapeHtml(saveButtonLabel)}</button>
-          <span class="tagStudio__saveMode" data-role="save-mode">${escapeHtml(saveModeLabel)}</span>
-        </div>
-        <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
-          <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>
-        </div>
-        <p class="tagStudio__status" data-role="status"></p>
-        <p class="tagStudio__saveWarning" data-role="save-warning"></p>
-        <p class="tagStudio__saveResult" data-role="save-result"></p>
-      </section>
-    </div>
+  const missingRef = Object.entries(refs).find(([, value]) => !value);
+  if (missingRef) {
+    renderFatalError(
+      state.mount,
+      studioText(state.config, "missing_template_shell_error", "Tag Studio error: missing template shell markup.")
+    );
+    return;
+  }
 
-    ${saveModalHtml}
-  `;
+  refs.workInput.setAttribute("placeholder", workInputPlaceholder);
+  refs.input.setAttribute("placeholder", tagInputPlaceholder);
+  refs.addButton.textContent = addButtonLabel;
+  refs.saveButton.textContent = saveButtonLabel;
+  refs.saveMode.textContent = saveModeLabel;
+  refs.modalHost.innerHTML = saveModalHtml;
 
   state.refs = {
-    workInput: state.mount.querySelector("#tagStudioWorkInput"),
-    selectedWork: state.mount.querySelector('[data-role="selected-work"]'),
-    workPopup: state.mount.querySelector('[data-role="work-popup"]'),
-    workPopupList: state.mount.querySelector('[data-role="work-popup-list"]'),
-    contextHint: state.mount.querySelector('[data-role="context-hint"]'),
-    input: state.mount.querySelector("#tagStudioInput"),
-    addButton: state.mount.querySelector('[data-role="add-tag"]'),
-    popup: state.mount.querySelector('[data-role="popup"]'),
-    popupList: state.mount.querySelector('[data-role="popup-list"]'),
-    status: state.mount.querySelector('[data-role="status"]'),
-    groups: state.mount.querySelector('[data-role="groups"]'),
-    saveButton: state.mount.querySelector('[data-role="save"]'),
-    saveMode: state.mount.querySelector('[data-role="save-mode"]'),
-    saveWarning: state.mount.querySelector('[data-role="save-warning"]'),
-    saveResult: state.mount.querySelector('[data-role="save-result"]'),
-    modal: state.mount.querySelector('[data-role="modal"]'),
-    modalTags: state.mount.querySelector('[data-role="modal-tags"]'),
-    modalSnippet: state.mount.querySelector('[data-role="modal-snippet"]'),
-    copyButton: state.mount.querySelector('[data-role="copy-snippet"]')
+    ...refs,
+    modal: state.mount.querySelector(UI_SELECTOR.modal),
+    modalTags: state.mount.querySelector(UI_SELECTOR.modalTags),
+    modalSnippet: state.mount.querySelector(UI_SELECTOR.modalSnippet),
+    copyButton: state.mount.querySelector(UI_SELECTOR.copySnippet)
   };
 }
 
@@ -393,13 +406,13 @@ function wireEvents(state) {
     if (!(target instanceof Element)) return;
 
     if (state.refs.popup && !state.refs.popup.hidden) {
-      if (!target.closest('[data-role="popup"]') && !target.closest("#tagStudioInput")) {
+      if (!target.closest(UI_SELECTOR.popup) && !target.closest(UI_SELECTOR.tagInput)) {
         hidePopup(state);
       }
     }
 
     if (state.refs.workPopup && !state.refs.workPopup.hidden) {
-      if (!target.closest('[data-role="work-popup"]') && !target.closest("#tagStudioWorkInput")) {
+      if (!target.closest(UI_SELECTOR.workPopup) && !target.closest(UI_SELECTOR.workInput)) {
         hideWorkPopup(state);
       }
     }
@@ -467,7 +480,7 @@ function wireEvents(state) {
     if (weightButton) {
       const entryId = Number(weightButton.getAttribute("data-cycle-weight-entry-id"));
       if (!Number.isFinite(entryId)) return;
-      const entry = getSelectedWorkEntries(state).find((item) => item.entryId === entryId);
+      const entry = getEditableEntries(state).find((item) => item.entryId === entryId);
       if (!entry) return;
       entry.wManual = nextWeight(entry.wManual);
       setStatus(
@@ -491,7 +504,7 @@ function wireEvents(state) {
     const button = event.target.closest("button[data-remove-entry-id]");
     if (!button) return;
     const entryId = Number(button.getAttribute("data-remove-entry-id"));
-    removeSelectedWorkEntry(state, entryId);
+    removeEditableEntry(state, entryId);
     renderAll(state);
   });
 
@@ -664,12 +677,6 @@ function clearSelectedWork(state, workId) {
 }
 
 function addFromInput(state) {
-  if (!state.selectedWorkId) {
-    setStatus(state, "warn", studioText(state.config, "select_work_before_tags", "Select a work before adding tags."));
-    renderStatus(state);
-    return;
-  }
-
   const rawInput = String(state.refs.input.value || "").trim();
   if (!rawInput) {
     setStatus(state, "warn", studioText(state.config, "tag_input_required", "Enter a tag slug, tag id, or alias."));
@@ -762,10 +769,12 @@ function resolveInput(rawInput, state) {
 }
 
 function addResolvedTag(state, tag, rawInput) {
-  if (!state.selectedWorkId || !tag || !tag.tag_id) return;
+  if (!tag || !tag.tag_id) return;
 
   const tagId = normalize(tag.tag_id);
-  if (getSeriesTagIdSet(state).has(tagId)) {
+  const isSeriesScope = !state.selectedWorkId;
+  const inheritedTagIds = getSeriesTagIdSet(state);
+  if (!isSeriesScope && inheritedTagIds.has(tagId)) {
     setStatus(state, "warn", studioText(
       state.config,
       "tag_inherited_warning",
@@ -775,14 +784,14 @@ function addResolvedTag(state, tag, rawInput) {
     return;
   }
 
-  const entries = getSelectedWorkEntries(state);
+  const entries = getEditableEntries(state);
   const alreadyExists = entries.some((entry) => entry.canonicalId === tagId);
   if (alreadyExists) {
     setStatus(state, "warn", studioText(
       state.config,
-      "tag_already_added_warning",
-      "Already added for {work_id}: {tag_id}.",
-      {
+      isSeriesScope ? "tag_already_added_warning_series" : "tag_already_added_warning",
+      isSeriesScope ? "Already added to series: {tag_id}." : "Already added for {work_id}: {tag_id}.",
+      isSeriesScope ? { tag_id: tagId } : {
         work_id: state.selectedWorkId,
         tag_id: tagId
       }
@@ -793,9 +802,9 @@ function addResolvedTag(state, tag, rawInput) {
   entries.push(makeResolvedEntry(nextEntryId(state), rawInput, tag, DEFAULT_WEIGHT));
   setStatus(state, "success", studioText(
     state.config,
-    "tag_added_success",
-    "Added {tag_id} to {work_id}.",
-    {
+    isSeriesScope ? "series_tag_added_success" : "tag_added_success",
+    isSeriesScope ? "Added {tag_id} to series tags." : "Added {tag_id} to {work_id}.",
+    isSeriesScope ? { tag_id: tagId } : {
       work_id: state.selectedWorkId,
       tag_id: tagId
     }
@@ -805,6 +814,9 @@ function addResolvedTag(state, tag, rawInput) {
 
 function nextEntryId(state) {
   let maxId = 0;
+  for (const entry of state.seriesEntries) {
+    if (entry.entryId > maxId) maxId = entry.entryId;
+  }
   for (const entries of state.workEntriesById.values()) {
     for (const entry of entries) {
       if (entry.entryId > maxId) maxId = entry.entryId;
@@ -813,14 +825,25 @@ function nextEntryId(state) {
   return maxId + 1;
 }
 
-function removeSelectedWorkEntry(state, entryId) {
-  if (!state.selectedWorkId) return;
-  const entries = getSelectedWorkEntries(state);
+function removeEditableEntry(state, entryId) {
+  const entries = getEditableEntries(state);
   const sizeBefore = entries.length;
   const nextEntries = entries.filter((entry) => entry.entryId !== entryId);
-  state.workEntriesById.set(state.selectedWorkId, nextEntries);
+  if (state.selectedWorkId) {
+    state.workEntriesById.set(state.selectedWorkId, nextEntries);
+  } else {
+    state.seriesEntries = nextEntries;
+  }
   if (nextEntries.length < sizeBefore) {
-    setStatus(state, "success", studioText(state.config, "work_tag_removed", "Work tag removed."));
+    setStatus(
+      state,
+      "success",
+      studioText(
+        state.config,
+        state.selectedWorkId ? "work_tag_removed" : "series_tag_removed",
+        state.selectedWorkId ? "Work tag removed." : "Series tag removed."
+      )
+    );
     setSaveResult(state, "", "");
   }
 }
@@ -845,15 +868,15 @@ function renderSelectedWork(state) {
   }
   state.refs.selectedWork.innerHTML = selected.map((item) => {
     const titleText = item.title ? ` ${escapeHtml(item.title)}` : "";
-    const activeClass = item.workId === state.selectedWorkId ? " is-active" : "";
+    const activeState = item.workId === state.selectedWorkId ? ` data-state="${UI_STATE.active}"` : "";
     return `
-      <span class="tagStudio__selectedWorkPill${activeClass}" title="${escapeHtml(item.workId)}${titleText}">
-        <button type="button" class="tagStudio__selectedWorkBtn" data-activate-work-id="${escapeHtml(item.workId)}" aria-pressed="${item.workId === state.selectedWorkId ? "true" : "false"}">
-          <span class="tagStudio__selectedWorkId">${escapeHtml(item.workId)}</span>
+      <span class="${UI_CLASS.selectedWorkPill}"${activeState} title="${escapeHtml(item.workId)}${titleText}">
+        <button type="button" class="${UI_CLASS.selectedWorkButton}" data-activate-work-id="${escapeHtml(item.workId)}" aria-pressed="${item.workId === state.selectedWorkId ? "true" : "false"}">
+          <span class="${UI_CLASS.selectedWorkId}">${escapeHtml(item.workId)}</span>
         </button>
         <button
           type="button"
-          class="tagStudio__chipRemove"
+          class="${UI_CLASS.chipRemove}"
           data-clear-selected-work="${escapeHtml(item.workId)}"
           aria-label="${escapeHtml(studioText(state.config, "remove_selected_work_aria_label", "Remove selected work {work_id}", { work_id: item.workId }))}"
         >x</button>
@@ -868,7 +891,7 @@ function renderContextHint(state) {
     state.refs.contextHint.textContent = studioText(
       state.config,
       "context_hint_default",
-      "Select one or more works to add per-work tag overrides. Series tags shown below are context only."
+      "No work selected: edit series tags directly. Select a work to switch to work-only overrides."
     );
     return;
   }
@@ -893,14 +916,14 @@ function renderWorkPopup(state) {
   }
 
   state.refs.workPopupList.innerHTML = `
-    <div class="tagStudioSuggest">
-      <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_works", "works"))}</p>
-        <div class="tagStudioSuggest__workRows">
+    <div class="${UI_CLASS.suggest}">
+      <section class="${UI_CLASS.suggestSection}">
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_works", "works"))}</p>
+        <div class="${UI_CLASS.suggestWorkRows}">
           ${matches.map((item) => `
-            <button type="button" class="tagStudioSuggest__workButton" data-popup-work-id="${escapeHtml(item.workId)}">
-              <span class="tagStudioSuggest__workId">${escapeHtml(item.workId)}</span>
-              <span class="tagStudioSuggest__workTitle">${escapeHtml(item.title || "")}</span>
+            <button type="button" class="${UI_CLASS.suggestWorkButton}" data-popup-work-id="${escapeHtml(item.workId)}">
+              <span class="${UI_CLASS.suggestWorkId}">${escapeHtml(item.workId)}</span>
+              <span class="${UI_CLASS.suggestWorkTitle}">${escapeHtml(item.title || "")}</span>
             </button>
           `).join("")}
         </div>
@@ -927,17 +950,22 @@ function getMatchingWorkOptions(state, query) {
 
 function renderPopup(state) {
   const query = normalize(state.refs.input.value);
-  if (!query || !state.selectedWorkId) {
+  if (!query) {
     hidePopup(state);
     return;
   }
 
-  const selectedTagIds = getSelectedTagIdSet(state);
+  const selectedTagIds = getEditableTagIdSet(state);
   const inheritedTagIds = getSeriesTagIdSet(state);
   const tagMatches = state.activeTagsBySlug
-    .filter((tag) => tag.slug.startsWith(query) && !selectedTagIds.has(tag.tag_id) && !inheritedTagIds.has(tag.tag_id))
+    .filter((tag) => {
+      if (!tag.slug.startsWith(query)) return false;
+      if (selectedTagIds.has(tag.tag_id)) return false;
+      if (state.selectedWorkId && inheritedTagIds.has(tag.tag_id)) return false;
+      return true;
+    })
     .slice(0, POPUP_TAG_MATCH_CAP);
-  const aliasMatches = getPopupAliasMatches(state, query, selectedTagIds, inheritedTagIds).slice(0, POPUP_ALIAS_MATCH_CAP);
+  const aliasMatches = getPopupAliasMatches(state, query, selectedTagIds, state.selectedWorkId ? inheritedTagIds : new Set()).slice(0, POPUP_ALIAS_MATCH_CAP);
 
   if (!tagMatches.length && !aliasMatches.length) {
     hidePopup(state);
@@ -946,13 +974,13 @@ function renderPopup(state) {
 
   const tagSection = tagMatches.length
     ? `
-      <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_tags", "tags"))}</p>
-        <div class="tagStudioSuggest__tagRows">
+      <section class="${UI_CLASS.suggestSection}">
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_tags", "tags"))}</p>
+        <div class="${UI_CLASS.suggestTagRows}">
           ${tagMatches.map((tag) => `
             <button
               type="button"
-              class="tagStudio__popupPill tagStudio__chip--${escapeHtml(tag.group)}"
+              class="${classNames(UI_CLASS.popupPill, chipGroupClass(tag.group))}"
               data-popup-tag-id="${escapeHtml(tag.tag_id)}"
               title="${escapeHtml(tag.tag_id)}"
             >
@@ -966,23 +994,23 @@ function renderPopup(state) {
 
   const aliasSection = aliasMatches.length
     ? `
-      <section class="tagStudioSuggest__section">
-        <p class="tagStudioSuggest__heading">${escapeHtml(studioText(state.config, "popup_heading_aliases", "aliases"))}</p>
-        <div class="tagStudioSuggest__aliasRows">
+      <section class="${UI_CLASS.suggestSection}">
+        <p class="${UI_CLASS.suggestHeading}">${escapeHtml(studioText(state.config, "popup_heading_aliases", "aliases"))}</p>
+        <div class="${UI_CLASS.suggestAliasRows}">
           ${aliasMatches.map((entry) => `
-            <div class="tagStudioSuggest__aliasRow">
+            <div class="${UI_CLASS.suggestAliasRow}">
               <span
-                class="tagStudio__popupPill tagStudioSuggest__aliasPill"
+                class="${classNames(UI_CLASS.popupPill, UI_CLASS.suggestAliasPill)}"
                 data-popup-alias="${escapeHtml(entry.alias)}"
                 title="${escapeHtml(entry.alias)}"
               >
                 ${escapeHtml(entry.alias)}
               </span>
-              <div class="tagStudioSuggest__aliasTargets">
+              <div class="${UI_CLASS.suggestAliasTargets}">
                 ${entry.targets.map((target) => `
                   <button
                     type="button"
-                    class="tagStudio__popupPill tagStudio__chip--${escapeHtml(target.group)} tagStudioSuggest__aliasTarget"
+                    class="${classNames(UI_CLASS.popupPill, chipGroupClass(target.group), UI_CLASS.suggestAliasTarget)}"
                     data-popup-alias-target="${escapeHtml(target.tagId)}"
                     data-popup-alias-source="${escapeHtml(entry.alias)}"
                     title="${escapeHtml(target.tagId)}"
@@ -999,7 +1027,7 @@ function renderPopup(state) {
     : "";
 
   state.refs.popupList.innerHTML = `
-    <div class="tagStudioSuggest">
+    <div class="${UI_CLASS.suggest}">
       ${tagSection}
       ${aliasSection}
     </div>
@@ -1022,9 +1050,14 @@ function getPopupAliasMatches(state, query, selectedTagIds, inheritedTagIds) {
     .filter((entry) => entry.targets.length > 0);
 }
 
-function getSelectedTagIdSet(state) {
+function getEditableEntries(state) {
+  if (!state.selectedWorkId) return state.seriesEntries;
+  return getSelectedWorkEntries(state);
+}
+
+function getEditableTagIdSet(state) {
   const out = new Set();
-  for (const entry of getSelectedWorkEntries(state)) {
+  for (const entry of getEditableEntries(state)) {
     out.add(entry.canonicalId);
   }
   return out;
@@ -1085,15 +1118,17 @@ function renderGroups(state) {
   const rowsHtml = STUDIO_GROUPS.map((group) => {
     const inherited = inheritedByGroup.get(group) || [];
     const overrides = overrideByGroup.get(group) || [];
-    const inheritedHtml = inherited.map((entry) => renderInheritedChip(entry, !selectedWorkId)).join("");
+    const inheritedHtml = selectedWorkId
+      ? inherited.map((entry) => renderInheritedChip(entry, false)).join("")
+      : inherited.map((entry) => renderSeriesEditableChip(entry)).join("");
     const overrideHtml = overrides.map((entry) => renderOverrideChip(entry)).join("");
     const emptyHtml = (!inheritedHtml && !overrideHtml)
-      ? `<span class="tagStudio__empty">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
+      ? `<span class="${UI_CLASS.empty}">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
       : "";
     return `
-      <div class="tagStudioGroupRow">
-        <span class="tagStudioGroupRow__label">${escapeHtml(group)}:</span>
-        <div class="tagStudioGroupRow__chips">
+      <div class="${UI_CLASS.groupRow}">
+        <span class="${UI_CLASS.groupRowLabel}">${escapeHtml(group)}:</span>
+        <div class="${UI_CLASS.groupRowChips}">
           ${inheritedHtml}
           ${overrideHtml}
           ${emptyHtml}
@@ -1102,40 +1137,61 @@ function renderGroups(state) {
     `;
   }).join("");
 
-  state.refs.groups.innerHTML = `<div class="tagStudioGroups">${rowsHtml}</div>`;
+  state.refs.groups.innerHTML = `<div class="${UI_CLASS.groups}">${rowsHtml}</div>`;
+}
+
+function renderSeriesEditableChip(entry) {
+  return `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+      <button
+        type="button"
+        class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
+        data-cycle-weight-entry-id="${entry.entryId}"
+        title="${escapeHtml(studioText(null, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(studioText(null, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+      ></button>
+      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
+      <button
+        type="button"
+        class="${UI_CLASS.chipRemove}"
+        data-remove-entry-id="${entry.entryId}"
+        aria-label="${escapeHtml(studioText(null, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+      >x</button>
+    </span>
+  `;
 }
 
 function renderInheritedChip(entry, useColorChip) {
   if (useColorChip) {
     return `
-      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
-        <span class="tagStudio__weightDot ${weightDotClass(entry.wManual)}" aria-hidden="true"></span>
-        <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
+      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+        <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
+        <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
       </span>
     `;
   }
   return `
-    <span class="tagStudio__chip tagStudio__chip--inherited" title="${escapeHtml(studioText(null, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
-      <span class="tagStudio__weightDot ${weightDotClass(entry.wManual)}" aria-hidden="true"></span>
-      <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
+    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(studioText(null, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
+      <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
+      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
     </span>
   `;
 }
 
 function renderOverrideChip(entry) {
   return `
-    <span class="tagStudio__chip tagStudio__chip--${escapeHtml(entry.group)}" title="${escapeHtml(studioText(null, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
-        class="tagStudio__weightDot ${weightDotClass(entry.wManual)}"
+        class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
         data-cycle-weight-entry-id="${entry.entryId}"
         title="${escapeHtml(studioText(null, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
         aria-label="${escapeHtml(studioText(null, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
-      <span class="tagStudio__chipTag">${escapeHtml(entry.label)}</span>
+      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
       <button
         type="button"
-        class="tagStudio__chipRemove"
+        class="${UI_CLASS.chipRemove}"
         data-remove-entry-id="${entry.entryId}"
         aria-label="${escapeHtml(studioText(null, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
       >x</button>
@@ -1146,16 +1202,17 @@ function renderOverrideChip(entry) {
 function renderSaveState(state) {
   const metrics = computeMetrics(state);
   const hasSelectedWork = Boolean(state.selectedWorkId);
-  const isDirty = hasPendingSaveChanges(state);
-  state.refs.input.disabled = !hasSelectedWork;
-  state.refs.addButton.disabled = !hasSelectedWork;
+  const diff = buildStateDiff(state);
+  const isDirty = diff.seriesChanged || diff.changedWorkIds.length > 0;
+  state.refs.input.disabled = false;
+  state.refs.addButton.disabled = false;
   state.refs.saveButton.disabled = !isDirty || metrics.unresolvedCount > 0;
 
   if (!hasSelectedWork && isDirty) {
     state.refs.saveWarning.textContent = studioText(
       state.config,
       "save_warning_pending_diff",
-      "Save to persist the current work-row diff."
+      "Save to persist the current tag assignment diff."
     );
     return;
   }
@@ -1181,7 +1238,7 @@ async function probeSaveMode(state) {
 
 async function handleSave(state) {
   const diff = buildStateDiff(state);
-  if (!diff.changedWorkIds.length) {
+  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
     setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
     return;
@@ -1190,6 +1247,9 @@ async function handleSave(state) {
   if (state.saveMode === "post") {
     try {
       const results = [];
+      if (diff.seriesChanged) {
+        results.push(await postTags(state.seriesId, null, diff.nextSeriesRows, false, utcTimestamp));
+      }
       for (const workId of diff.changedWorkIds) {
         const nextTags = diff.nextWorkStateById.get(workId) || [];
         const keepWork = diff.nextWorkStateById.has(workId);
@@ -1199,11 +1259,19 @@ async function handleSave(state) {
       const savedAt = String(lastResult.updated_at_utc || utcTimestamp());
       const removedCount = results.filter((result) => result && result.deleted).length;
       const savedCount = diff.changedWorkIds.length - removedCount;
-      setStatus(state, "success", buildTagStudioSaveSuccessMessage(state.config, savedCount, removedCount, savedAt, studioText));
+      setStatus(
+        state,
+        "success",
+        buildTagSaveSuccessMessage(
+          state.config,
+          { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt },
+          studioText
+        )
+      );
       setSaveResult(state, "", "");
       renderStatus(state);
+      state.baselineSeriesRows = normalizeAssignmentRows(diff.nextSeriesRows);
       state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
-      syncWorkEntriesFromPersistedState(state, diff.nextWorkStateById);
       renderAll(state);
       return;
     } catch (error) {
@@ -1222,7 +1290,7 @@ async function handleSave(state) {
 
 function openSaveModal(state) {
   const diff = buildStateDiff(state);
-  if (!diff.changedWorkIds.length) {
+  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
     setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
     renderStatus(state);
     return;
@@ -1236,7 +1304,10 @@ function openSaveModal(state) {
   );
   state.modalSnippet = snippet;
 
-  state.refs.modalTags.textContent = JSON.stringify(workStateMapToObject(diff.nextWorkStateById), null, 2);
+  state.refs.modalTags.textContent = JSON.stringify({
+    series_tags: diff.nextSeriesRows,
+    work_overrides: workStateMapToObject(diff.nextWorkStateById)
+  }, null, 2);
   state.refs.modalSnippet.textContent = snippet;
   state.refs.modal.hidden = false;
 }
@@ -1252,17 +1323,21 @@ function setStatus(state, kind, text) {
 
 function renderStatus(state) {
   state.refs.status.textContent = state.statusText || "";
-  state.refs.status.className = "tagStudio__status";
   if (state.statusKind) {
-    state.refs.status.classList.add(`is-${state.statusKind}`);
+    state.refs.status.dataset.state = state.statusKind;
+    return;
   }
+  delete state.refs.status.dataset.state;
 }
 
 function setSaveResult(state, kind, text) {
   if (!state.refs.saveResult) return;
   state.refs.saveResult.textContent = text || "";
-  state.refs.saveResult.className = "tagStudio__saveResult";
-  if (kind) state.refs.saveResult.classList.add(`is-${kind}`);
+  if (kind) {
+    state.refs.saveResult.dataset.state = kind;
+    return;
+  }
+  delete state.refs.saveResult.dataset.state;
 }
 
 function getSelectedWorkEntries(state) {
@@ -1285,7 +1360,8 @@ function getOrderedSelectedWorkIds(state) {
 }
 
 function hasPendingSaveChanges(state) {
-  return buildStateDiff(state).changedWorkIds.length > 0;
+  const diff = buildStateDiff(state);
+  return diff.seriesChanged || diff.changedWorkIds.length > 0;
 }
 
 function broadcastSelectedWorkChange(state) {
@@ -1302,9 +1378,9 @@ function broadcastSelectedWorkChange(state) {
 
 function weightDotClass(weight) {
   const normalized = normalizeManualWeight(weight, DEFAULT_WEIGHT);
-  if (normalized === 0.3) return "tagStudio__weightDot--low";
-  if (normalized === 0.9) return "tagStudio__weightDot--high";
-  return "tagStudio__weightDot--mid";
+  if (normalized === 0.3) return UI_CLASS.weightDotLow;
+  if (normalized === 0.9) return UI_CLASS.weightDotHigh;
+  return UI_CLASS.weightDotMid;
 }
 
 function escapeHtml(value) {
@@ -1317,7 +1393,15 @@ function escapeHtml(value) {
 }
 
 function renderFatalError(mount, message) {
-  mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
+  mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
 }
 
 function buildWorkSelectionSummary(state, added, unknown, invalid) {

@@ -21,7 +21,7 @@ export async function loadStudioAliasesJson(config, options) {
 }
 
 export async function loadStudioAssignmentsJson(config, options) {
-  return fetchJson(getStudioDataPath(config, "tag_assignments"), options);
+  return fetchJson(getStudioDataPath(config, "tag_assignments"), { cache: "no-store", ...(options || {}) });
 }
 
 export async function loadStudioGroupsJson(config, options) {

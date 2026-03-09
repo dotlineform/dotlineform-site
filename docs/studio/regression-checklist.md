@@ -20,6 +20,10 @@ Page: `studio/series-tag-editor/index.md`
 - [ ] Comma-separated work input adds multiple works.
 - [ ] Selected work switching updates chip state correctly.
 - [ ] Media preview updates when selected work changes.
+- [ ] With no work selected, tag input remains enabled for series-tag editing.
+- [ ] Adding a series tag works.
+- [ ] Removing a series tag works.
+- [ ] Cycling `w_manual` on a series tag works.
 - [ ] Adding a canonical tag works.
 - [ ] Adding an alias-resolved tag works.
 - [ ] Removing a work override tag works.

@@ -60,7 +60,56 @@ studio_page_doc: /docs/studio/pages/tag-editor/
   </header>
 
   <section class="tagStudioPage__editor">
-    <div id="tag-studio"></div>
+    <div id="tag-studio" class="tagStudio" data-role="series-tag-editor">
+      <section class="tagStudio__panel tagStudio__panel--editor" data-role="editor-shell">
+        <section class="tagStudioEditorSection tagStudioEditorSection--work" data-role="work-section">
+          <div class="tagStudio__inputRow tagStudio__inputRow--work">
+            <input
+              class="tagStudio__input"
+              data-role="work-input"
+              type="text"
+              autocomplete="off"
+              placeholder="work_id(s) in this series"
+            >
+            <div class="tagStudio__workSelection" data-role="selected-work"></div>
+          </div>
+          <div class="tagStudio__popup tagStudio__popup--work" data-role="work-popup" hidden>
+            <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="work-popup-list"></div>
+          </div>
+        </section>
+
+        <section class="tagStudioEditorSection tagStudioEditorSection--messages" data-role="message-section">
+          <p class="tagStudio__contextHint" data-role="context-hint"></p>
+          <p class="tagStudio__status" data-role="status"></p>
+          <p class="tagStudio__saveWarning" data-role="save-warning"></p>
+          <p class="tagStudio__saveResult" data-role="save-result"></p>
+        </section>
+
+        <section class="tagStudioEditorSection tagStudioEditorSection--groups" data-role="groups-section">
+          <div data-role="groups"></div>
+        </section>
+
+        <section class="tagStudioEditorSection tagStudioEditorSection--search" data-role="search-section">
+          <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+            <input
+              class="tagStudio__input"
+              data-role="tag-input"
+              type="text"
+              autocomplete="off"
+              placeholder="tag slug or alias"
+            >
+            <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
+            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
+            <span class="tagStudio__saveMode" data-role="save-mode"></span>
+          </div>
+          <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
+            <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>
+          </div>
+        </section>
+      </section>
+
+      <div data-role="modal-host"></div>
+    </div>
   </section>
 </article>
 <p id="seriesTagEditorEmpty" hidden></p>

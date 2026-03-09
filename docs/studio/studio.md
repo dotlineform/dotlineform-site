@@ -319,13 +319,14 @@ Computed from the selected work override state:
 
 Current save gate:
 
-- Save disabled when no work is selected
+- Save enabled when there is either a series-tag diff or a work-row diff
 - Save disabled when `unresolvedCount > 0`
 
 Current tags display in fixed rows (`subject`, `domain`, `form`, `theme`):
 
 - series tags are always shown for context
 - when no work is selected, series tags use the normal group color chips
+- when no work is selected, series tags are editable
 - when a work is selected, inherited series tags switch to monochrome chips
 - work override tags stay group-colored and removable
 
@@ -390,12 +391,15 @@ Save mode is probed at page load:
 - Endpoint: `POST /save-tags` on the local save service
 - Payload:
   - `series_id`
-  - `work_id`
-  - `tags` (array of work-override assignment objects; may be empty to delete that work row):
+  - optional `work_id`
+  - `tags`:
+    - when `work_id` is omitted: array of series assignment objects
+    - when `work_id` is present: array of work-override assignment objects; may be empty to delete that work row
     - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
   - `client_time_utc`
 - Save scope:
   - `Save` compares the current editor state against the baseline from page load or last successful save, then persists only the diff
+  - when no work is active, the editable scope is the series tag set
   - when multiple work pills are present and one is active, the active work's current override set is the persisted state for all selected work pills
 - Save sanitization:
   - inherited series tags are not persisted in work rows
@@ -411,8 +415,8 @@ Save mode is probed at page load:
 ### Patch mode
 
 - Shows modal with:
-  - canonical resolved work-override object array
-  - patch guidance to paste under `series[series_id].works` in `tag_assignments.json`
+  - canonical resolved tag assignment payload
+  - patch guidance to paste under `series[series_id]` in `tag_assignments.json`
   - delete guidance when the sanitized work delta is empty
 - Copy button uses `navigator.clipboard.writeText`
 

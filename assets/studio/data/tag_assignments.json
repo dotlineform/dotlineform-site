@@ -1,11 +1,11 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-07T19:04:45Z",
+  "updated_at_utc": "2026-03-09T15:07:06Z",
   "series": {
     "curve-poems": {
       "tags": [
         {
-          "tag_id": "form:line",
+          "tag_id": "subject:form",
           "w_manual": 0.6
         },
         {
@@ -13,11 +13,15 @@
           "w_manual": 0.6
         },
         {
+          "tag_id": "form:line",
+          "w_manual": 0.6
+        },
+        {
           "tag_id": "theme:emergence",
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-03-07T18:04:27Z",
+      "updated_at_utc": "2026-03-09T15:07:06Z",
       "works": {
         "00293": {
           "tags": [
@@ -30,7 +34,7 @@
               "w_manual": 0.6
             }
           ],
-          "updated_at_utc": "2026-03-07T17:34:07Z"
+          "updated_at_utc": "2026-03-09T15:06:58Z"
         },
         "00294": {
           "tags": [

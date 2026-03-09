@@ -2,7 +2,28 @@
 
 This document defines the shared UI layer for Studio pages.
 
-The goal is consistency without introducing a heavy component system. Studio pages still render their own markup in JS, but they should compose a small set of shared CSS primitives rather than reusing another page's class names.
+The goal is consistency without introducing a heavy component system. Studio pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and compose a small set of shared CSS primitives rather than reusing another page's class names.
+
+## UI Contract Boundary
+
+Studio uses three separate UI contracts:
+
+- `class=""`
+  presentation only
+- `data-role=""`
+  JS lookup only
+- `data-state=""` and `aria-*`
+  runtime state only
+
+Rules:
+
+- JS behavior must not query styling classes.
+- JS must not toggle presentation classes such as `.is-active`, `.is-error`, or page-specific BEM classes.
+- Shared role/state/class tokens for JS-generated Studio markup should live in `assets/studio/js/studio-ui.js`.
+- Page templates should own major layout containers and section boundaries.
+- JS should generate only the inner dynamic fragments that actually change at runtime.
+
+Use `assets/studio/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place when a Studio feature must render HTML from JS.
 
 ## Naming Boundary
 
