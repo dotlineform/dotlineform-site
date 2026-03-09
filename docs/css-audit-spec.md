@@ -8,6 +8,10 @@ Create a repeatable CSS audit that:
 - detects likely drift and maintainability risks
 - produces actionable recommendations with confidence levels
 
+Related contract:
+
+- `docs/css-primitives.md`
+
 ## Scope (v1)
 
 Static and heuristic checks only (no browser required).
@@ -123,4 +127,3 @@ Map to:
 - Findings include confidence labels.
 - Noise is manageable via ignore file support.
 - Report includes actionable recommendations, not only raw findings.
-

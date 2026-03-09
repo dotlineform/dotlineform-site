@@ -4,6 +4,10 @@ This document defines the shared UI layer for Studio pages.
 
 The goal is consistency without introducing a heavy component system. Studio pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and compose a small set of shared CSS primitives rather than reusing another page's class names.
 
+Related site-wide contract:
+
+- `docs/css-primitives.md`
+
 ## UI Contract Boundary
 
 Studio uses three separate UI contracts:
