@@ -18,9 +18,14 @@ import {
   loadStudioRegistryJson,
   normalizeStudioValue as normalize
 } from "./studio-data.js";
+import {
+  seriesTagsUi
+} from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+const UI = seriesTagsUi;
+const { className: UI_CLASS, state: UI_STATE } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initSeriesTagsPage);
@@ -38,7 +43,7 @@ async function initSeriesTagsPage() {
 
   const seriesData = await getSeriesData(config);
   if (!seriesData.length) {
-    mount.innerHTML = `<p class="tagStudio__empty">${escapeHtml(seriesTagsText(config, "empty_state", "none"))}</p>`;
+    mount.innerHTML = `<p class="${UI_CLASS.empty}">${escapeHtml(seriesTagsText(config, "empty_state", "none"))}</p>`;
     return;
   }
 
@@ -74,7 +79,7 @@ async function initSeriesTagsPage() {
       renderTable(state);
     });
   } catch (error) {
-    mount.innerHTML = `<div class="tagStudioError">${escapeHtml(seriesTagsText(config, "load_failed_error", "Failed to load series tag data."))}</div>`;
+    mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(seriesTagsText(config, "load_failed_error", "Failed to load series tag data."))}</div>`;
   }
 }
 
@@ -150,9 +155,9 @@ function renderTable(state) {
 
     const chips = visibleTags.length
       ? visibleTags.map((tag) => (
-        `<li class="tagStudio__chip ${escapeHtml(tag.className)}" title="${escapeHtml(tag.tagId)}">${escapeHtml(tag.label)}</li>`
+        `<li class="${classNames(UI_CLASS.chip, tag.className)}" title="${escapeHtml(tag.tagId)}">${escapeHtml(tag.label)}</li>`
       )).join("")
-      : `<li class="tagStudio__empty">${escapeHtml(seriesTagsText(state.config, "empty_state", "none"))}</li>`;
+      : `<li class="${UI_CLASS.empty}">${escapeHtml(seriesTagsText(state.config, "empty_state", "none"))}</li>`;
 
     return `
       <li class="seriesTags__row">
@@ -186,15 +191,14 @@ function renderTable(state) {
 }
 
 function renderFilters(state) {
-  const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
   const groupButtons = STUDIO_GROUPS.map((group) => {
-    const activeClass = state.filterGroup === group ? " is-active" : "";
     const titleAttr = groupTitleAttr(state.groupDescriptions, group);
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group), UI_CLASS.groupFilterButton)}"
         data-group="${escapeHtml(group)}"
+        ${stateAttr(state.filterGroup === group ? UI_STATE.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)}
@@ -203,8 +207,8 @@ function renderFilters(state) {
   }).join("");
 
   return `
-    <div class="tagStudio__key seriesTags__filters">
-      <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
+    <div class="${UI_CLASS.filters}">
+      <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(seriesTagsText(state.config, "filter_all_tags", "All tags"))}</button>
       ${groupButtons}
       ${renderGroupInfoControl(state)}
     </div>
@@ -220,7 +224,7 @@ function groupTitleAttr(groupDescriptions, group) {
 function renderGroupInfoControl(state) {
   return `
     <a
-      class="tagStudio__keyPill tagStudio__keyInfoBtn"
+      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
@@ -237,8 +241,8 @@ function toTagDisplay(rawTagId, registry) {
   const known = registry.get(tagId);
   if (known) {
     const className = STUDIO_GROUPS.includes(known.group)
-      ? `tagStudio__chip--${known.group}`
-      : "tagStudio__chip--warning";
+      ? chipGroupClass(known.group)
+      : UI_CLASS.chipWarning;
     return {
       tagId,
       group: known.group,
@@ -250,8 +254,8 @@ function toTagDisplay(rawTagId, registry) {
 
   const groupPrefix = groupFromTagId(tagId);
   const className = STUDIO_GROUPS.includes(groupPrefix)
-    ? `tagStudio__chip--${groupPrefix}`
-    : "tagStudio__chip--warning";
+    ? chipGroupClass(groupPrefix)
+    : UI_CLASS.chipWarning;
   return {
     tagId,
     group: groupPrefix,
@@ -278,4 +282,16 @@ function escapeHtml(value) {
 
 function seriesTagsText(config, key, fallback, tokens) {
   return getStudioText(config, `series_tags.${key}`, fallback, tokens);
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
+}
+
+function stateAttr(stateValue) {
+  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
 }

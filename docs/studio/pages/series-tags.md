@@ -18,14 +18,18 @@ Page controller:
 
 - `assets/studio/js/series-tags.js`
 
+Supporting modules:
+
+- `assets/studio/js/studio-ui.js`
+
 Top-level structure:
 
 - `.seriesTagsPage`
   - page scope for Studio CSS variables
 - `.tagStudio__panel`
   - shared Studio panel shell around the page
-- `#series-tags`
-  - page mount point
+- `#series-tags[data-role="series-tags"]`
+  - page root / render target
 
 ## Named UI Sections
 
@@ -152,6 +156,16 @@ Main render functions:
 Main event wiring:
 
 - a click handler on `#series-tags` listens for `button[data-group]`
+
+## UI Contract
+
+This page follows the shared Studio UI boundary documented in `docs/studio/ui-framework.md`:
+
+- classes define presentation
+- `data-role` defines JS selectors when the page needs them
+- `data-state` defines active filter state
+
+`assets/studio/js/studio-ui.js` holds the shared role/state/class tokens used by `series-tags.js`.
 
 ## State Handling
 

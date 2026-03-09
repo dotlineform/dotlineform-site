@@ -1,6 +1,12 @@
 import {
   fetchJson
 } from "./studio-data.js";
+import {
+  studioWorksUi
+} from "./studio-ui.js";
+
+const UI = studioWorksUi;
+const { selector: UI_SELECTOR, state: UI_STATE } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initStudioWorksPage);
@@ -15,7 +21,7 @@ function initStudioWorksPage() {
   const countEl = document.getElementById("worksListCount");
   const backNav = document.getElementById("worksIndexBackNav");
   const backLink = document.getElementById("worksIndexBackLink");
-  const buttons = Array.prototype.slice.call(document.querySelectorAll(".worksList__sortBtn"));
+  const buttons = Array.prototype.slice.call(document.querySelectorAll(UI_SELECTOR.sortButton));
   if (!worksListRoot || !emptyEl || !list || !countEl || !buttons.length) return;
 
   const baseurl = String(worksListRoot.dataset.baseurl || "");
@@ -216,7 +222,11 @@ function initStudioWorksPage() {
       const btnKey = btn.getAttribute("data-sort-key");
       const icon = btn.querySelector(".worksList__sortIcon");
       const active = btnKey === key;
-      btn.classList.toggle("is-active", active);
+      if (active) {
+        btn.dataset.state = UI_STATE.active;
+      } else {
+        delete btn.dataset.state;
+      }
       if (!icon) return;
       icon.textContent = active ? (dir === "asc" ? "▲" : "▼") : "";
     });

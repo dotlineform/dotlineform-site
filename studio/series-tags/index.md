@@ -9,7 +9,7 @@ studio_page_doc: /docs/studio/pages/series-tags/
 
 <div class="seriesTagsPage">
   <div class="tagStudio__panel">
-    <div id="series-tags"></div>
+    <div id="series-tags" data-role="series-tags"></div>
   </div>
 </div>
 

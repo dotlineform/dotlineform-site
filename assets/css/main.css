@@ -1461,7 +1461,8 @@ note: works tags are not currently in use on the work pages themselves.
   font-family: inherit;
 }
 
-.worksList__sortBtn.is-active{
+.worksList__sortBtn.is-active,
+.worksList__sortBtn[data-state="active"]{
   color: var(--text);
 }
 

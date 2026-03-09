@@ -7,8 +7,13 @@ import {
   loadStudioGroupsJson,
   normalizeStudioGroups
 } from "./studio-data.js";
+import {
+  tagGroupsUi
+} from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
+const UI = tagGroupsUi;
+const { className: UI_CLASS, selector: UI_SELECTOR } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagGroupsPage);
@@ -17,39 +22,39 @@ if (document.readyState === "loading") {
 }
 
 async function initTagGroupsPage() {
-  const mount = document.getElementById("tag-groups");
-  if (!mount) return;
+  const root = document.querySelector(UI_SELECTOR.pageRoot);
+  if (!root) return;
+  const content = root.querySelector(UI_SELECTOR.content);
+  if (!content) return;
 
   try {
     const config = await loadStudioConfig();
     STUDIO_GROUPS = getStudioGroups(config);
     const data = await loadStudioGroupsJson(config);
     const groups = normalizeStudioGroups(data, STUDIO_GROUPS);
-    renderGroups(mount, groups, config);
+    renderGroups(content, groups, config);
   } catch (error) {
-    mount.innerHTML = `<div class="tagStudioError">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
+    content.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(tagGroupsText(null, "load_failed_error", "Failed to load group descriptions from /assets/studio/data/tag_groups.json."))}</div>`;
   }
 }
 
-function renderGroups(mount, groups, config) {
+function renderGroups(content, groups, config) {
   if (!groups.length) {
-    mount.innerHTML = `<p class="tagStudio__empty">${escapeHtml(tagGroupsText(config, "empty_state", "No group descriptions available."))}</p>`;
+    content.innerHTML = `<p class="${UI_CLASS.empty}">${escapeHtml(tagGroupsText(config, "empty_state", "No group descriptions available."))}</p>`;
     return;
   }
 
-  mount.innerHTML = `
-    <div class="tagStudio__panel">
-      <div class="tagGroups__sections">
-        ${groups.map((group) => `
-          <section class="tagStudio__groupInfoSection tagGroups__section">
-            <p class="tagStudio__groupInfoHead">
-              <span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group.groupId)}">${escapeHtml(group.groupId)}</span>
-            </p>
-            ${group.description ? `<p class="tagGroups__short">${escapeHtml(group.description)}</p>` : ""}
-            <p class="tagStudio__groupInfoText">${escapeHtml(group.descriptionLong || tagGroupsText(config, "description_long_fallback", "No long description available."))}</p>
-          </section>
-        `).join("")}
-      </div>
+  content.innerHTML = `
+    <div class="tagGroups__sections">
+      ${groups.map((group) => `
+        <section class="${UI_CLASS.section}">
+          <p class="${UI_CLASS.head}">
+            <span class="${classNames(UI_CLASS.chip, chipGroupClass(group.groupId))}">${escapeHtml(group.groupId)}</span>
+          </p>
+          ${group.description ? `<p class="tagGroups__short">${escapeHtml(group.description)}</p>` : ""}
+          <p class="${UI_CLASS.text}">${escapeHtml(group.descriptionLong || tagGroupsText(config, "description_long_fallback", "No long description available."))}</p>
+        </section>
+      `).join("")}
     </div>
   `;
 }
@@ -65,4 +70,12 @@ function escapeHtml(value) {
 
 function tagGroupsText(config, key, fallback, tokens) {
   return getStudioText(config, `tag_groups.${key}`, fallback, tokens);
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
 }

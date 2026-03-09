@@ -7,6 +7,7 @@ section: works
 <div
   class="index worksList worksList--curator"
   id="worksCuratorRoot"
+  data-role="studio-works"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
   data-works-index-url="{{ '/assets/data/works_index.json' | relative_url }}"
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
@@ -20,19 +21,19 @@ section: works
   </div>
 
   <div class="worksList__head" role="group" aria-label="Sort works curator">
-    <button class="worksList__sortBtn" type="button" data-sort-key="cat">
+    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
       cat <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-sort-key="year">
+    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="year">
       year <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-sort-key="title">
+    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="title">
       title <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-sort-key="series">
+    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="series">
       series <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
-    <button class="worksList__sortBtn" type="button" data-sort-key="storage">
+    <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="storage">
       storage <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
   </div>

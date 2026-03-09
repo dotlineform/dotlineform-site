@@ -282,3 +282,50 @@ export const tagAliasesUi = createUiContract({
     error: "error"
   }
 });
+
+export const seriesTagsUi = createUiContract({
+  role: {
+    pageRoot: "series-tags"
+  },
+  className: {
+    error: "tagStudioError",
+    empty: "tagStudio__empty",
+    keyPill: "tagStudio__keyPill",
+    keyInfoButton: "tagStudio__keyInfoBtn",
+    allFilterButton: "tagStudioFilters__allBtn",
+    groupFilterButton: "tagStudioFilters__groupBtn",
+    chip: "tagStudio__chip",
+    chipGroupPrefix: "tagStudio__chip--",
+    chipWarning: "tagStudio__chip--warning",
+    filters: "tagStudio__key seriesTags__filters"
+  },
+  state: {
+    active: "active"
+  }
+});
+
+export const tagGroupsUi = createUiContract({
+  role: {
+    pageRoot: "tag-groups",
+    content: "content"
+  },
+  className: {
+    error: "tagStudioError",
+    empty: "tagStudio__empty",
+    chip: "tagStudio__keyPill",
+    chipGroupPrefix: "tagStudio__chip--",
+    section: "tagStudio__groupInfoSection tagGroups__section",
+    head: "tagStudio__groupInfoHead",
+    text: "tagStudio__groupInfoText"
+  }
+});
+
+export const studioWorksUi = createUiContract({
+  role: {
+    pageRoot: "studio-works",
+    sortButton: "sort-button"
+  },
+  state: {
+    active: "active"
+  }
+});

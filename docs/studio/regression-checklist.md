@@ -108,6 +108,36 @@ Notes:
 - Steps:
 - Screenshot/log:
 
+## Series Tags
+
+Page: `studio/series-tags/index.md`
+
+- [ ] Series Tags page loads without error.
+- [ ] Group filter buttons work.
+- [ ] Active filter styling is correct.
+- [ ] Series links point to the Series Tag Editor.
+- [ ] RAG dots and visible tag chips render correctly.
+- [ ] No console errors during series-tags flow.
+
+## Tag Groups
+
+Page: `studio/tag-groups/index.md`
+
+- [ ] Tag Groups page loads without error.
+- [ ] Group sections render in configured order.
+- [ ] Group chips and description text render correctly.
+- [ ] No console errors during tag-groups load.
+
+## Studio Works
+
+Page: `studio/studio-works/index.md`
+
+- [ ] Studio Works page loads without error.
+- [ ] Sort buttons work.
+- [ ] Active sort styling is correct.
+- [ ] Single-series filtered view still works.
+- [ ] No console errors during studio-works flow.
+
 ## Cross-check
 
 - [ ] Save/import mode label switches correctly between `Local server` and `Patch`.

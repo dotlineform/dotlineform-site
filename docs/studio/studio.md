@@ -684,3 +684,20 @@ It then:
 - group pills use `tag_groups.json` `description` as hover text (`title`)
 - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)
+- uses the shared Studio role/state contract for filter-button active state
+
+## Tag Groups Page
+
+The Tag Groups page (`/studio/tag-groups/`) reads `assets/studio/data/tag_groups.json` and:
+
+- renders group descriptions in configured Studio group order
+- uses a template-owned panel shell with a JS-owned content region
+- reuses shared Studio chip styling for group labels
+
+## Studio Works Page
+
+The Studio Works page (`/studio/studio-works/`) remains a lighter compatibility page and:
+
+- reads `works_index.json` and `series_index.json`
+- keeps its existing works-list layout
+- now uses the shared Studio role/state contract for active sort-button state
