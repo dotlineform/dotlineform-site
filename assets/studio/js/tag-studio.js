@@ -34,7 +34,6 @@ import {
   pushMapList,
   sanitizeTag,
   splitWorkInputTokens,
-  syncWorkEntriesFromPersistedState,
   workStateMapToObject
 } from "./tag-studio-domain.js";
 import {
@@ -225,28 +224,6 @@ function buildStateDiff(state) {
   return buildEditorStateDiff(state, getOrderedSelectedWorkIds(state));
 }
 
-function syncStateFromAssignments(state, assignmentsJson) {
-  const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
-  const seriesAssignment = getSeriesAssignment(assignmentsSeries, state.seriesId);
-  const seriesRows = normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags);
-  const resolvedSeries = createResolvedEntries(seriesRows, state.tagsById, 1);
-  state.seriesEntries = resolvedSeries.entries;
-  state.baselineSeriesRows = normalizeAssignmentRows(seriesRows);
-
-  const rawWorkAssignments = seriesAssignment && typeof seriesAssignment.works === "object" ? seriesAssignment.works : {};
-  const nextWorkStateById = new Map();
-  Object.keys(rawWorkAssignments).forEach((rawWorkId) => {
-    const workId = normalizeWorkId(rawWorkId);
-    if (!workId) return;
-    const workRow = rawWorkAssignments[rawWorkId];
-    const rows = normalizeAssignmentTags(workRow && typeof workRow === "object" ? workRow.tags : []);
-    nextWorkStateById.set(workId, rows);
-  });
-
-  state.baselineWorkStateById = cloneWorkStateMap(nextWorkStateById);
-  syncWorkEntriesFromPersistedState(state, nextWorkStateById);
-}
-
 function restoreSelectionFromQuery(state) {
   const searchParams = new URLSearchParams(window.location.search);
   const worksParam = String(searchParams.get("works") || "").trim();
@@ -311,8 +288,8 @@ function renderShell(state) {
   const modalCopyButton = studioText(state.config, "modal_copy_button", "Copy");
   const modalCloseButton = studioText(state.config, "modal_close_button", "Close");
   const saveModalHtml = renderStudioModalFrame({
-    modalRole: "modal",
-    backdropRole: "close-modal",
+    modalRole: UI.role.modal,
+    backdropRole: UI.role.modalClose,
     titleId: "tagStudioModalTitle",
     title: modalTitle,
     bodyHtml: `
@@ -323,7 +300,7 @@ function renderShell(state) {
     `,
     actionsHtml: renderStudioModalActions([
       { role: UI.role.copySnippet, label: modalCopyButton, primary: true },
-      { role: "close-modal", label: modalCloseButton }
+      { role: UI.role.modalClose, label: modalCloseButton }
     ])
   });
   const refs = {
@@ -513,7 +490,7 @@ function wireEvents(state) {
   });
 
   state.refs.modal.addEventListener("click", (event) => {
-    if (!event.target.closest('[data-role="close-modal"]')) return;
+    if (!event.target.closest(UI_SELECTOR.modalClose)) return;
     closeModal(state);
   });
 

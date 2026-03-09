@@ -1,13 +1,9 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-09T15:07:06Z",
+  "updated_at_utc": "2026-03-09T15:25:53Z",
   "series": {
     "curve-poems": {
       "tags": [
-        {
-          "tag_id": "subject:form",
-          "w_manual": 0.6
-        },
         {
           "tag_id": "form:curvilinear",
           "w_manual": 0.6
@@ -21,7 +17,7 @@
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-03-09T15:07:06Z",
+      "updated_at_utc": "2026-03-09T15:25:53Z",
       "works": {
         "00293": {
           "tags": [

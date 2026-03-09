@@ -45,6 +45,7 @@ export const seriesTagEditorUi = createUiContract({
     popupList: "popup-list",
     modalHost: "modal-host",
     modal: "modal",
+    modalClose: "close-modal",
     modalTags: "modal-tags",
     modalSnippet: "modal-snippet",
     copySnippet: "copy-snippet"
