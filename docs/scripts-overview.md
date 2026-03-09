@@ -23,6 +23,7 @@ Deferred improvements and follow-up items:
 
 - `docs/backlog.md`
 - `docs/css-audit-spec.md`
+- `docs/css-audit-latest.md`
 
 ## Main Pipeline
 
@@ -215,10 +216,10 @@ Behavior:
     - live duplicate check blocks existing `<group>:<slug>`
     - local mode uses `POST /import-tag-registry` with `mode: add` and a single tag payload
     - patch mode emits add-tag row snippet
-  - Import modes supported by endpoint:
-    - `add` (no overwrite)
-    - `merge` (add + overwrite)
-    - `replace` (replace entire registry)
+- Import modes supported by endpoint:
+  - `add` (no overwrite)
+  - `merge` (add + overwrite)
+  - `replace` (replace entire registry)
   - successful import responses include `summary_text` (same format used by Tag Registry UI and server log)
   - import request may include `import_filename`; server logs basename only (no client path)
   - tag mutation endpoint behavior (`POST /mutate-tag`):
@@ -286,6 +287,25 @@ Script logging:
 - Retention policy:
   - keep entries from the last 30 days
   - if no entries fall inside the last 30 days, keep the latest 1 day's worth (based on newest entry)
+
+### 3c) CSS token audit
+
+Run:
+
+```bash
+python3 scripts/css_token_audit.py
+```
+
+Optional flags:
+
+- `--md-out docs/css-audit-latest.md`: override Markdown output path
+- `assets/css/main.css assets/studio/css/studio.css`: optional file list override
+
+Behavior:
+
+- scans CSS for `font-size` declarations and color literals
+- reports repeated raw typography values and direct color literals
+- writes the current snapshot to `docs/css-audit-latest.md`
 
 ### 4) Audit site consistency (read-only)
 

@@ -79,3 +79,18 @@ My recommendation for the immediate next step:
 - then review what repeated UI patterns remain, especially lists/panels/toolbars
 
 If you want, I can take the next practical step and do the audit pass first: extract the current raw `font-size` and color values from both CSS files and turn that into a cleanup plan.
+
+I added a repeatable audit script at [scripts/css_token_audit.py](/Users/dlf/Developer/dotlineform/dotlineform-site/scripts/css_token_audit.py), generated the current snapshot in [docs/css-audit-latest.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs/css-audit-latest.md), and documented it in [docs/scripts-overview.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs/scripts-overview.md). Verification was just the script run: `python3 scripts/css_token_audit.py`.
+
+What the audit says is useful:
+- `main.css` has a typography drift problem more than a color problem. The biggest hotspot is `12px` used 12 times, plus smaller clusters at `13px`, `0.88rem`, `0.9rem`, `0.95rem`, and one `16px` lede.
+- `studio.css` has a compressed-but-messy UI text scale: `0.78rem` 12 times, `0.82rem` 9 times, `0.86rem` 5 times, `0.83rem` 3 times. That is almost certainly too many near-duplicate sizes for a ~10-page site.
+- Color is less urgent in `main.css`: only a handful of direct literals remain outside the theme tokens. `studio.css` is more mixed: the palette is tokenized at the top, but several component rules still hardcode values like `#fff`, `#1f1f1f`, `#d2d2d2`, and the weight-dot fills.
+
+So the first real cleanup pass should be typography only, not lists or colors yet:
+1. Finalize a shared text scale and decide whether `13px` survives or gets eliminated.
+2. Add a small Studio typography alias layer so `0.78/0.82/0.83/0.86/0.88/0.9` collapse into a controlled set.
+3. Replace repeated literals in `main.css` and `studio.css` with those tokens, without redesigning components yet.
+4. Re-run [docs/css-audit-latest.md](/Users/dlf/Developer/dotlineform/dotlineform-site/docs/css-audit-latest.md) and only then start the color pass.
+
+If you want, I can take that next pass now and do the typography-token consolidation only.
