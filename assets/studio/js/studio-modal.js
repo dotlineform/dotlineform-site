@@ -34,8 +34,8 @@ function renderStatus(status) {
   if (!status || !status.message) {
     return '<p class="tagStudioForm__status" data-role="modal-status"></p>';
   }
-  const kind = status.kind ? ` is-${escapeHtml(status.kind)}` : "";
-  return `<p class="tagStudioForm__status${kind}" data-role="modal-status">${escapeHtml(status.message)}</p>`;
+  const stateAttr = status.kind ? ` data-state="${escapeHtml(status.kind)}"` : "";
+  return `<p class="tagStudioForm__status" data-role="modal-status"${stateAttr}>${escapeHtml(status.message)}</p>`;
 }
 
 function renderWarning(warning) {
@@ -173,7 +173,11 @@ function setRoleMessage(host, role, className, kind, message) {
   if (!target) return;
   target.textContent = message || "";
   target.className = className;
-  if (kind) target.classList.add(`is-${kind}`);
+  if (kind) {
+    target.dataset.state = kind;
+    return;
+  }
+  delete target.dataset.state;
 }
 
 function closeActiveModal(host) {

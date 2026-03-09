@@ -3,6 +3,7 @@ layout: default
 title: Studio Works
 permalink: /studio/studio-works/
 section: works
+studio_page_doc: /docs/studio/pages/studio-works/
 ---
 <div
   class="index worksList worksList--curator"

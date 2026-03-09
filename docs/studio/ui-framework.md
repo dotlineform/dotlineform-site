@@ -314,36 +314,23 @@ This keeps modal rendering in the UI layer while keeping business rules in the e
 ### Supported Modal Types Implementation Status
 
 - `confirm`
-  Phase 2: used for aliases delete confirmation
+  used for aliases delete confirmation
 - `confirm-detail`
-  Phase 3: used for aliases promote/demote preview confirmation and registry demote confirmation
+  used for aliases promote/demote preview confirmation and registry demote confirmation
 - `form`
-  Phase 2: used for aliases promote group selection and demote target entry
+  used for aliases promote group selection and demote target entry
 - `patch-preview`
-  Phase 4: shared shell renderer used for registry, aliases, and editor patch/save preview modals
+  shared shell renderer used for registry, aliases, and editor patch/save preview modals
 
-Later phases should replace native `confirm(...)` and `prompt(...)` calls with these modal types rather than adding new one-off dialogs.
+Studio should continue to use these modal types rather than adding new one-off dialogs or reintroducing native `confirm(...)` and `prompt(...)` flows.
 
-### Migration Status
+### Current Status
 
-- Phase 1
-  Added shared modal controller scaffold and documented modal contracts.
-- Phase 2
-  Replaced aliases native dialogs with Studio modal types:
-  - alias delete uses `confirm`
-  - alias promote uses `form` then `confirm-detail`
-  - alias-side tag demote uses `form` then `confirm-detail`
-- Phase 3
-  Replaced registry demote native confirm with Studio `confirm-detail`, using page-root host placement.
-- Phase 4
-  Normalized existing custom modal shells onto the shared controller contract:
-  - registry patch, edit, new, delete, and demote shells use `renderStudioModalFrame(...)`
-  - aliases patch and edit shells use `renderStudioModalFrame(...)`
-  - editor save/patch shell uses `renderStudioModalFrame(...)`
-- Phase 5
-  Closed out documentation and regression coverage:
-  - modal-specific manual verification items live in `docs/studio/regression-checklist.md`
-  - the remaining open work is browser execution of that checklist, not further modal framework design
+- shared modal controller and shell renderer are in use across the editor, registry, and aliases pages
+- shared modal state now uses `data-state` rather than page-specific `.is-*` presentation classes
+- shared non-modal primitives cover toolbar, filters, list shell, and modal form internals
+- lighter Studio pages such as `series-tags`, `tag-groups`, and `studio-works` follow the same role/state contract where applicable
+- remaining work is manual browser verification using `docs/studio/regression-checklist.md`, not more framework design
 
 ### Aliases Integration Notes
 
@@ -386,21 +373,6 @@ This preserves the clean separation:
 - shared modal shell in the UI framework
 - application-specific contents and behavior in page/domain/service code
 
-### Phase 5 Close-out
-
-The modal framework work is structurally complete for the current Studio build:
-
-- native browser dialogs have been replaced in the migrated registry/aliases flows
-- persistent custom modal shells now share the same Studio frame renderer
-- modal shell ownership is centralized in `studio-modal.js`
-- mutation, validation, preview, and patch logic remain outside the modal framework
-
-What remains is execution of the manual browser checklist, especially:
-
-- visual consistency across desktop/mobile
-- focus and dismissal behavior across modal types
-- confirmation that no page-specific modal regressed during the shared-shell migration
-
 ## What Stays Page-Specific
 
 These should remain page-specific unless another page genuinely needs the same structure:
@@ -423,122 +395,15 @@ When adding or changing Studio UI:
 4. Keep layout-only exceptions local to the page namespace.
 5. Keep UI copy in `assets/studio/data/studio_config.json`, not in CSS or hard-coded duplicated markup.
 
-## Current Refactor Direction
+## Current Shared Coverage
 
 Current Studio cleanup standardizes:
 
 - list-page toolbar/import blocks on `tagStudioToolbar__*`
 - list-page search/filter controls on `tagStudioFilters__*`
+- shared list shells on `tagStudioList__*`
 - modal form internals on `tagStudioForm__*`
-
-Further cleanup should continue in that direction rather than adding more page-to-page class borrowing.
-
-## Non-Modal UI Refactor Plan
-
-The modal refactor is structurally complete. The remaining UI-system work is a narrower consistency pass for shared non-modal elements.
-
-### Scope
-
-Focus on shared primitives for:
-
-- search inputs
-- filter bars and `All tags` controls
-- action/import toolbars
-- status and result message blocks
-- list container, header, and row-shell structure
-
-Do not use this pass to redesign page-specific row content or to move business logic into the shared UI layer.
-
-### Planned Phases
-
-#### Phase 1: UI Inventory
-
-Objective:
-
-- identify where the same UI intent still uses different markup or classes
-- classify each pattern as:
-  - already shared
-  - should become shared
-  - keep page-specific
-  - defer
-
-Primary review targets:
-
-- `assets/studio/css/studio.css`
-- `assets/studio/js/tag-registry.js`
-- `assets/studio/js/tag-aliases.js`
-- `assets/studio/js/series-tags.js`
-- `assets/studio/js/tag-studio.js`
-
-This phase is analysis only.
-
-#### Phase 2: Search / Filter Standardization
-
-Objective:
-
-- make list-page search and filter controls use one shared structure and naming contract
-
-Expected scope:
-
-- `tagStudioFilters__searchWrap`
-- `tagStudioFilters__searchInput`
-- `tagStudioFilters__allBtn`
-- `tagStudioFilters__groupBtn`
-
-Page-specific filter logic stays in page controllers.
-
-Current status:
-
-- complete for registry, aliases, and series tags
-- remaining work is visual/manual verification rather than further search/filter renaming
-
-#### Phase 3: Toolbar / Status Standardization
-
-Objective:
-
-- make import/create/action rows and result/status messaging use one shared structure
-
-Expected scope:
-
-- `tagStudioToolbar__row`
-- `tagStudioToolbar__field`
-- `tagStudioToolbar__mode`
-- `tagStudioToolbar__selected`
-- `tagStudioToolbar__result`
-
-Page-specific actions, labels, and mutation flows stay local.
-
-Current status:
-
-- complete for registry and aliases
-- shared toolbar action positioning now uses the Studio toolbar namespace rather than page-specific classes
-
-#### Phase 4: List Shell Standardization
-
-Objective:
-
-- align shared list-shell structure while keeping row internals page-specific
-
-Expected scope:
-
-- list container spacing
-- shared header row treatment
-- empty-state placement
-- shared row-shell spacing
-
-Page-specific columns, chips, and row details stay local.
-
-Current status:
-
-- complete for registry and aliases
-- series tags intentionally keeps a page-specific row model while sharing the broader Studio control primitives
-
-#### Phase 5: Documentation And Regression Close-out
-
-Objective:
-
-- document the non-modal shared primitives explicitly
-- extend the regression checklist to cover the shared search/filter, toolbar/status, and list-shell patterns
+- lighter pages bind through `data-role` and `data-state` instead of style-class behavior hooks where they expose interactive controls
 
 ### Implementation Boundary
 

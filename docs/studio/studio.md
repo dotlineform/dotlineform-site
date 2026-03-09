@@ -10,8 +10,8 @@ Related references:
 Current status:
 
 - Studio modularity refactor is structurally complete for the current build
-- modal framework migration is structurally complete through Phase 5 documentation
-- non-modal shared UI cleanup is planned as the final consistency pass for search/filter, toolbar/status, and list-shell primitives
+- modal framework migration is structurally complete for the current build
+- non-modal shared UI cleanup is structurally complete across the editor, registry, aliases, and lighter Studio pages
 - remaining work is manual browser verification using `docs/studio/regression-checklist.md`
 
 ## Local Development

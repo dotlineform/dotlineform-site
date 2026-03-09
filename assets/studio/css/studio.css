@@ -816,8 +816,6 @@
   cursor: pointer;
 }
 
-.tagStudioFilters__allBtn.is-active,
-.tagStudioFilters__groupBtn.is-active,
 .tagStudioFilters__allBtn[data-state="active"],
 .tagStudioFilters__groupBtn[data-state="active"] {
   border-color: var(--studio-control-active-border);
@@ -896,17 +894,14 @@
   font-size: 0.82rem;
 }
 
-.tagStudioToolbar__result.is-success,
 .tagStudioToolbar__result[data-state="success"] {
   color: var(--studio-success);
 }
 
-.tagStudioToolbar__result.is-warn,
 .tagStudioToolbar__result[data-state="warn"] {
   color: var(--studio-warn);
 }
 
-.tagStudioToolbar__result.is-error,
 .tagStudioToolbar__result[data-state="error"] {
   color: var(--studio-danger);
 }
@@ -961,7 +956,6 @@
   cursor: pointer;
 }
 
-.tagRegistry__sortBtn.is-active,
 .tagRegistry__sortBtn[data-state="active"] {
   color: inherit;
 }
@@ -1010,27 +1004,23 @@
   font-size: 0.9rem;
 }
 
-.tagStudioForm__meta,
-.tagRegistryEdit__meta {
+.tagStudioForm__meta {
   margin: 0.25rem 0 0.75rem;
   font-size: 0.82rem;
   color: var(--muted, var(--studio-muted));
 }
 
-.tagStudioForm__fields,
-.tagRegistryEdit__fields {
+.tagStudioForm__fields {
   display: grid;
   gap: 0.55rem;
 }
 
-.tagStudioForm__field,
-.tagRegistryEdit__field {
+.tagStudioForm__field {
   display: grid;
   gap: 0.22rem;
 }
 
-.tagStudioForm__label,
-.tagRegistryEdit__label {
+.tagStudioForm__label {
   font-size: 0.78rem;
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
@@ -1040,58 +1030,44 @@
   margin: 0.35rem 0 0.55rem;
 }
 
-.tagRegistryNew__key .tagStudio__keyPill.is-active,
 .tagRegistryNew__key .tagStudio__keyPill[data-state="active"] {
   border-color: var(--studio-control-active-border);
   box-shadow: var(--studio-control-active-ring);
 }
 
-.tagStudioForm__readonly,
-.tagRegistryEdit__readonly {
+.tagStudioForm__readonly {
   background: var(--studio-surface-subtle);
   color: var(--muted, var(--studio-muted));
 }
 
-.tagStudioForm__descriptionInput,
-.tagRegistryEdit__descriptionInput {
+.tagStudioForm__descriptionInput {
   min-height: 5.2rem;
   resize: vertical;
   line-height: 1.35;
 }
 
-.tagStudioForm__status,
-.tagRegistryEdit__status {
+.tagStudioForm__status {
   margin: 0.7rem 0 0;
   min-height: 1.1rem;
   font-size: 0.82rem;
 }
 
-.tagStudioForm__impact,
-.tagRegistryEdit__impact {
+.tagStudioForm__impact {
   margin: 0.45rem 0 0;
   min-height: 1rem;
   font-size: 0.78rem;
   color: var(--muted, var(--studio-muted));
 }
 
-.tagStudioForm__impact.is-error,
-.tagRegistryEdit__impact.is-error,
-.tagStudioForm__impact[data-state="error"],
-.tagRegistryEdit__impact[data-state="error"] {
+.tagStudioForm__impact[data-state="error"] {
   color: var(--studio-danger);
 }
 
-.tagStudioForm__status.is-success,
-.tagRegistryEdit__status.is-success,
-.tagStudioForm__status[data-state="success"],
-.tagRegistryEdit__status[data-state="success"] {
+.tagStudioForm__status[data-state="success"] {
   color: var(--studio-success);
 }
 
-.tagStudioForm__status.is-error,
-.tagRegistryEdit__status.is-error,
-.tagStudioForm__status[data-state="error"],
-.tagRegistryEdit__status[data-state="error"] {
+.tagStudioForm__status[data-state="error"] {
   color: var(--studio-danger);
 }
 
@@ -1177,8 +1153,7 @@
   align-items: baseline;
 }
 
-.tagStudioForm__warning,
-.tagAliasesEdit__warning {
+.tagStudioForm__warning {
   margin: 0.2rem 0 0;
   min-height: 1rem;
   font-size: 0.78rem;
@@ -1194,38 +1169,30 @@
   overflow: visible;
 }
 
-.tagStudioForm__searchWrap,
-.tagAliasesEdit__searchWrap {
+.tagStudioForm__searchWrap {
   position: relative;
 }
 
-.tagStudioForm__searchWrap .tagStudio__popupInner,
-.tagAliasesEdit__searchWrap .tagStudio__popupInner {
+.tagStudioForm__searchWrap .tagStudio__popupInner {
   top: calc(100% + 0.25rem);
   left: 0;
 }
 
-.tagStudio__popupMore,
-.tagAliasesEdit__popupMore {
+.tagStudio__popupMore {
   cursor: default;
   pointer-events: none;
   opacity: 0.72;
 }
 
-.tagStudioForm__key,
-.tagAliasesEdit__key {
+.tagStudioForm__key {
   margin: 0.75rem 0 0.45rem;
 }
 
-.tagStudioForm__selected,
-.tagAliasesEdit__selectedTags {
+.tagStudioForm__selected {
   min-height: 1.6rem;
 }
 
-.tagStudioForm__key .tagStudio__keyPill.is-active,
-.tagAliasesEdit__key .tagStudio__keyPill.is-active,
-.tagStudioForm__key .tagStudio__keyPill[data-state="active"],
-.tagAliasesEdit__key .tagStudio__keyPill[data-state="active"] {
+.tagStudioForm__key .tagStudio__keyPill[data-state="active"] {
   border-color: var(--studio-control-active-border);
   box-shadow: var(--studio-control-active-ring);
 }
