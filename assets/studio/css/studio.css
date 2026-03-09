@@ -96,6 +96,13 @@
   padding: var(--studio-surface-padding-lg);
 }
 
+.tagStudioPage__context--meta {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+
 .tagStudioPage__title {
   margin: 0 0 0.9rem;
   font-size: var(--font-heading-2);

@@ -1109,6 +1109,24 @@ Use “structure-first” naming and scope section-specific differences via the 
   margin: 0;
 }
 
+.page__metaList{
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.page__metaList .page__row{
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.page__metaList .page__row > span{
+  overflow-wrap: anywhere;
+}
+
+.page__metaList .work__titleMain{
+  font-weight: 600;
+}
+
 /* .page__caption rules to override the generic .page__row grid/borders when rows are used as single-column caption lines in Work caption */
 .page__caption .page__row{
   display: block;            /* override grid rows */

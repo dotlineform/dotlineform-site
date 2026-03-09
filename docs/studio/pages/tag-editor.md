@@ -103,6 +103,8 @@ User-facing name:
 DOM / CSS:
 
 - `.tagStudioPage__context`
+- `.tagStudioPage__context--meta`
+- `.page__caption.page__metaList`
 - `#seriesTagEditorTitle`
 - `#seriesTagEditorCat`
 - `#seriesTagEditorYear`
@@ -120,6 +122,7 @@ JS owner:
 Meaning:
 
 - the field list in column 2 of the series header
+- this now uses the shared unboxed metadata pattern from the main site rather than a Studio-specific boxed panel treatment
 
 ### Editor panel
 

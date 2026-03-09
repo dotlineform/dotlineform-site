@@ -42,19 +42,19 @@ studio_page_doc: /docs/studio/pages/tag-editor/
       </a>
     </figure>
 
-    <section class="tagStudioPage__context">
+    <section class="tagStudioPage__context tagStudioPage__context--meta">
       <h1 class="tagStudioPage__title" id="seriesTagEditorTitle">Series Tag Editor</h1>
-      <div class="workCurator__rows" style="font-size:var(--meta-small-size);line-height:var(--meta-small-line);">
+      <div class="page__caption page__metaList">
         <div class="page__row">
-          cat
+          cat.
           <span id="seriesTagEditorCat">—</span>
         </div>
-        <div class="page__row">year <span id="seriesTagEditorYear">—</span></div>
-        <div class="page__row">year display <span id="seriesTagEditorYearDisplay">—</span></div>
-        <div class="page__row">sort fields <span id="seriesTagEditorSortFields">—</span></div>
-        <div class="page__row">primary work <span id="seriesTagEditorPrimaryWork">—</span></div>
-        <div class="page__row">project folders <span id="seriesTagEditorFolders">—</span></div>
-        <div class="page__row">notes <span id="seriesTagEditorNotes">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorYear">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorYearDisplay">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorSortFields">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorPrimaryWork">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorFolders">—</span></div>
+        <div class="page__row"><span id="seriesTagEditorNotes">—</span></div>
       </div>
     </section>
   </header>

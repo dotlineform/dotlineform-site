@@ -90,6 +90,21 @@ Defined in `assets/css/main.css`:
 - `.container`
   shared page-width wrapper
 
+### Site metadata pattern
+
+Defined in `assets/css/main.css`:
+
+- `.page__caption.page__metaList`
+  unboxed metadata list used for work/work-detail style metadata blocks
+
+This is the approved metadata baseline when listing work or series metadata:
+
+- `--font-small`
+- no container border or background
+- no row borders
+- bold title row via `.work__titleMain`
+- only `cat.` as an explicit field label when needed
+
 ### Site list patterns
 
 Defined in `assets/css/main.css`:
