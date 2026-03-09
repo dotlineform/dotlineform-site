@@ -610,6 +610,7 @@ Tag Registry import modes:
 
 The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/tag_aliases.json` and:
 
+- uses a template-owned page shell with JS-bound `data-role` hooks and a dedicated modal host
 - lists aliases with columns: alias, group tags
 - renders alias values inline as color-coded pills in the `group tags` column
   - alias row supports one or more canonical target tags

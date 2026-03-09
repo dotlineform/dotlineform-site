@@ -76,9 +76,10 @@ Notes:
 
 ## Tag Aliases
 
-Page: `assets/studio/js/tag-aliases.js`
+Page: `studio/tag-aliases/index.md`
 
 - [ ] Aliases page loads without error.
+- [ ] Aliases shell layout renders correctly on desktop/mobile.
 - [ ] Search filters rows correctly.
 - [ ] Group filter buttons work.
 - [ ] Sort toggle works.

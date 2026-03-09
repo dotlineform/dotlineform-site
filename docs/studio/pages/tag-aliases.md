@@ -20,6 +20,7 @@ Page controller:
 
 Supporting modules:
 
+- `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-aliases-domain.js`
 - `assets/studio/js/tag-aliases-save.js`
 - `assets/studio/js/tag-aliases-service.js`
@@ -28,8 +29,16 @@ Top-level structure:
 
 - `.tagAliasesPage`
   - page scope for Studio CSS variables
-- `#tag-aliases`
-  - page mount point
+- `#tag-aliases[data-role="tag-aliases"]`
+  - template-owned aliases shell root
+- `[data-role="toolbar"]`
+  - import/action toolbar shell
+- `[data-role="filters"]`
+  - search and key shell
+- `[data-role="list"]`
+  - list mount area
+- `[data-role="modal-host"]`
+  - modal mount point used by `tag-aliases.js`
 
 ## Named UI Sections
 
@@ -50,7 +59,8 @@ DOM / CSS:
 
 JS owner:
 
-- `renderShell(state)` in `assets/studio/js/tag-aliases.js`
+- page template for shell markup
+- `renderShell(state)` in `assets/studio/js/tag-aliases.js` for dynamic labels, refs, and persistent modal DOM
 
 Meaning:
 
@@ -64,6 +74,7 @@ User-facing name:
 
 DOM / CSS:
 
+- `[data-role="filters"]`
 - `.tagStudioFilters`
 - `[data-role="key"]`
 - `[data-role="search"]`
@@ -218,10 +229,20 @@ Main event wiring:
 
 The page controller owns:
 
-- shell rendering
+- dynamic inner rendering
 - modal visibility for the persistent edit modal
 - search/filter/sort wiring
 - delegating mutations and preview flows
+
+## UI Contract
+
+This page follows the shared Studio UI boundary documented in `docs/studio/ui-framework.md`:
+
+- classes define presentation
+- `data-role` defines JS selectors
+- `data-state` and ARIA define runtime state
+
+`assets/studio/js/studio-ui.js` holds the role selectors plus generated style class tokens used by `tag-aliases.js`.
 
 ## State Handling
 

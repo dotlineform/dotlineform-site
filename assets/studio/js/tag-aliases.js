@@ -54,12 +54,17 @@ import {
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
+import {
+  tagAliasesUi
+} from "./studio-ui.js";
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+const UI = tagAliasesUi;
+const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initTagAliasesPage);
@@ -142,126 +147,110 @@ function renderShell(state) {
   const editSaveButton = aliasesText(state.config, "edit_save_button", "Save");
   const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
   const patchModalHtml = renderStudioModalFrame({
-    modalRole: "patch-modal",
-    backdropRole: "close-modal",
+    modalRole: UI.role.patchModal,
+    backdropRole: UI.role.patchModalClose,
     titleId: "tagAliasesPatchTitle",
     title: patchModalTitle,
     bodyHtml: `
-      <p class="tagStudioModal__label">${escapeHtml(patchModalLabel)}</p>
-      <pre class="tagStudioModal__pre" data-role="patch-snippet"></pre>
+      <p class="${UI_CLASS.modalLabel}">${escapeHtml(patchModalLabel)}</p>
+      <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "copy-patch", label: patchModalCopy, primary: true },
-      { role: "close-modal", label: patchModalClose }
+      { role: UI.role.copyPatch, label: patchModalCopy, primary: true },
+      { role: UI.role.patchModalClose, label: patchModalClose }
     ])
   });
   const editModalHtml = renderStudioModalFrame({
-    modalRole: "edit-modal",
+    modalRole: UI.role.editModal,
     titleId: "tagAliasesEditTitle",
-    titleRole: "edit-modal-title",
+    titleRole: UI.role.editModalTitle,
     title: editModalTitle,
-    dialogClass: "tagAliasesEdit__dialog",
+    dialogClass: UI_CLASS.editDialog,
     bodyHtml: `
-      <div class="tagStudioForm__fields">
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(editAliasLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="edit-alias-name" autocomplete="off">
+      <div class="${UI_CLASS.formFields}">
+        <label class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(editAliasLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="${UI.role.editAliasName}" autocomplete="off">
         </label>
-        <p class="tagStudioForm__warning" data-role="edit-alias-warning"></p>
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(editDescriptionLabel)}</span>
-          <textarea class="tagStudio__input tagAliasesEdit__description" data-role="edit-alias-description" rows="2"></textarea>
+        <p class="${UI_CLASS.formWarning}" data-role="${UI.role.editAliasWarning}"></p>
+        <label class="${UI_CLASS.formField}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(editDescriptionLabel)}</span>
+          <textarea class="tagStudio__input ${UI_CLASS.editDescription}" data-role="${UI.role.editAliasDescription}" rows="2"></textarea>
         </label>
-        <label class="tagStudioForm__field tagStudioForm__searchWrap">
-          <span class="tagStudioForm__label">${escapeHtml(editSearchLabel)}</span>
-          <input type="text" class="tagStudio__input" data-role="edit-tag-search" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
-          <div class="tagStudio__popup" data-role="edit-tag-popup-wrap" hidden>
-            <div class="tagStudio__popupInner" data-role="edit-tag-popup"></div>
+        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
+          <span class="${UI_CLASS.formLabel}">${escapeHtml(editSearchLabel)}</span>
+          <input type="text" class="tagStudio__input" data-role="${UI.role.editTagSearch}" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
+          <div class="${UI_CLASS.popup}" data-role="${UI.role.editTagPopupWrap}" hidden>
+            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.editTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__key tagStudioForm__key" data-role="edit-group-key"></div>
-      <div class="tagStudio__chipList tagStudioForm__selected" data-role="edit-tag-list"></div>
-      <p class="tagStudioForm__status" data-role="edit-status"></p>
+      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
+      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: "save-edit-alias", label: editSaveButton, primary: true, disabled: true },
-      { role: "close-edit-modal", label: editCancelButton }
+      { role: UI.role.saveEditAlias, label: editSaveButton, primary: true, disabled: true },
+      { role: UI.role.editModalClose, label: editCancelButton }
     ])
   });
-  state.mount.innerHTML = `
-    <section class="tagStudio__panel">
-      <div class="tagStudioToolbar">
-        <div class="tagStudioToolbar__row">
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label">${escapeHtml(importFileLabel)}</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="choose-file">${escapeHtml(chooseFileLabel)}</button>
-            <input type="file" data-role="import-file" accept=".json,application/json" hidden>
-          </label>
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label">${escapeHtml(importModeFieldLabel)}</span>
-            <select class="tagStudioToolbar__select" data-role="import-mode">
-              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
-              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
-              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
-            </select>
-          </label>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">${escapeHtml(importButtonLabel)}</button>
-          <span class="tagStudioToolbar__mode" data-role="save-mode">${escapeHtml(importModeLabel)}</span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagStudioToolbar__action" data-role="open-new-alias">${escapeHtml(newAliasButtonLabel)}</button>
-        </div>
-        <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
-        <p class="tagStudioToolbar__result" data-role="import-result"></p>
-      </div>
+  const refs = {
+    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
+    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
+    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
+    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
+    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
+    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
+    openNewAlias: state.mount.querySelector(UI_SELECTOR.openNewAlias),
+    saveMode: state.mount.querySelector(UI_SELECTOR.saveMode),
+    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
+    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
+    key: state.mount.querySelector(UI_SELECTOR.key),
+    searchLabel: state.mount.querySelector(UI_SELECTOR.searchLabel),
+    search: state.mount.querySelector(UI_SELECTOR.search),
+    list: state.mount.querySelector(UI_SELECTOR.list),
+    modalHost: state.mount.querySelector(UI_SELECTOR.modalHost)
+  };
 
-      <div class="tagStudioFilters">
-        <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
-        <label class="tagStudioFilters__searchWrap">
-          <span class="visually-hidden">${escapeHtml(searchLabel)}</span>
-          <input
-            type="text"
-            class="tagStudio__input tagStudioFilters__searchInput"
-            data-role="search"
-            placeholder="${escapeHtml(searchPlaceholder)}"
-            autocomplete="off"
-          >
-        </label>
-      </div>
+  const missingRef = Object.entries(refs).find(([, value]) => !value);
+  if (missingRef) {
+    renderError(
+      state,
+      aliasesText(state.config, "missing_template_shell_error", "Tag Aliases error: missing template shell markup.")
+    );
+    return;
+  }
 
-      <div data-role="list"></div>
-    </section>
-
-    ${patchModalHtml}
-    ${editModalHtml}
-  `;
+  refs.importFileLabel.textContent = importFileLabel;
+  refs.chooseFile.textContent = chooseFileLabel;
+  refs.importModeLabel.textContent = importModeFieldLabel;
+  refs.importButton.textContent = importButtonLabel;
+  refs.openNewAlias.textContent = newAliasButtonLabel;
+  refs.saveMode.textContent = importModeLabel;
+  refs.searchLabel.textContent = searchLabel;
+  refs.search.setAttribute("placeholder", searchPlaceholder);
+  setSelectOptionLabel(refs.importMode, "add", importModeOptionAdd);
+  setSelectOptionLabel(refs.importMode, "merge", importModeOptionMerge);
+  setSelectOptionLabel(refs.importMode, "replace", importModeOptionReplace);
+  refs.modalHost.innerHTML = `${patchModalHtml}${editModalHtml}`;
 
   state.refs = {
-    key: state.mount.querySelector('[data-role="key"]'),
-    search: state.mount.querySelector('[data-role="search"]'),
-    chooseFile: state.mount.querySelector('[data-role="choose-file"]'),
-    importFile: state.mount.querySelector('[data-role="import-file"]'),
-    importMode: state.mount.querySelector('[data-role="import-mode"]'),
-    importButton: state.mount.querySelector('[data-role="import-btn"]'),
-    openNewAlias: state.mount.querySelector('[data-role="open-new-alias"]'),
-    saveMode: state.mount.querySelector('[data-role="save-mode"]'),
-    selectedFile: state.mount.querySelector('[data-role="selected-file"]'),
-    importResult: state.mount.querySelector('[data-role="import-result"]'),
-    list: state.mount.querySelector('[data-role="list"]'),
-    patchModal: state.mount.querySelector('[data-role="patch-modal"]'),
-    patchSnippet: state.mount.querySelector('[data-role="patch-snippet"]'),
-    copyPatch: state.mount.querySelector('[data-role="copy-patch"]'),
-    editModal: state.mount.querySelector('[data-role="edit-modal"]'),
-    editModalTitle: state.mount.querySelector('[data-role="edit-modal-title"]'),
-    editAliasName: state.mount.querySelector('[data-role="edit-alias-name"]'),
-    editAliasWarning: state.mount.querySelector('[data-role="edit-alias-warning"]'),
-    editAliasDescription: state.mount.querySelector('[data-role="edit-alias-description"]'),
-    editTagSearch: state.mount.querySelector('[data-role="edit-tag-search"]'),
-    editTagPopupWrap: state.mount.querySelector('[data-role="edit-tag-popup-wrap"]'),
-    editTagPopup: state.mount.querySelector('[data-role="edit-tag-popup"]'),
-    editGroupKey: state.mount.querySelector('[data-role="edit-group-key"]'),
-    editTagList: state.mount.querySelector('[data-role="edit-tag-list"]'),
-    editStatus: state.mount.querySelector('[data-role="edit-status"]'),
-    saveEditAlias: state.mount.querySelector('[data-role="save-edit-alias"]')
+    ...refs,
+    patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
+    patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
+    copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
+    editModal: state.mount.querySelector(UI_SELECTOR.editModal),
+    editModalTitle: state.mount.querySelector(UI_SELECTOR.editModalTitle),
+    editAliasName: state.mount.querySelector(UI_SELECTOR.editAliasName),
+    editAliasWarning: state.mount.querySelector(UI_SELECTOR.editAliasWarning),
+    editAliasDescription: state.mount.querySelector(UI_SELECTOR.editAliasDescription),
+    editTagSearch: state.mount.querySelector(UI_SELECTOR.editTagSearch),
+    editTagPopupWrap: state.mount.querySelector(UI_SELECTOR.editTagPopupWrap),
+    editTagPopup: state.mount.querySelector(UI_SELECTOR.editTagPopup),
+    editGroupKey: state.mount.querySelector(UI_SELECTOR.editGroupKey),
+    editTagList: state.mount.querySelector(UI_SELECTOR.editTagList),
+    editStatus: state.mount.querySelector(UI_SELECTOR.editStatus),
+    saveEditAlias: state.mount.querySelector(UI_SELECTOR.saveEditAlias)
   };
 }
 
@@ -355,7 +344,7 @@ function wireEvents(state) {
   });
 
   state.refs.patchModal.addEventListener("click", (event) => {
-    if (!event.target.closest('[data-role="close-modal"]')) return;
+    if (!event.target.closest(UI_SELECTOR.patchModalClose)) return;
     closePatchModal(state);
   });
 
@@ -370,12 +359,12 @@ function wireEvents(state) {
   });
 
   state.refs.editModal.addEventListener("click", (event) => {
-    if (event.target.closest('[data-role="close-edit-modal"]')) {
+    if (event.target.closest(UI_SELECTOR.editModalClose)) {
       closeAliasEditModal(state);
       return;
     }
     if (state.refs.editTagPopupWrap.hidden) return;
-    if (!event.target.closest('[data-role="edit-tag-popup-wrap"]') && !event.target.closest('[data-role="edit-tag-search"]')) {
+    if (!event.target.closest(UI_SELECTOR.editTagPopupWrap) && !event.target.closest(UI_SELECTOR.editTagSearch)) {
       hideEditTagPopup(state);
     }
   });
@@ -505,17 +494,16 @@ function syncAliasDerivedState(state) {
 function renderControls(state) {
   const counts = countAliasesByGroup(state.aliases);
   const totalCount = state.aliases.length;
-  const allActiveClass = state.filterGroup === "all" ? " is-active" : "";
   const allTagsLabel = aliasesText(state.config, "all_tags_filter", "All tags [{count}]", { count: totalCount });
   const groupButtons = STUDIO_GROUPS.map((group) => {
-    const activeClass = state.filterGroup === group ? " is-active" : "";
     const count = Number(counts[group] || 0);
     const titleAttr = groupTitleAttr(state, group);
     return `
       <button
         type="button"
-        class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)} tagStudioFilters__groupBtn${activeClass}"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group), UI_CLASS.groupFilterButton)}"
         data-group="${escapeHtml(group)}"
+        ${stateAttr(state.filterGroup === group ? UI_STATE.active : "")}
         ${titleAttr}
       >
         ${escapeHtml(group)} [${count}]
@@ -524,9 +512,9 @@ function renderControls(state) {
   }).join("");
 
   state.refs.key.innerHTML = `
-    <button type="button" class="tagStudio__button tagStudioFilters__allBtn${allActiveClass}" data-group="all">${escapeHtml(allTagsLabel)}</button>
+    <button type="button" class="tagStudio__button ${UI_CLASS.allFilterButton}" data-group="all"${stateAttr(state.filterGroup === "all" ? UI_STATE.active : "")}>${escapeHtml(allTagsLabel)}</button>
     ${groupButtons}
-    ${renderGroupInfoControl(state, "aliases")}
+    ${renderGroupInfoControl(state)}
   `;
 }
 
@@ -536,12 +524,12 @@ function groupTitleAttr(state, group) {
   return `title="${escapeHtml(description)}"`;
 }
 
-function renderGroupInfoControl(state, scope) {
+function renderGroupInfoControl(state) {
   const title = aliasesText(state.config, "group_info_title", "Open group descriptions in a new tab");
   const ariaLabel = aliasesText(state.config, "group_info_aria_label", "Open group descriptions in a new tab");
   return `
     <a
-      class="tagStudio__keyPill tagStudio__keyInfoBtn"
+      class="${classNames(UI_CLASS.keyPill, UI_CLASS.keyInfoButton)}"
       href="${GROUP_INFO_PAGE_PATH}"
       target="_blank"
       rel="noopener noreferrer"
@@ -558,31 +546,31 @@ function renderList(state) {
   const aliasHeading = aliasesText(state.config, "table_heading_alias", "alias");
 
   const headerHtml = `
-    <div class="tagStudioList__head tagAliases__head">
-      <button type="button" class="tagRegistry__sortBtn${sortBtnClass(state, "alias")}" data-sort-key="alias">
+    <div class="${UI_CLASS.listHead}">
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="alias"${stateAttr(state.sortKey === "alias" ? UI_STATE.active : "")}>
         ${escapeHtml(aliasHeading)}${sortIndicator(state, "alias")}
       </button>
-      <span class="tagStudioList__headLabel tagAliases__headLabel">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
+      <span class="${UI_CLASS.headLabel}">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
     </div>
   `;
 
   if (!visible.length) {
-    state.refs.list.innerHTML = `${headerHtml}<p class="tagStudio__empty">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</p>`;
+    state.refs.list.innerHTML = `${headerHtml}<p class="${UI_CLASS.empty}">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</p>`;
     return;
   }
 
   state.refs.list.innerHTML = `
     ${headerHtml}
-    <ul class="tagStudioList__rows tagAliases__rows">
+    <ul class="${UI_CLASS.listRows}">
       ${visible.map((entry) => {
         const sortedTargets = entry.resolvedTargets.slice().sort((a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base" }));
         return `
-        <li class="tagStudioList__row tagAliases__row">
-          <div class="tagAliases__aliasCol">
-            <span class="tagStudio__chip ${escapeHtml(getAliasClass(entry))}">
+        <li class="${UI_CLASS.listRow}">
+          <div class="${UI_CLASS.aliasCol}">
+            <span class="${classNames(UI_CLASS.chip, getAliasClass(entry))}">
               <button
                 type="button"
-                class="tagAliases__aliasBtn"
+                class="${UI_CLASS.aliasButton}"
                 data-edit-alias="${escapeHtml(entry.alias)}"
                 title="${escapeHtml(aliasesText(state.config, "alias_edit_title", "Edit alias {alias}", { alias: entry.alias }))}"
                 aria-label="${escapeHtml(aliasesText(state.config, "alias_edit_aria_label", "Edit alias {alias}", { alias: entry.alias }))}"
@@ -591,7 +579,7 @@ function renderList(state) {
               </button>
               <button
                 type="button"
-                class="tagStudio__chipRemove"
+                class="${UI_CLASS.chipRemove}"
                 data-promote-alias="${escapeHtml(entry.alias)}"
                 aria-label="${escapeHtml(aliasesText(state.config, "alias_promote_aria_label", "Promote alias {alias}", { alias: entry.alias }))}"
                 title="${escapeHtml(aliasesText(state.config, "alias_promote_title", "Promote alias to canonical tag"))}"
@@ -600,7 +588,7 @@ function renderList(state) {
               </button>
               <button
                 type="button"
-                class="tagStudio__chipRemove"
+                class="${UI_CLASS.chipRemove}"
                 data-delete-alias="${escapeHtml(entry.alias)}"
                 aria-label="${escapeHtml(aliasesText(state.config, "alias_delete_aria_label", "Delete alias {alias}", { alias: entry.alias }))}"
                 title="${escapeHtml(aliasesText(state.config, "alias_delete_title", "Delete alias"))}"
@@ -609,15 +597,15 @@ function renderList(state) {
               </button>
             </span>
           </div>
-          <div class="tagAliases__tagsCol">
-            <div class="tagAliases__tagList">
+          <div class="${UI_CLASS.tagsCol}">
+            <div class="${UI_CLASS.tagList}">
               ${sortedTargets.map((target) => `
-                <span class="tagStudio__chip ${escapeHtml(target.known ? `tagStudio__chip--${target.group}` : "tagStudio__chip--warning")}" title="${escapeHtml(target.tagId)}">
+                <span class="${classNames(UI_CLASS.chip, target.known ? chipGroupClass(target.group) : UI_CLASS.chipWarning)}" title="${escapeHtml(target.tagId)}">
                   ${escapeHtml(String(target.label || "").toLowerCase())}
                   ${target.known ? `
                     <button
                       type="button"
-                      class="tagStudio__chipRemove"
+                      class="${UI_CLASS.chipRemove}"
                       data-demote-tag-id="${escapeHtml(target.tagId)}"
                       title="${escapeHtml(aliasesText(state.config, "tag_demote_title", "Demote canonical tag to alias"))}"
                       aria-label="${escapeHtml(aliasesText(state.config, "tag_demote_aria_label", "Demote {tag_id}", { tag_id: target.tagId }))}"
@@ -638,19 +626,15 @@ function renderList(state) {
 
 function getAliasClass(entry) {
   if (!entry || entry.hasUnknown || !entry.groups.length || entry.groups.length > 1) {
-    return "tagStudio__chip--warning";
+    return UI_CLASS.chipWarning;
   }
   const group = entry.groups[0];
-  return STUDIO_GROUPS.includes(group) ? `tagStudio__chip--${group}` : "tagStudio__chip--warning";
+  return STUDIO_GROUPS.includes(group) ? chipGroupClass(group) : UI_CLASS.chipWarning;
 }
 
 function sortIndicator(state, key) {
   if (state.sortKey !== key) return "";
   return state.sortDir === "asc" ? " ↑" : " ↓";
-}
-
-function sortBtnClass(state, key) {
-  return state.sortKey === key ? " is-active" : "";
 }
 
 async function probeImportMode(state) {
@@ -817,7 +801,7 @@ function closeAliasEditModal(state) {
   state.refs.editTagSearch.value = "";
   setAliasEditModalMode(state, "edit");
   state.refs.editAliasWarning.textContent = "";
-  state.refs.editStatus.textContent = "";
+  setAliasEditStatus(state, "", "");
   state.refs.saveEditAlias.disabled = true;
   state.refs.editTagList.innerHTML = "";
   hideEditTagPopup(state);
@@ -830,10 +814,9 @@ function renderEditGroupKey(state) {
   }
   const selected = new Set((state.editState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
   state.refs.editGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
-    const activeClass = selected.has(group) ? " is-active" : "";
     const titleAttr = groupTitleAttr(state, group);
-    return `<span class="tagStudio__keyPill tagStudio__chip--${escapeHtml(group)}${activeClass}" ${titleAttr}>${escapeHtml(group)}</span>`;
-  }).join("") + renderGroupInfoControl(state, "edit");
+    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state);
 }
 
 function renderEditTagList(state) {
@@ -846,11 +829,11 @@ function renderEditTagList(state) {
     const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
     const label = info ? info.label : tagId;
     return `
-      <span class="tagStudio__chip tagStudio__chip--${escapeHtml(group)}" title="${escapeHtml(tagId)}">
+      <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
         ${escapeHtml(label)}
         <button
           type="button"
-          class="tagStudio__chipRemove"
+          class="${UI_CLASS.chipRemove}"
           data-remove-edit-tag="${escapeHtml(tagId)}"
           aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
         >
@@ -860,7 +843,7 @@ function renderEditTagList(state) {
     `;
   }).join("");
 
-  state.refs.editTagList.innerHTML = rows || `<span class="tagStudio__empty">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</span>`;
+  state.refs.editTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</span>`;
 }
 
 function getAliasEditValidation(state) {
@@ -877,9 +860,7 @@ function getAliasEditValidation(state) {
 }
 
 function setAliasEditStatus(state, kind, message) {
-  state.refs.editStatus.textContent = message || "";
-  state.refs.editStatus.className = "tagStudioForm__status";
-  if (kind) state.refs.editStatus.classList.add(`is-${kind}`);
+  setStatusText(state.refs.editStatus, kind, message);
 }
 
 function updateAliasEditUi(state) {
@@ -920,7 +901,7 @@ function renderEditTagPopup(state) {
   const chips = matches.map((item) => `
     <button
       type="button"
-      class="tagStudio__popupPill tagStudio__chip--${escapeHtml(item.group)}"
+      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
       data-popup-tag-id="${escapeHtml(item.tagId)}"
       title="${escapeHtml(item.tagId)}"
     >
@@ -928,7 +909,7 @@ function renderEditTagPopup(state) {
     </button>
   `);
   if (result.truncated) {
-    chips.push(`<span class="tagStudio__popupPill tagAliasesEdit__popupMore" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
+    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
   }
   state.refs.editTagPopup.innerHTML = chips.join("");
   state.refs.editTagPopupWrap.hidden = false;
@@ -1241,9 +1222,7 @@ function closePatchModal(state) {
 }
 
 function setImportResult(state, kind, message) {
-  state.refs.importResult.textContent = message || "";
-  state.refs.importResult.className = "tagStudioToolbar__result";
-  if (kind) state.refs.importResult.classList.add(`is-${kind}`);
+  setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
 }
 
 function clearImportResult(state) {
@@ -1255,7 +1234,36 @@ function aliasesText(config, key, fallback, tokens) {
 }
 
 function renderError(state, message) {
-  state.mount.innerHTML = `<div class="tagStudioError">${escapeHtml(message)}</div>`;
+  state.mount.innerHTML = `<div class="${UI_CLASS.error}">${escapeHtml(message)}</div>`;
+}
+
+function setSelectOptionLabel(select, value, label) {
+  if (!select) return;
+  const option = select.querySelector(`option[value="${value}"]`);
+  if (option) option.textContent = label;
+}
+
+function setStatusText(target, kind, message, baseClass = UI_CLASS.formStatus) {
+  if (!target) return;
+  target.textContent = message || "";
+  target.className = baseClass;
+  if (kind) {
+    target.dataset.state = kind;
+    return;
+  }
+  delete target.dataset.state;
+}
+
+function classNames(...tokens) {
+  return tokens.filter(Boolean).join(" ");
+}
+
+function chipGroupClass(group) {
+  return `${UI_CLASS.chipGroupPrefix}${group}`;
+}
+
+function stateAttr(stateValue) {
+  return stateValue ? ` data-state="${escapeHtml(stateValue)}"` : "";
 }
 
 function escapeHtml(value) {
