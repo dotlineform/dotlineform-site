@@ -119,7 +119,7 @@ def build_recommendations(audits: list[dict[str, object]]) -> list[str]:
         "",
         "- Finalize one shared text scale before touching page selectors further.",
         "- Replace repeated raw caption/meta values in `main.css` with semantic tokens.",
-        "- Add a small Studio typography alias layer so repeated UI sizes stop drifting by hundredths of a rem.",
+        "- Fit component and page typography to the existing shared tokens instead of preserving local near-duplicate sizes.",
         "",
         "### P2 Color",
         "",

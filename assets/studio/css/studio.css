@@ -87,7 +87,7 @@
 
 .tagStudioPage__title {
   margin: 0 0 0.9rem;
-  font-size: 1.3rem;
+  font-size: var(--font-heading-2);
 }
 
 .tagStudioPage__editor {
@@ -133,7 +133,7 @@
 
 .tagStudio__heading {
   margin: 0 0 0.75rem;
-  font-size: 1rem;
+  font-size: var(--font-body);
 }
 
 .tagStudio__headingRow {
@@ -150,7 +150,7 @@
 
 .tagStudio__label {
   flex: 0 0 auto;
-  font-size: 0.9rem;
+  font-size: var(--font-small);
   white-space: nowrap;
 }
 
@@ -259,7 +259,7 @@
   background: var(--studio-surface-subtle);
   color: inherit;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   padding: 0.24rem 0.5rem;
   cursor: pointer;
 }
@@ -306,7 +306,7 @@
 
 .tagStudioSuggest__heading {
   margin: 0;
-  font-size: 0.72rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
 }
@@ -336,12 +336,12 @@
 }
 
 .tagStudioSuggest__workId {
-  font-size: 0.84rem;
+  font-size: var(--font-small);
   font-variant-numeric: tabular-nums;
 }
 
 .tagStudioSuggest__workTitle {
-  font-size: 0.76rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted-body));
 }
 
@@ -380,13 +380,13 @@
 .tagStudio__status {
   margin: 0.55rem 0 0;
   min-height: 1.2rem;
-  font-size: 0.88rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__contextHint {
   margin: 0;
   min-height: 1.1rem;
-  font-size: 0.83rem;
+  font-size: var(--font-small);
   color: var(--muted, var(--studio-muted-body));
 }
 
@@ -426,7 +426,7 @@
 }
 
 .tagStudioGroupRow__label {
-  font-size: 0.86rem;
+  font-size: var(--font-small);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
   line-height: 1.5;
@@ -447,7 +447,7 @@
   border: 1px solid var(--line, var(--studio-line-chip));
   border-radius: 999px;
   background: var(--studio-surface-subtle);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__weightDot {
@@ -532,7 +532,7 @@
 
 .tagStudio__saveMode {
   color: var(--muted, var(--studio-muted-soft));
-  font-size: 0.86rem;
+  font-size: var(--font-small);
   white-space: nowrap;
 }
 
@@ -553,7 +553,7 @@
   border-radius: 999px;
   background: #fff;
   color: #1f1f1f;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__selectedWorkPill[data-state="active"] {
@@ -578,13 +578,13 @@
 .tagStudio__saveWarning {
   margin: 0;
   color: var(--studio-danger);
-  font-size: 0.88rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__saveResult {
   margin: 0.2rem 0 0;
   min-height: 1.1rem;
-  font-size: 0.86rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__saveResult[data-state="success"] {
@@ -597,7 +597,7 @@
 
 .tagStudio__empty {
   color: var(--muted, var(--studio-muted-soft));
-  font-size: 0.85rem;
+  font-size: var(--font-small);
 }
 
 .tagStudio__key {
@@ -613,7 +613,7 @@
   border-radius: 999px;
   border: 1px solid var(--line, var(--studio-line-chip));
   padding: 0.19rem 0.5rem;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   text-transform: lowercase;
 }
 
@@ -674,7 +674,7 @@
 
 .tagStudio__groupInfoText {
   margin: 0;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   line-height: 1.4;
   color: var(--muted, var(--studio-muted-body));
 }
@@ -686,7 +686,7 @@
 
 .tagGroups__short {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
 }
 
@@ -717,7 +717,7 @@
 
 .tagStudioModal__label {
   margin: 0.55rem 0 0.35rem;
-  font-size: 0.86rem;
+  font-size: var(--font-small);
 }
 
 .tagStudioModal__pre {
@@ -727,7 +727,7 @@
   padding: 0.65rem;
   overflow: auto;
   background: var(--studio-surface-code);
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 .tagStudioModal__actions {
@@ -799,7 +799,7 @@
 
 .tagStudioFilters__searchInput {
   min-width: 0;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   line-height: 1;
   height: 2.05rem;
   padding: 0 0.6rem;
@@ -809,7 +809,7 @@
 .tagStudioFilters__allBtn {
   border-radius: 999px;
   padding: 0.19rem 0.6rem;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
 }
 
 .tagStudioFilters__groupBtn {
@@ -844,14 +844,14 @@
 }
 
 .tagStudioToolbar__label {
-  font-size: 0.74rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
 }
 
 .tagStudioToolbar__select {
   font: inherit;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
   border-radius: 0.35rem;
@@ -867,7 +867,7 @@
 }
 
 .tagStudioToolbar__mode {
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   color: var(--muted, var(--studio-muted-soft));
   line-height: 2rem;
   align-self: flex-end;
@@ -883,7 +883,7 @@
 
 .tagStudioToolbar__selected {
   margin: 0.4rem 0 0;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-align: left;
 }
@@ -891,7 +891,7 @@
 .tagStudioToolbar__result {
   margin: 0.3rem 0 0;
   min-height: 1.1rem;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 .tagStudioToolbar__result[data-state="success"] {
@@ -916,7 +916,7 @@
 }
 
 .tagStudioList__headLabel {
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
 }
@@ -949,7 +949,7 @@
   padding: 0;
   margin: 0;
   font: inherit;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
   text-align: left;
@@ -1001,12 +1001,12 @@
   color: inherit;
   padding: 0 0.12rem;
   line-height: 1;
-  font-size: 0.9rem;
+  font-size: var(--font-small);
 }
 
 .tagStudioForm__meta {
   margin: 0.25rem 0 0.75rem;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
   color: var(--muted, var(--studio-muted));
 }
 
@@ -1021,7 +1021,7 @@
 }
 
 .tagStudioForm__label {
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
 }
@@ -1049,13 +1049,13 @@
 .tagStudioForm__status {
   margin: 0.7rem 0 0;
   min-height: 1.1rem;
-  font-size: 0.82rem;
+  font-size: var(--font-small);
 }
 
 .tagStudioForm__impact {
   margin: 0.45rem 0 0;
   min-height: 1rem;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
 }
 
@@ -1074,7 +1074,7 @@
 .tagRegistry__descCol {
   min-width: 0;
   color: var(--muted, var(--studio-muted-body));
-  font-size: 0.92rem;
+  font-size: var(--font-small);
   line-height: 1.35;
 }
 
@@ -1137,7 +1137,7 @@
 }
 
 .tagAliases__targetId {
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   word-break: break-word;
 }
@@ -1156,7 +1156,7 @@
 .tagStudioForm__warning {
   margin: 0.2rem 0 0;
   min-height: 1rem;
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
   color: var(--studio-danger);
 }
 
@@ -1261,7 +1261,7 @@
 
 .seriesTags {
   width: 100%;
-  font-size: 0.83rem;
+  font-size: var(--font-small);
   line-height: 1.3;
 }
 
@@ -1269,7 +1269,7 @@
   display: grid;
   grid-template-columns: minmax(12rem, 1fr) 5rem minmax(0, 2fr);
   gap: 0.56rem;
-  font-size: 0.83rem;
+  font-size: var(--font-small);
   color: var(--muted, var(--studio-muted));
   margin: 0;
   padding: 0 0 0.45rem;
@@ -1322,7 +1322,7 @@
 
 .seriesTags__filters .tagStudio__keyPill,
 .seriesTags__filters .tagStudioFilters__allBtn {
-  font-size: 0.78rem;
+  font-size: var(--font-caption);
 }
 
 @media (max-width: 900px) {
@@ -1343,7 +1343,7 @@
 
   .seriesTags__col--count {
     color: var(--muted, var(--studio-muted));
-    font-size: 0.86rem;
+    font-size: var(--font-small);
   }
 
   .seriesTags__col--count::before {
