@@ -12,6 +12,7 @@ Current status:
 - Studio modularity refactor is structurally complete for the current build
 - modal framework migration is structurally complete for the current build
 - non-modal shared UI cleanup is structurally complete across the editor, registry, aliases, and lighter Studio pages
+- Studio pages and Studio docs use Studio-specific links in the shared site header
 - remaining work is manual browser verification using `docs/studio/regression-checklist.md`
 
 ## Local Development
@@ -680,7 +681,7 @@ It then:
 - shows per-series status (RAG dot) using the same rules as Studio Series
 - renders assigned tags as color-coded pills
 - sorts tags alphabetically by label (fallback: tag id)
-- uses an inline header key (`All tags` + group pills) in the tags column
+- renders the group filter key above the list head using the shared Studio filter-row layout
 - group pills use `tag_groups.json` `description` as hover text (`title`)
 - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)

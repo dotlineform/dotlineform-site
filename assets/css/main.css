@@ -281,6 +281,37 @@ th{ background: var(--panel-2); }
   margin: 0;
 }
 
+.studioLayout__docLink{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  min-width: 1.85rem;
+  aspect-ratio: 1 / 1;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  font-size: var(--font-small);
+  line-height: 1;
+}
+
+.studioLayout__docLink:is(:link, :visited){
+  color: var(--link);
+  text-decoration: none;
+}
+
+.studioLayout__docLink:hover{
+  color: var(--link-hover);
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.studioLayout__docLink:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
 .studio__content{
   margin-top: 1rem;
 }

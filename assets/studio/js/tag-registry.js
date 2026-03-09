@@ -256,7 +256,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formImpact}">
         ${escapeHtml(deleteImpactIntro)}
       </p>
-      <p class="${UI_CLASS.formImpact}" data-role="${UI.role.deleteImpact}"></p>
+      <div class="${UI_CLASS.formImpact}" data-role="${UI.role.deleteImpact}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
@@ -825,7 +825,7 @@ async function refreshDeleteImpactPreview(state) {
   if (seq !== state.deletePreviewSeq || state.refs.deleteModal.hidden) return;
   if (result.ok) {
     state.deletePreview = result.summary;
-    setImpactPreview(state.refs.deleteImpact, "", result.message);
+    renderDeleteImpactPreview(state, result.response, result.message);
     return;
   }
   setImpactPreview(state.refs.deleteImpact, "error", result.message);
@@ -937,7 +937,7 @@ function openDeleteModal(state, tagId) {
   state.deleteTagId = tag.tagId;
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
-  state.refs.deleteTagMeta.textContent = `tag: ${tag.tagId}`;
+  state.refs.deleteTagMeta.innerHTML = renderDeleteTagMeta(state, tag);
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = state.saveMode !== "post";
@@ -957,7 +957,7 @@ function closeDeleteModal(state) {
   state.deleteTagId = "";
   state.deletePreview = "";
   state.deletePreviewSeq += 1;
-  state.refs.deleteTagMeta.textContent = "";
+  state.refs.deleteTagMeta.innerHTML = "";
   setStatusText(state.refs.deleteImpact, "", "", UI_CLASS.formImpact);
   setDeleteStatus(state, "", "");
   state.refs.confirmDeleteTag.disabled = false;
@@ -1334,6 +1334,42 @@ function closePatchModal(state) {
 
 function setImportResult(state, kind, message) {
   setStatusText(state.refs.importResult, kind, message, UI_CLASS.toolbarResult);
+}
+
+function renderDeleteTagMeta(state, tag) {
+  return `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
+      ${escapeHtml(tag.label)}
+    </span>
+    <span class="${UI_CLASS.deleteMetaId}">${escapeHtml(tag.tagId)}</span>
+  `;
+}
+
+function renderDeleteImpactPreview(state, response, fallbackMessage) {
+  const stats = response && typeof response === "object" ? response : {};
+  const items = [
+    [registryText(state.config, "delete_impact_series_rows", "series rows touched"), Number(stats.series_rows_touched || 0)],
+    [registryText(state.config, "delete_impact_series_refs", "series tag refs removed"), Number(stats.series_tag_refs_rewritten || 0)],
+    [registryText(state.config, "delete_impact_work_rows", "work rows touched"), Number(stats.work_rows_touched || 0)],
+    [registryText(state.config, "delete_impact_work_refs", "work tag refs removed"), Number(stats.work_tag_refs_rewritten || 0)],
+    [registryText(state.config, "delete_impact_aliases_rewritten", "aliases rewritten"), Number(stats.aliases_rewritten || 0)],
+    [registryText(state.config, "delete_impact_aliases_removed_empty", "aliases deleted (empty)"), Number(stats.aliases_removed_empty || 0)],
+    [registryText(state.config, "delete_impact_aliases_removed_redundant", "aliases deleted (redundant)"), Number(stats.aliases_removed_redundant || 0)]
+  ];
+  const summary = String(stats.summary_text || fallbackMessage || "").trim();
+  state.refs.deleteImpact.className = UI_CLASS.formImpact;
+  delete state.refs.deleteImpact.dataset.state;
+  state.refs.deleteImpact.innerHTML = `
+    <ul class="${UI_CLASS.deleteImpactList}">
+      ${items.map(([label, value]) => `
+        <li class="${UI_CLASS.deleteImpactItem}">
+          <span>${escapeHtml(label)}</span>
+          <strong class="${UI_CLASS.deleteImpactValue}">${escapeHtml(String(value))}</strong>
+        </li>
+      `).join("")}
+    </ul>
+    ${summary ? `<p class="${UI_CLASS.formMeta}">${escapeHtml(summary)}</p>` : ""}
+  `;
 }
 
 function clearImportResult(state) {

@@ -63,6 +63,12 @@ Defined in `assets/studio/css/studio.css`:
 
 These are the baseline building blocks for all Studio pages.
 
+Use these as the default contract for:
+
+- page and modal action buttons such as `Add`, `Save`, `Import`, `Create`, `OK`, and `Cancel`
+- text inputs and search inputs
+- modal action rows
+
 ### Toolbar pattern
 
 Use `tagStudioToolbar__*` for the shared top action/import block:
@@ -134,6 +140,25 @@ Use `tagStudioForm__*` for form-like modal content:
 - `tagStudioForm__selected`
 
 This covers shared modal form structure, not page-specific content.
+
+### Message and result pattern
+
+Use the shared message/status classes for status, warning, hint, and result copy:
+
+- `tagStudio__contextHint`
+- `tagStudio__status`
+- `tagStudio__saveWarning`
+- `tagStudio__saveResult`
+- `tagStudioToolbar__result`
+- `tagStudioForm__warning`
+- `tagStudioForm__status`
+- `tagStudioForm__impact`
+
+This pattern now covers:
+
+- shared message typography and surface treatment
+- empty-state collapse for unused message blocks
+- the editor’s combined message-container presentation, where multiple lines can live inside one shared message section
 
 ## Modal Types
 

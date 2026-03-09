@@ -43,6 +43,7 @@ export async function previewDeleteImpact(options) {
     const summary = buildMutationSummary(response);
     return {
       ok: true,
+      response,
       summary,
       message: registryText(config, "delete_impact_template", "Delete impact: {summary}", { summary })
     };

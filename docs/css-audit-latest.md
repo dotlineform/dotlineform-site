@@ -1,6 +1,6 @@
 # CSS Audit Latest
 
-Generated: 2026-03-09 22:02:57 UTC
+Generated: 2026-03-09 22:31:27 UTC
 
 Files:
 - `assets/css/main.css`
@@ -8,8 +8,8 @@ Files:
 
 ## Summary
 
-- `assets/css/main.css`: 37 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
-- `assets/studio/css/studio.css`: 32 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
+- `assets/css/main.css`: 38 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
+- `assets/studio/css/studio.css`: 35 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
 
 ## Findings
 

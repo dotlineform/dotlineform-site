@@ -12,6 +12,9 @@
   --studio-control-height: 2rem;
   --studio-shell-gap-sm: 0.45rem;
   --studio-shell-gap-md: 0.6rem;
+  --studio-list-gap: 0.56rem;
+  --studio-list-head-padding-y: 0.35rem;
+  --studio-list-row-padding-y: 0.45rem;
   --studio-pill-height: 1.8rem;
   --studio-pill-gap: 0.35rem;
   --studio-pill-padding-y: 0.28rem;
@@ -817,6 +820,9 @@ input.tagStudio__input {
 .tagStudioModal__actions {
   margin-top: 0.9rem;
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
 }
 
@@ -986,11 +992,14 @@ input.tagStudio__input {
 
 .tagStudioList__head {
   display: grid;
-  gap: 0.56rem;
+  gap: var(--studio-list-gap);
   border-bottom: 1px solid var(--studio-list-head-line, var(--line, var(--studio-line)));
-  padding: 0 0 0.35rem;
+  padding: 0 0 var(--studio-list-head-padding-y);
   margin: 0 0 0.1rem;
-  align-items: baseline;
+  align-items: start;
+  background: transparent;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
 }
 
 .tagStudioList__headLabel {
@@ -1026,9 +1035,13 @@ input.tagStudio__input {
 
 .tagStudioList__row {
   display: grid;
-  gap: 0.56rem;
-  padding: 0.45rem 0;
+  gap: var(--studio-list-gap);
+  padding: var(--studio-list-row-padding-y) 0;
   border-top: 1px solid var(--studio-list-row-line, var(--line, var(--studio-line)));
+  align-items: start;
+  background: transparent;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
 }
 
 .tagStudioList__row:first-child {
@@ -1140,6 +1153,36 @@ input.tagStudio__input {
   line-height: 1.35;
 }
 
+.tagRegistryDelete__metaTag {
+  margin-right: 0.45rem;
+}
+
+.tagRegistryDelete__metaId {
+  font-size: var(--font-small);
+  color: var(--muted, var(--studio-muted));
+  word-break: break-word;
+}
+
+.tagRegistryDelete__impactList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tagRegistryDelete__impactItem {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.tagRegistryDelete__impactValue {
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+}
+
 .tagAliases__controls {
   display: flex;
   flex-wrap: wrap;
@@ -1153,9 +1196,8 @@ input.tagStudio__input {
 }
 
 .tagAliases__row {
-  --studio-list-row-line: var(--line, var(--studio-line-soft));
+  --studio-list-row-line: var(--line, var(--studio-line));
   grid-template-columns: minmax(8.5rem, 12rem) minmax(0, 1fr);
-  align-items: baseline;
 }
 
 .tagAliases__aliasCol {
@@ -1205,7 +1247,7 @@ input.tagStudio__input {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  align-items: baseline;
+  align-items: start;
 }
 
 .tagStudioForm__warning {
@@ -1317,17 +1359,11 @@ input.tagStudio__input {
 }
 
 .seriesTags__head {
-  display: grid;
   grid-template-columns: minmax(12rem, 1fr) 5rem minmax(0, 2fr);
-  gap: 0.56rem;
-  align-items: center;
 }
 
 .seriesTags__row {
-  display: grid;
   grid-template-columns: minmax(12rem, 1fr) 5rem minmax(0, 2fr);
-  gap: 0.56rem;
-  align-items: start;
 }
 
 .seriesTags__col--count {
@@ -1346,7 +1382,7 @@ input.tagStudio__input {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  align-items: baseline;
+  align-items: start;
 }
 
 .seriesTags__filters {

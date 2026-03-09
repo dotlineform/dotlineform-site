@@ -25,6 +25,8 @@ Supporting modules:
 
 Top-level structure:
 
+- Studio layout wrapper from `_layouts/studio.html`
+  - shared site header with Studio-specific links, plus the page title row
 - `#worksCuratorRoot[data-role="studio-works"]`
   - page root and runtime data source
 - `[data-role="sort-button"]`

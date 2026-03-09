@@ -10,6 +10,7 @@ Use `Pass`, `Fail`, or `N/A` for each item.
 - Base Studio URL:
 - Sample `series_id` used:
 - Notes location for console output/screenshots:
+- [ ] Shared site header renders on Studio pages and Studio docs with the Studio link set (`studio`, `series tags`, `docs`).
 
 ## Series Tag Editor
 
@@ -55,6 +56,8 @@ Page: `studio/tag-registry/index.md`
 - [ ] Edit modal opens with current tag data.
 - [ ] Edit save succeeds in local-server mode.
 - [ ] Delete modal opens with impact preview.
+- [ ] Delete modal shows the selected tag as a coloured group pill with the correct `tag_id`.
+- [ ] Delete impact preview enumerates assignments/aliases as structured counts.
 - [ ] Delete confirm succeeds in local-server mode.
 - [ ] Demote modal opens and tag search works.
 - [ ] Demote confirm succeeds in local-server mode.

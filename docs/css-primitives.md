@@ -175,6 +175,15 @@ These are the approved shared Studio structural patterns for:
 - list shells
 - modal form internals
 
+For Studio lists, `tagStudioList__*` now carries the baseline for:
+
+- `--font-small` row and header type
+- shared head/row spacing
+- shared row vertical alignment
+- shared border/line treatment
+
+Page-specific list classes should usually only define column grids and cell internals.
+
 ### Studio plain-button/reset controls
 
 Defined in `assets/studio/css/studio.css`:

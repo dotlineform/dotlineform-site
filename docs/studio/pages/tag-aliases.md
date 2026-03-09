@@ -211,6 +211,10 @@ Page-specific classes retained:
 - `tagAliases__*` for row internals and alias-specific layout
 - `tagAliasesEdit__*` for a few edit-modal-specific details
 
+Important note:
+
+- this page uses the shared `tagStudioList__*` row/header spacing and line treatment; `tagAliases__*` should stay focused on column grids and alias-specific cell content
+
 ## DOM Rendering and Event Wiring
 
 Page boot:

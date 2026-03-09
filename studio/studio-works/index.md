@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: studio
 title: Studio Works
 permalink: /studio/studio-works/
 section: works
