@@ -88,10 +88,8 @@
 }
 
 .tagStudioPage__context {
-  border: 1px solid var(--line, var(--studio-line));
   border-radius: var(--studio-radius-lg);
   padding: var(--studio-surface-padding-lg);
-  background: var(--surface, var(--studio-surface));
 }
 
 .tagStudioPage__title {
@@ -120,9 +118,16 @@
 }
 
 .tagStudio__panel {
-  border: 1px solid var(--line, var(--studio-line));
   border-radius: var(--studio-radius-lg);
   padding: var(--studio-surface-padding-lg);
+}
+
+.tagStudioPage__context,
+.tagStudio__panel,
+.tagStudio__popupInner,
+.tagStudio__keyInfoPopup,
+.tagStudioModal__dialog {
+  border: 1px solid var(--line, var(--studio-line));
   background: var(--surface, var(--studio-surface));
 }
 
@@ -212,6 +217,19 @@
   box-shadow: 0 0 0 2px var(--studio-focus-ring);
 }
 
+.tagStudio__chipRemove,
+.tagStudio__selectedWorkBtn,
+.tagRegistry__sortBtn,
+.tagRegistry__tagInlineBtn,
+.tagRegistry__demoteBtn,
+.tagAliases__aliasBtn {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
 .tagStudio__button {
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
@@ -252,8 +270,6 @@
   max-width: min(34rem, calc(100vw - 3rem));
   max-height: 16rem;
   overflow: auto;
-  background: var(--surface, var(--studio-surface));
-  border: 1px solid var(--line, var(--studio-line));
   border-radius: var(--studio-radius-md);
   box-shadow: var(--studio-shadow-pop);
   padding: var(--studio-surface-padding-sm);
@@ -519,16 +535,11 @@
 }
 
 .tagStudio__chipRemove {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 0.9rem;
   line-height: 1;
-  cursor: pointer;
   padding: 0 0.1rem;
 }
 
@@ -572,12 +583,7 @@
 }
 
 .tagStudio__selectedWorkBtn {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   padding: 0;
-  cursor: pointer;
 }
 
 .tagStudio__selectedWorkId {
@@ -652,8 +658,6 @@
   width: min(42rem, calc(100vw - 2rem));
   max-height: min(24rem, calc(100vh - 5rem));
   overflow: auto;
-  background: var(--surface, var(--studio-surface));
-  border: 1px solid var(--line, var(--studio-line));
   border-radius: var(--studio-radius-md);
   box-shadow: var(--studio-shadow-pop);
   padding: var(--studio-surface-padding-md);
@@ -718,9 +722,7 @@
   width: min(52rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   overflow: auto;
-  border: 1px solid var(--line, var(--studio-line));
   border-radius: var(--studio-radius-lg);
-  background: var(--surface, var(--studio-surface));
   padding: 1rem;
 }
 
@@ -839,9 +841,13 @@
   margin: 0;
 }
 
-.tagStudioToolbar {
+.tagStudioToolbar,
+.tagAliases__detail {
   border: 1px solid var(--line, var(--studio-line-soft));
   border-radius: var(--studio-radius-md);
+}
+
+.tagStudioToolbar {
   padding: var(--studio-surface-padding-sm);
   margin: 0 0 var(--studio-shell-gap-sm);
 }
@@ -953,16 +959,12 @@
 }
 
 .tagRegistry__sortBtn {
-  border: 0;
-  background: transparent;
   padding: 0;
   margin: 0;
-  font: inherit;
   font-size: var(--font-caption);
   color: var(--muted, var(--studio-muted));
   text-transform: lowercase;
   text-align: left;
-  cursor: pointer;
 }
 
 .tagRegistry__sortBtn[data-state="active"] {
@@ -995,19 +997,11 @@
 }
 
 .tagRegistry__tagInlineBtn {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   line-height: 1;
-  cursor: pointer;
   padding: 0;
 }
 
 .tagRegistry__demoteBtn {
-  border: 0;
-  background: transparent;
-  color: inherit;
   padding: 0 0.12rem;
   line-height: 1;
   font-size: var(--font-small);
@@ -1110,18 +1104,11 @@
 }
 
 .tagAliases__aliasBtn {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   line-height: 1;
-  cursor: pointer;
   padding: 0;
 }
 
 .tagAliases__detail {
-  border: 1px solid var(--line, var(--studio-line-soft));
-  border-radius: var(--studio-radius-md);
   padding: 0.7rem;
   min-height: 12rem;
 }

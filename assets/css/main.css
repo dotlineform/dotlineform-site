@@ -1563,46 +1563,55 @@ note: works tags are not currently in use on the work pages themselves.
 .worksList__title:link,
 .worksList__title:visited,
 .worksList__title:active,
-.worksList__title:focus{
+.worksList__title:focus,
+.worksList__cat:link,
+.worksList__cat:visited,
+.worksList__cat:active,
+.worksList__cat:focus,
+.worksList__series:link,
+.worksList__series:visited,
+.worksList__series:active,
+.worksList__series:focus{
   color: var(--link);
-  font-weight: 700;
   text-decoration: none !important;
 }
 
-.worksList__title:hover{
+.worksList__title:hover,
+.worksList__cat:hover,
+.worksList__series:hover{
   color: var(--link-hover);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.worksList__title:focus-visible,
+.worksList__cat:focus-visible,
+.worksList__series:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.worksList__title:link,
+.worksList__title:visited,
+.worksList__title:active,
+.worksList__title:focus{
+  font-weight: 700;
 }
 
 .worksList__cat:link,
 .worksList__cat:visited,
 .worksList__cat:active,
 .worksList__cat:focus{
-  color: var(--link);
   font-weight: 400;
-  text-decoration: none !important;
-}
-
-.worksList__cat:hover{
-  color: var(--link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .worksList__series:link,
 .worksList__series:visited,
 .worksList__series:active,
 .worksList__series:focus{
-  color: var(--link);
   font-weight: 400;
-  text-decoration: none !important;
-}
-
-.worksList__series:hover{
-  color: var(--link-hover);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 
 .worksList--singleSeries .worksList__head{
