@@ -115,6 +115,10 @@ Page: `studio/series-tags/index.md`
 - [ ] Series Tags page loads without error.
 - [ ] Group filter buttons work.
 - [ ] Active filter styling is correct.
+- [ ] Default sort is by series.
+- [ ] Clicking each column header toggles sort order.
+- [ ] Active sort styling is correct.
+- [ ] Tags sort behaves consistently with the visible tag list.
 - [ ] Series links point to the Series Tag Editor.
 - [ ] RAG dots and visible tag chips render correctly.
 - [ ] No console errors during series-tags flow.

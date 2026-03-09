@@ -24,6 +24,12 @@ import {
 
 let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
+const SORTABLE_KEYS = new Set(["series", "status", "tags"]);
+const RAG_ORDER = {
+  red: 0,
+  amber: 1,
+  green: 2
+};
 const UI = seriesTagsUi;
 const { className: UI_CLASS, state: UI_STATE } = UI;
 
@@ -62,7 +68,9 @@ async function initSeriesTagsPage() {
       assignmentsSeries,
       registry,
       groupDescriptions: new Map(),
-      filterGroup: "all"
+      filterGroup: "all",
+      sortKey: "series",
+      sortDir: "asc"
     };
     try {
       const groupsJson = await loadStudioGroupsJson(config);
@@ -72,10 +80,23 @@ async function initSeriesTagsPage() {
     }
     renderTable(state);
     mount.addEventListener("click", (event) => {
-      const button = event.target.closest("button[data-group]");
-      if (!button) return;
-      const next = normalize(button.getAttribute("data-group"));
-      state.filterGroup = STUDIO_GROUPS.includes(next) ? next : "all";
+      const groupButton = event.target.closest("button[data-group]");
+      if (groupButton) {
+        const next = normalize(groupButton.getAttribute("data-group"));
+        state.filterGroup = STUDIO_GROUPS.includes(next) ? next : "all";
+        renderTable(state);
+        return;
+      }
+      const sortButton = event.target.closest("button[data-sort-key]");
+      if (!sortButton) return;
+      const nextSortKey = normalize(sortButton.getAttribute("data-sort-key"));
+      if (!SORTABLE_KEYS.has(nextSortKey)) return;
+      if (state.sortKey === nextSortKey) {
+        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+      } else {
+        state.sortKey = nextSortKey;
+        state.sortDir = "asc";
+      }
       renderTable(state);
     });
   } catch (error) {
@@ -140,33 +161,21 @@ function buildSeriesEditorUrl(config, seriesId) {
 }
 
 function renderTable(state) {
-  const rowsHtml = state.seriesData.map((series) => {
-    const assigned = getSeriesAssignmentTagIds(state.assignmentsSeries, series.seriesId, { exactMatchOnly: true });
-    const metrics = computeStudioTagMetrics(assigned, state.registry, state.config);
-    const rag = computeStudioRag(metrics, state.config);
-    const tooltip = buildStudioRagTooltip(metrics);
-    const ragLabel = `status ${rag.toUpperCase()}: ${tooltip}`;
-    const tags = assigned
-      .map((tagId) => toTagDisplay(tagId, state.registry))
-      .sort((a, b) => a.sortLabel.localeCompare(b.sortLabel, undefined, { sensitivity: "base" }));
-    const visibleTags = state.filterGroup === "all"
-      ? tags
-      : tags.filter((tag) => tag.group === state.filterGroup);
-
-    const chips = visibleTags.length
-      ? visibleTags.map((tag) => (
+  const rowsHtml = buildSeriesRows(state).map((row) => {
+    const chips = row.visibleTags.length
+      ? row.visibleTags.map((tag) => (
         `<li class="${classNames(UI_CLASS.chip, tag.className)}" title="${escapeHtml(tag.tagId)}">${escapeHtml(tag.label)}</li>`
       )).join("")
       : `<li class="${UI_CLASS.empty}">${escapeHtml(seriesTagsText(state.config, "empty_state", "none"))}</li>`;
 
     return `
-      <li class="seriesTags__row">
+      <li class="tagStudioList__row seriesTags__row">
         <div class="seriesTags__col seriesTags__col--title">
-          <a href="${escapeHtml(series.url)}">${escapeHtml(series.title)}</a>
+          <a href="${escapeHtml(row.url)}">${escapeHtml(row.title)}</a>
         </div>
         <div class="seriesTags__col seriesTags__col--count">
           <span class="tagStudioIndex__statusWrap">
-            <span class="rag rag--${escapeHtml(rag)}" title="${escapeHtml(tooltip)}" aria-label="${escapeHtml(ragLabel)}"></span>
+            <span class="rag rag--${escapeHtml(row.rag)}" title="${escapeHtml(row.tooltip)}" aria-label="${escapeHtml(row.ragLabel)}"></span>
           </span>
         </div>
         <div class="seriesTags__col seriesTags__col--tags">
@@ -178,16 +187,48 @@ function renderTable(state) {
 
   state.mount.innerHTML = `
     <div class="seriesTags">
-      <div class="seriesTags__head">
-        <div class="seriesTags__col seriesTags__col--title">${escapeHtml(seriesTagsText(state.config, "table_heading_series", "series"))}</div>
-        <div class="seriesTags__col seriesTags__col--count">${escapeHtml(seriesTagsText(state.config, "table_heading_status", "status"))}</div>
-        <div class="seriesTags__col seriesTags__col--tags">
-          ${renderFilters(state)}
-        </div>
+      ${renderFilters(state)}
+      <div class="tagStudioList__head seriesTags__head">
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="series"${stateAttr(state.sortKey === "series" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(state.config, "table_heading_series", "series"))}${sortIndicator(state, "series")}
+        </button>
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="status"${stateAttr(state.sortKey === "status" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(state.config, "table_heading_status", "status"))}${sortIndicator(state, "status")}
+        </button>
+        <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tags"${stateAttr(state.sortKey === "tags" ? UI_STATE.active : "")}>
+          ${escapeHtml(seriesTagsText(state.config, "table_heading_tags", "tags"))}${sortIndicator(state, "tags")}
+        </button>
       </div>
-      <ul class="seriesTags__rows">${rowsHtml}</ul>
+      <ul class="tagStudioList__rows seriesTags__rows">${rowsHtml}</ul>
     </div>
   `;
+}
+
+function buildSeriesRows(state) {
+  return state.seriesData
+    .map((series) => {
+      const assigned = getSeriesAssignmentTagIds(state.assignmentsSeries, series.seriesId, { exactMatchOnly: true });
+      const metrics = computeStudioTagMetrics(assigned, state.registry, state.config);
+      const rag = computeStudioRag(metrics, state.config);
+      const tooltip = buildStudioRagTooltip(metrics);
+      const ragLabel = `status ${rag.toUpperCase()}: ${tooltip}`;
+      const tags = assigned
+        .map((tagId) => toTagDisplay(tagId, state.registry))
+        .sort((a, b) => compareText(a.sortLabel, b.sortLabel));
+      const visibleTags = state.filterGroup === "all"
+        ? tags
+        : tags.filter((tag) => tag.group === state.filterGroup);
+      return {
+        ...series,
+        rag,
+        ragRank: Number.isInteger(RAG_ORDER[rag]) ? RAG_ORDER[rag] : Number.MAX_SAFE_INTEGER,
+        tooltip,
+        ragLabel,
+        visibleTags,
+        tagsSortKey: visibleTags.map((tag) => tag.sortLabel).join(" | ")
+      };
+    })
+    .sort((left, right) => compareSeriesRows(state, left, right));
 }
 
 function renderFilters(state) {
@@ -269,6 +310,33 @@ function groupFromTagId(tagId) {
   const idx = tagId.indexOf(":");
   if (idx < 0) return "";
   return tagId.slice(0, idx);
+}
+
+function compareSeriesRows(state, left, right) {
+  let result = 0;
+  if (state.sortKey === "status") {
+    result = (left.ragRank - right.ragRank)
+      || compareText(left.title, right.title)
+      || compareText(left.tagsSortKey, right.tagsSortKey);
+  } else if (state.sortKey === "tags") {
+    result = compareText(left.tagsSortKey, right.tagsSortKey)
+      || compareText(left.title, right.title)
+      || (left.ragRank - right.ragRank);
+  } else {
+    result = compareText(left.title, right.title)
+      || (left.ragRank - right.ragRank)
+      || compareText(left.tagsSortKey, right.tagsSortKey);
+  }
+  return state.sortDir === "desc" ? -result : result;
+}
+
+function compareText(left, right) {
+  return String(left || "").localeCompare(String(right || ""), undefined, { sensitivity: "base" });
+}
+
+function sortIndicator(state, key) {
+  if (state.sortKey !== key) return "";
+  return state.sortDir === "asc" ? " ↑" : " ↓";
 }
 
 function escapeHtml(value) {

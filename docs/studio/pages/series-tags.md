@@ -118,7 +118,7 @@ JS owner:
 
 Meaning:
 
-- the group filter controls embedded in the table header
+- the group filter controls rendered above the list head using the shared Studio filter-row layout
 
 ## UI Layout and Styling
 
@@ -140,7 +140,7 @@ Page-specific classes retained:
 
 Important note:
 
-- this page intentionally keeps a page-specific row model rather than using the shared `tagStudioList__*` shell
+- this page keeps a page-specific column grid, but now uses the shared `tagStudioList__*` header-row shell and sort-button treatment
 
 ## DOM Rendering and Event Wiring
 
@@ -152,10 +152,13 @@ Main render functions:
 
 - `renderTable(state)`
 - `renderFilters(state)`
+- `buildSeriesRows(state)`
 
 Main event wiring:
 
-- a click handler on `#series-tags` listens for `button[data-group]`
+- a click handler on `#series-tags` listens for:
+  - `button[data-group]`
+  - `button[data-sort-key]`
 
 ## UI Contract
 
@@ -180,6 +183,8 @@ Key state areas:
 - registry lookup
 - group descriptions
 - current `filterGroup`
+- current `sortKey`
+- current `sortDir`
 
 ## Data Access / Query Params / JSON Parsing
 
@@ -205,6 +210,7 @@ Primary business logic:
 - derive assigned tag ids for each series
 - compute tag metrics and RAG status
 - filter displayed tags by group
+- sort by series, status, or visible tags
 
 These responsibilities live mainly in:
 

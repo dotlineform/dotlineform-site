@@ -163,7 +163,7 @@ export const tagRegistryUi = createUiContract({
     listHead: "tagStudioList__head tagRegistry__head",
     listRows: "tagStudioList__rows tagRegistry__rows",
     listRow: "tagStudioList__row tagRegistry__row",
-    sortButton: "tagRegistry__sortBtn",
+    sortButton: "tagStudioList__sortBtn tagRegistry__sortBtn",
     chip: "tagStudio__chip",
     chipGroupPrefix: "tagStudio__chip--",
     chipRemove: "tagStudio__chipRemove",
@@ -294,10 +294,11 @@ export const seriesTagsUi = createUiContract({
     keyInfoButton: "tagStudio__keyInfoBtn",
     allFilterButton: "tagStudioFilters__allBtn",
     groupFilterButton: "tagStudioFilters__groupBtn",
+    sortButton: "tagStudioList__sortBtn",
     chip: "tagStudio__chip",
     chipGroupPrefix: "tagStudio__chip--",
     chipWarning: "tagStudio__chip--warning",
-    filters: "tagStudio__key seriesTags__filters"
+    filters: "tagStudioFilters tagStudio__key seriesTags__filters"
   },
   state: {
     active: "active"
