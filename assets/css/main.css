@@ -538,9 +538,7 @@ figure.diagram figcaption{
 }
 
 /* link styling */
-.index__link:link,
-.index__link:active,
-.index__link:focus{
+.index__link:is(:link, :active, :focus){
   text-decoration: none !important;
   color: var(--link);
   font-weight: 500;
@@ -597,13 +595,7 @@ figure.diagram figcaption{
   grid-template-columns: 1fr;
   align-items: center; /* center text block against thumbnail */
 }
-.workIndexItem__meta{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2px;
-  min-height: var(--list-thumb-size);
-}
+.workIndexItem__meta,
 .seriesIndexItem__meta{
   display: flex;
   flex-direction: column;
@@ -614,12 +606,8 @@ figure.diagram figcaption{
 .workIndexItem + .workIndexItem{ margin-top: 6px; }
 
 /* link colouring/behaviour (match index links) */
-.workIndexItem:link,
-.workIndexItem:active,
-.workIndexItem:focus,
-.seriesIndexItem:link,
-.seriesIndexItem:active,
-.seriesIndexItem:focus{
+.workIndexItem:is(:link, :active, :focus),
+.seriesIndexItem:is(:link, :active, :focus){
   color: var(--link);
   text-decoration: none !important;
   font-weight: 500;
@@ -662,11 +650,7 @@ figure.diagram figcaption{
   line-height: 1.2;
 }
 
-.workIndexItem__year{
-  font-size: var(--font-caption);
-  color: var(--muted);
-  line-height: 1.2;
-}
+.workIndexItem__year,
 .seriesIndexItem__year{
   font-size: var(--font-caption);
   color: var(--muted);
@@ -676,7 +660,7 @@ figure.diagram figcaption{
 @media (max-width: 640px){
   .workIndexItem{ grid-template-columns: 1fr; row-gap: 8px; }
   .workIndexItem__row{ grid-template-columns: 1fr; row-gap: 2px; }
-  .workIndexItem__meta{ min-height: 0; }
+  .workIndexItem__meta,
   .seriesIndexItem__meta{ min-height: 0; }
 }
 
@@ -1560,18 +1544,9 @@ note: works tags are not currently in use on the work pages themselves.
   overflow-wrap: anywhere;
 }
 
-.worksList__title:link,
-.worksList__title:visited,
-.worksList__title:active,
-.worksList__title:focus,
-.worksList__cat:link,
-.worksList__cat:visited,
-.worksList__cat:active,
-.worksList__cat:focus,
-.worksList__series:link,
-.worksList__series:visited,
-.worksList__series:active,
-.worksList__series:focus{
+.worksList__title:is(:link, :visited, :active, :focus),
+.worksList__cat:is(:link, :visited, :active, :focus),
+.worksList__series:is(:link, :visited, :active, :focus){
   color: var(--link);
   text-decoration: none !important;
 }
@@ -1593,24 +1568,12 @@ note: works tags are not currently in use on the work pages themselves.
   text-underline-offset: 2px;
 }
 
-.worksList__title:link,
-.worksList__title:visited,
-.worksList__title:active,
-.worksList__title:focus{
+.worksList__title:is(:link, :visited, :active, :focus){
   font-weight: 700;
 }
 
-.worksList__cat:link,
-.worksList__cat:visited,
-.worksList__cat:active,
-.worksList__cat:focus{
-  font-weight: 400;
-}
-
-.worksList__series:link,
-.worksList__series:visited,
-.worksList__series:active,
-.worksList__series:focus{
+.worksList__cat:is(:link, :visited, :active, :focus),
+.worksList__series:is(:link, :visited, :active, :focus){
   font-weight: 400;
 }
 
