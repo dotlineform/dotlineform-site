@@ -142,6 +142,11 @@
   background: var(--surface, var(--studio-surface));
 }
 
+.tagStudioPage__context.tagStudioPage__context--meta {
+  border: 0;
+  background: transparent;
+}
+
 .tagStudio__panel--editor {
   display: grid;
   gap: 0.7rem;
