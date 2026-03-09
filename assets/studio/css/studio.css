@@ -146,7 +146,21 @@
 }
 
 .tagStudioEditorSection--messages {
-  gap: 0.2rem;
+  gap: 0.3rem;
+  border: 1px solid var(--line, var(--studio-line-soft));
+  border-radius: var(--studio-radius-md);
+  padding: var(--studio-message-padding-y) var(--studio-message-padding-x);
+  background: var(--studio-surface-subtle);
+}
+
+.tagStudioEditorSection--messages > .tagStudio__contextHint,
+.tagStudioEditorSection--messages > .tagStudio__status,
+.tagStudioEditorSection--messages > .tagStudio__saveWarning,
+.tagStudioEditorSection--messages > .tagStudio__saveResult {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
 }
 
 .tagStudio__heading {
@@ -487,15 +501,13 @@ input.tagStudio__input {
 .tagStudioGroupRow {
   display: grid;
   grid-template-columns: 6.4rem minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 0.45rem;
 }
 
 .tagStudioGroupRow__label {
-  font-size: var(--font-small);
-  color: var(--muted, var(--studio-muted));
-  text-transform: lowercase;
-  line-height: 1.5;
+  justify-self: start;
+  align-self: start;
 }
 
 .tagStudioGroupRow__chips {

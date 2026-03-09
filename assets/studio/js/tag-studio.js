@@ -1104,7 +1104,7 @@ function renderGroups(state) {
       : "";
     return `
       <div class="${UI_CLASS.groupRow}">
-        <span class="${UI_CLASS.groupRowLabel}">${escapeHtml(group)}:</span>
+        <span class="${classNames(UI_CLASS.groupRowLabel, UI_CLASS.chip, chipGroupClass(group))}">${escapeHtml(group)}</span>
         <div class="${UI_CLASS.groupRowChips}">
           ${inheritedHtml}
           ${overrideHtml}

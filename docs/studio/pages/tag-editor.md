@@ -190,6 +190,7 @@ Meaning:
 
 - the line explaining whether edits apply to the series or to selected works
 - with no active work, this section should make it clear that the editor is in series-tag mode
+- the editor now presents context, status, warning, and save-result lines inside one shared message container rather than as separate boxes
 
 ### Group rows
 
@@ -211,6 +212,7 @@ JS owner:
 Meaning:
 
 - the visible rows of tag chips grouped by `subject`, `domain`, `form`, and `theme`
+- the group-name anchor for each row now uses the same coloured pill treatment as other Studio group-name displays
 - with no active work, these rows are editable series tags
 - with an active work, inherited series tags become monochrome context chips and work override tags remain editable
 
