@@ -41,6 +41,9 @@
   --link: #3f3f3f;
   --link-hover: #1e1e1e;
   --link-visited: #5b2aa6;
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --debug-outline-link: #d11;
+  --debug-outline-image: #1166cc;
 
   --container: 980px;
 
@@ -81,6 +84,7 @@
     --link: #7bb0ff;
     --link-hover: #a7c9ff;
     --link-visited: #c39bff;
+    --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.24);
   }
 }
 
@@ -96,6 +100,7 @@ html[data-theme="light"]{
   --link: #3f3f3f;
   --link-hover: #1e1e1e;
   --link-visited: #5b2aa6;
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 html[data-theme="dark"]{
@@ -109,6 +114,7 @@ html[data-theme="dark"]{
   --link: #7bb0ff;
   --link-hover: #a7c9ff;
   --link-visited: #c39bff;
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.24);
 }
 
 html { color-scheme: light dark; }
@@ -380,7 +386,7 @@ th{ background: var(--panel-2); }
   background: var(--panel);
   padding: 8px;
   z-index: 50;
-  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  box-shadow: var(--shadow-pop);
 }
 
 .nav-more__item{
@@ -649,12 +655,12 @@ figure.diagram figcaption{
 
 .workIndexItem__year{
   font-size: var(--font-caption);
-  color: #777;
+  color: var(--muted);
   line-height: 1.2;
 }
 .seriesIndexItem__year{
   font-size: var(--font-caption);
-  color: #777;
+  color: var(--muted);
   line-height: 1.2;
 }
 
@@ -1078,11 +1084,11 @@ Use “structure-first” naming and scope section-specific differences via the 
 
 /* Debug: add `debug-media-boxes` to <body> to compare link vs image boxes */
 .debug-media-boxes .page__mediaLink{
-  outline: 2px solid #d11;
+  outline: 2px solid var(--debug-outline-link);
   outline-offset: 2px;
 }
 .debug-media-boxes .page__mediaImg{
-  outline: 2px solid #1166cc;
+  outline: 2px solid var(--debug-outline-image);
   outline-offset: 2px;
 }
 

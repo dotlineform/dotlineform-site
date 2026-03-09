@@ -1,6 +1,6 @@
 # CSS Audit Latest
 
-Generated: 2026-03-09 18:17:11 UTC
+Generated: 2026-03-09 18:23:43 UTC
 
 Files:
 - `assets/css/main.css`
@@ -8,8 +8,8 @@ Files:
 
 ## Summary
 
-- `assets/css/main.css`: 38 `font-size` declarations, 0 raw literal sizes, 5 direct color literal usages
-- `assets/studio/css/studio.css`: 42 `font-size` declarations, 0 raw literal sizes, 10 direct color literal usages
+- `assets/css/main.css`: 38 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
+- `assets/studio/css/studio.css`: 42 `font-size` declarations, 0 raw literal sizes, 0 direct color literal usages
 
 ## Findings
 
@@ -19,10 +19,7 @@ Raw font-size hotspots:
 - none
 
 Direct color literal hotspots:
-- `#777`: 2 occurrence(s) at line(s) 652, 657
-- `rgba(0,0,0,.08)`: 1 occurrence(s) at line(s) 383
-- `#d11`: 1 occurrence(s) at line(s) 1081
-- `#1166cc`: 1 occurrence(s) at line(s) 1085
+- none
 
 ### `assets/studio/css/studio.css`
 
@@ -30,14 +27,7 @@ Raw font-size hotspots:
 - none
 
 Direct color literal hotspots:
-- `#fff`: 2 occurrence(s) at line(s) 465, 554
-- `#1f1f1f`: 2 occurrence(s) at line(s) 552, 555
-- `#d9a43f`: 1 occurrence(s) at line(s) 469
-- `#57a368`: 1 occurrence(s) at line(s) 473
-- `#fafafa`: 1 occurrence(s) at line(s) 507
-- `#d0d0d0`: 1 occurrence(s) at line(s) 508
-- `#2f2f2f`: 1 occurrence(s) at line(s) 509
-- `#d2d2d2`: 1 occurrence(s) at line(s) 834
+- none
 
 ## Recommendations
 
@@ -50,7 +40,7 @@ Direct color literal hotspots:
 ### P2 Color
 
 - Keep palette tokens centralized and remove the remaining component-level hardcoded colors.
-- Add semantic aliases for states and special chips instead of repeating neutrals and weight-dot fills inline.
+- Fit component colors to the shared palette and state tokens instead of preserving local one-off literals.
 
 ### P3 Primitives
 

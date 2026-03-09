@@ -124,7 +124,7 @@ def build_recommendations(audits: list[dict[str, object]]) -> list[str]:
         "### P2 Color",
         "",
         "- Keep palette tokens centralized and remove the remaining component-level hardcoded colors.",
-        "- Add semantic aliases for states and special chips instead of repeating neutrals and weight-dot fills inline.",
+        "- Fit component colors to the shared palette and state tokens instead of preserving local one-off literals.",
         "",
         "### P3 Primitives",
         "",
