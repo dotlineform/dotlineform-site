@@ -77,7 +77,7 @@
       "popup_heading_works": "works",
       "popup_heading_tags": "tags",
       "popup_heading_aliases": "aliases",
-      "empty_state": "none",
+      "empty_state": "",
       "work_input_required": "Enter a work_id from this series.",
       "work_input_required_multiple": "Enter at least one work_id from this series.",
       "work_unknown_error": "Unknown work_id for this series: \"{input}\".",

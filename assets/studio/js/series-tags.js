@@ -166,7 +166,7 @@ function renderTable(state) {
       ? row.visibleTags.map((tag) => (
         `<li class="${classNames(UI_CLASS.chip, tag.className)}" title="${escapeHtml(tag.tagId)}">${escapeHtml(tag.label)}</li>`
       )).join("")
-      : `<li class="${UI_CLASS.empty}">${escapeHtml(seriesTagsText(state.config, "empty_state", "none"))}</li>`;
+      : "";
 
     return `
       <li class="tagStudioList__row seriesTags__row">
