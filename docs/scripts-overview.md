@@ -1,3 +1,7 @@
+---
+permalink: /docs/scripts-overview/
+---
+
 # Scripts Overview
 
 Use this command prefix for all script commands:
