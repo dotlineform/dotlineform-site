@@ -15,9 +15,9 @@
   --studio-list-gap: 0.56rem;
   --studio-list-head-padding-y: 0.35rem;
   --studio-list-row-padding-y: 0.45rem;
-  --studio-pill-height: 1.8rem;
+  --studio-pill-height: 1.8rem; /* 1.8 */
   --studio-pill-gap: 0.35rem;
-  --studio-pill-padding-y: 0.28rem;
+  --studio-pill-padding-y: 0.1rem; /* original 0.28 */
   --studio-pill-padding-x: 0.5rem;
   --studio-message-padding-y: 0.42rem;
   --studio-message-padding-x: 0.6rem;
@@ -1364,6 +1364,14 @@ input.tagStudio__input {
 
 .seriesTags__row {
   grid-template-columns: minmax(12rem, 1fr) 5rem minmax(0, 2fr);
+  align-items: center;
+}
+
+.seriesTags__col--title,
+.seriesTags__col--count,
+.seriesTags__col--tags {
+  display: flex;
+  align-items: center;
 }
 
 .seriesTags__col--count {
@@ -1371,8 +1379,7 @@ input.tagStudio__input {
 }
 
 .seriesTags__col--tags {
-  display: flex;
-  align-items: start;
+  align-items: center;
 }
 
 .seriesTags__chipList {
@@ -1382,7 +1389,7 @@ input.tagStudio__input {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
-  align-items: start;
+  align-items: center;
 }
 
 .seriesTags__filters {
