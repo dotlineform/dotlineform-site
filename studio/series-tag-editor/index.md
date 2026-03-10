@@ -45,15 +45,15 @@ studio_page_doc: /docs/studio/pages/tag-editor/
     <section class="tagStudioPage__context tagStudioPage__context--meta">
       <h1 class="tagStudioPage__title" id="seriesTagEditorTitle">Series Tag Editor</h1>
       <div class="page__caption page__metaList">
+        <div class="page__row"><span id="seriesTagEditorYearDisplay">—</span></div>
         <div class="page__row">
-          cat.
+          <!-- cat. -->
           <span id="seriesTagEditorCat">—</span>
         </div>
-        <div class="page__row"><span id="seriesTagEditorYear">—</span></div>
-        <div class="page__row"><span id="seriesTagEditorYearDisplay">—</span></div>
-        <div class="page__row"><span id="seriesTagEditorSortFields">—</span></div>
-        <div class="page__row"><span id="seriesTagEditorPrimaryWork">—</span></div>
-        <div class="page__row"><span id="seriesTagEditorFolders">—</span></div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorYear">—</span></div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorSortFields">—</span></div>
+        <div class="page__row" style="display:none;"><span id="seriesTagEditorPrimaryWork">—</span></div>
+        <div class="page__row">/<span id="seriesTagEditorFolders">—</span></div>
         <div class="page__row"><span id="seriesTagEditorNotes">—</span></div>
       </div>
     </section>
