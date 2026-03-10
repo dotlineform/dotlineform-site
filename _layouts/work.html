@@ -447,8 +447,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
       var href = baseurl + '/series/' + encodeURIComponent(series) + '/';
       if (seriesPage > 0) href += '?series_page=' + encodeURIComponent(String(seriesPage));
       link.setAttribute('href', href);
-    } else if (from === 'works_curator_index') {
-      var curatorUrl = baseurl + '/works_curator/';
+    } else if (from === 'studio_works_index') {
+      var curatorUrl = baseurl + '/studio/studio-works/';
       var curatorQuery = new URLSearchParams();
       if (returnSort === 'cat' || returnSort === 'year' || returnSort === 'title' || returnSort === 'series' || returnSort === 'storage' || returnSort === 'seriessort') {
         curatorQuery.set('sort', returnSort);
@@ -459,7 +459,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
       if (returnSeries) {
         curatorQuery.set('series', returnSeries);
       }
-      link.textContent = '← works curator index';
+      link.textContent = '← studio works';
       link.setAttribute('href', curatorUrl + (curatorQuery.toString() ? ('?' + curatorQuery.toString()) : ''));
     } else if (from === 'works_index') {
       var worksUrl = baseurl + '/works/';

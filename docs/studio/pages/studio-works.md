@@ -73,6 +73,7 @@ DOM / CSS:
 Meaning:
 
 - the existing curator works rows and links
+- work links carry Studio sort/filter return state so the work-page back link returns to `/studio/studio-works/`
 
 ## UI Layout and Styling
 
