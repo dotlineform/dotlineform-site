@@ -6,6 +6,10 @@ import {
 } from "./studio-config.js";
 import {
   buildStudioGroupDescriptionMap,
+  getSeriesAssignmentTagIds,
+  getStudioAssignmentsSeries,
+  loadSiteSeriesIndexJson,
+  loadStudioAssignmentsJson,
   loadStudioAliasesJson,
   loadStudioGroupsJson,
   loadStudioRegistryJson
@@ -97,7 +101,9 @@ async function initTagRegistryPage() {
     deletePreviewSeq: 0,
     registryOptions: [],
     refs: null,
-    registryUpdatedAt: ""
+    registryUpdatedAt: "",
+    assignmentsSeries: {},
+    seriesMetaById: new Map()
   };
 
   renderShell(state);
@@ -253,10 +259,10 @@ function renderShell(state) {
     title: deleteModalTitle,
     bodyHtml: `
       <p class="${UI_CLASS.formMeta}" data-role="${UI.role.deleteTagMeta}"></p>
-      <p class="${UI_CLASS.formImpact}">
+      <p class="${UI_CLASS.formImpact} tagRegistryDelete__intro">
         ${escapeHtml(deleteImpactIntro)}
       </p>
-      <div class="${UI_CLASS.formImpact}" data-role="${UI.role.deleteImpact}"></div>
+      <div class="${UI_CLASS.formImpact} tagRegistryDelete__impactPanel" data-role="${UI.role.deleteImpact}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
@@ -561,6 +567,10 @@ async function loadRegistry(state, options = {}) {
     loadStudioRegistryJson(state.config, options),
     loadStudioAliasesJson(state.config, options)
   ]);
+  const [assignmentsResult, seriesIndexResult] = await Promise.allSettled([
+    loadStudioAssignmentsJson(state.config, options),
+    loadSiteSeriesIndexJson(state.config, options)
+  ]);
   let groupsData = null;
   try {
     groupsData = await loadStudioGroupsJson(state.config, options);
@@ -570,6 +580,12 @@ async function loadRegistry(state, options = {}) {
   state.registryUpdatedAt = normalizeTimestamp(registryData && registryData.updated_at_utc);
   state.tags = normalizeRegistryTags(registryData, state.registryUpdatedAt);
   state.aliasKeys = buildAliasKeySet(aliasesData);
+  state.assignmentsSeries = assignmentsResult.status === "fulfilled"
+    ? getStudioAssignmentsSeries(assignmentsResult.value)
+    : {};
+  state.seriesMetaById = seriesIndexResult.status === "fulfilled"
+    ? buildSeriesMetaById(state.config, seriesIndexResult.value)
+    : new Map();
   state.groupDescriptions = buildStudioGroupDescriptionMap(groupsData, STUDIO_GROUPS);
   state.registryOptions = buildRegistryOptions(state.tags);
 }
@@ -1341,35 +1357,106 @@ function renderDeleteTagMeta(state, tag) {
     <span class="${classNames(UI_CLASS.chip, chipGroupClass(tag.group), UI_CLASS.deleteMetaTag)}" title="${escapeHtml(tag.tagId)}">
       ${escapeHtml(tag.label)}
     </span>
-    <span class="${UI_CLASS.deleteMetaId}">${escapeHtml(tag.tagId)}</span>
   `;
 }
 
 function renderDeleteImpactPreview(state, response, fallbackMessage) {
   const stats = response && typeof response === "object" ? response : {};
+  const affectedSeries = getDeleteImpactSeries(state, state.deleteTagId);
+  const aliasesUpdated = Math.max(
+    0,
+    Number(stats.aliases_rewritten || 0) - Number(stats.aliases_removed_empty || 0) - Number(stats.aliases_removed_redundant || 0)
+  );
+  const aliasesDeleted = Number(stats.aliases_removed_empty || 0) + Number(stats.aliases_removed_redundant || 0);
   const items = [
-    [registryText(state.config, "delete_impact_series_rows", "series rows touched"), Number(stats.series_rows_touched || 0)],
-    [registryText(state.config, "delete_impact_series_refs", "series tag refs removed"), Number(stats.series_tag_refs_rewritten || 0)],
-    [registryText(state.config, "delete_impact_work_rows", "work rows touched"), Number(stats.work_rows_touched || 0)],
-    [registryText(state.config, "delete_impact_work_refs", "work tag refs removed"), Number(stats.work_tag_refs_rewritten || 0)],
-    [registryText(state.config, "delete_impact_aliases_rewritten", "aliases rewritten"), Number(stats.aliases_rewritten || 0)],
-    [registryText(state.config, "delete_impact_aliases_removed_empty", "aliases deleted (empty)"), Number(stats.aliases_removed_empty || 0)],
-    [registryText(state.config, "delete_impact_aliases_removed_redundant", "aliases deleted (redundant)"), Number(stats.aliases_removed_redundant || 0)]
+    renderDeleteImpactSeriesItem(state, affectedSeries),
+    renderDeleteImpactCountItem(
+      registryText(state.config, "delete_impact_aliases_updated", "aliases updated"),
+      aliasesUpdated
+    ),
+    renderDeleteImpactCountItem(
+      registryText(state.config, "delete_impact_aliases_deleted", "aliases deleted"),
+      aliasesDeleted
+    )
   ];
-  const summary = String(stats.summary_text || fallbackMessage || "").trim();
-  state.refs.deleteImpact.className = UI_CLASS.formImpact;
+  state.refs.deleteImpact.className = `${UI_CLASS.formImpact} tagRegistryDelete__impactPanel`;
   delete state.refs.deleteImpact.dataset.state;
   state.refs.deleteImpact.innerHTML = `
     <ul class="${UI_CLASS.deleteImpactList}">
-      ${items.map(([label, value]) => `
-        <li class="${UI_CLASS.deleteImpactItem}">
-          <span>${escapeHtml(label)}</span>
-          <strong class="${UI_CLASS.deleteImpactValue}">${escapeHtml(String(value))}</strong>
-        </li>
-      `).join("")}
+      ${items.join("")}
     </ul>
-    ${summary ? `<p class="${UI_CLASS.formMeta}">${escapeHtml(summary)}</p>` : ""}
   `;
+}
+
+function renderDeleteImpactCountItem(label, value) {
+  return `
+    <li class="${UI_CLASS.deleteImpactItem}">
+      <span>${escapeHtml(label)}: ${escapeHtml(String(value))}</span>
+    </li>
+  `;
+}
+
+function renderDeleteImpactSeriesItem(state, seriesEntries) {
+  const label = registryText(state.config, "delete_impact_series", "series affected");
+  const emptyLabel = registryText(state.config, "empty_state", "none");
+  const content = seriesEntries.length
+    ? `<span class="${UI_CLASS.deleteImpactLinks}">${seriesEntries.map((entry) => `
+        <a
+          class="${UI_CLASS.deleteImpactLink}"
+          href="${escapeHtml(entry.url)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >${escapeHtml(entry.title)}</a>
+      `).join(", ")}</span>`
+    : `<span>${escapeHtml(emptyLabel)}</span>`;
+  return `
+    <li class="${UI_CLASS.deleteImpactItem}">
+      <span>${escapeHtml(label)}: </span>${content}
+    </li>
+  `;
+}
+
+function getDeleteImpactSeries(state, tagId) {
+  const targetTagId = normalize(tagId);
+  if (!targetTagId) return [];
+  return Object.keys(state.assignmentsSeries || {})
+    .map((rawSeriesId) => ({
+      rawSeriesId,
+      seriesId: normalize(rawSeriesId)
+    }))
+    .filter(({ rawSeriesId, seriesId }) => seriesId && getSeriesAssignmentTagIds(state.assignmentsSeries, rawSeriesId).includes(targetTagId))
+    .map(({ seriesId }) => {
+      const meta = state.seriesMetaById.get(seriesId);
+      return {
+        seriesId,
+        title: meta && meta.title ? meta.title : seriesId,
+        url: buildSeriesEditorUrl(state.config, seriesId)
+      };
+    })
+    .sort((left, right) => left.title.localeCompare(right.title, undefined, { sensitivity: "base" }));
+}
+
+function buildSeriesMetaById(config, payload) {
+  const seriesMap = payload && payload.series && typeof payload.series === "object" ? payload.series : {};
+  const out = new Map();
+  Object.keys(seriesMap).forEach((rawSeriesId) => {
+    const seriesId = normalize(rawSeriesId);
+    if (!seriesId) return;
+    const row = seriesMap[rawSeriesId];
+    const title = String((row && row.title) || seriesId).trim();
+    out.set(seriesId, {
+      title,
+      url: buildSeriesEditorUrl(config, seriesId)
+    });
+  });
+  return out;
+}
+
+function buildSeriesEditorUrl(config, seriesId) {
+  const base = getStudioRoute(config, "series_tag_editor");
+  const normalizedSeriesId = normalize(seriesId);
+  if (!base || !normalizedSeriesId) return "";
+  return `${base}?series=${encodeURIComponent(normalizedSeriesId)}`;
 }
 
 function clearImportResult(state) {

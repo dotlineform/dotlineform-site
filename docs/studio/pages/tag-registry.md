@@ -223,7 +223,8 @@ DOM / CSS:
 Meaning:
 
 - shows the selected canonical tag as a coloured group pill with its full `tag_id`
-- enumerates delete impact as structured counts for assignments and aliases before confirmation
+- shows affected series as linked titles opening the series tag editor in a new tab
+- summarizes alias impact with `aliases updated` and `aliases deleted`
 
 ## UI Layout and Styling
 

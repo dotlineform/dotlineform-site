@@ -1157,6 +1157,13 @@ input.tagStudio__input {
   margin-right: 0.45rem;
 }
 
+.tagRegistryDelete__intro,
+.tagRegistryDelete__impactPanel {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
 .tagRegistryDelete__metaId {
   font-size: var(--font-small);
   color: var(--muted, var(--studio-muted));
@@ -1172,15 +1179,20 @@ input.tagStudio__input {
 }
 
 .tagRegistryDelete__impactItem {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
+  display: block;
 }
 
 .tagRegistryDelete__impactValue {
   flex: 0 0 auto;
   font-variant-numeric: tabular-nums;
+}
+
+.tagRegistryDelete__impactLinks {
+  display: inline;
+}
+
+.tagRegistryDelete__impactLink {
+  white-space: nowrap;
 }
 
 .tagAliases__controls {

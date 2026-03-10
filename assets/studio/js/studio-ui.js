@@ -187,6 +187,8 @@ export const tagRegistryUi = createUiContract({
     deleteImpactList: "tagRegistryDelete__impactList",
     deleteImpactItem: "tagRegistryDelete__impactItem",
     deleteImpactValue: "tagRegistryDelete__impactValue",
+    deleteImpactLinks: "tagRegistryDelete__impactLinks",
+    deleteImpactLink: "tagRegistryDelete__impactLink",
     formSearchWrap: "tagStudioForm__searchWrap",
     formKey: "tagStudioForm__key",
     formSelected: "tagStudioForm__selected",
