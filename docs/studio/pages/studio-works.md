@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/pages/studio-works/
+---
+
 # Studio Works
 
 Route:

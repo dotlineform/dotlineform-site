@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/pages/tag-editor/
+---
+
 # Tag Editor
 
 Route:

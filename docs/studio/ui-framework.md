@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/ui-framework/
+---
+
 # Studio UI Framework
 
 This document defines the shared UI layer for Studio pages.

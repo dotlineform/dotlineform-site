@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/pages/series-tags/
+---
+
 # Series Tags
 
 Route:

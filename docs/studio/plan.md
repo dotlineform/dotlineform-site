@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/plan/
+---
+
 **Phase 1 Task List**
 
 No edits yet. This is the concrete implementation plan for the first pass.
@@ -22,17 +26,17 @@ Output:
 
 3. Repoint small modules first.
 Targets:
-- [tag-groups.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-groups.js)
-- [tag-studio-index.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-studio-index.js)
-- [series-tags.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/series-tags.js)
+- `assets/studio/js/tag-groups.js`
+- `assets/studio/js/tag-studio-index.js`
+- `assets/studio/js/series-tags.js`
 Output:
 - these modules import shared helpers instead of owning their own fetch/parse copies
 
 4. Repoint large modules second.
 Targets:
-- [tag-registry.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-registry.js)
-- [tag-aliases.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-aliases.js)
-- [tag-studio.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-studio.js)
+- `assets/studio/js/tag-registry.js`
+- `assets/studio/js/tag-aliases.js`
+- `assets/studio/js/tag-studio.js`
 Output:
 - transport and data loading moved out
 - no render or UX changes yet
@@ -56,10 +60,10 @@ Goal: separate page/template structure from behavior.
 
 Tasks:
 1. Create `assets/studio/js/series-tag-editor-page.js`
-2. Move logic from [series-tag-editor/index.md](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/series-tag-editor/index.md#L58) into the module
+2. Move logic from `studio/series-tag-editor/index.md` into the module
 3. Pass Liquid/runtime values through `data-*` or inline JSON, not embedded logic
 4. Create `assets/studio/js/studio-works.js`
-5. Move logic from [studio-works/index.md](/Users/dlf/Developer/dotlineform/dotlineform-site/studio/studio-works/index.md#L44) into the module
+5. Move logic from `studio/studio-works/index.md` into the module
 
 Benefits:
 - cleaner content files
@@ -79,7 +83,7 @@ Verification:
 Goal: isolate business logic and save logic from DOM control code.
 
 Tasks:
-1. Extract pure editor/domain logic from [tag-studio.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-studio.js)
+1. Extract pure editor/domain logic from `assets/studio/js/tag-studio.js`
 Output:
 - tag resolution
 - assignment normalization
@@ -117,7 +121,7 @@ Verification:
 Goal: separate registry UI from registry mutation logic.
 
 Tasks:
-1. Extract registry service layer from [tag-registry.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-registry.js)
+1. Extract registry service layer from `assets/studio/js/tag-registry.js`
 2. Extract validators and patch builders
 3. Keep page/controller responsible only for render/wire/state transitions
 
@@ -141,7 +145,7 @@ Verification:
 Goal: mirror the registry architecture for consistency.
 
 Tasks:
-1. Extract alias service layer from [tag-aliases.js](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/js/tag-aliases.js)
+1. Extract alias service layer from `assets/studio/js/tag-aliases.js`
 2. Extract alias validators and patch builders
 3. Keep page/controller focused on UI state and rendering
 
@@ -165,7 +169,7 @@ Verification:
 Goal: finish structure/style separation.
 
 Tasks:
-1. Move layout CSS from [studio.html](/Users/dlf/Developer/dotlineform/dotlineform-site/_layouts/studio.html#L5) into [studio.css](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/studio/css/studio.css)
+1. Move layout CSS from `_layouts/studio.html` into `assets/studio/css/studio.css`
 2. Replace residual inline style attributes where safe
 
 Benefits:

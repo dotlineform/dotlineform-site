@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/pages/tag-groups/
+---
+
 # Tag Groups
 
 Route:

@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/regression-checklist/
+---
+
 # Studio Regression Checklist
 
 Use `Pass`, `Fail`, or `N/A` for each item.
