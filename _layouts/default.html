@@ -87,7 +87,7 @@
           {% elsif is_studio_docs_active %}
             <a class="nav-item is-active" href="{{ '/docs/studio/studio/' | relative_url }}" aria-current="page">docs</a>
           {% else %}
-            <a class="nav-item" href="{{ page.studio_page_doc | default: '/docs/studio/studio/' | relative_url }}">docs</a>
+            <a class="nav-item" href="{{ '/docs/studio/studio/' | relative_url }}">docs</a>
           {% endif %}
         {% else %}
           {%- assign is_series_index = false -%}
