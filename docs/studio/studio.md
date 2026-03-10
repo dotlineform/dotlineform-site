@@ -1,11 +1,16 @@
 # Studio
 
-This document is the central reference for series-level tags plus per-work override editing in the Series Tag Editor page (`/studio/series-tag-editor/?series=:series_id`).
+This document is the central reference for the Studio pages, which are designed to enable analysis of work in the portfolio.
 
 Related references:
 
-- `docs/studio/ui-framework.md` for shared Studio UI primitives and naming rules
-- `docs/studio/regression-checklist.md` for manual verification coverage
+- **[UI Framework](/docs/studio/ui-framework/)** for shared Studio UI primitives and naming rules
+
+Page documents:
+
+- **[Tag Registry](/docs/studio/pages/tag-registry/)**
+- **[Series Tags](/docs/studio/pages/series-tags/)**
+- **[Series Tag Editor](/docs/studio/pages/tag-editor/)**
 
 Current status:
 
