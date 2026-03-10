@@ -1,3 +1,7 @@
+---
+permalink: /docs/studio/studio/
+---
+
 # Studio
 
 This document is the central reference for the Studio pages, which are designed to enable analysis of work in the portfolio.
