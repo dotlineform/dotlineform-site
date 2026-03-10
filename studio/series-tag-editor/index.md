@@ -40,6 +40,7 @@ studio_page_doc: /docs/studio/pages/tag-editor/
           decoding="async"
         >
       </a>
+      <figcaption class="tagStudioPage__mediaCaption" id="seriesTagEditorMediaCaption"></figcaption>
     </figure>
 
     <section class="tagStudioPage__context tagStudioPage__context--meta">

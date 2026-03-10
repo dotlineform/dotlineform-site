@@ -94,6 +94,15 @@
   border-radius: var(--studio-radius-sm);
 }
 
+.tagStudioPage__mediaCaption {
+  margin-top: 0.25rem;
+  font-size: var(--font-caption);
+  line-height: 1.25;
+  color: var(--muted, var(--studio-muted));
+  font-style: normal;
+  text-align: left;
+}
+
 .tagStudioPage__context {
   border-radius: var(--studio-radius-lg);
   padding: var(--studio-surface-padding-lg);

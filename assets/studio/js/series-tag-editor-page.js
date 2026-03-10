@@ -25,6 +25,7 @@ function initSeriesTagEditorPage() {
   const mediaFigureEl = document.getElementById("seriesTagEditorMedia");
   const mediaLinkEl = document.getElementById("seriesTagEditorMediaLink");
   const mediaImgEl = document.getElementById("seriesTagEditorMediaImg");
+  const mediaCaptionEl = document.getElementById("seriesTagEditorMediaCaption");
   const baseurl = String(root.dataset.baseurl || "");
   const mediaBase = String(root.dataset.mediaBase || "");
   const mediaPrefix = root.dataset.mediaPrefix === undefined
@@ -100,9 +101,10 @@ function initSeriesTagEditorPage() {
   }
 
   async function renderPrimaryMedia(primaryWorkId, displayTitle) {
-    if (!mediaFigureEl || !mediaLinkEl || !mediaImgEl) return;
+    if (!mediaFigureEl || !mediaLinkEl || !mediaImgEl || !mediaCaptionEl) return;
     if (!primaryWorkId) {
       mediaFigureEl.hidden = true;
+      mediaCaptionEl.textContent = "";
       return;
     }
 
@@ -112,6 +114,7 @@ function initSeriesTagEditorPage() {
     const src1600 = `${imgBase}${primaryWorkId}-primary-1600.webp`;
     const src2400 = `${imgBase}${primaryWorkId}-primary-2400.webp`;
     const work = await fetchWorkRecord(primaryWorkId);
+    const workTitle = textOrDash(work && work.title ? work.title : displayTitle);
     let widthCm = Number(work && work.width_cm);
     let heightCm = Number(work && work.height_cm);
     if (!Number.isFinite(widthCm) || widthCm <= 0) widthCm = 4;
@@ -125,7 +128,8 @@ function initSeriesTagEditorPage() {
     mediaLinkEl.style.setProperty("--work-ar", `${widthCm} / ${heightCm}`);
     mediaImgEl.src = src1600;
     mediaImgEl.setAttribute("srcset", srcset);
-    mediaImgEl.alt = displayTitle;
+    mediaImgEl.alt = workTitle;
+    mediaCaptionEl.textContent = `${primaryWorkId} - ${workTitle}`;
     mediaFigureEl.hidden = false;
   }
 

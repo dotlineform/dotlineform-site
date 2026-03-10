@@ -81,6 +81,7 @@ DOM / CSS:
 - `#seriesTagEditorMedia.tagStudioPage__media`
 - `#seriesTagEditorMediaLink`
 - `#seriesTagEditorMediaImg.tagStudioPage__mediaImg`
+- `#seriesTagEditorMediaCaption.tagStudioPage__mediaCaption`
 
 JS owner:
 
@@ -93,6 +94,7 @@ Meaning:
 - the image area in column 1 of the series header
 - shows the series primary work by default
 - can switch to the currently selected work while editing
+- shows a caption under the image as `work_id - title` and updates when the displayed work changes
 
 ### Series metadata
 
