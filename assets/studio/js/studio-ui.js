@@ -337,28 +337,6 @@ export const tagAliasesUi = createUiContract({
   }
 });
 
-export const seriesTagsUi = createUiContract({
-  role: {
-    pageRoot: "series-tags"
-  },
-  className: {
-    error: "tagStudioError",
-    empty: "tagStudio__empty",
-    keyPill: "tagStudio__keyPill",
-    keyInfoButton: "tagStudio__keyInfoBtn",
-    allFilterButton: "tagStudioFilters__allBtn",
-    groupFilterButton: "tagStudioFilters__groupBtn",
-    sortButton: "tagStudioList__sortBtn",
-    chip: "tagStudio__chip",
-    chipGroupPrefix: "tagStudio__chip--",
-    chipWarning: "tagStudio__chip--warning",
-    filters: "tagStudioFilters tagStudio__key seriesTags__filters"
-  },
-  state: {
-    active: "active"
-  }
-});
-
 export const tagGroupsUi = createUiContract({
   role: {
     pageRoot: "tag-groups",
