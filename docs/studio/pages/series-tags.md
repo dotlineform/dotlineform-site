@@ -11,6 +11,7 @@ Route:
 Purpose:
 
 - review tags assigned to series
+- manage the cross-series offline assignment session, including export and local-server import
 
 ## Page / Template Structure
 
@@ -36,6 +37,32 @@ Top-level structure:
   - page root / render target
 
 ## Named UI Sections
+
+### Session strip
+
+User-facing name:
+
+- offline session strip
+
+DOM / CSS:
+
+- `[data-role="series-tags-session"]`
+- `[data-role="series-tags-session-summary"]`
+- `[data-role="series-tags-session-actions"]`
+- `[data-role="series-tags-session-import"]`
+- `[data-role="series-tags-session-review"]`
+- `[data-role="series-tags-session-result"]`
+- `.seriesTagsSession__*`
+
+JS owner:
+
+- `renderSessionStrip(state)` in `assets/studio/js/series-tags.js`
+
+Meaning:
+
+- the page-level hub for staged offline assignment rows across series
+- provides `Copy JSON`, `Download JSON`, and `Clear session`
+- when the local server is available, also provides assignment import preview/apply controls and per-series overwrite/skip review
 
 ### Table shell
 
@@ -102,6 +129,9 @@ DOM / CSS:
 Meaning:
 
 - the right column containing the filtered visible tags for each series
+- local staged changes reuse the same chip-caption treatment as the editor:
+  - `local` caption for locally added or modified assignments
+  - struck chip text plus `delete` caption for staged deletions
 
 ### Filter controls
 
@@ -154,12 +184,14 @@ Page boot:
 
 Main render functions:
 
+- `renderSessionStrip(state)`
 - `renderTable(state)`
 - `renderFilters(state)`
 - `buildSeriesRows(state)`
 
 Main event wiring:
 
+- session actions on the offline session strip
 - a click handler on `#series-tags` listens for:
   - `button[data-group]`
   - `button[data-sort-key]`
@@ -186,6 +218,8 @@ Key state areas:
 - assignments lookup
 - registry lookup
 - group descriptions
+- offline session payload
+- local-server import preview and per-series resolutions
 - current `filterGroup`
 - current `sortKey`
 - current `sortDir`
@@ -213,6 +247,9 @@ Primary business logic:
 
 - derive assigned tag ids for each series
 - compute tag metrics and RAG status
+- overlay staged offline rows over repo rows for display
+- export/copy/clear the offline session
+- preview and apply assignment imports through the local server
 - filter displayed tags by group
 - sort by series, status, or visible tags
 

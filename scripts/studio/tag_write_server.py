@@ -12,6 +12,8 @@ What it does:
   - Exposes a tiny localhost API for Tag Studio:
     - GET /health
     - POST /save-tags
+    - POST /import-tag-assignments-preview
+    - POST /import-tag-assignments
     - POST /import-tag-registry
     - POST /import-tag-aliases
     - POST /delete-tag-alias
@@ -84,6 +86,7 @@ DEFAULT_TAG_WEIGHT = 0.6
 ALLOWED_ASSIGNMENTS_REL_PATH = Path("assets/studio/data/tag_assignments.json")
 ALLOWED_REGISTRY_REL_PATH = Path("assets/studio/data/tag_registry.json")
 ALLOWED_ALIASES_REL_PATH = Path("assets/studio/data/tag_aliases.json")
+SITE_SERIES_INDEX_REL_PATH = Path("assets/data/series_index.json")
 BACKUPS_REL_DIR = Path("var/studio/backups")
 LOGS_REL_DIR = Path("var/studio/logs")
 
@@ -489,6 +492,17 @@ def load_aliases(path: Path) -> Dict[str, Any]:
     )
 
 
+def load_series_index(path: Path) -> Dict[str, Any]:
+    return load_json_object(
+        path,
+        {
+            "header": {},
+            "series": {},
+        },
+        "series index",
+    )
+
+
 def ensure_assignment_series_row(payload: Dict[str, Any], series_id: str) -> Dict[str, Any]:
     if not isinstance(payload.get("series"), dict):
         payload["series"] = {}
@@ -546,6 +560,263 @@ def apply_work_assignment_update(
     row["updated_at_utc"] = now_utc
     payload["updated_at_utc"] = now_utc
     return payload, deleted
+
+
+def normalize_assignment_rows_for_compare(rows: Any) -> list[Dict[str, Any]]:
+    return sanitize_assignment_tags(rows if rows is not None else [], "tags", strict=False)
+
+
+def normalize_assignment_series_row_for_compare(row: Any) -> Dict[str, Any]:
+    raw_row = row if isinstance(row, dict) else {}
+    works_obj = raw_row.get("works") if isinstance(raw_row.get("works"), dict) else {}
+    works: Dict[str, Dict[str, Any]] = {}
+
+    for raw_work_id, raw_work_row in works_obj.items():
+        work_id = str(raw_work_id or "").strip()
+        if not WORK_ID_RE.fullmatch(work_id):
+            continue
+        if not isinstance(raw_work_row, dict):
+            continue
+        works[work_id] = {
+            "tags": normalize_assignment_rows_for_compare(raw_work_row.get("tags", []))
+        }
+
+    normalized: Dict[str, Any] = {
+        "tags": normalize_assignment_rows_for_compare(raw_row.get("tags", []))
+    }
+    if works:
+        normalized["works"] = dict(sorted(works.items()))
+    return normalized
+
+
+def assignment_series_rows_equal(left: Any, right: Any) -> bool:
+    a = normalize_assignment_series_row_for_compare(left)
+    b = normalize_assignment_series_row_for_compare(right)
+    return a == b
+
+
+def sanitize_import_assignments_session(payload: Any) -> Dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise ValueError("import_assignments must be a JSON object")
+
+    raw_series = payload.get("series")
+    if not isinstance(raw_series, dict):
+        raise ValueError("import_assignments.series must be an object")
+
+    out_series: Dict[str, Dict[str, Any]] = {}
+    for raw_series_id, raw_entry in raw_series.items():
+        series_id = str(raw_series_id or "").strip().lower()
+        if not series_id or not SLUG_RE.fullmatch(series_id):
+            raise ValueError(f"import_assignments.series[{raw_series_id!r}] must use a slug-safe series id")
+        out_series[series_id] = sanitize_import_assignments_series_entry(raw_entry, series_id)
+
+    return {
+        "version": str(payload.get("version") or "").strip(),
+        "updated_at_utc": str(payload.get("updated_at_utc") or "").strip(),
+        "series": out_series,
+    }
+
+
+def sanitize_import_assignments_series_entry(raw_entry: Any, series_id: str) -> Dict[str, Any]:
+    if not isinstance(raw_entry, dict):
+        raise ValueError(f"import_assignments.series[{series_id}] must be an object")
+
+    staged_row = sanitize_import_assignment_series_row(raw_entry.get("staged_row"), f"import_assignments.series[{series_id}].staged_row")
+    base_snapshot = sanitize_import_assignment_series_row(
+        raw_entry.get("base_row_snapshot"),
+        f"import_assignments.series[{series_id}].base_row_snapshot",
+        allow_missing=True,
+    )
+    base_updated = str(raw_entry.get("base_series_updated_at_utc") or "").strip()
+    staged_at = str(raw_entry.get("staged_at_utc") or "").strip()
+    return {
+        "base_series_updated_at_utc": base_updated,
+        "base_row_snapshot": base_snapshot,
+        "staged_row": staged_row,
+        "staged_at_utc": staged_at,
+    }
+
+
+def sanitize_import_assignment_series_row(raw_row: Any, field_name: str, allow_missing: bool = False) -> Dict[str, Any]:
+    if raw_row is None and allow_missing:
+        return {"tags": []}
+    if not isinstance(raw_row, dict):
+        raise ValueError(f"{field_name} must be an object")
+
+    tags = sanitize_assignment_tags(raw_row.get("tags", []), f"{field_name}.tags", strict=True)
+    works_out: Dict[str, Dict[str, Any]] = {}
+    raw_works = raw_row.get("works")
+    if raw_works is not None:
+        if not isinstance(raw_works, dict):
+            raise ValueError(f"{field_name}.works must be an object")
+        for raw_work_id, raw_work_row in raw_works.items():
+            work_id = str(raw_work_id or "").strip()
+            if not WORK_ID_RE.fullmatch(work_id):
+                raise ValueError(f"{field_name}.works keys must be 5-digit work ids")
+            if not isinstance(raw_work_row, dict):
+                raise ValueError(f"{field_name}.works[{work_id}] must be an object")
+            works_out[work_id] = {
+                "tags": sanitize_assignment_tags(raw_work_row.get("tags", []), f"{field_name}.works[{work_id}].tags", strict=True)
+            }
+
+    out: Dict[str, Any] = {"tags": tags}
+    if works_out:
+        out["works"] = dict(sorted(works_out.items()))
+    return out
+
+
+def build_series_work_membership(series_index_payload: Dict[str, Any]) -> Dict[str, set[str]]:
+    raw_series = series_index_payload.get("series")
+    if not isinstance(raw_series, dict):
+        return {}
+
+    membership: Dict[str, set[str]] = {}
+    for raw_series_id, raw_row in raw_series.items():
+        series_id = str(raw_series_id or "").strip().lower()
+        if not series_id or not isinstance(raw_row, dict):
+            continue
+        works = raw_row.get("works")
+        members: set[str] = set()
+        if isinstance(works, list):
+            for raw_work_id in works:
+                work_id = str(raw_work_id or "").strip()
+                if WORK_ID_RE.fullmatch(work_id):
+                    members.add(work_id)
+        membership[series_id] = members
+    return membership
+
+
+def preview_assignment_import(
+    existing_payload: Dict[str, Any],
+    import_session: Dict[str, Any],
+    series_index_payload: Dict[str, Any],
+) -> Dict[str, Any]:
+    current_series = existing_payload.get("series") if isinstance(existing_payload.get("series"), dict) else {}
+    valid_series = build_series_work_membership(series_index_payload)
+    preview_rows: list[Dict[str, Any]] = []
+    applicable_count = 0
+    conflict_count = 0
+    invalid_count = 0
+    missing_count = 0
+
+    for series_id in sorted(import_session.get("series", {}).keys()):
+        entry = import_session["series"][series_id]
+        staged_row = normalize_assignment_series_row_for_compare(entry.get("staged_row"))
+        base_row = normalize_assignment_series_row_for_compare(entry.get("base_row_snapshot"))
+        current_row = normalize_assignment_series_row_for_compare(current_series.get(series_id))
+
+        row_preview: Dict[str, Any] = {
+            "series_id": series_id,
+            "base_series_updated_at_utc": str(entry.get("base_series_updated_at_utc") or ""),
+            "current_series_updated_at_utc": str((current_series.get(series_id) or {}).get("updated_at_utc") or ""),
+            "status": "apply",
+            "resolution_required": False,
+            "invalid_work_ids": [],
+        }
+
+        if series_id not in valid_series:
+            row_preview["status"] = "missing"
+            row_preview["resolution_required"] = False
+            missing_count += 1
+            preview_rows.append(row_preview)
+            continue
+
+        invalid_work_ids = sorted(
+            work_id
+            for work_id in (staged_row.get("works") or {}).keys()
+            if work_id not in valid_series.get(series_id, set())
+        )
+        if invalid_work_ids:
+            row_preview["status"] = "invalid"
+            row_preview["invalid_work_ids"] = invalid_work_ids
+            invalid_count += 1
+            preview_rows.append(row_preview)
+            continue
+
+        if not assignment_series_rows_equal(current_row, base_row):
+            row_preview["status"] = "conflict"
+            row_preview["resolution_required"] = True
+            conflict_count += 1
+        else:
+            applicable_count += 1
+
+        preview_rows.append(row_preview)
+
+    return {
+        "series": preview_rows,
+        "applicable_count": applicable_count,
+        "conflict_count": conflict_count,
+        "invalid_count": invalid_count,
+        "missing_count": missing_count,
+        "staged_series_count": len(preview_rows),
+    }
+
+
+def apply_assignment_import(
+    existing_payload: Dict[str, Any],
+    import_session: Dict[str, Any],
+    preview: Dict[str, Any],
+    resolutions: Dict[str, str],
+    now_utc: str,
+) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    updated_payload = json.loads(json.dumps(existing_payload))
+    if not isinstance(updated_payload.get("series"), dict):
+        updated_payload["series"] = {}
+
+    applied_series = 0
+    skipped_series = 0
+    overwritten_series = 0
+
+    preview_by_series = {
+        str(row.get("series_id") or ""): row
+        for row in preview.get("series", [])
+        if isinstance(row, dict)
+    }
+
+    for series_id in sorted(import_session.get("series", {}).keys()):
+        row_preview = preview_by_series.get(series_id) or {}
+        status = str(row_preview.get("status") or "")
+        if status in {"invalid", "missing"}:
+            skipped_series += 1
+            continue
+
+        resolution = str(resolutions.get(series_id) or "").strip().lower()
+        if status == "conflict":
+            if resolution == "skip":
+                skipped_series += 1
+                continue
+            if resolution != "overwrite":
+                raise ValueError(f"resolution required for conflicted series: {series_id}")
+            overwritten_series += 1
+
+        staged_row = normalize_assignment_series_row_for_compare(import_session["series"][series_id].get("staged_row"))
+        series_row = ensure_assignment_series_row(updated_payload, series_id)
+        series_row["tags"] = staged_row.get("tags", [])
+        works = staged_row.get("works") if isinstance(staged_row.get("works"), dict) else {}
+        if works:
+            works_out: Dict[str, Any] = {}
+            for work_id, work_row in works.items():
+                works_out[work_id] = {
+                    "tags": list(work_row.get("tags", [])),
+                    "updated_at_utc": now_utc,
+                }
+            series_row["works"] = works_out
+        else:
+            series_row.pop("works", None)
+        series_row["updated_at_utc"] = now_utc
+        applied_series += 1
+
+    updated_payload["updated_at_utc"] = now_utc
+    stats = {
+        "applied_series": applied_series,
+        "skipped_series": skipped_series,
+        "overwritten_series": overwritten_series,
+        "conflict_count": int(preview.get("conflict_count") or 0),
+        "invalid_count": int(preview.get("invalid_count") or 0),
+        "missing_count": int(preview.get("missing_count") or 0),
+        "staged_series_count": int(preview.get("staged_series_count") or 0),
+    }
+    return updated_payload, stats
 
 
 def apply_registry_import(
@@ -1635,6 +1906,7 @@ class TagWriteServer(ThreadingHTTPServer):
         handler_cls,
         repo_root: Path,
         assignments_path: Path,
+        series_index_path: Path,
         registry_path: Path,
         aliases_path: Path,
         allowed_write_paths: set[Path],
@@ -1644,6 +1916,7 @@ class TagWriteServer(ThreadingHTTPServer):
         super().__init__(server_address, handler_cls)
         self.repo_root = repo_root.resolve()
         self.assignments_path = assignments_path
+        self.series_index_path = series_index_path
         self.registry_path = registry_path
         self.aliases_path = aliases_path
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
@@ -1670,6 +1943,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:  # noqa: N802
         if self.path not in {
             "/save-tags",
+            "/import-tag-assignments-preview",
+            "/import-tag-assignments",
             "/import-tag-registry",
             "/import-tag-aliases",
             "/delete-tag-alias",
@@ -1729,6 +2004,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self.path == "/save-tags":
                 self._handle_save_tags(allowed)
+                return
+            if self.path == "/import-tag-assignments-preview":
+                self._handle_import_tag_assignments(allowed, preview=True)
+                return
+            if self.path == "/import-tag-assignments":
+                self._handle_import_tag_assignments(allowed, preview=False)
                 return
             if self.path == "/import-tag-registry":
                 self._handle_import_tag_registry(allowed)
@@ -1884,6 +2165,96 @@ class Handler(BaseHTTPRequestHandler):
                 "mode": mode,
                 "dry_run": self.server.dry_run,
                 **stats,
+            },
+        )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_import_tag_assignments(self, allowed: Optional[str], preview: bool) -> None:
+        body = self._read_json_body()
+        import_assignments = sanitize_import_assignments_session(body.get("import_assignments"))
+        import_filename = sanitize_import_filename(body.get("import_filename"))
+        raw_resolutions = body.get("resolutions")
+        _ = body.get("client_time_utc")
+
+        resolutions: Dict[str, str] = {}
+        if raw_resolutions is not None:
+            if not isinstance(raw_resolutions, dict):
+                raise ValueError("resolutions must be an object")
+            for raw_series_id, raw_resolution in raw_resolutions.items():
+                series_id = str(raw_series_id or "").strip().lower()
+                if not series_id:
+                    continue
+                resolution = str(raw_resolution or "").strip().lower()
+                if resolution not in {"overwrite", "skip"}:
+                    raise ValueError(f"resolutions[{series_id}] must be overwrite or skip")
+                resolutions[series_id] = resolution
+
+        now_utc = utc_now()
+        existing_payload = load_assignments(self.server.assignments_path)
+        series_index_payload = load_series_index(self.server.series_index_path)
+        preview_payload = preview_assignment_import(existing_payload, import_assignments, series_index_payload)
+        summary_text = (
+            f"assignment import preview; staged {preview_payload['staged_series_count']}; "
+            f"apply {preview_payload['applicable_count']}; conflict {preview_payload['conflict_count']}; "
+            f"invalid {preview_payload['invalid_count']}; missing {preview_payload['missing_count']}"
+        )
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "updated_at_utc": now_utc,
+            "summary_text": summary_text,
+            "import_filename": import_filename,
+            **preview_payload,
+        }
+
+        if preview:
+            self.server.log_event(
+                "import_tag_assignments_preview",
+                {
+                    "staged_series_count": preview_payload["staged_series_count"],
+                    "applicable_count": preview_payload["applicable_count"],
+                    "conflict_count": preview_payload["conflict_count"],
+                    "invalid_count": preview_payload["invalid_count"],
+                    "missing_count": preview_payload["missing_count"],
+                    "dry_run": self.server.dry_run,
+                },
+            )
+            self._send_json(HTTPStatus.OK, response_payload, allowed)
+            return
+
+        updated_payload, apply_stats = apply_assignment_import(
+            existing_payload,
+            import_assignments,
+            preview_payload,
+            resolutions,
+            now_utc,
+        )
+        apply_summary_text = (
+            f"assignment import apply; staged {apply_stats['staged_series_count']}; "
+            f"applied {apply_stats['applied_series']}; skipped {apply_stats['skipped_series']}; "
+            f"overwritten {apply_stats['overwritten_series']}; conflicts {apply_stats['conflict_count']}; "
+            f"invalid {apply_stats['invalid_count']}; missing {apply_stats['missing_count']}"
+        )
+        response_payload["summary_text"] = apply_summary_text
+        response_payload.update(apply_stats)
+
+        target_path = self.server.assignments_path.resolve()
+        if not self.server.dry_run:
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            atomic_write(target_path, updated_payload, self.server.backups_dir)
+        else:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = {
+                "updated_at_utc": now_utc,
+                **apply_stats,
+            }
+
+        self.server.log_event(
+            "import_tag_assignments",
+            {
+                **apply_stats,
+                "dry_run": self.server.dry_run,
             },
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
@@ -2351,6 +2722,7 @@ def main() -> None:
     args = parse_args()
     repo_root = detect_repo_root(args.repo_root)
     assignments_path = (repo_root / ALLOWED_ASSIGNMENTS_REL_PATH).resolve()
+    series_index_path = (repo_root / SITE_SERIES_INDEX_REL_PATH).resolve()
     registry_path = (repo_root / ALLOWED_REGISTRY_REL_PATH).resolve()
     aliases_path = (repo_root / ALLOWED_ALIASES_REL_PATH).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
@@ -2361,6 +2733,7 @@ def main() -> None:
         Handler,
         repo_root=repo_root,
         assignments_path=assignments_path,
+        series_index_path=series_index_path,
         registry_path=registry_path,
         aliases_path=aliases_path,
         allowed_write_paths=allowed_paths,
@@ -2370,7 +2743,7 @@ def main() -> None:
     mode = "dry-run" if args.dry_run else "write"
     print(
         f"tag_write_server listening on http://127.0.0.1:{args.port} "
-        f"(mode={mode}, assignments={assignments_path}, registry={registry_path}, aliases={aliases_path}, backups={backups_dir})"
+        f"(mode={mode}, assignments={assignments_path}, series_index={series_index_path}, registry={registry_path}, aliases={aliases_path}, backups={backups_dir})"
     )
     server.log_event(
         "server_start",
@@ -2378,6 +2751,7 @@ def main() -> None:
             "port": args.port,
             "mode": mode,
             "assignments_path": str(assignments_path.relative_to(repo_root)),
+            "series_index_path": str(series_index_path.relative_to(repo_root)),
             "registry_path": str(registry_path.relative_to(repo_root)),
             "aliases_path": str(aliases_path.relative_to(repo_root)),
             "backups_dir": str(backups_dir.relative_to(repo_root)),

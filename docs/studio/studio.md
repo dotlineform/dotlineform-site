@@ -393,7 +393,7 @@ Save mode is probed at page load:
 
 - Health check against local save service (500ms timeout)
 - If available: `Save mode: Local server`
-- Else: `Save mode: Patch`
+- Else: `Save mode: Offline session`
 
 ### Local server mode
 
@@ -419,16 +419,25 @@ Save mode is probed at page load:
 - On success:
   - UI status message includes save timestamp
 - On failure:
-  - UI falls back to Patch mode and opens patch modal
+  - UI falls back to Offline session mode and stages the current normalized series row in browser storage
 - Local write operations are logged to `var/studio/logs/tag_write_server.log` (JSONL).
 
-### Patch mode
+### Offline session mode
 
-- Shows modal with:
-  - canonical resolved tag assignment payload
-  - patch guidance to paste under `series[series_id]` in `tag_assignments.json`
-  - delete guidance when the sanitized work delta is empty
-- Copy button uses `navigator.clipboard.writeText`
+- Editor stages the full normalized series row in browser `localStorage`
+- staged rows preserve full assignment objects:
+  - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "alias"?: "<alias>" }`
+- editor baseline advances after each offline stage so the page behaves like a normal save flow
+- local assignment changes are marked in-chip:
+  - `local` caption for added/modified assignments
+  - struck chip text plus `delete` caption for pending deletions
+- Series Tags page becomes the session hub for:
+  - session summary
+  - `Copy JSON`
+  - `Download JSON`
+  - `Clear session`
+  - assignment import preview/apply when the local server is available
+- import conflicts are handled per series, with `overwrite` or `skip`
 
 ## Data Files: Purpose and Governance
 
@@ -684,6 +693,7 @@ The Series Tags page (`/studio/series-tags/`) reads:
 
 - `assets/data/series_index.json` for the series list/title/link target
 - `assets/studio/data/tag_assignments.json` for assigned tags per series
+- browser offline-session data for staged assignment rows
 
 It then:
 
@@ -691,12 +701,14 @@ It then:
 - links each series title to its Series Tag Editor page (`/studio/series-tag-editor/?series=<series_id>`)
 - shows per-series status (RAG dot) using the same rules as Studio Series
 - renders assigned tags as color-coded pills
+- overlays staged local rows when present and marks `local` / `delete` chip state in the list
 - sorts tags alphabetically by label (fallback: tag id)
 - renders the group filter key above the list head using the shared Studio filter-row layout
 - group pills use `tag_groups.json` `description` as hover text (`title`)
 - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)
 - uses the shared Studio role/state contract for filter-button active state
+- owns the offline session strip for export, clear, and assignment import preview/apply
 
 ## Tag Groups Page
 

@@ -9,6 +9,13 @@ studio_page_doc: /docs/studio/pages/series-tags/
 
 <div class="seriesTagsPage">
   <div class="tagStudio__panel">
+    <section class="tagStudioToolbar seriesTagsSession" data-role="series-tags-session">
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-summary"></div>
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-actions"></div>
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-import"></div>
+      <div class="seriesTagsSession__review" data-role="series-tags-session-review"></div>
+      <p class="tagStudioToolbar__result" data-role="series-tags-session-result"></p>
+    </section>
     <div id="series-tags" data-role="series-tags"></div>
   </div>
 </div>

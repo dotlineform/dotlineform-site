@@ -194,13 +194,15 @@ Behavior:
   - `POST /mutate-tag-alias`
   - `POST /promote-tag-alias-preview`
   - `POST /promote-tag-alias`
+  - `POST /import-tag-assignments-preview`
+  - `POST /import-tag-assignments`
   - `POST /demote-tag-preview`
   - `POST /demote-tag`
   - `POST /mutate-tag-preview`
   - `POST /mutate-tag`
   - Tag Studio page probes `/health` and shows:
   - `Save mode: Local server` when available
-  - `Save mode: Patch` when unavailable (fallback to patch modal)
+  - `Save mode: Offline session` when unavailable or when a staged local row already exists for the current series
   - `POST /save-tags` expects assignment objects in `tags`:
     - series save payload: `{ "series_id": "<series>", "tags": [...] }`
     - work override save payload: `{ "series_id": "<series>", "work_id": "<work_id>", "keep_work": true|false, "tags": [...] }`
@@ -212,6 +214,9 @@ Behavior:
   - work override saves strip tags already inherited from `series[*].tags`
   - `keep_work: false` plus empty tags deletes `series[*].works[work_id]`
   - `keep_work: true` allows an explicit work row with `tags: []`
+  - offline-session staging stores full normalized series rows in browser `localStorage`, including optional historical `alias`
+  - Series Tags page can export that session as JSON or preview/apply it through the local server
+  - assignment import preview/apply compares full normalized rows, including `alias`, and resolves conflicts per series via `overwrite` or `skip`
 - Tag Registry page probes `/health` and shows:
   - `Import mode: Local server` when available
   - `Import mode: Patch` when unavailable (fallback to manual patch copy)

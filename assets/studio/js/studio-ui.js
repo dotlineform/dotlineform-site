@@ -78,13 +78,60 @@ export const seriesTagEditorUi = createUiContract({
     groupRowLabel: "tagStudioGroupRow__label",
     groupRowChips: "tagStudioGroupRow__chips",
     chip: "tagStudio__chip",
+    chipText: "tagStudio__chipText",
     chipInherited: "tagStudio__chip--inherited",
     chipTag: "tagStudio__chipTag",
+    chipTagDelete: "tagStudio__chipTag--delete",
+    chipCaption: "tagStudio__chipCaption",
+    chipCaptionLocal: "tagStudio__chipCaption--local",
+    chipCaptionDelete: "tagStudio__chipCaption--delete",
     chipGroupPrefix: "tagStudio__chip--",
     weightDot: "tagStudio__weightDot",
     weightDotLow: "tagStudio__weightDot--low",
     weightDotMid: "tagStudio__weightDot--mid",
     weightDotHigh: "tagStudio__weightDot--high"
+  },
+  state: {
+    active: "active",
+    success: "success",
+    warn: "warn",
+    error: "error"
+  }
+});
+
+export const seriesTagsUi = createUiContract({
+  role: {
+    pageRoot: "series-tags",
+    session: "series-tags-session",
+    sessionSummary: "series-tags-session-summary",
+    sessionActions: "series-tags-session-actions",
+    sessionImport: "series-tags-session-import",
+    sessionReview: "series-tags-session-review",
+    sessionResult: "series-tags-session-result"
+  },
+  className: {
+    error: "tagStudioError",
+    empty: "tagStudio__empty",
+    chip: "tagStudio__chip",
+    chipText: "tagStudio__chipText",
+    chipTag: "tagStudio__chipTag",
+    chipCaption: "tagStudio__chipCaption",
+    chipCaptionLocal: "tagStudio__chipCaption--local",
+    chipCaptionDelete: "tagStudio__chipCaption--delete",
+    chipTagDelete: "tagStudio__chipTag--delete",
+    chipGroupPrefix: "tagStudio__chip--",
+    keyPill: "tagStudio__keyPill",
+    keyInfoButton: "tagStudio__keyInfoBtn",
+    allFilterButton: "tagStudioFilters__allBtn",
+    groupFilterButton: "tagStudioFilters__groupBtn",
+    sortButton: "tagStudioList__sortBtn",
+    filters: "tagStudioFilters seriesTags__filters",
+    sessionLabel: "seriesTagsSession__label",
+    sessionValue: "seriesTagsSession__value",
+    sessionAction: "seriesTagsSession__action",
+    sessionReviewItem: "seriesTagsSession__reviewItem",
+    sessionReviewMeta: "seriesTagsSession__reviewMeta",
+    sessionReviewSelect: "seriesTagsSession__reviewSelect"
   },
   state: {
     active: "active",

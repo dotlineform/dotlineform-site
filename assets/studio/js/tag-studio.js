@@ -37,6 +37,15 @@ import {
   workStateMapToObject
 } from "./tag-studio-domain.js";
 import {
+  equalOfflineSeriesRows,
+  getOfflineAssignmentsSeriesEntry,
+  normalizeOfflineSeriesRow,
+  readOfflineAssignmentsSession,
+  removeOfflineAssignmentsSeriesEntry,
+  upsertOfflineAssignmentsSeriesEntry,
+  writeOfflineAssignmentsSession
+} from "./tag-assignments-offline.js";
+import {
   buildPatchSnippet,
   buildSaveModeText as buildTagStudioSaveModeText,
   buildTagSaveSuccessMessage,
@@ -92,6 +101,7 @@ async function initTagStudio() {
       loadSiteSeriesIndexJson(config),
       loadSiteWorksIndexJson(config)
     ]);
+    const offlineSession = readOfflineAssignmentsSession();
 
     const state = buildState(
       mount,
@@ -101,7 +111,8 @@ async function initTagStudio() {
       assignmentsJson,
       seriesIndexJson,
       worksIndexJson,
-      config
+      config,
+      offlineSession
     );
     restoreSelectionFromQuery(state);
     renderShell(state);
@@ -121,7 +132,7 @@ async function initTagStudio() {
   }
 }
 
-function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson, config) {
+function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson, seriesIndexJson, worksIndexJson, config, offlineSession) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const tagsById = new Map();
   const slugMap = new Map();
@@ -166,7 +177,9 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
   const seriesWorkIds = new Set(seriesWorkOptions.map((item) => item.workId));
 
   const assignmentsSeries = assignmentsJson && typeof assignmentsJson.series === "object" ? assignmentsJson.series : {};
-  const seriesAssignment = getSeriesAssignment(assignmentsSeries, seriesId);
+  const repoSeriesAssignment = getSeriesAssignment(assignmentsSeries, seriesId);
+  const offlineSeriesEntry = getOfflineAssignmentsSeriesEntry(offlineSession, seriesId);
+  const seriesAssignment = offlineSeriesEntry ? offlineSeriesEntry.staged_row : repoSeriesAssignment;
   const seriesEntries = createResolvedEntries(
     normalizeAssignmentTags(seriesAssignment && seriesAssignment.tags),
     tagsById
@@ -215,13 +228,45 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
     statusText: "",
     statusKind: "",
     refs: null,
+    offlineSession,
+    hasOfflineStagedSeries: Boolean(offlineSeriesEntry),
+    offlineBaseSeriesRow: offlineSeriesEntry && offlineSeriesEntry.base_row_snapshot
+      ? normalizeOfflineSeriesRow(offlineSeriesEntry.base_row_snapshot)
+      : normalizeOfflineSeriesRow(repoSeriesAssignment),
+    offlineBaseSeriesUpdatedAt: offlineSeriesEntry
+      ? String(offlineSeriesEntry.base_series_updated_at_utc || "")
+      : String(repoSeriesAssignment && repoSeriesAssignment.updated_at_utc || ""),
+    offlineAutosaveTimer: 0,
     modalSnippet: "",
-    saveMode: "patch"
+    saveMode: "offline",
+    saveModeResolved: false
   };
 }
 
 function buildStateDiff(state) {
   return buildEditorStateDiff(state, getOrderedSelectedWorkIds(state));
+}
+
+function buildPersistedSeriesRow(diff) {
+  const row = {
+    tags: normalizeAssignmentRows(diff && diff.nextSeriesRows)
+  };
+  const works = {};
+  const nextWorkStateById = diff && diff.nextWorkStateById instanceof Map ? diff.nextWorkStateById : new Map();
+
+  for (const [workId, tags] of Array.from(nextWorkStateById.entries()).sort((a, b) => a[0].localeCompare(b[0]))) {
+    works[workId] = {
+      tags: normalizeAssignmentRows(tags)
+    };
+  }
+
+  if (Object.keys(works).length) row.works = works;
+  return row;
+}
+
+function applyPersistedBaseline(state, diff) {
+  state.baselineSeriesRows = normalizeAssignmentRows(diff.nextSeriesRows);
+  state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
 }
 
 function restoreSelectionFromQuery(state) {
@@ -281,7 +326,7 @@ function renderShell(state) {
   const tagInputPlaceholder = studioText(state.config, "tag_input_placeholder", "tag slug or alias");
   const addButtonLabel = studioText(state.config, "add_button", "Add");
   const saveButtonLabel = studioText(state.config, "save_button", "Save Tags");
-  const saveModeLabel = buildTagStudioSaveModeText(state.config, "patch", studioText);
+  const saveModeLabel = buildTagStudioSaveModeText(state.config, "offline", studioText);
   const modalTitle = studioText(state.config, "modal_title", "Tag Assignment Patch Preview");
   const modalResolvedLabel = studioText(state.config, "modal_resolved_label", "Resolved tag assignment payload");
   const modalPatchGuidanceLabel = studioText(state.config, "modal_patch_guidance_label", "Patch guidance for tag_assignments.json");
@@ -844,6 +889,35 @@ function renderAll(state) {
   renderSaveMode(state);
   renderSaveState(state);
   broadcastSelectedWorkChange(state);
+  syncOfflineAutosave(state);
+}
+
+function syncOfflineAutosave(state) {
+  if (!state.saveModeResolved || state.saveMode !== "offline") {
+    clearOfflineAutosave(state);
+    return;
+  }
+
+  const diff = buildStateDiff(state);
+  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
+    clearOfflineAutosave(state);
+    return;
+  }
+
+  if (state.offlineAutosaveTimer) {
+    window.clearTimeout(state.offlineAutosaveTimer);
+  }
+
+  state.offlineAutosaveTimer = window.setTimeout(() => {
+    state.offlineAutosaveTimer = 0;
+    stageOfflineState(state, { manual: false });
+  }, 700);
+}
+
+function clearOfflineAutosave(state) {
+  if (!state.offlineAutosaveTimer) return;
+  window.clearTimeout(state.offlineAutosaveTimer);
+  state.offlineAutosaveTimer = 0;
 }
 
 function renderSelectedWork(state) {
@@ -1082,11 +1156,89 @@ function buildAliasOptions(aliases, tagsById) {
   return out;
 }
 
+function createEmptyMarkerState() {
+  return {
+    current: new Map(),
+    deleted: []
+  };
+}
+
+function getOfflineBaseWorkRows(state, workId) {
+  const normalizedWorkId = normalizeWorkId(workId);
+  const works = state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.works && typeof state.offlineBaseSeriesRow.works === "object"
+    ? state.offlineBaseSeriesRow.works
+    : {};
+  const row = normalizedWorkId && works[normalizedWorkId] && typeof works[normalizedWorkId] === "object"
+    ? works[normalizedWorkId]
+    : null;
+  return normalizeAssignmentRows(row && row.tags);
+}
+
+function buildEntryRow(entry) {
+  if (!entry || !entry.canonicalId) return null;
+  const row = {
+    tag_id: normalize(entry.canonicalId),
+    w_manual: normalizeManualWeight(entry.wManual, DEFAULT_WEIGHT)
+  };
+  if (entry.alias) row.alias = normalize(entry.alias);
+  return row;
+}
+
+function equalAssignmentTagRow(left, right) {
+  if (!left || !right) return false;
+  return left.tag_id === right.tag_id
+    && left.w_manual === right.w_manual
+    && String(left.alias || "") === String(right.alias || "");
+}
+
+function makeHistoricalEntry(state, row, entryId) {
+  if (!row || !row.tag_id) return null;
+  const tag = state.tagsById.get(normalize(row.tag_id));
+  if (!tag) return null;
+  return makeResolvedEntry(entryId, row.tag_id, tag, row.w_manual, row.alias);
+}
+
+function buildEntryMarkerState(state, entries, baseRows, scopeKey) {
+  const current = new Map();
+  const deleted = [];
+  const normalizedBaseRows = normalizeAssignmentRows(baseRows);
+  const baseByTagId = new Map(normalizedBaseRows.map((row) => [row.tag_id, row]));
+  const currentTagIds = new Set();
+
+  for (const entry of Array.isArray(entries) ? entries : []) {
+    const currentRow = buildEntryRow(entry);
+    if (!currentRow) continue;
+    currentTagIds.add(currentRow.tag_id);
+    const baseRow = baseByTagId.get(currentRow.tag_id) || null;
+    if (!baseRow || !equalAssignmentTagRow(baseRow, currentRow)) {
+      current.set(currentRow.tag_id, "local");
+    }
+  }
+
+  for (const row of normalizedBaseRows) {
+    if (currentTagIds.has(row.tag_id)) continue;
+    const deletedEntry = makeHistoricalEntry(state, row, `${scopeKey}:${row.tag_id}`);
+    if (deletedEntry) deleted.push(deletedEntry);
+  }
+  deleted.sort(compareEntries);
+
+  return { current, deleted };
+}
+
 function renderGroups(state) {
   const inheritedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
   for (const entry of state.seriesEntries) {
     if (!inheritedByGroup.has(entry.group)) continue;
     inheritedByGroup.get(entry.group).push(entry);
+  }
+  const showOfflineMarkers = state.saveMode !== "post";
+  const seriesMarkerState = showOfflineMarkers
+    ? buildEntryMarkerState(state, state.seriesEntries, state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.tags, "series")
+    : createEmptyMarkerState();
+  const inheritedDeletedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
+  for (const entry of seriesMarkerState.deleted) {
+    if (!inheritedDeletedByGroup.has(entry.group)) continue;
+    inheritedDeletedByGroup.get(entry.group).push(entry);
   }
 
   const overrideByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
@@ -1094,21 +1246,51 @@ function renderGroups(state) {
     if (!overrideByGroup.has(entry.group)) continue;
     overrideByGroup.get(entry.group).push(entry);
   }
+  const selectedWorkId = state.selectedWorkId;
+  const overrideMarkerState = showOfflineMarkers && selectedWorkId
+    ? buildEntryMarkerState(state, getSelectedWorkEntries(state), getOfflineBaseWorkRows(state, selectedWorkId), `work:${selectedWorkId}`)
+    : createEmptyMarkerState();
+  const overrideDeletedByGroup = new Map(STUDIO_GROUPS.map((group) => [group, []]));
+  for (const entry of overrideMarkerState.deleted) {
+    if (!overrideDeletedByGroup.has(entry.group)) continue;
+    overrideDeletedByGroup.get(entry.group).push(entry);
+  }
 
   for (const group of STUDIO_GROUPS) {
     inheritedByGroup.get(group).sort(compareEntries);
+    inheritedDeletedByGroup.get(group).sort(compareEntries);
     overrideByGroup.get(group).sort(compareEntries);
+    overrideDeletedByGroup.get(group).sort(compareEntries);
   }
 
-  const selectedWorkId = state.selectedWorkId;
   const rowsHtml = STUDIO_GROUPS.map((group) => {
     const inherited = inheritedByGroup.get(group) || [];
+    const inheritedDeleted = inheritedDeletedByGroup.get(group) || [];
     const overrides = overrideByGroup.get(group) || [];
+    const overrideDeleted = overrideDeletedByGroup.get(group) || [];
     const inheritedHtml = selectedWorkId
-      ? inherited.map((entry) => renderInheritedChip(entry, false)).join("")
-      : inherited.map((entry) => renderSeriesEditableChip(entry)).join("");
-    const overrideHtml = overrides.map((entry) => renderOverrideChip(entry)).join("");
-    const emptyHtml = (!inheritedHtml && !overrideHtml)
+      ? inherited.map((entry) => renderInheritedChip(state, entry, false, seriesMarkerState.current.get(entry.canonicalId) || "")).join("")
+      : inherited.map((entry) => renderSeriesEditableChip(state, entry, seriesMarkerState.current.get(entry.canonicalId) || "")).join("");
+    const inheritedDeletedHtml = selectedWorkId
+      ? inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
+        inherited: true,
+        titleKey: "inherited_tag_title",
+        titleFallback: "Inherited from series: {tag_id}"
+      })).join("")
+      : inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
+        inherited: false,
+        titleKey: "series_tag_title",
+        titleFallback: "Series tag {tag_id}"
+      })).join("");
+    const overrideHtml = overrides
+      .map((entry) => renderOverrideChip(state, entry, overrideMarkerState.current.get(entry.canonicalId) || ""))
+      .join("");
+    const overrideDeletedHtml = overrideDeleted.map((entry) => renderDeletedChip(state, entry, {
+      inherited: false,
+      titleKey: "work_override_title",
+      titleFallback: "Work override {tag_id}"
+    })).join("");
+    const emptyHtml = (!inheritedHtml && !inheritedDeletedHtml && !overrideHtml && !overrideDeletedHtml)
       ? `<span class="${UI_CLASS.empty}">${escapeHtml(studioText(state.config, "empty_state", "none"))}</span>`
       : "";
     return `
@@ -1116,7 +1298,9 @@ function renderGroups(state) {
         <span class="${classNames(UI_CLASS.groupRowLabel, UI_CLASS.chip, chipGroupClass(group))}">${escapeHtml(group)}</span>
         <div class="${UI_CLASS.groupRowChips}">
           ${inheritedHtml}
+          ${inheritedDeletedHtml}
           ${overrideHtml}
+          ${overrideDeletedHtml}
           ${emptyHtml}
         </div>
       </div>
@@ -1126,61 +1310,90 @@ function renderGroups(state) {
   state.refs.groups.innerHTML = `<div class="${UI_CLASS.groups}">${rowsHtml}</div>`;
 }
 
-function renderSeriesEditableChip(entry) {
+function renderChipCaption(state, marker) {
+  if (!marker) return "";
+  const key = marker === "delete" ? "chip_caption_delete" : "chip_caption_local";
+  const fallback = marker === "delete" ? "delete" : "local";
+  const className = marker === "delete" ? UI_CLASS.chipCaptionDelete : UI_CLASS.chipCaptionLocal;
+  return `<span class="${classNames(UI_CLASS.chipCaption, className)}">${escapeHtml(studioText(state.config, key, fallback))}</span>`;
+}
+
+function renderChipLabel(state, entry, marker) {
   return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${UI_CLASS.chipText}">
+      <span class="${classNames(UI_CLASS.chipTag, marker === "delete" ? UI_CLASS.chipTagDelete : "")}">${escapeHtml(entry.label)}</span>
+      ${renderChipCaption(state, marker)}
+    </span>
+  `;
+}
+
+function renderSeriesEditableChip(state, entry, marker = "") {
+  return `
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
         class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
         data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(null, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(null, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
-      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
+      ${renderChipLabel(state, entry, marker)}
       <button
         type="button"
         class="${UI_CLASS.chipRemove}"
         data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(null, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+        aria-label="${escapeHtml(studioText(state.config, "remove_series_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
       >x</button>
     </span>
   `;
 }
 
-function renderInheritedChip(entry, useColorChip) {
+function renderInheritedChip(state, entry, useColorChip, marker = "") {
   if (useColorChip) {
     return `
-      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
+      <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "series_tag_title", "Series tag {tag_id}", { tag_id: entry.canonicalId }))}">
         <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
-        <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
+        ${renderChipLabel(state, entry, marker)}
       </span>
     `;
   }
   return `
-    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(studioText(null, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, UI_CLASS.chipInherited)}" title="${escapeHtml(studioText(state.config, "inherited_tag_title", "Inherited from series: {tag_id}", { tag_id: entry.canonicalId }))}">
       <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
-      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
+      ${renderChipLabel(state, entry, marker)}
     </span>
   `;
 }
 
-function renderOverrideChip(entry) {
+function renderOverrideChip(state, entry, marker = "") {
   return `
-    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(null, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
+    <span class="${classNames(UI_CLASS.chip, chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, "work_override_title", "Work override {tag_id}", { tag_id: entry.canonicalId }))}">
       <button
         type="button"
         class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}"
         data-cycle-weight-entry-id="${entry.entryId}"
-        title="${escapeHtml(studioText(null, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
-        aria-label="${escapeHtml(studioText(null, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        title="${escapeHtml(studioText(state.config, "weight_button_title", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
+        aria-label="${escapeHtml(studioText(state.config, "weight_button_aria_label", "w_manual {weight}", { weight: entry.wManual.toFixed(1) }))}"
       ></button>
-      <span class="${UI_CLASS.chipTag}">${escapeHtml(entry.label)}</span>
+      ${renderChipLabel(state, entry, marker)}
       <button
         type="button"
         class="${UI_CLASS.chipRemove}"
         data-remove-entry-id="${entry.entryId}"
-        aria-label="${escapeHtml(studioText(null, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
+        aria-label="${escapeHtml(studioText(state.config, "remove_work_tag_aria_label", "Remove {tag_id}", { tag_id: entry.canonicalId }))}"
       >x</button>
+    </span>
+  `;
+}
+
+function renderDeletedChip(state, entry, options = {}) {
+  const inherited = Boolean(options.inherited);
+  const titleKey = options.titleKey || "series_tag_title";
+  const titleFallback = options.titleFallback || "Series tag {tag_id}";
+  return `
+    <span class="${classNames(UI_CLASS.chip, inherited ? UI_CLASS.chipInherited : chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, titleKey, titleFallback, { tag_id: entry.canonicalId }))}">
+      <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
+      ${renderChipLabel(state, entry, "delete")}
     </span>
   `;
 }
@@ -1218,8 +1431,69 @@ function computeMetrics(state) {
 
 async function probeSaveMode(state) {
   const ok = await probeStudioHealth(500);
-  state.saveMode = ok ? "post" : "patch";
+  state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
+  state.saveModeResolved = true;
   renderSaveMode(state);
+  renderAll(state);
+}
+
+function stageOfflineState(state, options = {}) {
+  clearOfflineAutosave(state);
+
+  const diff = buildStateDiff(state);
+  if (!diff.seriesChanged && !diff.changedWorkIds.length) {
+    if (options.manual) {
+      setStatus(state, "warn", studioText(state.config, "save_status_no_changes", "No changes to save."));
+      renderStatus(state);
+    }
+    return false;
+  }
+
+  const stagedAt = utcTimestamp();
+  const stagedRow = buildPersistedSeriesRow(diff);
+  const baseRow = normalizeOfflineSeriesRow(state.offlineBaseSeriesRow);
+  let session = readOfflineAssignmentsSession();
+  let seriesCleared = false;
+
+  if (equalOfflineSeriesRows(stagedRow, baseRow)) {
+    session = removeOfflineAssignmentsSeriesEntry(session, state.seriesId, stagedAt);
+    seriesCleared = true;
+  } else {
+    session = upsertOfflineAssignmentsSeriesEntry(session, state.seriesId, {
+      base_series_updated_at_utc: state.offlineBaseSeriesUpdatedAt,
+      base_row_snapshot: baseRow,
+      staged_row: stagedRow,
+      staged_at_utc: stagedAt
+    }, stagedAt);
+  }
+
+  state.offlineSession = writeOfflineAssignmentsSession(session);
+  state.hasOfflineStagedSeries = !seriesCleared;
+  applyPersistedBaseline(state, diff);
+
+  if (options.manual) {
+    const removedCount = diff.changedWorkIds.filter((workId) => !diff.nextWorkStateById.has(workId)).length;
+    const savedCount = diff.changedWorkIds.length - removedCount;
+    setStatus(
+      state,
+      "success",
+      buildTagSaveSuccessMessage(
+        state.config,
+        { seriesSaved: diff.seriesChanged, savedCount, removedCount, savedAt: stagedAt },
+        studioText
+      )
+    );
+  }
+
+  setSaveResult(
+    state,
+    "success",
+    seriesCleared
+      ? studioText(state.config, "save_result_offline_cleared", "Series matches repo data. Offline session entry cleared.")
+      : studioText(state.config, "save_result_offline_staged", "Changes are staged in the offline session.")
+  );
+  renderAll(state);
+  return true;
 }
 
 async function handleSave(state) {
@@ -1256,22 +1530,22 @@ async function handleSave(state) {
       );
       setSaveResult(state, "", "");
       renderStatus(state);
-      state.baselineSeriesRows = normalizeAssignmentRows(diff.nextSeriesRows);
-      state.baselineWorkStateById = cloneWorkStateMap(diff.nextWorkStateById);
+      applyPersistedBaseline(state, diff);
       renderAll(state);
       return;
     } catch (error) {
-      state.saveMode = "patch";
+      state.saveMode = "offline";
+      state.saveModeResolved = true;
       renderSaveMode(state);
-      setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to Patch mode."));
-      setSaveResult(state, "error", studioText(state.config, "save_result_local_failed", "Local server save failed. Showing patch fallback."));
-      renderStatus(state);
-      openSaveModal(state);
+      stageOfflineState(state, { manual: false });
+      setStatus(state, "error", studioText(state.config, "save_status_local_failed", "Local save failed. Switched to offline mode."));
+      setSaveResult(state, "success", studioText(state.config, "save_result_local_failed", "Local server save failed. Changes are now staged in the offline session."));
+      renderAll(state);
       return;
     }
   }
 
-  openSaveModal(state);
+  stageOfflineState(state, { manual: true });
 }
 
 function openSaveModal(state) {

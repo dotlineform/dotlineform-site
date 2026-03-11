@@ -33,6 +33,7 @@ Supporting modules:
 
 - `assets/studio/js/studio-ui.js`
 - `assets/studio/js/tag-studio-domain.js`
+- `assets/studio/js/tag-assignments-offline.js`
 - `assets/studio/js/tag-studio-save.js`
 
 Top-level structure in the page template:
@@ -225,6 +226,7 @@ Meaning:
 - the group-name anchor for each row now uses the same coloured pill treatment as other Studio group-name displays
 - with no active work, these rows are editable series tags
 - with an active work, inherited series tags become monochrome context chips and work override tags remain editable
+- in offline mode, locally changed assignments show a caption below the chip and pending deletions remain visible as struck chips with a `delete` caption
 
 ### Tag input row
 
@@ -300,11 +302,10 @@ JS owner:
 
 - status rendering helpers in `assets/studio/js/tag-studio.js`
 
-### Save / patch modal
+### Manual patch modal
 
 User-facing name:
 
-- save modal
 - patch preview modal
 
 DOM / CSS:
@@ -319,6 +320,11 @@ JS owner:
 
 - modal shell in `renderShell(state)`
 - open/close/copy handling in `assets/studio/js/tag-studio.js`
+
+Meaning:
+
+- fallback/manual inspection modal for resolved tag-assignment payloads and patch guidance
+- not the primary offline-save workflow
 
 ## UI Layout and Styling
 
@@ -386,6 +392,7 @@ Key editor state areas:
 - resolved series entries
 - per-work entries
 - save mode
+- offline session baseline and staged-series metadata
 - modal snippet/status fields
 
 Business/state helpers live in:
@@ -434,7 +441,8 @@ Business responsibilities include:
 - work-state diffing
 - persisted assignment shape conversion
 - save/persist mode handling
-- patch snippet generation
+- offline-session staging and baseline overlay
+- patch snippet generation for fallback/manual inspection only
 
 ## Change Guidance
 
