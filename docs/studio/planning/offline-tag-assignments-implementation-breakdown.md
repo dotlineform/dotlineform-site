@@ -33,6 +33,7 @@ Responsibilities:
 - export JSON generation
 - imported offline JSON parsing
 - comparison between current repo row and stored base snapshot
+- preserve full normalized assignment rows, including optional `alias` metadata
 
 Keep out of this module:
 
@@ -61,12 +62,14 @@ Responsibilities in `tag-studio.js`:
 - advance baseline after offline stage
 - carry local assignment-state metadata into the render layer
 - preserve the current `post` save path
+- preserve optional `alias` metadata through overlay, diffing, staging, and rehydration
 
 Responsibilities in `tag-studio-domain.js`:
 
 - helpers for deriving local-vs-repo assignment state
 - stable normalized row comparisons for series tags and work rows
 - helpers required for pending-delete display state
+- treat assignment equality as full row equality, including optional `alias`
 
 Responsibilities in `tag-studio-save.js`:
 
@@ -91,6 +94,10 @@ Responsibilities:
 - render caption `local` for locally added or modified assignments
 - render struck-through chip text plus caption `delete` for staged deletions
 - define shared Studio classes or modifiers for these chip states
+
+Important note:
+
+- local-modified state is assignment-state based, so alias-only changes still count as local changes even when the visible chip text is unchanged
 
 Locked styling rule:
 
@@ -132,6 +139,7 @@ Responsibilities:
 - validate imported offline session JSON
 - validate series ids and work ids against current assignment and site structure
 - compare imported base snapshot with current repo row
+- accept and preserve optional `alias` values on assignment rows
 - return preview statuses such as `apply`, `conflict`, `invalid`, and `missing`
 - apply approved series rows atomically
 - update timestamps and backups consistently with existing writer behavior
@@ -142,6 +150,7 @@ Likely helper additions:
 - normalized assignment comparison helpers in Python
 - import payload validation helpers
 - import summary builders
+- alias-aware assignment row normalization helpers where needed
 
 ## Batch 6: Series Tags Import UI
 

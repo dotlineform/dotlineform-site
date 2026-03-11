@@ -55,6 +55,12 @@ Per-series staged data includes:
 
 The staged payload stores final normalized series rows, not incremental patch operations.
 
+Assignment rows in staged storage, export payloads, and import payloads must preserve the `tag_assignments.json` object schema:
+
+- `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "alias"?: "<alias>" }`
+
+The optional `alias` field is historical metadata only, but it must round-trip unchanged through offline staging, export, import, and conflict detection.
+
 ## Session Hub
 
 The Series Tags page owns the offline session controls.
@@ -99,6 +105,8 @@ Locked styling rules:
 
 These markers indicate local assignment state, not non-canonical tags. Canonicality still comes from the tag registry.
 
+Local assignment state is determined by persisted assignment-row equality, not only by visible chip text. An alias-only difference still counts as a local staged modification even though alias metadata is not shown in the UI.
+
 ## Import and Conflict Handling
 
 A new assignment import flow is added to the local write server.
@@ -108,7 +116,7 @@ Conflict model:
 - conflict granularity is per series row
 - no tag-level merge logic in v1
 - if the current repo row matches the stored base snapshot, the staged row can auto-apply
-- if the current repo row differs from the stored base snapshot, that series is a conflict
+- if the current repo row differs from the stored base snapshot, including optional hidden metadata such as `alias`, that series is a conflict
 - for each conflicting series, the user chooses `overwrite` or `skip`
 - `overwrite` means full replacement of the target series row from staged data
 - `skip` leaves the repo row unchanged
@@ -151,4 +159,3 @@ This includes:
 - `localStorage` is suitable for drafts, not durable archival storage
 - assignment import preview and apply add meaningful server and UI scope
 - series-level conflict handling is deliberately simpler than merge logic
-
