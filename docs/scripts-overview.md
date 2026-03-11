@@ -204,7 +204,8 @@ Behavior:
   - `POST /save-tags` expects assignment objects in `tags`:
     - series save payload: `{ "series_id": "<series>", "tags": [...] }`
     - work override save payload: `{ "series_id": "<series>", "work_id": "<work_id>", "keep_work": true|false, "tags": [...] }`
-    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
+    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "alias"?: "<alias>" }`
+    - `alias` is optional historical data only; it records that the tag was chosen from an alias match and is not treated as canonical
   - save writes `assets/studio/data/tag_assignments.json` with object-only tag rows (no string tags)
   - save is diff-based in the Series Tag Editor: the UI compares current series/work state against the last loaded/saved baseline and sends one `/save-tags` request for the series row when needed plus one request per changed work row
   - when multiple work pills are selected in the Series Tag Editor, the active work's current override set is used as the persisted state for all selected work pills

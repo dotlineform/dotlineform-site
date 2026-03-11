@@ -170,11 +170,23 @@ def sanitize_manual_weight(raw_weight: Any, field_name: str, strict: bool = True
     return closest
 
 
-def build_assignment_tag(tag_id: str, w_manual: float) -> Dict[str, Any]:
-    return {
+def build_assignment_tag(tag_id: str, w_manual: float, alias: str = "") -> Dict[str, Any]:
+    row = {
         "tag_id": tag_id,
         "w_manual": sanitize_manual_weight(w_manual, "w_manual", strict=False),
     }
+    if alias:
+        row["alias"] = alias
+    return row
+
+
+def sanitize_assignment_alias(raw_alias: Any, field_name: str) -> str:
+    alias = str(raw_alias or "").strip().lower()
+    if not alias:
+        raise ValueError(f"{field_name} must not be empty")
+    if not ALIAS_KEY_RE.fullmatch(alias):
+        raise ValueError(f"{field_name} must be slug-safe")
+    return alias
 
 
 def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False) -> Optional[Dict[str, Any]]:
@@ -199,7 +211,10 @@ def normalize_assignment_tag(raw_tag: Any, field_name: str, strict: bool = False
             raise
         return None
     w_manual = sanitize_manual_weight(raw_tag.get("w_manual"), f"{field_name}.w_manual", strict=strict)
-    return build_assignment_tag(tag_id, w_manual)
+    alias = ""
+    if "alias" in raw_tag and raw_tag.get("alias") is not None:
+        alias = sanitize_assignment_alias(raw_tag.get("alias"), f"{field_name}.alias")
+    return build_assignment_tag(tag_id, w_manual, alias)
 
 
 def sanitize_assignment_tags(raw_tags: Any, field_name: str = "tags", strict: bool = True) -> list[Dict[str, Any]]:

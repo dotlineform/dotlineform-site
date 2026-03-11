@@ -108,20 +108,22 @@ export function createResolvedEntries(rows, tagsById, nextEntryId = 1) {
   for (const row of rows) {
     const tag = tagsById.get(row.tagId);
     if (!tag) continue;
-    entries.push(makeResolvedEntry(cursor++, row.tagId, tag, row.wManual));
+    entries.push(makeResolvedEntry(cursor++, row.tagId, tag, row.wManual, row.alias));
   }
   return { entries, nextEntryId: cursor };
 }
 
-export function makeResolvedEntry(entryId, rawInput, tag, wManual) {
+export function makeResolvedEntry(entryId, rawInput, tag, wManual, alias = "") {
   const manual = normalizeManualWeight(wManual, DEFAULT_WEIGHT);
+  const normalizedAlias = normalize(alias);
   return {
     entryId,
     rawInput: String(rawInput || "").trim(),
     canonicalId: normalize(tag.tag_id),
     group: normalize(tag.group),
     label: String(tag.label || tag.tag_id).trim(),
-    wManual: manual
+    wManual: manual,
+    alias: normalizedAlias
   };
 }
 
@@ -133,10 +135,12 @@ export function getCanonicalTagAssignments(state, inheritedTagIds, selectedEntri
     if (!entry || !entry.canonicalId) continue;
     if (inheritedTagIds.has(entry.canonicalId) || seen.has(entry.canonicalId)) continue;
     seen.add(entry.canonicalId);
-    tags.push({
+    const row = {
       tag_id: entry.canonicalId,
       w_manual: entry.wManual
-    });
+    };
+    if (entry.alias) row.alias = entry.alias;
+    tags.push(row);
   }
 
   tags.sort(compareAssignmentRows);
@@ -156,10 +160,12 @@ export function getCanonicalTagAssignmentsForWork(state, workId, inheritedTagIds
     if (!entry || !entry.canonicalId) continue;
     if (inheritedTagIds.has(entry.canonicalId) || seen.has(entry.canonicalId)) continue;
     seen.add(entry.canonicalId);
-    tags.push({
+    const row = {
       tag_id: entry.canonicalId,
       w_manual: entry.wManual
-    });
+    };
+    if (entry.alias) row.alias = entry.alias;
+    tags.push(row);
   }
 
   return normalizeAssignmentRows(tags);
@@ -256,10 +262,13 @@ export function normalizeAssignmentRows(rows) {
     const tagId = normalize(raw.tag_id || raw.tagId);
     if (!tagId || seen.has(tagId)) continue;
     seen.add(tagId);
-    out.push({
+    const row = {
       tag_id: tagId,
       w_manual: normalizeManualWeight(raw.w_manual ?? raw.wManual, DEFAULT_WEIGHT)
-    });
+    };
+    const alias = normalize(raw.alias);
+    if (alias) row.alias = alias;
+    out.push(row);
   }
   out.sort(compareAssignmentRows);
   return out;
@@ -272,6 +281,7 @@ export function equalAssignmentRows(left, right) {
   for (let index = 0; index < a.length; index += 1) {
     if (a[index].tag_id !== b[index].tag_id) return false;
     if (a[index].w_manual !== b[index].w_manual) return false;
+    if ((a[index].alias || "") !== (b[index].alias || "")) return false;
   }
   return true;
 }
@@ -333,10 +343,13 @@ export function normalizeAssignmentTags(rawTags) {
     const tagId = normalize(raw.tag_id);
     if (!tagId || seen.has(tagId)) continue;
     seen.add(tagId);
-    out.push({
+    const row = {
       tagId,
       wManual: normalizeManualWeight(raw.w_manual, DEFAULT_WEIGHT)
-    });
+    };
+    const alias = normalize(raw.alias);
+    if (alias) row.alias = alias;
+    out.push(row);
   }
   return out;
 }

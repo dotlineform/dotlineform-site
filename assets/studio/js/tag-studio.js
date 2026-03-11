@@ -432,7 +432,7 @@ function wireEvents(state) {
       const tagId = normalize(tagButton.getAttribute("data-popup-tag-id"));
       const tag = state.tagsById.get(tagId);
       if (!tag) return;
-      addResolvedTag(state, tag, tag.slug || tag.tag_id);
+      addResolvedTag(state, tag, { rawInput: tag.slug || tag.tag_id });
       state.refs.input.value = "";
       hidePopup(state);
       renderAll(state);
@@ -445,7 +445,10 @@ function wireEvents(state) {
       const tag = state.tagsById.get(tagId);
       if (!tag) return;
       const aliasSource = normalize(aliasTargetButton.getAttribute("data-popup-alias-source"));
-      addResolvedTag(state, tag, aliasSource || tag.tag_id);
+      addResolvedTag(state, tag, {
+        rawInput: aliasSource || tag.tag_id,
+        alias: aliasSource
+      });
       state.refs.input.value = "";
       hidePopup(state);
       renderAll(state);
@@ -663,7 +666,7 @@ function addFromInput(state) {
 
   const resolved = resolveInput(rawInput, state);
   if (resolved.type === "resolved") {
-    addResolvedTag(state, resolved.tag, rawInput);
+    addResolvedTag(state, resolved.tag, { rawInput });
     state.refs.input.value = "";
     hidePopup(state);
     renderAll(state);
@@ -745,8 +748,14 @@ function resolveInput(rawInput, state) {
   return { type: "unresolved" };
 }
 
-function addResolvedTag(state, tag, rawInput) {
+function addResolvedTag(state, tag, options = {}) {
   if (!tag || !tag.tag_id) return;
+  const rawInput = typeof options === "string"
+    ? options
+    : String(options.rawInput || "").trim();
+  const alias = typeof options === "object" && options
+    ? normalize(options.alias)
+    : "";
 
   const tagId = normalize(tag.tag_id);
   const isSeriesScope = !state.selectedWorkId;
@@ -776,7 +785,7 @@ function addResolvedTag(state, tag, rawInput) {
     return;
   }
 
-  entries.push(makeResolvedEntry(nextEntryId(state), rawInput, tag, DEFAULT_WEIGHT));
+  entries.push(makeResolvedEntry(nextEntryId(state), rawInput, tag, DEFAULT_WEIGHT, alias));
   setStatus(state, "success", studioText(
     state.config,
     isSeriesScope ? "series_tag_added_success" : "tag_added_success",

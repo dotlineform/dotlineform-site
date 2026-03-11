@@ -404,7 +404,7 @@ Save mode is probed at page load:
   - `tags`:
     - when `work_id` is omitted: array of series assignment objects
     - when `work_id` is present: array of work-override assignment objects; may be empty to delete that work row
-    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9 }`
+    - `{ "tag_id": "<group>:<slug>", "w_manual": 0.3|0.6|0.9, "alias"?: "<alias>" }`
   - `client_time_utc`
 - Save scope:
   - `Save` compares the current editor state against the baseline from page load or last successful save, then persists only the diff
@@ -413,6 +413,7 @@ Save mode is probed at page load:
 - Save sanitization:
   - inherited series tags are not persisted in work rows
   - duplicate work tags are collapsed
+  - optional `alias` values are preserved as historical selection metadata and are not canonicalized back against `tag_aliases.json`
   - removing a work pill deletes that `series[series_id].works[work_id]` row entirely
   - selected work rows may persist with `tags: []` when the work row itself is part of the saved diff
 - On success:
@@ -479,9 +480,11 @@ Purpose:
 - `series[*].tags` schema is object-only:
   - `tag_id`: canonical `<group>:<slug>`
   - `w_manual`: discrete manual weight (`0.3`, `0.6`, `0.9`)
+  - optional `alias`: historical alias key recorded when a curator selected the tag from an alias match in the editor popup
   - effective weighting is derived at runtime and is not persisted in this file
 - `series[*].works[*].tags` uses the same object-only schema
   - stores only the work delta, never a materialized inherited list
+  - `alias` is informational only and remains untouched even if the canonical alias entry is later edited or deleted in `tag_aliases.json`
 
 Governance and maintenance:
 
@@ -516,7 +519,7 @@ Governance and maintenance:
 - Series RAG remains driven by `series[*].tags` only.
 - Add/search controls now sit below the work selector row and above the save-mode text.
 - New assignments default to `w_manual: 0.6`.
-- UI only edits and persists `w_manual`.
+- UI only edits tag membership and `w_manual`; historical `alias` metadata is write-only and not shown in the editor.
 
 ## Open Issues
 

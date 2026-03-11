@@ -13,6 +13,7 @@ Route:
 Purpose:
 
 - review and edit series-level tag assignments plus per-work override tags for one series
+- preserve optional historical alias metadata when a tag is added from an alias suggestion, without surfacing that metadata in the UI
 
 ## Page / Template Structure
 
