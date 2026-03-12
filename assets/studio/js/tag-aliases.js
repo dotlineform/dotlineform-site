@@ -1316,8 +1316,6 @@ function updateAliasEditUi(state) {
   state.refs.saveEditAlias.disabled = !(validation.valid && validation.changed);
   if (validation.tagsWarning) {
     setAliasEditStatus(state, "error", validation.tagsWarning);
-  } else if (!validation.changed && !isCreateAliasFlow(state)) {
-    setAliasEditStatus(state, "", aliasesText(state.config, "edit_no_changes", "No changes."));
   } else if (!validation.warning) {
     setAliasEditStatus(state, "", "");
   }
