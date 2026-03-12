@@ -142,7 +142,6 @@ function renderShell(state) {
   const editModalTitle = aliasesText(state.config, "edit_modal_title", "Edit Alias");
   const editAliasLabel = aliasesText(state.config, "edit_alias_label", "alias");
   const editDescriptionLabel = aliasesText(state.config, "edit_description_label", "description");
-  const editSearchLabel = aliasesText(state.config, "edit_search_label", "find tags");
   const editSearchPlaceholder = aliasesText(state.config, "edit_search_placeholder", "search tags");
   const editSaveButton = aliasesText(state.config, "edit_save_button", "Save");
   const editCancelButton = aliasesText(state.config, "edit_cancel_button", "Cancel");
@@ -177,15 +176,14 @@ function renderShell(state) {
           <span class="${UI_CLASS.formLabel}">${escapeHtml(editDescriptionLabel)}</span>
           <textarea class="tagStudio__input ${UI_CLASS.editDescription}" data-role="${UI.role.editAliasDescription}" rows="2"></textarea>
         </label>
+        <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
         <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
-          <span class="${UI_CLASS.formLabel}">${escapeHtml(editSearchLabel)}</span>
           <input type="text" class="tagStudio__input" data-role="${UI.role.editTagSearch}" autocomplete="off" placeholder="${escapeHtml(editSearchPlaceholder)}">
           <div class="${UI_CLASS.popup}" data-role="${UI.role.editTagPopupWrap}" hidden>
             <div class="${UI_CLASS.popupInner}" data-role="${UI.role.editTagPopup}"></div>
           </div>
         </label>
       </div>
-      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.editGroupKey}"></div>
       <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.editTagList}"></div>
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
@@ -843,7 +841,7 @@ function renderEditTagList(state) {
     `;
   }).join("");
 
-  state.refs.editTagList.innerHTML = rows || `<span class="${UI_CLASS.empty}">${escapeHtml(aliasesText(state.config, "empty_state", "none"))}</span>`;
+  state.refs.editTagList.innerHTML = rows;
 }
 
 function getAliasEditValidation(state) {
