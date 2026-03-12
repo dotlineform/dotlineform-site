@@ -58,6 +58,8 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__input`
 - `tagStudio__button`
 - `tagStudio__chip`
+- `tagStudio__keyPill`
+- `tagStudio__popupPill`
 - `tagStudio__chipText`
 - `tagStudio__chipCaption`
 - `tagStudio__chipTag--local`
@@ -69,6 +71,11 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudioModal`, `tagStudioModal__*`
 
 These are the baseline building blocks for all Studio pages.
+
+Chip rule:
+
+- `tagStudio__chip`, `tagStudio__keyPill`, and `tagStudio__popupPill` should share the same base pill geometry and height
+- only text-level state styling such as offline `local` / `delete` treatment should override that base
 
 Use these as the default contract for:
 
