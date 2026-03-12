@@ -171,10 +171,6 @@
 
 .tagStudioEditorSection--messages {
   gap: 0.3rem;
-  border: 1px solid var(--line, var(--studio-line-soft));
-  border-radius: var(--studio-radius-md);
-  padding: var(--studio-message-padding-y) var(--studio-message-padding-x);
-  background: var(--studio-surface-subtle);
 }
 
 .tagStudioEditorSection--messages > .tagStudio__contextHint,
@@ -475,10 +471,10 @@ input.tagStudio__input {
 .tagStudioForm__impact {
   display: block;
   margin: 0;
-  border: 1px solid var(--line, var(--studio-line-soft));
-  border-radius: var(--studio-radius-md);
-  padding: var(--studio-message-padding-y) var(--studio-message-padding-x);
-  background: var(--studio-surface-subtle);
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
   font-size: var(--font-small);
   line-height: 1.4;
 }

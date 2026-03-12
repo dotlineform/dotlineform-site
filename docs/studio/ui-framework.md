@@ -170,7 +170,8 @@ Use the shared message/status classes for status, warning, hint, and result copy
 
 This pattern now covers:
 
-- shared message typography and surface treatment
+- shared message typography and spacing
+- message containers should remain transparent and borderless on pages and in modals
 - empty-state collapse for unused message blocks
 - the editor’s combined message-container presentation, where multiple lines can live inside one shared message section
 
