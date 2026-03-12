@@ -669,7 +669,8 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
   - local server mode uses `POST /import-tag-aliases` in `add` mode with a single alias payload
   - patch mode provides add-alias fragment snippet
 - alias promotion behavior:
-  - user chooses target group at action time
+  - opens a page-owned promotion modal with clickable group chips and group-info link
+  - modal action is `Promote`, which proceeds directly into preview/apply in local-server mode
   - local server mode uses `POST /promote-tag-alias-preview` then `POST /promote-tag-alias`
   - canonical target id is `<group>:<alias-slug>`; label auto-derived from slug
   - if canonical exists already, promotion removes alias key only

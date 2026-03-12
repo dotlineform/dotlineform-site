@@ -101,6 +101,7 @@ async function initTagAliasesPage() {
     patchSnippet: "",
     registryOptions: [],
     groupDescriptions: new Map(),
+    promotionState: null,
     editState: null,
     refs: null
   };
@@ -141,6 +142,10 @@ function renderShell(state) {
   const patchModalLabel = aliasesText(state.config, "patch_modal_label", "Manual patch snippet");
   const patchModalCopy = aliasesText(state.config, "patch_modal_copy_button", "Copy");
   const patchModalClose = aliasesText(state.config, "patch_modal_close_button", "Close");
+  const promotionModalTitle = aliasesText(state.config, "promotion_modal_title", "Promote Alias");
+  const promotionModalPrompt = aliasesText(state.config, "promotion_modal_prompt", "Choose the canonical tag group for this alias.");
+  const promotionButton = aliasesText(state.config, "promotion_button", "Promote");
+  const promotionCancelButton = aliasesText(state.config, "promotion_cancel_button", "Cancel");
   const editModalTitle = aliasesText(state.config, "edit_modal_title", "Edit Alias");
   const editAliasLabel = aliasesText(state.config, "edit_alias_label", "alias");
   const editDescriptionLabel = aliasesText(state.config, "edit_description_label", "description");
@@ -159,6 +164,22 @@ function renderShell(state) {
     actionsHtml: renderStudioModalActions([
       { role: UI.role.copyPatch, label: patchModalCopy },
       { role: UI.role.patchModalClose, label: patchModalClose }
+    ])
+  });
+  const promotionModalHtml = renderStudioModalFrame({
+    modalRole: UI.role.promotionModal,
+    backdropRole: UI.role.promotionModalClose,
+    titleId: "tagAliasesPromotionTitle",
+    title: promotionModalTitle,
+    bodyHtml: `
+      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.promotionAliasMeta}"></p>
+      <p class="${UI_CLASS.formStatus}">${escapeHtml(promotionModalPrompt)}</p>
+      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.promotionGroupKey}"></div>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.promotionStatus}"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: UI.role.confirmPromotion, label: promotionButton, disabled: true },
+      { role: UI.role.promotionModalClose, label: promotionCancelButton }
     ])
   });
   const importModalHtml = renderStudioModalFrame({
@@ -243,7 +264,7 @@ function renderShell(state) {
   refs.openNewAlias.textContent = newAliasButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
-  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${editModalHtml}`;
+  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${promotionModalHtml}${editModalHtml}`;
 
   state.refs = {
     ...refs,
@@ -259,6 +280,11 @@ function renderShell(state) {
     patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
     patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
     copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
+    promotionModal: state.mount.querySelector(UI_SELECTOR.promotionModal),
+    promotionAliasMeta: state.mount.querySelector(UI_SELECTOR.promotionAliasMeta),
+    promotionGroupKey: state.mount.querySelector(UI_SELECTOR.promotionGroupKey),
+    promotionStatus: state.mount.querySelector(UI_SELECTOR.promotionStatus),
+    confirmPromotion: state.mount.querySelector(UI_SELECTOR.confirmPromotion),
     editModal: state.mount.querySelector(UI_SELECTOR.editModal),
     editModalTitle: state.mount.querySelector(UI_SELECTOR.editModalTitle),
     editAliasName: state.mount.querySelector(UI_SELECTOR.editAliasName),
@@ -381,6 +407,23 @@ function wireEvents(state) {
     closeImportModal(state);
   });
 
+  state.refs.promotionModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.promotionModalClose)) {
+      closePromotionModal(state);
+      return;
+    }
+    const groupButton = event.target.closest("button[data-promotion-group]");
+    if (!groupButton || !state.promotionState) return;
+    const group = normalize(groupButton.getAttribute("data-promotion-group"));
+    if (!STUDIO_GROUPS.includes(group)) return;
+    state.promotionState.group = group;
+    updatePromotionUi(state);
+  });
+
+  state.refs.confirmPromotion.addEventListener("click", () => {
+    void submitAliasPromotion(state);
+  });
+
   state.refs.copyPatch.addEventListener("click", async () => {
     if (!state.patchSnippet) return;
     try {
@@ -460,6 +503,69 @@ function syncImportModeFromControl(state) {
 function closeImportModal(state) {
   state.importModalOpen = false;
   state.refs.importModal.hidden = true;
+}
+
+function openPromotionModal(state, aliasKey, suggestedGroup) {
+  state.promotionState = {
+    aliasKey,
+    group: STUDIO_GROUPS.includes(suggestedGroup) ? suggestedGroup : ""
+  };
+  updatePromotionUi(state);
+  state.refs.promotionModal.hidden = false;
+}
+
+function closePromotionModal(state) {
+  state.promotionState = null;
+  state.refs.promotionModal.hidden = true;
+  state.refs.promotionAliasMeta.textContent = "";
+  state.refs.promotionGroupKey.innerHTML = "";
+  setPromotionStatus(state, "", "");
+  state.refs.confirmPromotion.disabled = true;
+}
+
+function renderPromotionGroupKey(state) {
+  if (!state.refs.promotionGroupKey) return;
+  if (!state.promotionState) {
+    state.refs.promotionGroupKey.innerHTML = "";
+    return;
+  }
+  state.refs.promotionGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `
+      <button
+        type="button"
+        class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"
+        data-promotion-group="${escapeHtml(group)}"
+        ${stateAttr(state.promotionState.group === group ? UI_STATE.active : "")}
+        ${titleAttr}
+      >
+        ${escapeHtml(group)}
+      </button>
+    `;
+  }).join("") + renderGroupInfoControl(state);
+}
+
+function setPromotionStatus(state, kind, message) {
+  if (!state.refs.promotionStatus) return;
+  setStatusText(state.refs.promotionStatus, kind, message);
+}
+
+function updatePromotionUi(state) {
+  if (!state.promotionState || !state.refs.promotionAliasMeta || !state.refs.confirmPromotion) return;
+  state.refs.promotionAliasMeta.textContent = aliasesText(
+    state.config,
+    "promotion_alias_meta",
+    "Alias: {alias_key}",
+    { alias_key: state.promotionState.aliasKey }
+  );
+  renderPromotionGroupKey(state);
+  if (!state.promotionState.group) {
+    setPromotionStatus(state, "", aliasesText(state.config, "promotion_group_required", "Choose a group."));
+    state.refs.confirmPromotion.disabled = true;
+    return;
+  }
+  setPromotionStatus(state, "", "");
+  state.refs.confirmPromotion.disabled = false;
 }
 
 async function loadData(state) {
@@ -1042,6 +1148,7 @@ async function saveAliasEdit(state) {
 async function handleAliasPromote(state, alias) {
   const aliasKey = normalize(alias);
   if (!aliasKey) return;
+  clearImportResult(state);
 
   const entry = findAliasEntry(state, aliasKey);
   if (!entry) {
@@ -1049,46 +1156,28 @@ async function handleAliasPromote(state, alias) {
     return;
   }
 
-  let selectedGroup = "";
   const suggestedGroup = entry && Array.isArray(entry.groups) && entry.groups.length ? entry.groups[0] : "subject";
-  const groupResult = await openFormModal({
-    root: state.mount,
-    title: aliasesText(state.config, "promotion_modal_title", "Promote Alias"),
-    body: aliasesText(state.config, "promotion_group_prompt", "Promote alias: choose group (subject/domain/form/theme)"),
-    primaryLabel: aliasesText(state.config, "promotion_next_button", "Next"),
-    cancelLabel: aliasesText(state.config, "promotion_cancel_button", "Cancel"),
-    fields: [
-      {
-        name: "group",
-        label: aliasesText(state.config, "promotion_group_label", "group"),
-        value: suggestedGroup || "subject"
-      }
-    ],
-    onSubmit(values) {
-      const group = normalize(values.group);
-      if (!group) {
-        return {
-          ok: false,
-          statusKind: "error",
-          status: aliasesText(state.config, "promotion_group_required", "Choose a group.")
-        };
-      }
-      if (!STUDIO_GROUPS.includes(group)) {
-        return {
-          ok: false,
-          statusKind: "error",
-          status: aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme.")
-        };
-      }
-      selectedGroup = group;
-      return true;
-    }
-  });
-  if (!groupResult.submitted) {
-    clearImportResult(state);
+  openPromotionModal(state, aliasKey, suggestedGroup);
+}
+
+async function submitAliasPromotion(state) {
+  if (!state.promotionState) return;
+  const aliasKey = normalize(state.promotionState.aliasKey);
+  const group = normalize(state.promotionState.group);
+  if (!aliasKey) return;
+  if (!group) {
+    setPromotionStatus(state, "", aliasesText(state.config, "promotion_group_required", "Choose a group."));
     return;
   }
-  const group = selectedGroup;
+  if (!STUDIO_GROUPS.includes(group)) {
+    setPromotionStatus(
+      state,
+      "error",
+      aliasesText(state.config, "promotion_group_invalid", "Promotion group must be one of: subject, domain, form, theme.")
+    );
+    return;
+  }
+  closePromotionModal(state);
 
   if (state.saveMode === "post") {
     const preview = await previewAliasPromote({
@@ -1098,27 +1187,6 @@ async function handleAliasPromote(state, alias) {
     });
     if (!preview.ok) {
       setImportResult(state, "error", preview.message);
-      return;
-    }
-    const previewSummary = preview.summary;
-    const confirmResult = await openConfirmDetailModal({
-      root: state.mount,
-      title: aliasesText(state.config, "promotion_confirm_title", "Confirm Alias Promotion"),
-      body: aliasesText(
-        state.config,
-        "promotion_confirm_template",
-        "Promote alias \"{alias_key}\" to canonical tag \"{new_tag_id}\"?",
-        {
-          alias_key: aliasKey,
-          new_tag_id: `${group}:${aliasKey}`
-        }
-      ),
-      impact: previewSummary,
-      primaryLabel: aliasesText(state.config, "promotion_confirm_button", "Promote"),
-      cancelLabel: aliasesText(state.config, "promotion_cancel_button", "Cancel")
-    });
-    if (!confirmResult.confirmed) {
-      clearImportResult(state);
       return;
     }
   }

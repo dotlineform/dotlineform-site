@@ -202,12 +202,29 @@ Meaning:
 
 - one shared modal shell is used for both edit and create flows
 
+### Promote alias modal
+
+User-facing name:
+
+- promote alias modal
+
+DOM / CSS:
+
+- `[data-role="promotion-modal"]`
+- `[data-role="promotion-alias-meta"]`
+- `[data-role="promotion-group-key"]`
+- `[data-role="promotion-status"]`
+- `[data-role="confirm-promotion"]`
+
+Meaning:
+
+- page-owned modal shell for choosing the promotion group via group chips before direct preview/apply
+
 ### Shared confirm/form modals
 
 User-facing name:
 
 - delete alias confirmation
-- promote alias flow
 - demote canonical tag flow
 
 DOM / CSS:
