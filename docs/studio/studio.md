@@ -431,6 +431,7 @@ Save mode is probed at page load:
 - local assignment changes are marked in-chip:
   - `local` caption for added/modified assignments
   - struck chip text plus `delete` caption for pending deletions
+- if the local server becomes available while the current series still has staged offline data, the editor stays in offline mode and surfaces an import-guidance message
 - Series Tags page becomes the session hub for:
   - `Session` button opens a modal for session summary, `Copy JSON`, `Download JSON`, and `Clear session`
   - `Import` button opens a modal for assignment import preview/apply when the local server is available

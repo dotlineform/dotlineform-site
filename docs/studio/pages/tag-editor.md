@@ -443,6 +443,7 @@ Business responsibilities include:
 - persisted assignment shape conversion
 - save/persist mode handling
 - offline-session staging and baseline overlay
+- local-server availability re-probe on page return/focus for staged-series notice
 - patch snippet generation for fallback/manual inspection only
 
 ## Change Guidance

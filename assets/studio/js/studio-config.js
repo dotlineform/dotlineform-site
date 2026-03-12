@@ -87,6 +87,7 @@ const DEFAULT_STUDIO_CONFIG = {
       save_result_local_failed: "Local server save failed. Changes are now staged in the offline session.",
       save_result_offline_staged: "Changes are staged in the offline session.",
       save_result_offline_cleared: "Series matches repo data. Offline session entry cleared.",
+      save_result_server_available_import: "Local server now available. Apply offline changes using Series Tags > Import.",
       save_status_success_base: "Saved {saved_count} work row{saved_plural}",
       save_status_success_removed_suffix: "; removed {removed_count} row{removed_plural}",
       save_status_success_at_suffix: " at {saved_at}."

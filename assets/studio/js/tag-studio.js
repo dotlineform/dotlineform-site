@@ -237,6 +237,9 @@ function buildState(mount, seriesId, registryJson, aliasesJson, assignmentsJson,
       ? String(offlineSeriesEntry.base_series_updated_at_utc || "")
       : String(repoSeriesAssignment && repoSeriesAssignment.updated_at_utc || ""),
     offlineAutosaveTimer: 0,
+    saveModeProbePending: false,
+    lastSaveModeHealthOk: false,
+    serverAvailableWhileOfflineNotified: false,
     modalSnippet: "",
     saveMode: "offline",
     saveModeResolved: false
@@ -393,6 +396,18 @@ function renderShell(state) {
 }
 
 function wireEvents(state) {
+  const reprobeSaveMode = () => {
+    if (document.visibilityState === "hidden") return;
+    void probeSaveMode(state);
+  };
+
+  window.addEventListener("focus", reprobeSaveMode);
+  window.addEventListener("pageshow", reprobeSaveMode);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState !== "visible") return;
+    reprobeSaveMode();
+  });
+
   state.refs.workInput.addEventListener("input", () => {
     setStatus(state, "", "");
     renderStatus(state);
@@ -1508,9 +1523,31 @@ function computeMetrics(state) {
 }
 
 async function probeSaveMode(state) {
+  if (state.saveModeProbePending) return;
+  state.saveModeProbePending = true;
   const ok = await probeStudioHealth(500);
+  state.saveModeProbePending = false;
+  state.lastSaveModeHealthOk = ok;
   state.saveMode = ok && !state.hasOfflineStagedSeries ? "post" : "offline";
   state.saveModeResolved = true;
+
+  const importMessage = studioText(
+    state.config,
+    "save_result_server_available_import",
+    "Local server now available. Apply offline changes using Series Tags > Import."
+  );
+  if (ok && state.hasOfflineStagedSeries) {
+    if (!state.serverAvailableWhileOfflineNotified) {
+      state.serverAvailableWhileOfflineNotified = true;
+      setSaveResult(state, "success", importMessage);
+    }
+  } else {
+    if (state.serverAvailableWhileOfflineNotified && state.refs.saveResult && state.refs.saveResult.textContent === importMessage) {
+      setSaveResult(state, "", "");
+    }
+    state.serverAvailableWhileOfflineNotified = false;
+  }
+
   renderSaveMode(state);
   renderAll(state);
 }
