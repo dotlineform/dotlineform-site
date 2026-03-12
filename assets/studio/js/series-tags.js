@@ -182,6 +182,11 @@ function buildSeriesEditorUrl(config, seriesId) {
 }
 
 function wireEvents(state) {
+  window.addEventListener("pageshow", () => {
+    state.offlineSession = readOfflineAssignmentsSession();
+    renderPage(state);
+  });
+
   state.refs.mount.addEventListener("click", (event) => {
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
