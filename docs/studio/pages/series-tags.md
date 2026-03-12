@@ -31,6 +31,12 @@ Top-level structure:
 
 - `.seriesTagsPage`
   - page scope for Studio CSS variables
+- `.seriesTagsActions`
+  - plain right-aligned action row for modal-launch buttons
+- `[data-role="series-tags-session-modal-host"]`
+  - session modal host
+- `[data-role="series-tags-import-modal-host"]`
+  - import modal host
 - `.tagStudio__panel`
   - shared Studio panel shell around the page
 - `#series-tags[data-role="series-tags"]`
@@ -38,31 +44,76 @@ Top-level structure:
 
 ## Named UI Sections
 
-### Session strip
+### Action row
 
 User-facing name:
 
-- offline session strip
+- series tags actions
 
 DOM / CSS:
 
-- `[data-role="series-tags-session"]`
+- `[data-role="series-tags-actions"]`
+- `[data-role="open-session-modal"]`
+- `[data-role="open-import-modal"]`
+- `.seriesTagsActions`
+
+JS owner:
+
+- `renderActionButtons(state)` in `assets/studio/js/series-tags.js`
+
+Meaning:
+
+- right-aligned launcher row below the page header and above the panel
+- `Session` opens the offline-session modal and is enabled only when staged local data exists
+- `Import` opens the assignment-import modal and is enabled only when the local server is available
+
+### Session modal
+
+User-facing name:
+
+- offline session modal
+
+DOM / CSS:
+
+- `[data-role="series-tags-session-modal-host"]`
+- `[data-role="series-tags-session-modal"]`
 - `[data-role="series-tags-session-summary"]`
 - `[data-role="series-tags-session-actions"]`
-- `[data-role="series-tags-session-import"]`
-- `[data-role="series-tags-session-review"]`
 - `[data-role="series-tags-session-result"]`
 - `.seriesTagsSession__*`
 
 JS owner:
 
-- `renderSessionStrip(state)` in `assets/studio/js/series-tags.js`
+- `renderSessionModal(state)` in `assets/studio/js/series-tags.js`
 
 Meaning:
 
-- the page-level hub for staged offline assignment rows across series
-- provides `Copy JSON`, `Download JSON`, and `Clear session`
-- when the local server is available, also provides assignment import preview/apply controls and per-series overwrite/skip review
+- modal hub for staged offline assignment rows across series
+- provides `Copy JSON`, `Download JSON`, `Clear session`, and `Close`
+
+### Import modal
+
+User-facing name:
+
+- import assignments modal
+
+DOM / CSS:
+
+- `[data-role="series-tags-import-modal-host"]`
+- `[data-role="series-tags-import-modal"]`
+- `[data-role="series-tags-session-import"]`
+- `[data-role="series-tags-session-review"]`
+- `[data-role="series-tags-import-result"]`
+- `.seriesTagsSession__*`
+
+JS owner:
+
+- `renderImportModal(state)` in `assets/studio/js/series-tags.js`
+
+Meaning:
+
+- modal flow for assignment import preview/apply
+- includes per-series overwrite/skip review plus `Close`
 
 ### Table shell
 
@@ -184,14 +235,18 @@ Page boot:
 
 Main render functions:
 
-- `renderSessionStrip(state)`
+- `renderActionButtons(state)`
+- `renderSessionModal(state)`
+- `renderImportModal(state)`
 - `renderTable(state)`
 - `renderFilters(state)`
 - `buildSeriesRows(state)`
 
 Main event wiring:
 
-- session actions on the offline session strip
+- modal launch buttons on the action row
+- session actions inside the session modal
+- import actions and conflict-resolution controls inside the import modal
 - a click handler on `#series-tags` listens for:
   - `button[data-group]`
   - `button[data-sort-key]`

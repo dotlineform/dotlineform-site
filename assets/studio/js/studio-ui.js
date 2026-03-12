@@ -103,12 +103,21 @@ export const seriesTagEditorUi = createUiContract({
 export const seriesTagsUi = createUiContract({
   role: {
     pageRoot: "series-tags",
-    session: "series-tags-session",
+    actions: "series-tags-actions",
+    openSessionModal: "open-session-modal",
+    openImportModal: "open-import-modal",
+    sessionModalHost: "series-tags-session-modal-host",
+    importModalHost: "series-tags-import-modal-host",
+    sessionModal: "series-tags-session-modal",
+    importModal: "series-tags-import-modal",
+    closeSessionModal: "close-session-modal",
+    closeImportModal: "close-import-modal",
     sessionSummary: "series-tags-session-summary",
     sessionActions: "series-tags-session-actions",
     sessionImport: "series-tags-session-import",
     sessionReview: "series-tags-session-review",
-    sessionResult: "series-tags-session-result"
+    sessionResult: "series-tags-session-result",
+    importResult: "series-tags-import-result"
   },
   className: {
     error: "tagStudioError",
@@ -128,6 +137,7 @@ export const seriesTagsUi = createUiContract({
     groupFilterButton: "tagStudioFilters__groupBtn",
     sortButton: "tagStudioList__sortBtn",
     filters: "tagStudioFilters seriesTags__filters",
+    actions: "seriesTagsActions",
     sessionLabel: "seriesTagsSession__label",
     sessionValue: "seriesTagsSession__value",
     sessionAction: "seriesTagsSession__action",

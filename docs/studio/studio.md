@@ -432,11 +432,8 @@ Save mode is probed at page load:
   - `local` caption for added/modified assignments
   - struck chip text plus `delete` caption for pending deletions
 - Series Tags page becomes the session hub for:
-  - session summary
-  - `Copy JSON`
-  - `Download JSON`
-  - `Clear session`
-  - assignment import preview/apply when the local server is available
+  - `Session` button opens a modal for session summary, `Copy JSON`, `Download JSON`, and `Clear session`
+  - `Import` button opens a modal for assignment import preview/apply when the local server is available
 - import conflicts are handled per series, with `overwrite` or `skip`
 
 ## Data Files: Purpose and Governance
@@ -708,7 +705,8 @@ It then:
 - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - applies key filtering to visible tag pills only (series rows and counts remain unchanged)
 - uses the shared Studio role/state contract for filter-button active state
-- owns the offline session strip for export, clear, and assignment import preview/apply
+- provides right-aligned `Session` and `Import` buttons above the panel
+- opens modal flows for offline session export/clear and assignment import preview/apply
 
 ## Tag Groups Page
 

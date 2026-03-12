@@ -8,14 +8,13 @@ studio_page_doc: /docs/studio/pages/series-tags/
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <div class="seriesTagsPage">
+  <div class="seriesTagsActions" data-role="series-tags-actions">
+    <button type="button" class="tagStudio__button" data-role="open-session-modal"></button>
+    <button type="button" class="tagStudio__button" data-role="open-import-modal"></button>
+  </div>
+  <div data-role="series-tags-session-modal-host"></div>
+  <div data-role="series-tags-import-modal-host"></div>
   <div class="tagStudio__panel">
-    <section class="tagStudioToolbar seriesTagsSession" data-role="series-tags-session">
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-summary"></div>
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-actions"></div>
-      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="series-tags-session-import"></div>
-      <div class="seriesTagsSession__review" data-role="series-tags-session-review"></div>
-      <p class="tagStudioToolbar__result" data-role="series-tags-session-result"></p>
-    </section>
     <div id="series-tags" data-role="series-tags"></div>
   </div>
 </div>

@@ -33,6 +33,10 @@ import {
   STUDIO_WRITE_ENDPOINTS
 } from "./studio-transport.js";
 import {
+  renderStudioModalActions,
+  renderStudioModalFrame
+} from "./studio-modal.js";
+import {
   seriesTagsUi
 } from "./studio-ui.js";
 
@@ -61,21 +65,19 @@ async function initSeriesTagsPage() {
   STUDIO_GROUPS = getStudioGroups(config);
   GROUP_INFO_PAGE_PATH = getStudioRoute(config, "tag_groups");
 
-  const sessionRoot = document.querySelector(UI_SELECTOR.session);
-  const sessionSummary = document.querySelector(UI_SELECTOR.sessionSummary);
-  const sessionActions = document.querySelector(UI_SELECTOR.sessionActions);
-  const sessionImport = document.querySelector(UI_SELECTOR.sessionImport);
-  const sessionReview = document.querySelector(UI_SELECTOR.sessionReview);
-  const sessionResult = document.querySelector(UI_SELECTOR.sessionResult);
+  const actions = document.querySelector(UI_SELECTOR.actions);
+  const openSessionModal = document.querySelector(UI_SELECTOR.openSessionModal);
+  const openImportModal = document.querySelector(UI_SELECTOR.openImportModal);
+  const sessionModalHost = document.querySelector(UI_SELECTOR.sessionModalHost);
+  const importModalHost = document.querySelector(UI_SELECTOR.importModalHost);
 
   const refs = {
     mount,
-    sessionRoot,
-    sessionSummary,
-    sessionActions,
-    sessionImport,
-    sessionReview,
-    sessionResult
+    actions,
+    openSessionModal,
+    openImportModal,
+    sessionModalHost,
+    importModalHost
   };
 
   const seriesData = await getSeriesData(config);
@@ -105,6 +107,8 @@ async function initSeriesTagsPage() {
       importPayload: null,
       importPreview: null,
       importResolutions: {},
+      sessionModalOpen: false,
+      importModalOpen: false,
       filterGroup: "all",
       sortKey: "series",
       sortDir: "asc",
@@ -187,6 +191,22 @@ function wireEvents(state) {
     renderPage(state);
   });
 
+  if (state.refs.actions) {
+    state.refs.actions.addEventListener("click", (event) => {
+      const sessionButton = event.target.closest(UI_SELECTOR.openSessionModal);
+      if (sessionButton && !sessionButton.disabled) {
+        state.sessionModalOpen = true;
+        renderChrome(state);
+        return;
+      }
+      const importButton = event.target.closest(UI_SELECTOR.openImportModal);
+      if (importButton && !importButton.disabled) {
+        state.importModalOpen = true;
+        renderChrome(state);
+      }
+    });
+  }
+
   state.refs.mount.addEventListener("click", (event) => {
     const groupButton = event.target.closest("button[data-group]");
     if (groupButton) {
@@ -208,8 +228,13 @@ function wireEvents(state) {
     renderTable(state);
   });
 
-  if (state.refs.sessionActions) {
-    state.refs.sessionActions.addEventListener("click", async (event) => {
+  if (state.refs.sessionModalHost) {
+    state.refs.sessionModalHost.addEventListener("click", async (event) => {
+      if (event.target.closest(`[data-role="${UI.role.closeSessionModal}"]`)) {
+        state.sessionModalOpen = false;
+        renderChrome(state);
+        return;
+      }
       const action = event.target.closest("button[data-session-action]");
       if (!action) return;
       const actionName = String(action.getAttribute("data-session-action") || "");
@@ -227,13 +252,18 @@ function wireEvents(state) {
     });
   }
 
-  if (state.refs.sessionImport) {
-    state.refs.sessionImport.addEventListener("click", async (event) => {
+  if (state.refs.importModalHost) {
+    state.refs.importModalHost.addEventListener("click", async (event) => {
+      if (event.target.closest(`[data-role="${UI.role.closeImportModal}"]`)) {
+        state.importModalOpen = false;
+        renderChrome(state);
+        return;
+      }
       const action = event.target.closest("button[data-import-action]");
       if (!action) return;
       const actionName = String(action.getAttribute("data-import-action") || "");
       if (actionName === "choose-file") {
-        const input = state.refs.sessionImport.querySelector('input[type="file"]');
+        const input = state.refs.importModalHost.querySelector('input[type="file"]');
         if (input) input.click();
         return;
       }
@@ -246,21 +276,18 @@ function wireEvents(state) {
       }
     });
 
-    state.refs.sessionImport.addEventListener("change", (event) => {
+    state.refs.importModalHost.addEventListener("change", (event) => {
       const input = event.target;
-      if (!(input instanceof HTMLInputElement) || input.type !== "file") return;
-      const files = input.files;
-      state.importFile = files && files.length ? files[0] : null;
-      state.importPayload = null;
-      state.importPreview = null;
-      state.importResolutions = {};
-      setResult(state, "", "");
-      renderSessionStrip(state);
-    });
-  }
-
-  if (state.refs.sessionReview) {
-    state.refs.sessionReview.addEventListener("change", (event) => {
+      if (input instanceof HTMLInputElement && input.type === "file") {
+        const files = input.files;
+        state.importFile = files && files.length ? files[0] : null;
+        state.importPayload = null;
+        state.importPreview = null;
+        state.importResolutions = {};
+        setResult(state, "", "");
+        renderImportModal(state);
+        return;
+      }
       const select = event.target.closest("select[data-import-resolution]");
       if (!select) return;
       const seriesId = normalize(select.getAttribute("data-import-resolution"));
@@ -271,52 +298,85 @@ function wireEvents(state) {
 }
 
 function renderPage(state) {
-  renderSessionStrip(state);
+  renderChrome(state);
   renderTable(state);
 }
 
-function renderSessionStrip(state) {
-  if (!state.refs.sessionRoot || !state.refs.sessionSummary || !state.refs.sessionActions || !state.refs.sessionResult) return;
+function renderChrome(state) {
+  renderActionButtons(state);
+  renderSessionModal(state);
+  renderImportModal(state);
+}
 
+function renderActionButtons(state) {
   const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
   const stagedSeriesIds = Object.keys(exportPayload.series || {}).sort();
   const hasStaged = stagedSeriesIds.length > 0;
-  state.refs.sessionRoot.hidden = false;
+  if (!state.refs.actions || !state.refs.openSessionModal || !state.refs.openImportModal) return;
+  state.refs.openSessionModal.textContent = seriesTagsText(state.config, "session_open_button", "Session");
+  state.refs.openSessionModal.disabled = !hasStaged;
+  state.refs.openImportModal.textContent = seriesTagsText(state.config, "import_open_button", "Import");
+  state.refs.openImportModal.disabled = !state.importAvailable;
+}
 
-  state.refs.sessionSummary.innerHTML = `
-    <span class="${UI_CLASS.sessionLabel}">${escapeHtml(seriesTagsText(state.config, "session_summary_label", "Offline session"))}</span>
-    <span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(
-      state.config,
-      "session_summary_value",
-      "{count} staged series",
-      { count: String(stagedSeriesIds.length) }
-    ))}</span>
-    <span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(
-      state.config,
-      "session_updated_value",
-      "Updated: {updated_at}",
-      { updated_at: exportPayload.updated_at_utc || seriesTagsText(state.config, "session_updated_empty", "not yet") }
-    ))}</span>
+function renderSessionModal(state) {
+  if (!state.refs.sessionModalHost) return;
+  const exportPayload = buildOfflineAssignmentsExport(state.offlineSession);
+  const stagedSeriesIds = Object.keys(exportPayload.series || {}).sort();
+  const hasStaged = stagedSeriesIds.length > 0;
+  const bodyHtml = `
+    <div class="tagStudioToolbar seriesTagsSession">
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionSummary}">
+        <span class="${UI_CLASS.sessionLabel}">${escapeHtml(seriesTagsText(state.config, "session_summary_label", "Offline session"))}</span>
+        <span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(
+          state.config,
+          "session_summary_value",
+          "{count} staged series",
+          { count: String(stagedSeriesIds.length) }
+        ))}</span>
+        <span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(
+          state.config,
+          "session_updated_value",
+          "Updated: {updated_at}",
+          { updated_at: exportPayload.updated_at_utc || seriesTagsText(state.config, "session_updated_empty", "not yet") }
+        ))}</span>
+      </div>
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionActions}">
+        <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="copy"${hasStaged ? "" : " disabled"}>
+          ${escapeHtml(seriesTagsText(state.config, "session_copy_button", "Copy JSON"))}
+        </button>
+        <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="download"${hasStaged ? "" : " disabled"}>
+          ${escapeHtml(seriesTagsText(state.config, "session_download_button", "Download JSON"))}
+        </button>
+        <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="clear"${hasStaged ? "" : " disabled"}>
+          ${escapeHtml(seriesTagsText(state.config, "session_clear_button", "Clear session"))}
+        </button>
+      </div>
+      <p class="tagStudioToolbar__result" data-role="${UI.role.sessionResult}"${state.resultKind ? ` data-state="${escapeHtml(state.resultKind)}"` : ""}>${escapeHtml(state.resultText || "")}</p>
+    </div>
   `;
+  state.refs.sessionModalHost.innerHTML = renderStudioModalFrame({
+    modalRole: UI.role.sessionModal,
+    backdropRole: UI.role.closeSessionModal,
+    titleId: "seriesTagsSessionModalTitle",
+    title: seriesTagsText(state.config, "session_modal_title", "Offline session"),
+    bodyHtml,
+    hidden: !state.sessionModalOpen,
+    actionsHtml: renderStudioModalActions([{
+      label: seriesTagsText(state.config, "modal_close_button", "Close"),
+      role: UI.role.closeSessionModal
+    }])
+  });
+}
 
-  state.refs.sessionActions.innerHTML = `
-    <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="copy"${hasStaged ? "" : " disabled"}>
-      ${escapeHtml(seriesTagsText(state.config, "session_copy_button", "Copy JSON"))}
-    </button>
-    <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="download"${hasStaged ? "" : " disabled"}>
-      ${escapeHtml(seriesTagsText(state.config, "session_download_button", "Download JSON"))}
-    </button>
-    <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-session-action="clear"${hasStaged ? "" : " disabled"}>
-      ${escapeHtml(seriesTagsText(state.config, "session_clear_button", "Clear session"))}
-    </button>
-  `;
-
-  if (state.refs.sessionImport) {
-    const preview = state.importPreview;
-    const hasFile = Boolean(state.importFile);
-    const canApply = Boolean(preview && (Number(preview.applicable_count) > 0 || Number(preview.conflict_count) > 0));
-    state.refs.sessionImport.innerHTML = state.importAvailable
-      ? `
+function renderImportModal(state) {
+  if (!state.refs.importModalHost) return;
+  const preview = state.importPreview;
+  const hasFile = Boolean(state.importFile);
+  const canApply = Boolean(preview && (Number(preview.applicable_count) > 0 || Number(preview.conflict_count) > 0));
+  const bodyHtml = `
+    <div class="tagStudioToolbar seriesTagsSession">
+      <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionImport}">
         <input type="file" accept="application/json,.json" hidden>
         <span class="${UI_CLASS.sessionLabel}">${escapeHtml(seriesTagsText(state.config, "session_import_label", "Import assignments"))}</span>
         <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-import-action="choose-file">
@@ -333,20 +393,23 @@ function renderSessionStrip(state) {
             ? seriesTagsText(state.config, "session_import_selected_file", "Selected: {filename}", { filename: state.importFile.name })
             : seriesTagsText(state.config, "session_import_no_file", "No import file selected.")
         )}</span>
-      `
-      : `<span class="${UI_CLASS.sessionValue}">${escapeHtml(seriesTagsText(state.config, "session_import_unavailable", "Import requires the local server."))}</span>`;
-  }
-
-  if (state.refs.sessionReview) {
-    state.refs.sessionReview.innerHTML = renderImportReview(state);
-  }
-
-  state.refs.sessionResult.textContent = state.resultText || "";
-  if (state.resultKind) {
-    state.refs.sessionResult.dataset.state = state.resultKind;
-  } else {
-    delete state.refs.sessionResult.dataset.state;
-  }
+      </div>
+      <div class="seriesTagsSession__review" data-role="${UI.role.sessionReview}">${renderImportReview(state)}</div>
+      <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"${state.resultKind ? ` data-state="${escapeHtml(state.resultKind)}"` : ""}>${escapeHtml(state.resultText || "")}</p>
+    </div>
+  `;
+  state.refs.importModalHost.innerHTML = renderStudioModalFrame({
+    modalRole: UI.role.importModal,
+    backdropRole: UI.role.closeImportModal,
+    titleId: "seriesTagsImportModalTitle",
+    title: seriesTagsText(state.config, "import_modal_title", "Import assignments"),
+    bodyHtml,
+    hidden: !state.importModalOpen,
+    actionsHtml: renderStudioModalActions([{
+      label: seriesTagsText(state.config, "modal_close_button", "Close"),
+      role: UI.role.closeImportModal
+    }])
+  });
 }
 
 function renderTable(state) {
@@ -478,7 +541,7 @@ async function handleCopySession(state) {
   } catch (error) {
     setResult(state, "error", seriesTagsText(state.config, "session_copy_failed", "Copy failed. Select and copy manually."));
   }
-  renderSessionStrip(state);
+  renderSessionModal(state);
 }
 
 function handleDownloadSession(state) {
@@ -493,7 +556,7 @@ function handleDownloadSession(state) {
   link.remove();
   window.setTimeout(() => URL.revokeObjectURL(href), 0);
   setResult(state, "success", seriesTagsText(state.config, "session_download_success", "Offline session JSON download started."));
-  renderSessionStrip(state);
+  renderSessionModal(state);
 }
 
 function handleClearSession(state) {
@@ -504,13 +567,13 @@ function handleClearSession(state) {
 
 async function probeImportAvailability(state) {
   state.importAvailable = await probeStudioHealth(500);
-  renderSessionStrip(state);
+  renderChrome(state);
 }
 
 async function handlePreviewImport(state) {
   if (!state.importFile) {
     setResult(state, "error", seriesTagsText(state.config, "session_import_no_file", "No import file selected."));
-    renderSessionStrip(state);
+    renderImportModal(state);
     return;
   }
 
@@ -518,7 +581,7 @@ async function handlePreviewImport(state) {
     state.importPayload = JSON.parse(await state.importFile.text());
   } catch (error) {
     setResult(state, "error", seriesTagsText(state.config, "session_import_invalid_json", "Import file is not valid JSON."));
-    renderSessionStrip(state);
+    renderImportModal(state);
     return;
   }
 
@@ -539,13 +602,13 @@ async function handlePreviewImport(state) {
   } catch (error) {
     setResult(state, "error", String(error && error.message ? error.message : seriesTagsText(state.config, "session_import_preview_failed", "Import preview failed.")));
   }
-  renderSessionStrip(state);
+  renderImportModal(state);
 }
 
 async function handleApplyImport(state) {
   if (!state.importPayload || !state.importPreview) {
     setResult(state, "error", seriesTagsText(state.config, "session_import_apply_without_preview", "Preview the import before applying it."));
-    renderSessionStrip(state);
+    renderImportModal(state);
     return;
   }
 
@@ -566,7 +629,7 @@ async function handleApplyImport(state) {
     renderPage(state);
   } catch (error) {
     setResult(state, "error", String(error && error.message ? error.message : seriesTagsText(state.config, "session_import_apply_failed", "Import failed.")));
-    renderSessionStrip(state);
+    renderImportModal(state);
   }
 }
 

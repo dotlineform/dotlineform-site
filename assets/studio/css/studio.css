@@ -1392,7 +1392,15 @@ input.tagStudio__input {
 }
 
 .seriesTagsSession {
-  margin-bottom: var(--studio-shell-gap-md);
+  display: grid;
+  gap: var(--studio-shell-gap-sm);
+}
+
+.seriesTagsActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin: 0 0 var(--studio-shell-gap-md);
 }
 
 .seriesTagsSession__row {
