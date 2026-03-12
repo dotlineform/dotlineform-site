@@ -36,7 +36,7 @@ Top-level structure:
 - `#tag-aliases[data-role="tag-aliases"]`
   - template-owned aliases shell root
 - `[data-role="toolbar"]`
-  - import/action toolbar shell
+  - action toolbar shell
 - `[data-role="filters"]`
   - search and key shell
 - `[data-role="list"]`
@@ -56,10 +56,6 @@ DOM / CSS:
 
 - `.tagStudioToolbar`
 - `.tagStudioToolbar__row`
-- `.tagStudioToolbar__field`
-- `.tagStudioToolbar__mode`
-- `.tagStudioToolbar__selected`
-- `.tagStudioToolbar__result`
 
 JS owner:
 
@@ -68,7 +64,32 @@ JS owner:
 
 Meaning:
 
-- the top action area containing import controls, save mode, and the “New alias” action
+- the top action area containing the `Import` modal trigger and the `New alias` action
+
+### Import modal
+
+User-facing name:
+
+- import modal
+
+DOM / CSS:
+
+- `[data-role="open-import-modal"]`
+- `[data-role="import-modal"]`
+- `[data-role="import-file"]`
+- `[data-role="import-mode"]`
+- `[data-role="import-btn"]`
+- `[data-role="selected-file"]`
+- `[data-role="import-result"]`
+
+JS owner:
+
+- `renderShell(state)` in `assets/studio/js/tag-aliases.js`
+- import handlers in `wireEvents(state)`
+
+Meaning:
+
+- modal-owned import controls for file selection, import mode, submit, and import result text; the modal trigger is disabled when the local server is unavailable
 
 ### Search and filters
 

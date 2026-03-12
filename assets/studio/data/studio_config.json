@@ -236,6 +236,8 @@
       "import_mode_option_replace": "replace entire aliases",
       "choose_file_button": "Choose file",
       "import_button": "Import",
+      "import_modal_title": "Import Aliases",
+      "import_modal_close_button": "Close",
       "new_alias_button": "New alias",
       "search_label": "Search aliases",
       "search_placeholder": "search",

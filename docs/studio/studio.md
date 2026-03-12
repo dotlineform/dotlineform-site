@@ -651,10 +651,12 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
 - supports search by alias prefix
 - supports header sorting (alias, asc/desc)
 - supports import from a local JSON file (recommended from `var/studio/import`)
+  - import controls live inside an `Import` modal opened from the top action row
+  - the `Import` button is disabled when the local server is unavailable
   - mode `add (no overwrite)`: add aliases with new key only
   - mode `replace`: replace the full aliases map
   - mode `add + overwrite`: add new aliases and overwrite matching keys, leaving other aliases untouched
-  - includes `New alias` button (right side of import controls) to open alias-create modal
+  - top action row includes `Import` then `New alias`
 - local-server import uses `POST /import-tag-aliases`
   - response includes `summary_text` and `import_filename` (basename only)
   - summary is written to `var/studio/logs/tag_write_server.log`

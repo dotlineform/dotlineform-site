@@ -29,7 +29,6 @@ import {
   parseTagIdCsv
 } from "./tag-aliases-domain.js";
 import {
-  buildAliasesImportModeText,
   buildManualPatchForAliasCreate,
   buildManualPatchForAliasDelete,
   buildManualPatchForAliasEdit,
@@ -96,7 +95,9 @@ async function initTagAliasesPage() {
     sortDir: "asc",
     importMode: "add",
     saveMode: "patch",
+    importAvailable: false,
     selectedFile: null,
+    importModalOpen: false,
     patchSnippet: "",
     registryOptions: [],
     groupDescriptions: new Map(),
@@ -131,7 +132,8 @@ function renderShell(state) {
   const importModeOptionReplace = aliasesText(state.config, "import_mode_option_replace", "replace entire aliases");
   const chooseFileLabel = aliasesText(state.config, "choose_file_button", "Choose file");
   const importButtonLabel = aliasesText(state.config, "import_button", "Import");
-  const importModeLabel = buildAliasesImportModeText(state, "patch");
+  const importModalTitle = aliasesText(state.config, "import_modal_title", "Import Aliases");
+  const importModalClose = aliasesText(state.config, "import_modal_close_button", "Close");
   const newAliasButtonLabel = aliasesText(state.config, "new_alias_button", "New alias");
   const searchLabel = aliasesText(state.config, "search_label", "Search aliases");
   const searchPlaceholder = aliasesText(state.config, "search_placeholder", "search");
@@ -157,6 +159,38 @@ function renderShell(state) {
     actionsHtml: renderStudioModalActions([
       { role: UI.role.copyPatch, label: patchModalCopy },
       { role: UI.role.patchModalClose, label: patchModalClose }
+    ])
+  });
+  const importModalHtml = renderStudioModalFrame({
+    modalRole: UI.role.importModal,
+    backdropRole: UI.role.importModalClose,
+    titleId: "tagAliasesImportTitle",
+    title: importModalTitle,
+    hidden: !state.importModalOpen,
+    bodyHtml: `
+      <div class="tagStudioToolbar">
+        <div class="tagStudioToolbar__row">
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label" data-role="${UI.role.importFileLabel}">${escapeHtml(importFileLabel)}</span>
+            <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(chooseFileLabel)}</button>
+            <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
+          </label>
+          <label class="tagStudioToolbar__field">
+            <span class="tagStudioToolbar__label" data-role="${UI.role.importModeLabel}">${escapeHtml(importModeFieldLabel)}</span>
+            <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
+              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
+              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
+              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
+            </select>
+          </label>
+          <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(importButtonLabel)}</button>
+        </div>
+        <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>
+        <p class="tagStudioToolbar__result" data-role="${UI.role.importResult}"></p>
+      </div>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: UI.role.importModalClose, label: importModalClose }
     ])
   });
   const editModalHtml = renderStudioModalFrame({
@@ -193,16 +227,8 @@ function renderShell(state) {
     ])
   });
   const refs = {
-    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
-    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
-    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
-    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
-    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
-    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
+    openImportModal: state.mount.querySelector(UI_SELECTOR.openImportModal),
     openNewAlias: state.mount.querySelector(UI_SELECTOR.openNewAlias),
-    saveMode: state.mount.querySelector(UI_SELECTOR.saveMode),
-    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
-    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
     key: state.mount.querySelector(UI_SELECTOR.key),
     searchLabel: state.mount.querySelector(UI_SELECTOR.searchLabel),
     search: state.mount.querySelector(UI_SELECTOR.search),
@@ -219,21 +245,23 @@ function renderShell(state) {
     return;
   }
 
-  refs.importFileLabel.textContent = importFileLabel;
-  refs.chooseFile.textContent = chooseFileLabel;
-  refs.importModeLabel.textContent = importModeFieldLabel;
-  refs.importButton.textContent = importButtonLabel;
+  refs.openImportModal.textContent = importButtonLabel;
   refs.openNewAlias.textContent = newAliasButtonLabel;
-  refs.saveMode.textContent = importModeLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
-  setSelectOptionLabel(refs.importMode, "add", importModeOptionAdd);
-  setSelectOptionLabel(refs.importMode, "merge", importModeOptionMerge);
-  setSelectOptionLabel(refs.importMode, "replace", importModeOptionReplace);
-  refs.modalHost.innerHTML = `${patchModalHtml}${editModalHtml}`;
+  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${editModalHtml}`;
 
   state.refs = {
     ...refs,
+    importModal: state.mount.querySelector(UI_SELECTOR.importModal),
+    importFileLabel: state.mount.querySelector(UI_SELECTOR.importFileLabel),
+    chooseFile: state.mount.querySelector(UI_SELECTOR.chooseFile),
+    importFile: state.mount.querySelector(UI_SELECTOR.importFile),
+    importModeLabel: state.mount.querySelector(UI_SELECTOR.importModeLabel),
+    importMode: state.mount.querySelector(UI_SELECTOR.importMode),
+    importButton: state.mount.querySelector(UI_SELECTOR.importButton),
+    selectedFile: state.mount.querySelector(UI_SELECTOR.selectedFile),
+    importResult: state.mount.querySelector(UI_SELECTOR.importResult),
     patchModal: state.mount.querySelector(UI_SELECTOR.patchModal),
     patchSnippet: state.mount.querySelector(UI_SELECTOR.patchSnippet),
     copyPatch: state.mount.querySelector(UI_SELECTOR.copyPatch),
@@ -250,12 +278,20 @@ function renderShell(state) {
     editStatus: state.mount.querySelector(UI_SELECTOR.editStatus),
     saveEditAlias: state.mount.querySelector(UI_SELECTOR.saveEditAlias)
   };
+  renderImportAvailability(state);
 }
 
 function wireEvents(state) {
   state.refs.search.addEventListener("input", () => {
     state.searchQuery = normalize(state.refs.search.value);
     renderList(state);
+  });
+
+  state.refs.openImportModal.addEventListener("click", () => {
+    if (!state.importAvailable) return;
+    clearImportResult(state);
+    state.importModalOpen = true;
+    state.refs.importModal.hidden = false;
   });
 
   state.refs.chooseFile.addEventListener("click", () => {
@@ -346,6 +382,11 @@ function wireEvents(state) {
     closePatchModal(state);
   });
 
+  state.refs.importModal.addEventListener("click", (event) => {
+    if (!event.target.closest(UI_SELECTOR.importModalClose)) return;
+    closeImportModal(state);
+  });
+
   state.refs.copyPatch.addEventListener("click", async () => {
     if (!state.patchSnippet) return;
     try {
@@ -420,6 +461,11 @@ function syncImportModeFromControl(state) {
   } else {
     state.importMode = "add";
   }
+}
+
+function closeImportModal(state) {
+  state.importModalOpen = false;
+  state.refs.importModal.hidden = true;
 }
 
 async function loadData(state) {
@@ -638,11 +684,16 @@ function sortIndicator(state, key) {
 async function probeImportMode(state) {
   const ok = await probeStudioHealth(500);
   state.saveMode = ok ? "post" : "patch";
-  renderImportMode(state);
+  state.importAvailable = ok;
+  renderImportAvailability(state);
 }
 
-function renderImportMode(state) {
-  state.refs.saveMode.textContent = buildAliasesImportModeText(state, state.saveMode);
+function renderImportAvailability(state) {
+  const available = Boolean(state.importAvailable && state.saveMode === "post");
+  state.importAvailable = available;
+  if (state.refs.openImportModal) state.refs.openImportModal.disabled = !available;
+  if (state.refs.importButton) state.refs.importButton.disabled = !available;
+  if (!available && state.importModalOpen) closeImportModal(state);
 }
 
 async function handleImport(state) {
@@ -677,7 +728,8 @@ async function handleImport(state) {
 
   if (result.switchToPatch) {
     state.saveMode = "patch";
-    renderImportMode(state);
+    state.importAvailable = false;
+    renderImportAvailability(state);
     setImportResult(state, "error", result.message);
   }
 
@@ -720,7 +772,8 @@ async function handleAliasDelete(state, alias) {
 
   if (result.switchToPatch) {
     state.saveMode = "patch";
-    renderImportMode(state);
+    state.importAvailable = false;
+    renderImportAvailability(state);
     setImportResult(state, "error", result.message);
   }
 
@@ -968,7 +1021,8 @@ async function saveAliasEdit(state) {
 
   if (result.switchToPatch) {
     state.saveMode = "patch";
-    renderImportMode(state);
+    state.importAvailable = false;
+    renderImportAvailability(state);
     setAliasEditStatus(state, "error", result.message);
   }
 
