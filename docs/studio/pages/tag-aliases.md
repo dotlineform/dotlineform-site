@@ -247,12 +247,11 @@ Meaning:
 
 - page-owned modal shell for choosing the promotion group via group chips before direct preview/apply
 
-### Shared confirm/form modals
+### Shared confirm modals
 
 User-facing name:
 
 - delete alias confirmation
-- demote canonical tag flow
 
 DOM / CSS:
 
@@ -261,7 +260,7 @@ DOM / CSS:
 
 Meaning:
 
-- these are transient shared modal-controller flows rather than persistent page-owned modal shells
+- these are transient shared confirm flows rather than persistent page-owned modal shells
 
 ## UI Layout and Styling
 
@@ -404,4 +403,4 @@ Clarify with the user when “alias” could mean:
 - the alias chip/button in the left column
 - the full alias row
 - the edit/create workflow
-- the transient confirm/form modal flows for delete/promote/demote
+- the transient confirm modal flow for delete

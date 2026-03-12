@@ -38,43 +38,6 @@ function renderStatus(status) {
   return `<p class="tagStudioForm__status" data-role="modal-status"${stateAttr}>${escapeHtml(status.message)}</p>`;
 }
 
-function renderWarning(warning) {
-  if (!warning) {
-    return '<p class="tagStudioForm__warning" data-role="modal-warning"></p>';
-  }
-  return `<p class="tagStudioForm__warning" data-role="modal-warning">${escapeHtml(warning)}</p>`;
-}
-
-function renderFields(fields = []) {
-  if (!Array.isArray(fields) || !fields.length) return "";
-  const rows = fields.map((field, index) => {
-    const name = String(field && field.name ? field.name : `field_${index}`);
-    const label = String(field && field.label ? field.label : name);
-    const value = field && field.value != null ? String(field.value) : "";
-    const placeholder = field && field.placeholder ? ` placeholder="${escapeHtml(field.placeholder)}"` : "";
-    const rowsAttr = field && field.rows ? ` rows="${escapeHtml(field.rows)}"` : "";
-    const readonly = field && field.readonly ? " readonly" : "";
-
-    if (field && field.type === "textarea") {
-      return `
-        <label class="tagStudioForm__field">
-          <span class="tagStudioForm__label">${escapeHtml(label)}</span>
-          <textarea class="tagStudio__input tagStudioForm__descriptionInput" data-role="modal-field" data-field-name="${escapeHtml(name)}"${rowsAttr}${readonly}${placeholder}>${escapeHtml(value)}</textarea>
-        </label>
-      `;
-    }
-
-    return `
-      <label class="tagStudioForm__field">
-        <span class="tagStudioForm__label">${escapeHtml(label)}</span>
-        <input class="tagStudio__input${field && field.readonly ? " tagStudioForm__readonly" : ""}" data-role="modal-field" data-field-name="${escapeHtml(name)}" type="${escapeHtml(field && field.type ? field.type : "text")}" value="${escapeHtml(value)}"${readonly}${placeholder}>
-      </label>
-    `;
-  }).join("");
-
-  return `<div class="tagStudioForm__fields">${rows}</div>`;
-}
-
 function renderSnippet(snippet) {
   if (!snippet) return "";
   return `<pre class="tagStudioModal__pre" data-role="modal-snippet">${escapeHtml(snippet)}</pre>`;
@@ -132,9 +95,7 @@ export function renderStudioModalFrame(options = {}) {
 function renderModal(type, options = {}) {
   const title = String(options.title || "");
   const bodyHtml = renderBodyText(options.body);
-  const warningHtml = type === "form" ? renderWarning(options.warning) : "";
-  const fieldsHtml = type === "form" ? renderFields(options.fields) : "";
-  const statusHtml = type === "form" || type === "confirm-detail" ? renderStatus(options.status) : "";
+  const statusHtml = type === "confirm-detail" ? renderStatus(options.status) : "";
   const impactHtml = type === "confirm-detail" && options.impact
     ? `<p class="tagStudioForm__impact" data-role="modal-impact">${escapeHtml(options.impact)}</p>`
     : "";
@@ -146,8 +107,6 @@ function renderModal(type, options = {}) {
       <div class="tagStudioModal__dialog" role="dialog" aria-modal="true" aria-labelledby="studioModalTitle">
         <h3 id="studioModalTitle">${escapeHtml(title)}</h3>
         ${bodyHtml}
-        ${warningHtml}
-        ${fieldsHtml}
         ${impactHtml}
         ${snippetHtml}
         ${statusHtml}
@@ -155,16 +114,6 @@ function renderModal(type, options = {}) {
       </div>
     </div>
   `;
-}
-
-function readFieldValues(host) {
-  const values = {};
-  host.querySelectorAll('[data-role="modal-field"]').forEach((field) => {
-    const name = String(field.getAttribute("data-field-name") || "").trim();
-    if (!name) return;
-    values[name] = "value" in field ? field.value : "";
-  });
-  return values;
 }
 
 function setRoleMessage(host, role, className, kind, message) {
@@ -191,7 +140,6 @@ function openModal(type, options = {}) {
   const modal = host.querySelector('[data-role="studio-modal"]');
   const primary = host.querySelector('[data-role="modal-primary"]');
   const cancelButtons = host.querySelectorAll('[data-role="modal-cancel"]');
-  const firstField = host.querySelector('[data-role="modal-field"]:not([readonly])');
 
   return new Promise((resolve) => {
     const cleanup = () => {
@@ -200,33 +148,21 @@ function openModal(type, options = {}) {
     };
 
     const api = {
-      setWarning(message) {
-        setRoleMessage(host, "modal-warning", "tagStudioForm__warning", "", message);
-      },
       setStatus(kind, message) {
         setRoleMessage(host, "modal-status", "tagStudioForm__status", kind, message);
-      },
-      readValues() {
-        return readFieldValues(host);
       }
     };
 
     const submit = async () => {
-      const values = readFieldValues(host);
       if (typeof options.onSubmit === "function") {
-        const result = await options.onSubmit(values, api);
+        const result = await options.onSubmit(api);
         if (result === false) return;
         if (result && typeof result === "object" && result.ok === false) {
-          if ("warning" in result) api.setWarning(result.warning || "");
           if ("status" in result) api.setStatus(result.statusKind || "error", result.status || "");
           return;
         }
       }
       cleanup();
-      if (type === "form") {
-        resolve({ submitted: true, values });
-        return;
-      }
       if (type === "patch-preview") {
         resolve({ confirmed: true });
         return;
@@ -236,10 +172,6 @@ function openModal(type, options = {}) {
 
     const cancel = () => {
       cleanup();
-      if (type === "form") {
-        resolve({ submitted: false, values: {} });
-        return;
-      }
       resolve({ confirmed: false });
     };
 
@@ -265,10 +197,7 @@ function openModal(type, options = {}) {
       });
     }
 
-    if (firstField) {
-      firstField.focus();
-      if (typeof firstField.select === "function") firstField.select();
-    } else if (primary) {
+    if (primary) {
       primary.focus();
     }
   });
@@ -284,10 +213,6 @@ export function openConfirmModal(options = {}) {
 
 export function openConfirmDetailModal(options = {}) {
   return openModal("confirm-detail", options);
-}
-
-export function openFormModal(options = {}) {
-  return openModal("form", options);
 }
 
 export function openPatchPreviewModal(options = {}) {
