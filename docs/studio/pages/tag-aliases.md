@@ -151,11 +151,11 @@ Meaning:
 
 - the left column showing the alias chip and alias-level actions
 
-### Group tags column
+### Tags column
 
 User-facing name:
 
-- group tags column
+- tags column
 
 DOM / CSS:
 
@@ -165,6 +165,7 @@ DOM / CSS:
 Meaning:
 
 - the right column showing the resolved target tags for the alias
+- header sorting uses the visible target tag labels, with alias as the tie-breaker
 
 ### Patch preview modal
 

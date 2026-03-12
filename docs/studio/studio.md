@@ -622,8 +622,8 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/studio/data
 The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/tag_aliases.json` and:
 
 - uses a template-owned page shell with JS-bound `data-role` hooks and a dedicated modal host
-- lists aliases with columns: alias, group tags
-- renders alias values inline as color-coded pills in the `group tags` column
+- lists aliases with columns: alias, tags
+- renders alias values inline as color-coded pills in the `tags` column
   - alias row supports one or more canonical target tags
   - single-group aliases use that group color
   - multi-group or unresolved aliases use warning color
@@ -641,7 +641,8 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
   - group pills use `tag_groups.json` `description` as hover text (`title`)
   - includes an `i` info pill that opens `/studio/tag-groups/` in a new tab
 - supports search by alias prefix
-- supports header sorting (alias, asc/desc)
+- supports header sorting (alias or tags, asc/desc)
+  - tags sort uses visible target tag labels, with alias as the tie-breaker
 - supports import from a local JSON file (recommended from `var/studio/import`)
   - import controls live inside an `Import` modal opened from the top right-aligned action row above the list panel
   - the `Import` button is disabled when the local server is unavailable

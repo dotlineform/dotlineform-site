@@ -185,12 +185,32 @@ export function getVisibleAliases(state) {
   });
 
   const direction = state.sortDir === "desc" ? -1 : 1;
-  filtered.sort((a, b) => direction * compareAliases(a, b));
+  filtered.sort((a, b) => direction * compareAliases(a, b, state.sortKey));
   return filtered;
 }
 
-export function compareAliases(a, b) {
+export function compareAliases(a, b, sortKey = "alias") {
+  if (sortKey === "tags") {
+    const tagComparison = compareAliasTagLabels(a, b);
+    if (tagComparison !== 0) return tagComparison;
+  }
   return a.alias.localeCompare(b.alias, undefined, { sensitivity: "base" });
+}
+
+function compareAliasTagLabels(a, b) {
+  const left = buildAliasTagSortValue(a);
+  const right = buildAliasTagSortValue(b);
+  return left.localeCompare(right, undefined, { sensitivity: "base" });
+}
+
+function buildAliasTagSortValue(entry) {
+  const labels = Array.isArray(entry && entry.resolvedTargets)
+    ? entry.resolvedTargets
+      .map((target) => normalize(target && target.label ? target.label : target && target.tagId ? target.tagId : ""))
+      .filter(Boolean)
+      .sort((left, right) => left.localeCompare(right, undefined, { sensitivity: "base" }))
+    : [];
+  return labels.join(" | ");
 }
 
 export function findAliasEntry(aliases, aliasKey) {

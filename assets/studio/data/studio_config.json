@@ -247,7 +247,7 @@
       "group_info_title": "Open group descriptions in a new tab",
       "group_info_aria_label": "Open group descriptions in a new tab",
       "table_heading_alias": "alias",
-      "group_tags_heading": "group tags",
+      "group_tags_heading": "tags",
       "empty_state": "none",
       "selected_file_template": "Selected: {filename}",
       "edit_modal_title": "Edit Alias",

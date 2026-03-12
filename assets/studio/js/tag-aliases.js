@@ -359,7 +359,7 @@ function wireEvents(state) {
     const sortButton = event.target.closest("button[data-sort-key]");
     if (sortButton) {
       const key = normalize(sortButton.getAttribute("data-sort-key"));
-      if (key !== "alias") return;
+      if (key !== "alias" && key !== "tags") return;
       if (state.sortKey === key) {
         state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
       } else {
@@ -582,13 +582,16 @@ function renderGroupInfoControl(state) {
 function renderList(state) {
   const visible = getVisibleAliases(state);
   const aliasHeading = aliasesText(state.config, "table_heading_alias", "alias");
+  const tagsHeading = aliasesText(state.config, "group_tags_heading", "tags");
 
   const headerHtml = `
     <div class="${UI_CLASS.listHead}">
       <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="alias"${stateAttr(state.sortKey === "alias" ? UI_STATE.active : "")}>
         ${escapeHtml(aliasHeading)}${sortIndicator(state, "alias")}
       </button>
-      <span class="${UI_CLASS.headLabel}">${escapeHtml(aliasesText(state.config, "group_tags_heading", "group tags"))}</span>
+      <button type="button" class="${UI_CLASS.sortButton}" data-sort-key="tags"${stateAttr(state.sortKey === "tags" ? UI_STATE.active : "")}>
+        ${escapeHtml(tagsHeading)}${sortIndicator(state, "tags")}
+      </button>
     </div>
   `;
 
