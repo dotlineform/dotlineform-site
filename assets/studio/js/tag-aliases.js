@@ -168,21 +168,15 @@ function renderShell(state) {
     title: importModalTitle,
     hidden: !state.importModalOpen,
     bodyHtml: `
-      <div class="tagStudioToolbar">
+      <div class="tagStudioToolbar tagStudioToolbar--modalImport">
         <div class="tagStudioToolbar__row">
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label" data-role="${UI.role.importFileLabel}">${escapeHtml(importFileLabel)}</span>
-            <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(chooseFileLabel)}</button>
-            <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
-          </label>
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label" data-role="${UI.role.importModeLabel}">${escapeHtml(importModeFieldLabel)}</span>
-            <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
-              <option value="add">${escapeHtml(importModeOptionAdd)}</option>
-              <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
-              <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
-            </select>
-          </label>
+          <button type="button" class="tagStudio__button" data-role="${UI.role.chooseFile}">${escapeHtml(chooseFileLabel)}</button>
+          <input type="file" data-role="${UI.role.importFile}" accept=".json,application/json" hidden>
+          <select class="tagStudioToolbar__select" data-role="${UI.role.importMode}">
+            <option value="add">${escapeHtml(importModeOptionAdd)}</option>
+            <option value="merge">${escapeHtml(importModeOptionMerge)}</option>
+            <option value="replace">${escapeHtml(importModeOptionReplace)}</option>
+          </select>
           <button type="button" class="tagStudio__button" data-role="${UI.role.importButton}">${escapeHtml(importButtonLabel)}</button>
         </div>
         <p class="tagStudioToolbar__selected" data-role="${UI.role.selectedFile}"></p>

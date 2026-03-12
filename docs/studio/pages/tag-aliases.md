@@ -35,8 +35,8 @@ Top-level structure:
   - page scope for Studio CSS variables
 - `#tag-aliases[data-role="tag-aliases"]`
   - template-owned aliases shell root
-- `[data-role="toolbar"]`
-  - action toolbar shell
+- `.seriesTagsActions`
+  - top action row shell shared with Series Tags layout pattern
 - `[data-role="filters"]`
   - search and key shell
 - `[data-role="list"]`
@@ -46,16 +46,17 @@ Top-level structure:
 
 ## Named UI Sections
 
-### Toolbar
+### Action row
 
 User-facing name:
 
-- toolbar
+- action row
 
 DOM / CSS:
 
-- `.tagStudioToolbar`
-- `.tagStudioToolbar__row`
+- `.seriesTagsActions`
+- `[data-role="open-import-modal"]`
+- `[data-role="open-new-alias"]`
 
 JS owner:
 
@@ -64,7 +65,7 @@ JS owner:
 
 Meaning:
 
-- the top action area containing the `Import` modal trigger and the `New alias` action
+- the top right-aligned action row above the list panel, containing the `Import` modal trigger and the `New alias` action
 
 ### Import modal
 

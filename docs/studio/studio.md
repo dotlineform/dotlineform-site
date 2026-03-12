@@ -567,10 +567,12 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/studio/data
 - supports key-button filtering by group
 - provides an `All tags` button to clear filter
 - supports import from a local JSON file (recommended from `var/studio/import`)
+  - import controls live inside an `Import` modal opened from the top right-aligned action row above the list panel
+  - the `Import` button is disabled when the local server is unavailable
   - mode `add (no overwrite)`: add tags with new `tag_id` only, keep existing entries unchanged
   - mode `replace`: replace the full tag list
   - mode `add + overwrite`: add new tags and overwrite matching `tag_id` entries, leaving other entries untouched
-  - includes `New tag` button (right side of import controls) to open tag-create modal
+  - top action row includes `Import` then `New tag`
 - local-server import writes update timestamps:
   - top-level `updated_at_utc`
   - per-tag `updated_at_utc` for added/overwritten tags
@@ -615,16 +617,6 @@ The Studio Tag Registry page (`/studio/tag-registry/`) reads `assets/studio/data
   - `POST /demote-tag` (apply)
   - demotion removes canonical tag, creates alias `<slug> -> target tag_id(s)`, rewrites assignment refs and alias target refs
 
-Tag Registry import modes:
-
-- `Import mode: Local server`
-  - uses `POST /import-tag-registry`
-  - returns import result counts (imported, added, overwritten, unchanged, removed, final)
-- `Import mode: Patch`
-  - server unavailable fallback
-  - generates copyable patch snippet for **new tags only**
-  - does not attempt overwrite in manual mode
-
 ## Tag Aliases Page
 
 The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/tag_aliases.json` and:
@@ -651,7 +643,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
 - supports search by alias prefix
 - supports header sorting (alias, asc/desc)
 - supports import from a local JSON file (recommended from `var/studio/import`)
-  - import controls live inside an `Import` modal opened from the top action row
+  - import controls live inside an `Import` modal opened from the top right-aligned action row above the list panel
   - the `Import` button is disabled when the local server is unavailable
   - mode `add (no overwrite)`: add aliases with new key only
   - mode `replace`: replace the full aliases map

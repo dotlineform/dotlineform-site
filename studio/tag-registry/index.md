@@ -9,30 +9,11 @@ studio_page_doc: /docs/studio/pages/tag-registry/
 
 <div class="tagRegistryPage">
   <div id="tag-registry" data-role="tag-registry">
+    <div class="seriesTagsActions">
+      <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
+      <button type="button" class="tagStudio__button" data-role="open-new-tag">New tag</button>
+    </div>
     <section class="tagStudio__panel">
-      <div class="tagStudioToolbar" data-role="toolbar">
-        <div class="tagStudioToolbar__row">
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label" data-role="import-file-label">import file</span>
-            <button type="button" class="tagStudio__button" data-role="choose-file">Choose file</button>
-            <input type="file" data-role="import-file" accept=".json,application/json" hidden>
-          </label>
-          <label class="tagStudioToolbar__field">
-            <span class="tagStudioToolbar__label" data-role="import-mode-label">mode</span>
-            <select class="tagStudioToolbar__select" data-role="import-mode">
-              <option value="add">add (no overwrite)</option>
-              <option value="merge">add + overwrite</option>
-              <option value="replace">replace entire registry</option>
-            </select>
-          </label>
-          <button type="button" class="tagStudio__button" data-role="import-btn">Import</button>
-          <span class="tagStudioToolbar__mode" data-role="save-mode"></span>
-          <button type="button" class="tagStudio__button tagStudioToolbar__action" data-role="open-new-tag">New tag</button>
-        </div>
-        <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
-        <p class="tagStudioToolbar__result" data-role="import-result"></p>
-      </div>
-
       <div class="tagStudioFilters" data-role="filters">
         <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
         <label class="tagStudioFilters__searchWrap">

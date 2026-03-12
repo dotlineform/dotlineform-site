@@ -35,8 +35,8 @@ Top-level structure:
   - page scope for Studio CSS variables
 - `#tag-registry[data-role="tag-registry"]`
   - template-owned registry shell root
-- `[data-role="toolbar"]`
-  - import/action toolbar shell
+- `.seriesTagsActions`
+  - top action row shell shared with Series Tags layout pattern
 - `[data-role="filters"]`
   - search and key shell
 - `[data-role="list"]`
@@ -46,20 +46,17 @@ Top-level structure:
 
 ## Named UI Sections
 
-### Toolbar
+### Action row
 
 User-facing name:
 
-- toolbar
+- action row
 
 DOM / CSS:
 
-- `.tagStudioToolbar`
-- `.tagStudioToolbar__row`
-- `.tagStudioToolbar__field`
-- `.tagStudioToolbar__mode`
-- `.tagStudioToolbar__selected`
-- `.tagStudioToolbar__result`
+- `.seriesTagsActions`
+- `[data-role="open-import-modal"]`
+- `[data-role="open-new-tag"]`
 
 JS owner:
 
@@ -68,7 +65,32 @@ JS owner:
 
 Meaning:
 
-- the top action area containing import controls, save mode, and the “New tag” action
+- the top right-aligned action row above the list panel, containing the `Import` modal trigger and the `New tag` action
+
+### Import modal
+
+User-facing name:
+
+- import modal
+
+DOM / CSS:
+
+- `[data-role="open-import-modal"]`
+- `[data-role="import-modal"]`
+- `[data-role="import-file"]`
+- `[data-role="import-mode"]`
+- `[data-role="import-btn"]`
+- `[data-role="selected-file"]`
+- `[data-role="import-result"]`
+
+JS owner:
+
+- `renderShell(state)` in `assets/studio/js/tag-registry.js`
+- import handlers in `wireEvents(state)`
+
+Meaning:
+
+- modal-owned import controls for file selection, import mode, submit, and import result text; the modal trigger is disabled when the local server is unavailable
 
 ### Search and filters
 

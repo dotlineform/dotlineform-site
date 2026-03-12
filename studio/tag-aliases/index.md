@@ -9,14 +9,11 @@ studio_page_doc: /docs/studio/pages/tag-aliases/
 
 <div class="tagAliasesPage">
   <div id="tag-aliases" data-role="tag-aliases">
+    <div class="seriesTagsActions">
+      <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
+      <button type="button" class="tagStudio__button" data-role="open-new-alias">New alias</button>
+    </div>
     <section class="tagStudio__panel">
-      <div class="tagStudioToolbar" data-role="toolbar">
-        <div class="tagStudioToolbar__row">
-          <button type="button" class="tagStudio__button" data-role="open-import-modal">Import</button>
-          <button type="button" class="tagStudio__button tagStudioToolbar__action" data-role="open-new-alias">New alias</button>
-        </div>
-      </div>
-
       <div class="tagStudioFilters" data-role="filters">
         <div class="tagStudio__key tagStudioFilters__key" data-role="key"></div>
         <label class="tagStudioFilters__searchWrap">

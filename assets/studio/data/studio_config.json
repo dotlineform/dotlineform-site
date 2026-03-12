@@ -137,6 +137,8 @@
       "import_mode_option_replace": "replace entire registry",
       "choose_file_button": "Choose file",
       "import_button": "Import",
+      "import_modal_title": "Import Registry",
+      "import_modal_close_button": "Close",
       "new_tag_button": "New tag",
       "search_label": "Search tags",
       "search_placeholder": "search",

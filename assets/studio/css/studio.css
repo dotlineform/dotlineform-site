@@ -929,6 +929,13 @@ input.tagStudio__input {
   margin: 0 0 var(--studio-shell-gap-sm);
 }
 
+.tagStudioToolbar--modalImport {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin: var(--studio-shell-gap-sm) 0 0;
+}
+
 .tagStudioToolbar__field {
   display: inline-flex;
   flex-direction: column;

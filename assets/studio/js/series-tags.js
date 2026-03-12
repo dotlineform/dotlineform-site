@@ -375,10 +375,9 @@ function renderImportModal(state) {
   const hasFile = Boolean(state.importFile);
   const canApply = Boolean(preview && (Number(preview.applicable_count) > 0 || Number(preview.conflict_count) > 0));
   const bodyHtml = `
-    <div class="tagStudioToolbar seriesTagsSession">
+    <div class="tagStudioToolbar tagStudioToolbar--modalImport seriesTagsSession">
       <div class="tagStudioToolbar__row seriesTagsSession__row" data-role="${UI.role.sessionImport}">
         <input type="file" accept="application/json,.json" hidden>
-        <span class="${UI_CLASS.sessionLabel}">${escapeHtml(seriesTagsText(state.config, "session_import_label", "Import assignments"))}</span>
         <button type="button" class="tagStudio__button ${UI_CLASS.sessionAction}" data-import-action="choose-file">
           ${escapeHtml(seriesTagsText(state.config, "session_import_choose_button", "Choose file"))}
         </button>
