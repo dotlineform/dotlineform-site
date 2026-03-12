@@ -14,7 +14,7 @@ studio_page_doc: /docs/studio/pages/tag-aliases/
         <div class="tagStudioToolbar__row">
           <label class="tagStudioToolbar__field">
             <span class="tagStudioToolbar__label" data-role="import-file-label">import file</span>
-            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="choose-file">Choose file</button>
+            <button type="button" class="tagStudio__button" data-role="choose-file">Choose file</button>
             <input type="file" data-role="import-file" accept=".json,application/json" hidden>
           </label>
           <label class="tagStudioToolbar__field">
@@ -25,9 +25,9 @@ studio_page_doc: /docs/studio/pages/tag-aliases/
               <option value="replace">replace entire aliases</option>
             </select>
           </label>
-          <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="import-btn">Import</button>
+          <button type="button" class="tagStudio__button" data-role="import-btn">Import</button>
           <span class="tagStudioToolbar__mode" data-role="save-mode"></span>
-          <button type="button" class="tagStudio__button tagStudio__button--primary tagStudioToolbar__action" data-role="open-new-alias">New alias</button>
+          <button type="button" class="tagStudio__button tagStudioToolbar__action" data-role="open-new-alias">New alias</button>
         </div>
         <p class="tagStudioToolbar__selected" data-role="selected-file"></p>
         <p class="tagStudioToolbar__result" data-role="import-result"></p>

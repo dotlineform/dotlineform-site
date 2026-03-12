@@ -86,7 +86,7 @@ function renderActions(options = {}) {
   const primaryAttrs = options.primaryDisabled ? " disabled" : "";
   return `
     <div class="tagStudioModal__actions">
-      <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
+      <button type="button" class="tagStudio__button" data-role="modal-primary"${primaryAttrs}>${escapeHtml(primaryLabel)}</button>
       <button type="button" class="tagStudio__button" data-role="modal-cancel">${escapeHtml(cancelLabel)}</button>
     </div>
   `;
@@ -97,7 +97,6 @@ function renderActionList(actions = []) {
   return actions.map((action, index) => {
     const label = String(action && action.label ? action.label : `Action ${index + 1}`);
     const classes = ["tagStudio__button"];
-    if (action && action.primary) classes.push("tagStudio__button--primary");
     const roleAttr = action && action.role ? ` data-role="${escapeHtml(action.role)}"` : "";
     const disabledAttr = action && action.disabled ? " disabled" : "";
     return `<button type="button" class="${classes.join(" ")}"${roleAttr}${disabledAttr}>${escapeHtml(label)}</button>`;

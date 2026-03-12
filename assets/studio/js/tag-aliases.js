@@ -156,7 +156,7 @@ function renderShell(state) {
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.copyPatch, label: patchModalCopy, primary: true },
+      { role: UI.role.copyPatch, label: patchModalCopy },
       { role: UI.role.patchModalClose, label: patchModalClose }
     ])
   });
@@ -190,7 +190,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.saveEditAlias, label: editSaveButton, primary: true, disabled: true },
+      { role: UI.role.saveEditAlias, label: editSaveButton, disabled: true },
       { role: UI.role.editModalClose, label: editCancelButton }
     ])
   });

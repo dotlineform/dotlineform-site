@@ -57,7 +57,6 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__panel`
 - `tagStudio__input`
 - `tagStudio__button`
-- `tagStudio__button--primary`
 - `tagStudio__chip`
 - `tagStudio__chipText`
 - `tagStudio__chipCaption`

@@ -177,7 +177,7 @@ function renderShell(state) {
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.patchSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.copyPatch, label: patchModalCopy, primary: true },
+      { role: UI.role.copyPatch, label: patchModalCopy },
       { role: UI.role.patchModalClose, label: patchModalClose }
     ])
   });
@@ -199,7 +199,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.editStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.saveEdit, label: editSaveButton, primary: true },
+      { role: UI.role.saveEdit, label: editSaveButton },
       { role: UI.role.editModalClose, label: editCloseButton }
     ])
   });
@@ -223,7 +223,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.newTagStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.createTag, label: newCreateButton, primary: true, disabled: true },
+      { role: UI.role.createTag, label: newCreateButton, disabled: true },
       { role: UI.role.newModalClose, label: newCancelButton }
     ])
   });
@@ -248,7 +248,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDemote, label: demoteConfirmButton, primary: true, disabled: true },
+      { role: UI.role.confirmDemote, label: demoteConfirmButton, disabled: true },
       { role: UI.role.demoteModalClose, label: demoteCloseButton }
     ])
   });
@@ -266,7 +266,7 @@ function renderShell(state) {
       <p class="${UI_CLASS.formStatus}" data-role="${UI.role.deleteStatus}"></p>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.confirmDeleteTag, label: deleteConfirmButton, primary: true },
+      { role: UI.role.confirmDeleteTag, label: deleteConfirmButton },
       { role: UI.role.deleteModalClose, label: deleteCloseButton }
     ])
   });

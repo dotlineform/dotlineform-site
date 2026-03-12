@@ -347,7 +347,7 @@ function renderShell(state) {
       <pre class="${UI_CLASS.modalPre}" data-role="${UI.role.modalSnippet}"></pre>
     `,
     actionsHtml: renderStudioModalActions([
-      { role: UI.role.copySnippet, label: modalCopyButton, primary: true },
+      { role: UI.role.copySnippet, label: modalCopyButton },
       { role: UI.role.modalClose, label: modalCloseButton }
     ])
   });

@@ -100,7 +100,7 @@ studio_page_doc: /docs/studio/pages/tag-editor/
               placeholder="tag slug or alias"
             >
             <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
-            <button type="button" class="tagStudio__button tagStudio__button--primary" data-role="save">Save Tags</button>
+            <button type="button" class="tagStudio__button" data-role="save">Save Tags</button>
             <span class="tagStudio__saveMode" data-role="save-mode"></span>
           </div>
           <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
