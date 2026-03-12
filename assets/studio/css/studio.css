@@ -1305,6 +1305,7 @@ input.tagStudio__input {
 
 .tagStudioForm__selected {
   min-height: 1.6rem;
+  margin-top: 0.35rem;
 }
 
 .tagStudioForm__key .tagStudio__keyPill[data-state="active"] {

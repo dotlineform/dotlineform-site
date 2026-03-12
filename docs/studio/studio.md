@@ -377,7 +377,8 @@ While typing in `Add Tag`, autocomplete shows two sections in one popup:
    - each alias row shows:
      - alias pill (neutral white/grey style)
      - vertical list of group-colored canonical target tag pills for that alias
-   - alias rows are laid out horizontally with wrapping (like tag pills)
+- alias rows are laid out horizontally with wrapping (like tag pills)
+- demoting a canonical tag from Tag Aliases now uses a page-owned search modal with canonical tag matches only, not free-text comma-separated target entry
 
 Interaction:
 
@@ -625,8 +626,8 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
 - lists aliases with columns: alias, tags
 - renders alias values inline as color-coded pills in the `tags` column
   - alias row supports one or more canonical target tags
-  - single-group aliases use that group color
-  - multi-group or unresolved aliases use warning color
+  - alias chip stays neutral black/white
+  - target tag chips carry the group color
   - known group-tag pills include `←` demote
   - alias pills include `→` promote
   - alias pills include `×` delete

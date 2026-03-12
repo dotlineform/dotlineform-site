@@ -150,6 +150,7 @@ DOM / CSS:
 Meaning:
 
 - the left column showing the alias chip and alias-level actions
+- alias chips use the neutral Studio chip style; only the target tag chips carry group color
 
 ### Tags column
 
@@ -217,6 +218,32 @@ DOM / CSS:
 - `[data-role="confirm-promotion"]`
 
 Meaning:
+
+- choose the canonical tag group for alias promotion using group chips, then apply the promotion directly after preview when the local server is available
+
+### Demote tag modal
+
+User-facing name:
+
+- demote tag modal
+
+DOM / CSS:
+
+- `[data-role="demote-modal"]`
+- `[data-role="demote-tag-meta"]`
+- `[data-role="demote-group-key"]`
+- `[data-role="demote-tag-search"]`
+- `[data-role="demote-tag-popup-wrap"]`
+- `[data-role="demote-tag-popup"]`
+- `[data-role="demote-tag-list"]`
+- `[data-role="demote-status"]`
+- `[data-role="confirm-demote"]`
+
+Meaning:
+
+- page-owned modal for demoting a canonical tag to an alias
+- target tags are chosen from canonical registry matches using a search popup and removable selected-tag chips
+- the search results are tag-only; alias matches are not shown
 
 - page-owned modal shell for choosing the promotion group via group chips before direct preview/apply
 

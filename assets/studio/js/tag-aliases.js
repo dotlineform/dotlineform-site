@@ -26,7 +26,6 @@ import {
   normalize,
   normalizeAliases,
   normalizeTimestamp,
-  parseTagIdCsv
 } from "./tag-aliases-domain.js";
 import {
   buildManualPatchForAliasCreate,
@@ -49,7 +48,6 @@ import {
 import {
   openConfirmDetailModal,
   openConfirmModal,
-  openFormModal,
   renderStudioModalActions,
   renderStudioModalFrame
 } from "./studio-modal.js";
@@ -61,6 +59,7 @@ let STUDIO_GROUPS = ["subject", "domain", "form", "theme"];
 const ALIAS_RE = /^[a-z0-9][a-z0-9-]*$/;
 const MAX_ALIAS_TAGS = 4;
 const EDIT_TAG_MATCH_CAP = 12;
+const DEMOTE_TAG_MATCH_CAP = 12;
 let GROUP_INFO_PAGE_PATH = "/studio/tag-groups/";
 const UI = tagAliasesUi;
 const { className: UI_CLASS, selector: UI_SELECTOR, state: UI_STATE } = UI;
@@ -102,6 +101,7 @@ async function initTagAliasesPage() {
     registryOptions: [],
     groupDescriptions: new Map(),
     promotionState: null,
+    demoteState: null,
     editState: null,
     refs: null
   };
@@ -146,6 +146,11 @@ function renderShell(state) {
   const promotionModalPrompt = aliasesText(state.config, "promotion_modal_prompt", "Choose the canonical tag group for this alias.");
   const promotionButton = aliasesText(state.config, "promotion_button", "Promote");
   const promotionCancelButton = aliasesText(state.config, "promotion_cancel_button", "Cancel");
+  const demotionModalTitle = aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias");
+  const demotionMeta = aliasesText(state.config, "demotion_modal_meta", "tag: {tag_id} -> alias \"{alias_key}\"");
+  const demotionSearchPlaceholder = aliasesText(state.config, "demotion_search_placeholder", "search tags");
+  const demotionButton = aliasesText(state.config, "demotion_confirm_button", "Demote");
+  const demotionCancelButton = aliasesText(state.config, "demotion_cancel_button", "Cancel");
   const editModalTitle = aliasesText(state.config, "edit_modal_title", "Edit Alias");
   const editAliasLabel = aliasesText(state.config, "edit_alias_label", "alias");
   const editDescriptionLabel = aliasesText(state.config, "edit_description_label", "description");
@@ -208,6 +213,30 @@ function renderShell(state) {
       { role: UI.role.importModalClose, label: importModalClose }
     ])
   });
+  const demoteModalHtml = renderStudioModalFrame({
+    modalRole: UI.role.demoteModal,
+    backdropRole: UI.role.demoteModalClose,
+    titleId: "tagAliasesDemotionTitle",
+    title: demotionModalTitle,
+    bodyHtml: `
+      <p class="${UI_CLASS.formMeta}" data-role="${UI.role.demoteTagMeta}">${escapeHtml(demotionMeta)}</p>
+      <div class="tagStudio__key ${UI_CLASS.formKey}" data-role="${UI.role.demoteGroupKey}"></div>
+      <div class="${UI_CLASS.formFields}">
+        <label class="${UI_CLASS.formField} ${UI_CLASS.formSearchWrap}">
+          <input type="text" class="tagStudio__input" data-role="${UI.role.demoteTagSearch}" autocomplete="off" placeholder="${escapeHtml(demotionSearchPlaceholder)}">
+          <div class="${UI_CLASS.popup}" data-role="${UI.role.demoteTagPopupWrap}" hidden>
+            <div class="${UI_CLASS.popupInner}" data-role="${UI.role.demoteTagPopup}"></div>
+          </div>
+        </label>
+      </div>
+      <div class="tagStudio__chipList ${UI_CLASS.formSelected}" data-role="${UI.role.demoteTagList}"></div>
+      <p class="${UI_CLASS.formStatus}" data-role="${UI.role.demoteStatus}"></p>
+    `,
+    actionsHtml: renderStudioModalActions([
+      { role: UI.role.confirmDemote, label: demotionButton, disabled: true },
+      { role: UI.role.demoteModalClose, label: demotionCancelButton }
+    ])
+  });
   const editModalHtml = renderStudioModalFrame({
     modalRole: UI.role.editModal,
     titleId: "tagAliasesEditTitle",
@@ -264,7 +293,7 @@ function renderShell(state) {
   refs.openNewAlias.textContent = newAliasButtonLabel;
   refs.searchLabel.textContent = searchLabel;
   refs.search.setAttribute("placeholder", searchPlaceholder);
-  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${promotionModalHtml}${editModalHtml}`;
+  refs.modalHost.innerHTML = `${importModalHtml}${patchModalHtml}${promotionModalHtml}${demoteModalHtml}${editModalHtml}`;
 
   state.refs = {
     ...refs,
@@ -285,6 +314,15 @@ function renderShell(state) {
     promotionGroupKey: state.mount.querySelector(UI_SELECTOR.promotionGroupKey),
     promotionStatus: state.mount.querySelector(UI_SELECTOR.promotionStatus),
     confirmPromotion: state.mount.querySelector(UI_SELECTOR.confirmPromotion),
+    demoteModal: state.mount.querySelector(UI_SELECTOR.demoteModal),
+    demoteTagMeta: state.mount.querySelector(UI_SELECTOR.demoteTagMeta),
+    demoteTagSearch: state.mount.querySelector(UI_SELECTOR.demoteTagSearch),
+    demoteTagPopupWrap: state.mount.querySelector(UI_SELECTOR.demoteTagPopupWrap),
+    demoteTagPopup: state.mount.querySelector(UI_SELECTOR.demoteTagPopup),
+    demoteGroupKey: state.mount.querySelector(UI_SELECTOR.demoteGroupKey),
+    demoteTagList: state.mount.querySelector(UI_SELECTOR.demoteTagList),
+    demoteStatus: state.mount.querySelector(UI_SELECTOR.demoteStatus),
+    confirmDemote: state.mount.querySelector(UI_SELECTOR.confirmDemote),
     editModal: state.mount.querySelector(UI_SELECTOR.editModal),
     editModalTitle: state.mount.querySelector(UI_SELECTOR.editModalTitle),
     editAliasName: state.mount.querySelector(UI_SELECTOR.editAliasName),
@@ -343,7 +381,7 @@ function wireEvents(state) {
     const demoteButton = event.target.closest("button[data-demote-tag-id]");
     if (demoteButton) {
       const tagId = normalize(demoteButton.getAttribute("data-demote-tag-id"));
-      if (tagId) void handleTagDemoteFromAliases(state, tagId);
+      if (tagId) openDemoteModal(state, tagId);
       return;
     }
 
@@ -422,6 +460,52 @@ function wireEvents(state) {
 
   state.refs.confirmPromotion.addEventListener("click", () => {
     void submitAliasPromotion(state);
+  });
+
+  state.refs.demoteModal.addEventListener("click", (event) => {
+    if (event.target.closest(UI_SELECTOR.demoteModalClose)) {
+      closeDemoteModal(state);
+      return;
+    }
+    if (state.refs.demoteTagPopupWrap.hidden) return;
+    if (!event.target.closest(UI_SELECTOR.demoteTagPopupWrap) && !event.target.closest(UI_SELECTOR.demoteTagSearch)) {
+      hideDemoteTagPopup(state);
+    }
+  });
+
+  state.refs.demoteTagSearch.addEventListener("input", () => {
+    renderDemoteTagPopup(state);
+  });
+
+  state.refs.demoteTagSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideDemoteTagPopup(state);
+      state.refs.demoteTagSearch.blur();
+    }
+  });
+
+  state.refs.demoteTagPopup.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-popup-demote-tag-id]");
+    if (!button) return;
+    const tagId = normalize(button.getAttribute("data-popup-demote-tag-id"));
+    if (!tagId) return;
+    addDemoteTag(state, tagId);
+    state.refs.demoteTagSearch.value = "";
+    hideDemoteTagPopup(state);
+    updateDemoteUi(state);
+  });
+
+  state.refs.demoteTagList.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-remove-demote-tag]");
+    if (!button || !state.demoteState) return;
+    const tagId = normalize(button.getAttribute("data-remove-demote-tag"));
+    if (!tagId) return;
+    state.demoteState.tags = state.demoteState.tags.filter((item) => item !== tagId);
+    updateDemoteUi(state);
+  });
+
+  state.refs.confirmDemote.addEventListener("click", () => {
+    void handleTagDemoteFromAliases(state);
   });
 
   state.refs.copyPatch.addEventListener("click", async () => {
@@ -521,6 +605,219 @@ function closePromotionModal(state) {
   state.refs.promotionGroupKey.innerHTML = "";
   setPromotionStatus(state, "", "");
   state.refs.confirmPromotion.disabled = true;
+}
+
+function openDemoteModal(state, tagId) {
+  clearImportResult(state);
+  const canonicalTagId = normalize(tagId);
+  if (!canonicalTagId) return;
+  const tagInfo = state.registryById.get(canonicalTagId);
+  if (!tagInfo) {
+    setImportResult(
+      state,
+      "error",
+      aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: canonicalTagId })
+    );
+    return;
+  }
+
+  state.demoteState = {
+    tagId: canonicalTagId,
+    tags: []
+  };
+  state.refs.demoteTagMeta.textContent = aliasesText(
+    state.config,
+    "demotion_modal_meta",
+    "tag: {tag_id} -> alias \"{alias_key}\"",
+    {
+      tag_id: canonicalTagId,
+      alias_key: canonicalTagId.split(":", 2)[1] || canonicalTagId
+    }
+  );
+  state.refs.demoteTagSearch.value = "";
+  hideDemoteTagPopup(state);
+  updateDemoteUi(state);
+  state.refs.demoteModal.hidden = false;
+  state.refs.demoteTagSearch.focus();
+}
+
+function closeDemoteModal(state) {
+  state.demoteState = null;
+  state.refs.demoteModal.hidden = true;
+  state.refs.demoteTagMeta.textContent = "";
+  state.refs.demoteTagSearch.value = "";
+  state.refs.demoteGroupKey.innerHTML = "";
+  state.refs.demoteTagList.innerHTML = "";
+  state.refs.confirmDemote.disabled = true;
+  setDemoteStatus(state, "", "");
+  hideDemoteTagPopup(state);
+}
+
+function setDemoteStatus(state, kind, message) {
+  setStatusText(state.refs.demoteStatus, kind, message);
+}
+
+function renderDemoteGroupKey(state) {
+  if (!state.demoteState) {
+    state.refs.demoteGroupKey.innerHTML = "";
+    return;
+  }
+  const selected = new Set((state.demoteState.tags || []).map((tagId) => normalize(tagId).split(":", 1)[0]));
+  state.refs.demoteGroupKey.innerHTML = STUDIO_GROUPS.map((group) => {
+    const titleAttr = groupTitleAttr(state, group);
+    return `<span class="${classNames(UI_CLASS.keyPill, chipGroupClass(group))}"${stateAttr(selected.has(group) ? UI_STATE.active : "")} ${titleAttr}>${escapeHtml(group)}</span>`;
+  }).join("") + renderGroupInfoControl(state);
+}
+
+function renderDemoteTagList(state) {
+  if (!state.demoteState) {
+    state.refs.demoteTagList.innerHTML = "";
+    return;
+  }
+  const rows = state.demoteState.tags.map((tagId) => {
+    const info = state.registryById.get(tagId);
+    const group = info && STUDIO_GROUPS.includes(info.group) ? info.group : "warning";
+    const label = info ? info.label : tagId;
+    return `
+      <span class="${classNames(UI_CLASS.chip, group === "warning" ? UI_CLASS.chipWarning : chipGroupClass(group))}" title="${escapeHtml(tagId)}">
+        ${escapeHtml(label)}
+        <button
+          type="button"
+          class="${UI_CLASS.chipRemove}"
+          data-remove-demote-tag="${escapeHtml(tagId)}"
+          aria-label="${escapeHtml(aliasesText(state.config, "remove_target_tag_aria_label", "Remove {tag_id}", { tag_id: tagId }))}"
+        >
+          x
+        </button>
+      </span>
+    `;
+  }).join("");
+  state.refs.demoteTagList.innerHTML = rows;
+}
+
+function getDemoteValidation(state) {
+  if (!state.demoteState) return { valid: false, warning: "", tags: [] };
+  const selectedTags = Array.isArray(state.demoteState.tags) ? state.demoteState.tags.slice() : [];
+  let warning = "";
+
+  if (!selectedTags.length) {
+    warning = aliasesText(state.config, "target_tag_required", "At least one canonical target tag is required.");
+  } else if (selectedTags.length > MAX_ALIAS_TAGS) {
+    warning = aliasesText(state.config, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS });
+  } else {
+    const seenGroups = new Set();
+    for (const tagId of selectedTags) {
+      if (tagId === state.demoteState.tagId) {
+        warning = aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag.");
+        break;
+      }
+      const info = state.registryById.get(tagId);
+      if (!info) {
+        warning = aliasesText(state.config, "unknown_tag_selected", "Unknown tag selected: {tag_id}", { tag_id: tagId });
+        break;
+      }
+      if (seenGroups.has(info.group)) {
+        warning = aliasesText(state.config, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group: info.group });
+        break;
+      }
+      seenGroups.add(info.group);
+    }
+  }
+
+  return {
+    valid: !warning,
+    warning,
+    tags: selectedTags
+  };
+}
+
+function updateDemoteUi(state) {
+  if (!state.demoteState) return;
+  renderDemoteGroupKey(state);
+  renderDemoteTagList(state);
+  const validation = getDemoteValidation(state);
+  state.refs.confirmDemote.disabled = !validation.valid;
+  if (validation.warning) {
+    const emptyWarning = aliasesText(state.config, "target_tag_required", "At least one canonical target tag is required.");
+    const kind = validation.warning === emptyWarning ? "" : "error";
+    setDemoteStatus(state, kind, validation.warning);
+  } else {
+    setDemoteStatus(state, "", "");
+  }
+}
+
+function getDemoteTagMatches(state, query) {
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery || !state.demoteState) {
+    return { matches: [], truncated: false };
+  }
+  const selected = new Set(state.demoteState.tags || []);
+  const allMatches = state.registryOptions.filter((item) => {
+    if (selected.has(item.tagId)) return false;
+    if (item.tagId === state.demoteState.tagId) return false;
+    const slug = item.tagId.split(":", 2)[1] || "";
+    return (
+      normalize(item.label).startsWith(normalizedQuery) ||
+      normalize(slug).startsWith(normalizedQuery)
+    );
+  });
+  return {
+    matches: allMatches.slice(0, DEMOTE_TAG_MATCH_CAP),
+    truncated: allMatches.length > DEMOTE_TAG_MATCH_CAP
+  };
+}
+
+function renderDemoteTagPopup(state) {
+  if (!state.demoteState) return;
+  const result = getDemoteTagMatches(state, state.refs.demoteTagSearch.value);
+  if (!result.matches.length) {
+    hideDemoteTagPopup(state);
+    return;
+  }
+  const chips = result.matches.map((item) => `
+    <button
+      type="button"
+      class="${classNames(UI_CLASS.popupPill, chipGroupClass(item.group))}"
+      data-popup-demote-tag-id="${escapeHtml(item.tagId)}"
+      title="${escapeHtml(item.tagId)}"
+    >
+      ${escapeHtml(item.label)}
+    </button>
+  `);
+  if (result.truncated) {
+    chips.push(`<span class="${classNames(UI_CLASS.popupPill, UI_CLASS.popupMore)}" title="${escapeHtml(aliasesText(state.config, "popup_more_title", "More matches available"))}">…</span>`);
+  }
+  state.refs.demoteTagPopup.innerHTML = chips.join("");
+  state.refs.demoteTagPopupWrap.hidden = false;
+}
+
+function hideDemoteTagPopup(state) {
+  state.refs.demoteTagPopupWrap.hidden = true;
+  state.refs.demoteTagPopup.innerHTML = "";
+}
+
+function addDemoteTag(state, tagId) {
+  if (!state.demoteState) return;
+  const normalizedTagId = normalize(tagId);
+  if (!normalizedTagId || !state.registryById.has(normalizedTagId)) return;
+  if (normalizedTagId === state.demoteState.tagId) {
+    setDemoteStatus(state, "error", aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag."));
+    return;
+  }
+  if (state.demoteState.tags.includes(normalizedTagId)) return;
+  if (state.demoteState.tags.length >= MAX_ALIAS_TAGS) {
+    setDemoteStatus(state, "error", aliasesText(state.config, "target_tags_max", "At most {max_tags} target tags are allowed.", { max_tags: MAX_ALIAS_TAGS }));
+    return;
+  }
+
+  const nextGroup = normalizedTagId.split(":", 1)[0];
+  const groupConflict = state.demoteState.tags.some((item) => item.split(":", 1)[0] === nextGroup);
+  if (groupConflict) {
+    setDemoteStatus(state, "error", aliasesText(state.config, "target_tags_one_per_group", "Only one target tag per group is allowed ({group}).", { group: nextGroup }));
+    return;
+  }
+
+  state.demoteState.tags.push(normalizedTagId);
 }
 
 function renderPromotionGroupKey(state) {
@@ -714,7 +1011,7 @@ function renderList(state) {
         return `
         <li class="${UI_CLASS.listRow}">
           <div class="${UI_CLASS.aliasCol}">
-            <span class="${classNames(UI_CLASS.chip, getAliasClass(entry))}">
+            <span class="${UI_CLASS.chip}">
               <button
                 type="button"
                 class="${UI_CLASS.aliasButton}"
@@ -769,14 +1066,6 @@ function renderList(state) {
       }).join("")}
     </ul>
   `;
-}
-
-function getAliasClass(entry) {
-  if (!entry || entry.hasUnknown || !entry.groups.length || entry.groups.length > 1) {
-    return UI_CLASS.chipWarning;
-  }
-  const group = entry.groups[0];
-  return STUDIO_GROUPS.includes(group) ? chipGroupClass(group) : UI_CLASS.chipWarning;
 }
 
 function sortIndicator(state, key) {
@@ -1218,51 +1507,16 @@ async function submitAliasPromotion(state) {
   openPatchModal(state, patchResult.snippet);
 }
 
-async function handleTagDemoteFromAliases(state, tagId) {
-  const canonicalTagId = normalize(tagId);
+async function handleTagDemoteFromAliases(state) {
+  if (!state.demoteState) return;
+  const canonicalTagId = normalize(state.demoteState.tagId);
   if (!canonicalTagId) return;
-
-  let aliasTargets = [];
-  const inputResult = await openFormModal({
-    root: state.mount,
-    title: aliasesText(state.config, "demotion_modal_title", "Demote Tag to Alias"),
-    body: [
-      aliasesText(state.config, "demotion_prompt_line_1", "Demote {tag_id} to alias.", { tag_id: canonicalTagId }),
-      aliasesText(state.config, "demotion_prompt_line_2", "Enter canonical target tag_ids (comma-separated)."),
-      aliasesText(state.config, "demotion_prompt_line_3", "Example: form:line,theme:emergence")
-    ],
-    primaryLabel: aliasesText(state.config, "demotion_next_button", "Next"),
-    cancelLabel: aliasesText(state.config, "demotion_cancel_button", "Cancel"),
-    fields: [
-      {
-        name: "targets",
-        label: aliasesText(state.config, "demotion_targets_label", "target tag_ids")
-      }
-    ],
-    onSubmit(values) {
-      try {
-        aliasTargets = parseTagIdCsv(values.targets, (key, fallback, tokens) => aliasesText(null, key, fallback, tokens));
-      } catch (error) {
-        return {
-          ok: false,
-          statusKind: "error",
-          status: String(error.message || aliasesText(state.config, "invalid_target_tags", "Invalid target tags."))
-        };
-      }
-      if (aliasTargets.includes(canonicalTagId)) {
-        return {
-          ok: false,
-          statusKind: "error",
-          status: aliasesText(state.config, "demotion_target_self", "Target list must not include the demoted tag.")
-        };
-      }
-      return true;
-    }
-  });
-  if (!inputResult.submitted) {
-    clearImportResult(state);
+  const validation = getDemoteValidation(state);
+  if (!validation.valid) {
+    setDemoteStatus(state, "error", validation.warning || aliasesText(state.config, "invalid_target_tags", "Invalid target tags."));
     return;
   }
+  const aliasTargets = validation.tags.slice().sort((a, b) => a.localeCompare(b));
 
   if (state.saveMode === "post") {
     const preview = await previewTagDemoteFromAliases({
@@ -1271,6 +1525,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
       config: state.config
     });
     if (!preview.ok) {
+      setDemoteStatus(state, "error", preview.message);
       setImportResult(state, "error", preview.message);
       return;
     }
@@ -1294,7 +1549,6 @@ async function handleTagDemoteFromAliases(state, tagId) {
       cancelLabel: aliasesText(state.config, "demotion_cancel_button", "Cancel")
     });
     if (!confirmResult.confirmed) {
-      clearImportResult(state);
       return;
     }
   }
@@ -1305,10 +1559,13 @@ async function handleTagDemoteFromAliases(state, tagId) {
     aliasTargets
   });
   if (!result.ok) {
-    setImportResult(state, "error", result.message || aliasesText(state.config, "demotion_failed", "Demotion failed."));
+    const message = result.message || aliasesText(state.config, "demotion_failed", "Demotion failed.");
+    setDemoteStatus(state, "error", message);
+    setImportResult(state, "error", message);
     return;
   }
   if (result.mode === "post") {
+    closeDemoteModal(state);
     setImportResult(state, "success", String(result.response.summary_text || aliasesText(state.config, "demoted_success", "Demoted.")));
     const updatedAtUtc = normalizeTimestamp(result.response && result.response.updated_at_utc) || state.aliasesUpdatedAt;
     state.aliasesUpdatedAt = updatedAtUtc || state.aliasesUpdatedAt;
@@ -1324,6 +1581,7 @@ async function handleTagDemoteFromAliases(state, tagId) {
   }
 
   const patchResult = result.patchResult || buildManualPatchForDemote(canonicalTagId, aliasTargets);
+  closeDemoteModal(state);
   setImportResult(state, patchResult.kind, patchResult.message);
   openPatchModal(state, patchResult.snippet);
 }
