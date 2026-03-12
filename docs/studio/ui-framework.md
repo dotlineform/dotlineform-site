@@ -61,6 +61,7 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__chip`
 - `tagStudio__chipText`
 - `tagStudio__chipCaption`
+- `tagStudio__chipTag--local`
 - `tagStudio__chipTag--delete`
 - `tagStudio__key`
 - `tagStudio__popup`

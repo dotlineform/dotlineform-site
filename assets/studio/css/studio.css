@@ -561,6 +561,11 @@ input.tagStudio__input {
   min-width: 0;
 }
 
+.tagStudio__chipTag--local,
+.tagStudio__chipTag--delete {
+  font-weight: 700;
+}
+
 .tagStudio__weightDot {
   width: 0.62rem;
   height: 0.62rem;

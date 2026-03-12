@@ -527,9 +527,20 @@ function wireEvents(state) {
     }
 
     const button = event.target.closest("button[data-remove-entry-id]");
-    if (!button) return;
-    const entryId = Number(button.getAttribute("data-remove-entry-id"));
-    removeEditableEntry(state, entryId);
+    if (button) {
+      const entryId = Number(button.getAttribute("data-remove-entry-id"));
+      removeEditableEntry(state, entryId);
+      renderAll(state);
+      return;
+    }
+
+    const restoreButton = event.target.closest("button[data-restore-tag-id]");
+    if (!restoreButton) return;
+    restoreDeletedEntry(
+      state,
+      restoreButton.getAttribute("data-restore-tag-id"),
+      restoreButton.getAttribute("data-restore-scope")
+    );
     renderAll(state);
   });
 
@@ -877,6 +888,58 @@ function removeEditableEntry(state, entryId) {
     );
     setSaveResult(state, "", "");
   }
+}
+
+function restoreDeletedEntry(state, rawTagId, rawScope) {
+  const tagId = normalize(rawTagId);
+  const scope = String(rawScope || "").trim().toLowerCase();
+  if (!tagId) return;
+
+  const tag = state.tagsById.get(tagId);
+  if (!tag) return;
+
+  if (scope === "work") {
+    if (!state.selectedWorkId) return;
+    if (getSeriesTagIdSet(state).has(tagId)) {
+      setStatus(
+        state,
+        "warn",
+        studioText(
+          state.config,
+          "work_tag_restore_inherited_warning",
+          "Cannot restore {tag_id} while it is inherited from the series.",
+          { tag_id: tagId }
+        )
+      );
+      setSaveResult(state, "", "");
+      return;
+    }
+
+    const entries = getSelectedWorkEntries(state);
+    if (entries.some((entry) => entry.canonicalId === tagId)) return;
+    const baseRow = getOfflineBaseWorkRows(state, state.selectedWorkId).find((row) => row.tag_id === tagId);
+    if (!baseRow) return;
+    entries.push(makeResolvedEntry(nextEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
+    setStatus(
+      state,
+      "success",
+      studioText(state.config, "work_tag_restored", "Work tag restored.")
+    );
+    setSaveResult(state, "", "");
+    return;
+  }
+
+  if (state.seriesEntries.some((entry) => entry.canonicalId === tagId)) return;
+  const baseRow = normalizeAssignmentRows(state.offlineBaseSeriesRow && state.offlineBaseSeriesRow.tags)
+    .find((row) => row.tag_id === tagId);
+  if (!baseRow) return;
+  state.seriesEntries.push(makeResolvedEntry(nextEntryId(state), tagId, tag, baseRow.w_manual, baseRow.alias));
+  setStatus(
+    state,
+    "success",
+    studioText(state.config, "series_tag_restored", "Series tag restored.")
+  );
+  setSaveResult(state, "", "");
 }
 
 function renderAll(state) {
@@ -1274,11 +1337,13 @@ function renderGroups(state) {
     const inheritedDeletedHtml = selectedWorkId
       ? inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
         inherited: true,
+        scope: "series",
         titleKey: "inherited_tag_title",
         titleFallback: "Inherited from series: {tag_id}"
       })).join("")
       : inheritedDeleted.map((entry) => renderDeletedChip(state, entry, {
         inherited: false,
+        scope: "series",
         titleKey: "series_tag_title",
         titleFallback: "Series tag {tag_id}"
       })).join("");
@@ -1287,6 +1352,7 @@ function renderGroups(state) {
       .join("");
     const overrideDeletedHtml = overrideDeleted.map((entry) => renderDeletedChip(state, entry, {
       inherited: false,
+      scope: "work",
       titleKey: "work_override_title",
       titleFallback: "Work override {tag_id}"
     })).join("");
@@ -1321,7 +1387,11 @@ function renderChipCaption(state, marker) {
 function renderChipLabel(state, entry, marker) {
   return `
     <span class="${UI_CLASS.chipText}">
-      <span class="${classNames(UI_CLASS.chipTag, marker === "delete" ? UI_CLASS.chipTagDelete : "")}">${escapeHtml(entry.label)}</span>
+      <span class="${classNames(
+        UI_CLASS.chipTag,
+        marker === "local" ? UI_CLASS.chipTagLocal : "",
+        marker === "delete" ? UI_CLASS.chipTagDelete : ""
+      )}">${escapeHtml(entry.label)}</span>
       ${renderChipCaption(state, marker)}
     </span>
   `;
@@ -1390,10 +1460,18 @@ function renderDeletedChip(state, entry, options = {}) {
   const inherited = Boolean(options.inherited);
   const titleKey = options.titleKey || "series_tag_title";
   const titleFallback = options.titleFallback || "Series tag {tag_id}";
+  const restoreScope = options.scope || "series";
   return `
     <span class="${classNames(UI_CLASS.chip, inherited ? UI_CLASS.chipInherited : chipGroupClass(entry.group))}" title="${escapeHtml(studioText(state.config, titleKey, titleFallback, { tag_id: entry.canonicalId }))}">
       <span class="${classNames(UI_CLASS.weightDot, weightDotClass(entry.wManual))}" aria-hidden="true"></span>
       ${renderChipLabel(state, entry, "delete")}
+      <button
+        type="button"
+        class="${UI_CLASS.chipRemove}"
+        data-restore-tag-id="${escapeHtml(entry.canonicalId)}"
+        data-restore-scope="${escapeHtml(restoreScope)}"
+        aria-label="${escapeHtml(studioText(state.config, "restore_deleted_tag_aria_label", "Restore {tag_id}", { tag_id: entry.canonicalId }))}"
+      >⤺</button>
     </span>
   `;
 }

@@ -131,7 +131,7 @@ Meaning:
 - the right column containing the filtered visible tags for each series
 - local staged changes reuse the same chip-caption treatment as the editor:
   - `local` caption for locally added or modified assignments
-  - struck chip text plus `delete` caption for staged deletions
+  - bold struck chip text plus `delete` caption for staged deletions
 
 ### Filter controls
 

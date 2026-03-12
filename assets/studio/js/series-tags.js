@@ -454,7 +454,11 @@ function renderTagChip(state, tag) {
   return `
     <li class="${classNames(UI_CLASS.chip, tag.className)}" title="${escapeHtml(tag.tagId)}">
       <span class="${UI_CLASS.chipText}">
-        <span class="${classNames(UI_CLASS.chipTag, tag.marker === "delete" ? UI_CLASS.chipTagDelete : "")}">${escapeHtml(tag.label)}</span>
+        <span class="${classNames(
+          UI_CLASS.chipTag,
+          tag.marker === "local" ? UI_CLASS.chipTagLocal : "",
+          tag.marker === "delete" ? UI_CLASS.chipTagDelete : ""
+        )}">${escapeHtml(tag.label)}</span>
         ${caption}
       </span>
     </li>

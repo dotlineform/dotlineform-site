@@ -226,7 +226,8 @@ Meaning:
 - the group-name anchor for each row now uses the same coloured pill treatment as other Studio group-name displays
 - with no active work, these rows are editable series tags
 - with an active work, inherited series tags become monochrome context chips and work override tags remain editable
-- in offline mode, locally changed assignments show a caption below the chip and pending deletions remain visible as struck chips with a `delete` caption
+- in offline mode, locally changed assignments show a caption below the chip and bold tag text
+- pending deletions remain visible as bold struck chips with a `delete` caption and a `⤺` restore control
 
 ### Tag input row
 
