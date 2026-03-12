@@ -912,13 +912,6 @@ pre.theme-text{
   }
 }
 
-/* Keep work-details thumbs at fixed cell width.
-   This avoids single-item grids stretching to full content width. */
-.workDetails .seriesGrid{
-  grid-template-columns: repeat(auto-fill, var(--cell));
-  justify-content: start;
-}
-
 .seriesGrid__item{
   display: block;
   aspect-ratio: 1 / 1;
