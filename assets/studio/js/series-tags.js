@@ -745,7 +745,7 @@ function renderGroupInfoControl(state) {
       rel="noopener"
       title="${escapeHtml(seriesTagsText(state.config, "group_info_title", "Open group descriptions in a new tab"))}"
       aria-label="${escapeHtml(seriesTagsText(state.config, "group_info_aria_label", "Open group descriptions in a new tab"))}"
-    >?</a>
+    >i</a>
   `;
 }
 

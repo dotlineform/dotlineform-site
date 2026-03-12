@@ -733,9 +733,12 @@ input.tagStudio__input {
   width: var(--studio-pill-height);
   min-width: var(--studio-pill-height);
   aspect-ratio: 1 / 1;
+  border: 1px solid var(--line, var(--studio-line-chip));
+  border-radius: 999px;
   padding: 0;
   background: var(--studio-surface-subtle);
   cursor: pointer;
+  font-style: italic;
   line-height: 1;
   text-decoration: none;
   text-transform: none;
