@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-8d866c67531962f952aa4abf7ab81f8e",
-    "generated_at_utc": "2026-03-13T22:11:35Z",
+    "version": "blake2b-0fdd75ecda4f6053feaa58240e85ab17",
+    "generated_at_utc": "2026-03-13T22:24:07Z",
     "count": 613
   },
   "works": {
@@ -6641,7 +6641,7 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-6edccbf4d90e15bd6d532d413cc679ca",
-      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+      "details_checksum": "blake2b-da037c789297e9c796971e23371858e7"
     },
     "00482": {
       "work_id": "00482",
