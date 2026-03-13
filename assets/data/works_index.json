@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-c292a0b696d87708a1e231f74e1c3910",
-    "generated_at_utc": "2026-03-13T13:23:02Z",
-    "count": 572
+    "version": "blake2b-956e27d964612b0778ecd294dcfb62ed",
+    "generated_at_utc": "2026-03-13T14:35:26Z",
+    "count": 597
   },
   "works": {
     "00001": {
@@ -5257,6 +5257,132 @@
       "work_checksum": "blake2b-9209015b0629369ddfac22cf068f4596",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00394": {
+      "work_id": "00394",
+      "title": "wa (yoko takenami)",
+      "title_sort": "wa (yoko takenami)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-3c528f9c9ab95bd34461861bf8c26fd9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00395": {
+      "work_id": "00395",
+      "title": "wa (6)",
+      "title_sort": "wa (006)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-ceca729e74837c268d123568a9fd0761",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00396": {
+      "work_id": "00396",
+      "title": "wa (5)",
+      "title_sort": "wa (005)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-2e2caa95c77734bd53002b55b6c5430c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00397": {
+      "work_id": "00397",
+      "title": "wa (4)",
+      "title_sort": "wa (004)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-d7b8fe274d4ef2efc098e16f73cb5712",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00398": {
+      "work_id": "00398",
+      "title": "wa (7)",
+      "title_sort": "wa (007)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-fd2e77ed68a4f6b01e6f535fe1895a13",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00399": {
+      "work_id": "00399",
+      "title": "wa (3)",
+      "title_sort": "wa (003)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-85008ceca519e8066f30cc64c0ee7bfd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00400": {
+      "work_id": "00400",
+      "title": "wa (2)",
+      "title_sort": "wa (002)",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-4ecc2df1e7a323cfbac88ffe58a5452c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00401": {
+      "work_id": "00401",
+      "title": "wa",
+      "title_sort": "wa",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": "5",
+      "work_checksum": "blake2b-3820a9e2f4ca510fb30b6204a3a714a6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00402": {
+      "work_id": "00402",
+      "title": "spiders",
+      "title_sort": "spiders",
+      "year": 2006,
+      "year_display": "2006",
+      "series_id": "spiders",
+      "series_ids": [
+        "spiders"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-78ace45664bccaa75973a08942c1c8ee",
+      "details_checksum": "blake2b-d664f6f8a4eb18016ff982b56dde07a8"
+    },
     "00403": {
       "work_id": "00403",
       "title": "found form (2017-06-29)",
@@ -8013,6 +8139,230 @@
       ],
       "storage": "7",
       "work_checksum": "blake2b-b71e8dca651d460b2ddb5ae54ccc7efe",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00600": {
+      "work_id": "00600",
+      "title": "wa 1",
+      "title_sort": "wa 001",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-db48837069fb291a7ef4d8bcde851802",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00601": {
+      "work_id": "00601",
+      "title": "wa 2",
+      "title_sort": "wa 002",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-87afb798eca75cb5fc654a404d796dec",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00602": {
+      "work_id": "00602",
+      "title": "wa 3",
+      "title_sort": "wa 003",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b5c8b5d4b6e9e05f4ef74cae494445ae",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00603": {
+      "work_id": "00603",
+      "title": "wa 4",
+      "title_sort": "wa 004",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6d01c818d21cb0af49da68fce03e676d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00604": {
+      "work_id": "00604",
+      "title": "wa 5",
+      "title_sort": "wa 005",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-304d66b7a436aeda554d1174e251c126",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00605": {
+      "work_id": "00605",
+      "title": "wa 6",
+      "title_sort": "wa 006",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b3077fcdf8c4ca0533dddcbd79a084a1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00606": {
+      "work_id": "00606",
+      "title": "wa 7",
+      "title_sort": "wa 007",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b417848251f5e09e2a60403caa32cfdc",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00607": {
+      "work_id": "00607",
+      "title": "wa 8",
+      "title_sort": "wa 008",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8870887b0a9f01cf5597385be1895d55",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00608": {
+      "work_id": "00608",
+      "title": "wa 9",
+      "title_sort": "wa 009",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-feb0c8c91746fc028988e9207d3786d9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00609": {
+      "work_id": "00609",
+      "title": "wa 10",
+      "title_sort": "wa 010",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-547b9c3be03ee8ad537d0a16a3221bd0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00610": {
+      "work_id": "00610",
+      "title": "wa 11",
+      "title_sort": "wa 011",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-823ee0d9f1682851960b55ecaaa5c38c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00611": {
+      "work_id": "00611",
+      "title": "wa 12",
+      "title_sort": "wa 012",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e6d58fd85aba1f08d520e7cb4dc891ee",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00612": {
+      "work_id": "00612",
+      "title": "wa 13",
+      "title_sort": "wa 013",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cff690bff23badc3c763ce1c9d53ccd0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00613": {
+      "work_id": "00613",
+      "title": "wa 14",
+      "title_sort": "wa 014",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4a41a338140837b1662788ed3a427c1a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00614": {
+      "work_id": "00614",
+      "title": "wa 15",
+      "title_sort": "wa 015",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4886523c6531c02b49f6eb336acbf5ec",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00615": {
+      "work_id": "00615",
+      "title": "wa 16",
+      "title_sort": "wa 016",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "wa",
+      "series_ids": [
+        "wa"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a59e020b13c6259d6a4f9f3426486e9e",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

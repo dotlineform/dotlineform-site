@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "work_details_index_v1",
-    "version": "blake2b-d906abfe8792cde87e9221e1886ed52f",
-    "generated_at_utc": "2026-03-13T09:28:49Z",
-    "count": 568
+    "version": "blake2b-1d4372f22ec7dbe0a36787d39a5cc1c3",
+    "generated_at_utc": "2026-03-13T14:35:26Z",
+    "count": 574
   },
   "details": {
     "00001-001": {
@@ -685,6 +685,66 @@
       "project_subfolder": "reverse",
       "section_id": "reverse",
       "detail_checksum": "blake2b-19547cc8bbad657662919835b8475082"
+    },
+    "00402-001": {
+      "detail_uid": "00402-001",
+      "work_id": "00402",
+      "detail_id": "001",
+      "title": "spiders (2006-06-08 - 21-26-10)",
+      "title_sort": "spiders (2006-006-008 - 021-026-010)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-26c299ac19c756c9d68adc6d6e5332c3"
+    },
+    "00402-002": {
+      "detail_uid": "00402-002",
+      "work_id": "00402",
+      "detail_id": "002",
+      "title": "spiders (2006-06-08 - 21-25-05)",
+      "title_sort": "spiders (2006-006-008 - 021-025-005)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-f54804cc836391b72041650f22b2a3ba"
+    },
+    "00402-003": {
+      "detail_uid": "00402-003",
+      "work_id": "00402",
+      "detail_id": "003",
+      "title": "spiders (2006-06-08 - 20-19-05)",
+      "title_sort": "spiders (2006-006-008 - 020-019-005)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-c208151b0fe7f4c7bf6a1bd014fa2f30"
+    },
+    "00402-004": {
+      "detail_uid": "00402-004",
+      "work_id": "00402",
+      "detail_id": "004",
+      "title": "spiders (2006-06-08 - 20-18-27)",
+      "title_sort": "spiders (2006-006-008 - 020-018-027)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-53357c71a9bde70d8e8ff1fd747b5741"
+    },
+    "00402-005": {
+      "detail_uid": "00402-005",
+      "work_id": "00402",
+      "detail_id": "005",
+      "title": "spiders (2006-06-08 - 20-16-41)",
+      "title_sort": "spiders (2006-006-008 - 020-016-041)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-4da4133f9f2f2872de8f93298cb1436c"
+    },
+    "00402-006": {
+      "detail_uid": "00402-006",
+      "work_id": "00402",
+      "detail_id": "006",
+      "title": "spiders (2006-06-08 - 20-15-37)",
+      "title_sort": "spiders (2006-006-008 - 020-015-037)",
+      "project_subfolder": "photos",
+      "section_id": "photos",
+      "detail_checksum": "blake2b-e9c576d5388baebdec945f9612d83432"
     },
     "00456-001": {
       "detail_uid": "00456-001",

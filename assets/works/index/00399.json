@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-8be4a6de9917f740ac0e8d36dd9e2d95",
+    "generated_at_utc": "2026-03-13T13:58:36Z",
+    "work_id": "00399",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-85008ceca519e8066f30cc64c0ee7bfd",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-8be4a6de9917f740ac0e8d36dd9e2d95"
+  },
+  "work": {
+    "work_id": "00399",
+    "title": "wa (3)",
+    "title_sort": "wa (003)",
+    "year": 2008,
+    "year_display": "2008",
+    "series_id": "wa",
+    "series_ids": [
+      "wa"
+    ],
+    "series_title": "wa",
+    "series_sort": "00399",
+    "storage": "5",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 33.2,
+    "width_cm": 24.3,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "85008ceca519e8066f30cc64c0ee7bfd"
+  },
+  "sections": []
+}
