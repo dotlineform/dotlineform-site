@@ -1179,6 +1179,7 @@ Use “structure-first” naming and scope section-specific differences via the 
   display: inline-block;
   color: var(--link);
   text-decoration: none;
+  font-size: var(--font-small);
   font-weight: 500;
   line-height: 1.2;
 }
