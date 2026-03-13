@@ -766,6 +766,14 @@ def main() -> None:
         i = header_index.get(col_name)
         return None if i is None or i >= len(row) else row[i]
 
+    def live_cell_value(row: tuple, row_cells: tuple | None, header_index: Dict[str, int], col_name: str) -> Any:
+        i = header_index.get(col_name)
+        if i is None:
+            return None
+        if row_cells is not None and i < len(row_cells):
+            return row_cells[i].value
+        return None if i >= len(row) else row[i]
+
     def first_present_col(header_index: Dict[str, int], names: List[str]) -> Optional[str]:
         for n in names:
             if n in header_index:
@@ -2118,11 +2126,11 @@ def main() -> None:
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(cell(dr, work_details_hi, "title")),
-                    project_subfolder=coerce_string(cell(dr, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                    height_px=coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                    has_primary_2400=coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
+                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
+                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                    has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
                 )
                 detail_records_by_work.setdefault(wid, []).append(detail_record)
 
@@ -2195,7 +2203,7 @@ def main() -> None:
 
         details_payload_unsorted: Dict[str, Dict[str, Any]] = {}
         if work_details_rows and len(work_details_rows) > 1:
-            for dr in work_details_rows[1:]:
+            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
                 wid_raw = cell(dr, work_details_hi, "work_id")
                 did_raw = cell(dr, work_details_hi, "detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
@@ -2203,18 +2211,18 @@ def main() -> None:
                 wid = slug_id(wid_raw)
                 if wid not in eligible_work_ids:
                     continue
-                status = normalize_status(cell(dr, work_details_hi, "status"))
+                status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
                 if status not in {"draft", "published"}:
                     continue
                 did = slug_id(did_raw, width=3)
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(cell(dr, work_details_hi, "title")),
-                    project_subfolder=coerce_string(cell(dr, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                    height_px=coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                    has_primary_2400=coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
+                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
+                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                    has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
                 )
                 item = build_work_detail_index_record(detail_record)
                 detail_uid = coerce_string(item.get("detail_uid"))
@@ -2276,7 +2284,7 @@ def main() -> None:
 
         detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
         if work_details_rows and len(work_details_rows) > 1:
-            for dr in work_details_rows[1:]:
+            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
                 wid_raw = cell(dr, work_details_hi, "work_id")
                 did_raw = cell(dr, work_details_hi, "detail_id")
                 if is_empty(wid_raw) or is_empty(did_raw):
@@ -2284,7 +2292,7 @@ def main() -> None:
                 wid = slug_id(wid_raw)
                 if wid not in works_payload:
                     continue
-                status = normalize_status(cell(dr, work_details_hi, "status"))
+                status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
                 if status not in {"draft", "published"}:
                     continue
                 did = slug_id(did_raw, width=3)
@@ -2292,11 +2300,11 @@ def main() -> None:
                     build_canonical_detail_record(
                         wid=wid,
                         did=did,
-                        title=coerce_string(cell(dr, work_details_hi, "title")),
-                        project_subfolder=coerce_string(cell(dr, work_details_hi, "project_subfolder")),
-                        width_px=coerce_int(cell(dr, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                        height_px=coerce_int(cell(dr, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                        has_primary_2400=coerce_presence_bool(cell(dr, work_details_hi, "has_primary_2400")),
+                        title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
+                        project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                        width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                        height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                        has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
                     )
                 )
 
