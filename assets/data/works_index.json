@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-cce1170209c49dbbca015897be9a0cb8",
-    "generated_at_utc": "2026-03-13T21:45:06Z",
-    "count": 612
+    "version": "blake2b-8d866c67531962f952aa4abf7ab81f8e",
+    "generated_at_utc": "2026-03-13T22:11:35Z",
+    "count": 613
   },
   "works": {
     "00001": {
@@ -5213,6 +5213,20 @@
       ],
       "storage": "2",
       "work_checksum": "blake2b-31c2a3169fc8f87c1e2207322f24504a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00378": {
+      "work_id": "00378",
+      "title": "mm quantum",
+      "title_sort": "mm quantum",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "mm",
+      "series_ids": [
+        "mm"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-c8b2f79563a87db23180c9337d87f096",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
     "00379": {
