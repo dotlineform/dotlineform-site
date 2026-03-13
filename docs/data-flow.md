@@ -22,7 +22,7 @@ Current direction:
 - keep `series_index.json`
 - keep `works_index.json`
 - keep per-work JSON in `assets/works/index/<work_id>.json`
-- retire the runtime dependency on `work_details_index.json`
+- remove the obsolete global work-details index
 
 ## 1. Series Index
 
@@ -52,10 +52,10 @@ Why it is used:
 
 - the series index is fundamentally a global series listing, so a single global series JSON is the correct source
 
-Replacement for `work_details_index.json`:
+Replacement for the removed global work-details index:
 
 - none here
-- this step does not depend on `work_details_index.json`
+- this step does not depend on any global detail index
 
 ## 2. Series Page
 
@@ -90,10 +90,10 @@ Why both are used:
 - `series_index.json` answers membership and ordering
 - `works_index.json` answers lightweight work-card metadata without fetching one JSON file per work
 
-Replacement for `work_details_index.json`:
+Replacement for the removed global work-details index:
 
 - none here
-- this step does not depend on `work_details_index.json`
+- this step does not depend on any global detail index
 
 ## 3. Work Page
 
@@ -134,10 +134,10 @@ Why this is the right source:
 - details belong to a work, so per-work JSON is the natural source for detail sections and detail grids
 - this already scales better than using a global details JSON for work-page rendering
 
-Replacement for `work_details_index.json`:
+Replacement for the removed global work-details index:
 
 - none needed for this step
-- the work page already uses per-work JSON and does not depend on `work_details_index.json`
+- the work page already uses per-work JSON and does not depend on any global detail index
 
 ## 4. Detail Page
 
@@ -184,28 +184,17 @@ From that work-local payload, the page derives:
 - previous / next detail links
 - back-link context
 
-## `/work_details/` Index Page
+## Removed Global Detail Index
 
-User-facing step:
+Removed artefacts:
 
-- `/work_details/`
-- retired
-
-Template:
-
-- [`work_details/index.md`](/Users/dlf/Developer/dotlineform/dotlineform-site/work_details/index.md)
-
-Current status:
-
-- the page source still exists in the repo
-- it is marked `published: false`
-- the work page no longer links to it
-- it is no longer part of sitemap generation
+- the global work-details index JSON
+- `work_details/index.md`
 
 Replacement:
 
 - no replacement is needed
-- per-work detail grids on `/works/<work_id>/` are now the only detail index UI
+- per-work detail grids on `/works/<work_id>/` are the only detail index UI
 
 ## Current State
 

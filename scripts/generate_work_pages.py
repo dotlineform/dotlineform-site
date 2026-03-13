@@ -8,7 +8,6 @@ file per work (e.g. `_works/00286.md`) with YAML front matter populated from the
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
-Lightweight work-details index JSON is written to assets/data/work_details_index.json (object keyed by detail_uid).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -607,7 +606,6 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
-    ap.add_argument("--work-details-index-json-path", default="assets/data/work_details_index.json", help="Output path for generated lightweight work-details index JSON")
     ap.add_argument("--works-files-dir", default="assets/works/files", help="Output folder for copied work download files")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
@@ -659,7 +657,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,work-details-index-json,moments. "
+            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments. "
             "works-curator-pages is explicit-only; it does not run as part of work-pages."
         ),
     )
@@ -682,7 +680,6 @@ def main() -> None:
         "work-details-pages",
         "work-json",
         "works-index-json",
-        "work-details-index-json",
         "moments",
     }
     selected_artifacts: Optional[set[str]] = None
@@ -716,7 +713,6 @@ def main() -> None:
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
     run_works_index_json = artifact_enabled("works-index-json")
-    run_work_details_index_json = selected_artifacts is not None and artifact_enabled("work-details-index-json")
     run_moments_artifact = artifact_enabled("moments")
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
@@ -838,8 +834,6 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
     works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    work_details_index_json_path = Path(args.work_details_index_json_path).expanduser()
-    work_details_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     works_files_dir = Path(args.works_files_dir).expanduser()
     works_files_dir.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
@@ -1122,21 +1116,6 @@ def main() -> None:
             "storage": storage_value,
             "work_checksum": f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None,
             "details_checksum": None,
-        }
-
-    def build_work_detail_index_record(detail_record: Dict[str, Any]) -> Dict[str, Any]:
-        detail_uid = str(detail_record.get("detail_uid", ""))
-        project_subfolder = coerce_string(detail_record.get("project_subfolder")) or ""
-        detail_checksum_raw = coerce_string(detail_record.get("checksum"))
-        return {
-            "detail_uid": detail_uid,
-            "work_id": detail_record.get("work_id"),
-            "detail_id": detail_record.get("detail_id"),
-            "title": detail_record.get("title"),
-            "title_sort": detail_record.get("title_sort"),
-            "project_subfolder": project_subfolder,
-            "section_id": slug_anchor(project_subfolder or "details"),
-            "detail_checksum": f"blake2b-{detail_checksum_raw}" if detail_checksum_raw is not None else None,
         }
 
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -1900,7 +1879,7 @@ def main() -> None:
     # Work detail page generation + per-work detail JSON (WorkDetails)
     # ----------------------------
     if not work_details_rows or len(work_details_rows) < 2 or work_details_ws is None:
-        if run_work_details_pages or run_work_json or run_works_index_json or run_work_details_index_json:
+        if run_work_details_pages or run_work_json or run_works_index_json:
             print("No work detail pages/JSON/index rows found (WorkDetails sheet empty or missing).")
         else:
             print("Work detail pages/JSON skipped: not selected by --only.")
@@ -2189,83 +2168,6 @@ def main() -> None:
             )
         else:
             print("Work detail JSON skipped: not selected by --only.")
-
-    if run_work_details_index_json:
-        eligible_work_ids: set[str] = set()
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            status = normalize_status(cell(wr, works_hi, "status"))
-            if status not in {"draft", "published"}:
-                continue
-            eligible_work_ids.add(slug_id(wid_raw))
-
-        details_payload_unsorted: Dict[str, Dict[str, Any]] = {}
-        if work_details_rows and len(work_details_rows) > 1:
-            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
-                wid_raw = cell(dr, work_details_hi, "work_id")
-                did_raw = cell(dr, work_details_hi, "detail_id")
-                if is_empty(wid_raw) or is_empty(did_raw):
-                    continue
-                wid = slug_id(wid_raw)
-                if wid not in eligible_work_ids:
-                    continue
-                status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
-                if status not in {"draft", "published"}:
-                    continue
-                did = slug_id(did_raw, width=3)
-                detail_record = build_canonical_detail_record(
-                    wid=wid,
-                    did=did,
-                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
-                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                    has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
-                )
-                item = build_work_detail_index_record(detail_record)
-                detail_uid = coerce_string(item.get("detail_uid"))
-                if detail_uid is None:
-                    continue
-                details_payload_unsorted[detail_uid] = item
-
-        details_payload: Dict[str, Dict[str, Any]] = {
-            detail_uid: details_payload_unsorted[detail_uid]
-            for detail_uid in sorted(details_payload_unsorted.keys())
-        }
-        version_payload = {
-            "schema": "work_details_index_v1",
-            "details": details_payload,
-        }
-        version = compute_payload_version(version_payload)
-        payload = {
-            "header": {
-                "schema": "work_details_index_v1",
-                "version": version,
-                "generated_at_utc": utc_timestamp_now(),
-                "count": len(details_payload),
-            },
-            "details": details_payload,
-        }
-        exists = work_details_index_json_path.exists()
-        existing_version = extract_existing_header_scalar(work_details_index_json_path, "version") if exists else None
-        if (existing_version is not None) and (existing_version == version) and (not args.force):
-            print("Work details index JSON done. Wrote: 0. Skipped: 1.")
-        else:
-            if args.write:
-                work_details_index_json_path.write_text(
-                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"Work details index JSON done. Wrote: 1. Skipped: 0. Path: {work_details_index_json_path}")
-            else:
-                print(
-                    "Work details index JSON done. Would write: 1. Skipped: 0. "
-                    f"Path: {work_details_index_json_path} (overwrite={exists})"
-                )
-    else:
-        print("Work details index JSON skipped: not selected by --only.")
 
     if run_works_index_json:
         works_payload: Dict[str, Dict[str, Any]] = {}

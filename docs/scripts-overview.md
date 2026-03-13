@@ -138,9 +138,8 @@ Useful flags:
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
-- `--work-details-index-json-path` (default `assets/data/work_details_index.json`)
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `work-details-index-json`, `moments`
+  - allowed: `work-pages`, `works-curator-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - coupling:
     - `works-curator-pages` runs only when explicitly included in `--only`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
@@ -155,8 +154,6 @@ Useful flags:
     - each work keeps backward-compatible `series_id` as the first series and adds ordered `series_ids`
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
-  - `work-details-index-json`: writes `assets/data/work_details_index.json` as a lightweight object keyed by `detail_uid`
-    - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
     - `work.series_id` remains the first series and `work.series_ids` preserves the full ordered membership list from the workbook
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
@@ -166,7 +163,7 @@ Runtime canonical data flow:
 - `/series/` and `/series/<series_id>/` read `assets/data/series_index.json`.
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
 - `/works/<work_id>/` series nav/counter/link visibility read `assets/data/series_index.json`.
-- `/work_details/` reads `assets/data/work_details_index.json`.
+- `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 
 ### 3b) Tag Studio local save server
 
@@ -355,12 +352,11 @@ Or run multiple checks with repeated `--check-only`:
 
 Current checks:
 
-- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, `assets/data/series_index.json`, and `assets/data/work_details_index.json` (including duplicate IDs)
+- `cross_refs`: validates key references across `_works`, `_series`, `_work_details`, `assets/data/series_index.json`, and `assets/works/index/*.json` (including duplicate IDs)
 - `schema`: validates required front matter fields by collection and format/consistency checks (`work_id`, `detail_uid`, slug-safe IDs, `sort_fields` token rules with `work_id` last sourced from canonical `series_index.json` with `_series` fallback, optional `_works.series_id` slug format, and `detail_uid` prefix matching `work_id`)
 - `json_schema`: validates generated JSON structure/count consistency for:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
-  - `assets/data/work_details_index.json`
   - `assets/works/index/*.json`
 - `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
 - `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)
