@@ -1,0 +1,86 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-b7aad86fc164d540f8f05cdb7bc3eae3",
+    "generated_at_utc": "2026-03-13T09:13:03Z",
+    "work_id": "00528",
+    "count": 3,
+    "hash": "blake2b-a7ab33c21a41df29e9999ae6aac874d6",
+    "work_checksum": "blake2b-f67a631378de4193ce4b53285fb3ccf2",
+    "details_checksum": "blake2b-a7ab33c21a41df29e9999ae6aac874d6",
+    "record_checksum": "blake2b-b7aad86fc164d540f8f05cdb7bc3eae3"
+  },
+  "work": {
+    "work_id": "00528",
+    "title": "body",
+    "title_sort": "body",
+    "year": 2025,
+    "year_display": "2025",
+    "series_id": "2-bodies",
+    "series_ids": [
+      "2-bodies"
+    ],
+    "series_title": "2 bodies",
+    "series_sort": "00528",
+    "storage": null,
+    "medium_type": "drawing",
+    "medium_caption": "pencil and ink on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 64.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "f67a631378de4193ce4b53285fb3ccf2"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00528",
+          "detail_id": "001",
+          "detail_uid": "00528-001",
+          "title": "body detail",
+          "title_sort": "body detail",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d1308394b5e518a9cfa3d5482f5ce354"
+        },
+        {
+          "work_id": "00528",
+          "detail_id": "002",
+          "detail_uid": "00528-002",
+          "title": "body detail",
+          "title_sort": "body detail",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f57c808f6edbf29a39da6c694cfd7ec8"
+        },
+        {
+          "work_id": "00528",
+          "detail_id": "003",
+          "detail_uid": "00528-003",
+          "title": "body detail",
+          "title_sort": "body detail",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "8b0bdad6b3d188f73325f1c135d6df2b"
+        }
+      ]
+    }
+  ]
+}

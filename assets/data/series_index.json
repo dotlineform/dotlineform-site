@@ -1,11 +1,45 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-3672098fce0c6d65756812dacfd8343b",
-    "generated_at_utc": "2026-03-13T08:14:34Z",
-    "count": 27
+    "version": "blake2b-ea3bcf75196322aba859cad9b33341d2",
+    "generated_at_utc": "2026-03-13T09:28:49Z",
+    "count": 29
   },
   "series": {
+    "2-bodies": {
+      "series_id": "2-bodies",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "2 bodies",
+      "title_sort": "002 bodies",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2025,
+      "year_display": "2025",
+      "primary_work_id": "00533",
+      "notes": null,
+      "project_folders": [
+        "2 bodies"
+      ],
+      "checksum": "08b62442f4463511d4f496d1f4fd88c3",
+      "works": [
+        "00526",
+        "00527",
+        "00528",
+        "00529",
+        "00530",
+        "00531",
+        "00532",
+        "00533",
+        "00534"
+      ],
+      "thumb": {
+        "work_id": "00533",
+        "thumb_96": "/assets/works/img/00533-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00533-thumb-192.webp"
+      }
+    },
     "a-poem-divided-into-4-parts": {
       "series_id": "a-poem-divided-into-4-parts",
       "layout": "series",
@@ -1219,6 +1253,34 @@
         "work_id": "00573",
         "thumb_96": "/assets/works/img/00573-thumb-96.webp",
         "thumb_192": "/assets/works/img/00573-thumb-192.webp"
+      }
+    },
+    "tree": {
+      "series_id": "tree",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "tree",
+      "title_sort": "tree",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "00546",
+      "notes": null,
+      "project_folders": [
+        "tree"
+      ],
+      "checksum": "14446d467f069f408891d3740637819d",
+      "works": [
+        "00546",
+        "00547",
+        "00548"
+      ],
+      "thumb": {
+        "work_id": "00546",
+        "thumb_96": "/assets/works/img/00546-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00546-thumb-192.webp"
       }
     }
   }

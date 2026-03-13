@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "work_details_index_v1",
-    "version": "blake2b-ed969afb3c3e5e6581a02cde96ee0d1b",
-    "generated_at_utc": "2026-03-13T08:14:34Z",
-    "count": 532
+    "version": "blake2b-d906abfe8792cde87e9221e1886ed52f",
+    "generated_at_utc": "2026-03-13T09:28:49Z",
+    "count": 568
   },
   "details": {
     "00001-001": {
@@ -5305,6 +5305,366 @@
       "project_subfolder": "details",
       "section_id": "details",
       "detail_checksum": "blake2b-7ea1296818f7545990f5632eb167aaff"
+    },
+    "00526-001": {
+      "detail_uid": "00526-001",
+      "work_id": "00526",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-ea33203ddf722ef05cd1afa157d3a414"
+    },
+    "00526-002": {
+      "detail_uid": "00526-002",
+      "work_id": "00526",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-fc87545822ef692a8d5ed9176d759ca5"
+    },
+    "00526-003": {
+      "detail_uid": "00526-003",
+      "work_id": "00526",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-114a6eebcc3410cf1d0e9a9579180f33"
+    },
+    "00527-001": {
+      "detail_uid": "00527-001",
+      "work_id": "00527",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-6dd701d762741f75ebb2ca364efe2c7a"
+    },
+    "00527-002": {
+      "detail_uid": "00527-002",
+      "work_id": "00527",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-0f65e1b620de4f9923ef1dbc1d3fdad8"
+    },
+    "00527-003": {
+      "detail_uid": "00527-003",
+      "work_id": "00527",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-3136239bff93f4417183dbdc8d5bfbca"
+    },
+    "00528-001": {
+      "detail_uid": "00528-001",
+      "work_id": "00528",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d1308394b5e518a9cfa3d5482f5ce354"
+    },
+    "00528-002": {
+      "detail_uid": "00528-002",
+      "work_id": "00528",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f57c808f6edbf29a39da6c694cfd7ec8"
+    },
+    "00528-003": {
+      "detail_uid": "00528-003",
+      "work_id": "00528",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-8b0bdad6b3d188f73325f1c135d6df2b"
+    },
+    "00529-001": {
+      "detail_uid": "00529-001",
+      "work_id": "00529",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-dffdeac0d3707bd9af94453d663dc72e"
+    },
+    "00529-002": {
+      "detail_uid": "00529-002",
+      "work_id": "00529",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f6b250327897833052ef8c56abf77134"
+    },
+    "00529-003": {
+      "detail_uid": "00529-003",
+      "work_id": "00529",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-d95da7101ae95ee04ce17cad0402f2f3"
+    },
+    "00529-004": {
+      "detail_uid": "00529-004",
+      "work_id": "00529",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-74d449f1641f24fae1f00ea629ffc7b0"
+    },
+    "00529-005": {
+      "detail_uid": "00529-005",
+      "work_id": "00529",
+      "detail_id": "005",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c029dac3d8eaf97485931af5a41f5530"
+    },
+    "00529-006": {
+      "detail_uid": "00529-006",
+      "work_id": "00529",
+      "detail_id": "006",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-2fd9232f4bc21b30aca8d2a1538b9673"
+    },
+    "00530-001": {
+      "detail_uid": "00530-001",
+      "work_id": "00530",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-05a03d700961fcdde0f9f7ed882e4030"
+    },
+    "00530-002": {
+      "detail_uid": "00530-002",
+      "work_id": "00530",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f985b9f4fc4111e534dcc10713f295bb"
+    },
+    "00530-003": {
+      "detail_uid": "00530-003",
+      "work_id": "00530",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-5cbdf877c9a59530f91f3c7be139ee3f"
+    },
+    "00530-004": {
+      "detail_uid": "00530-004",
+      "work_id": "00530",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-1f85afd95d67b10efbe11be256a93463"
+    },
+    "00531-001": {
+      "detail_uid": "00531-001",
+      "work_id": "00531",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-edc2e00eb24711637a2e8e9d985af24b"
+    },
+    "00531-002": {
+      "detail_uid": "00531-002",
+      "work_id": "00531",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-1c356806e27beb0f1209a350816fcfc8"
+    },
+    "00531-003": {
+      "detail_uid": "00531-003",
+      "work_id": "00531",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-bc44af3f9f2b48c83c9be0d26918216f"
+    },
+    "00531-004": {
+      "detail_uid": "00531-004",
+      "work_id": "00531",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-10ee449ab3db6fe3609ae82390b5ff5f"
+    },
+    "00532-001": {
+      "detail_uid": "00532-001",
+      "work_id": "00532",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-eff3380df28ea3a443874972e364a41e"
+    },
+    "00532-002": {
+      "detail_uid": "00532-002",
+      "work_id": "00532",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-ffac00969c33509fb68031dc4b6020cf"
+    },
+    "00532-003": {
+      "detail_uid": "00532-003",
+      "work_id": "00532",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-f0777bbc3ec1ca3830fc7722858ddaf1"
+    },
+    "00532-004": {
+      "detail_uid": "00532-004",
+      "work_id": "00532",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-9699713a78f658023dac29bd520c27c5"
+    },
+    "00533-001": {
+      "detail_uid": "00533-001",
+      "work_id": "00533",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-25b0b37a152453ffd4d02ef7cc8385eb"
+    },
+    "00533-002": {
+      "detail_uid": "00533-002",
+      "work_id": "00533",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-b4d48d6811f6f80ea37269403fd464af"
+    },
+    "00533-003": {
+      "detail_uid": "00533-003",
+      "work_id": "00533",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-50be66890738785fed5e1243a8d875c0"
+    },
+    "00533-004": {
+      "detail_uid": "00533-004",
+      "work_id": "00533",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-56db0a58f1fb07bcf0cb17a9beb2c372"
+    },
+    "00533-005": {
+      "detail_uid": "00533-005",
+      "work_id": "00533",
+      "detail_id": "005",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-a4685d5501678363d443f1b9fb621036"
+    },
+    "00534-001": {
+      "detail_uid": "00534-001",
+      "work_id": "00534",
+      "detail_id": "001",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-de9708e151c40290cf55aca8ac24811f"
+    },
+    "00534-002": {
+      "detail_uid": "00534-002",
+      "work_id": "00534",
+      "detail_id": "002",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-835ba10e708e184c99a50a526acafcd1"
+    },
+    "00534-003": {
+      "detail_uid": "00534-003",
+      "work_id": "00534",
+      "detail_id": "003",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-c6ffe0f79c2aec917d39e4761598de73"
+    },
+    "00534-004": {
+      "detail_uid": "00534-004",
+      "work_id": "00534",
+      "detail_id": "004",
+      "title": "body detail",
+      "title_sort": "body detail",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-04c5788a4614412aaa2745bff971b628"
     },
     "00536-001": {
       "detail_uid": "00536-001",

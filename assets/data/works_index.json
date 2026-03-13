@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-544e3d29dbac8c14f006d2a7a74fea32",
-    "generated_at_utc": "2026-03-13T08:14:34Z",
-    "count": 536
+    "version": "blake2b-f49ba9195942d5307bf11a53e066be27",
+    "generated_at_utc": "2026-03-13T09:28:49Z",
+    "count": 548
   },
   "works": {
     "00001": {
@@ -6923,6 +6923,132 @@
       "work_checksum": "blake2b-6b50a179ed433af41df119b8b5cb1400",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00526": {
+      "work_id": "00526",
+      "title": "body",
+      "title_sort": "body",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-692b1f5a60297f056d9760b53c5abe9f",
+      "details_checksum": "blake2b-e6d42f33e60457b745260e707abc9508"
+    },
+    "00527": {
+      "work_id": "00527",
+      "title": "body",
+      "title_sort": "body",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d0958338433ae055582c89982ca3ce81",
+      "details_checksum": "blake2b-7a016b4573381828511a15ffc396774e"
+    },
+    "00528": {
+      "work_id": "00528",
+      "title": "body",
+      "title_sort": "body",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f67a631378de4193ce4b53285fb3ccf2",
+      "details_checksum": "blake2b-a7ab33c21a41df29e9999ae6aac874d6"
+    },
+    "00529": {
+      "work_id": "00529",
+      "title": "body residue",
+      "title_sort": "body residue",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c24be2b0c78cff10a3479137bc373265",
+      "details_checksum": "blake2b-8953fd31dc14506f674a3fe8c3be9dc6"
+    },
+    "00530": {
+      "work_id": "00530",
+      "title": "body curves",
+      "title_sort": "body curves",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-727a7d178b8f62b4af4870c97444414f",
+      "details_checksum": "blake2b-6052e5e35a95ca7aff978a52539a008e"
+    },
+    "00531": {
+      "work_id": "00531",
+      "title": "body monoprint",
+      "title_sort": "body monoprint",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1208823ed3b55300e9e67cb6746a7cfe",
+      "details_checksum": "blake2b-4b86aa90dc94306dd1c2532c3678e0b7"
+    },
+    "00532": {
+      "work_id": "00532",
+      "title": "body monoprint petals",
+      "title_sort": "body monoprint petals",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6b88d937d4b2111842ae4c3431cf5bdf",
+      "details_checksum": "blake2b-364e8ae418acf36e74f0b7aa54bb66d3"
+    },
+    "00533": {
+      "work_id": "00533",
+      "title": "2 bodies monoprint",
+      "title_sort": "002 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0c0afe52eabda5dc45371aa90359bdbb",
+      "details_checksum": "blake2b-f3623cca57c24560aec0fd712f7a060d"
+    },
+    "00534": {
+      "work_id": "00534",
+      "title": "2 bodies monoprint",
+      "title_sort": "002 bodies monoprint",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "2-bodies",
+      "series_ids": [
+        "2-bodies"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9260048afac01993fdf56560a7080c18",
+      "details_checksum": "blake2b-acde3a9ba55e9e8a5b77561f6b688574"
+    },
     "00536": {
       "work_id": "00536",
       "title": "model 2",
@@ -7061,6 +7187,48 @@
       ],
       "storage": "9",
       "work_checksum": "blake2b-d89a9c9b1355776d0456427ddafe14b6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00546": {
+      "work_id": "00546",
+      "title": "tree.jpg",
+      "title_sort": "tree.jpg",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "tree",
+      "series_ids": [
+        "tree"
+      ],
+      "storage": "framed",
+      "work_checksum": "blake2b-7c8b9ba1c939bd7a18e5157e1ad2f5e7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00547": {
+      "work_id": "00547",
+      "title": "tree (tint).jpg",
+      "title_sort": "tree (tint).jpg",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "tree",
+      "series_ids": [
+        "tree"
+      ],
+      "storage": "12",
+      "work_checksum": "blake2b-e69e8e6c8d5ed163e7bc4376d103b7a0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00548": {
+      "work_id": "00548",
+      "title": "tree source.jpg",
+      "title_sort": "tree source.jpg",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "tree",
+      "series_ids": [
+        "tree"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8be02893587bd90dc9c1013b34576f77",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
     "00549": {
