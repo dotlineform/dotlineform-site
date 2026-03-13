@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-42c6613ea438a7b1958675b125c2a3f5",
-    "generated_at_utc": "2026-03-13T20:42:33Z",
-    "count": 37
+    "version": "blake2b-f722ab9cd8d01bbd96c4069607b084c0",
+    "generated_at_utc": "2026-03-13T21:44:52Z",
+    "count": 38
   },
   "series": {
     "2-bodies": {
@@ -67,6 +67,32 @@
         "work_id": "00001",
         "thumb_96": "/assets/works/img/00001-thumb-96.webp",
         "thumb_192": "/assets/works/img/00001-thumb-192.webp"
+      }
+    },
+    "certainty": {
+      "series_id": "certainty",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "certainty",
+      "title_sort": "certainty",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2026,
+      "year_display": "2001-26",
+      "primary_work_id": "00389",
+      "notes": null,
+      "project_folders": [
+        "certainty"
+      ],
+      "checksum": "a0a0656b078fdad14d8ec6c6c6643e0e",
+      "works": [
+        "00389"
+      ],
+      "thumb": {
+        "work_id": "00389",
+        "thumb_96": "/assets/works/img/00389-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00389-thumb-192.webp"
       }
     },
     "collected-1989-1998": {

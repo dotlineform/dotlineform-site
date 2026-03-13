@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-8e3c83e3d504c6a5ea69a2850cf8f47b",
-    "generated_at_utc": "2026-03-13T20:42:35Z",
-    "count": 611
+    "version": "blake2b-cce1170209c49dbbca015897be9a0cb8",
+    "generated_at_utc": "2026-03-13T21:45:06Z",
+    "count": 612
   },
   "works": {
     "00001": {
@@ -5326,6 +5326,20 @@
       "storage": "4",
       "work_checksum": "blake2b-65d0d22686bbf8dfa87b7df9d7d5bfa5",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00389": {
+      "work_id": "00389",
+      "title": "certainty",
+      "title_sort": "certainty",
+      "year": 2026,
+      "year_display": "2001-26",
+      "series_id": "certainty",
+      "series_ids": [
+        "certainty"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-71d8ff64ef26c00c226f51431fbb0817",
+      "details_checksum": "blake2b-5ecb50cba6db9af1012d2e52600184b2"
     },
     "00390": {
       "work_id": "00390",
