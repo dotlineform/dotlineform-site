@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-956e27d964612b0778ecd294dcfb62ed",
-    "generated_at_utc": "2026-03-13T14:35:26Z",
-    "count": 597
+    "version": "blake2b-f65bd4a5cbfb2aad325185fc82f7043b",
+    "generated_at_utc": "2026-03-13T14:50:31Z",
+    "count": 598
   },
   "works": {
     "00001": {
@@ -5255,6 +5255,20 @@
       ],
       "storage": "4",
       "work_checksum": "blake2b-9209015b0629369ddfac22cf068f4596",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00388": {
+      "work_id": "00388",
+      "title": "lipseyes",
+      "title_sort": "lipseyes",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "lipseyes",
+      "series_ids": [
+        "lipseyes"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-65d0d22686bbf8dfa87b7df9d7d5bfa5",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
     "00394": {

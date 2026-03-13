@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-a954cdfa453a82eb3c4e27ad15b4250e",
-    "generated_at_utc": "2026-03-13T14:35:26Z",
-    "count": 33
+    "version": "blake2b-8ac1e53fce4d8c28c747fc90a85f33b5",
+    "generated_at_utc": "2026-03-13T14:50:31Z",
+    "count": 34
   },
   "series": {
     "2-bodies": {
@@ -918,6 +918,32 @@
         "work_id": "00127",
         "thumb_96": "/assets/works/img/00127-thumb-96.webp",
         "thumb_192": "/assets/works/img/00127-thumb-192.webp"
+      }
+    },
+    "lipseyes": {
+      "series_id": "lipseyes",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "lipseyes",
+      "title_sort": "lipseyes",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2003,
+      "year_display": "2003",
+      "primary_work_id": "00388",
+      "notes": null,
+      "project_folders": [
+        "lipseyes"
+      ],
+      "checksum": "2ba38f3aa97274d0c27437796a6ddd4b",
+      "works": [
+        "00388"
+      ],
+      "thumb": {
+        "work_id": "00388",
+        "thumb_96": "/assets/works/img/00388-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00388-thumb-192.webp"
       }
     },
     "living-surface-hand-form": {
