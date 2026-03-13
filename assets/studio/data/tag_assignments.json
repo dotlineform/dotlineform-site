@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-13T21:21:47Z",
+  "updated_at_utc": "2026-03-13T23:28:43Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -250,6 +250,16 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-13T21:21:47Z"
+    },
+    "glass-forms": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-13T22:48:15Z"
+    },
+    "k-crystals": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-13T23:28:43Z"
     }
   }
 }

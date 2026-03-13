@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-0fdd75ecda4f6053feaa58240e85ab17",
-    "generated_at_utc": "2026-03-13T22:24:07Z",
-    "count": 613
+    "version": "blake2b-3706fd6c5eb65f4579cf75c25f1e17c7",
+    "generated_at_utc": "2026-03-13T23:28:44Z",
+    "count": 622
   },
   "works": {
     "00001": {
@@ -5285,6 +5285,20 @@
       "work_checksum": "blake2b-fb51c8a6c59c0a928c9f313356683fba",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00384": {
+      "work_id": "00384",
+      "title": "glass forms",
+      "title_sort": "glass forms",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "series_id": "glass-forms",
+      "series_ids": [
+        "glass-forms"
+      ],
+      "storage": "11",
+      "work_checksum": "blake2b-11975b7bbfaa1b006a0d38c475c5e137",
+      "details_checksum": "blake2b-59c7dee8356b590afffed661584a129b"
+    },
     "00385": {
       "work_id": "00385",
       "title": "nerve 1",
@@ -8588,6 +8602,118 @@
       "storage": null,
       "work_checksum": "blake2b-784348676e06b59369bb4842b289201e",
       "details_checksum": "blake2b-5337a935c624cb5e328c11b7104eda30"
+    },
+    "00621": {
+      "work_id": "00621",
+      "title": "crystal",
+      "title_sort": "crystal",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8744227355a3baa895d07a44b0a890cb",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00622": {
+      "work_id": "00622",
+      "title": "k crystals",
+      "title_sort": "k crystals",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c86dcfd455c34cf65300bd0592022fdf",
+      "details_checksum": "blake2b-f3ae7a94a0b0f39012ffdcd946cac872"
+    },
+    "00623": {
+      "work_id": "00623",
+      "title": "k crystals (transparent)",
+      "title_sort": "k crystals (transparent)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0e5b8baddbbb45466b38420c225cf839",
+      "details_checksum": "blake2b-51fee1c7b8ab9d7ad0fa16e8a87cd89f"
+    },
+    "00624": {
+      "work_id": "00624",
+      "title": "k crystals (squared transparent)",
+      "title_sort": "k crystals (squared transparent)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5ff240bfcb4d489ee881ec989b7830b6",
+      "details_checksum": "blake2b-922801238477a5755f5b3f04096ac356"
+    },
+    "00625": {
+      "work_id": "00625",
+      "title": "k crystals (squared solid)",
+      "title_sort": "k crystals (squared solid)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-789e50d83a44e342af29ce3053f0e4e8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00626": {
+      "work_id": "00626",
+      "title": "k-crystals source",
+      "title_sort": "k-crystals source",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-50e5678a5bde60ed12ecd43794c1aaf0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00627": {
+      "work_id": "00627",
+      "title": "k-crystals squared source",
+      "title_sort": "k-crystals squared source",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3f2933a4ad91e1f77ff03a394b7555c6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00628": {
+      "work_id": "00628",
+      "title": "group theory",
+      "title_sort": "group theory",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "k-crystals",
+      "series_ids": [
+        "k-crystals"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-20bed19df0b466a49b0c924e7ea5b356",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
 }

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-f72dea1d47fdea33db213f16a7c9e191",
-    "generated_at_utc": "2026-03-13T22:24:07Z",
-    "count": 38
+    "version": "blake2b-c4470492df93f91877a3293ded854d36",
+    "generated_at_utc": "2026-03-13T23:28:43Z",
+    "count": 40
   },
   "series": {
     "2-bodies": {
@@ -827,6 +827,32 @@
         "thumb_192": "/assets/works/img/00403-thumb-192.webp"
       }
     },
+    "glass-forms": {
+      "series_id": "glass-forms",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "glass forms",
+      "title_sort": "glass forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2010,
+      "year_display": "c. 2010?",
+      "primary_work_id": "00384",
+      "notes": null,
+      "project_folders": [
+        "glass forms"
+      ],
+      "checksum": "7fd5ab49764097377225d13b6b969200",
+      "works": [
+        "00384"
+      ],
+      "thumb": {
+        "work_id": "00384",
+        "thumb_96": "/assets/works/img/00384-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00384-thumb-192.webp"
+      }
+    },
     "harmony": {
       "series_id": "harmony",
       "layout": "series",
@@ -907,6 +933,39 @@
         "work_id": "00457",
         "thumb_96": "/assets/works/img/00457-thumb-96.webp",
         "thumb_192": "/assets/works/img/00457-thumb-192.webp"
+      }
+    },
+    "k-crystals": {
+      "series_id": "k-crystals",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "k crystals",
+      "title_sort": "k crystals",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2009,
+      "year_display": "2009",
+      "primary_work_id": "00625",
+      "notes": null,
+      "project_folders": [
+        "k crystals"
+      ],
+      "checksum": "b26b18cca82b35ff667c376ad374e070",
+      "works": [
+        "00621",
+        "00622",
+        "00623",
+        "00624",
+        "00625",
+        "00626",
+        "00627",
+        "00628"
+      ],
+      "thumb": {
+        "work_id": "00625",
+        "thumb_96": "/assets/works/img/00625-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00625-thumb-192.webp"
       }
     },
     "kylie-structures": {
@@ -1090,7 +1149,7 @@
       "series_id": "mm",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-13",
       "title": "mm",
       "title_sort": "mm",
       "sort_fields": "work_id",

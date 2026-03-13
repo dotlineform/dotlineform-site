@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-f6d5340470213407ec620d247aca4292",
+    "generated_at_utc": "2026-03-13T23:28:44Z",
+    "work_id": "00626",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-50e5678a5bde60ed12ecd43794c1aaf0",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-f6d5340470213407ec620d247aca4292"
+  },
+  "work": {
+    "work_id": "00626",
+    "title": "k-crystals source",
+    "title_sort": "k-crystals source",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "k-crystals",
+    "series_ids": [
+      "k-crystals"
+    ],
+    "series_title": "k crystals",
+    "series_sort": "00626",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "50e5678a5bde60ed12ecd43794c1aaf0"
+  },
+  "sections": []
+}

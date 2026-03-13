@@ -1,0 +1,86 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-1791ff03605f81b80ea18606de007f28",
+    "generated_at_utc": "2026-03-13T23:28:44Z",
+    "work_id": "00623",
+    "count": 3,
+    "hash": "blake2b-51fee1c7b8ab9d7ad0fa16e8a87cd89f",
+    "work_checksum": "blake2b-0e5b8baddbbb45466b38420c225cf839",
+    "details_checksum": "blake2b-51fee1c7b8ab9d7ad0fa16e8a87cd89f",
+    "record_checksum": "blake2b-1791ff03605f81b80ea18606de007f28"
+  },
+  "work": {
+    "work_id": "00623",
+    "title": "k crystals (transparent)",
+    "title_sort": "k crystals (transparent)",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "k-crystals",
+    "series_ids": [
+      "k-crystals"
+    ],
+    "series_title": "k crystals",
+    "series_sort": "00623",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "0e5b8baddbbb45466b38420c225cf839"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00623",
+          "detail_id": "001",
+          "detail_uid": "00623-001",
+          "title": "k crystals (transparent) - detail 1",
+          "title_sort": "k crystals (transparent) - detail 001",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 4134,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5fa1fce406088589a2a6e7772fe03542"
+        },
+        {
+          "work_id": "00623",
+          "detail_id": "002",
+          "detail_uid": "00623-002",
+          "title": "k crystals (transparent) - detail 2",
+          "title_sort": "k crystals (transparent) - detail 002",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 4134,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2cbfe6c4d8363d490f4940389d2b0eaf"
+        },
+        {
+          "work_id": "00623",
+          "detail_id": "003",
+          "detail_uid": "00623-003",
+          "title": "k crystals (transparent) - detail 3",
+          "title_sort": "k crystals (transparent) - detail 003",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 4134,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "08d13614153039dcb01ea1342accd189"
+        }
+      ]
+    }
+  ]
+}

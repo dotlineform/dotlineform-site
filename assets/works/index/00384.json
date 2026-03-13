@@ -1,0 +1,99 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-c0bf71b6d6095b7e740535a84447aed1",
+    "generated_at_utc": "2026-03-13T22:48:15Z",
+    "work_id": "00384",
+    "count": 4,
+    "hash": "blake2b-59c7dee8356b590afffed661584a129b",
+    "work_checksum": "blake2b-11975b7bbfaa1b006a0d38c475c5e137",
+    "details_checksum": "blake2b-59c7dee8356b590afffed661584a129b",
+    "record_checksum": "blake2b-c0bf71b6d6095b7e740535a84447aed1"
+  },
+  "work": {
+    "work_id": "00384",
+    "title": "glass forms",
+    "title_sort": "glass forms",
+    "year": 2010,
+    "year_display": "c. 2010?",
+    "series_id": "glass-forms",
+    "series_ids": [
+      "glass-forms"
+    ],
+    "series_title": "glass forms",
+    "series_sort": "00384",
+    "storage": "11",
+    "medium_type": "mixed media",
+    "medium_caption": "glass on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 27.9,
+    "width_cm": 29.6,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "11975b7bbfaa1b006a0d38c475c5e137"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00384",
+          "detail_id": "001",
+          "detail_uid": "00384-001",
+          "title": "glass forms 001",
+          "title_sort": "glass forms 001",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5ec167a92ab3095f03b22621a8c7628d"
+        },
+        {
+          "work_id": "00384",
+          "detail_id": "002",
+          "detail_uid": "00384-002",
+          "title": "glass forms 002",
+          "title_sort": "glass forms 002",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ecfa14f97462cee00888451252513142"
+        },
+        {
+          "work_id": "00384",
+          "detail_id": "003",
+          "detail_uid": "00384-003",
+          "title": "glass forms 003",
+          "title_sort": "glass forms 003",
+          "project_subfolder": "details",
+          "width_px": 4032,
+          "height_px": 3024,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1c5fb078829d84e66b6e2e56ce6d6fa2"
+        },
+        {
+          "work_id": "00384",
+          "detail_id": "004",
+          "detail_uid": "00384-004",
+          "title": "glass forms 004",
+          "title_sort": "glass forms 004",
+          "project_subfolder": "details",
+          "width_px": 3444,
+          "height_px": 2528,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9884f31ccde8aab74eaa04d45c0d6635"
+        }
+      ]
+    }
+  ]
+}
