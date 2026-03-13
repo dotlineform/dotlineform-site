@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9374125c2235d272c52bbf823389cf0e",
+    "generated_at_utc": "2026-03-13T13:23:02Z",
+    "work_id": "00535",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-41ce42025b24f93e4983c09a218b4b90",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-9374125c2235d272c52bbf823389cf0e"
+  },
+  "work": {
+    "work_id": "00535",
+    "title": "form mobile",
+    "title_sort": "form mobile",
+    "year": 2021,
+    "year_display": "2021",
+    "series_id": "form-mobile",
+    "series_ids": [
+      "form-mobile"
+    ],
+    "series_title": "form mobile",
+    "series_sort": "00535",
+    "storage": "extant",
+    "medium_type": "sculpture",
+    "medium_caption": "wire",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 41.8,
+    "width_cm": 59.8,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "41ce42025b24f93e4983c09a218b4b90"
+  },
+  "sections": []
+}

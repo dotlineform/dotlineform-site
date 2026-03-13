@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9a032c2691d7ece09a30ca98ed978650",
+    "generated_at_utc": "2026-03-13T13:23:02Z",
+    "work_id": "00591",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-ce6e58b677bd262cb16870a84d95149f",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-9a032c2691d7ece09a30ca98ed978650"
+  },
+  "work": {
+    "work_id": "00591",
+    "title": "curve 1'",
+    "title_sort": "curve 001'",
+    "year": 2021,
+    "year_display": "2021",
+    "series_id": "form-mobile",
+    "series_ids": [
+      "form-mobile"
+    ],
+    "series_title": "form mobile",
+    "series_sort": "00591",
+    "storage": "7",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 42.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "ce6e58b677bd262cb16870a84d95149f"
+  },
+  "sections": []
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-be55c5a1fd9871d2f218fa8eedc497f4",
-    "generated_at_utc": "2026-03-13T10:06:23Z",
-    "count": 553
+    "version": "blake2b-c292a0b696d87708a1e231f74e1c3910",
+    "generated_at_utc": "2026-03-13T13:23:02Z",
+    "count": 572
   },
   "works": {
     "00001": {
@@ -7105,6 +7105,20 @@
       "work_checksum": "blake2b-9260048afac01993fdf56560a7080c18",
       "details_checksum": "blake2b-acde3a9ba55e9e8a5b77561f6b688574"
     },
+    "00535": {
+      "work_id": "00535",
+      "title": "form mobile",
+      "title_sort": "form mobile",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "extant",
+      "work_checksum": "blake2b-41ce42025b24f93e4983c09a218b4b90",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
     "00536": {
       "work_id": "00536",
       "title": "model 2",
@@ -7747,6 +7761,258 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-17c0ce6f315f777ff23dee77f31d5b04",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00582": {
+      "work_id": "00582",
+      "title": "form mobile 1",
+      "title_sort": "form mobile 001",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-eed4606a95ac8c9eb28d10c134feda5b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00583": {
+      "work_id": "00583",
+      "title": "form mobile 2",
+      "title_sort": "form mobile 002",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5abd88d75ca6200c72875a58f1d1761e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00584": {
+      "work_id": "00584",
+      "title": "form mobile 3",
+      "title_sort": "form mobile 003",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cfe7626e0d92f148ba1e3b699bab44a1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00585": {
+      "work_id": "00585",
+      "title": "form mobile 4",
+      "title_sort": "form mobile 004",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-018add4f22f24dd4aaf39e1bf3086e8b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00586": {
+      "work_id": "00586",
+      "title": "form mobile 5",
+      "title_sort": "form mobile 005",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d13ab566ea998441e42fe6a424554eb3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00587": {
+      "work_id": "00587",
+      "title": "form mobile 6",
+      "title_sort": "form mobile 006",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-351467a4bae28a4e7e3ec098ed60f650",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00588": {
+      "work_id": "00588",
+      "title": "form mobile 7",
+      "title_sort": "form mobile 007",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-13744df83140138e610dbe4bc0163328",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00589": {
+      "work_id": "00589",
+      "title": "form mobile 8",
+      "title_sort": "form mobile 008",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b8d92cd9c1cc4d8eaed3c4a2c5a8e477",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00590": {
+      "work_id": "00590",
+      "title": "curve 1",
+      "title_sort": "curve 001",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-5f93c1c55642fcb7891c0797d5ba2ca9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00591": {
+      "work_id": "00591",
+      "title": "curve 1'",
+      "title_sort": "curve 001'",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-ce6e58b677bd262cb16870a84d95149f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00592": {
+      "work_id": "00592",
+      "title": "curve 2",
+      "title_sort": "curve 002",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-15dd91629db8b02b7ae10c7d1da1250d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00593": {
+      "work_id": "00593",
+      "title": "curve 2'",
+      "title_sort": "curve 002'",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-d9e4972a64955374e4c4ef40aa48441d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00594": {
+      "work_id": "00594",
+      "title": "curve 3",
+      "title_sort": "curve 003",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-c6b48ef0a909515cb2a31d290db34eb3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00595": {
+      "work_id": "00595",
+      "title": "curve 3'",
+      "title_sort": "curve 003'",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-4a284dceb01dd4e8d927c9140ff706cd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00596": {
+      "work_id": "00596",
+      "title": "curve 4",
+      "title_sort": "curve 004",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-c1aea37365d25f410206324df043e963",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00597": {
+      "work_id": "00597",
+      "title": "curve 4'",
+      "title_sort": "curve 004'",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-45a26395e25949e395a52de6a404eee8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00598": {
+      "work_id": "00598",
+      "title": "curve 5",
+      "title_sort": "curve 005",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-9bd4c90bfa8544917ce521a3b488eabd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00599": {
+      "work_id": "00599",
+      "title": "curve 5'",
+      "title_sort": "curve 005'",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "form-mobile",
+      "series_ids": [
+        "form-mobile"
+      ],
+      "storage": "7",
+      "work_checksum": "blake2b-b71e8dca651d460b2ddb5ae54ccc7efe",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
