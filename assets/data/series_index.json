@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-2ae535e7cead363330e6ed93ec7b8cd4",
-    "generated_at_utc": "2026-03-05T21:25:22Z",
-    "count": 25
+    "version": "blake2b-3672098fce0c6d65756812dacfd8343b",
+    "generated_at_utc": "2026-03-13T08:14:34Z",
+    "count": 27
   },
   "series": {
     "a-poem-divided-into-4-parts": {
@@ -943,26 +943,36 @@
       "series_id": "models",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-13",
       "title": "models",
       "title_sort": "models",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1994,
       "year_display": "1994",
-      "primary_work_id": "00130",
+      "primary_work_id": "00540",
       "notes": null,
       "project_folders": [
         "models"
       ],
-      "checksum": "a8a516250b985b854f0f0662cc1d32cf",
+      "checksum": "dca90daa075b2a1ae20c838617bfb77a",
       "works": [
-        "00130"
+        "00130",
+        "00536",
+        "00537",
+        "00538",
+        "00539",
+        "00540",
+        "00541",
+        "00542",
+        "00543",
+        "00544",
+        "00545"
       ],
       "thumb": {
-        "work_id": "00130",
-        "thumb_96": "/assets/works/img/00130-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00130-thumb-192.webp"
+        "work_id": "00540",
+        "thumb_96": "/assets/works/img/00540-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00540-thumb-192.webp"
       }
     },
     "molecule-forms": {
@@ -1077,6 +1087,36 @@
         "thumb_192": "/assets/works/img/00166-thumb-192.webp"
       }
     },
+    "particle-theory": {
+      "series_id": "particle-theory",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "particle theory",
+      "title_sort": "particle theory",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2008,
+      "year_display": "2008",
+      "primary_work_id": "00553",
+      "notes": null,
+      "project_folders": [
+        "particle theory"
+      ],
+      "checksum": "a92b37c9471c1036e661113973690fcd",
+      "works": [
+        "00549",
+        "00550",
+        "00551",
+        "00552",
+        "00553"
+      ],
+      "thumb": {
+        "work_id": "00553",
+        "thumb_96": "/assets/works/img/00553-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00553-thumb-192.webp"
+      }
+    },
     "r": {
       "series_id": "r",
       "layout": "series",
@@ -1127,6 +1167,58 @@
         "work_id": "00142",
         "thumb_96": "/assets/works/img/00142-thumb-96.webp",
         "thumb_192": "/assets/works/img/00142-thumb-192.webp"
+      }
+    },
+    "string-theory": {
+      "series_id": "string-theory",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "string theory",
+      "title_sort": "string theory",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2005-12",
+      "primary_work_id": "00573",
+      "notes": null,
+      "project_folders": [
+        "string theory"
+      ],
+      "checksum": "f98064b7d3d1325885e847ca6e72886c",
+      "works": [
+        "00554",
+        "00555",
+        "00556",
+        "00557",
+        "00558",
+        "00559",
+        "00560",
+        "00561",
+        "00562",
+        "00563",
+        "00564",
+        "00565",
+        "00566",
+        "00567",
+        "00568",
+        "00569",
+        "00570",
+        "00571",
+        "00572",
+        "00573",
+        "00574",
+        "00575",
+        "00576",
+        "00577",
+        "00578",
+        "00579",
+        "00580"
+      ],
+      "thumb": {
+        "work_id": "00573",
+        "thumb_96": "/assets/works/img/00573-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00573-thumb-192.webp"
       }
     }
   }

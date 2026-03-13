@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-69691e14e8ed036eaa94a0123137f8be",
+    "generated_at_utc": "2026-03-13T07:10:53Z",
+    "work_id": "00553",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-b0b4ecf7c3ff4624f06f1d3cb0f6af87",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-69691e14e8ed036eaa94a0123137f8be"
+  },
+  "work": {
+    "work_id": "00553",
+    "title": "particle theory (4 layers)",
+    "title_sort": "particle theory (004 layers)",
+    "year": 2008,
+    "year_display": "2008",
+    "series_id": "particle-theory",
+    "series_ids": [
+      "particle-theory"
+    ],
+    "series_title": "particle theory",
+    "series_sort": "00553",
+    "storage": "12",
+    "medium_type": "paper collage",
+    "medium_caption": "paper collage, tracing paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 41.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "b0b4ecf7c3ff4624f06f1d3cb0f6af87"
+  },
+  "sections": []
+}

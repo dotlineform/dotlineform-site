@@ -1,0 +1,60 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-992137e216d8def81bfad37be978aa70",
+    "generated_at_utc": "2026-03-13T08:14:34Z",
+    "work_id": "00536",
+    "count": 1,
+    "hash": "blake2b-d8784429955e2b8d0280012292c42432",
+    "work_checksum": "blake2b-8c1bca17777b22e4c6b87b94cfa6ae15",
+    "details_checksum": "blake2b-d8784429955e2b8d0280012292c42432",
+    "record_checksum": "blake2b-992137e216d8def81bfad37be978aa70"
+  },
+  "work": {
+    "work_id": "00536",
+    "title": "model 2",
+    "title_sort": "model 002",
+    "year": 1994,
+    "year_display": "1994",
+    "series_id": "models",
+    "series_ids": [
+      "models"
+    ],
+    "series_title": "models",
+    "series_sort": "00536",
+    "storage": "9",
+    "medium_type": "collage",
+    "medium_caption": "magazine collage, tracing paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 38.8,
+    "width_cm": 25.4,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "8c1bca17777b22e4c6b87b94cfa6ae15"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00536",
+          "detail_id": "001",
+          "detail_uid": "00536-001",
+          "title": "model 2 - 001",
+          "title_sort": "model 002 - 001",
+          "project_subfolder": "details",
+          "width_px": 3031,
+          "height_px": 4629,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0a2c87bcbb03e7f0ee6864bb362dcaae"
+        }
+      ]
+    }
+  ]
+}

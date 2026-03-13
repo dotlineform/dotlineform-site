@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d02d34a5e449fd1c7f66040c5366cbf0",
+    "generated_at_utc": "2026-03-13T06:36:33Z",
+    "work_id": "00559",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-0386b7e3e58db09c7a9dfa92c0603c72",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-d02d34a5e449fd1c7f66040c5366cbf0"
+  },
+  "work": {
+    "work_id": "00559",
+    "title": "string theory 6",
+    "title_sort": "string theory 006",
+    "year": 2005,
+    "year_display": "2005",
+    "series_id": "string-theory",
+    "series_ids": [
+      "string-theory"
+    ],
+    "series_title": "string theory",
+    "series_sort": "00559",
+    "storage": "12",
+    "medium_type": "paper collage",
+    "medium_caption": "paper collage",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 34.7,
+    "width_cm": 25.3,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "0386b7e3e58db09c7a9dfa92c0603c72"
+  },
+  "sections": []
+}

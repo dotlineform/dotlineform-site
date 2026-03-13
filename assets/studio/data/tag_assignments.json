@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-12T19:44:52Z",
+  "updated_at_utc": "2026-03-13T07:10:53Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -58,19 +58,23 @@
     },
     "a-poem-divided-into-4-parts": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "collected-1989-1998": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "collected-digital-1998": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "colouring-book": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "dotlineform-2021": {
       "tags": [
@@ -79,7 +83,8 @@
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-02-28T23:19:30Z"
+      "updated_at_utc": "2026-02-28T23:19:30Z",
+      "works": {}
     },
     "dots": {
       "tags": [
@@ -88,79 +93,108 @@
           "w_manual": 0.6
         }
       ],
-      "updated_at_utc": "2026-02-28T21:56:56Z"
+      "updated_at_utc": "2026-02-28T21:56:56Z",
+      "works": {}
     },
     "for-david-lynch": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "forest-memories-1-48": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "forests-2023": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "found-forms": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "heaven-and-earth": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "intuition-2020": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "kylie-structures": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "landscapes": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "leaf": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "learning-to-draw-landscapes": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "living-surface-hand-form": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "mm": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "models": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "molecules": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "mouse-story": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "nerve": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "r": {
       "tags": [],
-      "updated_at_utc": "2026-02-28T21:49:45Z"
+      "updated_at_utc": "2026-02-28T21:49:45Z",
+      "works": {}
     },
     "molecule-forms": {
       "tags": [],
-      "updated_at_utc": "2026-03-05T12:47:25Z"
+      "updated_at_utc": "2026-03-05T12:47:25Z",
+      "works": {}
+    },
+    "string-theory": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-13T06:36:32Z"
+    },
+    "particle-theory": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-13T07:10:53Z"
     }
   }
 }

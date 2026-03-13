@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-ed3efb38b3b327f7063f2ea4d3c5bfcd",
+    "generated_at_utc": "2026-03-13T06:36:33Z",
+    "work_id": "00576",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-a115d0c227fe96005758208e601c97f6",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-ed3efb38b3b327f7063f2ea4d3c5bfcd"
+  },
+  "work": {
+    "work_id": "00576",
+    "title": "path form 4",
+    "title_sort": "path form 004",
+    "year": 2012,
+    "year_display": "2012",
+    "series_id": "string-theory",
+    "series_ids": [
+      "string-theory"
+    ],
+    "series_title": "string theory",
+    "series_sort": "00576",
+    "storage": "7",
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 20.0,
+    "width_cm": 20.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "a115d0c227fe96005758208e601c97f6"
+  },
+  "sections": []
+}

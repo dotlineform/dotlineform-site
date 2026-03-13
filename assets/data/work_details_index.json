@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "work_details_index_v1",
-    "version": "blake2b-2abbe48ab62f5b4aef0c4a85ec949692",
-    "generated_at_utc": "2026-03-05T13:26:59Z",
-    "count": 530
+    "version": "blake2b-ed969afb3c3e5e6581a02cde96ee0d1b",
+    "generated_at_utc": "2026-03-13T08:14:34Z",
+    "count": 532
   },
   "details": {
     "00001-001": {
@@ -5305,6 +5305,26 @@
       "project_subfolder": "details",
       "section_id": "details",
       "detail_checksum": "blake2b-7ea1296818f7545990f5632eb167aaff"
+    },
+    "00536-001": {
+      "detail_uid": "00536-001",
+      "work_id": "00536",
+      "detail_id": "001",
+      "title": "model 2 - 001",
+      "title_sort": "model 002 - 001",
+      "project_subfolder": "details",
+      "section_id": "details",
+      "detail_checksum": "blake2b-0a2c87bcbb03e7f0ee6864bb362dcaae"
+    },
+    "00571-001": {
+      "detail_uid": "00571-001",
+      "work_id": "00571",
+      "detail_id": "001",
+      "title": "2012-01-06 - 12-30-44",
+      "title_sort": "2012-001-006 - 012-030-044",
+      "project_subfolder": "working",
+      "section_id": "working",
+      "detail_checksum": "blake2b-545da77027f17ecca70345633b01b853"
     }
   }
 }

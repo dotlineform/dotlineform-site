@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9e487dafbc667f5a3424e80abad1b3ec",
+    "generated_at_utc": "2026-03-13T06:36:33Z",
+    "work_id": "00562",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-20ed4e15210d875bf513c9094d09c476",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-9e487dafbc667f5a3424e80abad1b3ec"
+  },
+  "work": {
+    "work_id": "00562",
+    "title": "string theory forms 2",
+    "title_sort": "string theory forms 002",
+    "year": 2005,
+    "year_display": "2005",
+    "series_id": "string-theory",
+    "series_ids": [
+      "string-theory"
+    ],
+    "series_title": "string theory",
+    "series_sort": "00562",
+    "storage": null,
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "20ed4e15210d875bf513c9094d09c476"
+  },
+  "sections": []
+}
