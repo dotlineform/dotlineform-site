@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-1486834afe915bb7c903769c11fedbb9",
-    "generated_at_utc": "2026-03-13T15:10:09Z",
-    "count": 601
+    "version": "blake2b-a3dfc5c1f38ff71d45b11d6644ac9c11",
+    "generated_at_utc": "2026-03-13T15:46:05Z",
+    "count": 606
   },
   "works": {
     "00001": {
@@ -5271,6 +5271,20 @@
       "work_checksum": "blake2b-65d0d22686bbf8dfa87b7df9d7d5bfa5",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00390": {
+      "work_id": "00390",
+      "title": "forest 3",
+      "title_sort": "forest 003",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "forest",
+      "series_ids": [
+        "forest"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-8c23c6153bed43b793bd0fa14396265d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
     "00391": {
       "work_id": "00391",
       "title": "composite (blue)",
@@ -5283,6 +5297,34 @@
       ],
       "storage": "4",
       "work_checksum": "blake2b-0d15d13493e645cba0d48754a5627241",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00392": {
+      "work_id": "00392",
+      "title": "forest 1",
+      "title_sort": "forest 001",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "forest",
+      "series_ids": [
+        "forest"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-55e985e9ef96e0da8db642d98d0a6efa",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00393": {
+      "work_id": "00393",
+      "title": "model 500",
+      "title_sort": "model 500",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "forest",
+      "series_ids": [
+        "forest"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-b37137f3fd38695f3662bfbf8329bdd7",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
     "00394": {
@@ -8419,6 +8461,34 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-cd02558baea956ef14c3895366b7ce6a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00618": {
+      "work_id": "00618",
+      "title": "forest 2",
+      "title_sort": "forest 002",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "forest",
+      "series_ids": [
+        "forest"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f2222a643d131de23d985ae5542ca821",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00619": {
+      "work_id": "00619",
+      "title": "body 1",
+      "title_sort": "body 001",
+      "year": 2003,
+      "year_display": "2003",
+      "series_id": "forest",
+      "series_ids": [
+        "forest"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-563a56ae22137e91c72b849d0e8b19f4",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-894f4a73009821cd159ae4fc7b6dc5b0",
-    "generated_at_utc": "2026-03-13T15:10:09Z",
-    "count": 35
+    "version": "blake2b-41ed6e09d3fc784592e7cec32a1916ba",
+    "generated_at_utc": "2026-03-13T15:46:05Z",
+    "count": 36
   },
   "series": {
     "2-bodies": {
@@ -381,8 +381,8 @@
     "composite-blue-red-smoke": {
       "series_id": "composite-blue-red-smoke",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-13",
       "title": "composite (blue red smoke)",
       "title_sort": "composite (blue red smoke)",
       "sort_fields": "work_id",
@@ -594,6 +594,36 @@
         "work_id": "00346",
         "thumb_96": "/assets/works/img/00346-thumb-96.webp",
         "thumb_192": "/assets/works/img/00346-thumb-192.webp"
+      }
+    },
+    "forest": {
+      "series_id": "forest",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "forest",
+      "title_sort": "forest",
+      "sort_fields": "title,work_id",
+      "series_type": "primary",
+      "year": 2003,
+      "year_display": "2003",
+      "primary_work_id": "00392",
+      "notes": null,
+      "project_folders": [
+        "forest"
+      ],
+      "checksum": "9f997efbf7f6d8a4f9c6ebff7bf34132",
+      "works": [
+        "00619",
+        "00392",
+        "00618",
+        "00390",
+        "00393"
+      ],
+      "thumb": {
+        "work_id": "00392",
+        "thumb_96": "/assets/works/img/00392-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00392-thumb-192.webp"
       }
     },
     "forest-memories-1-48": {
