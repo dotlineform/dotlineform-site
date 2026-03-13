@@ -15,15 +15,14 @@ Current generated JSON files involved in this flow:
 
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
-- `assets/data/work_details_index.json`
 - `assets/works/index/<work_id>.json`
 
-Intended direction:
+Current direction:
 
 - keep `series_index.json`
 - keep `works_index.json`
 - keep per-work JSON in `assets/works/index/<work_id>.json`
-- retire `work_details_index.json` if `/work_details/` index is retired
+- retire the runtime dependency on `work_details_index.json`
 
 ## 1. Series Index
 
@@ -149,22 +148,20 @@ User-facing step:
 
 Current JSON used:
 
-- [`assets/data/work_details_index.json`](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/data/work_details_index.json)
 - [`assets/works/index/<work_id>.json`](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/works/index)
 
 Template:
 
 - [`_layouts/work_details.html`](/Users/dlf/Developer/dotlineform/dotlineform-site/_layouts/work_details.html)
 
-What `work_details_index.json` currently provides:
+What the detail stub front matter provides:
 
-- quick lookup from `detail_uid` to:
 - `work_id`
-- title
-- `section_id`
-- lightweight section context
+- `detail_id`
+- `detail_uid`
+- `title` as fallback text only
 
-What per-work JSON provides after that:
+What per-work JSON provides:
 
 - canonical detail record
 - detail dimensions
@@ -173,28 +170,13 @@ What per-work JSON provides after that:
 - sibling detail ordering for prev/next navigation
 - parent work title
 
-Why `work_details_index.json` is currently used:
+How the page now works:
 
-- the detail page does a lightweight first lookup to find the parent work before fetching that work's JSON
+- it reads `page.work_id` from the stub
+- it fetches [`assets/works/index/<work_id>.json`](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/works/index)
+- it finds the matching `detail_uid` in that work payload
 
-Recommended replacement for `work_details_index.json`:
-
-- remove this first lookup
-- use the detail stub front matter directly:
-- `page.work_id`
-- `page.detail_uid`
-- `page.title` as fallback only
-- then fetch [`assets/works/index/<work_id>.json`](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/works/index)
-- find the matching `detail_uid` inside that work payload
-
-This replacement is viable because the generated `_work_details/<detail_uid>.md` stub already carries:
-
-- `work_id`
-- `detail_id`
-- `detail_uid`
-- `title`
-
-After that fetch, the page can derive:
+From that work-local payload, the page derives:
 
 - correct detail title
 - section ID
@@ -207,31 +189,27 @@ After that fetch, the page can derive:
 User-facing step:
 
 - `/work_details/`
-- global all-details listing
-
-Current JSON used:
-
-- [`assets/data/work_details_index.json`](/Users/dlf/Developer/dotlineform/dotlineform-site/assets/data/work_details_index.json)
+- retired
 
 Template:
 
 - [`work_details/index.md`](/Users/dlf/Developer/dotlineform/dotlineform-site/work_details/index.md)
 
-What it provides:
+Current status:
 
-- global client-side list of all detail records
-- filtering by `from_work`
-- filtering by section
-- sorting by cat / title
+- the page source still exists in the repo
+- it is marked `published: false`
+- the work page no longer links to it
+- it is no longer part of sitemap generation
 
-Replacement if `/work_details/` is retired:
+Replacement:
 
-- no replacement needed
-- this is the main reason `work_details_index.json` still exists as a global file
+- no replacement is needed
+- per-work detail grids on `/works/<work_id>/` are now the only detail index UI
 
-## Recommended Future State
+## Current State
 
-If `/work_details/` is retired, the clean data flow becomes:
+The implemented data flow is now:
 
 1. `/series/`
    - uses `assets/data/series_index.json`
@@ -248,9 +226,8 @@ If `/work_details/` is retired, the clean data flow becomes:
    - uses stub front matter for `work_id`
    - uses `assets/works/index/<work_id>.json`
 
-In that future state:
+Result:
 
-- `work_details_index.json` can be removed
 - detail browsing becomes fully work-local
 - very large detail sets scale with the size of one work's JSON, not with one global details index
-
+- a very large work+details set has no runtime impact on unrelated works

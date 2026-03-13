@@ -324,24 +324,13 @@ layout: default
     updateMedia();
     updateBackLink();
 
-    var detailsIndexUrl = baseurl + '/assets/data/work_details_index.json';
-    fetchJson(detailsIndexUrl)
-      .then(function (detailsIndex) {
-        var detailsMap = (detailsIndex && detailsIndex.details && typeof detailsIndex.details === 'object')
-          ? detailsIndex.details
-          : {};
-        var detailRow = detailsMap[ctx.detailUid] || null;
-        if (detailRow) {
-          if (!ctx.fromWork) ctx.fromWork = normalize(detailRow.work_id);
-          if (!explicitSection) ctx.section = normalize(detailRow.section_id).toLowerCase() || ctx.section;
-          if (!explicitDetailsSection) ctx.detailsSection = normalize(detailRow.section_id).toLowerCase() || ctx.detailsSection;
-          var maybeTitle = normalize(detailRow.title);
-          if (maybeTitle) ctx.title = maybeTitle;
-        }
-        if (!ctx.fromWork) return null;
-        var workJsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(ctx.fromWork) + '.json';
-        return fetchJson(workJsonUrl);
-      })
+    if (!ctx.fromWork) {
+      nav.hidden = true;
+      return;
+    }
+
+    var workJsonUrl = baseurl + '/assets/works/index/' + encodeURIComponent(ctx.fromWork) + '.json';
+    fetchJson(workJsonUrl)
       .then(function (workPayload) {
         if (!workPayload || typeof workPayload !== 'object') {
           updateTitleAndCat();

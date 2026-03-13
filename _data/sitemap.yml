@@ -10,18 +10,6 @@ sections:
         depth: 0
         node_type: "index"
       -
-        title: "work details index"
-        url: "/work_details/"
-        source: "work_details/index.md"
-        depth: 1
-        node_type: "index"
-      -
-        title: "works curator index"
-        url: "/works_curator/"
-        source: "works_curator/index.md"
-        depth: 0
-        node_type: "index"
-      -
         title: "series"
         url: "/series/"
         source: "_series/*.md"

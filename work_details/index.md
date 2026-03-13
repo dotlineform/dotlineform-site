@@ -3,6 +3,7 @@ layout: default
 title: Work Details
 permalink: /work_details/
 section: works
+published: false
 ---
 
 <div class="index worksList detailsList" id="workDetailsIndexRoot" hidden>

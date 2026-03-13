@@ -585,22 +585,15 @@ If you later serve images only from external media_base (CDN/R2), this check won
       var html = '';
       html += '<h3 class=\"workDetails__title\">' + esc(group.label || 'Details') + '</h3>';
       html += renderDetailsGrid(pageItems, group.secId, group.page);
-      var idxHref = baseurl + '/work_details/?from_work=' + encodeURIComponent(workId);
-      if (workTitle) idxHref += '&from_work_title=' + encodeURIComponent(workTitle);
-      idxHref += '&section=' + encodeURIComponent(group.secId);
-      if (group.label) idxHref += '&section_label=' + encodeURIComponent(group.label);
-      if (currentSeries) idxHref += '&series=' + encodeURIComponent(currentSeries);
-      if (currentSeriesPage > 0) idxHref += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
-      html += '<div class=\"seriesGridFooter\">';
-      html += '<a class=\"seriesGridFooter__indexLink\" href=\"' + esc(idxHref) + '\">index</a>';
       if (pageCount > 1) {
+        html += '<div class=\"seriesGridFooter\">';
         html += '<nav class=\"gridPager\" aria-label=\"details pagination\">';
         html += '<span class=\"gridPager__status\">' + group.page + '/' + pageCount + '</span>';
         html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"-1\" aria-label=\"Previous page\">←</button>';
         html += '<button class=\"gridPager__btn\" type=\"button\" data-pager-key=\"' + esc(group.key) + '\" data-pager-delta=\"1\" aria-label=\"Next page\">→</button>';
         html += '</nav>';
+        html += '</div>';
       }
-      html += '</div>';
 
       group.el.innerHTML = html;
     }

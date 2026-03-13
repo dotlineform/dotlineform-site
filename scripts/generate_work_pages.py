@@ -716,7 +716,7 @@ def main() -> None:
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
     run_works_index_json = artifact_enabled("works-index-json")
-    run_work_details_index_json = artifact_enabled("work-details-index-json")
+    run_work_details_index_json = selected_artifacts is not None and artifact_enabled("work-details-index-json")
     run_moments_artifact = artifact_enabled("moments")
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
