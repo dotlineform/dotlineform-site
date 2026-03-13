@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-41ed6e09d3fc784592e7cec32a1916ba",
-    "generated_at_utc": "2026-03-13T15:46:05Z",
-    "count": 36
+    "version": "blake2b-42c6613ea438a7b1958675b125c2a3f5",
+    "generated_at_utc": "2026-03-13T16:22:17Z",
+    "count": 37
   },
   "series": {
     "2-bodies": {
@@ -799,6 +799,36 @@
         "work_id": "00403",
         "thumb_96": "/assets/works/img/00403-thumb-96.webp",
         "thumb_192": "/assets/works/img/00403-thumb-192.webp"
+      }
+    },
+    "harmony": {
+      "series_id": "harmony",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-13",
+      "title": "harmony",
+      "title_sort": "harmony",
+      "sort_fields": "title,work_id",
+      "series_type": "primary",
+      "year": 2009,
+      "year_display": "2009",
+      "primary_work_id": "00379",
+      "notes": null,
+      "project_folders": [
+        "harmony"
+      ],
+      "checksum": "5efd51d1b1a0cd5ccb83812f2e4417a2",
+      "works": [
+        "00380",
+        "00381",
+        "00382",
+        "00379",
+        "00620"
+      ],
+      "thumb": {
+        "work_id": "00379",
+        "thumb_96": "/assets/works/img/00379-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00379-thumb-192.webp"
       }
     },
     "heaven-and-earth": {

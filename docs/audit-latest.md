@@ -1,8 +1,8 @@
 # Audit Report
 
-- Run at: `2026-03-06T22:53:47+00:00`
-- Duration: `77ms`
-- Checks: `cross_refs, json_schema`
+- Run at: `2026-03-13T16:48:27+00:00`
+- Duration: `72ms`
+- Checks: `orphans`
 - Errors: `0`
 - Warnings: `0`
 
@@ -11,27 +11,22 @@
 | flag | value | default? |
 | --- | --- | --- |
 | `--site-root` | `.` | `yes` |
-| `--checks` | `cross_refs,json_schema` | `no` |
-| `--check-only` | `(none)` | `yes` |
+| `--checks` | `cross_refs,schema` | `yes` |
+| `--check-only` | `orphans` | `no` |
 | `--series-ids` | `(empty)` | `yes` |
 | `--work-ids` | `(empty)` | `yes` |
 | `--strict` | `False` | `yes` |
 | `--json-out` | `(empty)` | `yes` |
 | `--md-out` | `docs/audit-latest.md` | `yes` |
 | `--max-samples` | `20` | `yes` |
-| `--orphans-media` | `False` | `yes` |
+| `--orphans-media` | `True` | `no` |
 
 ## Check Summary
 
-- `cross_refs`: errors=0 warnings=0
-- `json_schema`: errors=0 warnings=0
+- `orphans`: errors=0 warnings=0
 
 ## Findings
 
-### cross_refs
-
-- none
-
-### json_schema
+### orphans
 
 - none

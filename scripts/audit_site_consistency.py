@@ -107,6 +107,41 @@ def add_sample(samples: List[Dict[str, Any]], item: Dict[str, Any], max_samples:
         samples.append(item)
 
 
+def load_series_work_counts_from_index(site_root: Path) -> Optional[Dict[str, int]]:
+    series_index_path = site_root / "assets/data/series_index.json"
+    if not series_index_path.exists():
+        return None
+    try:
+        payload = json.loads(series_index_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        return None
+    counts: Dict[str, int] = {}
+    for raw_sid, raw_row in series_map.items():
+        sid = normalize_text(raw_sid)
+        if sid == "" or not isinstance(raw_row, dict):
+            continue
+        works = raw_row.get("works")
+        counts[sid] = len(works) if isinstance(works, list) else 0
+    return counts
+
+
+def load_work_details_index_ids(site_root: Path) -> Optional[Set[str]]:
+    details_index_path = site_root / "assets/data/work_details_index.json"
+    if not details_index_path.exists():
+        return None
+    try:
+        payload = json.loads(details_index_path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    details_map = payload.get("details")
+    if not isinstance(details_map, dict):
+        return None
+    return {normalize_text(raw_uid) for raw_uid in details_map.keys() if normalize_text(raw_uid) != ""}
+
+
 def normalize_url(url: str) -> str:
     s = normalize_text(url)
     if s == "":
@@ -1030,14 +1065,17 @@ def check_orphans(
     work_ids = set(works.keys())
     series_ids = set(series.keys())
     detail_ids = set(work_details.keys())
-    works_by_series: Dict[str, int] = {}
-    for wid, row in works.items():
-        if work_ids_scope is not None and wid not in work_ids_scope:
-            continue
-        sid = normalize_text(row["fm"].get("series_id"))
-        if sid == "":
-            continue
-        works_by_series[sid] = works_by_series.get(sid, 0) + 1
+    indexed_detail_ids = load_work_details_index_ids(site_root)
+    works_by_series = load_series_work_counts_from_index(site_root)
+    if works_by_series is None:
+        works_by_series = {}
+        for wid, row in works.items():
+            if work_ids_scope is not None and wid not in work_ids_scope:
+                continue
+            sid = normalize_text(row["fm"].get("series_id"))
+            if sid == "":
+                continue
+            works_by_series[sid] = works_by_series.get(sid, 0) + 1
 
     for sid, row in series.items():
         if series_ids_scope is not None and sid not in series_ids_scope:
@@ -1045,6 +1083,29 @@ def check_orphans(
         if works_by_series.get(sid, 0) == 0:
             warnings += 1
             add_sample(samples, {"check": "orphans", "id": sid, "path": row["path"], "message": "series page has no works"}, max_samples)
+
+    if indexed_detail_ids is not None:
+        for duid, row in work_details.items():
+            wid = normalize_text(row["fm"].get("work_id"))
+            if work_ids_scope is not None and wid not in work_ids_scope:
+                continue
+            sid = ""
+            if wid in works:
+                sid = normalize_text(works[wid]["fm"].get("series_id"))
+            if series_ids_scope is not None and sid not in series_ids_scope:
+                continue
+            if duid not in indexed_detail_ids:
+                warnings += 1
+                add_sample(
+                    samples,
+                    {
+                        "check": "orphans",
+                        "id": duid,
+                        "path": row["path"],
+                        "message": "work detail page is not present in work_details_index.json",
+                    },
+                    max_samples,
+                )
 
     for p in sorted((site_root / "assets/works/index").glob("*.json")):
         wid = p.stem
@@ -1075,7 +1136,13 @@ def check_orphans(
             if not m:
                 continue
             duid = m.group(1)
-            if duid not in detail_ids:
+            wid = duid.split("-", 1)[0]
+            if work_ids_scope is not None and wid not in work_ids_scope:
+                continue
+            if (
+                duid not in detail_ids
+                and (indexed_detail_ids is None or duid not in indexed_detail_ids)
+            ):
                 warnings += 1
                 add_sample(samples, {"check": "orphans", "id": duid, "path": str(p), "message": "orphan detail image file (no matching detail page)"}, max_samples)
 
@@ -1127,6 +1194,10 @@ def render_markdown_report(report: Dict[str, Any], flag_rows: List[Dict[str, str
         lines.append(f"### {name}")
         lines.append("")
         samples = c.get("samples", []) or []
+        total_findings = int(c.get("error_count", 0)) + int(c.get("warning_count", 0))
+        if total_findings > len(samples):
+            lines.append(f"_Showing first {len(samples)} of {total_findings} findings (see `--max-samples`)._")
+            lines.append("")
         if not samples:
             lines.append("- none")
             lines.append("")
