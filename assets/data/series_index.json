@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-ea3bcf75196322aba859cad9b33341d2",
-    "generated_at_utc": "2026-03-13T09:28:49Z",
-    "count": 29
+    "version": "blake2b-e280e7458e100d854e59dfb1575a01b4",
+    "generated_at_utc": "2026-03-13T10:06:23Z",
+    "count": 30
   },
   "series": {
     "2-bodies": {
@@ -1119,6 +1119,36 @@
         "work_id": "00166",
         "thumb_96": "/assets/works/img/00166-thumb-96.webp",
         "thumb_192": "/assets/works/img/00166-thumb-192.webp"
+      }
+    },
+    "nerve-forms": {
+      "series_id": "nerve-forms",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "nerve forms",
+      "title_sort": "nerve forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2004,
+      "year_display": "2004",
+      "primary_work_id": "00581",
+      "notes": "add videos",
+      "project_folders": [
+        "nerve forms"
+      ],
+      "checksum": "0b5b8efb462703ff1eb528c97b7d8872",
+      "works": [
+        "00385",
+        "00386",
+        "00387",
+        "00525",
+        "00581"
+      ],
+      "thumb": {
+        "work_id": "00581",
+        "thumb_96": "/assets/works/img/00581-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00581-thumb-192.webp"
       }
     },
     "particle-theory": {

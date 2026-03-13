@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-f49ba9195942d5307bf11a53e066be27",
-    "generated_at_utc": "2026-03-13T09:28:49Z",
-    "count": 548
+    "version": "blake2b-be55c5a1fd9871d2f218fa8eedc497f4",
+    "generated_at_utc": "2026-03-13T10:06:23Z",
+    "count": 553
   },
   "works": {
     "00001": {
@@ -5215,6 +5215,48 @@
       "work_checksum": "blake2b-31c2a3169fc8f87c1e2207322f24504a",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00385": {
+      "work_id": "00385",
+      "title": "nerve 1",
+      "title_sort": "nerve 001",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "nerve-forms",
+      "series_ids": [
+        "nerve-forms"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-38fe5b815f64c7d578e8a343087361aa",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00386": {
+      "work_id": "00386",
+      "title": "nerve 3",
+      "title_sort": "nerve 003",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "nerve-forms",
+      "series_ids": [
+        "nerve-forms"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-feb0a0138e262ea847cc1f6d768373a8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00387": {
+      "work_id": "00387",
+      "title": "nerve 3",
+      "title_sort": "nerve 003",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "nerve-forms",
+      "series_ids": [
+        "nerve-forms"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-9209015b0629369ddfac22cf068f4596",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
     "00403": {
       "work_id": "00403",
       "title": "found form (2017-06-29)",
@@ -6923,6 +6965,20 @@
       "work_checksum": "blake2b-6b50a179ed433af41df119b8b5cb1400",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00525": {
+      "work_id": "00525",
+      "title": "nerve 2",
+      "title_sort": "nerve 002",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "nerve-forms",
+      "series_ids": [
+        "nerve-forms"
+      ],
+      "storage": "4",
+      "work_checksum": "blake2b-568e3f29a7e607ca65d0cf1b0b3798a6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
     "00526": {
       "work_id": "00526",
       "title": "body",
@@ -7677,6 +7733,20 @@
       ],
       "storage": "7",
       "work_checksum": "blake2b-be3d295535e02399da6b1d19a8423020",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00581": {
+      "work_id": "00581",
+      "title": "nerve forms",
+      "title_sort": "nerve forms",
+      "year": 2004,
+      "year_display": "2004",
+      "series_id": "nerve-forms",
+      "series_ids": [
+        "nerve-forms"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-17c0ce6f315f777ff23dee77f31d5b04",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
