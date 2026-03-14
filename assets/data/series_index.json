@@ -1,11 +1,39 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-32d87411b5a43601dccd3df2019c902a",
-    "generated_at_utc": "2026-03-14T19:34:35Z",
-    "count": 41
+    "version": "blake2b-97f95bcf3ba723af6991d613a5449192",
+    "generated_at_utc": "2026-03-14T22:37:10Z",
+    "count": 42
   },
   "series": {
+    "10000": {
+      "series_id": "10000",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-14",
+      "title": "10,000",
+      "title_sort": "010,000",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2009,
+      "year_display": "2009",
+      "primary_work_id": "00635",
+      "notes": null,
+      "project_folders": [
+        "10000"
+      ],
+      "checksum": "949f7936521ad766775b9bb6f07724e3",
+      "works": [
+        "00635",
+        "00636",
+        "00637"
+      ],
+      "thumb": {
+        "work_id": "00635",
+        "thumb_96": "/assets/works/img/00635-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00635-thumb-192.webp"
+      }
+    },
     "2-bodies": {
       "series_id": "2-bodies",
       "layout": "series",
