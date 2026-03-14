@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-8f37e6ffb94958cb13eb6d22c844f133",
+    "generated_at_utc": "2026-03-14T17:12:58Z",
+    "work_id": "00632",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-d24015682691fb80bdaf80d91d1b6400",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-8f37e6ffb94958cb13eb6d22c844f133"
+  },
+  "work": {
+    "work_id": "00632",
+    "title": "quantum random number theory (circle)",
+    "title_sort": "quantum random number theory (circle)",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "qrnt",
+    "series_ids": [
+      "qrnt"
+    ],
+    "series_title": "quantum random number theory",
+    "series_sort": "00632",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "d24015682691fb80bdaf80d91d1b6400"
+  },
+  "sections": []
+}

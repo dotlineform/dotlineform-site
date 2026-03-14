@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-dc202c07e58f15e5a9b6de9c1517f0f1",
+    "generated_at_utc": "2026-03-14T17:12:58Z",
+    "work_id": "00383",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-507c41281c6d9ac6e71604f89dfefff6",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-dc202c07e58f15e5a9b6de9c1517f0f1"
+  },
+  "work": {
+    "work_id": "00383",
+    "title": "qrnt",
+    "title_sort": "qrnt",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "qrnt",
+    "series_ids": [
+      "qrnt"
+    ],
+    "series_title": "quantum random number theory",
+    "series_sort": "00383",
+    "storage": "14",
+    "medium_type": "digital print",
+    "medium_caption": "inkjet print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "507c41281c6d9ac6e71604f89dfefff6"
+  },
+  "sections": []
+}

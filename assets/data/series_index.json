@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-c4470492df93f91877a3293ded854d36",
-    "generated_at_utc": "2026-03-13T23:28:43Z",
-    "count": 40
+    "version": "blake2b-32d87411b5a43601dccd3df2019c902a",
+    "generated_at_utc": "2026-03-14T19:34:35Z",
+    "count": 41
   },
   "series": {
     "2-bodies": {
@@ -938,8 +938,8 @@
     "k-crystals": {
       "series_id": "k-crystals",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-13",
       "title": "k crystals",
       "title_sort": "k crystals",
       "sort_fields": "work_id",
@@ -1423,6 +1423,39 @@
         "work_id": "00553",
         "thumb_96": "/assets/works/img/00553-thumb-96.webp",
         "thumb_192": "/assets/works/img/00553-thumb-192.webp"
+      }
+    },
+    "qrnt": {
+      "series_id": "qrnt",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-14",
+      "title": "quantum random number theory",
+      "title_sort": "quantum random number theory",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2015,
+      "year_display": "2009, 2015",
+      "primary_work_id": "00630",
+      "notes": null,
+      "project_folders": [
+        "qrnt",
+        "qrnt (bits symbols)"
+      ],
+      "checksum": "d22e8d371d97b13627c4a6ee3d38d9b6",
+      "works": [
+        "00383",
+        "00629",
+        "00630",
+        "00631",
+        "00632",
+        "00633",
+        "00634"
+      ],
+      "thumb": {
+        "work_id": "00630",
+        "thumb_96": "/assets/works/img/00630-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00630-thumb-192.webp"
       }
     },
     "r": {

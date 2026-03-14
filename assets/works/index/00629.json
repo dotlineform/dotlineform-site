@@ -1,0 +1,221 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-e1dcfaa004bdba92ac3e831f36f91115",
+    "generated_at_utc": "2026-03-14T17:33:31Z",
+    "work_id": "00629",
+    "count": 13,
+    "hash": "blake2b-6d33f429eade854943f8c0a7d3198eaa",
+    "work_checksum": "blake2b-2027fc498ea5ff326c4ecb660631e7cc",
+    "details_checksum": "blake2b-6d33f429eade854943f8c0a7d3198eaa",
+    "record_checksum": "blake2b-e1dcfaa004bdba92ac3e831f36f91115"
+  },
+  "work": {
+    "work_id": "00629",
+    "title": "quantum random number theory",
+    "title_sort": "quantum random number theory",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "qrnt",
+    "series_ids": [
+      "qrnt"
+    ],
+    "series_title": "quantum random number theory",
+    "series_sort": "00629",
+    "storage": "framed",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "2027fc498ea5ff326c4ecb660631e7cc"
+  },
+  "sections": [
+    {
+      "project_subfolder": "versions",
+      "details": [
+        {
+          "work_id": "00629",
+          "detail_id": "001",
+          "detail_uid": "00629-001",
+          "title": "quantum random number theory (10,000) 1",
+          "title_sort": "quantum random number theory (010,000) 001",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "01958ffc053c1bfd14f047c56750b944"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "002",
+          "detail_uid": "00629-002",
+          "title": "quantum random number theory (10,000) 2",
+          "title_sort": "quantum random number theory (010,000) 002",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9d32512861552cef586bf828dc80737c"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "003",
+          "detail_uid": "00629-003",
+          "title": "quantum random number theory (10,000) 3",
+          "title_sort": "quantum random number theory (010,000) 003",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "5f96aaeef769c8abe60058ac9d3db728"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "004",
+          "detail_uid": "00629-004",
+          "title": "quantum random number theory (10,000) 4",
+          "title_sort": "quantum random number theory (010,000) 004",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "9fad6d8a716b0422d599bd7f65c0da55"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "005",
+          "detail_uid": "00629-005",
+          "title": "quantum random number theory (10,000) 5",
+          "title_sort": "quantum random number theory (010,000) 005",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d2fa963997d01e6ea3f4f90d6339a003"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "006",
+          "detail_uid": "00629-006",
+          "title": "quantum random number theory (10,000) 6",
+          "title_sort": "quantum random number theory (010,000) 006",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "1fa5dbcfbda9da0aad7bb3992f26e569"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "007",
+          "detail_uid": "00629-007",
+          "title": "quantum random number theory (10,000) 7",
+          "title_sort": "quantum random number theory (010,000) 007",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "00b3e48426935561ed9eec5a5a55b119"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "008",
+          "detail_uid": "00629-008",
+          "title": "quantum random number theory (10,000) 8",
+          "title_sort": "quantum random number theory (010,000) 008",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "35f1c0e82296b23feec60ed5e3c34fb3"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "009",
+          "detail_uid": "00629-009",
+          "title": "quantum random number theory (10,000) 9",
+          "title_sort": "quantum random number theory (010,000) 009",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "c8ca811f6d451dc23b7b0f2fe51f70cd"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "010",
+          "detail_uid": "00629-010",
+          "title": "quantum random number theory (10,000) 10",
+          "title_sort": "quantum random number theory (010,000) 010",
+          "project_subfolder": "versions",
+          "width_px": 4800,
+          "height_px": 4800,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "73ccbdcb2d0be8d010d69118c0812a5b"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "install",
+      "details": [
+        {
+          "work_id": "00629",
+          "detail_id": "011",
+          "detail_uid": "00629-011",
+          "title": "qrnt - Searching for God exhibition - install 1",
+          "title_sort": "qrnt - Searching for God exhibition - install 001",
+          "project_subfolder": "install",
+          "width_px": 1600,
+          "height_px": 1200,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "61291e5c1a9d03c9d8a473edb611f6c0"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "012",
+          "detail_uid": "00629-012",
+          "title": "qrnt - Searching for God exhibition - install 2",
+          "title_sort": "qrnt - Searching for God exhibition - install 002",
+          "project_subfolder": "install",
+          "width_px": 1600,
+          "height_px": 1200,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "ad50ef3aef55c451ff637f8a2ee76406"
+        },
+        {
+          "work_id": "00629",
+          "detail_id": "013",
+          "detail_uid": "00629-013",
+          "title": "qrnt - Searching for God exhibition - install 3",
+          "title_sort": "qrnt - Searching for God exhibition - install 003",
+          "project_subfolder": "install",
+          "width_px": 1296,
+          "height_px": 1304,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "bbb33872245b89b96f5a8bb584d38b7c"
+        }
+      ]
+    }
+  ]
+}

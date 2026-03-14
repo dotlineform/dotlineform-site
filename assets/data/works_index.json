@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-3706fd6c5eb65f4579cf75c25f1e17c7",
-    "generated_at_utc": "2026-03-13T23:28:44Z",
-    "count": 622
+    "version": "blake2b-fbd6cb0021aa2857e13b0c58617f3ea1",
+    "generated_at_utc": "2026-03-14T19:34:36Z",
+    "count": 629
   },
   "works": {
     "00001": {
@@ -5285,6 +5285,20 @@
       "work_checksum": "blake2b-fb51c8a6c59c0a928c9f313356683fba",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
+    "00383": {
+      "work_id": "00383",
+      "title": "qrnt",
+      "title_sort": "qrnt",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": "14",
+      "work_checksum": "blake2b-507c41281c6d9ac6e71604f89dfefff6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
     "00384": {
       "work_id": "00384",
       "title": "glass forms",
@@ -8712,8 +8726,92 @@
         "k-crystals"
       ],
       "storage": null,
-      "work_checksum": "blake2b-20bed19df0b466a49b0c924e7ea5b356",
+      "work_checksum": "blake2b-21da8efa4d06780667db9b656a99d1f0",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00629": {
+      "work_id": "00629",
+      "title": "quantum random number theory",
+      "title_sort": "quantum random number theory",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": "framed",
+      "work_checksum": "blake2b-2027fc498ea5ff326c4ecb660631e7cc",
+      "details_checksum": "blake2b-6d33f429eade854943f8c0a7d3198eaa"
+    },
+    "00630": {
+      "work_id": "00630",
+      "title": "quantum random number theory (version)",
+      "title_sort": "quantum random number theory (version)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-107b8fea1af0d848a34fdd46a23a3b57",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00631": {
+      "work_id": "00631",
+      "title": "quantum random number theory (form)",
+      "title_sort": "quantum random number theory (form)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": "framed",
+      "work_checksum": "blake2b-d7fbbe957bbb20377943935c5f8ff9f3",
+      "details_checksum": "blake2b-3a4fd30f04e9e7cf31c81f21b349ca96"
+    },
+    "00632": {
+      "work_id": "00632",
+      "title": "quantum random number theory (circle)",
+      "title_sort": "quantum random number theory (circle)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d24015682691fb80bdaf80d91d1b6400",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00633": {
+      "work_id": "00633",
+      "title": "quantum random number theory (4 circles)",
+      "title_sort": "quantum random number theory (004 circles)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7f79c18ce42a8028874c36c71a6bece5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00634": {
+      "work_id": "00634",
+      "title": "bits symbols 1",
+      "title_sort": "bits symbols 001",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "qrnt",
+      "series_ids": [
+        "qrnt"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cfb7428d7f7fe0886e62217ce5353185",
+      "details_checksum": "blake2b-a5950774522220e0489e614c03d00ac9"
     }
   }
 }
