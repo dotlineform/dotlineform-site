@@ -57,8 +57,8 @@ permalink: /series/
 
     var baseurl = {{ site.baseurl | default: '' | jsonify }};
     var dataUrl = baseurl + '/assets/data/series_index.json';
-    var params = new URLSearchParams(window.location.search);
-    var currentView = normalizeView(params.get('view'));
+    var viewStorageKey = 'dlf.seriesIndex.view';
+    var currentView = readStoredView();
     var seriesItems = [];
 
     function withBase(path) {
@@ -70,19 +70,23 @@ permalink: /series/
     }
 
     function normalizeView(value) {
-      return String(value || '').trim().toLowerCase() === 'grid' ? 'grid' : 'list';
+      return String(value || '').trim().toLowerCase() === 'list' ? 'list' : 'grid';
+    }
+
+    function readStoredView() {
+      try {
+        return normalizeView(window.localStorage.getItem(viewStorageKey));
+      } catch (err) {
+        return 'grid';
+      }
     }
 
     function persistView(view) {
-      var next = new URLSearchParams(window.location.search);
-      if (view === 'grid') {
-        next.set('view', 'grid');
-      } else {
-        next.delete('view');
+      try {
+        window.localStorage.setItem(viewStorageKey, normalizeView(view));
+      } catch (err) {
+        // Ignore storage failures; the page still works with in-memory state.
       }
-      var query = next.toString();
-      var nextUrl = window.location.pathname + (query ? ('?' + query) : '') + window.location.hash;
-      window.history.replaceState({}, '', nextUrl);
     }
 
     function yearValue(v) {
@@ -106,20 +110,13 @@ permalink: /series/
       return 0;
     }
 
-    function withReturnView(url) {
-      var q = new URLSearchParams();
-      q.set('from', 'series_index');
-      q.set('return_view', currentView);
-      return url + '?' + q.toString();
-    }
-
     function cardHref(s) {
       var sid = String((s && s.series_id) || '').trim();
       var works = Array.isArray(s && s.works) ? s.works : [];
       if (works.length === 1) {
-        return withReturnView(baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/');
+        return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/';
       }
-      return withReturnView(baseurl + '/series/' + encodeURIComponent(sid) + '/');
+      return baseurl + '/series/' + encodeURIComponent(sid) + '/';
     }
 
     function cardThumbData(s) {

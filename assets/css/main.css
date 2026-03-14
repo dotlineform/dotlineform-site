@@ -487,6 +487,7 @@ th{ background: var(--panel-2); }
   width: 1.575rem;
   height: 1.575rem;
   padding: 0;
+  color: var(--muted);
 }
 
 .seriesIndex__viewBtn.is-active,
@@ -505,7 +506,7 @@ th{ background: var(--panel-2); }
   height: 0.8rem;
   stroke: currentColor;
   fill: none;
-  stroke-width: 1.2;
+  stroke-width: 1.1;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
