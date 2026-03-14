@@ -186,6 +186,7 @@ permalink: /series/
       a.className = 'seriesGrid__item';
       a.href = href;
       a.setAttribute('aria-label', title);
+      a.title = title;
 
       if (thumb96) {
         var img = document.createElement('img');
