@@ -140,6 +140,9 @@ const DEFAULT_STUDIO_CONFIG = {
       session_import_status_conflict: "Conflict with current repo row.",
       session_import_status_invalid: "Invalid staged data.",
       session_import_status_missing: "Series not found in current site data."
+    },
+    studio_works: {
+      copy_series_button: "copy series"
     }
   }
 };

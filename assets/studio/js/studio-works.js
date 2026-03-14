@@ -2,6 +2,10 @@ import {
   fetchJson
 } from "./studio-data.js";
 import {
+  getStudioText,
+  loadStudioConfig
+} from "./studio-config.js";
+import {
   studioWorksUi
 } from "./studio-ui.js";
 
@@ -21,8 +25,9 @@ function initStudioWorksPage() {
   const countEl = document.getElementById("worksListCount");
   const backNav = document.getElementById("worksIndexBackNav");
   const backLink = document.getElementById("worksIndexBackLink");
+  const copySeriesButton = document.getElementById("worksListCopySeriesButton");
   const buttons = Array.prototype.slice.call(document.querySelectorAll(UI_SELECTOR.sortButton));
-  if (!worksListRoot || !emptyEl || !list || !countEl || !buttons.length) return;
+  if (!worksListRoot || !emptyEl || !list || !countEl || !buttons.length || !copySeriesButton) return;
 
   const baseurl = String(worksListRoot.dataset.baseurl || "");
   const worksIndexUrl = String(worksListRoot.dataset.worksIndexUrl || "");
@@ -40,6 +45,8 @@ function initStudioWorksPage() {
   let visualSortKey = sortKey;
   let totalWorksAll = 0;
   let totalSeriesAll = 0;
+  let config = null;
+  let copySeriesText = "";
 
   if (!hasExplicitSort) sortKey = hasSeriesFilter ? "seriessort" : "cat";
   if (!validKeys[sortKey]) sortKey = hasSeriesFilter ? "seriessort" : "cat";
@@ -48,6 +55,47 @@ function initStudioWorksPage() {
   if (hasSeriesFilter) {
     worksListRoot.classList.add("worksList--singleSeries");
   }
+
+  function worksText(key, fallback) {
+    return getStudioText(config, `studio_works.${key}`, fallback);
+  }
+
+  function compareSeriesRows(a, b) {
+    const at = normalizeText(a && (a.title_sort || a.title || a.series_id));
+    const bt = normalizeText(b && (b.title_sort || b.title || b.series_id));
+    const titleCmp = collator.compare(at, bt);
+    if (titleCmp !== 0) return titleCmp;
+
+    return collator.compare(normalizeText(a && a.series_id), normalizeText(b && b.series_id));
+  }
+
+  async function copyTextToClipboard(text) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const probe = document.createElement("textarea");
+    probe.value = text;
+    probe.setAttribute("readonly", "");
+    probe.style.position = "absolute";
+    probe.style.left = "-9999px";
+    document.body.appendChild(probe);
+    probe.select();
+    probe.setSelectionRange(0, probe.value.length);
+    const copied = document.execCommand("copy");
+    document.body.removeChild(probe);
+    if (!copied) throw new Error("copy_failed");
+  }
+
+  copySeriesButton.addEventListener("click", async () => {
+    if (!copySeriesText) return;
+    try {
+      await copyTextToClipboard(copySeriesText);
+    } catch (error) {
+      console.warn("studio_works: copy series failed", error);
+    }
+  });
 
   function normalizeText(value) {
     return String(value == null ? "" : value).trim();
@@ -332,6 +380,16 @@ function initStudioWorksPage() {
     const seriesMetaById = buildSeriesMeta(seriesMap);
     const rows = [];
     const seriesIdSet = {};
+    const seriesRows = Object.keys(seriesMap)
+      .map((sid) => seriesMap[sid])
+      .filter((row) => row && typeof row === "object");
+
+    seriesRows.sort(compareSeriesRows);
+    copySeriesText = seriesRows
+      .map((row) => normalizeText(row.title) || normalizeText(row.series_id))
+      .filter(Boolean)
+      .join("\n");
+    copySeriesButton.disabled = !copySeriesText;
 
     Object.keys(worksMap).forEach((wid) => {
       const row = makeWorkRow(worksMap[wid], seriesMetaById);
@@ -382,16 +440,19 @@ function initStudioWorksPage() {
   }
 
   Promise.all([
+    loadStudioConfig().catch(() => null),
     fetchJson(worksIndexUrl),
     fetchJson(seriesIndexUrl).catch(() => null)
   ])
-    .then((parts) => {
-      const hasRows = renderFromJson(parts[0], parts[1]);
-      if (!hasRows) {
-        worksListRoot.hidden = true;
-        emptyEl.hidden = false;
-        return;
-      }
+      .then((parts) => {
+        config = parts[0];
+        copySeriesButton.textContent = worksText("copy_series_button", "copy series");
+        const hasRows = renderFromJson(parts[1], parts[2]);
+        if (!hasRows) {
+          worksListRoot.hidden = true;
+          emptyEl.hidden = false;
+          return;
+        }
       worksListRoot.hidden = false;
       emptyEl.hidden = true;
       try {

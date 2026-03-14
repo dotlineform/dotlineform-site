@@ -18,7 +18,10 @@ studio_page_doc: /docs/studio/pages/studio-works/
   <h1 class="index__heading visually-hidden">works curator</h1>
   <div class="worksList__metaRow">
     <p class="worksList__count" id="worksListCount"></p>
-    <a class="worksList__metaLink" href="{{ '/site_map/' | relative_url }}">site map</a>
+    <div class="worksList__metaActions">
+      <button class="tagStudio__button worksList__metaButton" type="button" id="worksListCopySeriesButton">copy series</button>
+      <a class="worksList__metaLink" href="{{ '/site_map/' | relative_url }}">site map</a>
+    </div>
   </div>
 
   <div class="worksList__head" role="group" aria-label="Sort works curator">

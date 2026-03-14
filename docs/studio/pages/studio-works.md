@@ -33,6 +33,8 @@ Top-level structure:
   - shared site header with Studio-specific links, plus the page title row
 - `#worksCuratorRoot[data-role="studio-works"]`
   - page root and runtime data source
+- `#worksListCopySeriesButton`
+  - copies the plain-text series list to the clipboard
 - `[data-role="sort-button"]`
   - shared sort-button hooks on the existing works header controls
 
@@ -58,6 +60,27 @@ JS owner:
 Meaning:
 
 - the existing works curator sort controls, now bound through the shared Studio role/state contract
+
+### Meta actions
+
+User-facing name:
+
+- works meta actions
+
+DOM / CSS:
+
+- `.worksList__metaRow`
+- `.worksList__metaActions`
+- `#worksListCopySeriesButton`
+
+JS owner:
+
+- `initStudioWorksPage()`
+
+Meaning:
+
+- provides the `copy series` clipboard action alongside the site-map link
+- copies plain-text series titles, one per line, in alphabetical order
 
 ### Works list
 
@@ -99,10 +122,12 @@ Page boot:
 Main event wiring:
 
 - click handlers on `[data-role="sort-button"]`
+- click handler on `#worksListCopySeriesButton`
 
 Meaning:
 
 - the page keeps its existing list rendering, but the interactive sort state no longer depends on style-class behavior hooks
+- the page now also loads Studio config for the copy-button label
 
 ## UI Contract
 

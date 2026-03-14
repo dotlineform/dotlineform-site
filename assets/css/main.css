@@ -1492,6 +1492,18 @@ note: works tags are not currently in use on the work pages themselves.
   column-gap: 12px;
 }
 
+.worksList__metaActions{
+  display: flex;
+  align-items: baseline;
+  column-gap: 10px;
+}
+
+.worksList__metaButton.tagStudio__button{
+  padding-top: 4px;
+  padding-bottom: 4px;
+  cursor: pointer;
+}
+
 .worksList__metaLink{
   font-size: var(--font-small);
   line-height: var(--line-snug);
