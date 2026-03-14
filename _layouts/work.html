@@ -441,12 +441,29 @@ If you later serve images only from external media_base (CDN/R2), this check won
     var returnSort = (params.get('return_sort') || '').trim().toLowerCase();
     var returnDir = (params.get('return_dir') || '').trim().toLowerCase();
     var returnSeries = (params.get('return_series') || '').trim().toLowerCase();
+    var returnView = (params.get('return_view') || '').trim().toLowerCase();
 
     if (series) {
       link.textContent = '← ' + seriesLabel;
       var href = baseurl + '/series/' + encodeURIComponent(series) + '/';
-      if (seriesPage > 0) href += '?series_page=' + encodeURIComponent(String(seriesPage));
+      var seriesQuery = new URLSearchParams();
+      if (seriesPage > 0) seriesQuery.set('series_page', String(seriesPage));
+      if (from === 'series_index') {
+        seriesQuery.set('from', 'series_index');
+        if (returnView === 'grid' || returnView === 'list') {
+          seriesQuery.set('return_view', returnView);
+        }
+      }
+      if (seriesQuery.toString()) href += '?' + seriesQuery.toString();
       link.setAttribute('href', href);
+    } else if (from === 'series_index') {
+      var seriesUrl = baseurl + '/series/';
+      var seriesIndexQuery = new URLSearchParams();
+      if (returnView === 'grid') {
+        seriesIndexQuery.set('view', 'grid');
+      }
+      link.textContent = '← works';
+      link.setAttribute('href', seriesUrl + (seriesIndexQuery.toString() ? ('?' + seriesIndexQuery.toString()) : ''));
     } else if (from === 'studio_works_index') {
       var curatorUrl = baseurl + '/studio/studio-works/';
       var curatorQuery = new URLSearchParams();

@@ -65,6 +65,8 @@ layout: default
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
+      var from = String(params.get('from') || '').trim().toLowerCase();
+      var returnView = String(params.get('return_view') || '').trim().toLowerCase();
       var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
       var worksIndexUrl = baseurl + '/assets/data/works_index.json';
       if (!seriesId) {
@@ -132,6 +134,12 @@ layout: default
       function withQuery(url, page) {
         var q = 'series=' + encodeURIComponent(seriesId);
         if (page > 1) q += '&series_page=' + encodeURIComponent(String(page));
+        if (from === 'series_index') {
+          q += '&from=series_index';
+          if (returnView === 'grid' || returnView === 'list') {
+            q += '&return_view=' + encodeURIComponent(returnView);
+          }
+        }
         var join = (url.indexOf('?') === -1) ? '?' : '&';
         return url + join + q;
       }
@@ -253,7 +261,29 @@ layout: default
   </div>
 
   <nav class="page__nav">
-    <a class="page__back" href="{{ '/series/' | relative_url }}">← works</a>
+    <a
+      class="page__back"
+      id="seriesPageBackLink"
+      href="{{ '/series/' | relative_url }}"
+      data-baseurl="{{ site.baseurl | default: '' }}"
+    >← works</a>
   </nav>
   
 </article>
+
+<script>
+  (function () {
+    var link = document.getElementById('seriesPageBackLink');
+    if (!link) return;
+
+    var baseurl = String(link.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var params = new URLSearchParams(window.location.search);
+    var from = String(params.get('from') || '').trim().toLowerCase();
+    var returnView = String(params.get('return_view') || '').trim().toLowerCase();
+    if (from !== 'series_index') return;
+
+    var q = new URLSearchParams();
+    if (returnView === 'grid') q.set('view', 'grid');
+    link.setAttribute('href', baseurl + '/series/' + (q.toString() ? ('?' + q.toString()) : ''));
+  })();
+</script>
