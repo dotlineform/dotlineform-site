@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-97f95bcf3ba723af6991d613a5449192",
-    "generated_at_utc": "2026-03-14T22:37:10Z",
-    "count": 42
+    "version": "blake2b-06ac297c2f8e938127cff605a26d4ced",
+    "generated_at_utc": "2026-03-14T23:39:49Z",
+    "count": 44
   },
   "series": {
     "10000": {
@@ -32,6 +32,32 @@
         "work_id": "00635",
         "thumb_96": "/assets/works/img/00635-thumb-96.webp",
         "thumb_192": "/assets/works/img/00635-thumb-192.webp"
+      }
+    },
+    "16-forms": {
+      "series_id": "16-forms",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "16 forms",
+      "title_sort": "016 forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "00639",
+      "notes": null,
+      "project_folders": [
+        "16 forms"
+      ],
+      "checksum": "adcb04d7b159c9e5268b15827adc50a6",
+      "works": [
+        "00639"
+      ],
+      "thumb": {
+        "work_id": "00639",
+        "thumb_96": "/assets/works/img/00639-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00639-thumb-192.webp"
       }
     },
     "2-bodies": {
@@ -66,6 +92,32 @@
         "work_id": "00533",
         "thumb_96": "/assets/works/img/00533-thumb-96.webp",
         "thumb_192": "/assets/works/img/00533-thumb-192.webp"
+      }
+    },
+    "3-symbols": {
+      "series_id": "3-symbols",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-14",
+      "title": "3 symbols",
+      "title_sort": "003 symbols",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2007,
+      "year_display": "2007",
+      "primary_work_id": "00638",
+      "notes": null,
+      "project_folders": [
+        "3 symbols"
+      ],
+      "checksum": "878d0f2bcfc45e81450f6902bf02c8b9",
+      "works": [
+        "00638"
+      ],
+      "thumb": {
+        "work_id": "00638",
+        "thumb_96": "/assets/works/img/00638-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00638-thumb-192.webp"
       }
     },
     "a-poem-divided-into-4-parts": {
