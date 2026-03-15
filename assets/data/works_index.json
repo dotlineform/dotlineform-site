@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-9f03c74472320aa109e95bed215e9522",
-    "generated_at_utc": "2026-03-15T19:01:21Z",
-    "count": 804
+    "version": "blake2b-bde8e60d10d6d46c6235e060a81786f9",
+    "generated_at_utc": "2026-03-15T19:39:54Z",
+    "count": 806
   },
   "works": {
     "00001": {
@@ -11261,6 +11261,34 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-1e6613fe01505084dd30807ce7e3a8ea",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00811": {
+      "work_id": "00811",
+      "title": "close",
+      "title_sort": "close",
+      "year": 2017,
+      "year_display": "2017",
+      "series_id": "closeness",
+      "series_ids": [
+        "closeness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0a7b6bbf23a29a7fb4a8fb8899ebb24c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00812": {
+      "work_id": "00812",
+      "title": "closer",
+      "title_sort": "closer",
+      "year": 2017,
+      "year_display": "2017",
+      "series_id": "closeness",
+      "series_ids": [
+        "closeness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1b754f1d3290cbd1626c2f5b74caa339",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

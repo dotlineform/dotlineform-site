@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-1107bf70bcc8df20d639ca6b2277d748",
-    "generated_at_utc": "2026-03-15T19:01:21Z",
-    "count": 58
+    "version": "blake2b-04fa9b2d109b683810496f7eafeda9ea",
+    "generated_at_utc": "2026-03-15T19:39:54Z",
+    "count": 59
   },
   "series": {
     "10000": {
@@ -642,8 +642,8 @@
     "book-of-curves": {
       "series_id": "book-of-curves",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "book of curves",
       "title_sort": "book of curves",
       "sort_fields": "work_id",
@@ -693,6 +693,33 @@
         "work_id": "00389",
         "thumb_96": "/assets/works/img/00389-thumb-96.webp",
         "thumb_192": "/assets/works/img/00389-thumb-192.webp"
+      }
+    },
+    "closeness": {
+      "series_id": "closeness",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "closeness",
+      "title_sort": "closeness",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2017,
+      "year_display": "2017",
+      "primary_work_id": "00811",
+      "notes": null,
+      "project_folders": [
+        "closeness"
+      ],
+      "checksum": "67d929d3146f60129bbf7d4f5ba850b0",
+      "works": [
+        "00811",
+        "00812"
+      ],
+      "thumb": {
+        "work_id": "00811",
+        "thumb_96": "/assets/works/img/00811-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00811-thumb-192.webp"
       }
     },
     "collected-1989-1998": {
