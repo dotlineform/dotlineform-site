@@ -450,19 +450,19 @@ If you later serve images only from external media_base (CDN/R2), this check won
       if (seriesQuery.toString()) href += '?' + seriesQuery.toString();
       link.setAttribute('href', href);
     } else if (from === 'studio_works_index') {
-      var curatorUrl = baseurl + '/studio/studio-works/';
-      var curatorQuery = new URLSearchParams();
+      var studioWorksUrl = baseurl + '/studio/studio-works/';
+      var studioWorksQuery = new URLSearchParams();
       if (returnSort === 'cat' || returnSort === 'year' || returnSort === 'title' || returnSort === 'series' || returnSort === 'storage' || returnSort === 'seriessort') {
-        curatorQuery.set('sort', returnSort);
+        studioWorksQuery.set('sort', returnSort);
       }
       if (returnDir === 'asc' || returnDir === 'desc') {
-        curatorQuery.set('dir', returnDir);
+        studioWorksQuery.set('dir', returnDir);
       }
       if (returnSeries) {
-        curatorQuery.set('series', returnSeries);
+        studioWorksQuery.set('series', returnSeries);
       }
       link.textContent = '← studio works';
-      link.setAttribute('href', curatorUrl + (curatorQuery.toString() ? ('?' + curatorQuery.toString()) : ''));
+      link.setAttribute('href', studioWorksUrl + (studioWorksQuery.toString() ? ('?' + studioWorksQuery.toString()) : ''));
     } else if (from === 'works_index') {
       var worksUrl = baseurl + '/works/';
       var q = new URLSearchParams();

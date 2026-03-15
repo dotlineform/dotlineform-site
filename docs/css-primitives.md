@@ -114,7 +114,7 @@ Defined in `assets/css/main.css`:
 - `.workIndexItem`, `.seriesIndexItem`
   thumbnail-plus-text compact card/list rows
 - `.worksList__*`
-  denser works/curator data list shell
+  denser works/studio data list shell
 
 These are the approved shared list families for the main site today.
 

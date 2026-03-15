@@ -657,8 +657,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,works-curator-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments. "
-            "works-curator-pages is explicit-only; it does not run as part of work-pages."
+            "Allowed: work-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments."
         ),
     )
     args = ap.parse_args()
@@ -673,7 +672,6 @@ def main() -> None:
 
     valid_artifacts = {
         "work-pages",
-        "works-curator-pages",
         "work-files",
         "series-pages",
         "series-index-json",
@@ -706,7 +704,6 @@ def main() -> None:
         return name in selected_artifacts
 
     run_work_pages = artifact_enabled("work-pages")
-    run_works_curator_pages = selected_artifacts is not None and artifact_enabled("works-curator-pages")
     run_work_files = artifact_enabled("work-files")
     run_series_pages = artifact_enabled("series-pages")
     run_series_index_json = artifact_enabled("series-index-json")
@@ -799,11 +796,6 @@ def main() -> None:
     # - Use `_works` if you're using a Jekyll collection.
     out_dir = Path(args.output_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    works_curator_out_dir: Optional[Path] = None
-    if run_works_curator_pages:
-        works_curator_out_dir = Path("_works_curator").expanduser()
-        works_curator_out_dir.mkdir(parents=True, exist_ok=True)
 
     work_prose_dir = Path(args.work_prose_dir).expanduser()
     work_prose_dir.mkdir(parents=True, exist_ok=True)
@@ -1136,11 +1128,9 @@ def main() -> None:
 
     written = 0
     skipped = 0
-    curator_written = 0
-    curator_skipped = 0
     downloads_copied = 0
     downloads_missing = 0
-    run_works_loop = run_work_pages or run_works_curator_pages or run_work_files or run_works_index_json
+    run_works_loop = run_work_pages or run_work_files or run_works_index_json
     canonical_work_record_by_id: Dict[str, Dict[str, Any]] = {}
     for wid in sorted(work_meta_by_id.keys()):
         record = build_canonical_work_record(wid)
@@ -1308,24 +1298,6 @@ def main() -> None:
                     print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
                 return True
 
-            def write_curator_page(path: Path, curator_content: str) -> bool:
-                exists = path.exists()
-                existing_content: Optional[str] = None
-                if exists:
-                    try:
-                        existing_content = path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_content = None
-                if (existing_content is not None) and (existing_content == curator_content) and (not args.force):
-                    print(f"{prefix}SKIP (works-curator; content match): {path}")
-                    return False
-                if args.write:
-                    path.write_text(curator_content, encoding="utf-8")
-                    print(f"{prefix}WRITE (works-curator): {path}")
-                else:
-                    print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
-                return True
-
             if run_work_pages:
                 if write_page(out_path, "work", work_page_content):
                     written += 1
@@ -1344,83 +1316,6 @@ def main() -> None:
                                 published_date_missing_warned = True
                 else:
                     skipped += 1
-
-            if run_works_curator_pages:
-                curator_field_defs: List[tuple[str, List[str], Any]] = [
-                    ("title", ["title"], coerce_string),
-                    ("storage_location", ["storage_location"], coerce_string),
-                    ("project_folder", ["project_folder"], coerce_string),
-                    ("project_filename", ["project_filename"], coerce_string),
-                    ("height_cm", ["height_cm"], coerce_numeric),
-                    ("width_cm", ["width_cm"], coerce_numeric),
-                    ("year", ["year"], coerce_int),
-                    ("year_display", ["year_display"], coerce_string),
-                    ("medium_type", ["medium_type"], coerce_string),
-                    ("medium_caption", ["medium_caption"], coerce_string),
-                    ("duration", ["duration"], coerce_string),
-                    ("depth_cm", ["depth_cm"], coerce_numeric),
-                    ("has_primary_2400", ["has_primary_2400"], coerce_presence_bool),
-                    ("download", ["download"], coerce_string),
-                    ("provenance", ["provenance"], coerce_string),
-                    ("Vimeo_url", ["Vimeo_url", "vimeo_url"], coerce_string),
-                    ("YouTube_url", ["YouTube_url", "youtube_url"], coerce_string),
-                    ("Bandcamp_url", ["Bandcamp_url", "bandcamp_url"], coerce_string),
-                    ("notes", ["notes"], coerce_string),
-                ]
-
-                cfm: Dict[str, Any] = {
-                    "layout": "work_curator",
-                    "work_id": wid,
-                    "project_base_folder": "projects/",
-                }
-                for out_key, aliases, coercer in curator_field_defs:
-                    col_name = first_present_col(works_hi, aliases)
-                    raw_value = cell(r, works_hi, col_name) if col_name is not None else None
-                    cfm[out_key] = coercer(raw_value)
-                curator_series_ids = parse_work_series_ids(r)
-                cfm["series_id"] = curator_series_ids[0] if curator_series_ids else None
-
-                curator_field_order = [
-                    "layout",
-                    "work_id",
-                    "title",
-                    "storage_location",
-                    "project_base_folder",
-                    "project_folder",
-                    "project_filename",
-                    "height_cm",
-                    "width_cm",
-                    "year",
-                    "year_display",
-                    "series_id",
-                    "medium_type",
-                    "medium_caption",
-                    "duration",
-                    "depth_cm",
-                    "has_primary_2400",
-                    "download",
-                    "provenance",
-                    "Vimeo_url",
-                    "YouTube_url",
-                    "Bandcamp_url",
-                    "notes",
-                ]
-                cfm_ordered: Dict[str, Any] = {}
-                for key in curator_field_order:
-                    if key in cfm:
-                        cfm_ordered[key] = cfm[key]
-                for key, value in cfm.items():
-                    if key not in cfm_ordered:
-                        cfm_ordered[key] = value
-
-                if works_curator_out_dir is None:
-                    raise RuntimeError("works_curator_out_dir is not initialized")
-                curator_path = works_curator_out_dir / f"{wid}.md"
-                curator_content = build_front_matter(cfm_ordered) + "\n"
-                if write_curator_page(curator_path, curator_content):
-                    curator_written += 1
-                else:
-                    curator_skipped += 1
 
             if run_work_files and download_rel is not None:
                 project_folder = work_project_folder_by_id.get(wid)
@@ -1458,8 +1353,7 @@ def main() -> None:
     if run_works_loop:
         print(
             f"\nDone. {'Would write' if not args.write else 'Wrote'}: "
-            f"{written} works, {curator_written} works-curator."
-            f" Skipped: {skipped} works, {curator_skipped} works-curator."
+            f"{written} works. Skipped: {skipped} works."
         )
         print(
             f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."

@@ -10,7 +10,7 @@ Route:
 
 Purpose:
 
-- review curator works with Studio-specific sort-state wiring
+- review works with Studio-specific sort-state wiring
 
 ## Page / Template Structure
 
@@ -31,7 +31,7 @@ Top-level structure:
 
 - Studio layout wrapper from `_layouts/studio.html`
   - shared site header with Studio-specific links, plus the page title row
-- `#worksCuratorRoot[data-role="studio-works"]`
+- `#worksStudioRoot[data-role="studio-works"]`
   - page root and runtime data source
 - `#worksListCopySeriesButton`
   - copies the plain-text series list to the clipboard
@@ -59,7 +59,7 @@ JS owner:
 
 Meaning:
 
-- the existing works curator sort controls, now bound through the shared Studio role/state contract
+- the existing works sort controls, now bound through the shared Studio role/state contract
 
 ### Meta actions
 
@@ -95,7 +95,7 @@ DOM / CSS:
 
 Meaning:
 
-- the existing curator works rows and links
+- the existing Studio works rows and links
 - work links carry Studio sort/filter return state so the work-page back link returns to `/studio/studio-works/`
 
 ## UI Layout and Styling
@@ -111,7 +111,7 @@ Shared primitives used:
 
 Page-specific classes retained:
 
-- `worksList__*` for the existing curator layout and row styling
+- `worksList__*` plus `worksList--studio` for the Studio works layout and row styling
 
 ## DOM Rendering and Event Wiring
 

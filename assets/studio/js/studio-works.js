@@ -19,8 +19,8 @@ if (document.readyState === "loading") {
 }
 
 function initStudioWorksPage() {
-  const worksListRoot = document.getElementById("worksCuratorRoot");
-  const emptyEl = document.getElementById("worksCuratorEmpty");
+  const worksListRoot = document.getElementById("worksStudioRoot");
+  const emptyEl = document.getElementById("worksStudioEmpty");
   const list = document.getElementById("worksList");
   const countEl = document.getElementById("worksListCount");
   const backNav = document.getElementById("worksIndexBackNav");
@@ -458,11 +458,11 @@ function initStudioWorksPage() {
       try {
         initSortUi();
       } catch (err) {
-        console.error("works_curator: initSortUi failed", err);
+        console.error("studio_works: initSortUi failed", err);
       }
     })
     .catch((err) => {
-      console.error("works_curator: render failed", err);
+      console.error("studio_works: render failed", err);
       worksListRoot.hidden = true;
       emptyEl.hidden = false;
     });

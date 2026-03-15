@@ -76,7 +76,7 @@ Notes:
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
-- Works curator page:
+- Studio works page:
   - `studio/studio-works/index.md`
   - `assets/studio/js/studio-works.js`
 - Group descriptions reference page:

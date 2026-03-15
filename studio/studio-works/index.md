@@ -6,8 +6,8 @@ section: works
 studio_page_doc: /docs/studio/pages/studio-works/
 ---
 <div
-  class="index worksList worksList--curator"
-  id="worksCuratorRoot"
+  class="index worksList worksList--studio"
+  id="worksStudioRoot"
   data-role="studio-works"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
   data-works-index-url="{{ '/assets/data/works_index.json' | relative_url }}"
@@ -15,7 +15,7 @@ studio_page_doc: /docs/studio/pages/studio-works/
   data-series-base-href="{{ '/series/' | relative_url }}"
   hidden
 >
-  <h1 class="index__heading visually-hidden">works curator</h1>
+  <h1 class="index__heading visually-hidden">studio works</h1>
   <div class="worksList__metaRow">
     <p class="worksList__count" id="worksListCount"></p>
     <div class="worksList__metaActions">
@@ -24,7 +24,7 @@ studio_page_doc: /docs/studio/pages/studio-works/
     </div>
   </div>
 
-  <div class="worksList__head" role="group" aria-label="Sort works curator">
+  <div class="worksList__head" role="group" aria-label="Sort studio works">
     <button class="worksList__sortBtn" type="button" data-role="sort-button" data-sort-key="cat">
       cat <span class="worksList__sortIcon" aria-hidden="true"></span>
     </button>
@@ -52,6 +52,6 @@ studio_page_doc: /docs/studio/pages/studio-works/
     >← series</a>
   </nav>
 </div>
-<p id="worksCuratorEmpty" hidden>no curator works yet</p>
+<p id="worksStudioEmpty" hidden>no studio works yet</p>
 
 <script type="module" src="{{ '/assets/studio/js/studio-works.js' | relative_url }}"></script>

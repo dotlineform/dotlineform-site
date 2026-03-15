@@ -1421,15 +1421,6 @@ Use “structure-first” naming and scope section-specific differences via the 
   min-width: 0;
 }
 
-/* Curator page: keep label column compact so value column can use available measure */
-.workCurator__rows .page__row{
-  grid-template-columns: 18ch minmax(0, 1fr);
-}
-
-.workCurator__rows .page__row > span{
-  overflow-wrap: anywhere;
-}
-
 .seriesNav--title{
   max-width: none;
   margin: 0;
@@ -1599,20 +1590,12 @@ note: works tags are not currently in use on the work pages themselves.
   padding: var(--list-row-padding-compact) 0;
 }
 
-.worksList--curator .worksList__head{
+.worksList--studio .worksList__head{
   grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
 }
 
-.worksList--curator .worksList__item{
+.worksList--studio .worksList__item{
   grid-template-columns: 7ch 10.5ch minmax(0, 1.35fr) minmax(0, 1fr) 8ch;
-}
-
-.seriesCuratorList .worksList__head{
-  grid-template-columns: 10.5ch minmax(0, 1.2fr) minmax(0, 1fr);
-}
-
-.seriesCuratorList .worksList__item{
-  grid-template-columns: 10.5ch minmax(0, 1.2fr) minmax(0, 1fr);
 }
 
 .worksList__cat{
@@ -1694,11 +1677,11 @@ note: works tags are not currently in use on the work pages themselves.
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr);
 }
 
-.worksList--curator.worksList--singleSeries .worksList__head{
+.worksList--studio.worksList--singleSeries .worksList__head{
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
 }
 
-.worksList--curator.worksList--singleSeries .worksList__item{
+.worksList--studio.worksList--singleSeries .worksList__item{
   grid-template-columns: 7ch 10.5ch minmax(0, 1fr) 8ch;
 }
 
