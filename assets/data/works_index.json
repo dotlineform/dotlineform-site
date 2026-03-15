@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-c55bc50dfddc2eaa71185c5680aa3548",
-    "generated_at_utc": "2026-03-15T18:21:14Z",
-    "count": 794
+    "version": "blake2b-5ae0f70a57321193cb0a3e8651240445",
+    "generated_at_utc": "2026-03-15T18:47:25Z",
+    "count": 799
   },
   "works": {
     "00001": {
@@ -11122,6 +11122,76 @@
       "storage": null,
       "work_checksum": "blake2b-00e88b99f4784586c4a6e4654ff0d483",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00801": {
+      "work_id": "00801",
+      "title": "book dna",
+      "title_sort": "book dna",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "book-dna",
+      "series_ids": [
+        "book-dna"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e38d940eae0d1ac2973b8ead5e34bff3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00802": {
+      "work_id": "00802",
+      "title": "book atomic",
+      "title_sort": "book atomic",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "book-dna",
+      "series_ids": [
+        "book-dna"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-92aab93f140d5246ff69562eeb2efbf4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00803": {
+      "work_id": "00803",
+      "title": "book diagrams 1",
+      "title_sort": "book diagrams 001",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "book-dna",
+      "series_ids": [
+        "book-dna"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6341b8f57e78d336382134f193f9979e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00804": {
+      "work_id": "00804",
+      "title": "book diagrams 2",
+      "title_sort": "book diagrams 002",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "book-dna",
+      "series_ids": [
+        "book-dna"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-06080f6d90f3980396e244c7b3e138e5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00805": {
+      "work_id": "00805",
+      "title": "book dna sequence",
+      "title_sort": "book dna sequence",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "book-dna",
+      "series_ids": [
+        "book-dna"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c97fba4d537e97cb1b3f59f8b6fac438",
+      "details_checksum": "blake2b-1366c47a382fdb3e4b89bebd8845c455"
     }
   }
 }

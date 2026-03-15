@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-605fd92893018762e543942c56b8a686",
+    "generated_at_utc": "2026-03-15T18:47:25Z",
+    "work_id": "00801",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-e38d940eae0d1ac2973b8ead5e34bff3",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-605fd92893018762e543942c56b8a686"
+  },
+  "work": {
+    "work_id": "00801",
+    "title": "book dna",
+    "title_sort": "book dna",
+    "year": 2010,
+    "year_display": "2010",
+    "series_id": "book-dna",
+    "series_ids": [
+      "book-dna"
+    ],
+    "series_title": "book dna",
+    "series_sort": "00801",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "e38d940eae0d1ac2973b8ead5e34bff3"
+  },
+  "sections": []
+}

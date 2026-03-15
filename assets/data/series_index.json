@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-08069c7df16c4e58c42c70e8f1b769b5",
-    "generated_at_utc": "2026-03-15T18:21:14Z",
-    "count": 56
+    "version": "blake2b-cd2ccf5090ddddcd5c979f51bd26b2c9",
+    "generated_at_utc": "2026-03-15T18:47:23Z",
+    "count": 57
   },
   "series": {
     "10000": {
@@ -544,8 +544,8 @@
     "body-space": {
       "series_id": "body-space",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "body space",
       "title_sort": "body space",
       "sort_fields": "work_id",
@@ -578,8 +578,8 @@
     "body-space-reclining-state": {
       "series_id": "body-space-reclining-state",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "body space (reclining state)",
       "title_sort": "body space (reclining state)",
       "sort_fields": "work_id",
@@ -607,6 +607,36 @@
         "work_id": "00792",
         "thumb_96": "/assets/works/img/00792-thumb-96.webp",
         "thumb_192": "/assets/works/img/00792-thumb-192.webp"
+      }
+    },
+    "book-dna": {
+      "series_id": "book-dna",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "book dna",
+      "title_sort": "book dna",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2010,
+      "year_display": "2010",
+      "primary_work_id": "00801",
+      "notes": null,
+      "project_folders": [
+        "book dna"
+      ],
+      "checksum": "eca4ad1cf0845cbdb054264e01e049b9",
+      "works": [
+        "00801",
+        "00802",
+        "00803",
+        "00804",
+        "00805"
+      ],
+      "thumb": {
+        "work_id": "00801",
+        "thumb_96": "/assets/works/img/00801-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00801-thumb-192.webp"
       }
     },
     "certainty": {
