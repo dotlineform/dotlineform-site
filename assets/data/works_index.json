@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-b3203b3a954a264c9879dc8901d041bb",
-    "generated_at_utc": "2026-03-15T16:23:41Z",
-    "count": 749
+    "version": "blake2b-0e89d4f858764986bd1277bb00256295",
+    "generated_at_utc": "2026-03-15T17:50:02Z",
+    "count": 776
   },
   "works": {
     "00001": {
@@ -10492,6 +10492,384 @@
       "storage": null,
       "work_checksum": "blake2b-48ad2a19c3982527651ee104d7a94963",
       "details_checksum": "blake2b-cae476165631fbea7e65bfce5cba2542"
+    },
+    "00756": {
+      "work_id": "00756",
+      "title": "base cs",
+      "title_sort": "base cs",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a93566d8fff98d4bce7975e7e6ae8a90",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00757": {
+      "work_id": "00757",
+      "title": "base k (1)",
+      "title_sort": "base k (001)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7cd4d689f192467e663b0652a8a7d14f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00758": {
+      "work_id": "00758",
+      "title": "base k (2)",
+      "title_sort": "base k (002)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1712f854db83b2db6bc6348d741fe605",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00759": {
+      "work_id": "00759",
+      "title": "base k (2) dissected 1",
+      "title_sort": "base k (002) dissected 001",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-610759b99301da7dd476949d6635d285",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00760": {
+      "work_id": "00760",
+      "title": "base k (2) dissected 2",
+      "title_sort": "base k (002) dissected 002",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-175379342b40ea02cb8cf0421955f85e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00761": {
+      "work_id": "00761",
+      "title": "base k (2) edit",
+      "title_sort": "base k (002) edit",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3ff8dc979a8a6d87d40fcd725fd573ed",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00762": {
+      "work_id": "00762",
+      "title": "base k (3)",
+      "title_sort": "base k (003)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9031d52efb75943774f20fc7acaa97a6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00763": {
+      "work_id": "00763",
+      "title": "base m",
+      "title_sort": "base m",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6b35f5d365b2001ede1359277f15ec74",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00764": {
+      "work_id": "00764",
+      "title": "base nerve (1)",
+      "title_sort": "base nerve (001)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-54f982d2c1d5f6ada77d8665c30519e2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00765": {
+      "work_id": "00765",
+      "title": "base nerve (2)",
+      "title_sort": "base nerve (002)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5d95f1a831959e13735ddfe9b84ddad2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00766": {
+      "work_id": "00766",
+      "title": "base nerve (2) edges 1",
+      "title_sort": "base nerve (002) edges 001",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-44961c34e4c299a7f1835b1ddf295872",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00767": {
+      "work_id": "00767",
+      "title": "base nerve (2) edges 2",
+      "title_sort": "base nerve (002) edges 002",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-14e8d78f0d34700c6e07ce17249c3508",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00768": {
+      "work_id": "00768",
+      "title": "base nerve (2) edges 3",
+      "title_sort": "base nerve (002) edges 003",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bbb0186e4afebd477efb4534c430e400",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00769": {
+      "work_id": "00769",
+      "title": "base nerve (2) edges 4",
+      "title_sort": "base nerve (002) edges 004",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1b2bc1ad1a231ff1f3b73c8db160b754",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00770": {
+      "work_id": "00770",
+      "title": "base nerve (3)",
+      "title_sort": "base nerve (003)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e36ab7bffa6c959c239a65b66c2889cc",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00771": {
+      "work_id": "00771",
+      "title": "base pearls",
+      "title_sort": "base pearls",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6b31845b8b137f345bbb83d90e012107",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00772": {
+      "work_id": "00772",
+      "title": "base s",
+      "title_sort": "base s",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-30a2655bb6d788ce6db819e355512fae",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00773": {
+      "work_id": "00773",
+      "title": "base sb",
+      "title_sort": "base sb",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "base-series",
+      "series_ids": [
+        "base-series"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cdd0ef2c6b3fafe7572a0d5daa28a8ae",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00774": {
+      "work_id": "00774",
+      "title": "birds [1]",
+      "title_sort": "birds [001]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cb567d9d7abc70f2efaf40e4fd880548",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00775": {
+      "work_id": "00775",
+      "title": "birds [2]",
+      "title_sort": "birds [002]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cce5cc3495c3fd46ee2e4fa5d1d1d898",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00776": {
+      "work_id": "00776",
+      "title": "birds [3]",
+      "title_sort": "birds [003]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b2960a575f0b65346b4c4bd0d5ae3e38",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00777": {
+      "work_id": "00777",
+      "title": "birds [4]",
+      "title_sort": "birds [004]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-83f43ea1d933890ca4966eefcd8f9fe2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00778": {
+      "work_id": "00778",
+      "title": "birds [5]",
+      "title_sort": "birds [005]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-68d8cfe3ff26d207201c5533b460d28e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00779": {
+      "work_id": "00779",
+      "title": "birds [6]",
+      "title_sort": "birds [006]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-28b2ed4c5ff50782384c99c9eed0d8f9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00780": {
+      "work_id": "00780",
+      "title": "birds [7]",
+      "title_sort": "birds [007]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7a2862e341c333a0dbfbb656f5131e60",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00781": {
+      "work_id": "00781",
+      "title": "birds [8]",
+      "title_sort": "birds [008]",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "birds",
+      "series_ids": [
+        "birds"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-024be9ce845bcdaec4801427ba72376e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00782": {
+      "work_id": "00782",
+      "title": "birth of healing forms",
+      "title_sort": "birth of healing forms",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "birth-of-healing-forms",
+      "series_ids": [
+        "birth-of-healing-forms"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ccc71f13d069325b2476ce589e13c48a",
+      "details_checksum": "blake2b-4432da255b655f868de314724667894f"
     }
   }
 }

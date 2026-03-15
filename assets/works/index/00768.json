@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-64b8720af2bcaf7511f87f8f4afe2a8c",
+    "generated_at_utc": "2026-03-15T17:03:44Z",
+    "work_id": "00768",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-bbb0186e4afebd477efb4534c430e400",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-64b8720af2bcaf7511f87f8f4afe2a8c"
+  },
+  "work": {
+    "work_id": "00768",
+    "title": "base nerve (2) edges 3",
+    "title_sort": "base nerve (002) edges 003",
+    "year": 2007,
+    "year_display": "2007",
+    "series_id": "base-series",
+    "series_ids": [
+      "base-series"
+    ],
+    "series_title": "base series",
+    "series_sort": "00768",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "bbb0186e4afebd477efb4534c430e400"
+  },
+  "sections": []
+}

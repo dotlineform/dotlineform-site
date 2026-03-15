@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-f418d62d7dda5b0c903883265210970a",
-    "generated_at_utc": "2026-03-15T16:23:41Z",
-    "count": 51
+    "version": "blake2b-ac82e4bf0f51c84a9c112eb2f2f8e0ad",
+    "generated_at_utc": "2026-03-15T17:50:01Z",
+    "count": 54
   },
   "series": {
     "10000": {
@@ -414,8 +414,8 @@
     "assembly-codes": {
       "series_id": "assembly-codes",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "assembly codes",
       "title_sort": "assembly codes",
       "sort_fields": "work_id",
@@ -437,6 +437,108 @@
         "work_id": "00753",
         "thumb_96": "/assets/works/img/00753-thumb-96.webp",
         "thumb_192": "/assets/works/img/00753-thumb-192.webp"
+      }
+    },
+    "base-series": {
+      "series_id": "base-series",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "base series",
+      "title_sort": "base series",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2007,
+      "year_display": "2007",
+      "primary_work_id": "00756",
+      "notes": null,
+      "project_folders": [
+        "base series"
+      ],
+      "checksum": "06e12019fb2939bd9376ee07fe34993c",
+      "works": [
+        "00756",
+        "00757",
+        "00758",
+        "00759",
+        "00760",
+        "00761",
+        "00762",
+        "00763",
+        "00764",
+        "00765",
+        "00766",
+        "00767",
+        "00768",
+        "00769",
+        "00770",
+        "00771",
+        "00772",
+        "00773"
+      ],
+      "thumb": {
+        "work_id": "00756",
+        "thumb_96": "/assets/works/img/00756-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00756-thumb-192.webp"
+      }
+    },
+    "birds": {
+      "series_id": "birds",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "birds",
+      "title_sort": "birds",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2020,
+      "year_display": "2020",
+      "primary_work_id": "00781",
+      "notes": null,
+      "project_folders": [
+        "birds"
+      ],
+      "checksum": "eff6972646840ee90d0f23c2843e817b",
+      "works": [
+        "00774",
+        "00775",
+        "00776",
+        "00777",
+        "00778",
+        "00779",
+        "00780",
+        "00781"
+      ],
+      "thumb": {
+        "work_id": "00781",
+        "thumb_96": "/assets/works/img/00781-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00781-thumb-192.webp"
+      }
+    },
+    "birth-of-healing-forms": {
+      "series_id": "birth-of-healing-forms",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "birth of healing forms",
+      "title_sort": "birth of healing forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "00782",
+      "notes": null,
+      "project_folders": [
+        "birth of healing forms"
+      ],
+      "checksum": "6570f213eb426da606864c91e4f7a76e",
+      "works": [
+        "00782"
+      ],
+      "thumb": {
+        "work_id": "00782",
+        "thumb_96": "/assets/works/img/00782-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00782-thumb-192.webp"
       }
     },
     "certainty": {
