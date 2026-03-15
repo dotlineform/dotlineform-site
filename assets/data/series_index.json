@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-cd2ccf5090ddddcd5c979f51bd26b2c9",
-    "generated_at_utc": "2026-03-15T18:47:23Z",
-    "count": 57
+    "version": "blake2b-1107bf70bcc8df20d639ca6b2277d748",
+    "generated_at_utc": "2026-03-15T19:01:21Z",
+    "count": 58
   },
   "series": {
     "10000": {
@@ -612,8 +612,8 @@
     "book-dna": {
       "series_id": "book-dna",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "book dna",
       "title_sort": "book dna",
       "sort_fields": "work_id",
@@ -637,6 +637,36 @@
         "work_id": "00801",
         "thumb_96": "/assets/works/img/00801-thumb-96.webp",
         "thumb_192": "/assets/works/img/00801-thumb-192.webp"
+      }
+    },
+    "book-of-curves": {
+      "series_id": "book-of-curves",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "book of curves",
+      "title_sort": "book of curves",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2011,
+      "year_display": "2011",
+      "primary_work_id": "00806",
+      "notes": null,
+      "project_folders": [
+        "book of curves"
+      ],
+      "checksum": "f715dc7cbeaf2abcf8b93c37b2207d28",
+      "works": [
+        "00806",
+        "00807",
+        "00808",
+        "00809",
+        "00810"
+      ],
+      "thumb": {
+        "work_id": "00806",
+        "thumb_96": "/assets/works/img/00806-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00806-thumb-192.webp"
       }
     },
     "certainty": {

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-5ae0f70a57321193cb0a3e8651240445",
-    "generated_at_utc": "2026-03-15T18:47:25Z",
-    "count": 799
+    "version": "blake2b-9f03c74472320aa109e95bed215e9522",
+    "generated_at_utc": "2026-03-15T19:01:21Z",
+    "count": 804
   },
   "works": {
     "00001": {
@@ -11192,6 +11192,76 @@
       "storage": null,
       "work_checksum": "blake2b-c97fba4d537e97cb1b3f59f8b6fac438",
       "details_checksum": "blake2b-1366c47a382fdb3e4b89bebd8845c455"
+    },
+    "00806": {
+      "work_id": "00806",
+      "title": "book of curves 0",
+      "title_sort": "book of curves 000",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "book-of-curves",
+      "series_ids": [
+        "book-of-curves"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d684a9bdc4a018ab5697205e9d8f7545",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00807": {
+      "work_id": "00807",
+      "title": "book of curves 1 and 10",
+      "title_sort": "book of curves 001 and 010",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "book-of-curves",
+      "series_ids": [
+        "book-of-curves"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-78e1b922bf7ee2ee5b25418942aa98af",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00808": {
+      "work_id": "00808",
+      "title": "book of curves 2-6",
+      "title_sort": "book of curves 002-006",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "book-of-curves",
+      "series_ids": [
+        "book-of-curves"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-383bc76c5966483e3613b418591949d9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00809": {
+      "work_id": "00809",
+      "title": "book of curves 7 and 8",
+      "title_sort": "book of curves 007 and 008",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "book-of-curves",
+      "series_ids": [
+        "book-of-curves"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1cf9a37d47d8c44d3c915c4119098739",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00810": {
+      "work_id": "00810",
+      "title": "book of curves 9 and 11",
+      "title_sort": "book of curves 009 and 011",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "book-of-curves",
+      "series_ids": [
+        "book-of-curves"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1e6613fe01505084dd30807ce7e3a8ea",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
 }
