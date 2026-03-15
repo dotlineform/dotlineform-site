@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-ac82e4bf0f51c84a9c112eb2f2f8e0ad",
-    "generated_at_utc": "2026-03-15T17:50:01Z",
-    "count": 54
+    "version": "blake2b-08069c7df16c4e58c42c70e8f1b769b5",
+    "generated_at_utc": "2026-03-15T18:21:14Z",
+    "count": 56
   },
   "series": {
     "10000": {
@@ -518,8 +518,8 @@
     "birth-of-healing-forms": {
       "series_id": "birth-of-healing-forms",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "birth of healing forms",
       "title_sort": "birth of healing forms",
       "sort_fields": "work_id",
@@ -539,6 +539,74 @@
         "work_id": "00782",
         "thumb_96": "/assets/works/img/00782-thumb-96.webp",
         "thumb_192": "/assets/works/img/00782-thumb-192.webp"
+      }
+    },
+    "body-space": {
+      "series_id": "body-space",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "body space",
+      "title_sort": "body space",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2007,
+      "year_display": "2007",
+      "primary_work_id": "00783",
+      "notes": null,
+      "project_folders": [
+        "body space"
+      ],
+      "checksum": "bb99e0300b72de995ea45c9e0785a357",
+      "works": [
+        "00783",
+        "00784",
+        "00785",
+        "00786",
+        "00787",
+        "00788",
+        "00789",
+        "00790",
+        "00791"
+      ],
+      "thumb": {
+        "work_id": "00783",
+        "thumb_96": "/assets/works/img/00783-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00783-thumb-192.webp"
+      }
+    },
+    "body-space-reclining-state": {
+      "series_id": "body-space-reclining-state",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "body space (reclining state)",
+      "title_sort": "body space (reclining state)",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2019,
+      "year_display": "2019",
+      "primary_work_id": "00792",
+      "notes": null,
+      "project_folders": [
+        "body space (reclining state)"
+      ],
+      "checksum": "7ffb4bccaade3bdae76b9a8feff47356",
+      "works": [
+        "00792",
+        "00793",
+        "00794",
+        "00795",
+        "00796",
+        "00797",
+        "00798",
+        "00799",
+        "00800"
+      ],
+      "thumb": {
+        "work_id": "00792",
+        "thumb_96": "/assets/works/img/00792-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00792-thumb-192.webp"
       }
     },
     "certainty": {

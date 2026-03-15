@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-0e89d4f858764986bd1277bb00256295",
-    "generated_at_utc": "2026-03-15T17:50:02Z",
-    "count": 776
+    "version": "blake2b-c55bc50dfddc2eaa71185c5680aa3548",
+    "generated_at_utc": "2026-03-15T18:21:14Z",
+    "count": 794
   },
   "works": {
     "00001": {
@@ -10870,6 +10870,258 @@
       "storage": null,
       "work_checksum": "blake2b-ccc71f13d069325b2476ce589e13c48a",
       "details_checksum": "blake2b-4432da255b655f868de314724667894f"
+    },
+    "00783": {
+      "work_id": "00783",
+      "title": "body space 1",
+      "title_sort": "body space 001",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7609cf209a86f11115dd01f0bd073f1d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00784": {
+      "work_id": "00784",
+      "title": "body space 2",
+      "title_sort": "body space 002",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1815f380c0542f8516cc4939e1f06640",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00785": {
+      "work_id": "00785",
+      "title": "body space 3",
+      "title_sort": "body space 003",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2058b67941f094aab1c65134b05ec83f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00786": {
+      "work_id": "00786",
+      "title": "body space 4",
+      "title_sort": "body space 004",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-14d82c50f60d571b935b9c3835a670ed",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00787": {
+      "work_id": "00787",
+      "title": "body space 5",
+      "title_sort": "body space 005",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f3348c2b21d7fff30fc9a1689aecc2e6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00788": {
+      "work_id": "00788",
+      "title": "body space (boundary condition 1)",
+      "title_sort": "body space (boundary condition 001)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f0eeeb497d99329d920429bc0e08bfb3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00789": {
+      "work_id": "00789",
+      "title": "body space (boundary condition 2)",
+      "title_sort": "body space (boundary condition 002)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2a5c26844298c9532f3627c40546eac2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00790": {
+      "work_id": "00790",
+      "title": "body space (empty cell)",
+      "title_sort": "body space (empty cell)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c34c533d3fadba4926b83548fde52b6b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00791": {
+      "work_id": "00791",
+      "title": "body space (joined cells)",
+      "title_sort": "body space (joined cells)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "body-space",
+      "series_ids": [
+        "body-space"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-041a346ca54d8e0976b1cf922c4e56b5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00792": {
+      "work_id": "00792",
+      "title": "body space (reclining state) 1",
+      "title_sort": "body space (reclining state) 001",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1e32f55be4d2b373330bd85c8df4e9b3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00793": {
+      "work_id": "00793",
+      "title": "body space (reclining state) 2",
+      "title_sort": "body space (reclining state) 002",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a8b29d65f374e78198c98780387e4da3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00794": {
+      "work_id": "00794",
+      "title": "body space (reclining state) 3",
+      "title_sort": "body space (reclining state) 003",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7c44aa01571fcbfbe28e0464110ba3f6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00795": {
+      "work_id": "00795",
+      "title": "body space (reclining state) 4",
+      "title_sort": "body space (reclining state) 004",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7c1eb25c129d3d35e130a65d1f671ebc",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00796": {
+      "work_id": "00796",
+      "title": "body space (reclining state) 5",
+      "title_sort": "body space (reclining state) 005",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cb5f70004bb9c25afea47c8a7139dc47",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00797": {
+      "work_id": "00797",
+      "title": "body space (reclining state) 6",
+      "title_sort": "body space (reclining state) 006",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a8e9be820a1f6a6b17c125657cadb989",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00798": {
+      "work_id": "00798",
+      "title": "body space (reclining state) 7",
+      "title_sort": "body space (reclining state) 007",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f4b12267038709e243176aca0b9300ec",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00799": {
+      "work_id": "00799",
+      "title": "body space (reclining state) 8",
+      "title_sort": "body space (reclining state) 008",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9d59f55af1375ad79c9305e7681bc0d3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00800": {
+      "work_id": "00800",
+      "title": "body space (reclining state) 9",
+      "title_sort": "body space (reclining state) 009",
+      "year": 2019,
+      "year_display": "2019",
+      "series_id": "body-space-reclining-state",
+      "series_ids": [
+        "body-space-reclining-state"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-00e88b99f4784586c4a6e4654ff0d483",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
 }
