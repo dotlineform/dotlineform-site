@@ -120,12 +120,6 @@ def parse_series_ids_from_works_row(row: tuple[Any, ...], hi: Dict[str, int]) ->
     if series_ids_col is not None:
         raw_value = row[hi[series_ids_col]]
         parsed = [normalize_text(part) for part in normalize_text(raw_value).split(",") if normalize_text(part)]
-    if not parsed:
-        legacy_col = first_present_col(hi, ["series_id"])
-        if legacy_col is not None:
-            legacy_value = normalize_text(row[hi[legacy_col]])
-            if legacy_value:
-                parsed = [legacy_value]
 
     out: list[str] = []
     seen: set[str] = set()
@@ -374,10 +368,10 @@ def collect_series_ids_for_work_ids(xlsx_path: Path, work_ids: Set[str]) -> Set[
     ws = wb["Works"]
     hi = header_map(ws)
 
-    if "work_id" not in hi:
-        raise SystemExit("Works sheet missing required column: work_id")
-    if first_present_col(hi, ["series_ids", "series_id"]) is None:
-        raise SystemExit("Works sheet missing required column: series_ids (or legacy series_id)")
+    required = ["work_id", "series_ids"]
+    missing = [c for c in required if c not in hi]
+    if missing:
+        raise SystemExit(f"Works sheet missing required columns: {', '.join(missing)}")
 
     out: Set[str] = set()
     for row in ws.iter_rows(min_row=2, values_only=True):

@@ -781,12 +781,6 @@ def main() -> None:
         series_ids_col = first_present_col(works_hi, ["series_ids"])
         if series_ids_col is not None:
             parsed_values = parse_list(cell(row, works_hi, series_ids_col))
-        if not parsed_values:
-            legacy_series_id_col = first_present_col(works_hi, ["series_id"])
-            if legacy_series_id_col is not None:
-                legacy_series_id = coerce_string(cell(row, works_hi, legacy_series_id_col))
-                if legacy_series_id is not None:
-                    parsed_values = [legacy_series_id]
 
         series_ids: List[str] = []
         seen_series_ids: set[str] = set()
@@ -864,6 +858,8 @@ def main() -> None:
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
+    if "series_ids" not in works_hi:
+        raise SystemExit("Works sheet missing required column: series_ids")
     if series_sort_rows:
         required_series_sort = ["series_id", "sort_fields"]
         missing_series_sort = [c for c in required_series_sort if c not in series_sort_hi]
@@ -889,7 +885,7 @@ def main() -> None:
 
     # Pre-index unique project folders by series_id from Works.
     series_project_folders_by_id: Dict[str, List[str]] = {}
-    if first_present_col(works_hi, ["series_ids", "series_id"]) is not None and "project_folder" in works_hi:
+    if "project_folder" in works_hi:
         project_folder_sets_by_series: Dict[str, set[str]] = {}
         for wr in works_rows[1:]:
             folder = coerce_string(cell(wr, works_hi, "project_folder"))
@@ -1359,7 +1355,6 @@ def main() -> None:
                     ("width_cm", ["width_cm"], coerce_numeric),
                     ("year", ["year"], coerce_int),
                     ("year_display", ["year_display"], coerce_string),
-                    ("series_id", ["series_id"], coerce_string),
                     ("medium_type", ["medium_type"], coerce_string),
                     ("medium_caption", ["medium_caption"], coerce_string),
                     ("duration", ["duration"], coerce_string),
