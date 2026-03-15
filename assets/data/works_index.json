@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-3874603a5dccdce293698263c7441915",
-    "generated_at_utc": "2026-03-14T23:39:50Z",
-    "count": 634
+    "version": "blake2b-24a314ac4b36a15eabdd2ab36c1972e7",
+    "generated_at_utc": "2026-03-15T01:23:09Z",
+    "count": 709
   },
   "works": {
     "00001": {
@@ -8882,6 +8882,1056 @@
       "storage": null,
       "work_checksum": "blake2b-12a3f5795bb645807949067d31535124",
       "details_checksum": "blake2b-346e1364e94785a7c772bddb79afebec"
+    },
+    "00641": {
+      "work_id": "00641",
+      "title": "a doll story - doll 1",
+      "title_sort": "a doll story - doll 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9a748c1fd17029f362bd9b0dec021502",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00642": {
+      "work_id": "00642",
+      "title": "a doll story - doll 2",
+      "title_sort": "a doll story - doll 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7af034e9a606201dd6ed3a01151e5558",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00643": {
+      "work_id": "00643",
+      "title": "a doll story - doll 3",
+      "title_sort": "a doll story - doll 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ebaf247c7bf4e8ae1b00a690bef59830",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00644": {
+      "work_id": "00644",
+      "title": "a doll story - doll 4",
+      "title_sort": "a doll story - doll 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-df049235fe77233d00e348836f52ecf2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00645": {
+      "work_id": "00645",
+      "title": "a doll story - doll 5",
+      "title_sort": "a doll story - doll 005",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a5799e04da03b4a50428995a4ab8ffe8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00646": {
+      "work_id": "00646",
+      "title": "a doll story - doll 6",
+      "title_sort": "a doll story - doll 006",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-af8019f7bc0e5b8c74510df6e6e9a773",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00647": {
+      "work_id": "00647",
+      "title": "a doll story - doll 7",
+      "title_sort": "a doll story - doll 007",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-318aaf31746c828c1027d60e95741134",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00648": {
+      "work_id": "00648",
+      "title": "a doll story - doll 8",
+      "title_sort": "a doll story - doll 008",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d1e9859809b40d773f67223ae8a6ebd7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00649": {
+      "work_id": "00649",
+      "title": "a doll story - doll 9",
+      "title_sort": "a doll story - doll 009",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4947e20fa7622a65f902ece94181ddf9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00650": {
+      "work_id": "00650",
+      "title": "a doll story - doll 10",
+      "title_sort": "a doll story - doll 010",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5b395cf57ca24b05ed8d1a1742c8d842",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00651": {
+      "work_id": "00651",
+      "title": "a doll story - doll 11",
+      "title_sort": "a doll story - doll 011",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9682b3e140ff17c8d15995a1f5974df4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00652": {
+      "work_id": "00652",
+      "title": "a doll story - doll 12",
+      "title_sort": "a doll story - doll 012",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3f06e0a0c44acadbb7355c88614c2630",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00653": {
+      "work_id": "00653",
+      "title": "a doll story - doll 13",
+      "title_sort": "a doll story - doll 013",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e2f7bfca9a7ac8eab1449f6cdf0ecf7a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00654": {
+      "work_id": "00654",
+      "title": "a doll story - doll 14",
+      "title_sort": "a doll story - doll 014",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b86ba653fe664e8bb4973f5353514cc9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00655": {
+      "work_id": "00655",
+      "title": "a doll story - doll 15",
+      "title_sort": "a doll story - doll 015",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-693f5ecea1a86473591a017549e87577",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00656": {
+      "work_id": "00656",
+      "title": "a doll story - doll 16",
+      "title_sort": "a doll story - doll 016",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5917d137f9509c2e9d795c4ff2433955",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00657": {
+      "work_id": "00657",
+      "title": "a doll story - doll 17",
+      "title_sort": "a doll story - doll 017",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bf002365994beb5d4020bae99b99e9fb",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00658": {
+      "work_id": "00658",
+      "title": "a doll story - doll 18",
+      "title_sort": "a doll story - doll 018",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b57511f24bc5de031b42ea1d34092547",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00659": {
+      "work_id": "00659",
+      "title": "a doll story - doll 19",
+      "title_sort": "a doll story - doll 019",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fd42f0654235632e6429fb86004b92de",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00660": {
+      "work_id": "00660",
+      "title": "a doll story - doll 20",
+      "title_sort": "a doll story - doll 020",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ba7153715d2ab6e772a991ab58331d63",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00661": {
+      "work_id": "00661",
+      "title": "a doll story - doll 21",
+      "title_sort": "a doll story - doll 021",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f8ee9fdbcdb5df74d1a8d671802efe86",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00662": {
+      "work_id": "00662",
+      "title": "a doll story - doll 22",
+      "title_sort": "a doll story - doll 022",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-30cf2dac0a77bf454df9442958d98d2a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00663": {
+      "work_id": "00663",
+      "title": "a doll story - doll 23",
+      "title_sort": "a doll story - doll 023",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-49097319a708304206cea606e952fb82",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00664": {
+      "work_id": "00664",
+      "title": "a doll story - doll 24",
+      "title_sort": "a doll story - doll 024",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b427342982c97324704da1bfd2742f2a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00665": {
+      "work_id": "00665",
+      "title": "a doll story - doll 25",
+      "title_sort": "a doll story - doll 025",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7ae3d5c9146483d4b883f29cc8fe9945",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00666": {
+      "work_id": "00666",
+      "title": "a doll story - doll 26 (2015)",
+      "title_sort": "a doll story - doll 026 (2015)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fd74cb9297ae38ab58a21ae49eacf1b1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00667": {
+      "work_id": "00667",
+      "title": "a doll story - doll 27 (2014)",
+      "title_sort": "a doll story - doll 027 (2014)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a40cc140287629200434f9475e89b463",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00668": {
+      "work_id": "00668",
+      "title": "a doll story - doll glass 1",
+      "title_sort": "a doll story - doll glass 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-dc714e9f5ecaa613e1e2610c50c20144",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00669": {
+      "work_id": "00669",
+      "title": "a doll story - doll glass 2",
+      "title_sort": "a doll story - doll glass 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bfe43d1a0367bbb590ed8e2b1ec8fdf8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00670": {
+      "work_id": "00670",
+      "title": "a doll story - doll glass 3",
+      "title_sort": "a doll story - doll glass 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1f68cc12cf0c1bea8440091b99fcc00e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00671": {
+      "work_id": "00671",
+      "title": "a doll story - doll glass 4",
+      "title_sort": "a doll story - doll glass 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d49d1806068db5ecc5d806074e6a9bfb",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00672": {
+      "work_id": "00672",
+      "title": "a doll story - doll glass 5",
+      "title_sort": "a doll story - doll glass 005",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d36a226437872d68dc06fd82db2082d2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00673": {
+      "work_id": "00673",
+      "title": "a doll story - doll glass 6",
+      "title_sort": "a doll story - doll glass 006",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b7fe0f1f91cca828805f3b7033ce46ee",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00674": {
+      "work_id": "00674",
+      "title": "a doll story - doll glass 7",
+      "title_sort": "a doll story - doll glass 007",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b9192533be31dbe55bfb03f633312849",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00675": {
+      "work_id": "00675",
+      "title": "a doll story - doll glass 8",
+      "title_sort": "a doll story - doll glass 008",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2fd01c9ba6d48942b4090004718c2ef7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00676": {
+      "work_id": "00676",
+      "title": "a doll story - doll glass 9",
+      "title_sort": "a doll story - doll glass 009",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7625c071651a1bbe9654735d55fa261f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00677": {
+      "work_id": "00677",
+      "title": "a doll story - doll glass 10",
+      "title_sort": "a doll story - doll glass 010",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-12b6193b46b1f6e7519cf8fb57035c66",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00678": {
+      "work_id": "00678",
+      "title": "a doll story - doll glass 11",
+      "title_sort": "a doll story - doll glass 011",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d9734fca21ed1a874f5dc8780b88e220",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00679": {
+      "work_id": "00679",
+      "title": "a doll story - doll glass 12",
+      "title_sort": "a doll story - doll glass 012",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-34f8c76675fef51ff28531ea044297f0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00680": {
+      "work_id": "00680",
+      "title": "a doll story - doll glass 13",
+      "title_sort": "a doll story - doll glass 013",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-70f3e11fad770bf16d7cf13bf8491cb6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00681": {
+      "work_id": "00681",
+      "title": "a doll story - doll glass 14",
+      "title_sort": "a doll story - doll glass 014",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c5f73f586ff60b0b33d909cb39280bf8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00682": {
+      "work_id": "00682",
+      "title": "a doll story - doll glass 15",
+      "title_sort": "a doll story - doll glass 015",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-13491fcf66e9421f2887661c118ab52c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00683": {
+      "work_id": "00683",
+      "title": "a doll story - doll glass 16",
+      "title_sort": "a doll story - doll glass 016",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ff8cd0aedb25eb722d9de7825d54998e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00684": {
+      "work_id": "00684",
+      "title": "a doll story - doll glass 17",
+      "title_sort": "a doll story - doll glass 017",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9b914601ab8910b9143e43cd23724481",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00685": {
+      "work_id": "00685",
+      "title": "a doll story - doll glass 18",
+      "title_sort": "a doll story - doll glass 018",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-67f59ee3a18e374cf77843a891d392ec",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00686": {
+      "work_id": "00686",
+      "title": "a doll story - doll glass 19",
+      "title_sort": "a doll story - doll glass 019",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5002bd81b8c6b0858795edf422cbbaee",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00687": {
+      "work_id": "00687",
+      "title": "a doll story - doll glass 20",
+      "title_sort": "a doll story - doll glass 020",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-504b311600f5f49433274573f0257cc8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00688": {
+      "work_id": "00688",
+      "title": "a doll story - doll glass 21",
+      "title_sort": "a doll story - doll glass 021",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a04fc1692ad1229f3e390cc41f3442de",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00689": {
+      "work_id": "00689",
+      "title": "a doll story - doll glass 22",
+      "title_sort": "a doll story - doll glass 022",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6f183282a42af38b2c6b8fd41bacbb75",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00690": {
+      "work_id": "00690",
+      "title": "a doll story - doll glass 23",
+      "title_sort": "a doll story - doll glass 023",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d203556d948bcd7503a1f104195f7bee",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00691": {
+      "work_id": "00691",
+      "title": "a doll story - doll glass 24",
+      "title_sort": "a doll story - doll glass 024",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-46fec617f84bc08b83861b9d6a5388b9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00692": {
+      "work_id": "00692",
+      "title": "a doll story - doll glass 25",
+      "title_sort": "a doll story - doll glass 025",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-81969434cbe713993fcded4516dc8c33",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00693": {
+      "work_id": "00693",
+      "title": "a doll story - doll glass 26",
+      "title_sort": "a doll story - doll glass 026",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6d5947b725c8b33a95d53df843d9403f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00694": {
+      "work_id": "00694",
+      "title": "a doll story - doll glass 27",
+      "title_sort": "a doll story - doll glass 027",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4cc723078f3ef115428fce8150e07251",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00695": {
+      "work_id": "00695",
+      "title": "a doll story - doll glass 28",
+      "title_sort": "a doll story - doll glass 028",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5ba96b4120fe0205a65c1d5cabb4cd79",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00696": {
+      "work_id": "00696",
+      "title": "a doll story - doll glass 29",
+      "title_sort": "a doll story - doll glass 029",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c8702beeb22efcfbc1abc1f55c83098d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00697": {
+      "work_id": "00697",
+      "title": "a doll story - doll glass 30",
+      "title_sort": "a doll story - doll glass 030",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-59d7d6838eec6e429ab7275818061500",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00698": {
+      "work_id": "00698",
+      "title": "a doll story - glass 1",
+      "title_sort": "a doll story - glass 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e08e06bf67c2fd52d60b19d9eefc7cd6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00699": {
+      "work_id": "00699",
+      "title": "a doll story - glass 2",
+      "title_sort": "a doll story - glass 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-82c638e42480174b6c0fa8838621c990",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00700": {
+      "work_id": "00700",
+      "title": "a doll story - glass 3",
+      "title_sort": "a doll story - glass 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-326cf1d8c3ac55b8ab4f4e57ab6e5ec3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00701": {
+      "work_id": "00701",
+      "title": "a doll story - glass 4",
+      "title_sort": "a doll story - glass 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0f2d48d82cf74bea0efee8597b0c2485",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00702": {
+      "work_id": "00702",
+      "title": "a doll story - glass 5",
+      "title_sort": "a doll story - glass 005",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d59b693669adf0e7770461ba12770d7e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00703": {
+      "work_id": "00703",
+      "title": "a doll story - glass 6",
+      "title_sort": "a doll story - glass 006",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-291b9cefc9537d2669ed1c8302618175",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00704": {
+      "work_id": "00704",
+      "title": "a doll story - glass 7",
+      "title_sort": "a doll story - glass 007",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9f6f67d91670a1c369786b9073bf26ba",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00705": {
+      "work_id": "00705",
+      "title": "a doll story - glass 8",
+      "title_sort": "a doll story - glass 008",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-293ed5efa02966ffd211d03948e2c887",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00706": {
+      "work_id": "00706",
+      "title": "a doll story - glass 9",
+      "title_sort": "a doll story - glass 009",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-27710b7d40b184263152b3f0e2fb24e4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00707": {
+      "work_id": "00707",
+      "title": "a doll story - glass 10",
+      "title_sort": "a doll story - glass 010",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6d745d827c0642ca5852ef2d90d880ea",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00708": {
+      "work_id": "00708",
+      "title": "a doll story - glass 11",
+      "title_sort": "a doll story - glass 011",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ef90d61c27efddb87e469823cf4ac54b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00709": {
+      "work_id": "00709",
+      "title": "a doll story - shelf 1",
+      "title_sort": "a doll story - shelf 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-aeba0b942f19e70da8ba698dbd4b9eff",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00710": {
+      "work_id": "00710",
+      "title": "a doll story - shelf 2",
+      "title_sort": "a doll story - shelf 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-15490ff02951d476a51cd6bf7fa04179",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00711": {
+      "work_id": "00711",
+      "title": "a doll story - shelf 3",
+      "title_sort": "a doll story - shelf 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-206a28b4dbe44717769b870f0bad9cc1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00712": {
+      "work_id": "00712",
+      "title": "a doll story - shelf 4",
+      "title_sort": "a doll story - shelf 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9a46aafb54bdbd0d1976a0c359409790",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00713": {
+      "work_id": "00713",
+      "title": "a doll story - weights 1",
+      "title_sort": "a doll story - weights 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b4cc5ab63e98d4833f568a40574bc5f1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00714": {
+      "work_id": "00714",
+      "title": "a doll story - weights 2",
+      "title_sort": "a doll story - weights 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c3897e2ad8809a8a1fa41fea9c57fabe",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00715": {
+      "work_id": "00715",
+      "title": "a doll story - weights 3",
+      "title_sort": "a doll story - weights 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-doll-story",
+      "series_ids": [
+        "a-doll-story"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-935a9eeeaf31e7844823a932e300cfb7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
 }

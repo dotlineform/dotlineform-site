@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-66dffaf6b0b7b72856745a4868992867",
+    "generated_at_utc": "2026-03-15T01:23:09Z",
+    "work_id": "00665",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-7ae3d5c9146483d4b883f29cc8fe9945",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-66dffaf6b0b7b72856745a4868992867"
+  },
+  "work": {
+    "work_id": "00665",
+    "title": "a doll story - doll 25",
+    "title_sort": "a doll story - doll 025",
+    "year": 2024,
+    "year_display": "2024",
+    "series_id": "a-doll-story",
+    "series_ids": [
+      "a-doll-story"
+    ],
+    "series_title": "a doll story",
+    "series_sort": "00665",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 25.0,
+    "width_cm": 35.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "7ae3d5c9146483d4b883f29cc8fe9945"
+  },
+  "sections": []
+}
