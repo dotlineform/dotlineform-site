@@ -1,0 +1,112 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-c688e55da9d1333a60c727ba3f38efc4",
+    "generated_at_utc": "2026-03-15T20:07:01Z",
+    "work_id": "00813",
+    "count": 5,
+    "hash": "blake2b-f7c1c9443185ea0af8c67073ccea7e14",
+    "work_checksum": "blake2b-dc68478a25f5ef16d76356449320da24",
+    "details_checksum": "blake2b-f7c1c9443185ea0af8c67073ccea7e14",
+    "record_checksum": "blake2b-c688e55da9d1333a60c727ba3f38efc4"
+  },
+  "work": {
+    "work_id": "00813",
+    "title": "colours 1958-2001",
+    "title_sort": "colours 1958-2001",
+    "year": 2008,
+    "year_display": "2008",
+    "series_id": "colours",
+    "series_ids": [
+      "colours"
+    ],
+    "series_title": "colours",
+    "series_sort": "00813",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "dc68478a25f5ef16d76356449320da24"
+  },
+  "sections": [
+    {
+      "project_subfolder": "versions",
+      "details": [
+        {
+          "work_id": "00813",
+          "detail_id": "001",
+          "detail_uid": "00813-001",
+          "title": "colours 1958-2001.1",
+          "title_sort": "colours 1958-2001.001",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "358442f3c17ce92a656ed3768f44c53c"
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "002",
+          "detail_uid": "00813-002",
+          "title": "colours 1958-2001.2",
+          "title_sort": "colours 1958-2001.002",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b6735a1befa03aaef41c46e2c3ecf4cd"
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "003",
+          "detail_uid": "00813-003",
+          "title": "colours 1958-2001.3",
+          "title_sort": "colours 1958-2001.003",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a8a631a65944e4cb603fd54d86042860"
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "004",
+          "detail_uid": "00813-004",
+          "title": "colours 1958-2001.4",
+          "title_sort": "colours 1958-2001.004",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d9670b449f3ffada679487636e8938b2"
+        },
+        {
+          "work_id": "00813",
+          "detail_id": "005",
+          "detail_uid": "00813-005",
+          "title": "colours 1958-2001.5",
+          "title_sort": "colours 1958-2001.005",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "81c42f98d2153856144b00ca17db96f8"
+        }
+      ]
+    }
+  ]
+}

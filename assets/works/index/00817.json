@@ -1,0 +1,112 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-449e01d66fef077a4edf4443d3c61cc6",
+    "generated_at_utc": "2026-03-15T20:07:01Z",
+    "work_id": "00817",
+    "count": 5,
+    "hash": "blake2b-7bfa3bc1e4a74e6100200308cb2d1f66",
+    "work_checksum": "blake2b-3d88bee657783a4325eb38e975f850d6",
+    "details_checksum": "blake2b-7bfa3bc1e4a74e6100200308cb2d1f66",
+    "record_checksum": "blake2b-449e01d66fef077a4edf4443d3c61cc6"
+  },
+  "work": {
+    "work_id": "00817",
+    "title": "colours marilyn",
+    "title_sort": "colours marilyn",
+    "year": 2008,
+    "year_display": "2008",
+    "series_id": "colours",
+    "series_ids": [
+      "colours"
+    ],
+    "series_title": "colours",
+    "series_sort": "00817",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "3d88bee657783a4325eb38e975f850d6"
+  },
+  "sections": [
+    {
+      "project_subfolder": "versions",
+      "details": [
+        {
+          "work_id": "00817",
+          "detail_id": "001",
+          "detail_uid": "00817-001",
+          "title": "colours marilyn.1",
+          "title_sort": "colours marilyn.001",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "66f1d4e0eaaa10f974f2e4a26c144866"
+        },
+        {
+          "work_id": "00817",
+          "detail_id": "002",
+          "detail_uid": "00817-002",
+          "title": "colours marilyn.2",
+          "title_sort": "colours marilyn.002",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "63da85cfe7b1ef0d1f43ca124099559c"
+        },
+        {
+          "work_id": "00817",
+          "detail_id": "003",
+          "detail_uid": "00817-003",
+          "title": "colours marilyn.3",
+          "title_sort": "colours marilyn.003",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cfaba28c7e035558da85c89318336393"
+        },
+        {
+          "work_id": "00817",
+          "detail_id": "004",
+          "detail_uid": "00817-004",
+          "title": "colours marilyn.4",
+          "title_sort": "colours marilyn.004",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d378320348fe1db829bbe2c65005be92"
+        },
+        {
+          "work_id": "00817",
+          "detail_id": "005",
+          "detail_uid": "00817-005",
+          "title": "colours marilyn.5",
+          "title_sort": "colours marilyn.005",
+          "project_subfolder": "versions",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b4c786144b4edc7645e9c6a602e60849"
+        }
+      ]
+    }
+  ]
+}

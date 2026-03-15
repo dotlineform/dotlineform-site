@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-bde8e60d10d6d46c6235e060a81786f9",
-    "generated_at_utc": "2026-03-15T19:39:54Z",
-    "count": 806
+    "version": "blake2b-f6c16d7c0bcf441ce0bc8d153d34194f",
+    "generated_at_utc": "2026-03-15T20:54:30Z",
+    "count": 825
   },
   "works": {
     "00001": {
@@ -11289,6 +11289,272 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-1b754f1d3290cbd1626c2f5b74caa339",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00813": {
+      "work_id": "00813",
+      "title": "colours 1958-2001",
+      "title_sort": "colours 1958-2001",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "colours",
+      "series_ids": [
+        "colours"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-dc68478a25f5ef16d76356449320da24",
+      "details_checksum": "blake2b-f7c1c9443185ea0af8c67073ccea7e14"
+    },
+    "00814": {
+      "work_id": "00814",
+      "title": "colours belsen",
+      "title_sort": "colours belsen",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "colours",
+      "series_ids": [
+        "colours"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-69b86b879e5fed244d35ab33d6894068",
+      "details_checksum": "blake2b-7e2201c3b0a7c26ae5e1c1d2c1c82f5e"
+    },
+    "00815": {
+      "work_id": "00815",
+      "title": "colours dachau",
+      "title_sort": "colours dachau",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "colours",
+      "series_ids": [
+        "colours"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ee601a39c615a9c4ab04f2afac446318",
+      "details_checksum": "blake2b-042a99bdb9f7a2877129041602a08d19"
+    },
+    "00816": {
+      "work_id": "00816",
+      "title": "colours kylie",
+      "title_sort": "colours kylie",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "colours",
+      "series_ids": [
+        "colours"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-484f58541d4a76684b2336d4c8a88215",
+      "details_checksum": "blake2b-d1884f86c5b02da387d6c053661e0d03"
+    },
+    "00817": {
+      "work_id": "00817",
+      "title": "colours marilyn",
+      "title_sort": "colours marilyn",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "colours",
+      "series_ids": [
+        "colours"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3d88bee657783a4325eb38e975f850d6",
+      "details_checksum": "blake2b-7bfa3bc1e4a74e6100200308cb2d1f66"
+    },
+    "00818": {
+      "work_id": "00818",
+      "title": "concrete [1]",
+      "title_sort": "concrete [001]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-22010c4c69af09781b75c35ee2d4b214",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00819": {
+      "work_id": "00819",
+      "title": "concrete [2]",
+      "title_sort": "concrete [002]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1739be4b5fb924c74c3a0d1a87220d59",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00820": {
+      "work_id": "00820",
+      "title": "concrete [3]",
+      "title_sort": "concrete [003]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-263d01de92fb178b9baca0d55afdfedd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00821": {
+      "work_id": "00821",
+      "title": "concrete [4]",
+      "title_sort": "concrete [004]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-efe2dc088499b450c36dd206351c426b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00822": {
+      "work_id": "00822",
+      "title": "concrete [5]",
+      "title_sort": "concrete [005]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1de45a00fb6ed1ff1afd36f2d8b0b394",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00823": {
+      "work_id": "00823",
+      "title": "concrete [6]",
+      "title_sort": "concrete [006]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1a65fac9294d148cdb8318633af0dedb",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00824": {
+      "work_id": "00824",
+      "title": "concrete [7]",
+      "title_sort": "concrete [007]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-52f49585fedc4f2ba562172aef55934f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00825": {
+      "work_id": "00825",
+      "title": "concrete [8]",
+      "title_sort": "concrete [008]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-153ac02ac7f8879a4def44bfad9d2970",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00826": {
+      "work_id": "00826",
+      "title": "concrete [9]",
+      "title_sort": "concrete [009]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-07c7874cf66a889dd97f499086e3140f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00827": {
+      "work_id": "00827",
+      "title": "concrete [10]",
+      "title_sort": "concrete [010]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6c594d0e3c557243f32fcf4f377d7391",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00828": {
+      "work_id": "00828",
+      "title": "concrete [11]",
+      "title_sort": "concrete [011]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-65274e703d225b50d9ebf7bbd5169fc8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00829": {
+      "work_id": "00829",
+      "title": "concrete [12]",
+      "title_sort": "concrete [012]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-28c10ca68449bbe4a00f553529b1524c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00830": {
+      "work_id": "00830",
+      "title": "concrete [13]",
+      "title_sort": "concrete [013]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-79e5b21bc6dcd358eb627191e3024d64",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00831": {
+      "work_id": "00831",
+      "title": "concrete [14]",
+      "title_sort": "concrete [014]",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "concrete",
+      "series_ids": [
+        "concrete"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-133ff604786248715696e0f4f6ba4efe",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

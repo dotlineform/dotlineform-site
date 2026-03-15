@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-02c7cb8ccb3a3c9641bd571f25e2d274",
+    "generated_at_utc": "2026-03-15T20:54:30Z",
+    "work_id": "00828",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-65274e703d225b50d9ebf7bbd5169fc8",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-02c7cb8ccb3a3c9641bd571f25e2d274"
+  },
+  "work": {
+    "work_id": "00828",
+    "title": "concrete [11]",
+    "title_sort": "concrete [011]",
+    "year": 2012,
+    "year_display": "2012",
+    "series_id": "concrete",
+    "series_ids": [
+      "concrete"
+    ],
+    "series_title": "concrete",
+    "series_sort": "00828",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 42.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "65274e703d225b50d9ebf7bbd5169fc8"
+  },
+  "sections": []
+}
