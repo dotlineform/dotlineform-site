@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-3df90c83ff080ab6597b598e36599024",
-    "generated_at_utc": "2026-03-15T16:06:28Z",
-    "count": 746
+    "version": "blake2b-b3203b3a954a264c9879dc8901d041bb",
+    "generated_at_utc": "2026-03-15T16:23:41Z",
+    "count": 749
   },
   "works": {
     "00001": {
@@ -10450,6 +10450,48 @@
       "storage": null,
       "work_checksum": "blake2b-b60f48d3e694d33a43b627f776c6bbac",
       "details_checksum": "blake2b-23f112f42e6e4975b35eee938a55d643"
+    },
+    "00753": {
+      "work_id": "00753",
+      "title": "assembly code 1",
+      "title_sort": "assembly code 001",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "assembly-codes",
+      "series_ids": [
+        "assembly-codes"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-88426519eacde544cf23aa1b642eb52d",
+      "details_checksum": "blake2b-6568fe881a8e3e13ad04004b1b7613ce"
+    },
+    "00754": {
+      "work_id": "00754",
+      "title": "assembly code 2",
+      "title_sort": "assembly code 002",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "assembly-codes",
+      "series_ids": [
+        "assembly-codes"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8d68c037487b74b77bb5b5eeaf9a8929",
+      "details_checksum": "blake2b-75d985ce663c2bdd7514c2ad5fc157b3"
+    },
+    "00755": {
+      "work_id": "00755",
+      "title": "assembly code 3",
+      "title_sort": "assembly code 003",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "assembly-codes",
+      "series_ids": [
+        "assembly-codes"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-48ad2a19c3982527651ee104d7a94963",
+      "details_checksum": "blake2b-cae476165631fbea7e65bfce5cba2542"
     }
   }
 }

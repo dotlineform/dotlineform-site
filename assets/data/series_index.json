@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-bd005f3e5d1e2394fe1cac4ed78cca23",
-    "generated_at_utc": "2026-03-15T16:06:27Z",
-    "count": 50
+    "version": "blake2b-f418d62d7dda5b0c903883265210970a",
+    "generated_at_utc": "2026-03-15T16:23:41Z",
+    "count": 51
   },
   "series": {
     "10000": {
@@ -409,6 +409,34 @@
         "work_id": "00748",
         "thumb_96": "/assets/works/img/00748-thumb-96.webp",
         "thumb_192": "/assets/works/img/00748-thumb-192.webp"
+      }
+    },
+    "assembly-codes": {
+      "series_id": "assembly-codes",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "assembly codes",
+      "title_sort": "assembly codes",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "00753",
+      "notes": null,
+      "project_folders": [
+        "assembly codes"
+      ],
+      "checksum": "800643f2b3de4d7ae460a9ff8ccb804d",
+      "works": [
+        "00753",
+        "00754",
+        "00755"
+      ],
+      "thumb": {
+        "work_id": "00753",
+        "thumb_96": "/assets/works/img/00753-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00753-thumb-192.webp"
       }
     },
     "certainty": {
