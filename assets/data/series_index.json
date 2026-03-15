@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-56297fa773ed17b1fbd53ff1db75e5d7",
-    "generated_at_utc": "2026-03-15T20:54:30Z",
-    "count": 61
+    "version": "blake2b-35d844482f57f994a5b498b4cd501901",
+    "generated_at_utc": "2026-03-15T21:12:02Z",
+    "count": 62
   },
   "series": {
     "10000": {
@@ -1092,8 +1092,8 @@
     "concrete": {
       "series_id": "concrete",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "concrete",
       "title_sort": "concrete",
       "sort_fields": "work_id",
@@ -1126,6 +1126,37 @@
         "work_id": "00830",
         "thumb_96": "/assets/works/img/00830-thumb-96.webp",
         "thumb_192": "/assets/works/img/00830-thumb-192.webp"
+      }
+    },
+    "creases": {
+      "series_id": "creases",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "creases",
+      "title_sort": "creases",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2016,
+      "year_display": "2016",
+      "primary_work_id": "00833",
+      "notes": null,
+      "project_folders": [
+        "creases"
+      ],
+      "checksum": "3de0fd54897f249b5d42f2f9bf4e5bd8",
+      "works": [
+        "00832",
+        "00833",
+        "00834",
+        "00835",
+        "00836",
+        "00837"
+      ],
+      "thumb": {
+        "work_id": "00833",
+        "thumb_96": "/assets/works/img/00833-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00833-thumb-192.webp"
       }
     },
     "curve-poems": {

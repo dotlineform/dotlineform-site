@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-f6c16d7c0bcf441ce0bc8d153d34194f",
-    "generated_at_utc": "2026-03-15T20:54:30Z",
-    "count": 825
+    "version": "blake2b-9965f49231d60db3fbd258cc952f10b2",
+    "generated_at_utc": "2026-03-15T21:12:02Z",
+    "count": 831
   },
   "works": {
     "00001": {
@@ -11555,6 +11555,90 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-133ff604786248715696e0f4f6ba4efe",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00832": {
+      "work_id": "00832",
+      "title": "creases 1",
+      "title_sort": "creases 001",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cf589f69ff08500de91f73ddc92eba5b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00833": {
+      "work_id": "00833",
+      "title": "creases 1 (version)",
+      "title_sort": "creases 001 (version)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cc92a7d31419a77200985452c6485b07",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00834": {
+      "work_id": "00834",
+      "title": "creases 2",
+      "title_sort": "creases 002",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-52d61243a29d8104f5cd7eb56ccf8eb2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00835": {
+      "work_id": "00835",
+      "title": "creases 2 (version)",
+      "title_sort": "creases 002 (version)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a0ddb23d38b8a7a401f2f26ecaf81c74",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00836": {
+      "work_id": "00836",
+      "title": "creases 3",
+      "title_sort": "creases 003",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bdd9600f9c196fe37bcd24a66aad1459",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00837": {
+      "work_id": "00837",
+      "title": "creases 3 (version)",
+      "title_sort": "creases 003 (version)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "creases",
+      "series_ids": [
+        "creases"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b015d3b5f472b09503f59a9d40c292cf",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
