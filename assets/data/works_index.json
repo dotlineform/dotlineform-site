@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-9965f49231d60db3fbd258cc952f10b2",
-    "generated_at_utc": "2026-03-15T21:12:02Z",
-    "count": 831
+    "version": "blake2b-f1992d092c3078f41a54f8bef403b96e",
+    "generated_at_utc": "2026-03-15T21:25:34Z",
+    "count": 843
   },
   "works": {
     "00001": {
@@ -11639,6 +11639,174 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-b015d3b5f472b09503f59a9d40c292cf",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00838": {
+      "work_id": "00838",
+      "title": "structure a",
+      "title_sort": "structure a",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c1eb2577938129fa640366bbe0bcb1cc",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00839": {
+      "work_id": "00839",
+      "title": "structure b",
+      "title_sort": "structure b",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-55d3f746255588830246433bf91a5017",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00840": {
+      "work_id": "00840",
+      "title": "structure c",
+      "title_sort": "structure c",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0f548e2943940bcf681afdf495ac32e9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00841": {
+      "work_id": "00841",
+      "title": "structure d",
+      "title_sort": "structure d",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7313133634fa2ba109edc79138b9524b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00842": {
+      "work_id": "00842",
+      "title": "structure i",
+      "title_sort": "structure i",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-64ea8dd3fa86b88cba7ce03c5b7ad5e0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00843": {
+      "work_id": "00843",
+      "title": "structure ii ~",
+      "title_sort": "structure ii ~",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-594962b040bf0f91c413fcae2f1ced4b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00844": {
+      "work_id": "00844",
+      "title": "structure ii",
+      "title_sort": "structure ii",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6f99c5ded03b8734fffa479e2e5a724f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00845": {
+      "work_id": "00845",
+      "title": "structure iii",
+      "title_sort": "structure iii",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8c891fd5bb3f76538f0413655ce70828",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00846": {
+      "work_id": "00846",
+      "title": "structure iv",
+      "title_sort": "structure iv",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f711a18ba463ca3cade520cca52b99a8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00847": {
+      "work_id": "00847",
+      "title": "structure v composite",
+      "title_sort": "structure v composite",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9da52d74235721fcc4cb8b4e956ddfae",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00848": {
+      "work_id": "00848",
+      "title": "structure v",
+      "title_sort": "structure v",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-95e4e12e20f6b0b2aba2328f80e6c08f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00849": {
+      "work_id": "00849",
+      "title": "structure vi",
+      "title_sort": "structure vi",
+      "year": 2011,
+      "year_display": "2011",
+      "series_id": "cube-structure",
+      "series_ids": [
+        "cube-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-07abdd65644def0669f4b3b4b44207dd",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

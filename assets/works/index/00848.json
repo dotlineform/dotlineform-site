@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-58811fcc9d1b392ab4f4f35083976e56",
+    "generated_at_utc": "2026-03-15T21:25:34Z",
+    "work_id": "00848",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-95e4e12e20f6b0b2aba2328f80e6c08f",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-58811fcc9d1b392ab4f4f35083976e56"
+  },
+  "work": {
+    "work_id": "00848",
+    "title": "structure v",
+    "title_sort": "structure v",
+    "year": 2011,
+    "year_display": "2011",
+    "series_id": "cube-structure",
+    "series_ids": [
+      "cube-structure"
+    ],
+    "series_title": "cube structure",
+    "series_sort": "00848",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "95e4e12e20f6b0b2aba2328f80e6c08f"
+  },
+  "sections": []
+}
