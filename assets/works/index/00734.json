@@ -1,0 +1,125 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-1ba08916a9d83f1f04f0fa2a488d7f30",
+    "generated_at_utc": "2026-03-15T13:12:30Z",
+    "work_id": "00734",
+    "count": 6,
+    "hash": "blake2b-f9839824f785e0817a54aee63af148f4",
+    "work_checksum": "blake2b-f4d8278080c099621994cd21d82920f6",
+    "details_checksum": "blake2b-f9839824f785e0817a54aee63af148f4",
+    "record_checksum": "blake2b-1ba08916a9d83f1f04f0fa2a488d7f30"
+  },
+  "work": {
+    "work_id": "00734",
+    "title": "a theory of happiness is a theory of everything",
+    "title_sort": "a theory of happiness is a theory of everything",
+    "year": 2008,
+    "year_display": "2008",
+    "series_id": "a-theory-of-happiness",
+    "series_ids": [
+      "a-theory-of-happiness"
+    ],
+    "series_title": "a theory of happiness is a theory of everything",
+    "series_sort": "00734",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "f4d8278080c099621994cd21d82920f6"
+  },
+  "sections": [
+    {
+      "project_subfolder": "layers",
+      "details": [
+        {
+          "work_id": "00734",
+          "detail_id": "001",
+          "detail_uid": "00734-001",
+          "title": "buddhism",
+          "title_sort": "buddhism",
+          "project_subfolder": "layers",
+          "width_px": 8858,
+          "height_px": 8858,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4a1582210099b0a08db1081306a24526"
+        },
+        {
+          "work_id": "00734",
+          "detail_id": "002",
+          "detail_uid": "00734-002",
+          "title": "chemicals",
+          "title_sort": "chemicals",
+          "project_subfolder": "layers",
+          "width_px": 8858,
+          "height_px": 8858,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cc317410c07c99ed9d0d53a5acfaf8fb"
+        },
+        {
+          "work_id": "00734",
+          "detail_id": "003",
+          "detail_uid": "00734-003",
+          "title": "colour",
+          "title_sort": "colour",
+          "project_subfolder": "layers",
+          "width_px": 8858,
+          "height_px": 8858,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2e0c9c34d08ae3b756e08f14cbfa3a87"
+        },
+        {
+          "work_id": "00734",
+          "detail_id": "004",
+          "detail_uid": "00734-004",
+          "title": "music",
+          "title_sort": "music",
+          "project_subfolder": "layers",
+          "width_px": 8858,
+          "height_px": 8858,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "aea053928a55810f658f9efa096f69f2"
+        },
+        {
+          "work_id": "00734",
+          "detail_id": "005",
+          "detail_uid": "00734-005",
+          "title": "physics",
+          "title_sort": "physics",
+          "project_subfolder": "layers",
+          "width_px": 8858,
+          "height_px": 8858,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d2f08111946fd7321ebc20d6f1c2a58b"
+        },
+        {
+          "work_id": "00734",
+          "detail_id": "006",
+          "detail_uid": "00734-006",
+          "title": "words",
+          "title_sort": "words",
+          "project_subfolder": "layers",
+          "width_px": 8753,
+          "height_px": 8850,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a10fcd089c6edd494950037ff36ae54f"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-e1290a2309afc639210384bef684e9f9",
-    "generated_at_utc": "2026-03-15T01:23:09Z",
-    "count": 45
+    "version": "blake2b-bd005f3e5d1e2394fe1cac4ed78cca23",
+    "generated_at_utc": "2026-03-15T16:06:27Z",
+    "count": 50
   },
   "series": {
     "10000": {
@@ -123,8 +123,8 @@
     "a-doll-story": {
       "series_id": "a-doll-story",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-15",
       "title": "a doll story",
       "title_sort": "a doll story",
       "sort_fields": "work_id",
@@ -220,6 +220,74 @@
         "thumb_192": "/assets/works/img/00666-thumb-192.webp"
       }
     },
+    "a-feeling-that-we-are-part-of-a-structure": {
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "a feeling that we are part of a structure",
+      "title_sort": "a feeling that we are part of a structure",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "00717",
+      "notes": null,
+      "project_folders": [
+        "a feeling that we are part of a structure"
+      ],
+      "checksum": "2fd4c8576e67b319f8450a68ad4b710a",
+      "works": [
+        "00716",
+        "00717",
+        "00718",
+        "00719",
+        "00720",
+        "00721"
+      ],
+      "thumb": {
+        "work_id": "00717",
+        "thumb_96": "/assets/works/img/00717-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00717-thumb-192.webp"
+      }
+    },
+    "a-humid-home-full-of-light": {
+      "series_id": "a-humid-home-full-of-light",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "a humid home full of light",
+      "title_sort": "a humid home full of light",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2013,
+      "year_display": "2013",
+      "primary_work_id": "00729",
+      "notes": null,
+      "project_folders": [
+        "a humid home full of light"
+      ],
+      "checksum": "95a82c701699964b494dcbd27115e8c0",
+      "works": [
+        "00722",
+        "00723",
+        "00724",
+        "00725",
+        "00726",
+        "00727",
+        "00728",
+        "00729",
+        "00730",
+        "00731",
+        "00732",
+        "00733"
+      ],
+      "thumb": {
+        "work_id": "00729",
+        "thumb_96": "/assets/works/img/00729-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00729-thumb-192.webp"
+      }
+    },
     "a-poem-divided-into-4-parts": {
       "series_id": "a-poem-divided-into-4-parts",
       "layout": "series",
@@ -247,6 +315,100 @@
         "work_id": "00001",
         "thumb_96": "/assets/works/img/00001-thumb-96.webp",
         "thumb_192": "/assets/works/img/00001-thumb-192.webp"
+      }
+    },
+    "a-theory-of-happiness": {
+      "series_id": "a-theory-of-happiness",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "a theory of happiness is a theory of everything",
+      "title_sort": "a theory of happiness is a theory of everything",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2008,
+      "year_display": "2008-10",
+      "primary_work_id": "00734",
+      "notes": null,
+      "project_folders": [
+        "a theory of happiness.._"
+      ],
+      "checksum": "e5385440331c3afedc25fa279585f6fb",
+      "works": [
+        "00734",
+        "00735"
+      ],
+      "thumb": {
+        "work_id": "00734",
+        "thumb_96": "/assets/works/img/00734-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00734-thumb-192.webp"
+      }
+    },
+    "all-the-little-cracks": {
+      "series_id": "all-the-little-cracks",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "all the little cracks",
+      "title_sort": "all the little cracks",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2010,
+      "year_display": "2010, 2016",
+      "primary_work_id": "00751",
+      "notes": null,
+      "project_folders": [
+        "all the little cracks"
+      ],
+      "checksum": "e5642a538d0d8aecbd24926632dafb59",
+      "works": [
+        "00751",
+        "00752"
+      ],
+      "thumb": {
+        "work_id": "00751",
+        "thumb_96": "/assets/works/img/00751-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00751-thumb-192.webp"
+      }
+    },
+    "an-act-of-kindness": {
+      "series_id": "an-act-of-kindness",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-15",
+      "title": "an act of kindness",
+      "title_sort": "an act of kindness",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "00748",
+      "notes": null,
+      "project_folders": [
+        "an act of kindness"
+      ],
+      "checksum": "0e9a3ad8288e999df2e2c647598aaa9f",
+      "works": [
+        "00736",
+        "00737",
+        "00738",
+        "00739",
+        "00740",
+        "00741",
+        "00742",
+        "00743",
+        "00744",
+        "00745",
+        "00746",
+        "00747",
+        "00748",
+        "00749",
+        "00750"
+      ],
+      "thumb": {
+        "work_id": "00748",
+        "thumb_96": "/assets/works/img/00748-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00748-thumb-192.webp"
       }
     },
     "certainty": {

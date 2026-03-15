@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-24a314ac4b36a15eabdd2ab36c1972e7",
-    "generated_at_utc": "2026-03-15T01:23:09Z",
-    "count": 709
+    "version": "blake2b-3df90c83ff080ab6597b598e36599024",
+    "generated_at_utc": "2026-03-15T16:06:28Z",
+    "count": 746
   },
   "works": {
     "00001": {
@@ -9932,6 +9932,524 @@
       "storage": null,
       "work_checksum": "blake2b-935a9eeeaf31e7844823a932e300cfb7",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00716": {
+      "work_id": "00716",
+      "title": "a feeling that we are part of a structure - 01",
+      "title_sort": "a feeling that we are part of a structure - 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5ffcd40caff7aed04b1e7be824d00246",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00717": {
+      "work_id": "00717",
+      "title": "a feeling that we are part of a structure - 02",
+      "title_sort": "a feeling that we are part of a structure - 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-157c4f53fb35b9d5bd822610496c049a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00718": {
+      "work_id": "00718",
+      "title": "a feeling that we are part of a structure - 03",
+      "title_sort": "a feeling that we are part of a structure - 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3eb6ccfd05f5653c7df1a6bab21b6187",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00719": {
+      "work_id": "00719",
+      "title": "a feeling that we are part of a structure - 04",
+      "title_sort": "a feeling that we are part of a structure - 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-47e3d42de966c359f1f2ccc55e7d3559",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00720": {
+      "work_id": "00720",
+      "title": "a feeling that we are part of a structure - 05",
+      "title_sort": "a feeling that we are part of a structure - 005",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-092782bbaddc4ad505c757cdf1a411ed",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00721": {
+      "work_id": "00721",
+      "title": "a feeling that we are part of a structure - 06",
+      "title_sort": "a feeling that we are part of a structure - 006",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+      "series_ids": [
+        "a-feeling-that-we-are-part-of-a-structure"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6bfe1e6c9e264b5c8376e09c53c6ccbe",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00722": {
+      "work_id": "00722",
+      "title": "a humid home full of light [1]",
+      "title_sort": "a humid home full of light [001]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4469d3035d7e491d14040893c7d10bee",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00723": {
+      "work_id": "00723",
+      "title": "a humid home full of light [2]",
+      "title_sort": "a humid home full of light [002]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9961b8ba328b5ab68f52969ec2d35320",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00724": {
+      "work_id": "00724",
+      "title": "a humid home full of light [3]",
+      "title_sort": "a humid home full of light [003]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d5cf0a1d322af3bb975612d15e8ae418",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00725": {
+      "work_id": "00725",
+      "title": "a humid home full of light [4]",
+      "title_sort": "a humid home full of light [004]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1ad821482e9abe4e7613c71a645a2173",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00726": {
+      "work_id": "00726",
+      "title": "a humid home full of light [5]",
+      "title_sort": "a humid home full of light [005]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-204096649be5f5e65a14a65620d64ac4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00727": {
+      "work_id": "00727",
+      "title": "a humid home full of light [6]",
+      "title_sort": "a humid home full of light [006]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-aed2144bf77e4ea70d6549cb30fd2a5e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00728": {
+      "work_id": "00728",
+      "title": "a humid home full of light [7]",
+      "title_sort": "a humid home full of light [007]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-18f40dfb3b2a135dd81f14481c7fbd7a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00729": {
+      "work_id": "00729",
+      "title": "a humid home full of light [8]",
+      "title_sort": "a humid home full of light [008]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6c9226b161d928bf43ddd93cf03bdc22",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00730": {
+      "work_id": "00730",
+      "title": "a humid home full of light [9]",
+      "title_sort": "a humid home full of light [009]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4492e1fee43455d43614c9608811d6df",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00731": {
+      "work_id": "00731",
+      "title": "a humid home full of light [10]",
+      "title_sort": "a humid home full of light [010]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2b53748435826767eeb297dcd6fe22de",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00732": {
+      "work_id": "00732",
+      "title": "a humid home full of light [11]",
+      "title_sort": "a humid home full of light [011]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ec5f8927f1af1a8a227a70a1a51bb76b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00733": {
+      "work_id": "00733",
+      "title": "a humid home full of light [12]",
+      "title_sort": "a humid home full of light [012]",
+      "year": 2013,
+      "year_display": "2013",
+      "series_id": "a-humid-home-full-of-light",
+      "series_ids": [
+        "a-humid-home-full-of-light"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9a967dc10f130b80fb0d584bec4f0180",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00734": {
+      "work_id": "00734",
+      "title": "a theory of happiness is a theory of everything",
+      "title_sort": "a theory of happiness is a theory of everything",
+      "year": 2008,
+      "year_display": "2008",
+      "series_id": "a-theory-of-happiness",
+      "series_ids": [
+        "a-theory-of-happiness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f4d8278080c099621994cd21d82920f6",
+      "details_checksum": "blake2b-f9839824f785e0817a54aee63af148f4"
+    },
+    "00735": {
+      "work_id": "00735",
+      "title": "a theory of happiness is a theory of everything (64°)",
+      "title_sort": "a theory of happiness is a theory of everything (064°)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "a-theory-of-happiness",
+      "series_ids": [
+        "a-theory-of-happiness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0ed288d051d4e5bb2e7609d1a087211f",
+      "details_checksum": "blake2b-25db2d76a72c782b3475a4e82d2b8fd0"
+    },
+    "00736": {
+      "work_id": "00736",
+      "title": "an act of kindness [1]",
+      "title_sort": "an act of kindness [001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-daf34b4e557e890d1c7aba49b5ee928b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00737": {
+      "work_id": "00737",
+      "title": "an act of kindness [2]",
+      "title_sort": "an act of kindness [002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0011e51fa115b171953a267fd5ef5b72",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00738": {
+      "work_id": "00738",
+      "title": "an act of kindness [3]",
+      "title_sort": "an act of kindness [003]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a0cef9f5f1d176d656f6891339b18e7e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00739": {
+      "work_id": "00739",
+      "title": "an act of kindness [4]",
+      "title_sort": "an act of kindness [004]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3d30166b09a4a294eb681b3a04fbe3ba",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00740": {
+      "work_id": "00740",
+      "title": "an act of kindness [5]",
+      "title_sort": "an act of kindness [005]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-147c885d845cf2b5c401c12ad7dd7d35",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00741": {
+      "work_id": "00741",
+      "title": "a partial act of kindness [1.1]",
+      "title_sort": "a partial act of kindness [001.001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-31f2545777c987162f4145c07e4e035a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00742": {
+      "work_id": "00742",
+      "title": "a partial act of kindness [1.2]",
+      "title_sort": "a partial act of kindness [001.002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1e65108e74b3ea7e05a57c2a8c466c06",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00743": {
+      "work_id": "00743",
+      "title": "a partial act of kindness [2.1]",
+      "title_sort": "a partial act of kindness [002.001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-dad5cf8ab1a2bb254a838be211b1ccd8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00744": {
+      "work_id": "00744",
+      "title": "a partial act of kindness [2.2]",
+      "title_sort": "a partial act of kindness [002.002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f835b167f63692979f0fd630f20f2602",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00745": {
+      "work_id": "00745",
+      "title": "a partial act of kindness [3.1]",
+      "title_sort": "a partial act of kindness [003.001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-590d200fea995b1fe22e5b6cb34d9797",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00746": {
+      "work_id": "00746",
+      "title": "a partial act of kindness [3.2]",
+      "title_sort": "a partial act of kindness [003.002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2adb238610cd8423264ed92ab98f53f7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00747": {
+      "work_id": "00747",
+      "title": "a partial act of kindness [4.1]",
+      "title_sort": "a partial act of kindness [004.001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6a4095bad2e3ee9e7a45e1254d5dac06",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00748": {
+      "work_id": "00748",
+      "title": "a partial act of kindness [4.2]",
+      "title_sort": "a partial act of kindness [004.002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9789906013a6edf5d3720769edf21724",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00749": {
+      "work_id": "00749",
+      "title": "a partial act of kindness [5.1]",
+      "title_sort": "a partial act of kindness [005.001]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-77b8598bbbb255093664050bd57137a1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00750": {
+      "work_id": "00750",
+      "title": "a partial act of kindness [5.2]",
+      "title_sort": "a partial act of kindness [005.002]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "an-act-of-kindness",
+      "series_ids": [
+        "an-act-of-kindness"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0b11185cd213cb6d85805c4e520e8672",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00751": {
+      "work_id": "00751",
+      "title": "all the little cracks",
+      "title_sort": "all the little cracks",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "all-the-little-cracks",
+      "series_ids": [
+        "all-the-little-cracks"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-61e006ac4261dd4826958c93ed7ce7b2",
+      "details_checksum": "blake2b-6697a14485f08b8bd226f0c6e998de94"
+    },
+    "00752": {
+      "work_id": "00752",
+      "title": "all the little cracks again",
+      "title_sort": "all the little cracks again",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "all-the-little-cracks",
+      "series_ids": [
+        "all-the-little-cracks"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b60f48d3e694d33a43b627f776c6bbac",
+      "details_checksum": "blake2b-23f112f42e6e4975b35eee938a55d643"
     }
   }
 }

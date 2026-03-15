@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-15T01:23:09Z",
+  "updated_at_utc": "2026-03-15T15:57:48Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -285,6 +285,31 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-15T01:23:09Z"
+    },
+    "a-feeling-that-we-are-part-of-a-structure": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-15T12:04:30Z"
+    },
+    "a-humid-home-full-of-light": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-15T12:45:43Z"
+    },
+    "a-theory-of-happiness": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-15T13:12:29Z"
+    },
+    "an-act-of-kindness": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-15T15:18:13Z"
+    },
+    "all-the-little-cracks": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-15T15:57:48Z"
     }
   }
 }

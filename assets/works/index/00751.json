@@ -1,0 +1,99 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-a8bfda6454eef77803515851028c4d10",
+    "generated_at_utc": "2026-03-15T16:06:27Z",
+    "work_id": "00751",
+    "count": 4,
+    "hash": "blake2b-6697a14485f08b8bd226f0c6e998de94",
+    "work_checksum": "blake2b-61e006ac4261dd4826958c93ed7ce7b2",
+    "details_checksum": "blake2b-6697a14485f08b8bd226f0c6e998de94",
+    "record_checksum": "blake2b-a8bfda6454eef77803515851028c4d10"
+  },
+  "work": {
+    "work_id": "00751",
+    "title": "all the little cracks",
+    "title_sort": "all the little cracks",
+    "year": 2010,
+    "year_display": "2010",
+    "series_id": "all-the-little-cracks",
+    "series_ids": [
+      "all-the-little-cracks"
+    ],
+    "series_title": "all the little cracks",
+    "series_sort": "00751",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "61e006ac4261dd4826958c93ed7ce7b2"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00751",
+          "detail_id": "001",
+          "detail_uid": "00751-001",
+          "title": "all the little cracks - detail 1",
+          "title_sort": "all the little cracks - detail 001",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "524d6bedbab9074381a2fe53d40d1b85"
+        },
+        {
+          "work_id": "00751",
+          "detail_id": "002",
+          "detail_uid": "00751-002",
+          "title": "all the little cracks - detail 2",
+          "title_sort": "all the little cracks - detail 002",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "4e3c0bcf80b5238cbc49654cdf49dd42"
+        },
+        {
+          "work_id": "00751",
+          "detail_id": "003",
+          "detail_uid": "00751-003",
+          "title": "all the little cracks - detail 3",
+          "title_sort": "all the little cracks - detail 003",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a2e195289c3521712c4a2fff2a64acf3"
+        },
+        {
+          "work_id": "00751",
+          "detail_id": "004",
+          "detail_uid": "00751-004",
+          "title": "all the little cracks - detail 4",
+          "title_sort": "all the little cracks - detail 004",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "adc91f988d7a5ddfd1e9008cc8a669b4"
+        }
+      ]
+    }
+  ]
+}
