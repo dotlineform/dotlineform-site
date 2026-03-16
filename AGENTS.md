@@ -10,6 +10,9 @@
 
 - Use `/Users/dlf/miniconda3/bin/python3` for all Python commands.
 - Run project commands from `dotlineform-site/` unless explicitly told otherwise.
+- Media/generator scripts should rely on `DOTLINEFORM_PROJECTS_BASE_DIR` by default for source image lookups.
+- Only pass `--projects-base-dir` when intentionally overriding `DOTLINEFORM_PROJECTS_BASE_DIR`.
+- If work/detail/moment dimension lookups fail unexpectedly, verify `DOTLINEFORM_PROJECTS_BASE_DIR` in the current shell before supplying a manual `--projects-base-dir`.
 
 ## Ruby / Jekyll Toolchain
 
