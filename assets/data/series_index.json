@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-ac0985c5ce37dbfc7c9bb25ee2fb683a",
-    "generated_at_utc": "2026-03-16T20:35:40Z",
+    "version": "blake2b-7f7d0929f656689165dd65cad2e6a470",
+    "generated_at_utc": "2026-03-16T20:56:37Z",
     "count": 65
   },
   "series": {
@@ -1241,8 +1241,8 @@
     "curve-machine": {
       "series_id": "curve-machine",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-16",
       "title": "curve machine",
       "title_sort": "curve machine",
       "sort_fields": "work_id",
@@ -1256,7 +1256,11 @@
       ],
       "checksum": "8e45a00275e127346fead66cdc588b8f",
       "works": [
-        "00867"
+        "00867",
+        "00868",
+        "00869",
+        "00870",
+        "00871"
       ],
       "thumb": {
         "work_id": "00867",

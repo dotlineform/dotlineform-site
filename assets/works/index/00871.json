@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-310db231e5d049c102c52b783369bb9c",
+    "generated_at_utc": "2026-03-16T20:56:38Z",
+    "work_id": "00871",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-ad950758244697f973866f9571835e6a",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-310db231e5d049c102c52b783369bb9c"
+  },
+  "work": {
+    "work_id": "00871",
+    "title": "loops",
+    "title_sort": "loops",
+    "year": 2020,
+    "year_display": "2020",
+    "series_id": "curve-machine",
+    "series_ids": [
+      "curve-machine"
+    ],
+    "series_title": "curve machine",
+    "series_sort": "00871",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 24.0,
+    "width_cm": 32.0,
+    "depth_cm": null,
+    "width_px": 3780,
+    "height_px": 2835,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "ad950758244697f973866f9571835e6a"
+  },
+  "sections": []
+}

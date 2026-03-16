@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-05903f4971b51c42a080883c04f33809",
-    "generated_at_utc": "2026-03-16T20:35:40Z",
-    "count": 861
+    "version": "blake2b-ad3a399c1b11ede89cc64e9d43163ea2",
+    "generated_at_utc": "2026-03-16T20:56:38Z",
+    "count": 865
   },
   "works": {
     "00001": {
@@ -12059,6 +12059,62 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-ace4c326ab9e6514857290d644dec017",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00868": {
+      "work_id": "00868",
+      "title": "curve machine (off)",
+      "title_sort": "curve machine (off)",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "curve-machine",
+      "series_ids": [
+        "curve-machine"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2ea271b4888ca36274d0287c05646eed",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00869": {
+      "work_id": "00869",
+      "title": "curves",
+      "title_sort": "curves",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "curve-machine",
+      "series_ids": [
+        "curve-machine"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5a686cc39a64e6b0d7049cc82830dea7",
+      "details_checksum": "blake2b-2ac857afc2187483c074aaad26c9957e"
+    },
+    "00870": {
+      "work_id": "00870",
+      "title": "holes",
+      "title_sort": "holes",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "curve-machine",
+      "series_ids": [
+        "curve-machine"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fb5d6d811acc683695ef47ee429e7dcc",
+      "details_checksum": "blake2b-652017596ee2d59715b7f687acb965fd"
+    },
+    "00871": {
+      "work_id": "00871",
+      "title": "loops",
+      "title_sort": "loops",
+      "year": 2020,
+      "year_display": "2020",
+      "series_id": "curve-machine",
+      "series_ids": [
+        "curve-machine"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ad950758244697f973866f9571835e6a",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
