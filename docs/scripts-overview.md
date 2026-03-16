@@ -136,6 +136,8 @@ Useful flags:
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
+  - used for work primary images as well as work detail and moment source images
+  - when source files are found, `Works.width_px`/`height_px` and detail/moment dimension columns are refreshed on `--write`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts

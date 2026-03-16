@@ -60,6 +60,8 @@ If you later serve images only from external media_base (CDN/R2), this check won
   "vimeo_url": {{ page.vimeo_url | jsonify }},
   "youtube_url": {{ page.youtube_url | jsonify }},
   "bandcamp_url": {{ page.bandcamp_url | jsonify }},
+  "width_px": {{ page.width_px | jsonify }},
+  "height_px": {{ page.height_px | jsonify }},
   "height_cm": {{ page.height_cm | jsonify }},
   "width_cm": {{ page.width_cm | jsonify }},
   "depth_cm": {{ page.depth_cm | jsonify }},
@@ -298,8 +300,12 @@ If you later serve images only from external media_base (CDN/R2), this check won
       var img = document.getElementById('workPrimaryImg');
       if (!mediaLink || !img) return;
 
-      var width = toNumber(meta && meta.width_cm);
-      var height = toNumber(meta && meta.height_cm);
+      var width = toNumber(meta && meta.width_px);
+      var height = toNumber(meta && meta.height_px);
+      if (!(width != null && height != null && width > 0 && height > 0)) {
+        width = toNumber(meta && meta.width_cm);
+        height = toNumber(meta && meta.height_cm);
+      }
       if (width != null && height != null && width > 0 && height > 0) {
         mediaLink.style.setProperty('--work-ar', String(width) + ' / ' + String(height));
       }

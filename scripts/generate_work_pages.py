@@ -370,6 +370,8 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("height_cm", "height_cm", coerce_numeric),
     ("width_cm", "width_cm", coerce_numeric),
     ("depth_cm", "depth_cm", coerce_numeric),
+    ("width_px", "width_px", coerce_int),
+    ("height_px", "height_px", coerce_int),
     ("download", "download", coerce_string),
     ("has_primary_2400", "has_primary_2400", coerce_presence_bool),
     # tags handled separately (csv list)
@@ -1026,6 +1028,8 @@ def main() -> None:
         "height_cm",
         "width_cm",
         "depth_cm",
+        "width_px",
+        "height_px",
         "download",
         "has_primary_2400",
         "artist",
@@ -1131,11 +1135,6 @@ def main() -> None:
     downloads_copied = 0
     downloads_missing = 0
     run_works_loop = run_work_pages or run_work_files or run_works_index_json
-    canonical_work_record_by_id: Dict[str, Dict[str, Any]] = {}
-    for wid in sorted(work_meta_by_id.keys()):
-        record = build_canonical_work_record(wid)
-        if record is not None:
-            canonical_work_record_by_id[wid] = record
 
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
@@ -1215,6 +1214,79 @@ def main() -> None:
         and not explicit_moment_filter
     ):
         run_moments = False
+
+    works_width_px_idx = works_hi.get("width_px")
+    works_height_px_idx = works_hi.get("height_px")
+    if args.write and run_works_loop:
+        if works_width_px_idx is None:
+            works_width_px_idx = works_ws.max_column
+            works_ws.cell(row=1, column=works_width_px_idx + 1, value="width_px")
+            works_hi["width_px"] = works_width_px_idx
+        if works_height_px_idx is None:
+            works_height_px_idx = works_ws.max_column
+            works_ws.cell(row=1, column=works_height_px_idx + 1, value="height_px")
+            works_hi["height_px"] = works_height_px_idx
+
+    work_dimensions_updated = 0
+    work_project_folder_missing_warned = False
+    if run_works_loop:
+        for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
+            raw_work_id = cell(wr, works_hi, "work_id")
+            if is_empty(raw_work_id):
+                continue
+            wid = slug_id(raw_work_id)
+            if selected_ids is not None and wid not in selected_ids:
+                continue
+            status = normalize_status(cell(wr, works_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+
+            width_px = coerce_int(live_cell_value(wr, wr_cells, works_hi, "width_px")) if "width_px" in works_hi else None
+            height_px = coerce_int(live_cell_value(wr, wr_cells, works_hi, "height_px")) if "height_px" in works_hi else None
+            project_filename = coerce_string(live_cell_value(wr, wr_cells, works_hi, "project_filename")) if "project_filename" in works_hi else None
+
+            src_path: Optional[Path] = None
+            if project_filename:
+                if Path(project_filename).is_absolute():
+                    src_path = Path(project_filename)
+                else:
+                    project_folder = work_project_folder_by_id.get(wid)
+                    if project_folder:
+                        src_path = projects_root / project_folder / project_filename
+                    elif not work_project_folder_missing_warned:
+                        if not has_project_folder_col:
+                            print("Warning: Works sheet has no project_folder column; cannot persist work image dimensions.")
+                        else:
+                            print("Warning: missing Works.project_folder for one or more works; cannot persist those image dimensions.")
+                        work_project_folder_missing_warned = True
+
+            if src_path is not None:
+                src_w, src_h = read_image_dims_px(src_path)
+                if src_w is not None and src_h is not None:
+                    width_px = src_w
+                    height_px = src_h
+                    if args.write and works_width_px_idx is not None and works_height_px_idx is not None:
+                        prev_w = wr_cells[works_width_px_idx].value if works_width_px_idx < len(wr_cells) else None
+                        prev_h = wr_cells[works_height_px_idx].value if works_height_px_idx < len(wr_cells) else None
+                        if prev_w != src_w or prev_h != src_h:
+                            wr_cells[works_width_px_idx].value = src_w
+                            wr_cells[works_height_px_idx].value = src_h
+                            work_dimensions_updated += 1
+                else:
+                    print(f"Warning: could not read dimensions for work primary source image: {src_path}")
+            elif project_filename:
+                print(f"Warning: could not resolve work primary source image path for {wid} ({project_filename})")
+
+            meta = work_meta_by_id.get(wid)
+            if meta is not None:
+                meta["width_px"] = width_px
+                meta["height_px"] = height_px
+
+    canonical_work_record_by_id: Dict[str, Dict[str, Any]] = {}
+    for wid in sorted(work_meta_by_id.keys()):
+        record = build_canonical_work_record(wid)
+        if record is not None:
+            canonical_work_record_by_id[wid] = record
 
     total = 0
     if run_works_loop:
@@ -1345,11 +1417,14 @@ def main() -> None:
                         print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
                         downloads_copied += 1
 
-    if run_work_pages and args.write and status_updated > 0:
+    if run_works_loop and args.write and (status_updated > 0 or work_dimensions_updated > 0):
         wb.save(xlsx_path)
-        print(f"Updated status to 'published' for {status_updated} row(s).")
+        if status_updated > 0:
+            print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
             print(f"Set published_date for {published_date_updated} row(s).")
+        if work_dimensions_updated > 0:
+            print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
     if run_works_loop:
         print(
             f"\nDone. {'Would write' if not args.write else 'Wrote'}: "

@@ -115,17 +115,21 @@ function initSeriesTagEditorPage() {
     const src2400 = `${imgBase}${primaryWorkId}-primary-2400.webp`;
     const work = await fetchWorkRecord(primaryWorkId);
     const workTitle = textOrDash(work && work.title ? work.title : displayTitle);
-    let widthCm = Number(work && work.width_cm);
-    let heightCm = Number(work && work.height_cm);
-    if (!Number.isFinite(widthCm) || widthCm <= 0) widthCm = 4;
-    if (!Number.isFinite(heightCm) || heightCm <= 0) heightCm = 3;
+    let width = Number(work && work.width_px);
+    let height = Number(work && work.height_px);
+    if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) {
+      width = Number(work && work.width_cm);
+      height = Number(work && work.height_cm);
+    }
+    if (!Number.isFinite(width) || width <= 0) width = 4;
+    if (!Number.isFinite(height) || height <= 0) height = 3;
     const has2400 = Boolean(work && work.has_primary_2400 === true);
     const fullSrc = has2400 ? src2400 : src1600;
     let srcset = `${src800} 800w, ${src1200} 1200w, ${src1600} 1600w`;
     if (has2400) srcset += `, ${src2400} 2400w`;
 
     mediaLinkEl.href = fullSrc;
-    mediaLinkEl.style.setProperty("--work-ar", `${widthCm} / ${heightCm}`);
+    mediaLinkEl.style.setProperty("--work-ar", `${width} / ${height}`);
     mediaImgEl.src = src1600;
     mediaImgEl.setAttribute("srcset", srcset);
     mediaImgEl.alt = workTitle;
