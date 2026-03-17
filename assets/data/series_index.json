@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-036d123d07a7ec4bcb90445ce44a3141",
-    "generated_at_utc": "2026-03-17T15:38:47Z",
-    "count": 68
+    "version": "blake2b-3270a63d61c1e11d9d688b69639d2e3a",
+    "generated_at_utc": "2026-03-17T19:24:35Z",
+    "count": 70
   },
   "series": {
     "10000": {
@@ -1470,8 +1470,8 @@
     "doll-sees-everything": {
       "series_id": "doll-sees-everything",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-17",
       "title": "doll sees everything",
       "title_sort": "doll sees everything",
       "sort_fields": "work_id",
@@ -1507,6 +1507,79 @@
         "work_id": "00919",
         "thumb_96": "/assets/works/img/00919-thumb-96.webp",
         "thumb_192": "/assets/works/img/00919-thumb-192.webp"
+      }
+    },
+    "dot": {
+      "series_id": "dot",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-17",
+      "title": "dot",
+      "title_sort": "dot",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2010,
+      "year_display": "2010, 2012",
+      "primary_work_id": "00936",
+      "notes": null,
+      "project_folders": [
+        "dot"
+      ],
+      "checksum": "bc3adf98eb001c9db5bc327acd123286",
+      "works": [
+        "00926",
+        "00927",
+        "00928",
+        "00929",
+        "00930",
+        "00931",
+        "00932",
+        "00933",
+        "00934",
+        "00935",
+        "00936"
+      ],
+      "thumb": {
+        "work_id": "00936",
+        "thumb_96": "/assets/works/img/00936-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00936-thumb-192.webp"
+      }
+    },
+    "dot-theory": {
+      "series_id": "dot-theory",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "dot theory",
+      "title_sort": "dot theory",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2009,
+      "year_display": "2009",
+      "primary_work_id": "00937",
+      "notes": null,
+      "project_folders": [
+        "dot theory"
+      ],
+      "checksum": "fbba63c35344acd2508d6f0ab0f5c78f",
+      "works": [
+        "00937",
+        "00938",
+        "00939",
+        "00940",
+        "00941",
+        "00942",
+        "00943",
+        "00944",
+        "00945",
+        "00946",
+        "00947",
+        "00948"
+      ],
+      "thumb": {
+        "work_id": "00937",
+        "thumb_96": "/assets/works/img/00937-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00937-thumb-192.webp"
       }
     },
     "dotlineform-2021": {

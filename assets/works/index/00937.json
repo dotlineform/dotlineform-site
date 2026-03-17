@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-a8cc97bc2838c9343b2878f6191e4636",
+    "generated_at_utc": "2026-03-17T19:24:35Z",
+    "work_id": "00937",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-d4ce6548d42f3cda8005567834d36a26",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-a8cc97bc2838c9343b2878f6191e4636"
+  },
+  "work": {
+    "work_id": "00937",
+    "title": "dot theory (dot)",
+    "title_sort": "dot theory (dot)",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "dot-theory",
+    "series_ids": [
+      "dot-theory"
+    ],
+    "series_title": "dot theory",
+    "series_sort": "00937",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "d4ce6548d42f3cda8005567834d36a26"
+  },
+  "sections": []
+}

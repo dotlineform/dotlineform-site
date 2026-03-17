@@ -1,0 +1,88 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-65f26b4231eceb244aadca807b6b16ec",
+    "generated_at_utc": "2026-03-17T19:24:35Z",
+    "work_id": "00944",
+    "count": 3,
+    "hash": "blake2b-75e34791315e659d865c6fdef3f76bad",
+    "work_checksum": "blake2b-1a11567e4082b43a87b7169e977b3cc1",
+    "details_checksum": "blake2b-75e34791315e659d865c6fdef3f76bad",
+    "record_checksum": "blake2b-65f26b4231eceb244aadca807b6b16ec"
+  },
+  "work": {
+    "work_id": "00944",
+    "title": "dot theory (dots edges)",
+    "title_sort": "dot theory (dots edges)",
+    "year": 2009,
+    "year_display": "2009",
+    "series_id": "dot-theory",
+    "series_ids": [
+      "dot-theory"
+    ],
+    "series_title": "dot theory",
+    "series_sort": "00944",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 75.0,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 5906,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "1a11567e4082b43a87b7169e977b3cc1"
+  },
+  "sections": [
+    {
+      "project_subfolder": "edges",
+      "details": [
+        {
+          "work_id": "00944",
+          "detail_id": "001",
+          "detail_uid": "00944-001",
+          "title": "edges 1.1",
+          "title_sort": "edges 001.001",
+          "project_subfolder": "edges",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b909b41d7b23bdf649596a0c0873785e"
+        },
+        {
+          "work_id": "00944",
+          "detail_id": "002",
+          "detail_uid": "00944-002",
+          "title": "edges 1.2",
+          "title_sort": "edges 001.002",
+          "project_subfolder": "edges",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b107bcbf7d733bf5fd71698576366eaa"
+        },
+        {
+          "work_id": "00944",
+          "detail_id": "003",
+          "detail_uid": "00944-003",
+          "title": "edges 1.3",
+          "title_sort": "edges 001.003",
+          "project_subfolder": "edges",
+          "width_px": 4724,
+          "height_px": 4724,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "0980dcab3aad6e5272fa6047c426b636"
+        }
+      ]
+    }
+  ]
+}

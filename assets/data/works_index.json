@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-366014b588eb757ae1ec752128b34344",
-    "generated_at_utc": "2026-03-17T15:38:47Z",
-    "count": 919
+    "version": "blake2b-d715016edf81bf05e10bb5aee3d948aa",
+    "generated_at_utc": "2026-03-17T19:24:35Z",
+    "count": 942
   },
   "works": {
     "00001": {
@@ -12871,6 +12871,328 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-8a70e493a648ec9580025d35e4625f37",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00926": {
+      "work_id": "00926",
+      "title": "dot (2010-10-25 - 13-20-30)",
+      "title_sort": "dot (2010-010-025 - 013-020-030)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d0056aca59af384262cd9199e1dd9d71",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00927": {
+      "work_id": "00927",
+      "title": "dot (2010-10-25 - 13-20-37)",
+      "title_sort": "dot (2010-010-025 - 013-020-037)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6b86d8e08b915bf6d9553a7d97c46a95",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00928": {
+      "work_id": "00928",
+      "title": "dot (2012-12-03 - 12-53-42)",
+      "title_sort": "dot (2012-012-003 - 012-053-042)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0496143079b2ff066dabf9c50ff96213",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00929": {
+      "work_id": "00929",
+      "title": "dot (2012-12-03 - 12-54-08)",
+      "title_sort": "dot (2012-012-003 - 012-054-008)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-91d58d6143f26c8ab5214f8ff91ae811",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00930": {
+      "work_id": "00930",
+      "title": "dot (2012-12-03 - 12-54-33)",
+      "title_sort": "dot (2012-012-003 - 012-054-033)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f5ea2457aaf5799ca49fe97811012538",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00931": {
+      "work_id": "00931",
+      "title": "dot (2012-12-03 - 12-54-46)",
+      "title_sort": "dot (2012-012-003 - 012-054-046)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-63a4b2073224000e27a472a9e79e9344",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00932": {
+      "work_id": "00932",
+      "title": "dot (2012-12-03 - 13-01-23)",
+      "title_sort": "dot (2012-012-003 - 013-001-023)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4751907bc538e55dfbc4ce6e63c246ef",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00933": {
+      "work_id": "00933",
+      "title": "dot (2012-12-03 - 13-04-49)",
+      "title_sort": "dot (2012-012-003 - 013-004-049)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3153b78426491033c79dca0166110dd7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00934": {
+      "work_id": "00934",
+      "title": "dot (2012-12-03 - 13-05-07)",
+      "title_sort": "dot (2012-012-003 - 013-005-007)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0981b0cfc19ac848272d9576e053ecc9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00935": {
+      "work_id": "00935",
+      "title": "dot (2012-12-03 - 13-05-40)",
+      "title_sort": "dot (2012-012-003 - 013-005-040)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6fd2a313833c22f11fe6627d52446d91",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00936": {
+      "work_id": "00936",
+      "title": "dot (2012-12-03 - 13-06-14)",
+      "title_sort": "dot (2012-012-003 - 013-006-014)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "dot",
+      "series_ids": [
+        "dot"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-02c98c6e0597e2d3baba798b9b37e6f1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00937": {
+      "work_id": "00937",
+      "title": "dot theory (dot)",
+      "title_sort": "dot theory (dot)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d4ce6548d42f3cda8005567834d36a26",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00938": {
+      "work_id": "00938",
+      "title": "dot theory (dots) I",
+      "title_sort": "dot theory (dots) I",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-23de8b12e946613f038ad68f8a39f44c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00939": {
+      "work_id": "00939",
+      "title": "dot theory (dots) version",
+      "title_sort": "dot theory (dots) version",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7cd34dbd842e6e952774ef20b429bb80",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00940": {
+      "work_id": "00940",
+      "title": "dot theory (dots splash)",
+      "title_sort": "dot theory (dots splash)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-98b4f2acbdbffa4d074dfef878332e80",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00941": {
+      "work_id": "00941",
+      "title": "dot theory (dots) grid",
+      "title_sort": "dot theory (dots) grid",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3277b6d31f08fb02d5adade8742a0568",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00942": {
+      "work_id": "00942",
+      "title": "dot theory (dots composite)",
+      "title_sort": "dot theory (dots composite)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-48dc6463cc169f5f8e58acd81cf0bc9d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00943": {
+      "work_id": "00943",
+      "title": "dot theory (dots composite) grid",
+      "title_sort": "dot theory (dots composite) grid",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-deeb6367501c2fe9db1d3cb7325d0b4b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00944": {
+      "work_id": "00944",
+      "title": "dot theory (dots edges)",
+      "title_sort": "dot theory (dots edges)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1a11567e4082b43a87b7169e977b3cc1",
+      "details_checksum": "blake2b-75e34791315e659d865c6fdef3f76bad"
+    },
+    "00945": {
+      "work_id": "00945",
+      "title": "dot theory (edge line)",
+      "title_sort": "dot theory (edge line)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-398a1e917fe38202889a6ceb5df884db",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00946": {
+      "work_id": "00946",
+      "title": "dot theory (lines)",
+      "title_sort": "dot theory (lines)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5f9b82ab6b936cc146aa51e7a55bb42b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00947": {
+      "work_id": "00947",
+      "title": "dot theory (lines concentric)",
+      "title_sort": "dot theory (lines concentric)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-62242c457ffe73a699383555f0ab33e8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00948": {
+      "work_id": "00948",
+      "title": "dot theory (strings)",
+      "title_sort": "dot theory (strings)",
+      "year": 2009,
+      "year_display": "2009",
+      "series_id": "dot-theory",
+      "series_ids": [
+        "dot-theory"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-21e5df3302c82d1eb74427e89db25541",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
