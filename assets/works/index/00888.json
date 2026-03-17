@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d1838a862d5b6e7b6400869b2ad8e99e",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00888",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-f10461771f81029d0b483e4fef24a545",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-d1838a862d5b6e7b6400869b2ad8e99e"
+  },
+  "work": {
+    "work_id": "00888",
+    "title": "doll formaldehyde form [2]",
+    "title_sort": "doll formaldehyde form [002]",
+    "year": 1990,
+    "year_display": "c. 1990",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "009-00888",
+    "storage": "extant",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 22.0,
+    "width_cm": 26.0,
+    "depth_cm": null,
+    "width_px": 2093,
+    "height_px": 1769,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "f10461771f81029d0b483e4fef24a545"
+  },
+  "sections": []
+}

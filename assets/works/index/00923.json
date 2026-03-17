@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9333c4eab4054bd28b3dd776f5f57152",
+    "generated_at_utc": "2026-03-17T15:38:47Z",
+    "work_id": "00923",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-ff5631ebbf48c8a747b9baa7e40375ed",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-9333c4eab4054bd28b3dd776f5f57152"
+  },
+  "work": {
+    "work_id": "00923",
+    "title": "doll sees everything (15)",
+    "title_sort": "doll sees everything (015)",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "doll-sees-everything",
+    "series_ids": [
+      "doll-sees-everything"
+    ],
+    "series_title": "doll sees everything",
+    "series_sort": "00923",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 32.0,
+    "width_cm": 24.0,
+    "depth_cm": null,
+    "width_px": 2835,
+    "height_px": 3780,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "ff5631ebbf48c8a747b9baa7e40375ed"
+  },
+  "sections": []
+}

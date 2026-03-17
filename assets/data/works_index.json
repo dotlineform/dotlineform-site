@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-ad3a399c1b11ede89cc64e9d43163ea2",
-    "generated_at_utc": "2026-03-16T20:56:38Z",
-    "count": 865
+    "version": "blake2b-366014b588eb757ae1ec752128b34344",
+    "generated_at_utc": "2026-03-17T15:38:47Z",
+    "count": 919
   },
   "works": {
     "00001": {
@@ -12115,6 +12115,762 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-ad950758244697f973866f9571835e6a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00872": {
+      "work_id": "00872",
+      "title": "doll bandage",
+      "title_sort": "doll bandage",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "8",
+      "work_checksum": "blake2b-0d3d67b0f7efb802805d1568ba8017f7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00873": {
+      "work_id": "00873",
+      "title": "doll cell [framed version]",
+      "title_sort": "doll cell [framed version]",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "extant",
+      "work_checksum": "blake2b-5619b1c577265b15b1dc389e781e1ccf",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00874": {
+      "work_id": "00874",
+      "title": "doll cell (stairs)",
+      "title_sort": "doll cell (stairs)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0af96d93491c36c548de5612fb2b35ca",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00875": {
+      "work_id": "00875",
+      "title": "doll cell",
+      "title_sort": "doll cell",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6b1238c8ffa08fdb6c2d04200d7d792d",
+      "details_checksum": "blake2b-f6f8a250776bf3e3f71b14ac0103b740"
+    },
+    "00876": {
+      "work_id": "00876",
+      "title": "doll components",
+      "title_sort": "doll components",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6cce2add2e0a6dcfb6ab362e6a6b2f94",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00877": {
+      "work_id": "00877",
+      "title": "doll face 1",
+      "title_sort": "doll face 001",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "8",
+      "work_checksum": "blake2b-04d5c174e56a692dd250c51dca66eca3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00878": {
+      "work_id": "00878",
+      "title": "doll face 2",
+      "title_sort": "doll face 002",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "8",
+      "work_checksum": "blake2b-6a3de9ad8d741a708ef20da49b77b80e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00879": {
+      "work_id": "00879",
+      "title": "doll face 3",
+      "title_sort": "doll face 003",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "8",
+      "work_checksum": "blake2b-b55cd340d9cedc0b2b7ae147cce4d6cb",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00880": {
+      "work_id": "00880",
+      "title": "doll face 4",
+      "title_sort": "doll face 004",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "8",
+      "work_checksum": "blake2b-9582ef7bde79476e4a4f88fe9d123b74",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00881": {
+      "work_id": "00881",
+      "title": "doll face and hair",
+      "title_sort": "doll face and hair",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c202138a1fbf4e9813c9f9e1bb861c3e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00882": {
+      "work_id": "00882",
+      "title": "doll forest (cell)",
+      "title_sort": "doll forest (cell)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-59df994f6e567d704830cb2523184c23",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00883": {
+      "work_id": "00883",
+      "title": "doll forest (green)",
+      "title_sort": "doll forest (green)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fa1155b680d68e9268350d7d5c714c5e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00884": {
+      "work_id": "00884",
+      "title": "doll forest (dissolve)",
+      "title_sort": "doll forest (dissolve)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-83a429c6bd0cf185c5fc01cabc88a211",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00885": {
+      "work_id": "00885",
+      "title": "doll forest (transform)",
+      "title_sort": "doll forest (transform)",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-95f516bf073e304b7e4bb3961a929963",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00886": {
+      "work_id": "00886",
+      "title": "doll forest",
+      "title_sort": "doll forest",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-03f8db9d1d65fe54152e5711409e53ce",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00887": {
+      "work_id": "00887",
+      "title": "doll formaldehyde form [1]",
+      "title_sort": "doll formaldehyde form [001]",
+      "year": 1990,
+      "year_display": "c. 1990",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "extant",
+      "work_checksum": "blake2b-055cd00a136ee830d18c1007c93beb43",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00888": {
+      "work_id": "00888",
+      "title": "doll formaldehyde form [2]",
+      "title_sort": "doll formaldehyde form [002]",
+      "year": 1990,
+      "year_display": "c. 1990",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "extant",
+      "work_checksum": "blake2b-f10461771f81029d0b483e4fef24a545",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00889": {
+      "work_id": "00889",
+      "title": "doll frame [1]",
+      "title_sort": "doll frame [001]",
+      "year": 1990,
+      "year_display": "c. 1990",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": "extant",
+      "work_checksum": "blake2b-d4021fe5e35d00ebb7e94c93e5b60e98",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00890": {
+      "work_id": "00890",
+      "title": "doll frame [2]",
+      "title_sort": "doll frame [002]",
+      "year": 1990,
+      "year_display": "c. 1990",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-74c9618b7af93395a0239e12ba9940ba",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00891": {
+      "work_id": "00891",
+      "title": "doll frame [3]",
+      "title_sort": "doll frame [003]",
+      "year": 1990,
+      "year_display": "c. 1990",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-827b4dc1983256e66abfff7794026659",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00892": {
+      "work_id": "00892",
+      "title": "doll hand",
+      "title_sort": "doll hand",
+      "year": 1989,
+      "year_display": "c. 1989",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f2deec481d2dc8f7beeee1291eae41e2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00893": {
+      "work_id": "00893",
+      "title": "doll moiré",
+      "title_sort": "doll moiré",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a83b8893148d290bdd9d776e36753115",
+      "details_checksum": "blake2b-d23254b5ba25eacd4581d685eb05a956"
+    },
+    "00894": {
+      "work_id": "00894",
+      "title": "doll moiré reduced",
+      "title_sort": "doll moiré reduced",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7dcd634f5848797f32c32f16d20de748",
+      "details_checksum": "blake2b-5a130425f8f6fc5fe08a1ce3b209a960"
+    },
+    "00895": {
+      "work_id": "00895",
+      "title": "doll moiré structures",
+      "title_sort": "doll moiré structures",
+      "year": 2008,
+      "year_display": "c. 2008",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-76463fd42f55385fb42e7cf77027b283",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00896": {
+      "work_id": "00896",
+      "title": "doll still life 1",
+      "title_sort": "doll still life 001",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8777ae4661b57566e993d44b7f085b72",
+      "details_checksum": "blake2b-7aaaa5f4483197c775367195f03c5702"
+    },
+    "00897": {
+      "work_id": "00897",
+      "title": "doll still life 2",
+      "title_sort": "doll still life 002",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5232cc5dc421482272c3f6b68f701cd0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00898": {
+      "work_id": "00898",
+      "title": "doll still life 3",
+      "title_sort": "doll still life 003",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5ca9012c4f0fd197e678e3a66e6aa8a0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00899": {
+      "work_id": "00899",
+      "title": "doll still life 4",
+      "title_sort": "doll still life 004",
+      "year": 2005,
+      "year_display": "2005",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cb471bf1f884c64fa23cda49307979b5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00900": {
+      "work_id": "00900",
+      "title": "doll still life 5",
+      "title_sort": "doll still life 005",
+      "year": 2007,
+      "year_display": "2007",
+      "series_id": "doll",
+      "series_ids": [
+        "doll"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-096764919c1fb7c9739d125590a83849",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00901": {
+      "work_id": "00901",
+      "title": "doll face 1",
+      "title_sort": "doll face 001",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-236599faf37dccd3bb4b690333f80ce0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00902": {
+      "work_id": "00902",
+      "title": "doll face 2",
+      "title_sort": "doll face 002",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8b002ee191903ccbdac843cb7abdad4b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00903": {
+      "work_id": "00903",
+      "title": "doll face 3",
+      "title_sort": "doll face 003",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4b505e772fffd4ddf8225ba0274c4ca3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00904": {
+      "work_id": "00904",
+      "title": "doll face 4",
+      "title_sort": "doll face 004",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5d197a38e097ae0e2c29f421dfde4900",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00905": {
+      "work_id": "00905",
+      "title": "doll face 5",
+      "title_sort": "doll face 005",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4d34468b34978380207b44d71d7cccaf",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00906": {
+      "work_id": "00906",
+      "title": "doll face 6",
+      "title_sort": "doll face 006",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bfb805e35fa36c89f950d0f7e67b8dc7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00907": {
+      "work_id": "00907",
+      "title": "doll face 7",
+      "title_sort": "doll face 007",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c6762c231ffd39a4c838ed36a9b7dae8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00908": {
+      "work_id": "00908",
+      "title": "doll face 8",
+      "title_sort": "doll face 008",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "doll-faces",
+      "series_ids": [
+        "doll-faces"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c195feb33fd7d5f120abc0ab9b63d6b4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00909": {
+      "work_id": "00909",
+      "title": "doll sees everything (1)",
+      "title_sort": "doll sees everything (001)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0ecd678bc3ed373625aaa6fa7c5fc54a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00910": {
+      "work_id": "00910",
+      "title": "doll sees everything (2)",
+      "title_sort": "doll sees everything (002)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bbc3460108270629bd181bfd0ab5fac5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00911": {
+      "work_id": "00911",
+      "title": "doll sees everything (3)",
+      "title_sort": "doll sees everything (003)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-93fdb605ef2e86fc89e68b6745dcbe2c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00912": {
+      "work_id": "00912",
+      "title": "doll sees everything (4)",
+      "title_sort": "doll sees everything (004)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f2fe409a1a0ff66e221f8c497c9cc3c7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00913": {
+      "work_id": "00913",
+      "title": "doll sees everything (5)",
+      "title_sort": "doll sees everything (005)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-6dd3f11f228e2a0c8387b6a9fd81915a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00914": {
+      "work_id": "00914",
+      "title": "doll sees everything (6)",
+      "title_sort": "doll sees everything (006)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-73c28228dc367255a7362e348d3359dc",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00915": {
+      "work_id": "00915",
+      "title": "doll sees everything (7)",
+      "title_sort": "doll sees everything (007)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-752b376e7fdbbabd0899b49ac462ddad",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00916": {
+      "work_id": "00916",
+      "title": "doll sees everything (8)",
+      "title_sort": "doll sees everything (008)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7847b05f32c2ca3242cc78c8a646c830",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00917": {
+      "work_id": "00917",
+      "title": "doll sees everything (9)",
+      "title_sort": "doll sees everything (009)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-52775674a37ee4e2576fdd6a84af8df8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00918": {
+      "work_id": "00918",
+      "title": "doll sees everything (10)",
+      "title_sort": "doll sees everything (010)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7aecd19b662f887964e1faa58cd5537f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00919": {
+      "work_id": "00919",
+      "title": "doll sees everything (11)",
+      "title_sort": "doll sees everything (011)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fe05f95df2590f26482f44460c0d3d23",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00920": {
+      "work_id": "00920",
+      "title": "doll sees everything (12)",
+      "title_sort": "doll sees everything (012)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-44deb41ddfd7485ec8778d24e6875860",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00921": {
+      "work_id": "00921",
+      "title": "doll sees everything (13)",
+      "title_sort": "doll sees everything (013)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3f03f4cccdaea3c36a916ceac7bc837a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00922": {
+      "work_id": "00922",
+      "title": "doll sees everything (14)",
+      "title_sort": "doll sees everything (014)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c9dca60585429310687a7bb73ce08063",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00923": {
+      "work_id": "00923",
+      "title": "doll sees everything (15)",
+      "title_sort": "doll sees everything (015)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ff5631ebbf48c8a747b9baa7e40375ed",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00924": {
+      "work_id": "00924",
+      "title": "doll sees everything (16)",
+      "title_sort": "doll sees everything (016)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-faeac707a1d105b8a60ce433388cd507",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00925": {
+      "work_id": "00925",
+      "title": "doll sees everything (17)",
+      "title_sort": "doll sees everything (017)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "doll-sees-everything",
+      "series_ids": [
+        "doll-sees-everything"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8a70e493a648ec9580025d35e4625f37",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

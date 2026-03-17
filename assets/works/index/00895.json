@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-0a7d1399b38c5b404d613b6ad9b9406a",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00895",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-76463fd42f55385fb42e7cf77027b283",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-0a7d1399b38c5b404d613b6ad9b9406a"
+  },
+  "work": {
+    "work_id": "00895",
+    "title": "doll moiré structures",
+    "title_sort": "doll moiré structures",
+    "year": 2008,
+    "year_display": "c. 2008",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "029-00895",
+    "storage": null,
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 42.0,
+    "width_cm": 59.4,
+    "depth_cm": null,
+    "width_px": 1200,
+    "height_px": 1685,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "76463fd42f55385fb42e7cf77027b283"
+  },
+  "sections": []
+}

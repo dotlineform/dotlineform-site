@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-70079cff5a3873e1c9649e7bbc49ee51",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00876",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-6cce2add2e0a6dcfb6ab362e6a6b2f94",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-70079cff5a3873e1c9649e7bbc49ee51"
+  },
+  "work": {
+    "work_id": "00876",
+    "title": "doll components",
+    "title_sort": "doll components",
+    "year": 2005,
+    "year_display": "2005",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "013-00876",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.8,
+    "width_cm": 50.8,
+    "depth_cm": null,
+    "width_px": 6000,
+    "height_px": 6000,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "6cce2add2e0a6dcfb6ab362e6a6b2f94"
+  },
+  "sections": []
+}

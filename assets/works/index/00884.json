@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-23d1811c2d031ad56a1542d23d3f36df",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00884",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-83a429c6bd0cf185c5fc01cabc88a211",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-23d1811c2d031ad56a1542d23d3f36df"
+  },
+  "work": {
+    "work_id": "00884",
+    "title": "doll forest (dissolve)",
+    "title_sort": "doll forest (dissolve)",
+    "year": 2007,
+    "year_display": "2007",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "023-00884",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "83a429c6bd0cf185c5fc01cabc88a211"
+  },
+  "sections": []
+}

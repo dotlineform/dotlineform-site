@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-b294a106cc7fdface6e9a0a805ff278c",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00881",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-c202138a1fbf4e9813c9f9e1bb861c3e",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-b294a106cc7fdface6e9a0a805ff278c"
+  },
+  "work": {
+    "work_id": "00881",
+    "title": "doll face and hair",
+    "title_sort": "doll face and hair",
+    "year": 1989,
+    "year_display": "c. 1989",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "006-00881",
+    "storage": null,
+    "medium_type": "mixed media",
+    "medium_caption": "photocopy",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 40.0,
+    "width_cm": 28.0,
+    "depth_cm": null,
+    "width_px": 3345,
+    "height_px": 4818,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "c202138a1fbf4e9813c9f9e1bb861c3e"
+  },
+  "sections": []
+}

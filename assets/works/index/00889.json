@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-e8202fbd5842289b4c408bce00b06ee9",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00889",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-d4021fe5e35d00ebb7e94c93e5b60e98",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-e8202fbd5842289b4c408bce00b06ee9"
+  },
+  "work": {
+    "work_id": "00889",
+    "title": "doll frame [1]",
+    "title_sort": "doll frame [001]",
+    "year": 1990,
+    "year_display": "c. 1990",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "010-00889",
+    "storage": "extant",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 23.0,
+    "width_cm": 34.0,
+    "depth_cm": null,
+    "width_px": 4016,
+    "height_px": 2717,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "d4021fe5e35d00ebb7e94c93e5b60e98"
+  },
+  "sections": []
+}

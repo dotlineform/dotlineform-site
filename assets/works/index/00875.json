@@ -1,0 +1,101 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-2bbf2e946f419f2c144443243b05bfb4",
+    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "work_id": "00875",
+    "count": 4,
+    "hash": "blake2b-f6f8a250776bf3e3f71b14ac0103b740",
+    "work_checksum": "blake2b-6b1238c8ffa08fdb6c2d04200d7d792d",
+    "details_checksum": "blake2b-f6f8a250776bf3e3f71b14ac0103b740",
+    "record_checksum": "blake2b-2bbf2e946f419f2c144443243b05bfb4"
+  },
+  "work": {
+    "work_id": "00875",
+    "title": "doll cell",
+    "title_sort": "doll cell",
+    "year": 2007,
+    "year_display": "2007",
+    "series_id": "doll",
+    "series_ids": [
+      "doll"
+    ],
+    "series_title": "doll",
+    "series_sort": "020-00875",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "6b1238c8ffa08fdb6c2d04200d7d792d"
+  },
+  "sections": [
+    {
+      "project_subfolder": "cell",
+      "details": [
+        {
+          "work_id": "00875",
+          "detail_id": "001",
+          "detail_uid": "00875-001",
+          "title": "doll cell - 2007-04-03 - 14-17-59",
+          "title_sort": "doll cell - 2007-004-003 - 014-017-059",
+          "project_subfolder": "cell",
+          "width_px": 3780,
+          "height_px": 2835,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "a6fb12679dcdb65b11171337996101aa"
+        },
+        {
+          "work_id": "00875",
+          "detail_id": "002",
+          "detail_uid": "00875-002",
+          "title": "doll cell - 2007-04-08 - 22-13-45",
+          "title_sort": "doll cell - 2007-004-008 - 022-013-045",
+          "project_subfolder": "cell",
+          "width_px": 3780,
+          "height_px": 2837,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "2c961d04352be6afa2773f830fff2069"
+        },
+        {
+          "work_id": "00875",
+          "detail_id": "003",
+          "detail_uid": "00875-003",
+          "title": "doll cell - 2007-04-08 - 22-14-01",
+          "title_sort": "doll cell - 2007-004-008 - 022-014-001",
+          "project_subfolder": "cell",
+          "width_px": 3780,
+          "height_px": 2837,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "f709a63944cdd33b76e64199e6464da5"
+        },
+        {
+          "work_id": "00875",
+          "detail_id": "004",
+          "detail_uid": "00875-004",
+          "title": "doll cell - 2007-04-08 - 22-14-13",
+          "title_sort": "doll cell - 2007-004-008 - 022-014-013",
+          "project_subfolder": "cell",
+          "width_px": 3780,
+          "height_px": 2837,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "181066c15056ec9a7860fda956c7eab9"
+        }
+      ]
+    }
+  ]
+}

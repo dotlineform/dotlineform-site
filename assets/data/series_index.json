@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-7f7d0929f656689165dd65cad2e6a470",
-    "generated_at_utc": "2026-03-16T20:56:37Z",
-    "count": 65
+    "version": "blake2b-036d123d07a7ec4bcb90445ce44a3141",
+    "generated_at_utc": "2026-03-17T15:38:47Z",
+    "count": 68
   },
   "series": {
     "10000": {
@@ -1378,6 +1378,135 @@
         "work_id": "00361",
         "thumb_96": "/assets/works/img/00361-thumb-96.webp",
         "thumb_192": "/assets/works/img/00361-thumb-192.webp"
+      }
+    },
+    "doll": {
+      "series_id": "doll",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-17",
+      "title": "doll",
+      "title_sort": "doll",
+      "sort_fields": "year,work_id",
+      "series_type": "primary",
+      "year": 1989,
+      "year_display": "1989-2008",
+      "primary_work_id": "00872",
+      "notes": null,
+      "project_folders": [
+        "doll"
+      ],
+      "checksum": "fa3399521d9d83fed82867038083d335",
+      "works": [
+        "00872",
+        "00877",
+        "00878",
+        "00879",
+        "00880",
+        "00881",
+        "00892",
+        "00887",
+        "00888",
+        "00889",
+        "00890",
+        "00891",
+        "00876",
+        "00896",
+        "00897",
+        "00898",
+        "00899",
+        "00873",
+        "00874",
+        "00875",
+        "00882",
+        "00883",
+        "00884",
+        "00885",
+        "00886",
+        "00900",
+        "00893",
+        "00894",
+        "00895"
+      ],
+      "thumb": {
+        "work_id": "00872",
+        "thumb_96": "/assets/works/img/00872-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00872-thumb-192.webp"
+      }
+    },
+    "doll-faces": {
+      "series_id": "doll-faces",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-17",
+      "title": "doll faces",
+      "title_sort": "doll faces",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "00901",
+      "notes": null,
+      "project_folders": [
+        "doll faces"
+      ],
+      "checksum": "a7325c53001a81391c30287112b04816",
+      "works": [
+        "00901",
+        "00902",
+        "00903",
+        "00904",
+        "00905",
+        "00906",
+        "00907",
+        "00908"
+      ],
+      "thumb": {
+        "work_id": "00901",
+        "thumb_96": "/assets/works/img/00901-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00901-thumb-192.webp"
+      }
+    },
+    "doll-sees-everything": {
+      "series_id": "doll-sees-everything",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "doll sees everything",
+      "title_sort": "doll sees everything",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "00919",
+      "notes": null,
+      "project_folders": [
+        "doll sees everything"
+      ],
+      "checksum": "38a148a223cfd9d835fe50b1f2334470",
+      "works": [
+        "00909",
+        "00910",
+        "00911",
+        "00912",
+        "00913",
+        "00914",
+        "00915",
+        "00916",
+        "00917",
+        "00918",
+        "00919",
+        "00920",
+        "00921",
+        "00922",
+        "00923",
+        "00924",
+        "00925"
+      ],
+      "thumb": {
+        "work_id": "00919",
+        "thumb_96": "/assets/works/img/00919-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00919-thumb-192.webp"
       }
     },
     "dotlineform-2021": {
