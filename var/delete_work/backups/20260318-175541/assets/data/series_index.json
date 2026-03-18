@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-1f31bad60f6a1ce1b3c02e181270b0f8",
-    "generated_at_utc": "2026-03-18T17:55:41Z",
+    "version": "blake2b-4b7c63650815d077b05980aa0e2f375c",
+    "generated_at_utc": "2026-03-18T16:58:58Z",
     "count": 70
   },
   "series": {
@@ -1600,6 +1600,7 @@
       ],
       "checksum": "dee5e24494d8fc4a7d8aded06fb86b60",
       "works": [
+        "00455",
         "00949",
         "00950",
         "00951",

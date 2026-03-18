@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-4348fb43e5d9315838a3f3b8745f2d22",
-    "generated_at_utc": "2026-03-18T17:55:41Z",
-    "count": 976
+    "version": "blake2b-fc8865f399ae4f935ce4f3d14a37f8ef",
+    "generated_at_utc": "2026-03-18T16:58:59Z",
+    "count": 977
   },
   "works": {
     "00001": {
@@ -6291,6 +6291,20 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-346553e6454118179db80be71e66b439",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00455": {
+      "work_id": "00455",
+      "title": "dotlineform (2021)",
+      "title_sort": "dotlineform (2021)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2d860cacd172c2891dcf30ab10d97a06",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     },
     "00456": {
