@@ -864,6 +864,27 @@ def main() -> None:
     if moments_rows and "status" not in moments_hi:
         raise SystemExit("Moments sheet missing required column: status")
 
+    series_duplicate_rows: Dict[str, List[int]] = {}
+    if series_rows and len(series_rows) > 1 and "series_id" in series_hi:
+        first_row_by_series_id: Dict[str, int] = {}
+        for row_number, row in enumerate(series_rows[1:], start=2):
+            sid = normalize_text(cell(row, series_hi, "series_id"))
+            if not sid:
+                continue
+            if sid not in first_row_by_series_id:
+                first_row_by_series_id[sid] = row_number
+                continue
+            series_duplicate_rows.setdefault(sid, [first_row_by_series_id[sid]]).append(row_number)
+        if series_duplicate_rows:
+            duplicate_summary = "; ".join(
+                f"{sid} (rows {', '.join(str(row_number) for row_number in row_numbers)})"
+                for sid, row_numbers in sorted(series_duplicate_rows.items())
+            )
+            print(
+                "Warning: Series sheet has duplicate series_id values; later rows overwrite earlier rows in generated output: "
+                f"{duplicate_summary}"
+            )
+
     # Pre-index series titles by series_id
     series_title_by_id: Dict[str, str] = {}
     for r in series_rows[1:] if len(series_rows) > 1 else []:
