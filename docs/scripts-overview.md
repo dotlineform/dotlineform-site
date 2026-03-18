@@ -165,6 +165,39 @@ Runtime canonical data flow:
 - `/works/<work_id>/` series nav/counter/link visibility read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 
+### 3a) Delete a single work from generated artifacts
+
+Run:
+
+```bash
+./scripts/delete_work.py --work-id 00123
+./scripts/delete_work.py --work-id 00123 --write
+```
+
+Behavior:
+
+- dry-run by default; pass `--write` to apply changes
+- requires exactly one `--work-id`
+- only proceeds when `data/works.xlsx` worksheet `Works` has `status=delete` for that work
+- on successful `--write`, updates `Works.status` to `deleted`
+- deletes:
+  - `_works/<work_id>.md`
+  - `_work_details/<work_id>-*.md`
+  - `assets/works/index/<work_id>.json`
+  - removes the work from `assets/data/series_index.json`
+  - removes the work from `assets/data/works_index.json`
+  - removes per-work overrides from `assets/studio/data/tag_assignments.json`
+- if a deleted work is referenced by a series `primary_work_id` or `thumb.work_id`, those fields are set to `null`
+- intentionally leaves these untouched:
+  - `assets/work_details/img/*`
+  - `_includes/work_prose/<work_id>.md`
+  - `assets/works/files/<work_id>-*`
+
+Backups:
+
+- `--write` creates timestamped backups under `var/delete_work/backups/YYYYMMDD-HHMMSS/`
+- backups preserve repo-relative paths for modified/deleted files so they can be restored manually if needed
+
 ### 3b) Tag Studio local save server
 
 Run:
@@ -289,6 +322,7 @@ Script logging:
 - Current pipeline/logged scripts include:
   - `scripts/run_draft_pipeline.py` -> `logs/run_draft_pipeline.log`
   - `scripts/generate_work_pages.py` -> `logs/generate_work_pages.log`
+  - `scripts/delete_work.py` -> `logs/delete_work.log`
   - `scripts/studio/tag_write_server.py` -> `var/studio/logs/tag_write_server.log`
 - Log format is JSON Lines (one JSON object per line).
 - Retention policy:
