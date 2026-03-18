@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-5a9a6d8b37d5fab73f69dcc3d9ce14ed",
+    "generated_at_utc": "2026-03-18T19:41:53Z",
+    "work_id": "00987",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-02a14265c10cf6e73326f4f4a1b53f5e",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-5a9a6d8b37d5fab73f69dcc3d9ce14ed"
+  },
+  "work": {
+    "work_id": "00987",
+    "title": "dotlineform - monoprint 4",
+    "title_sort": "dotlineform - monoprint 004",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "dotlineform-2023",
+    "series_ids": [
+      "dotlineform-2023"
+    ],
+    "series_title": "dotlineform (2023)",
+    "series_sort": "00987",
+    "storage": "6",
+    "medium_type": "painting",
+    "medium_caption": "paint on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "depth_cm": null,
+    "width_px": 2480,
+    "height_px": 3508,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "02a14265c10cf6e73326f4f4a1b53f5e"
+  },
+  "sections": []
+}

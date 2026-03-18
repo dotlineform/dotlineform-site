@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-4348fb43e5d9315838a3f3b8745f2d22",
-    "generated_at_utc": "2026-03-18T17:55:41Z",
-    "count": 976
+    "version": "blake2b-bd673d1215508e8ed3a5347c8c6b6f6d",
+    "generated_at_utc": "2026-03-18T19:41:53Z",
+    "count": 994
   },
   "works": {
     "00001": {
@@ -6292,6 +6292,20 @@
       "storage": null,
       "work_checksum": "blake2b-346553e6454118179db80be71e66b439",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00455": {
+      "work_id": "00455",
+      "title": "dotlineform",
+      "title_sort": "dotlineform",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8aef95abc3b59ae616c44d5c9767d528",
+      "details_checksum": "blake2b-4f07e137e54cfbb8fed4e52ef4182cbd"
     },
     "00456": {
       "work_id": "00456",
@@ -13669,6 +13683,244 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-c3d99a1d3e5f35970ffcbe38397ef975",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00984": {
+      "work_id": "00984",
+      "title": "dotlineform - monoprint 1",
+      "title_sort": "dotlineform - monoprint 001",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-28bce13efdf54f0d5aae2d8da973fbe3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00985": {
+      "work_id": "00985",
+      "title": "dotlineform - monoprint 2",
+      "title_sort": "dotlineform - monoprint 002",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-1615afa35538adb014b99d802a75b0d1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00986": {
+      "work_id": "00986",
+      "title": "dotlineform - monoprint 3",
+      "title_sort": "dotlineform - monoprint 003",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-f2d1f6582dfab76b2cc50cc77c0f686b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00987": {
+      "work_id": "00987",
+      "title": "dotlineform - monoprint 4",
+      "title_sort": "dotlineform - monoprint 004",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-02a14265c10cf6e73326f4f4a1b53f5e",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00988": {
+      "work_id": "00988",
+      "title": "dotlineform - monoprint 5",
+      "title_sort": "dotlineform - monoprint 005",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-4fbb6ef54e952d98f48acdb70675f5c3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00989": {
+      "work_id": "00989",
+      "title": "dotlineform - monoprint 6",
+      "title_sort": "dotlineform - monoprint 006",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-42cac4d40b5a2d7b04740e9bc446efb7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00990": {
+      "work_id": "00990",
+      "title": "dotlineform - monoprint 7",
+      "title_sort": "dotlineform - monoprint 007",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-5b42a73be01275dbb20653f8d5437fc2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00991": {
+      "work_id": "00991",
+      "title": "dotlineform - monoprint 7 (detail)",
+      "title_sort": "dotlineform - monoprint 007 (detail)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-12fc7bbd684f261ad2eb3c895969faf5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00992": {
+      "work_id": "00992",
+      "title": "dotlineform - monoprint 8",
+      "title_sort": "dotlineform - monoprint 008",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-6d5818c19d11e79808011a91c643e15b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00993": {
+      "work_id": "00993",
+      "title": "dotlineform - monoprint 9",
+      "title_sort": "dotlineform - monoprint 009",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-469da87a2c1712f9f9372a0f2a917077",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00994": {
+      "work_id": "00994",
+      "title": "dotlineform - monoprint 10",
+      "title_sort": "dotlineform - monoprint 010",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-c8c3f54a7d80763b2f48c5c38e02d26a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00995": {
+      "work_id": "00995",
+      "title": "dotlineform - monoprint 11",
+      "title_sort": "dotlineform - monoprint 011",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-89ae8ad6623110532094ec45ed0a4e67",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00996": {
+      "work_id": "00996",
+      "title": "dotlineform - monoprint 12",
+      "title_sort": "dotlineform - monoprint 012",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-e867ca483cdfb1b58558755e9ab846d9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00997": {
+      "work_id": "00997",
+      "title": "dotlineform - monoprint 13",
+      "title_sort": "dotlineform - monoprint 013",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-70d85aaf10152369f2265de265c6c4a3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00998": {
+      "work_id": "00998",
+      "title": "dotlineform - monoprint 14",
+      "title_sort": "dotlineform - monoprint 014",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-cec4864e6efc4365d65913e5068368f2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00999": {
+      "work_id": "00999",
+      "title": "dotlineform - monoprint 15",
+      "title_sort": "dotlineform - monoprint 015",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-17f141f3fdf50c1ed7cf63de987cb7f2",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01000": {
+      "work_id": "01000",
+      "title": "dotlineform - monoprint 16",
+      "title_sort": "dotlineform - monoprint 016",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "dotlineform-2023",
+      "series_ids": [
+        "dotlineform-2023"
+      ],
+      "storage": "6",
+      "work_checksum": "blake2b-71b7999a02875fab987bed9d16327cb0",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
