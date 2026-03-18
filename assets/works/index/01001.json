@@ -1,0 +1,114 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-472724ed3bf5ebb9457f2794be0a09a9",
+    "generated_at_utc": "2026-03-18T20:14:09Z",
+    "work_id": "01001",
+    "count": 5,
+    "hash": "blake2b-2b4079cf0e862eb952a9543be2a93296",
+    "work_checksum": "blake2b-bc50362d4194884a8626e231e88111c3",
+    "details_checksum": "blake2b-2b4079cf0e862eb952a9543be2a93296",
+    "record_checksum": "blake2b-472724ed3bf5ebb9457f2794be0a09a9"
+  },
+  "work": {
+    "work_id": "01001",
+    "title": "dots (inside)",
+    "title_sort": "dots (inside)",
+    "year": 2010,
+    "year_display": "2010",
+    "series_id": "dots",
+    "series_ids": [
+      "dots"
+    ],
+    "series_title": "dots",
+    "series_sort": "01001",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "bc50362d4194884a8626e231e88111c3"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01001",
+          "detail_id": "001",
+          "detail_uid": "01001-001",
+          "title": "dots (inside) [detail 1]",
+          "title_sort": "dots (inside) [detail 001]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "74e2f74ce35aaf8947f203dda2a869c9"
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "002",
+          "detail_uid": "01001-002",
+          "title": "dots (inside) [detail 2]",
+          "title_sort": "dots (inside) [detail 002]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d064877cd11ae8da03cf771c41f93d77"
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "003",
+          "detail_uid": "01001-003",
+          "title": "dots (inside) [detail 3]",
+          "title_sort": "dots (inside) [detail 003]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "b95af6af906dabdeb3848b677e8699b0"
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "004",
+          "detail_uid": "01001-004",
+          "title": "dots (inside) [detail 4]",
+          "title_sort": "dots (inside) [detail 004]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "15c4086a8bae7e96eb996e15c84c1b6f"
+        },
+        {
+          "work_id": "01001",
+          "detail_id": "005",
+          "detail_uid": "01001-005",
+          "title": "dots (inside) [detail 5]",
+          "title_sort": "dots (inside) [detail 005]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "365b4e8ff15d9170c758f83719a23599"
+        }
+      ]
+    }
+  ]
+}

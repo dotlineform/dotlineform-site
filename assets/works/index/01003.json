@@ -1,0 +1,88 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-ef276ded75ea748510b7d48fa84e1912",
+    "generated_at_utc": "2026-03-18T20:14:09Z",
+    "work_id": "01003",
+    "count": 3,
+    "hash": "blake2b-dd8c9a48e230269fcf47e2e6b0d1b54e",
+    "work_checksum": "blake2b-2d5ad218956d5b25bcaeb0c96b9c655b",
+    "details_checksum": "blake2b-dd8c9a48e230269fcf47e2e6b0d1b54e",
+    "record_checksum": "blake2b-ef276ded75ea748510b7d48fa84e1912"
+  },
+  "work": {
+    "work_id": "01003",
+    "title": "dots (second normal form)",
+    "title_sort": "dots (second normal form)",
+    "year": 2010,
+    "year_display": "2010",
+    "series_id": "dots",
+    "series_ids": [
+      "dots"
+    ],
+    "series_title": "dots",
+    "series_sort": "01003",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "2d5ad218956d5b25bcaeb0c96b9c655b"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01003",
+          "detail_id": "001",
+          "detail_uid": "01003-001",
+          "title": "dots (second normal form) [detail 1]",
+          "title_sort": "dots (second normal form) [detail 001]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "cb49cd9333ffc07e9d3f764c546fd7ff"
+        },
+        {
+          "work_id": "01003",
+          "detail_id": "002",
+          "detail_uid": "01003-002",
+          "title": "dots (second normal form) [detail 2]",
+          "title_sort": "dots (second normal form) [detail 002]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "d50f4528048f4c0f9e788d715fed7afc"
+        },
+        {
+          "work_id": "01003",
+          "detail_id": "003",
+          "detail_uid": "01003-003",
+          "title": "dots (second normal form) [detail 3]",
+          "title_sort": "dots (second normal form) [detail 003]",
+          "project_subfolder": "details",
+          "width_px": 5906,
+          "height_px": 5906,
+          "has_primary_2400": false,
+          "layout": "work_details",
+          "checksum": "edaf1ed64681a7eaf3eb2fd286a2dc5a"
+        }
+      ]
+    }
+  ]
+}

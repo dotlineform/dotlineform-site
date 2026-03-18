@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-bd673d1215508e8ed3a5347c8c6b6f6d",
-    "generated_at_utc": "2026-03-18T19:41:53Z",
-    "count": 994
+    "version": "blake2b-263867a30d0bd0ffc3a01eea9becc7a4",
+    "generated_at_utc": "2026-03-18T20:14:09Z",
+    "count": 1000
   },
   "works": {
     "00001": {
@@ -13921,6 +13921,90 @@
       ],
       "storage": "6",
       "work_checksum": "blake2b-71b7999a02875fab987bed9d16327cb0",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01001": {
+      "work_id": "01001",
+      "title": "dots (inside)",
+      "title_sort": "dots (inside)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bc50362d4194884a8626e231e88111c3",
+      "details_checksum": "blake2b-2b4079cf0e862eb952a9543be2a93296"
+    },
+    "01002": {
+      "work_id": "01002",
+      "title": "dots (first normal form)",
+      "title_sort": "dots (first normal form)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-486423b7388d113d953c2e63f77aea55",
+      "details_checksum": "blake2b-2895e4058f8429921a67287b417a01c5"
+    },
+    "01003": {
+      "work_id": "01003",
+      "title": "dots (second normal form)",
+      "title_sort": "dots (second normal form)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2d5ad218956d5b25bcaeb0c96b9c655b",
+      "details_checksum": "blake2b-dd8c9a48e230269fcf47e2e6b0d1b54e"
+    },
+    "01004": {
+      "work_id": "01004",
+      "title": "dots (equations)",
+      "title_sort": "dots (equations)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-20ec6801ee6172cb0050b0f70ef8e958",
+      "details_checksum": "blake2b-57fe56218448610ea0122b45713884ec"
+    },
+    "01005": {
+      "work_id": "01005",
+      "title": "dots (equations particles)",
+      "title_sort": "dots (equations particles)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-38548150dee263072639181a253c0034",
+      "details_checksum": "blake2b-6f702c7856930ae1b68221714b7d9911"
+    },
+    "01006": {
+      "work_id": "01006",
+      "title": "dots (equations sample grid)",
+      "title_sort": "dots (equations sample grid)",
+      "year": 2010,
+      "year_display": "2010",
+      "series_id": "dots",
+      "series_ids": [
+        "dots"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b37ebdb52af02ad0a2c371b6b9b0ccbe",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

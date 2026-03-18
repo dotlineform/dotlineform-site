@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-de09939819fd56c798ae8722f96593d0",
-    "generated_at_utc": "2026-03-18T19:41:52Z",
+    "version": "blake2b-feeb750cb25d4eb28f92f38ee837063f",
+    "generated_at_utc": "2026-03-18T20:14:09Z",
     "count": 71
   },
   "series": {
@@ -1645,7 +1645,7 @@
     "dotlineform-2023": {
       "series_id": "dotlineform-2023",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
       "published_date": "2026-03-18",
       "title": "dotlineform (2023)",
       "title_sort": "dotlineform (2023)",
@@ -1697,13 +1697,19 @@
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "00456",
-      "notes": "more works and details to publish",
+      "notes": null,
       "project_folders": [
         "dots"
       ],
       "checksum": "ebfb48815c448a17aa1f08c9e6ebc7f0",
       "works": [
-        "00456"
+        "00456",
+        "01001",
+        "01002",
+        "01003",
+        "01004",
+        "01005",
+        "01006"
       ],
       "thumb": {
         "work_id": "00456",
