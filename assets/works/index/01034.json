@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-8bfcfb9816ac964ee7cb08227445de03",
+    "generated_at_utc": "2026-03-18T21:26:31Z",
+    "work_id": "01034",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-cfd3a26ba5aa6182a11c6d45496f5cde",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-8bfcfb9816ac964ee7cb08227445de03"
+  },
+  "work": {
+    "work_id": "01034",
+    "title": "droplets (2016-04-02 - 19-17-11)",
+    "title_sort": "droplets (2016-004-002 - 019-017-011)",
+    "year": 2016,
+    "year_display": "2016",
+    "series_id": "droplets",
+    "series_ids": [
+      "droplets"
+    ],
+    "series_title": "droplets",
+    "series_sort": "01034",
+    "storage": null,
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 60.0,
+    "width_cm": 60.0,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 7087,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "cfd3a26ba5aa6182a11c6d45496f5cde"
+  },
+  "sections": []
+}

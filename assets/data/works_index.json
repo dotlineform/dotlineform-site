@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-263867a30d0bd0ffc3a01eea9becc7a4",
-    "generated_at_utc": "2026-03-18T20:14:09Z",
-    "count": 1000
+    "version": "blake2b-fbebffe3cee7eb4a73bd6c6f7e462897",
+    "generated_at_utc": "2026-03-18T21:26:31Z",
+    "count": 1030
   },
   "works": {
     "00001": {
@@ -14005,6 +14005,426 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-b37ebdb52af02ad0a2c371b6b9b0ccbe",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01007": {
+      "work_id": "01007",
+      "title": "droplets (2014-04-21 - 18-43-56)",
+      "title_sort": "droplets (2014-004-021 - 018-043-056)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-37d03c5db1ef3654220ff06415d93f40",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01008": {
+      "work_id": "01008",
+      "title": "droplets (2014-04-29 - 10-46-33)",
+      "title_sort": "droplets (2014-004-029 - 010-046-033)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f8551ce9ab57c4c9bb887551f0b2363f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01009": {
+      "work_id": "01009",
+      "title": "droplets (2014-06-14 - 21-11-55)",
+      "title_sort": "droplets (2014-006-014 - 021-011-055)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-35366e471015f5b18463ac4142768940",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01010": {
+      "work_id": "01010",
+      "title": "droplets (2014-06-22 - 11-16-46)",
+      "title_sort": "droplets (2014-006-022 - 011-016-046)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-24a533602007dbc54651e55a9b8f4a11",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01011": {
+      "work_id": "01011",
+      "title": "droplets (2014-06-22 - 13-57-44)",
+      "title_sort": "droplets (2014-006-022 - 013-057-044)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-13c2b0888364ee8150a83c1f10559a91",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01012": {
+      "work_id": "01012",
+      "title": "droplets (2014-12-18 - 09-36-41)",
+      "title_sort": "droplets (2014-012-018 - 009-036-041)",
+      "year": 2014,
+      "year_display": "2014",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b1779cc9bfbaf135c0755b9d56f9c010",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01013": {
+      "work_id": "01013",
+      "title": "droplets (2015-02-10 - 14-57-00)",
+      "title_sort": "droplets (2015-002-010 - 014-057-000)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b9f02faada7aed688012f0339dab5983",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01014": {
+      "work_id": "01014",
+      "title": "droplets (2015-06-08 - 10-25-53)",
+      "title_sort": "droplets (2015-006-008 - 010-025-053)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9b27986ed615c359385cdb7ee9a04665",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01015": {
+      "work_id": "01015",
+      "title": "droplets (2015-06-11 - 20-28-37)",
+      "title_sort": "droplets (2015-006-011 - 020-028-037)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3324f8ca41e4913f61147ade3da8e33a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01016": {
+      "work_id": "01016",
+      "title": "droplets (2015-06-14 - 16-49-51)",
+      "title_sort": "droplets (2015-006-014 - 016-049-051)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e21b0694a8e5c62f53d9f9a18765b4af",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01017": {
+      "work_id": "01017",
+      "title": "droplets (2015-06-16 - 11-28-38)",
+      "title_sort": "droplets (2015-006-016 - 011-028-038)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-70d32ef5d2a951c5ef0a92decca11a18",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01018": {
+      "work_id": "01018",
+      "title": "droplets (2015-06-21 - 18-03-26)",
+      "title_sort": "droplets (2015-006-021 - 018-003-026)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-0bec79185e363c5d9c4635ba9ea1b6d4",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01019": {
+      "work_id": "01019",
+      "title": "droplets (2015-06-25 - 15-54-18)",
+      "title_sort": "droplets (2015-006-025 - 015-054-018)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ae4b5fab2635b9386ca7df02be62bf80",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01020": {
+      "work_id": "01020",
+      "title": "droplets (2015-07-05 - 13-04-54)",
+      "title_sort": "droplets (2015-007-005 - 013-004-054)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-55412fdb9a8ea851be1ecad3927a5ed6",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01021": {
+      "work_id": "01021",
+      "title": "droplets (2015-07-13 - 09-43-57)",
+      "title_sort": "droplets (2015-007-013 - 009-043-057)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ef8b67872f9de81d00a04bcb1fadd64a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01022": {
+      "work_id": "01022",
+      "title": "droplets (2015-07-13 - 09-44-01)",
+      "title_sort": "droplets (2015-007-013 - 009-044-001)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c03ec49621ab11df64df1c7382e1fb68",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01023": {
+      "work_id": "01023",
+      "title": "droplets (2015-07-13 - 09-44-08)",
+      "title_sort": "droplets (2015-007-013 - 009-044-008)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-fd771e3bc98aabcd035b557c19242124",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01024": {
+      "work_id": "01024",
+      "title": "droplets (2015-07-13 - 10-41-46)",
+      "title_sort": "droplets (2015-007-013 - 010-041-046)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-857ae6c11042430d8ec59cd74d8ca7e9",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01025": {
+      "work_id": "01025",
+      "title": "droplets (2015-07-13 - 12-45-05)",
+      "title_sort": "droplets (2015-007-013 - 012-045-005)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bc1a067d40cced34991aa44eab91de2f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01026": {
+      "work_id": "01026",
+      "title": "droplets (2015-07-13 - 12-46-24)",
+      "title_sort": "droplets (2015-007-013 - 012-046-024)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ec3da2cf4cc1fdb22645b9d65eaf91ea",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01027": {
+      "work_id": "01027",
+      "title": "droplets (2015-07-15 - 11-11-16)",
+      "title_sort": "droplets (2015-007-015 - 011-011-016)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d796830aee2b334d4b108c32e32f5c85",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01028": {
+      "work_id": "01028",
+      "title": "droplets (2015-07-20 - 13-14-34)",
+      "title_sort": "droplets (2015-007-020 - 013-014-034)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e270cde26fec258caa287338f904f44b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01029": {
+      "work_id": "01029",
+      "title": "droplets (2015-07-20 - 17-42-37)",
+      "title_sort": "droplets (2015-007-020 - 017-042-037)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-da005fc11fb5fb0735af5d5f2c0e9124",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01030": {
+      "work_id": "01030",
+      "title": "droplets (2015-07-20 - 17-42-49)",
+      "title_sort": "droplets (2015-007-020 - 017-042-049)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-2f8deee76d6a320963f8bda54babb5f7",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01031": {
+      "work_id": "01031",
+      "title": "droplets (2015-07-27 - 13-27-17)",
+      "title_sort": "droplets (2015-007-027 - 013-027-017)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-756e26e8756d72605d7ac4e8344c7f3f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01032": {
+      "work_id": "01032",
+      "title": "droplets (2015-08-03 - 09-31-45)",
+      "title_sort": "droplets (2015-008-003 - 009-031-045)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5483f60a4048d55846516007c22af0be",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01033": {
+      "work_id": "01033",
+      "title": "droplets (2015-08-03 - 10-38-26)",
+      "title_sort": "droplets (2015-008-003 - 010-038-026)",
+      "year": 2015,
+      "year_display": "2015",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-79a68ab21d60e51ade93497fa61a5705",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01034": {
+      "work_id": "01034",
+      "title": "droplets (2016-04-02 - 19-17-11)",
+      "title_sort": "droplets (2016-004-002 - 019-017-011)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-cfd3a26ba5aa6182a11c6d45496f5cde",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01035": {
+      "work_id": "01035",
+      "title": "droplets (2016-05-23 - 17-59-55)",
+      "title_sort": "droplets (2016-005-023 - 017-059-055)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-eb9a7365f404ec3e6a62350311985bc8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01036": {
+      "work_id": "01036",
+      "title": "droplets (2016-05-23 - 17-59-58)",
+      "title_sort": "droplets (2016-005-023 - 017-059-058)",
+      "year": 2016,
+      "year_display": "2016",
+      "series_id": "droplets",
+      "series_ids": [
+        "droplets"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f454eadb51e7a14d15283f060af50403",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }
