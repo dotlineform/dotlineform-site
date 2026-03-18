@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-3270a63d61c1e11d9d688b69639d2e3a",
-    "generated_at_utc": "2026-03-17T19:24:35Z",
+    "version": "blake2b-4b7c63650815d077b05980aa0e2f375c",
+    "generated_at_utc": "2026-03-18T16:58:58Z",
     "count": 70
   },
   "series": {
@@ -1548,8 +1548,8 @@
     "dot-theory": {
       "series_id": "dot-theory",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-17",
       "title": "dot theory",
       "title_sort": "dot theory",
       "sort_fields": "work_id",
@@ -1585,27 +1585,62 @@
     "dotlineform-2021": {
       "series_id": "dotlineform-2021",
       "layout": "series",
-      "status": "published",
-      "published_date": "2026-03-05",
+      "status": "draft",
+      "published_date": null,
       "title": "dotlineform (2021)",
       "title_sort": "dotlineform (2021)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2021,
       "year_display": "2021",
-      "primary_work_id": "00455",
-      "notes": "details to publish",
+      "primary_work_id": "00949",
+      "notes": null,
       "project_folders": [
         "dotlineform (2021)"
       ],
-      "checksum": "8300f68565d6e4797f5286dc3c9a0ff9",
+      "checksum": "dee5e24494d8fc4a7d8aded06fb86b60",
       "works": [
-        "00455"
+        "00455",
+        "00949",
+        "00950",
+        "00951",
+        "00952",
+        "00953",
+        "00954",
+        "00955",
+        "00956",
+        "00957",
+        "00958",
+        "00959",
+        "00960",
+        "00961",
+        "00962",
+        "00963",
+        "00964",
+        "00965",
+        "00966",
+        "00967",
+        "00968",
+        "00969",
+        "00970",
+        "00971",
+        "00972",
+        "00973",
+        "00974",
+        "00975",
+        "00976",
+        "00977",
+        "00978",
+        "00979",
+        "00980",
+        "00981",
+        "00982",
+        "00983"
       ],
       "thumb": {
-        "work_id": "00455",
-        "thumb_96": "/assets/works/img/00455-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00455-thumb-192.webp"
+        "work_id": "00949",
+        "thumb_96": "/assets/works/img/00949-thumb-96.webp",
+        "thumb_192": "/assets/works/img/00949-thumb-192.webp"
       }
     },
     "dots": {

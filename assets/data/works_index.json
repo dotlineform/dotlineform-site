@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-d715016edf81bf05e10bb5aee3d948aa",
-    "generated_at_utc": "2026-03-17T19:24:35Z",
-    "count": 942
+    "version": "blake2b-fc8865f399ae4f935ce4f3d14a37f8ef",
+    "generated_at_utc": "2026-03-18T16:58:59Z",
+    "count": 977
   },
   "works": {
     "00001": {
@@ -13193,6 +13193,496 @@
       ],
       "storage": null,
       "work_checksum": "blake2b-21e5df3302c82d1eb74427e89db25541",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00949": {
+      "work_id": "00949",
+      "title": "dotlineform",
+      "title_sort": "dotlineform",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-9ed83313bde870f78bdc1ad2e6db494c",
+      "details_checksum": "blake2b-a6ad036e127bf4740b5426a47b3be9fc"
+    },
+    "00950": {
+      "work_id": "00950",
+      "title": "dotlineform surface (1)",
+      "title_sort": "dotlineform surface (001)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5fcf8f94e5e872ffb694836e16699fa3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00951": {
+      "work_id": "00951",
+      "title": "dotlineform surface (2)",
+      "title_sort": "dotlineform surface (002)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-10e8ef3e02be2441961edec86bae0367",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00952": {
+      "work_id": "00952",
+      "title": "dotlineform surface (3)",
+      "title_sort": "dotlineform surface (003)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-f21b1f6da189c17c4d75b0487a7a0d2a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00953": {
+      "work_id": "00953",
+      "title": "dotlineform surface (4)",
+      "title_sort": "dotlineform surface (004)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4d06c4b03a748517c08f167ffe433d87",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00954": {
+      "work_id": "00954",
+      "title": "dotlineform surface (5)",
+      "title_sort": "dotlineform surface (005)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c7d7fdf9dbca773e0bf71ded30b612c1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00955": {
+      "work_id": "00955",
+      "title": "dotlineform surface (6)",
+      "title_sort": "dotlineform surface (006)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ff436c7ebb6df96002f786cc43f63f5d",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00956": {
+      "work_id": "00956",
+      "title": "dotlineform surface (7)",
+      "title_sort": "dotlineform surface (007)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-33fc4df17b1ff33551cd3b7811203f6a",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00957": {
+      "work_id": "00957",
+      "title": "dotlineform surface (8)",
+      "title_sort": "dotlineform surface (008)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4163fbb835d09bc30f6b656021fb65fd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00958": {
+      "work_id": "00958",
+      "title": "dotlineform surface (9)",
+      "title_sort": "dotlineform surface (009)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-1663926f3bc94809081783d3b380966f",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00959": {
+      "work_id": "00959",
+      "title": "dotlineform surface (10)",
+      "title_sort": "dotlineform surface (010)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-23bae802b8bc6b27ec55c835e707d3b3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00960": {
+      "work_id": "00960",
+      "title": "dotlineform surface (11)",
+      "title_sort": "dotlineform surface (011)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-09b78b37b6f617db97cb8be88d8e516c",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00961": {
+      "work_id": "00961",
+      "title": "dotlineform surface (12)",
+      "title_sort": "dotlineform surface (012)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-eabdc8734e870b4ecc4e181b85d39c6b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00962": {
+      "work_id": "00962",
+      "title": "dotlineform surface (13)",
+      "title_sort": "dotlineform surface (013)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3488dc9dc6c861a7637992fe334eec1b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00963": {
+      "work_id": "00963",
+      "title": "dotlineform surface (14)",
+      "title_sort": "dotlineform surface (014)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-7e0080e7107514441c233b240be019a8",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00964": {
+      "work_id": "00964",
+      "title": "dotlineform surface (15)",
+      "title_sort": "dotlineform surface (015)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-107a0c292b9c61083adffe1efee3a424",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00965": {
+      "work_id": "00965",
+      "title": "dotlineform surface (16)",
+      "title_sort": "dotlineform surface (016)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4d634716809ffac009e8f2f918622900",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00966": {
+      "work_id": "00966",
+      "title": "dotlineform surface (17)",
+      "title_sort": "dotlineform surface (017)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8dd64ca46dab1bc5d49f98a314e218b1",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00967": {
+      "work_id": "00967",
+      "title": "dotlineform surface (18)",
+      "title_sort": "dotlineform surface (018)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-3a40945971831bc3df068b508e6580aa",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00968": {
+      "work_id": "00968",
+      "title": "dotlineform surface (19)",
+      "title_sort": "dotlineform surface (019)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-ec0e49890ad23168afed36c3618472bd",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00969": {
+      "work_id": "00969",
+      "title": "dotlineform surface (20)",
+      "title_sort": "dotlineform surface (020)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-90aa88cb922b7c14e7d78d38ceb467e3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00970": {
+      "work_id": "00970",
+      "title": "dotlineform surface (21)",
+      "title_sort": "dotlineform surface (021)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c3cae18c4e20733bdf04c7fe3a0a3045",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00971": {
+      "work_id": "00971",
+      "title": "dotlineform surface (22)",
+      "title_sort": "dotlineform surface (022)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-142cb838d97063e327af4d85156143f5",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00972": {
+      "work_id": "00972",
+      "title": "dotlineform surface (23)",
+      "title_sort": "dotlineform surface (023)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-700ab542685d7566435b7c59f754a562",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00973": {
+      "work_id": "00973",
+      "title": "dotlineform surface (24)",
+      "title_sort": "dotlineform surface (024)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-4c68f80d3ab76b3b4556a9575dcffff3",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00974": {
+      "work_id": "00974",
+      "title": "dotlineform surface (25)",
+      "title_sort": "dotlineform surface (025)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5841b12ceae5ddf8b189650b7705fd44",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00975": {
+      "work_id": "00975",
+      "title": "dotlineform surface (26)",
+      "title_sort": "dotlineform surface (026)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-70ed4bf2e40b71dccc7f131c47fd8527",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00976": {
+      "work_id": "00976",
+      "title": "dotlineform surface (27)",
+      "title_sort": "dotlineform surface (027)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8b1f36b53859753b04999039beec7039",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00977": {
+      "work_id": "00977",
+      "title": "dotlineform surface (28)",
+      "title_sort": "dotlineform surface (028)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-abb6f0e58ea1002a0d3999a57b05a669",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00978": {
+      "work_id": "00978",
+      "title": "dotlineform surface (29)",
+      "title_sort": "dotlineform surface (029)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-a0da77af9a750b129431575dea7e4b50",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00979": {
+      "work_id": "00979",
+      "title": "dotlineform surface (30)",
+      "title_sort": "dotlineform surface (030)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-663e7ca0d8f01dc9b904958e3a9a6064",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00980": {
+      "work_id": "00980",
+      "title": "dotlineform surface (31)",
+      "title_sort": "dotlineform surface (031)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b55e0180dbe7705edc0478703f622a0b",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00981": {
+      "work_id": "00981",
+      "title": "dotlineform surface (32)",
+      "title_sort": "dotlineform surface (032)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-b94a62be19fa51dc049e773587000005",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00982": {
+      "work_id": "00982",
+      "title": "dotlineform surface (33)",
+      "title_sort": "dotlineform surface (033)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-34d49a22794fdd1de8ee82faf34c3e75",
+      "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "00983": {
+      "work_id": "00983",
+      "title": "dotlineform surface (34)",
+      "title_sort": "dotlineform surface (034)",
+      "year": 2021,
+      "year_display": "2021",
+      "series_id": "dotlineform-2021",
+      "series_ids": [
+        "dotlineform-2021"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-c3d99a1d3e5f35970ffcbe38397ef975",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
     }
   }

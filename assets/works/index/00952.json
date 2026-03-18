@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-1fa62d5c7ef75e5af92af745eae48a96",
+    "generated_at_utc": "2026-03-18T16:58:59Z",
+    "work_id": "00952",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-f21b1f6da189c17c4d75b0487a7a0d2a",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-1fa62d5c7ef75e5af92af745eae48a96"
+  },
+  "work": {
+    "work_id": "00952",
+    "title": "dotlineform surface (3)",
+    "title_sort": "dotlineform surface (003)",
+    "year": 2021,
+    "year_display": "2021",
+    "series_id": "dotlineform-2021",
+    "series_ids": [
+      "dotlineform-2021"
+    ],
+    "series_title": "dotlineform (2021)",
+    "series_sort": "00952",
+    "storage": null,
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 18.0,
+    "width_cm": 32.0,
+    "depth_cm": null,
+    "width_px": 3780,
+    "height_px": 2126,
+    "download": null,
+    "has_primary_2400": false,
+    "artist": "Michael Davies",
+    "checksum": "f21b1f6da189c17c4d75b0487a7a0d2a"
+  },
+  "sections": []
+}
