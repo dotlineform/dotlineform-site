@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-fbebffe3cee7eb4a73bd6c6f7e462897",
-    "generated_at_utc": "2026-03-18T21:26:31Z",
-    "count": 1030
+    "version": "blake2b-99fd9ab0f15e6a7dfa635f6fe5a9e767",
+    "generated_at_utc": "2026-03-18T22:12:06Z",
+    "count": 1031
   },
   "works": {
     "00001": {
@@ -14426,6 +14426,20 @@
       "storage": null,
       "work_checksum": "blake2b-f454eadb51e7a14d15283f060af50403",
       "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0"
+    },
+    "01037": {
+      "work_id": "01037",
+      "title": "egg forms",
+      "title_sort": "egg forms",
+      "year": 2024,
+      "year_display": "2024",
+      "series_id": "egg-forms",
+      "series_ids": [
+        "egg-forms"
+      ],
+      "storage": "framed",
+      "work_checksum": "blake2b-14ec02a2c2a72ae009ab41d0f5043e7f",
+      "details_checksum": "blake2b-e779afdbc54b9a551f257277ad7aa676"
     }
   }
 }

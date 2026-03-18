@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-9bf5c0d918dab486e68d4638d0c35f01",
-    "generated_at_utc": "2026-03-18T21:26:31Z",
-    "count": 72
+    "version": "blake2b-d96908be880a0e9fce4d16e130f84cbe",
+    "generated_at_utc": "2026-03-18T22:12:05Z",
+    "count": 73
   },
   "series": {
     "10000": {
@@ -1720,8 +1720,8 @@
     "droplets": {
       "series_id": "droplets",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-18",
       "title": "droplets",
       "title_sort": "droplets",
       "sort_fields": "work_id",
@@ -1770,6 +1770,32 @@
         "work_id": "01017",
         "thumb_96": "/assets/works/img/01017-thumb-96.webp",
         "thumb_192": "/assets/works/img/01017-thumb-192.webp"
+      }
+    },
+    "egg-forms": {
+      "series_id": "egg-forms",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "egg forms",
+      "title_sort": "egg forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "01037",
+      "notes": null,
+      "project_folders": [
+        "egg forms"
+      ],
+      "checksum": "8668fc5fea6aad08fe37c47c78a9e2a1",
+      "works": [
+        "01037"
+      ],
+      "thumb": {
+        "work_id": "01037",
+        "thumb_96": "/assets/works/img/01037-thumb-96.webp",
+        "thumb_192": "/assets/works/img/01037-thumb-192.webp"
       }
     },
     "for-david-lynch": {
