@@ -14,12 +14,6 @@ layout: default
 {%- assign src800  = img_base | append: wid | append: "-primary-800.webp" -%}
 {%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
-{%- assign work_details_json_path = "/assets/works/index/" | append: wid | append: ".json" -%}
-{%- assign work_details_json_file = site.static_files | where: "path", work_details_json_path | first -%}
-{%- assign has_work_details_json = false -%}
-{%- if work_details_json_file -%}
-  {%- assign has_work_details_json = true -%}
-{%- endif -%}
 {%- assign full_src = src1600 -%}
 
 {%- unless img_base contains '://' -%}
@@ -152,7 +146,6 @@ layout: default
     data-thumb-base="{{ site.thumb_base | default: '' }}"
     data-thumb-prefix="{{ site.thumb_prefix | default: '/assets' }}"
     data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
-    data-has-details-json="{{ has_work_details_json }}"
     hidden
   >
     <h2 class="visually-hidden">Additional details</h2>
@@ -487,8 +480,6 @@ layout: default
     } else {
       requestedDetailsPage = Math.floor(requestedDetailsPage);
     }
-    var hasDetailsJson = String(section.getAttribute('data-has-details-json') || 'false') === 'true';
-    if (!hasDetailsJson) return;
     // Site-level toggle: when true, hash-based back-links from detail pages scroll
     // to the corresponding details section after async JSON content is inserted.
     var enableHashScroll = String(section.getAttribute('data-enable-hash-scroll') || 'true') !== 'false';
