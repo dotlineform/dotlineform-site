@@ -112,7 +112,6 @@ function initSeriesTagEditorPage() {
     const src800 = `${imgBase}${primaryWorkId}-primary-800.webp`;
     const src1200 = `${imgBase}${primaryWorkId}-primary-1200.webp`;
     const src1600 = `${imgBase}${primaryWorkId}-primary-1600.webp`;
-    const src2400 = `${imgBase}${primaryWorkId}-primary-2400.webp`;
     const work = await fetchWorkRecord(primaryWorkId);
     const workTitle = textOrDash(work && work.title ? work.title : displayTitle);
     let width = Number(work && work.width_px);
@@ -123,12 +122,9 @@ function initSeriesTagEditorPage() {
     }
     if (!Number.isFinite(width) || width <= 0) width = 4;
     if (!Number.isFinite(height) || height <= 0) height = 3;
-    const has2400 = Boolean(work && work.has_primary_2400 === true);
-    const fullSrc = has2400 ? src2400 : src1600;
     let srcset = `${src800} 800w, ${src1200} 1200w, ${src1600} 1600w`;
-    if (has2400) srcset += `, ${src2400} 2400w`;
 
-    mediaLinkEl.href = fullSrc;
+    mediaLinkEl.href = src1600;
     mediaLinkEl.style.setProperty("--work-ar", `${width} / ${height}`);
     mediaImgEl.src = src1600;
     mediaImgEl.setAttribute("srcset", srcset);

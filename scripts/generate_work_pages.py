@@ -16,7 +16,6 @@ Lightweight works index JSON is written to assets/data/works_index.json (object 
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
-- Booleans are emitted unquoted for: has_primary_2400
 - Everything else is emitted as a quoted string (including fields like year_display)
 - Empty cells become YAML null
 
@@ -206,7 +205,7 @@ def yaml_quote(s: str) -> str:
 
 
 NUMERIC_KEYS = {"year", "height_cm", "width_cm", "depth_cm", "width_px", "height_px"}
-BOOLEAN_KEYS = {"has_primary_2400"}
+BOOLEAN_KEYS = set()
 
 
 def is_empty(value: Any) -> bool:
@@ -257,11 +256,6 @@ def coerce_string(value: Any) -> Optional[str]:
         return None
     s = normalize_text(value)
     return s if s != "" else None
-
-
-def coerce_presence_bool(value: Any) -> bool:
-    """Map Excel presence to bool: empty -> False, non-empty -> True."""
-    return not is_empty(value)
 
 
 def dump_scalar(key: str, value: Any) -> str:
@@ -373,7 +367,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("width_px", "width_px", coerce_int),
     ("height_px", "height_px", coerce_int),
     ("download", "download", coerce_string),
-    ("has_primary_2400", "has_primary_2400", coerce_presence_bool),
     # tags handled separately (csv list)
     # checksum is always computed, not sourced from Excel
 ]
@@ -921,8 +914,6 @@ def main() -> None:
     works_sortable_fields = {fm_key for fm_key, _, _ in WORKS_SCHEMA}
     works_sortable_fields.update({"work_id", "series_title", "title_sort"})
     numeric_sort_fields = {"year", "height_cm", "width_cm", "depth_cm"}
-    bool_sort_fields = {"has_primary_2400"}
-
     work_meta_by_id: Dict[str, Dict[str, Any]] = {}
     work_ids_by_series_all: Dict[str, List[str]] = {}
     for wr in works_rows[1:]:
@@ -1003,8 +994,6 @@ def main() -> None:
                 if field in numeric_sort_fields:
                     nv = coerce_numeric(value)
                     return float("-inf") if nv is None else nv
-                if field in bool_sort_fields:
-                    return 1 if bool(value) else 0
                 return normalize_text(value).lower()
 
             for field, desc in reversed(parsed_fields):
@@ -1052,7 +1041,6 @@ def main() -> None:
         "width_px",
         "height_px",
         "download",
-        "has_primary_2400",
         "artist",
     ]
 
@@ -1092,7 +1080,6 @@ def main() -> None:
         project_subfolder: Optional[str],
         width_px: Optional[int],
         height_px: Optional[int],
-        has_primary_2400: bool,
     ) -> Dict[str, Any]:
         detail_uid = f"{wid}-{did}"
         dfm: Dict[str, Any] = {
@@ -1104,7 +1091,6 @@ def main() -> None:
             "project_subfolder": project_subfolder,
             "width_px": width_px,
             "height_px": height_px,
-            "has_primary_2400": has_primary_2400,
             "layout": "work_details",
         }
         dfm["checksum"] = compute_work_checksum(dfm)
@@ -1869,7 +1855,7 @@ def main() -> None:
         else:
             print("Work detail pages/JSON skipped: not selected by --only.")
     else:
-        required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "project_filename", "has_primary_2400"]
+        required_details = ["work_id", "detail_id", "title", "status", "project_subfolder", "project_filename"]
         missing_details = [c for c in required_details if c not in work_details_hi]
         if missing_details:
             raise SystemExit(f"WorkDetails sheet missing required columns: {', '.join(missing_details)}")
@@ -2094,7 +2080,6 @@ def main() -> None:
                     project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
                     width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
                     height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                    has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
                 )
                 detail_records_by_work.setdefault(wid, []).append(detail_record)
 
@@ -2191,7 +2176,6 @@ def main() -> None:
                         project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
                         width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
                         height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                        has_primary_2400=coerce_presence_bool(live_cell_value(dr, dr_cells, work_details_hi, "has_primary_2400")),
                     )
                 )
 

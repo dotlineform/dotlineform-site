@@ -87,7 +87,6 @@ Flags:
 
 ```bash
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_work_ids.txt \
-MAKE_SRCSET_2400_IDS_FILE=/tmp/work_2400_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/work_success_ids.txt \
 bash scripts/make_srcset_images.sh \
   "$DOTLINEFORM_MEDIA_BASE_DIR/works/make_srcset_images" \
@@ -95,12 +94,10 @@ bash scripts/make_srcset_images.sh \
   4
 ```
 
-Moments example (no 2400):
+Moments example:
 
 ```bash
-: > /tmp/empty_2400_ids.txt
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_moment_ids.txt \
-MAKE_SRCSET_2400_IDS_FILE=/tmp/empty_2400_ids.txt \
 MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/moment_success_ids.txt \
 bash scripts/make_srcset_images.sh \
   "$DOTLINEFORM_MEDIA_BASE_DIR/moments/make_srcset_images" \

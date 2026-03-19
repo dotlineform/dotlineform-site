@@ -10,10 +10,6 @@ Run the draft publish pipeline end-to-end (fail-fast):
 6) make_srcset_images.sh (for moments)
 7) generate_work_pages.py data/works.xlsx --write (for affected work IDs only)
 
-The 2400px derivative selection is driven from Works.has_primary_2400:
-- empty cell -> do not request 2400
-- non-empty cell -> request 2400
-
 Dry-run mode:
 - copy + srcset + generate run in preview mode
 - no workbook writes/deletes are performed
@@ -189,41 +185,6 @@ def parse_work_id_selection(raw: str) -> Set[str]:
     return selected
 
 
-def collect_2400_ids(xlsx_path: Path, copied_ids: Iterable[str]) -> Set[str]:
-    """Select work IDs that require 2400 derivatives based on Works.has_primary_2400."""
-    copied = set(copied_ids)
-    if not copied:
-        return set()
-
-    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
-    if "Works" not in wb.sheetnames:
-        raise SystemExit("Worksheet not found: 'Works'")
-    ws = wb["Works"]
-    hi = header_map(ws)
-
-    required = ["work_id"]
-    missing = [c for c in required if c not in hi]
-    if missing:
-        raise SystemExit(f"Works sheet missing required columns: {', '.join(missing)}")
-
-    has_col = hi.get("has_primary_2400")
-    if has_col is None:
-        return set()
-
-    want_2400: Set[str] = set()
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        work_id = row[hi["work_id"]]
-        if is_empty(work_id):
-            continue
-        wid = slug_id(work_id)
-        if wid not in copied:
-            continue
-        raw = row[has_col] if has_col < len(row) else None
-        if not is_empty(raw):
-            want_2400.add(wid)
-    return want_2400
-
-
 def collect_draft_ids(
     xlsx_path: Path,
     allowed_ids: Set[str] | None = None,
@@ -386,44 +347,6 @@ def collect_series_ids_for_work_ids(xlsx_path: Path, work_ids: Set[str]) -> Set[
     return out
 
 
-def collect_detail_2400_uids(xlsx_path: Path, copied_uids: Iterable[str]) -> Set[str]:
-    """Select detail_uids that require 2400 derivatives based on WorkDetails.has_primary_2400."""
-    copied = set(copied_uids)
-    if not copied:
-        return set()
-
-    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
-    if "WorkDetails" not in wb.sheetnames:
-        return set()
-    ws = wb["WorkDetails"]
-    hi = header_map(ws)
-
-    required = ["work_id", "detail_id"]
-    missing = [c for c in required if c not in hi]
-    if missing:
-        raise SystemExit(f"WorkDetails sheet missing required columns: {', '.join(missing)}")
-
-    has_col = hi.get("has_primary_2400")
-    if has_col is None:
-        return set()
-
-    want_2400: Set[str] = set()
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        raw_work_id = row[hi["work_id"]]
-        raw_detail_id = row[hi["detail_id"]]
-        if is_empty(raw_work_id) or is_empty(raw_detail_id):
-            continue
-        wid = slug_id(raw_work_id)
-        did = slug_id(raw_detail_id, width=3)
-        uid = f"{wid}-{did}"
-        if uid not in copied:
-            continue
-        raw = row[has_col] if has_col < len(row) else None
-        if not is_empty(raw):
-            want_2400.add(uid)
-    return want_2400
-
-
 def work_ids_from_detail_uids(detail_uids: Iterable[str]) -> Set[str]:
     """Map detail_uids (work_id-detail_id) to parent work_ids."""
     out: Set[str] = set()
@@ -558,9 +481,6 @@ def main() -> int:
         copied_ids_file = tmp_dir / "copied_ids.txt"
         draft_detail_uids_file = tmp_dir / "draft_detail_uids.txt"
         copied_detail_uids_file = tmp_dir / "copied_detail_uids.txt"
-        ids_2400_file = tmp_dir / "ids_2400.txt"
-        detail_ids_2400_file = tmp_dir / "detail_ids_2400.txt"
-        moment_ids_2400_file = tmp_dir / "moment_ids_2400.txt"
         success_ids_file = tmp_dir / "success_ids.txt"
         detail_success_ids_file = tmp_dir / "detail_success_ids.txt"
         moment_success_ids_file = tmp_dir / "moment_success_ids.txt"
@@ -630,15 +550,8 @@ def main() -> int:
 
             copied_ids = read_ids(copied_ids_file)
             if copied_ids:
-                ids_2400 = collect_2400_ids(xlsx_path, copied_ids)
-                ids_2400_file.write_text(
-                    "\n".join(sorted(ids_2400)) + ("\n" if ids_2400 else ""),
-                    encoding="utf-8",
-                )
-
                 # make_srcset_images.sh controls selection via environment variables.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_2400_IDS_FILE"] = str(ids_2400_file)
                 env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
                 env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(success_ids_file)
 
@@ -687,15 +600,8 @@ def main() -> int:
 
             copied_detail_uids = read_ids(copied_detail_uids_file)
             if copied_detail_uids:
-                detail_2400_ids = collect_detail_2400_uids(xlsx_path, copied_detail_uids)
-                detail_ids_2400_file.write_text(
-                    "\n".join(sorted(detail_2400_ids)) + ("\n" if detail_2400_ids else ""),
-                    encoding="utf-8",
-                )
-
                 # Restrict run to copied detail_uids and track success IDs.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_2400_IDS_FILE"] = str(detail_ids_2400_file)
                 env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_detail_uids_file)
                 env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(detail_success_ids_file)
 
@@ -744,11 +650,8 @@ def main() -> int:
 
             copied_moment_ids = read_ids(copied_moment_ids_file)
             if copied_moment_ids:
-                # Moments never request 2400 derivatives: set an explicit empty allow-list.
-                moment_ids_2400_file.write_text("", encoding="utf-8")
                 # Restrict run to copied moment_ids and track success IDs.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_2400_IDS_FILE"] = str(moment_ids_2400_file)
                 env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_moment_ids_file)
                 env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(moment_success_ids_file)
 
