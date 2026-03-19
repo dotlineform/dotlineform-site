@@ -78,6 +78,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     <!-- note: add debug-media-boxes to <a> to compare link vs image boxes -->
     <a class="page__mediaLink"
       id="workMediaLink"
+      data-swipe-nav-zone="work-media"
       href="{{ full_src }}" target="_blank" rel="noopener"
       style="--work-ar: 4 / 3;">
       <img
@@ -192,6 +193,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
 
 </article>
 
+<script src="{{ '/assets/js/swipe-nav.js' | relative_url }}"></script>
 <script>
   (function () {
     if (window.__dlfGetWorkRecord) return;
@@ -562,7 +564,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
     }
 
     function renderDetailsGrid(details, secId, currentPage) {
-      var html = '<div class=\"seriesGrid\" aria-label=\"details for ' + esc(secId) + '\">';
+      var html = '<div class=\"seriesGrid\" data-swipe-nav-grid=\"work-details\" aria-label=\"details for ' + esc(secId) + '\">';
       details.forEach(function (d) {
         var uid = String((d && d.detail_uid) || '').trim();
         if (!uid) return;
@@ -640,6 +642,17 @@ If you later serve images only from external media_base (CDN/R2), this check won
           groups.push(group);
           groupsByKey[group.key] = group;
           renderDetailsGroup(group);
+          if (window.__dlfSwipeNav) {
+            window.__dlfSwipeNav.bindActionZone(groupEl, {
+              startWithinSelector: '[data-swipe-nav-grid]',
+              getPrev: function () {
+                return groupEl.querySelector('[data-pager-key=\"' + group.key + '\"][data-pager-delta=\"-1\"]');
+              },
+              getNext: function () {
+                return groupEl.querySelector('[data-pager-key=\"' + group.key + '\"][data-pager-delta=\"1\"]');
+              }
+            });
+          }
         });
 
         if (groups.length) {
@@ -663,6 +676,22 @@ If you later serve images only from external media_base (CDN/R2), this check won
       .catch(function () {
         section.hidden = true;
       });
+  })();
+</script>
+<script>
+  (function () {
+    var swipe = window.__dlfSwipeNav;
+    var zone = document.getElementById('workMediaLink');
+    if (!swipe || !zone) return;
+
+    swipe.bindLinkZone(zone, {
+      getPrev: function () {
+        return document.getElementById('seriesNavPrev');
+      },
+      getNext: function () {
+        return document.getElementById('seriesNavNext');
+      }
+    });
   })();
 </script>
 <script src="{{ '/assets/js/work.js' | relative_url }}"></script>

@@ -59,6 +59,7 @@ layout: default
     <a
       class="page__mediaLink"
       id="detailMediaLink"
+      data-swipe-nav-zone="detail-media"
       href="{{ full_src }}"
       target="_blank"
       rel="noopener"
@@ -122,6 +123,7 @@ layout: default
   </nav>
 </article>
 
+<script src="{{ '/assets/js/swipe-nav.js' | relative_url }}"></script>
 <script>
   (function () {
     var root = document.getElementById('detailPageRoot');
@@ -371,6 +373,22 @@ layout: default
         updateBackLink();
         nav.hidden = true;
       });
+  })();
+</script>
+<script>
+  (function () {
+    var swipe = window.__dlfSwipeNav;
+    var zone = document.getElementById('detailMediaLink');
+    if (!swipe || !zone) return;
+
+    swipe.bindLinkZone(zone, {
+      getPrev: function () {
+        return document.getElementById('detailNavPrev');
+      },
+      getNext: function () {
+        return document.getElementById('detailNavNext');
+      }
+    });
   })();
 </script>
 <script src="{{ '/assets/js/work.js' | relative_url }}"></script>

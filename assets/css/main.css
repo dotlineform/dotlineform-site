@@ -959,6 +959,11 @@ pre.theme-text{
   max-width: var(--content-measure);
 }
 
+[data-swipe-nav-zone],
+[data-swipe-nav-grid]{
+  touch-action: pan-y;
+}
+
 /* Clamp to 10 columns when there is room */
 @media (min-width: 1200px){
   .seriesGrid{

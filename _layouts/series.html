@@ -30,7 +30,7 @@ layout: default
   Include ?series=<series_id> in work links so the work page can fetch
   series context and render Prev/Next navigation.
   {% endcomment %}
-  <div class="seriesGrid" id="seriesGrid" aria-label="works in series"></div>
+  <div class="seriesGrid" id="seriesGrid" data-swipe-nav-zone="series-grid" aria-label="works in series"></div>
   <div class="seriesGridFooter">
     <a
       class="seriesGridFooter__indexLink"
@@ -44,6 +44,7 @@ layout: default
     </nav>
   </div>
 
+  <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}"></script>
   <script>
     (function () {
       var grid = document.getElementById('seriesGrid');
@@ -189,6 +190,17 @@ layout: default
           renderPage(next);
         });
 
+        if (window.__dlfSwipeNav) {
+          window.__dlfSwipeNav.bindActionZone(grid, {
+            getPrev: function () {
+              return pager.hidden ? null : prevBtn;
+            },
+            getNext: function () {
+              return pager.hidden ? null : nextBtn;
+            }
+          });
+        }
+
         renderPage(currentPage);
       }
 
@@ -244,7 +256,7 @@ layout: default
         .catch(function () {
           pager.hidden = true;
           grid.innerHTML = '';
-        });
+      });
     })();
   </script>
 {%- endif -%}
