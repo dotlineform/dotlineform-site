@@ -1,0 +1,72 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-541f110b7f275a81ba908944639064ba",
+    "generated_at_utc": "2026-03-19T16:47:27Z",
+    "work_id": "01045",
+    "count": 2,
+    "hash": "blake2b-760343f71d7d9d13aeb36ad4d747874a",
+    "work_checksum": "blake2b-8f13c53783fd4c53571bc5f2b6c2a4ca",
+    "details_checksum": "blake2b-760343f71d7d9d13aeb36ad4d747874a",
+    "record_checksum": "blake2b-541f110b7f275a81ba908944639064ba"
+  },
+  "work": {
+    "work_id": "01045",
+    "title": "entangled form'",
+    "title_sort": "entangled form'",
+    "year": 2023,
+    "year_display": "2023",
+    "series_id": "entangled-form",
+    "series_ids": [
+      "entangled-form"
+    ],
+    "series_title": "entangled form",
+    "series_sort": "01045",
+    "storage": "framed",
+    "medium_type": "monoprint",
+    "medium_caption": "ink and paint on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 60.0,
+    "width_cm": 42.0,
+    "depth_cm": null,
+    "width_px": 1787,
+    "height_px": 1787,
+    "download": null,
+    "artist": "Michael Davies",
+    "checksum": "8f13c53783fd4c53571bc5f2b6c2a4ca"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01045",
+          "detail_id": "001",
+          "detail_uid": "01045-001",
+          "title": "entangled form' - spider",
+          "title_sort": "entangled form' - spider",
+          "project_subfolder": "details",
+          "width_px": 3316,
+          "height_px": 1865,
+          "layout": "work_details",
+          "checksum": "62005eab7a53870a877c6adfdc8a2d07"
+        },
+        {
+          "work_id": "01045",
+          "detail_id": "002",
+          "detail_uid": "01045-002",
+          "title": "entangled form' - spider (detail)",
+          "title_sort": "entangled form' - spider (detail)",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details",
+          "checksum": "121a093854dbe9ba4b6d8b2b250af878"
+        }
+      ]
+    }
+  ]
+}
