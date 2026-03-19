@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-ee2aee0eb7a29d851dfb4da6e329870d",
-    "generated_at_utc": "2026-03-19T17:08:57Z",
-    "count": 1040
+    "version": "blake2b-6318f120c11af6d20a7ed4fdbd054191",
+    "generated_at_utc": "2026-03-19T17:32:01Z",
+    "count": 1042
   },
   "works": {
     "00001": {
@@ -14566,6 +14566,34 @@
       "storage": null,
       "work_checksum": "blake2b-982bf4be32d69b187c0231d5648eeb00",
       "details_checksum": "blake2b-1effaa2dd8ee2f3cfcdf9376139f0f9a"
+    },
+    "01047": {
+      "work_id": "01047",
+      "title": "field I",
+      "title_sort": "field I",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "field",
+      "series_ids": [
+        "field"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d4a26b78f84709e0dd3fbaf3797f2b53",
+      "details_checksum": "blake2b-5df95a84fbb539a58f7c6c22527e525c"
+    },
+    "01048": {
+      "work_id": "01048",
+      "title": "field II",
+      "title_sort": "field II",
+      "year": 2025,
+      "year_display": "2025",
+      "series_id": "field",
+      "series_ids": [
+        "field"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8c52fc4cc7b754e243382d3f2d930d33",
+      "details_checksum": "blake2b-0bba73ea1db9b8aa89da07355ce280ac"
     }
   }
 }

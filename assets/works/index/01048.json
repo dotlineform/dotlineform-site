@@ -1,0 +1,84 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-ebaba0eecb67ef61e7ff30f1b42273a6",
+    "generated_at_utc": "2026-03-19T17:32:01Z",
+    "work_id": "01048",
+    "count": 3,
+    "hash": "blake2b-0bba73ea1db9b8aa89da07355ce280ac",
+    "work_checksum": "blake2b-8c52fc4cc7b754e243382d3f2d930d33",
+    "details_checksum": "blake2b-0bba73ea1db9b8aa89da07355ce280ac",
+    "record_checksum": "blake2b-ebaba0eecb67ef61e7ff30f1b42273a6"
+  },
+  "work": {
+    "work_id": "01048",
+    "title": "field II",
+    "title_sort": "field II",
+    "year": 2025,
+    "year_display": "2025",
+    "series_id": "field",
+    "series_ids": [
+      "field"
+    ],
+    "series_title": "field",
+    "series_sort": "01048",
+    "storage": null,
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 50.0,
+    "width_cm": 59.0,
+    "depth_cm": null,
+    "width_px": 6969,
+    "height_px": 5906,
+    "download": null,
+    "artist": "Michael Davies",
+    "checksum": "8c52fc4cc7b754e243382d3f2d930d33"
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01048",
+          "detail_id": "001",
+          "detail_uid": "01048-001",
+          "title": "field II - detail 1",
+          "title_sort": "field II - detail 001",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 1125,
+          "layout": "work_details",
+          "checksum": "2fc69057cdb453c53c056feb51f92943"
+        },
+        {
+          "work_id": "01048",
+          "detail_id": "002",
+          "detail_uid": "01048-002",
+          "title": "field II - detail 2",
+          "title_sort": "field II - detail 002",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 1125,
+          "layout": "work_details",
+          "checksum": "3b1bdb6df106d91d01a50dac8f8a35e0"
+        },
+        {
+          "work_id": "01048",
+          "detail_id": "003",
+          "detail_uid": "01048-003",
+          "title": "field II - detail 3",
+          "title_sort": "field II - detail 003",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 1125,
+          "layout": "work_details",
+          "checksum": "0befaf46c73873e09300126695a2cd25"
+        }
+      ]
+    }
+  ]
+}

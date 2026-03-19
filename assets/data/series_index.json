@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-208f07d8b1b1b242c96bb0ea0f4965a8",
-    "generated_at_utc": "2026-03-19T17:08:56Z",
-    "count": 76
+    "version": "blake2b-949ded2d181fd14b6be6f086fb6513f5",
+    "generated_at_utc": "2026-03-19T17:32:01Z",
+    "count": 77
   },
   "series": {
     "10000": {
@@ -1859,8 +1859,8 @@
     "espresso": {
       "series_id": "espresso",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-19",
       "title": "espresso",
       "title_sort": "espresso",
       "sort_fields": "work_id",
@@ -1880,6 +1880,33 @@
         "work_id": "01046",
         "thumb_96": "/assets/works/img/01046-thumb-96.webp",
         "thumb_192": "/assets/works/img/01046-thumb-192.webp"
+      }
+    },
+    "field": {
+      "series_id": "field",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "field",
+      "title_sort": "field",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2025,
+      "year_display": "2025",
+      "primary_work_id": "01047",
+      "notes": null,
+      "project_folders": [
+        "field"
+      ],
+      "checksum": "721c497e6574bd5461b80fce23bf75da",
+      "works": [
+        "01047",
+        "01048"
+      ],
+      "thumb": {
+        "work_id": "01047",
+        "thumb_96": "/assets/works/img/01047-thumb-96.webp",
+        "thumb_192": "/assets/works/img/01047-thumb-192.webp"
       }
     },
     "for-david-lynch": {
