@@ -47,7 +47,6 @@
 
         {% if is_studio_context %}
           {% assign u_studio = u | slice: 0, 8 %}
-          {% assign u_series_tags = u | slice: 0, 20 %}
           {%- assign is_studio_index = false -%}
           {%- assign is_studio_active = false -%}
           {%- assign is_series_tags_index = false -%}
@@ -66,29 +65,9 @@
           {%- if u == '/docs/studio/studio/' -%}{%- assign is_studio_docs_index = true -%}{%- endif -%}
           {%- if u_studio_docs == '/docs/studio/' -%}{%- assign is_studio_docs_active = true -%}{%- endif -%}
 
-          {% if is_studio_index %}
-            <span class="nav-item is-active" aria-current="page">studio</span>
-          {% elsif is_studio_active %}
-            <a class="nav-item is-active" href="{{ '/studio/' | relative_url }}" aria-current="page">studio</a>
-          {% else %}
-            <a class="nav-item" href="{{ '/studio/' | relative_url }}">studio</a>
-          {% endif %}
-
-          {% if is_series_tags_index %}
-            <span class="nav-item is-active" aria-current="page">series tags</span>
-          {% elsif is_series_tags_active %}
-            <a class="nav-item is-active" href="{{ '/studio/series-tags/' | relative_url }}" aria-current="page">series tags</a>
-          {% else %}
-            <a class="nav-item" href="{{ '/studio/series-tags/' | relative_url }}">series tags</a>
-          {% endif %}
-
-          {% if is_studio_docs_index %}
-            <span class="nav-item is-active" aria-current="page">docs</span>
-          {% elsif is_studio_docs_active %}
-            <a class="nav-item is-active" href="{{ '/docs/studio/studio/' | relative_url }}" aria-current="page">docs</a>
-          {% else %}
-            <a class="nav-item" href="{{ '/docs/studio/studio/' | relative_url }}">docs</a>
-          {% endif %}
+          {% include nav_item.html label="studio" href='/studio/' class_name='nav-item' is_current=is_studio_index is_active=is_studio_active %}
+          {% include nav_item.html label="series tags" href='/studio/series-tags/' class_name='nav-item' is_current=is_series_tags_index is_active=is_series_tags_active %}
+          {% include nav_item.html label="docs" href='/docs/studio/studio/' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
         {% else %}
           {%- assign is_series_index = false -%}
           {%- assign is_series_active = false -%}
@@ -100,21 +79,8 @@
           {%- if u == '/moments/' -%}{%- assign is_moments_index = true -%}{%- endif -%}
           {%- if page.collection == 'moments' or u_moments == '/moments/' -%}{%- assign is_moments_active = true -%}{%- endif -%}
 
-          {% if is_series_index %}
-            <span class="nav-item nav-item--overflow is-active" aria-current="page">works</span>
-          {% elsif is_series_active %}
-            <a class="nav-item nav-item--overflow is-active" href="{{ '/series/' | relative_url }}" aria-current="page">works</a>
-          {% else %}
-            <a class="nav-item nav-item--overflow" href="{{ '/series/' | relative_url }}">works</a>
-          {% endif %}
-
-          {% if is_moments_index %}
-            <span class="nav-item nav-item--overflow is-active" aria-current="page">moments</span>
-          {% elsif is_moments_active %}
-            <a class="nav-item nav-item--overflow is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
-          {% else %}
-            <a class="nav-item nav-item--overflow" href="{{ '/moments/' | relative_url }}">moments</a>
-          {% endif %}
+          {% include nav_item.html label="works" href='/series/' class_name='nav-item nav-item--overflow' is_current=is_series_index is_active=is_series_active %}
+          {% include nav_item.html label="moments" href='/moments/' class_name='nav-item nav-item--overflow' is_current=is_moments_index is_active=is_moments_active %}
 
           {%- assign more_active = false -%}
           {%- if is_series_active or is_series_index or is_moments_active or is_moments_index -%}
@@ -125,20 +91,8 @@
               &#9776;
             </button>
             <div class="nav-more__panel" role="menu" hidden>
-              {% if is_series_index %}
-                <span class="nav-more__item is-active" aria-current="page">works</span>
-              {% elsif is_series_active %}
-                <a class="nav-more__item is-active" href="{{ '/series/' | relative_url }}" aria-current="page">works</a>
-              {% else %}
-                <a class="nav-more__item" href="{{ '/series/' | relative_url }}">works</a>
-              {% endif %}
-              {% if is_moments_index %}
-                <span class="nav-more__item is-active" aria-current="page">moments</span>
-              {% elsif is_moments_active %}
-                <a class="nav-more__item is-active" href="{{ '/moments/' | relative_url }}" aria-current="page">moments</a>
-              {% else %}
-                <a class="nav-more__item" href="{{ '/moments/' | relative_url }}">moments</a>
-              {% endif %}
+              {% include nav_item.html label="works" href='/series/' class_name='nav-more__item' is_current=is_series_index is_active=is_series_active %}
+              {% include nav_item.html label="moments" href='/moments/' class_name='nav-more__item' is_current=is_moments_index is_active=is_moments_active %}
             </div>
           </div>
         {% endif %}

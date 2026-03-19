@@ -1,0 +1,16 @@
+{%- assign nav_is_current = false -%}
+{%- if include.is_current == true or include.is_current == 'true' -%}
+  {%- assign nav_is_current = true -%}
+{%- endif -%}
+{%- assign nav_is_active = false -%}
+{%- if include.is_active == true or include.is_active == 'true' -%}
+  {%- assign nav_is_active = true -%}
+{%- endif -%}
+{%- capture nav_class -%}{{ include.class_name }}{% if nav_is_current or nav_is_active %} is-active{% endif %}{%- endcapture -%}
+{%- if nav_is_current -%}
+  <span class="{{ nav_class | strip }}" aria-current="page">{{ include.label }}</span>
+{%- elsif nav_is_active -%}
+  <a class="{{ nav_class | strip }}" href="{{ include.href | relative_url }}" aria-current="page">{{ include.label }}</a>
+{%- else -%}
+  <a class="{{ include.class_name }}" href="{{ include.href | relative_url }}">{{ include.label }}</a>
+{%- endif -%}
