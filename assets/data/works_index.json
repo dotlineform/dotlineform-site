@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-7ac92788904a2acba7abdca0d6447e24",
-    "generated_at_utc": "2026-03-19T19:57:41Z",
-    "count": 1045
+    "version": "blake2b-fc89a206e491fdc9f4ab59df218f5d9c",
+    "generated_at_utc": "2026-03-19T20:29:46Z",
+    "count": 1048
   },
   "works": {
     "00001": {
@@ -14636,6 +14636,48 @@
       "storage": null,
       "work_checksum": "blake2b-e305e5e3c6ea49ce95ebaa7e2303635e",
       "details_checksum": "blake2b-5541cf6c982ad0bded9456e2d17c854b"
+    },
+    "01052": {
+      "work_id": "01052",
+      "title": "flowers 1.jpg",
+      "title_sort": "flowers 001.jpg",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "flowers",
+      "series_ids": [
+        "flowers"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-bb060bcc7ca3f0c1e0cb8004322fdb5d",
+      "details_checksum": "blake2b-20f164672348b734e2a8228c0b5958a1"
+    },
+    "01053": {
+      "work_id": "01053",
+      "title": "flowers 2.jpg",
+      "title_sort": "flowers 002.jpg",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "flowers",
+      "series_ids": [
+        "flowers"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-707310f5093be93ee1f026ccf9ff4492",
+      "details_checksum": "blake2b-d24e6cf849e6a645ac7737213d910b41"
+    },
+    "01054": {
+      "work_id": "01054",
+      "title": "flowers 3.jpg",
+      "title_sort": "flowers 003.jpg",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "flowers",
+      "series_ids": [
+        "flowers"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-8de43f654bffa909d0e869956d69458b",
+      "details_checksum": "blake2b-f1455410ef888d4bfe2658186b926559"
     }
   }
 }
