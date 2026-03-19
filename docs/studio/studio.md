@@ -8,7 +8,7 @@ This document is the central reference for the Studio pages, which are designed 
 
 Related references:
 
-- **[UI Framework](/docs/studio/ui-framework/)** for shared Studio UI primitives and naming rules
+- **[UI Framework](/docs/studio/ui-framework/)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
 
 Page documents:
 

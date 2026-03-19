@@ -2,38 +2,106 @@
 permalink: /docs/studio/ui-framework/
 ---
 
-# Studio UI Framework
+# UI Framework
 
-This document defines the shared UI layer for Studio pages.
+This document defines the shared UI framework for the site.
 
-The goal is consistency without introducing a heavy component system. Studio pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and compose a small set of shared CSS primitives rather than reusing another page's class names.
+It has two responsibilities:
+
+- site-wide UI interaction defaults and JS hook rules
+- Studio-specific shared primitives, naming boundaries, and modal patterns
+
+The goal is consistency without introducing a heavy component system. Pages should expose their major layout containers in template markup, keep JS focused on dynamic UI, and reuse stable hooks and shared primitives instead of borrowing unrelated page-specific class names.
 
 Related site-wide contract:
 
 - `docs/css-primitives.md`
 
-## UI Contract Boundary
+## Scope
 
-Studio uses three separate UI contracts:
+This framework covers:
+
+- site-wide behavior contracts for progressive enhancement, navigation interactions, and DOM hooks
+- Studio-specific shared UI layers such as `tagStudio*`, toolbar/filter/list primitives, and modal patterns
+
+## Site UI Contract Boundary
+
+Use three separate UI contracts across the site:
 
 - `class=""`
   presentation only
-- `data-role=""`
+- stable `id=""`, `data-role=""`, or feature-scoped `data-*`
   JS lookup only
+- `data-role=""`
+  use when a reusable semantic JS hook is needed
 - `data-state=""` and `aria-*`
   runtime state only
 
 Rules:
 
-- JS behavior must not query styling classes.
+- JS behavior must not query styling classes when a stable hook can be exposed.
+- Prefer explicit `data-role`, stable `id`, or feature-scoped `data-*` hooks over presentational selectors.
 - JS must not toggle presentation classes such as `.is-active`, `.is-error`, or page-specific BEM classes.
-- Shared role/state/class tokens for JS-generated Studio markup should live in `assets/studio/js/studio-ui.js`.
 - Page templates should own major layout containers and section boundaries.
 - JS should generate only the inner dynamic fragments that actually change at runtime.
 
-Use `assets/studio/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place when a Studio feature must render HTML from JS.
+For Studio-generated markup, use `assets/studio/js/studio-ui.js` to keep `data-role` selectors and generated style class names visible in one place.
 
-## Naming Boundary
+## Site Interaction Defaults
+
+### Progressive enhancement
+
+Site interactions should default to progressive enhancement:
+
+- preserve baseline links, buttons, keyboard behavior, and visible controls
+- add JS behavior on top of existing navigation and control flows rather than replacing them
+- keep behavior scoped to the relevant content region rather than binding globally unless the page architecture genuinely requires it
+
+### Prev/next and paginated navigation
+
+For any image viewer, detail viewer, or paginated grid:
+
+- reuse the existing previous/next controls or the same underlying URL/state-generation logic already used by the UI
+- do not invent a parallel navigation model in JS
+- preserve existing first/last behavior exactly, including wrapping if the current controls already wrap
+- if no valid previous/next action exists, do nothing in that direction
+
+### Swipe navigation default
+
+Horizontal swipe is the default progressive enhancement for future:
+
+- image viewers with existing previous/next navigation
+- paginated thumbnail grids with existing previous/next pagination controls
+
+Required implementation rules:
+
+- use Pointer Events as the primary input model unless a page has a clear incompatible constraint
+- activate swipe only from the main media or grid region, not from the whole document by default
+- use stable DOM hooks such as `data-role`, stable `id`, or feature-scoped `data-*`, not presentational class names
+- resolve navigation from the existing prev/next anchors or buttons at gesture time
+- preserve click/tap navigation, keyboard navigation, visible controls, and ordinary vertical scroll
+- use conservative gesture thresholds and ignore taps, small drags, slow drags, vertical scrolls, and diagonal movement
+- ignore multi-touch interactions
+- cancel tracking on `pointercancel`
+- apply `touch-action: pan-y` only on the specific swipe zone, not globally
+
+Benefits:
+
+- keeps navigation behavior consistent across input modes
+- avoids duplicated URL/state logic
+- reduces accidental regressions when navigation behavior changes later
+
+Risks to watch:
+
+- accidental click activation after a successful swipe
+- over-broad swipe zones that interfere with vertical scrolling or interactive children
+- JS that reads visual class names instead of stable behavior hooks
+
+## Studio-Specific Framework
+
+The sections below define the shared Studio UI layer. They apply to Studio pages and Studio-owned JS/CSS contracts.
+
+## Studio Naming Boundary
 
 - `tagStudio__*`
   Shared Studio primitives such as buttons, inputs, chips, panels, popups, and modal shells.
@@ -48,7 +116,7 @@ Use `assets/studio/js/studio-ui.js` to keep `data-role` selectors and generated 
 
 Rule of thumb: if two Studio pages need the same visual treatment, the class should move into the shared `tagStudio*` layer instead of borrowing another page's namespace.
 
-## Shared Primitives
+## Studio Shared Primitives
 
 ### Base controls
 
@@ -175,7 +243,7 @@ This pattern now covers:
 - empty-state collapse for unused message blocks
 - the editor’s combined message-container presentation, where multiple lines can live inside one shared message section
 
-## Modal Types
+## Studio Modal Types
 
 Studio should use a small standardized set of modal types. The framework defines the modal shell, required slots, and UI interaction contract. Application code defines the actual content, validation rules, and mutation behavior.
 
@@ -292,7 +360,7 @@ Application logic stays outside the modal:
 - deciding when patch mode is needed
 - post-copy status handling
 
-## Modal Selection Rule
+## Studio Modal Selection Rule
 
 Choose the simplest modal type that fits the interaction:
 
@@ -303,7 +371,7 @@ Choose the simplest modal type that fits the interaction:
 
 Do not introduce a new modal type unless one of the above cannot express the interaction without awkward conditional behavior or mixed responsibilities.
 
-## Modal Implementation
+## Studio Modal Implementation
 
 ### Shared Controller
 
@@ -417,7 +485,7 @@ This preserves the clean separation:
 - shared modal shell in the UI framework
 - application-specific contents and behavior in page/domain/service code
 
-## What Stays Page-Specific
+## What Stays Studio Page-Specific
 
 These should remain page-specific unless another page genuinely needs the same structure:
 
@@ -429,7 +497,7 @@ These should remain page-specific unless another page genuinely needs the same s
 
 Do not move page-specific list structure into the shared layer just because two pages are both "lists". Share only the repeated UI primitives.
 
-## Review Rules
+## Studio Review Rules
 
 When adding or changing Studio UI:
 
@@ -439,7 +507,7 @@ When adding or changing Studio UI:
 4. Keep layout-only exceptions local to the page namespace.
 5. Keep UI copy in `assets/studio/data/studio_config.json`, not in CSS or hard-coded duplicated markup.
 
-## Current Shared Coverage
+## Current Studio Shared Coverage
 
 Current Studio cleanup standardizes:
 

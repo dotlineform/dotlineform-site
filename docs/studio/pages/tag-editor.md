@@ -277,7 +277,7 @@ Meaning:
 
 ## UI Contract
 
-This page follows the shared Studio UI boundary documented in `docs/studio/ui-framework.md`:
+This page follows the Studio-specific shared UI boundary documented in `docs/studio/ui-framework.md`:
 
 - classes define presentation
 - `data-role` defines JS selectors

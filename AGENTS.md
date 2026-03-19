@@ -94,9 +94,10 @@
 
 ## Studio UI Guidance
 
-- `docs/studio/ui-framework.md` defines the core Studio UI elements and shared UI contracts.
-- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use `docs/studio/ui-framework.md` as the basis.
-- If Studio UI definitions, scope, or shared naming boundaries change, update `docs/studio/ui-framework.md` in the same change.
+- `docs/studio/ui-framework.md` defines the site-wide UI interaction defaults and the Studio shared UI contracts.
+- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use the Studio-specific sections of `docs/studio/ui-framework.md` as the basis.
+- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, or DOM hook conventions, use the site-wide sections of `docs/studio/ui-framework.md` as the basis.
+- If site-wide UI defaults or Studio UI definitions, scope, or shared naming boundaries change, update `docs/studio/ui-framework.md` in the same change.
 - Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
