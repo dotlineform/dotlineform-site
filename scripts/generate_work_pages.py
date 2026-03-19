@@ -1110,7 +1110,6 @@ def main() -> None:
             "title_sort": title_sort_value if title_sort_value is not None else numeric_aware_sort_key(title_value),
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
-            "series_id": work_record.get("series_id"),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
             "storage": storage_value,
             "work_checksum": f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None,

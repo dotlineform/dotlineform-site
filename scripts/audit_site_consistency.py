@@ -655,19 +655,20 @@ def check_json_schema(
                 if normalize_text(row.get("work_id")) == "":
                     errors += 1
                     add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing work_id"}, max_samples)
-                if "series_ids" in row:
-                    if not isinstance(row.get("series_ids"), list):
+                if "series_ids" not in row:
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry missing series_ids"}, max_samples)
+                elif not isinstance(row.get("series_ids"), list):
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must be list"}, max_samples)
+                else:
+                    series_ids = [normalize_text(item) for item in row.get("series_ids", [])]
+                    if not series_ids:
                         errors += 1
-                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must be list when present"}, max_samples)
-                    else:
-                        series_ids = [normalize_text(item) for item in row.get("series_ids", [])]
-                        if any(item == "" for item in series_ids):
-                            errors += 1
-                            add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
-                        primary_series_id = normalize_text(row.get("series_id"))
-                        if primary_series_id and series_ids and series_ids[0] != primary_series_id:
-                            errors += 1
-                            add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_id must match first series_ids value"}, max_samples)
+                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not be empty"}, max_samples)
+                    elif any(item == "" for item in series_ids):
+                        errors += 1
+                        add_sample(samples, {"check": "json_schema", "id": wid_norm, "path": str(works_index_path), "message": "works index entry series_ids must not contain empty values"}, max_samples)
 
     tag_assignments_path = site_root / "assets/studio/data/tag_assignments.json"
     try:
