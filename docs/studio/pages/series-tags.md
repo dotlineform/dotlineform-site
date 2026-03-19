@@ -287,7 +287,7 @@ Query params:
 
 Primary data access:
 
-- series list from inline JSON or `series_index.json`
+- series list from inline JSON or `series_index.json`, limited to `series_type = primary`
 - assignments JSON
 - registry JSON
 - groups JSON

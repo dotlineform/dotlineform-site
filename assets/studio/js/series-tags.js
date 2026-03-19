@@ -142,6 +142,7 @@ function parseSeriesDataFromInline(config) {
     const parsed = JSON.parse(node.textContent || "[]");
     if (!Array.isArray(parsed)) return [];
     return parsed
+      .filter((entry) => isPrimarySeriesEntry(entry))
       .map((entry) => {
         const seriesId = normalize(entry && entry.series_id);
         const title = String((entry && entry.title) || "").trim();
@@ -164,6 +165,7 @@ async function fetchSeriesDataFromIndex(config) {
     ? payload.series
     : {};
   return Object.keys(seriesMap)
+    .filter((seriesId) => isPrimarySeriesEntry(seriesMap[seriesId]))
     .map((seriesId) => {
       const row = seriesMap[seriesId];
       const sid = normalize(seriesId);
@@ -176,6 +178,10 @@ async function fetchSeriesDataFromIndex(config) {
     })
     .filter((entry) => entry.seriesId && entry.title)
     .sort((a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: "base" }));
+}
+
+function isPrimarySeriesEntry(entry) {
+  return normalize(entry && entry.series_type) === "primary";
 }
 
 function buildSeriesEditorUrl(config, seriesId) {

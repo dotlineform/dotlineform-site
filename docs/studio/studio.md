@@ -686,7 +686,7 @@ The Studio Tag Aliases page (`/studio/tag-aliases/`) reads `assets/studio/data/t
 
 The Series Tags page (`/studio/series-tags/`) reads:
 
-- `assets/data/series_index.json` for the series list/title/link target
+- `assets/data/series_index.json` for the primary-series list/title/link target (`series_type = primary`)
 - `assets/studio/data/tag_assignments.json` for assigned tags per series
 - browser offline-session data for staged assignment rows
 
