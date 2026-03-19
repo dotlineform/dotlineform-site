@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b8c42c943591f3ae52061f0617717d09",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d0bf43f653febccb86824dd33ac4f7f5",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00634",
     "count": 25,
     "hash": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
-    "work_checksum": "blake2b-177cd755f29ee904dc7494b8e9943967",
+    "work_checksum": "blake2b-159cc4af724543db3916469d8dcce6f8",
     "details_checksum": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
-    "record_checksum": "blake2b-b8c42c943591f3ae52061f0617717d09"
+    "record_checksum": "blake2b-d0bf43f653febccb86824dd33ac4f7f5"
   },
   "work": {
     "work_id": "00634",
@@ -16,12 +16,9 @@
     "title_sort": "bits symbols 001",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "qrnt",
     "series_ids": [
       "qrnt"
     ],
-    "series_title": "quantum random number theory",
-    "series_sort": "00634",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 8858,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "177cd755f29ee904dc7494b8e9943967"
+    "checksum": "159cc4af724543db3916469d8dcce6f8"
   },
   "sections": [
     {

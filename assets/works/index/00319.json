@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fb668e0b181ead2daa205696a93d79f2",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-595a7a4bfb44d92a7c76a0e3ee924fba",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00319",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4c0c5c2e14937b1eb4a3ae5578e7999f",
+    "work_checksum": "blake2b-e19f3de4ed2711a676da4ce7fb5d9462",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-fb668e0b181ead2daa205696a93d79f2"
+    "record_checksum": "blake2b-595a7a4bfb44d92a7c76a0e3ee924fba"
   },
   "work": {
     "work_id": "00319",
@@ -16,12 +16,9 @@
     "title_sort": "it never ends",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00319",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "4c0c5c2e14937b1eb4a3ae5578e7999f"
+    "checksum": "e19f3de4ed2711a676da4ce7fb5d9462"
   },
   "sections": []
 }

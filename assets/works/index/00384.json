@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d43bb5ac689a5a8707de2d7d4bde431c",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-526bfc81f59fce42d5de6ac781f3dd6b",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00384",
     "count": 4,
     "hash": "blake2b-bb594859929edd8b030d8c89eefed856",
-    "work_checksum": "blake2b-f303741b20eeacf0af36bef39a481a4a",
+    "work_checksum": "blake2b-fb500f96901af2c549567fd898d62378",
     "details_checksum": "blake2b-bb594859929edd8b030d8c89eefed856",
-    "record_checksum": "blake2b-d43bb5ac689a5a8707de2d7d4bde431c"
+    "record_checksum": "blake2b-526bfc81f59fce42d5de6ac781f3dd6b"
   },
   "work": {
     "work_id": "00384",
@@ -16,12 +16,9 @@
     "title_sort": "glass forms",
     "year": 2010,
     "year_display": "c. 2010?",
-    "series_id": "glass-forms",
     "series_ids": [
       "glass-forms"
     ],
-    "series_title": "glass forms",
-    "series_sort": "00384",
     "storage": "11",
     "medium_type": "mixed media",
     "medium_caption": "glass on paper",
@@ -36,7 +33,7 @@
     "height_px": 3295,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f303741b20eeacf0af36bef39a481a4a"
+    "checksum": "fb500f96901af2c549567fd898d62378"
   },
   "sections": [
     {

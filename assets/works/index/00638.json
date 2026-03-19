@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4f015ac605ca9a8d083a5b5d08024424",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-4ac1abacd6ffdedb459f49453196aefc",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00638",
     "count": 53,
     "hash": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
-    "work_checksum": "blake2b-468507be0e1e87b3f1c269bd7e849077",
+    "work_checksum": "blake2b-efa2c5e5af4d29bc2364a1eabdafd6d4",
     "details_checksum": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
-    "record_checksum": "blake2b-4f015ac605ca9a8d083a5b5d08024424"
+    "record_checksum": "blake2b-4ac1abacd6ffdedb459f49453196aefc"
   },
   "work": {
     "work_id": "00638",
@@ -16,12 +16,9 @@
     "title_sort": "003 symbols",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "3-symbols",
     "series_ids": [
       "3-symbols"
     ],
-    "series_title": "3 symbols",
-    "series_sort": "00638",
     "storage": "framed",
     "medium_type": "mixed media",
     "medium_caption": "enamel paint on c-type print, aluminium mount",
@@ -36,7 +33,7 @@
     "height_px": 1804,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "468507be0e1e87b3f1c269bd7e849077"
+    "checksum": "efa2c5e5af4d29bc2364a1eabdafd6d4"
   },
   "sections": [
     {

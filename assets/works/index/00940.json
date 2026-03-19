@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-02810e59ada6fca4c9968b6e7a34be6d",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-a775801d13ceca4d0c0d6ca063d5e4ea",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00940",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e256ab7694b86356cad2e87b9aa3da31",
+    "work_checksum": "blake2b-cb418aa583086c4646fbfb3b3b2c3f68",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-02810e59ada6fca4c9968b6e7a34be6d"
+    "record_checksum": "blake2b-a775801d13ceca4d0c0d6ca063d5e4ea"
   },
   "work": {
     "work_id": "00940",
@@ -16,12 +16,9 @@
     "title_sort": "dot theory (dots splash)",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "dot-theory",
     "series_ids": [
       "dot-theory"
     ],
-    "series_title": "dot theory",
-    "series_sort": "00940",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e256ab7694b86356cad2e87b9aa3da31"
+    "checksum": "cb418aa583086c4646fbfb3b3b2c3f68"
   },
   "sections": []
 }

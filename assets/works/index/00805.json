@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-135a25418abad9949343925123da05b3",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0af2cccad60bd476a62b115a912efa18",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00805",
     "count": 80,
     "hash": "blake2b-8d4d282d824909bbe452525ed2336dd7",
-    "work_checksum": "blake2b-32aeeabff066ede815c7cd8dfccf379c",
+    "work_checksum": "blake2b-a1429f93a59839e48c71ee793b7f7509",
     "details_checksum": "blake2b-8d4d282d824909bbe452525ed2336dd7",
-    "record_checksum": "blake2b-135a25418abad9949343925123da05b3"
+    "record_checksum": "blake2b-0af2cccad60bd476a62b115a912efa18"
   },
   "work": {
     "work_id": "00805",
@@ -16,12 +16,9 @@
     "title_sort": "book dna sequence",
     "year": 2010,
     "year_display": "2010",
-    "series_id": "book-dna",
     "series_ids": [
       "book-dna"
     ],
-    "series_title": "book dna",
-    "series_sort": "00805",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5315,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "32aeeabff066ede815c7cd8dfccf379c"
+    "checksum": "a1429f93a59839e48c71ee793b7f7509"
   },
   "sections": [
     {

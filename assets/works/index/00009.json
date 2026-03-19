@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e6ac9716abb24b06ed43a4473f28ea0f",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-db13a47db9ff902b2b678f821b861591",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00009",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fd4a1e180198dac1a9e7baf53916a7b0",
+    "work_checksum": "blake2b-50195169fcfe18152b8f81b08a8a3205",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e6ac9716abb24b06ed43a4473f28ea0f"
+    "record_checksum": "blake2b-db13a47db9ff902b2b678f821b861591"
   },
   "work": {
     "work_id": "00009",
@@ -16,12 +16,9 @@
     "title_sort": "internal organs (wireframe)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "104-00009",
     "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "wire on paper",
@@ -36,7 +33,7 @@
     "height_px": 7016,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "fd4a1e180198dac1a9e7baf53916a7b0"
+    "checksum": "50195169fcfe18152b8f81b08a8a3205"
   },
   "sections": []
 }

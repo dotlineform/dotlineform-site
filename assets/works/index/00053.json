@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c2b2875805c6ec20902a7a263e10ba9f",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-443cfebd8755bbed938b64e08b0403b9",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00053",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-edcc479f7f320a498b983fbd2347040e",
+    "work_checksum": "blake2b-7d95f0cb0b95f6728cca999bbb914c60",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c2b2875805c6ec20902a7a263e10ba9f"
+    "record_checksum": "blake2b-443cfebd8755bbed938b64e08b0403b9"
   },
   "work": {
     "work_id": "00053",
@@ -16,12 +16,9 @@
     "title_sort": "internal organs of doll",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "105-00053",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 4961,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "edcc479f7f320a498b983fbd2347040e"
+    "checksum": "7d95f0cb0b95f6728cca999bbb914c60"
   },
   "sections": []
 }

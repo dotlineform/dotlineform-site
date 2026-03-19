@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-450cd32e8a9203e3754ca8172d621fee",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-f0583246f445d3085fbcc8ccfdbe47df",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00455",
     "count": 50,
     "hash": "blake2b-46e39d562a186ed03100650923dd8b62",
-    "work_checksum": "blake2b-2f849c072154c6ecf795c437dba30b25",
+    "work_checksum": "blake2b-a3bc9f3bf1a66b216ee572200c579ddc",
     "details_checksum": "blake2b-46e39d562a186ed03100650923dd8b62",
-    "record_checksum": "blake2b-450cd32e8a9203e3754ca8172d621fee"
+    "record_checksum": "blake2b-f0583246f445d3085fbcc8ccfdbe47df"
   },
   "work": {
     "work_id": "00455",
@@ -16,12 +16,9 @@
     "title_sort": "dotlineform",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "dotlineform-2023",
     "series_ids": [
       "dotlineform-2023"
     ],
-    "series_title": "dotlineform (2023)",
-    "series_sort": "00455",
     "storage": null,
     "medium_type": "mixed media",
     "medium_caption": "mixed media on board",
@@ -36,7 +33,7 @@
     "height_px": 13110,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "2f849c072154c6ecf795c437dba30b25"
+    "checksum": "a3bc9f3bf1a66b216ee572200c579ddc"
   },
   "sections": [
     {

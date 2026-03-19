@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4ce9c1103a129038212d81082372fdf2",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-596f30bbb7b274e1b7564438286c2985",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00628",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ce6094ea1ac0871546f08ff5f2d178ed",
+    "work_checksum": "blake2b-bca722b7a8c5610ecbbb5c477779148d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4ce9c1103a129038212d81082372fdf2"
+    "record_checksum": "blake2b-596f30bbb7b274e1b7564438286c2985"
   },
   "work": {
     "work_id": "00628",
@@ -16,12 +16,9 @@
     "title_sort": "group theory",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "k-crystals",
     "series_ids": [
       "k-crystals"
     ],
-    "series_title": "k crystals",
-    "series_sort": "00628",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ce6094ea1ac0871546f08ff5f2d178ed"
+    "checksum": "bca722b7a8c5610ecbbb5c477779148d"
   },
   "sections": []
 }

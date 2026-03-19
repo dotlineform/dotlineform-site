@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7b57bce75c27d4ba67e9cacba03a2c8f",
-    "generated_at_utc": "2026-03-19T17:08:57Z",
+    "version": "blake2b-8539a6a0fac439edf19fbf09389ee13c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01046",
     "count": 25,
     "hash": "blake2b-1effaa2dd8ee2f3cfcdf9376139f0f9a",
-    "work_checksum": "blake2b-982bf4be32d69b187c0231d5648eeb00",
+    "work_checksum": "blake2b-ed3a71ff8da19477750e912957e42b36",
     "details_checksum": "blake2b-1effaa2dd8ee2f3cfcdf9376139f0f9a",
-    "record_checksum": "blake2b-7b57bce75c27d4ba67e9cacba03a2c8f"
+    "record_checksum": "blake2b-8539a6a0fac439edf19fbf09389ee13c"
   },
   "work": {
     "work_id": "01046",
@@ -16,12 +16,9 @@
     "title_sort": "espresso",
     "year": 2012,
     "year_display": "2012",
-    "series_id": "espresso",
     "series_ids": [
       "espresso"
     ],
-    "series_title": "espresso",
-    "series_sort": "01046",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5433,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "982bf4be32d69b187c0231d5648eeb00"
+    "checksum": "ed3a71ff8da19477750e912957e42b36"
   },
   "sections": [
     {

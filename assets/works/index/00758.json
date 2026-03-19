@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7f36f625b3c4d7504f8043e8365a648b",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-fd22ad3d6b29f4552f355b1b465d9da5",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00758",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e8d17c9b741835992741a41c26a711fa",
+    "work_checksum": "blake2b-f44e078eb2bb61eae350bb6bae4aa8d5",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7f36f625b3c4d7504f8043e8365a648b"
+    "record_checksum": "blake2b-fd22ad3d6b29f4552f355b1b465d9da5"
   },
   "work": {
     "work_id": "00758",
@@ -16,12 +16,9 @@
     "title_sort": "base k (002)",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "base-series",
     "series_ids": [
       "base-series"
     ],
-    "series_title": "base series",
-    "series_sort": "00758",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e8d17c9b741835992741a41c26a711fa"
+    "checksum": "f44e078eb2bb61eae350bb6bae4aa8d5"
   },
   "sections": []
 }

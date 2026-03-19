@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-918e648782ca0e0744b251801bb13543",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d1f7bed3cbcd4803c1336bf84ddd56a8",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00307",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-87c0f0c48cb72d641bf71ad7cdcee8a0",
+    "work_checksum": "blake2b-9b4bbeaa2a048dd13d8827b671efcc14",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-918e648782ca0e0744b251801bb13543"
+    "record_checksum": "blake2b-d1f7bed3cbcd4803c1336bf84ddd56a8"
   },
   "work": {
     "work_id": "00307",
@@ -16,12 +16,9 @@
     "title_sort": "untitled",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00307",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "87c0f0c48cb72d641bf71ad7cdcee8a0"
+    "checksum": "9b4bbeaa2a048dd13d8827b671efcc14"
   },
   "sections": []
 }

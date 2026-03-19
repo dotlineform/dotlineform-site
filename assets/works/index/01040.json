@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0215f7dfde5f8332dd3ab3b878f231bc",
-    "generated_at_utc": "2026-03-19T15:56:10Z",
+    "version": "blake2b-f76529e4d90360912b64f1a0099e0987",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01040",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-04fc1ae3be553535768a41e7c522eff4",
+    "work_checksum": "blake2b-06a879385d014395491e77484c522c6e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-0215f7dfde5f8332dd3ab3b878f231bc"
+    "record_checksum": "blake2b-f76529e4d90360912b64f1a0099e0987"
   },
   "work": {
     "work_id": "01040",
@@ -16,12 +16,9 @@
     "title_sort": "egg print 002 (reverse)",
     "year": 2012,
     "year_display": "2012",
-    "series_id": "egg-prints",
     "series_ids": [
       "egg-prints"
     ],
-    "series_title": "egg prints",
-    "series_sort": "01040",
     "storage": "5",
     "medium_type": "monoprint",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 5398,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "04fc1ae3be553535768a41e7c522eff4"
+    "checksum": "06a879385d014395491e77484c522c6e"
   },
   "sections": []
 }

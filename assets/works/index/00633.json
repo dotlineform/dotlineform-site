@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d3140814fc22f8c25f8f8bc4b6dd055a",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-5af0b40fa743aab0d945c87257453611",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00633",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8239e4bc97c5d73174f2abc9d432de0a",
+    "work_checksum": "blake2b-2c4f824bf448eace34cf7f55bf9a7af6",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-d3140814fc22f8c25f8f8bc4b6dd055a"
+    "record_checksum": "blake2b-5af0b40fa743aab0d945c87257453611"
   },
   "work": {
     "work_id": "00633",
@@ -16,12 +16,9 @@
     "title_sort": "quantum random number theory (004 circles)",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "qrnt",
     "series_ids": [
       "qrnt"
     ],
-    "series_title": "quantum random number theory",
-    "series_sort": "00633",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "8239e4bc97c5d73174f2abc9d432de0a"
+    "checksum": "2c4f824bf448eace34cf7f55bf9a7af6"
   },
   "sections": []
 }

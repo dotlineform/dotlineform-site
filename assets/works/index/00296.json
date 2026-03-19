@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-844d2ed9eda08512e5174242b4be0dff",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-b84272990def967fbf5b5d3eb6fbc8e2",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00296",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7c20fdea51c0c102e4a2ce4b2914fe26",
+    "work_checksum": "blake2b-593118d8203439c11de3ceac3f709b56",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-844d2ed9eda08512e5174242b4be0dff"
+    "record_checksum": "blake2b-b84272990def967fbf5b5d3eb6fbc8e2"
   },
   "work": {
     "work_id": "00296",
@@ -16,12 +16,9 @@
     "title_sort": "004 things that are completely different but at the same time are the same",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00296",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen and pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7c20fdea51c0c102e4a2ce4b2914fe26"
+    "checksum": "593118d8203439c11de3ceac3f709b56"
   },
   "sections": []
 }

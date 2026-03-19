@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-01cac1ccf0bb2f1e61f18872b8cb8be5",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7e617f2d6756fdafc8a29a91f7a0ee23",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00004",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-dd00e1dbf77ab1d8f296156ea66e13e9",
+    "work_checksum": "blake2b-76fde6060386346f864719c68ee3ecd9",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-01cac1ccf0bb2f1e61f18872b8cb8be5"
+    "record_checksum": "blake2b-7e617f2d6756fdafc8a29a91f7a0ee23"
   },
   "work": {
     "work_id": "00004",
@@ -16,12 +16,9 @@
     "title_sort": "a poem divided into 004 parts (\"we only feel love\")",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "a-poem-divided-into-4-parts",
     "series_ids": [
       "a-poem-divided-into-4-parts"
     ],
-    "series_title": "a poem divided into 4 parts",
-    "series_sort": "00004",
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on tracing paper",
@@ -36,7 +33,7 @@
     "height_px": 2480,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "dd00e1dbf77ab1d8f296156ea66e13e9"
+    "checksum": "76fde6060386346f864719c68ee3ecd9"
   },
   "sections": []
 }

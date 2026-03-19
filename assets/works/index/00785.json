@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-30e463d8ffb6388c9424a4736719b154",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-293e7dd6fdfd97936a9c6c1272875f77",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00785",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b44a5d78df9e8d76d04e27a5905251bd",
+    "work_checksum": "blake2b-ab560e4045aed00d2d4a0a798ccebdda",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-30e463d8ffb6388c9424a4736719b154"
+    "record_checksum": "blake2b-293e7dd6fdfd97936a9c6c1272875f77"
   },
   "work": {
     "work_id": "00785",
@@ -16,12 +16,9 @@
     "title_sort": "body space 003",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "body-space",
     "series_ids": [
       "body-space"
     ],
-    "series_title": "body space",
-    "series_sort": "00785",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "b44a5d78df9e8d76d04e27a5905251bd"
+    "checksum": "ab560e4045aed00d2d4a0a798ccebdda"
   },
   "sections": []
 }

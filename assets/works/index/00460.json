@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3ad4b830fef1c2fcccb057ddb57ee68b",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0d488054cbe16420fed198cff89244d9",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00460",
     "count": 20,
     "hash": "blake2b-6e81ea3d0ca8539cc8469f23b4a40e40",
-    "work_checksum": "blake2b-f3a5547884e8b8cb4147eb617603fc79",
+    "work_checksum": "blake2b-cb99cf1820b2dd4c321308b183acc249",
     "details_checksum": "blake2b-6e81ea3d0ca8539cc8469f23b4a40e40",
-    "record_checksum": "blake2b-3ad4b830fef1c2fcccb057ddb57ee68b"
+    "record_checksum": "blake2b-0d488054cbe16420fed198cff89244d9"
   },
   "work": {
     "work_id": "00460",
@@ -16,12 +16,9 @@
     "title_sort": "molecules",
     "year": 2013,
     "year_display": "2013",
-    "series_id": "molecules",
     "series_ids": [
       "molecules"
     ],
-    "series_title": "molecules",
-    "series_sort": "00460",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 9000,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f3a5547884e8b8cb4147eb617603fc79"
+    "checksum": "cb99cf1820b2dd4c321308b183acc249"
   },
   "sections": [
     {

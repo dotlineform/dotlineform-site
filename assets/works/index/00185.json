@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fafaee7a128b42f0aa1b15c106d66296",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-2329b74c4ef16165f0129e88b377c1cd",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00185",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0b4d2628ee0c3deec37296f43d9b9f5c",
+    "work_checksum": "blake2b-e7b3071eceb3cd61a3e31adef2642fc0",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-fafaee7a128b42f0aa1b15c106d66296"
+    "record_checksum": "blake2b-2329b74c4ef16165f0129e88b377c1cd"
   },
   "work": {
     "work_id": "00185",
@@ -16,12 +16,9 @@
     "title_sort": "cell 001",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "039-00185",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 2160,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "0b4d2628ee0c3deec37296f43d9b9f5c"
+    "checksum": "e7b3071eceb3cd61a3e31adef2642fc0"
   },
   "sections": []
 }

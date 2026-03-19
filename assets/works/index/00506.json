@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d3eaa93e142b703d1cf2b3682320e108",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-ff910ea36fb1f71c51c5a22966770a44",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00506",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f3d8a062031d08be0abbb571b01a8e50",
+    "work_checksum": "blake2b-cf80bfa4243983f4e76c941ea56eaa7a",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-d3eaa93e142b703d1cf2b3682320e108"
+    "record_checksum": "blake2b-ff910ea36fb1f71c51c5a22966770a44"
   },
   "work": {
     "work_id": "00506",
@@ -16,12 +16,9 @@
     "title_sort": "mm quantum 002.004",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "mm",
     "series_ids": [
       "mm"
     ],
-    "series_title": "mm",
-    "series_sort": "00506",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f3d8a062031d08be0abbb571b01a8e50"
+    "checksum": "cf80bfa4243983f4e76c941ea56eaa7a"
   },
   "sections": []
 }

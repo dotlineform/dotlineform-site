@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8e75f4bb87a51c979165b17229ec91c4",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-2a02d51df839dff192f0dfafe1f2113e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00173",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fb11e7286f6a93db496e089e41412bc9",
+    "work_checksum": "blake2b-9dc963fbfb62edb1083f7af5d6b35e4d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-8e75f4bb87a51c979165b17229ec91c4"
+    "record_checksum": "blake2b-2a02d51df839dff192f0dfafe1f2113e"
   },
   "work": {
     "work_id": "00173",
@@ -16,12 +16,9 @@
     "title_sort": "orange mesh compact",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "141-00173",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 3461,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "fb11e7286f6a93db496e089e41412bc9"
+    "checksum": "9dc963fbfb62edb1083f7af5d6b35e4d"
   },
   "sections": []
 }

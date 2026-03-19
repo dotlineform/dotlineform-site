@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f2604dbe0fe2cf85c53e5e67c99837b4",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-76850188f291975f91d101495352cd25",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00081",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-20af4fee109b6e6b66e34c6a39750daf",
+    "work_checksum": "blake2b-266435236f340ea055080d14c76c7c82",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f2604dbe0fe2cf85c53e5e67c99837b4"
+    "record_checksum": "blake2b-76850188f291975f91d101495352cd25"
   },
   "work": {
     "work_id": "00081",
@@ -16,12 +16,9 @@
     "title_sort": "body forms 008",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "017-00081",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 7015,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "20af4fee109b6e6b66e34c6a39750daf"
+    "checksum": "266435236f340ea055080d14c76c7c82"
   },
   "sections": []
 }

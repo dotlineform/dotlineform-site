@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-072ec68b376563ec1c750435d3117f76",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-31cba72917881923cd4f20a1f1687195",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00168",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-a321a8f1326e025157898af2522b7ef0",
+    "work_checksum": "blake2b-1af2173d62a7ccf485a389e76a27ff5d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-072ec68b376563ec1c750435d3117f76"
+    "record_checksum": "blake2b-31cba72917881923cd4f20a1f1687195"
   },
   "work": {
     "work_id": "00168",
@@ -16,12 +16,9 @@
     "title_sort": "hand life 002",
     "year": 1989,
     "year_display": "1989",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "086-00168",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 3918,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a321a8f1326e025157898af2522b7ef0"
+    "checksum": "1af2173d62a7ccf485a389e76a27ff5d"
   },
   "sections": []
 }

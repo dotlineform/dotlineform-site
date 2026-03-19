@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d68194bad0fa8c82f2f82f87fc181d53",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-cb6118882b34610ad4672ca2eac05a86",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00539",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-048e9f9ed5ffd88126fa8c70dfaaafae",
+    "work_checksum": "blake2b-10ea8192dcb8c7f8ebd52bebb13c3746",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-d68194bad0fa8c82f2f82f87fc181d53"
+    "record_checksum": "blake2b-cb6118882b34610ad4672ca2eac05a86"
   },
   "work": {
     "work_id": "00539",
@@ -16,12 +16,9 @@
     "title_sort": "model 005",
     "year": 1994,
     "year_display": "1994",
-    "series_id": "models",
     "series_ids": [
       "models"
     ],
-    "series_title": "models",
-    "series_sort": "00539",
     "storage": "9",
     "medium_type": "photocopy",
     "medium_caption": "magazine collage",
@@ -36,7 +33,7 @@
     "height_px": 4057,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "048e9f9ed5ffd88126fa8c70dfaaafae"
+    "checksum": "10ea8192dcb8c7f8ebd52bebb13c3746"
   },
   "sections": []
 }

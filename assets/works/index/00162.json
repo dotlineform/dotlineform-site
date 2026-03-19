@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7927549e8ddb3016880516aa4ebf20fd",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d5027a6710f302834238b66f78100967",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00162",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-10c32b8b1f1a84869585da112679d1e4",
+    "work_checksum": "blake2b-4b3befd5ac92155d38985bcf55d68b42",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7927549e8ddb3016880516aa4ebf20fd"
+    "record_checksum": "blake2b-d5027a6710f302834238b66f78100967"
   },
   "work": {
     "work_id": "00162",
@@ -16,12 +16,9 @@
     "title_sort": "mouse story (fragment)",
     "year": 1993,
     "year_display": "c. 1993?",
-    "series_id": "mouse-story",
     "series_ids": [
       "mouse-story"
     ],
-    "series_title": "mouse story",
-    "series_sort": "00162",
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "printed page",
@@ -36,7 +33,7 @@
     "height_px": 4410,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "10c32b8b1f1a84869585da112679d1e4"
+    "checksum": "4b3befd5ac92155d38985bcf55d68b42"
   },
   "sections": []
 }

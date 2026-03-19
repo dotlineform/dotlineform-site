@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-62cecfdda320d80632149ae85c28cc70",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-74da859e1fb4f4489e17bbaec6f853eb",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00198",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-cf41c4ec9b12707369aab077d41e8d84",
+    "work_checksum": "blake2b-366431c8ff11cb820efbec837f218a96",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-62cecfdda320d80632149ae85c28cc70"
+    "record_checksum": "blake2b-74da859e1fb4f4489e17bbaec6f853eb"
   },
   "work": {
     "work_id": "00198",
@@ -16,12 +16,9 @@
     "title_sort": "book of curves 001",
     "year": 1994,
     "year_display": "1994",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "027-00198",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 3436,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "cf41c4ec9b12707369aab077d41e8d84"
+    "checksum": "366431c8ff11cb820efbec837f218a96"
   },
   "sections": []
 }

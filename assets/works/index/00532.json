@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8befa87b436cd61d707c9b005da2a18e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-f31a104b8a89750afcded9c75aa25022",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00532",
     "count": 4,
     "hash": "blake2b-3195fe3dcb49fe1350ae475ea1ec112c",
-    "work_checksum": "blake2b-633b9f57b3e7d614451d68cdb4a9d9af",
+    "work_checksum": "blake2b-a506d9279c7ef7a3d8f06d0c5bb66da5",
     "details_checksum": "blake2b-3195fe3dcb49fe1350ae475ea1ec112c",
-    "record_checksum": "blake2b-8befa87b436cd61d707c9b005da2a18e"
+    "record_checksum": "blake2b-f31a104b8a89750afcded9c75aa25022"
   },
   "work": {
     "work_id": "00532",
@@ -16,12 +16,9 @@
     "title_sort": "body monoprint petals",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "2-bodies",
     "series_ids": [
       "2-bodies"
     ],
-    "series_title": "2 bodies",
-    "series_sort": "00532",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "mixed media",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "633b9f57b3e7d614451d68cdb4a9d9af"
+    "checksum": "a506d9279c7ef7a3d8f06d0c5bb66da5"
   },
   "sections": [
     {

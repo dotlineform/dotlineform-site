@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ac0583f9344d74d6ac1986b4226c2664",
-    "generated_at_utc": "2026-03-19T19:57:41Z",
+    "version": "blake2b-b38edf8cf2fdf5a135214fa1a6cb6fc9",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01051",
     "count": 6,
     "hash": "blake2b-5541cf6c982ad0bded9456e2d17c854b",
-    "work_checksum": "blake2b-e305e5e3c6ea49ce95ebaa7e2303635e",
+    "work_checksum": "blake2b-cdb6f19dc8f77602f2071c0487657bff",
     "details_checksum": "blake2b-5541cf6c982ad0bded9456e2d17c854b",
-    "record_checksum": "blake2b-ac0583f9344d74d6ac1986b4226c2664"
+    "record_checksum": "blake2b-b38edf8cf2fdf5a135214fa1a6cb6fc9"
   },
   "work": {
     "work_id": "01051",
@@ -16,12 +16,9 @@
     "title_sort": "fireworks particles version",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "fireworks-form",
     "series_ids": [
       "fireworks-form"
     ],
-    "series_title": "fireworks form",
-    "series_sort": "01051",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 8976,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e305e5e3c6ea49ce95ebaa7e2303635e"
+    "checksum": "cdb6f19dc8f77602f2071c0487657bff"
   },
   "sections": [
     {

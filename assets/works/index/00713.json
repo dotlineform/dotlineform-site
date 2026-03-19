@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fdb91e9a5f88f13b9673f48e597f3a4f",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-a569449a686e69f12849d885a7d99805",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00713",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e2f1501e8cefc9a78ae76cd8be3da076",
+    "work_checksum": "blake2b-2e67a6158456c6d54c8f7f283033da87",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-fdb91e9a5f88f13b9673f48e597f3a4f"
+    "record_checksum": "blake2b-a569449a686e69f12849d885a7d99805"
   },
   "work": {
     "work_id": "00713",
@@ -16,12 +16,9 @@
     "title_sort": "a doll story - weights 001",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "a-doll-story",
     "series_ids": [
       "a-doll-story"
     ],
-    "series_title": "a doll story",
-    "series_sort": "00713",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 2835,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e2f1501e8cefc9a78ae76cd8be3da076"
+    "checksum": "2e67a6158456c6d54c8f7f283033da87"
   },
   "sections": []
 }

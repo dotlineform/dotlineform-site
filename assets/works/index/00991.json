@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-17fef4684d04a680801111122a1960ff",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-b5c42701a0b410043e6dc1e8ad009eb0",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00991",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-9f3fd7fc8582a0d2a0f64ba39ebe5d1d",
+    "work_checksum": "blake2b-f3468ddcc0df3c6e22995d3e38625a3f",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-17fef4684d04a680801111122a1960ff"
+    "record_checksum": "blake2b-b5c42701a0b410043e6dc1e8ad009eb0"
   },
   "work": {
     "work_id": "00991",
@@ -16,12 +16,9 @@
     "title_sort": "dotlineform - monoprint 007 (detail)",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "dotlineform-2023",
     "series_ids": [
       "dotlineform-2023"
     ],
-    "series_title": "dotlineform (2023)",
-    "series_sort": "00991",
     "storage": "6",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 2953,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "9f3fd7fc8582a0d2a0f64ba39ebe5d1d"
+    "checksum": "f3468ddcc0df3c6e22995d3e38625a3f"
   },
   "sections": []
 }

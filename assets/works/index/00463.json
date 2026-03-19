@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b3a8caaeef2f8dedd71ccd8b8617b59e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-e335eef968c71e79656215c1d515228e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00463",
     "count": 7,
     "hash": "blake2b-928cf9d608756578feab4a12984c31c9",
-    "work_checksum": "blake2b-9919f81c4df3e2c21c9b086658a3e216",
+    "work_checksum": "blake2b-04cb4bd1dc53cb7f66794bf8ddcfdbf3",
     "details_checksum": "blake2b-928cf9d608756578feab4a12984c31c9",
-    "record_checksum": "blake2b-b3a8caaeef2f8dedd71ccd8b8617b59e"
+    "record_checksum": "blake2b-e335eef968c71e79656215c1d515228e"
   },
   "work": {
     "work_id": "00463",
@@ -16,12 +16,9 @@
     "title_sort": "living surface hand form",
     "year": 2004,
     "year_display": "1989, 2004",
-    "series_id": "living-surface-hand-form",
     "series_ids": [
       "living-surface-hand-form"
     ],
-    "series_title": "living surface hand form",
-    "series_sort": "00463",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 8031,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "9919f81c4df3e2c21c9b086658a3e216"
+    "checksum": "04cb4bd1dc53cb7f66794bf8ddcfdbf3"
   },
   "sections": [
     {

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-99bcd9cd095dfc14d818c3923df19f3c",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0622fb6c786dbe9f90dc48eb7a750469",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00342",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-36732cc78c0080c7876b9e949ab0e386",
+    "work_checksum": "blake2b-bd91b2535e7288ce82c83fb3612c58e8",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-99bcd9cd095dfc14d818c3923df19f3c"
+    "record_checksum": "blake2b-0622fb6c786dbe9f90dc48eb7a750469"
   },
   "work": {
     "work_id": "00342",
@@ -16,12 +16,9 @@
     "title_sort": "009 moments that are exactly the same but different and unique",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00342",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen and pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 4960,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "36732cc78c0080c7876b9e949ab0e386"
+    "checksum": "bd91b2535e7288ce82c83fb3612c58e8"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-18f5141f1391dacc50d04a4bda635e00",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-3ba4cdb6107a472d8f6330a4fd11d51f",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00159",
     "count": 2,
     "hash": "blake2b-079a035c219ac5325acc9299dcf01d6a",
-    "work_checksum": "blake2b-81ab455d72513efdb177ad7fe018bda7",
+    "work_checksum": "blake2b-9205321db61bac29cb38743994f5da69",
     "details_checksum": "blake2b-079a035c219ac5325acc9299dcf01d6a",
-    "record_checksum": "blake2b-18f5141f1391dacc50d04a4bda635e00"
+    "record_checksum": "blake2b-3ba4cdb6107a472d8f6330a4fd11d51f"
   },
   "work": {
     "work_id": "00159",
@@ -16,12 +16,9 @@
     "title_sort": "Michelle Pfeiffer",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "116-00159",
     "storage": "1",
     "medium_type": "photograph",
     "medium_caption": "colour photographs mounted in A4 booklet",
@@ -36,7 +33,7 @@
     "height_px": 5712,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "81ab455d72513efdb177ad7fe018bda7"
+    "checksum": "9205321db61bac29cb38743994f5da69"
   },
   "sections": [
     {

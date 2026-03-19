@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7c465e08faa5dd40b6414709ba3d4574",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-5828f151c37700a3ee56665e69e5023c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00363",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-a2d8d8e593e1280a9cb88a894d970a59",
+    "work_checksum": "blake2b-eed8885b6cad59028d2f20b3de07da6e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7c465e08faa5dd40b6414709ba3d4574"
+    "record_checksum": "blake2b-5828f151c37700a3ee56665e69e5023c"
   },
   "work": {
     "work_id": "00363",
@@ -16,12 +16,9 @@
     "title_sort": "007 particles",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00363",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink and pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 3508,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a2d8d8e593e1280a9cb88a894d970a59"
+    "checksum": "eed8885b6cad59028d2f20b3de07da6e"
   },
   "sections": []
 }

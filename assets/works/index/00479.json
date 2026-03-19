@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-eba129a003ab59474d88bf6f716eab99",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-e0f24237e31d939031a2e786423a9bf7",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00479",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e0ec47d50e2b0f3c934095e1579f1b8f",
+    "work_checksum": "blake2b-7771c9ef72c13f4f84ab0e75fcd72b8f",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-eba129a003ab59474d88bf6f716eab99"
+    "record_checksum": "blake2b-e0f24237e31d939031a2e786423a9bf7"
   },
   "work": {
     "work_id": "00479",
@@ -16,12 +16,9 @@
     "title_sort": "mm creased 006",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "mm",
     "series_ids": [
       "mm"
     ],
-    "series_title": "mm",
-    "series_sort": "00479",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e0ec47d50e2b0f3c934095e1579f1b8f"
+    "checksum": "7771c9ef72c13f4f84ab0e75fcd72b8f"
   },
   "sections": []
 }

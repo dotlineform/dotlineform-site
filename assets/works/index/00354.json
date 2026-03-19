@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ee2f7737c4f5f08a53262eca042c021a",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-62d90872e3b853929361905dc0f467fa",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00354",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2e1a6165f4f9574d08f58a8a8c4e9534",
+    "work_checksum": "blake2b-0366a48cc89a9c3aa5537019e2e1f53f",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-ee2f7737c4f5f08a53262eca042c021a"
+    "record_checksum": "blake2b-62d90872e3b853929361905dc0f467fa"
   },
   "work": {
     "work_id": "00354",
@@ -16,12 +16,9 @@
     "title_sort": "untitled",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00354",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink and pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 4960,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "2e1a6165f4f9574d08f58a8a8c4e9534"
+    "checksum": "0366a48cc89a9c3aa5537019e2e1f53f"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-07e3cb75bf65d8c771c7cf70da315e29",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-1473c2da805caab5dafa8be30729c1d6",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00903",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7349abd11c0b99d109b26bdcac624141",
+    "work_checksum": "blake2b-3bb72e5432c4459b1ac2ac724be77813",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-07e3cb75bf65d8c771c7cf70da315e29"
+    "record_checksum": "blake2b-1473c2da805caab5dafa8be30729c1d6"
   },
   "work": {
     "work_id": "00903",
@@ -16,12 +16,9 @@
     "title_sort": "doll face 003",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "doll-faces",
     "series_ids": [
       "doll-faces"
     ],
-    "series_title": "doll faces",
-    "series_sort": "00903",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7349abd11c0b99d109b26bdcac624141"
+    "checksum": "3bb72e5432c4459b1ac2ac724be77813"
   },
   "sections": []
 }

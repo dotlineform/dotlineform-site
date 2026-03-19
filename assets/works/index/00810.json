@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-89576f9fcd000605101fb3a43ca329e4",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-12279133990ba183a98a0c142f4b636e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00810",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f0616fa900ae3447d23d8d732558b699",
+    "work_checksum": "blake2b-6e32a76549a2299950dade0eaa33964d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-89576f9fcd000605101fb3a43ca329e4"
+    "record_checksum": "blake2b-12279133990ba183a98a0c142f4b636e"
   },
   "work": {
     "work_id": "00810",
@@ -16,12 +16,9 @@
     "title_sort": "book of curves 009 and 011",
     "year": 2011,
     "year_display": "2011",
-    "series_id": "book-of-curves",
     "series_ids": [
       "book-of-curves"
     ],
-    "series_title": "book of curves",
-    "series_sort": "00810",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 7087,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f0616fa900ae3447d23d8d732558b699"
+    "checksum": "6e32a76549a2299950dade0eaa33964d"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4c21d60ab17e71e7699714a7405a3a6e",
-    "generated_at_utc": "2026-03-19T17:32:01Z",
+    "version": "blake2b-d1643e8ca5edcdd3004011a64ba310e9",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01047",
     "count": 3,
     "hash": "blake2b-5df95a84fbb539a58f7c6c22527e525c",
-    "work_checksum": "blake2b-d4a26b78f84709e0dd3fbaf3797f2b53",
+    "work_checksum": "blake2b-810111d93b777f8955d952296c9211e3",
     "details_checksum": "blake2b-5df95a84fbb539a58f7c6c22527e525c",
-    "record_checksum": "blake2b-4c21d60ab17e71e7699714a7405a3a6e"
+    "record_checksum": "blake2b-d1643e8ca5edcdd3004011a64ba310e9"
   },
   "work": {
     "work_id": "01047",
@@ -16,12 +16,9 @@
     "title_sort": "field I",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "field",
     "series_ids": [
       "field"
     ],
-    "series_title": "field",
-    "series_sort": "01047",
     "storage": null,
     "medium_type": "painting",
     "medium_caption": "acrylic on canvas",
@@ -36,7 +33,7 @@
     "height_px": 6024,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "d4a26b78f84709e0dd3fbaf3797f2b53"
+    "checksum": "810111d93b777f8955d952296c9211e3"
   },
   "sections": [
     {

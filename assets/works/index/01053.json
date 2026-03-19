@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7c28d8e50f0b0dae1ead4b3ca3515e6f",
-    "generated_at_utc": "2026-03-19T20:29:46Z",
+    "version": "blake2b-a92d14358d587eb0f1b6be304200b931",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01053",
     "count": 3,
     "hash": "blake2b-d24e6cf849e6a645ac7737213d910b41",
-    "work_checksum": "blake2b-707310f5093be93ee1f026ccf9ff4492",
+    "work_checksum": "blake2b-80c430e4b96a871697212b82a072607a",
     "details_checksum": "blake2b-d24e6cf849e6a645ac7737213d910b41",
-    "record_checksum": "blake2b-7c28d8e50f0b0dae1ead4b3ca3515e6f"
+    "record_checksum": "blake2b-a92d14358d587eb0f1b6be304200b931"
   },
   "work": {
     "work_id": "01053",
@@ -16,12 +16,9 @@
     "title_sort": "flowers 002.jpg",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "flowers",
     "series_ids": [
       "flowers"
     ],
-    "series_title": "flowers",
-    "series_sort": "01053",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "707310f5093be93ee1f026ccf9ff4492"
+    "checksum": "80c430e4b96a871697212b82a072607a"
   },
   "sections": [
     {

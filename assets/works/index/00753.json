@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f47de656630dad19e70108ea7d0eff40",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7200d23142776d1d79ba703cc4e6d0c9",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00753",
     "count": 3,
     "hash": "blake2b-19d349f64db7605f3ee858f4656f5ff5",
-    "work_checksum": "blake2b-dbe2680c206df7cbe9bdb7cf1737d16b",
+    "work_checksum": "blake2b-30f1b5a5894d5ca72a148907ee242529",
     "details_checksum": "blake2b-19d349f64db7605f3ee858f4656f5ff5",
-    "record_checksum": "blake2b-f47de656630dad19e70108ea7d0eff40"
+    "record_checksum": "blake2b-7200d23142776d1d79ba703cc4e6d0c9"
   },
   "work": {
     "work_id": "00753",
@@ -16,12 +16,9 @@
     "title_sort": "assembly code 001",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "assembly-codes",
     "series_ids": [
       "assembly-codes"
     ],
-    "series_title": "assembly codes",
-    "series_sort": "00753",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "dbe2680c206df7cbe9bdb7cf1737d16b"
+    "checksum": "30f1b5a5894d5ca72a148907ee242529"
   },
   "sections": [
     {

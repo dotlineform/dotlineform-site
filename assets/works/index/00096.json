@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7699dd2580357dae3e88a8e242d9fbb0",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0413a364c77994973c9c38c69e484a60",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00096",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3b26c41c2ee153440c918aea8497a7ef",
+    "work_checksum": "blake2b-89876af4e968270075b9f73385eca824",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7699dd2580357dae3e88a8e242d9fbb0"
+    "record_checksum": "blake2b-0413a364c77994973c9c38c69e484a60"
   },
   "work": {
     "work_id": "00096",
@@ -16,12 +16,9 @@
     "title_sort": "dissection (prepared body 001)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "057-00096",
     "storage": "1",
     "medium_type": "painting",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 7016,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "3b26c41c2ee153440c918aea8497a7ef"
+    "checksum": "89876af4e968270075b9f73385eca824"
   },
   "sections": []
 }

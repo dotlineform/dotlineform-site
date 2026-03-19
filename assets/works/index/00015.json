@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a439dfd69347cdbc46e8274f8d7a63e3",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-3b753c9a3985bdaa37847caa65bb12dd",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00015",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0fdcd7df519ab686700075015049ccac",
+    "work_checksum": "blake2b-9c01d486ec7d5984965a245e7c10332c",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a439dfd69347cdbc46e8274f8d7a63e3"
+    "record_checksum": "blake2b-3b753c9a3985bdaa37847caa65bb12dd"
   },
   "work": {
     "work_id": "00015",
@@ -16,12 +16,9 @@
     "title_sort": "forms (ink and water 002)",
     "year": 1993,
     "year_display": "1993",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "072-00015",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 6936,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "0fdcd7df519ab686700075015049ccac"
+    "checksum": "9c01d486ec7d5984965a245e7c10332c"
   },
   "sections": []
 }

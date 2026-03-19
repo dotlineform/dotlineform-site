@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3778d83e47764e6f55eff3d04a13e75e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-de687e95d622709c1d8bd38dd49b8d5b",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00457",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fcb93ff7170cc52772986cc449fff044",
+    "work_checksum": "blake2b-2fae9076e6bb5c4db34606cb7e91f915",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-3778d83e47764e6f55eff3d04a13e75e"
+    "record_checksum": "blake2b-de687e95d622709c1d8bd38dd49b8d5b"
   },
   "work": {
     "work_id": "00457",
@@ -16,12 +16,9 @@
     "title_sort": "intuition (2020)",
     "year": 2020,
     "year_display": "c. 2001-11",
-    "series_id": "intuition-2020",
     "series_ids": [
       "intuition-2020"
     ],
-    "series_title": "intuition (2020)",
-    "series_sort": "00457",
     "storage": null,
     "medium_type": "music",
     "medium_caption": "audio files (mp3/FLAC/wav)",
@@ -36,7 +33,7 @@
     "height_px": null,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "fcb93ff7170cc52772986cc449fff044"
+    "checksum": "2fae9076e6bb5c4db34606cb7e91f915"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-da2a6d72b1c7fa4a4532a2b0ff6c6826",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-85ca8e113dc9d802b87713f8110224e3",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00394",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e47f368677efe4204cd1c69f65bcacd0",
+    "work_checksum": "blake2b-610e0278f63c3cf9b6accd4a57297c8d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-da2a6d72b1c7fa4a4532a2b0ff6c6826"
+    "record_checksum": "blake2b-85ca8e113dc9d802b87713f8110224e3"
   },
   "work": {
     "work_id": "00394",
@@ -16,12 +16,9 @@
     "title_sort": "wa (yoko takenami)",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "wa",
     "series_ids": [
       "wa"
     ],
-    "series_title": "wa",
-    "series_sort": "00394",
     "storage": "5",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 4134,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e47f368677efe4204cd1c69f65bcacd0"
+    "checksum": "610e0278f63c3cf9b6accd4a57297c8d"
   },
   "sections": []
 }

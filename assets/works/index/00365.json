@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4b75c9baacc5bdb5ed403b43917f2691",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-02e7e266ae78783d03db982f6b3cf27a",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00365",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7561f50c9f86554a26062744b92a22ec",
+    "work_checksum": "blake2b-4ebb27af29fb41056ed938a8c60be98d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4b75c9baacc5bdb5ed403b43917f2691"
+    "record_checksum": "blake2b-02e7e266ae78783d03db982f6b3cf27a"
   },
   "work": {
     "work_id": "00365",
@@ -16,12 +16,9 @@
     "title_sort": "the eye",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00365",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink and pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 3508,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7561f50c9f86554a26062744b92a22ec"
+    "checksum": "4ebb27af29fb41056ed938a8c60be98d"
   },
   "sections": []
 }

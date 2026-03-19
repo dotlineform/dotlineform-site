@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-855614e6a286260e2445d83b6945d0ca",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-cb94dce71f7a496545da4c32273adc9e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00631",
     "count": 4,
     "hash": "blake2b-fc34b5f7c24ffedebf6c84c217100cb0",
-    "work_checksum": "blake2b-36d1d6cf6ba42b47f3c69397020da285",
+    "work_checksum": "blake2b-ca86d71fa57b8833e8f5d4054850927e",
     "details_checksum": "blake2b-fc34b5f7c24ffedebf6c84c217100cb0",
-    "record_checksum": "blake2b-855614e6a286260e2445d83b6945d0ca"
+    "record_checksum": "blake2b-cb94dce71f7a496545da4c32273adc9e"
   },
   "work": {
     "work_id": "00631",
@@ -16,12 +16,9 @@
     "title_sort": "quantum random number theory (form)",
     "year": 2015,
     "year_display": "2015",
-    "series_id": "qrnt",
     "series_ids": [
       "qrnt"
     ],
-    "series_title": "quantum random number theory",
-    "series_sort": "00631",
     "storage": "framed",
     "medium_type": "digital print",
     "medium_caption": "pencil on giclée print",
@@ -36,7 +33,7 @@
     "height_px": 3088,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "36d1d6cf6ba42b47f3c69397020da285"
+    "checksum": "ca86d71fa57b8833e8f5d4054850927e"
   },
   "sections": [
     {

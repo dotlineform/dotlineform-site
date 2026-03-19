@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4851c26bf01bba703f843f3d1a84886d",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-6d586c13277280c273b8d0bad644bd03",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00216",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-d2905ccd796df4ee0b35e926e6baec70",
+    "work_checksum": "blake2b-3d9c6547a03190790e58d07ef9fc6f23",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4851c26bf01bba703f843f3d1a84886d"
+    "record_checksum": "blake2b-6d586c13277280c273b8d0bad644bd03"
   },
   "work": {
     "work_id": "00216",
@@ -16,12 +16,9 @@
     "title_sort": "nature 001",
     "year": 1996,
     "year_display": "1996",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "119-00216",
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
@@ -36,7 +33,7 @@
     "height_px": 2494,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "d2905ccd796df4ee0b35e926e6baec70"
+    "checksum": "3d9c6547a03190790e58d07ef9fc6f23"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-6b6bae01e5f1b4649cfaa0883eefe51e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-b1435c612d71ded2936cd1bb46a4eb45",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00894",
     "count": 4,
     "hash": "blake2b-4a07198e7ab3a596d88158e027cb6f85",
-    "work_checksum": "blake2b-ce7e690527561552f552a83490a02f44",
+    "work_checksum": "blake2b-f07fa57642a7ba7de0acadfe25d09afa",
     "details_checksum": "blake2b-4a07198e7ab3a596d88158e027cb6f85",
-    "record_checksum": "blake2b-6b6bae01e5f1b4649cfaa0883eefe51e"
+    "record_checksum": "blake2b-b1435c612d71ded2936cd1bb46a4eb45"
   },
   "work": {
     "work_id": "00894",
@@ -16,12 +16,9 @@
     "title_sort": "doll moiré reduced",
     "year": 2008,
     "year_display": "c. 2008",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "028-00894",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ce7e690527561552f552a83490a02f44"
+    "checksum": "f07fa57642a7ba7de0acadfe25d09afa"
   },
   "sections": [
     {

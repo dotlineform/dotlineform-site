@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e7424ed74ae354852d5a63e7ccbd3978",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d33a274a99e7536dcf0ab1877e0073fa",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00224",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-278f31c197ff7adb85db8f2d59f1c56d",
+    "work_checksum": "blake2b-7d2397e5d3e010f869215d6132531e3e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e7424ed74ae354852d5a63e7ccbd3978"
+    "record_checksum": "blake2b-d33a274a99e7536dcf0ab1877e0073fa"
   },
   "work": {
     "work_id": "00224",
@@ -16,12 +16,9 @@
     "title_sort": "colouring book 008",
     "year": 1996,
     "year_display": "1996",
-    "series_id": "colouring-book",
     "series_ids": [
       "colouring-book"
     ],
-    "series_title": "colouring book",
-    "series_sort": "00224",
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
@@ -36,7 +33,7 @@
     "height_px": 2835,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "278f31c197ff7adb85db8f2d59f1c56d"
+    "checksum": "7d2397e5d3e010f869215d6132531e3e"
   },
   "sections": []
 }

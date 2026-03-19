@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5738763b59dceeb5563af4744ca18169",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-b0aa39b2e6eebb7075f9817105a8c5de",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00842",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-c7606a1d602597c140529a893e88ebd2",
+    "work_checksum": "blake2b-2d06568d1db464791041184c4640a5c3",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5738763b59dceeb5563af4744ca18169"
+    "record_checksum": "blake2b-b0aa39b2e6eebb7075f9817105a8c5de"
   },
   "work": {
     "work_id": "00842",
@@ -16,12 +16,9 @@
     "title_sort": "structure i",
     "year": 2011,
     "year_display": "2011",
-    "series_id": "cube-structure",
     "series_ids": [
       "cube-structure"
     ],
-    "series_title": "cube structure",
-    "series_sort": "00842",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "c7606a1d602597c140529a893e88ebd2"
+    "checksum": "2d06568d1db464791041184c4640a5c3"
   },
   "sections": []
 }

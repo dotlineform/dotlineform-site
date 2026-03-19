@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b0f34467b6eb754d5e5d151a3a21c2e0",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-418b4b8c3e38a249313cba32ade8a4a8",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00933",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2022388b32566a6783c324d9971326a7",
+    "work_checksum": "blake2b-46d18976c9280e739cae36419852725c",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b0f34467b6eb754d5e5d151a3a21c2e0"
+    "record_checksum": "blake2b-418b4b8c3e38a249313cba32ade8a4a8"
   },
   "work": {
     "work_id": "00933",
@@ -16,12 +16,9 @@
     "title_sort": "dot (2012-012-003 - 013-004-049)",
     "year": 2012,
     "year_display": "2012",
-    "series_id": "dot",
     "series_ids": [
       "dot"
     ],
-    "series_title": "dot",
-    "series_sort": "00933",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "2022388b32566a6783c324d9971326a7"
+    "checksum": "46d18976c9280e739cae36419852725c"
   },
   "sections": []
 }

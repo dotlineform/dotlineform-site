@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-2572f72db5c2038003132e6a74b5624b",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-96837207e5f3cc98d8ec156d2834ca27",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00464",
     "count": 60,
     "hash": "blake2b-9458a64a46aa5ed3b06dc3e18357f992",
-    "work_checksum": "blake2b-a442578bbeccd2c19d5263c08a119d16",
+    "work_checksum": "blake2b-37c3126e081bf05abc4f29bf0a1ced5b",
     "details_checksum": "blake2b-9458a64a46aa5ed3b06dc3e18357f992",
-    "record_checksum": "blake2b-2572f72db5c2038003132e6a74b5624b"
+    "record_checksum": "blake2b-96837207e5f3cc98d8ec156d2834ca27"
   },
   "work": {
     "work_id": "00464",
@@ -16,12 +16,9 @@
     "title_sort": "forest memories 001-048",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "forest-memories-1-48",
     "series_ids": [
       "forest-memories-1-48"
     ],
-    "series_title": "forest memories 1-48",
-    "series_sort": "00464",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a442578bbeccd2c19d5263c08a119d16"
+    "checksum": "37c3126e081bf05abc4f29bf0a1ced5b"
   },
   "sections": [
     {

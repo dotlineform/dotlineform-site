@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4ed5cf3a52ad2b9904a812e04103bc83",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-cdd4336e7588db08484c6e58cb3f110c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00876",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-6e63bdc589984e0ecf748ba07d26ebc4",
+    "work_checksum": "blake2b-d101b4322e8a2f4401139e71eec42d5b",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4ed5cf3a52ad2b9904a812e04103bc83"
+    "record_checksum": "blake2b-cdd4336e7588db08484c6e58cb3f110c"
   },
   "work": {
     "work_id": "00876",
@@ -16,12 +16,9 @@
     "title_sort": "doll components",
     "year": 2005,
     "year_display": "2005",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "013-00876",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 6000,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "6e63bdc589984e0ecf748ba07d26ebc4"
+    "checksum": "d101b4322e8a2f4401139e71eec42d5b"
   },
   "sections": []
 }

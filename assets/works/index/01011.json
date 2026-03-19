@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0bb23eab6ea290ac5c9215ba487999c9",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-61dfcde37686f914b686fa82e5b6c4b6",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01011",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-5705e28bda2d71b3cc0d3bd00d905601",
+    "work_checksum": "blake2b-45d1645f82153224468a395da8b5278e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-0bb23eab6ea290ac5c9215ba487999c9"
+    "record_checksum": "blake2b-61dfcde37686f914b686fa82e5b6c4b6"
   },
   "work": {
     "work_id": "01011",
@@ -16,12 +16,9 @@
     "title_sort": "droplets (2014-006-022 - 013-057-044)",
     "year": 2014,
     "year_display": "2014",
-    "series_id": "droplets",
     "series_ids": [
       "droplets"
     ],
-    "series_title": "droplets",
-    "series_sort": "01011",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 7087,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "5705e28bda2d71b3cc0d3bd00d905601"
+    "checksum": "45d1645f82153224468a395da8b5278e"
   },
   "sections": []
 }

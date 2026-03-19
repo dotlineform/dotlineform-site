@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5348cc3b326d5f12334ab9d73e005c8b",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-9227f66d31d8925b23fae338a1675184",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00872",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-bfee2f457edc8091d43e11d6ed9b1c60",
+    "work_checksum": "blake2b-5784b4070a1ece6a94d4084fff835b6d",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5348cc3b326d5f12334ab9d73e005c8b"
+    "record_checksum": "blake2b-9227f66d31d8925b23fae338a1675184"
   },
   "work": {
     "work_id": "00872",
@@ -16,12 +16,9 @@
     "title_sort": "doll bandage",
     "year": 1989,
     "year_display": "c. 1989",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "001-00872",
     "storage": "8",
     "medium_type": "mixed media",
     "medium_caption": "mixed media (photocopy)",
@@ -36,7 +33,7 @@
     "height_px": 4658,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "bfee2f457edc8091d43e11d6ed9b1c60"
+    "checksum": "5784b4070a1ece6a94d4084fff835b6d"
   },
   "sections": []
 }

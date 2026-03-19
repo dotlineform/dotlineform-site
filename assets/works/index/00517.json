@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fd2aea7a59d33bb74acae00cb5142e7e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-e9e0e212205711531b71fb460d703977",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00517",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ee7b8a6c0997c9e29238217aeabcf47c",
+    "work_checksum": "blake2b-638cb1f3197e33cd79cdebf35cecba44",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-fd2aea7a59d33bb74acae00cb5142e7e"
+    "record_checksum": "blake2b-e9e0e212205711531b71fb460d703977"
   },
   "work": {
     "work_id": "00517",
@@ -16,12 +16,9 @@
     "title_sort": "landscape 002",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "landscapes",
     "series_ids": [
       "landscapes"
     ],
-    "series_title": "landscapes",
-    "series_sort": "00517",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ee7b8a6c0997c9e29238217aeabcf47c"
+    "checksum": "638cb1f3197e33cd79cdebf35cecba44"
   },
   "sections": []
 }

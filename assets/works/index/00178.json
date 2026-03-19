@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-6e1392b89e2225656ecaaed6b164cd22",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-353707f37565f8d4a6d985bf63f5814e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00178",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-bc67fb0ed0ceb9931a8c0782d17076d6",
+    "work_checksum": "blake2b-82bb1ac8b78dd50a6f3b7d0e290050de",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-6e1392b89e2225656ecaaed6b164cd22"
+    "record_checksum": "blake2b-353707f37565f8d4a6d985bf63f5814e"
   },
   "work": {
     "work_id": "00178",
@@ -16,12 +16,9 @@
     "title_sort": "carpet pattern",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "038-00178",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "bc67fb0ed0ceb9931a8c0782d17076d6"
+    "checksum": "82bb1ac8b78dd50a6f3b7d0e290050de"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-04a9574ce3ce8ddb5bd15230a3ea4bab",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-9ec97767e582cecc9d02009061433524",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00008",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b46fa7c533ad953d2264e96fd0c4d701",
+    "work_checksum": "blake2b-ec065fd6d38c97ad9c0437253a48b19f",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-04a9574ce3ce8ddb5bd15230a3ea4bab"
+    "record_checksum": "blake2b-9ec97767e582cecc9d02009061433524"
   },
   "work": {
     "work_id": "00008",
@@ -16,13 +16,10 @@
     "title_sort": "nerve",
     "year": 1995,
     "year_display": "July 1990 – January 1995",
-    "series_id": "nerve",
     "series_ids": [
       "nerve",
       "collected-1989-1998"
     ],
-    "series_title": "nerve",
-    "series_sort": "00008",
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "loose bound book, 48p",
@@ -37,7 +34,7 @@
     "height_px": 2263,
     "download": "nerve.pdf",
     "artist": "Michael Davies",
-    "checksum": "b46fa7c533ad953d2264e96fd0c4d701"
+    "checksum": "ec065fd6d38c97ad9c0437253a48b19f"
   },
   "sections": []
 }

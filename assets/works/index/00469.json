@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0f6785868afb466d21a0f89b65c5df76",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-cf16f1e603042e1dfe6d347d2ec0dac0",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00469",
     "count": 8,
     "hash": "blake2b-818459e7aacf34e5de3ea6605820941a",
-    "work_checksum": "blake2b-2ee2d03a06e708894891876d89b58e6b",
+    "work_checksum": "blake2b-b9fa259d3c756a771632ccf8c225c82c",
     "details_checksum": "blake2b-818459e7aacf34e5de3ea6605820941a",
-    "record_checksum": "blake2b-0f6785868afb466d21a0f89b65c5df76"
+    "record_checksum": "blake2b-cf16f1e603042e1dfe6d347d2ec0dac0"
   },
   "work": {
     "work_id": "00469",
@@ -16,12 +16,9 @@
     "title_sort": "heaven and earth",
     "year": 2011,
     "year_display": "2011",
-    "series_id": "heaven-and-earth",
     "series_ids": [
       "heaven-and-earth"
     ],
-    "series_title": "heaven and earth",
-    "series_sort": "00469",
     "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 8859,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "2ee2d03a06e708894891876d89b58e6b"
+    "checksum": "b9fa259d3c756a771632ccf8c225c82c"
   },
   "sections": [
     {

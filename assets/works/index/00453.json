@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c662b1815dcd55838d842d018252d3a6",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-ca06b08bf8abe32f3d816aa66714a4fd",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00453",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ac10f5ab30d2d3e79232ba0b1d84138a",
+    "work_checksum": "blake2b-5dbfaec847a2bcc59e91687b25fe203b",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c662b1815dcd55838d842d018252d3a6"
+    "record_checksum": "blake2b-ca06b08bf8abe32f3d816aa66714a4fd"
   },
   "work": {
     "work_id": "00453",
@@ -16,12 +16,9 @@
     "title_sort": "found form 038",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "found-forms",
     "series_ids": [
       "found-forms"
     ],
-    "series_title": "found forms",
-    "series_sort": "00453",
     "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ac10f5ab30d2d3e79232ba0b1d84138a"
+    "checksum": "5dbfaec847a2bcc59e91687b25fe203b"
   },
   "sections": []
 }

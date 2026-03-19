@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a3e77be526fd3b4ef5f96d151443a250",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7b14cab3ad7fb9a76c2398a4bcc771b2",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00620",
     "count": 13,
     "hash": "blake2b-b74e2abc88570b4a33d18aa2e2c4d7df",
-    "work_checksum": "blake2b-a4a5fafbe6f61eb8edc3ae390f3dd2ea",
+    "work_checksum": "blake2b-35100354600df3c156a0c619fe4a10f6",
     "details_checksum": "blake2b-b74e2abc88570b4a33d18aa2e2c4d7df",
-    "record_checksum": "blake2b-a3e77be526fd3b4ef5f96d151443a250"
+    "record_checksum": "blake2b-7b14cab3ad7fb9a76c2398a4bcc771b2"
   },
   "work": {
     "work_id": "00620",
@@ -16,12 +16,9 @@
     "title_sort": "harmony 003 (version)",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "harmony",
     "series_ids": [
       "harmony"
     ],
-    "series_title": "harmony",
-    "series_sort": "005-00620",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a4a5fafbe6f61eb8edc3ae390f3dd2ea"
+    "checksum": "35100354600df3c156a0c619fe4a10f6"
   },
   "sections": [
     {

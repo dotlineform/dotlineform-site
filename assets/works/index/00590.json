@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f81def657ac1dea329b26dedf2fc2622",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-95cc8f0164b0702439c91dd91885e344",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00590",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fa7f99ae22c301d1a2734c52882e2103",
+    "work_checksum": "blake2b-575dc7844902d7d4173d130eebe566c7",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f81def657ac1dea329b26dedf2fc2622"
+    "record_checksum": "blake2b-95cc8f0164b0702439c91dd91885e344"
   },
   "work": {
     "work_id": "00590",
@@ -16,12 +16,9 @@
     "title_sort": "curve 001",
     "year": 2021,
     "year_display": "2021",
-    "series_id": "form-mobile",
     "series_ids": [
       "form-mobile"
     ],
-    "series_title": "form mobile",
-    "series_sort": "00590",
     "storage": "7",
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 3508,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "fa7f99ae22c301d1a2734c52882e2103"
+    "checksum": "575dc7844902d7d4173d130eebe566c7"
   },
   "sections": []
 }

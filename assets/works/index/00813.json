@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7be3cb976c0aae92bb9f133050fcd7a9",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d004b0f1d4783e6eb5e74d7eb0f8ec70",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00813",
     "count": 5,
     "hash": "blake2b-e5affc70c29501ec623df5a60058e455",
-    "work_checksum": "blake2b-674b24119a09902b32048742b5b0437b",
+    "work_checksum": "blake2b-b6d470d08bfbbcc31ae22550bb609c82",
     "details_checksum": "blake2b-e5affc70c29501ec623df5a60058e455",
-    "record_checksum": "blake2b-7be3cb976c0aae92bb9f133050fcd7a9"
+    "record_checksum": "blake2b-d004b0f1d4783e6eb5e74d7eb0f8ec70"
   },
   "work": {
     "work_id": "00813",
@@ -16,12 +16,9 @@
     "title_sort": "colours 1958-2001",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "colours",
     "series_ids": [
       "colours"
     ],
-    "series_title": "colours",
-    "series_sort": "00813",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "674b24119a09902b32048742b5b0437b"
+    "checksum": "b6d470d08bfbbcc31ae22550bb609c82"
   },
   "sections": [
     {

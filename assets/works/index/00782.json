@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-96e8937beca9c34825a087327e78abed",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-79981bb2388ef187dc7de665e05ca560",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00782",
     "count": 46,
     "hash": "blake2b-675936d823aa812933984c320d3d98a6",
-    "work_checksum": "blake2b-7d86f17be07f712098479a2d5efe4e74",
+    "work_checksum": "blake2b-dae04189208109329035673c52925502",
     "details_checksum": "blake2b-675936d823aa812933984c320d3d98a6",
-    "record_checksum": "blake2b-96e8937beca9c34825a087327e78abed"
+    "record_checksum": "blake2b-79981bb2388ef187dc7de665e05ca560"
   },
   "work": {
     "work_id": "00782",
@@ -16,12 +16,9 @@
     "title_sort": "birth of healing forms",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "birth-of-healing-forms",
     "series_ids": [
       "birth-of-healing-forms"
     ],
-    "series_title": "birth of healing forms",
-    "series_sort": "00782",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7d86f17be07f712098479a2d5efe4e74"
+    "checksum": "dae04189208109329035673c52925502"
   },
   "sections": [
     {

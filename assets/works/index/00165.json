@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-50663a14195e732a95ba4b1b6b38970b",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-a70490d95895635b6d1637b646e802db",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00165",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-68d26e1ac976d1e943e043ee42934c3b",
+    "work_checksum": "blake2b-e21abf24a73073d30fc101d7e3bcf8bd",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-50663a14195e732a95ba4b1b6b38970b"
+    "record_checksum": "blake2b-a70490d95895635b6d1637b646e802db"
   },
   "work": {
     "work_id": "00165",
@@ -16,12 +16,9 @@
     "title_sort": "angels",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "006-00165",
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "printed page",
@@ -36,7 +33,7 @@
     "height_px": 4061,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "68d26e1ac976d1e943e043ee42934c3b"
+    "checksum": "e21abf24a73073d30fc101d7e3bcf8bd"
   },
   "sections": []
 }

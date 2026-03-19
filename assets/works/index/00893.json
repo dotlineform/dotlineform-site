@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0e304f208787839c9c0bda11e77b9420",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-468ea1e127359456a6d8f5be98ab961b",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00893",
     "count": 8,
     "hash": "blake2b-11c0554ce16cb616550938ade0e48bd5",
-    "work_checksum": "blake2b-eb96c8942e7e6069202703c27a842f68",
+    "work_checksum": "blake2b-2468f133fa95578e1b87702575a09814",
     "details_checksum": "blake2b-11c0554ce16cb616550938ade0e48bd5",
-    "record_checksum": "blake2b-0e304f208787839c9c0bda11e77b9420"
+    "record_checksum": "blake2b-468ea1e127359456a6d8f5be98ab961b"
   },
   "work": {
     "work_id": "00893",
@@ -16,12 +16,9 @@
     "title_sort": "doll moiré",
     "year": 2008,
     "year_display": "c. 2008",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "027-00893",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
@@ -36,7 +33,7 @@
     "height_px": 1909,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "eb96c8942e7e6069202703c27a842f68"
+    "checksum": "2468f133fa95578e1b87702575a09814"
   },
   "sections": [
     {

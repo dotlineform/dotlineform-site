@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-59154ac1c7738030084ee4f962cffaa4",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-1591de1b4a4c1532d854ab5424779091",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00947",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7d9362afe2224d5385a728f704a5f961",
+    "work_checksum": "blake2b-b3e6b0b38c51d336b176eb6306d35732",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-59154ac1c7738030084ee4f962cffaa4"
+    "record_checksum": "blake2b-1591de1b4a4c1532d854ab5424779091"
   },
   "work": {
     "work_id": "00947",
@@ -16,12 +16,9 @@
     "title_sort": "dot theory (lines concentric)",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "dot-theory",
     "series_ids": [
       "dot-theory"
     ],
-    "series_title": "dot theory",
-    "series_sort": "00947",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7d9362afe2224d5385a728f704a5f961"
+    "checksum": "b3e6b0b38c51d336b176eb6306d35732"
   },
   "sections": []
 }

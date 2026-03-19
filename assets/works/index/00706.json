@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c2ca1113149070afb27385e415079807",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-da2bcf78db52c28dc3cc6794da4bef6b",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00706",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-86d2c0bfff3efefdea5465581c7231d9",
+    "work_checksum": "blake2b-162650f860f63012bd984a2a6b348df8",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c2ca1113149070afb27385e415079807"
+    "record_checksum": "blake2b-da2bcf78db52c28dc3cc6794da4bef6b"
   },
   "work": {
     "work_id": "00706",
@@ -16,12 +16,9 @@
     "title_sort": "a doll story - glass 009",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "a-doll-story",
     "series_ids": [
       "a-doll-story"
     ],
-    "series_title": "a doll story",
-    "series_sort": "00706",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 2835,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "86d2c0bfff3efefdea5465581c7231d9"
+    "checksum": "162650f860f63012bd984a2a6b348df8"
   },
   "sections": []
 }

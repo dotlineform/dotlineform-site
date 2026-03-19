@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fbbe2948b634919accd85a614039e37f",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-46746c96977fb827a1ceb11c5e5ab5bc",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01000",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3b9e1ae0aba5fa0fbabf33cf79f76f4c",
+    "work_checksum": "blake2b-c93e102c27623ae0e9f88eb5a8ecbc67",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-fbbe2948b634919accd85a614039e37f"
+    "record_checksum": "blake2b-46746c96977fb827a1ceb11c5e5ab5bc"
   },
   "work": {
     "work_id": "01000",
@@ -16,12 +16,9 @@
     "title_sort": "dotlineform - monoprint 016",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "dotlineform-2023",
     "series_ids": [
       "dotlineform-2023"
     ],
-    "series_title": "dotlineform (2023)",
-    "series_sort": "01000",
     "storage": "6",
     "medium_type": "painting",
     "medium_caption": "pen, ink, paint on paper",
@@ -36,7 +33,7 @@
     "height_px": 2953,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "3b9e1ae0aba5fa0fbabf33cf79f76f4c"
+    "checksum": "c93e102c27623ae0e9f88eb5a8ecbc67"
   },
   "sections": []
 }

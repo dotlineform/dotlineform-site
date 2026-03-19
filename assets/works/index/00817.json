@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4858694240f2214e64d44239d7abc6a1",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-4748b5125dd5d9a5283863079f8f56fa",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00817",
     "count": 5,
     "hash": "blake2b-5a54a691bad0e3d39962d8bf24c1a40a",
-    "work_checksum": "blake2b-e56ff5915393ff9ff4b69f66724f3876",
+    "work_checksum": "blake2b-1b60f2ae1dbfd14920f04f9500e8a5d1",
     "details_checksum": "blake2b-5a54a691bad0e3d39962d8bf24c1a40a",
-    "record_checksum": "blake2b-4858694240f2214e64d44239d7abc6a1"
+    "record_checksum": "blake2b-4748b5125dd5d9a5283863079f8f56fa"
   },
   "work": {
     "work_id": "00817",
@@ -16,12 +16,9 @@
     "title_sort": "colours marilyn",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "colours",
     "series_ids": [
       "colours"
     ],
-    "series_title": "colours",
-    "series_sort": "00817",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e56ff5915393ff9ff4b69f66724f3876"
+    "checksum": "1b60f2ae1dbfd14920f04f9500e8a5d1"
   },
   "sections": [
     {

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-99f186cbf89d3d1bcb7b153707c268ed",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-5b7e6c307714d826fb8e58a9c9448d8f",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00163",
     "count": 10,
     "hash": "blake2b-4ebffb098962fcbb27ac7042d8ed4bef",
-    "work_checksum": "blake2b-81b8d120624d9c6e8f8cfaf295761c18",
+    "work_checksum": "blake2b-c12700cfb458e24d2b4a523e4bbf62f1",
     "details_checksum": "blake2b-4ebffb098962fcbb27ac7042d8ed4bef",
-    "record_checksum": "blake2b-99f186cbf89d3d1bcb7b153707c268ed"
+    "record_checksum": "blake2b-5b7e6c307714d826fb8e58a9c9448d8f"
   },
   "work": {
     "work_id": "00163",
@@ -16,12 +16,9 @@
     "title_sort": "nerve (abattoir)",
     "year": 1995,
     "year_display": "1990-95",
-    "series_id": "nerve",
     "series_ids": [
       "nerve"
     ],
-    "series_title": "nerve",
-    "series_sort": "00163",
     "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "bound photocopied printed pages, canvas cover",
@@ -36,7 +33,7 @@
     "height_px": 2193,
     "download": "nerve (abattoir).pdf",
     "artist": "Michael Davies",
-    "checksum": "81b8d120624d9c6e8f8cfaf295761c18"
+    "checksum": "c12700cfb458e24d2b4a523e4bbf62f1"
   },
   "sections": [
     {

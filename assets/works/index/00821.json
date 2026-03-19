@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3f25fb6eb5a48c05ef5c1804a0611a35",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-383761da444c775282211bea15228830",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00821",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4b50a5e6f6540c30802e99278fa0e653",
+    "work_checksum": "blake2b-c6822ddc53a67053f58c8f5c5e548f0b",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-3f25fb6eb5a48c05ef5c1804a0611a35"
+    "record_checksum": "blake2b-383761da444c775282211bea15228830"
   },
   "work": {
     "work_id": "00821",
@@ -16,12 +16,9 @@
     "title_sort": "concrete [004]",
     "year": 2012,
     "year_display": "2012",
-    "series_id": "concrete",
     "series_ids": [
       "concrete"
     ],
-    "series_title": "concrete",
-    "series_sort": "00821",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 4960,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "4b50a5e6f6540c30802e99278fa0e653"
+    "checksum": "c6822ddc53a67053f58c8f5c5e548f0b"
   },
   "sections": []
 }

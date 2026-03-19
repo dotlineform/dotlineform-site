@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3ebb87de2eb638825878f7b26b2b09c9",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-be7edab1a329e183730ca8b9bb0c6dc7",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00482",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e83a5519a1e16c2d23661e079b4b3991",
+    "work_checksum": "blake2b-bf47758c15532cba8158ee69ff936c2c",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-3ebb87de2eb638825878f7b26b2b09c9"
+    "record_checksum": "blake2b-be7edab1a329e183730ca8b9bb0c6dc7"
   },
   "work": {
     "work_id": "00482",
@@ -16,12 +16,9 @@
     "title_sort": "mm particles 001",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "mm",
     "series_ids": [
       "mm"
     ],
-    "series_title": "mm",
-    "series_sort": "00482",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "e83a5519a1e16c2d23661e079b4b3991"
+    "checksum": "bf47758c15532cba8158ee69ff936c2c"
   },
   "sections": []
 }

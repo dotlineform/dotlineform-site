@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8bfc01ec447a240f35b6be7b3c169efe",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-438f6dbb6fcee051f625ff422a623e0e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00166",
     "count": 19,
     "hash": "blake2b-04e23a5d0f1881ce9c3d3f9741b1c893",
-    "work_checksum": "blake2b-d240dc495eb23167f817ea9fa6f8277d",
+    "work_checksum": "blake2b-5884d5f164b98693181f41f2441d8ca3",
     "details_checksum": "blake2b-04e23a5d0f1881ce9c3d3f9741b1c893",
-    "record_checksum": "blake2b-8bfc01ec447a240f35b6be7b3c169efe"
+    "record_checksum": "blake2b-438f6dbb6fcee051f625ff422a623e0e"
   },
   "work": {
     "work_id": "00166",
@@ -16,12 +16,9 @@
     "title_sort": "nerve (formaldehyde form)",
     "year": 1993,
     "year_display": "1993",
-    "series_id": "nerve",
     "series_ids": [
       "nerve"
     ],
-    "series_title": "nerve",
-    "series_sort": "00166",
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "bound printed pages, edition 9 [extant]",
@@ -36,7 +33,7 @@
     "height_px": 2676,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "d240dc495eb23167f817ea9fa6f8277d"
+    "checksum": "5884d5f164b98693181f41f2441d8ca3"
   },
   "sections": [
     {

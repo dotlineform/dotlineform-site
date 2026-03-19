@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-afcdad1a4c16dc7b177213d503fc6d1c",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-c4a2f5db1093ca0ab99e7bb9dbef75ba",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00386",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8d1ccbb625db23887d682d72b415e25c",
+    "work_checksum": "blake2b-39b451f2a574f367a3f3284c4d83fdd4",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-afcdad1a4c16dc7b177213d503fc6d1c"
+    "record_checksum": "blake2b-c4a2f5db1093ca0ab99e7bb9dbef75ba"
   },
   "work": {
     "work_id": "00386",
@@ -16,12 +16,9 @@
     "title_sort": "nerve 003",
     "year": 2004,
     "year_display": "2004",
-    "series_id": "nerve-forms",
     "series_ids": [
       "nerve-forms"
     ],
-    "series_title": "nerve forms",
-    "series_sort": "00386",
     "storage": "4",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3600,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "8d1ccbb625db23887d682d72b415e25c"
+    "checksum": "39b451f2a574f367a3f3284c4d83fdd4"
   },
   "sections": []
 }

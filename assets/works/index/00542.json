@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e02ba0370dfa77924664219d72a10661",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-2b5c225d0c6d620461b6177b64a09001",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00542",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0210c56e4f8e6a73bc837c329ec22f9c",
+    "work_checksum": "blake2b-d290b6e540062394be67d96bbf0da047",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e02ba0370dfa77924664219d72a10661"
+    "record_checksum": "blake2b-2b5c225d0c6d620461b6177b64a09001"
   },
   "work": {
     "work_id": "00542",
@@ -16,12 +16,9 @@
     "title_sort": "model 008",
     "year": 1994,
     "year_display": "1994",
-    "series_id": "models",
     "series_ids": [
       "models"
     ],
-    "series_title": "models",
-    "series_sort": "00542",
     "storage": "9",
     "medium_type": "mixed media",
     "medium_caption": "paint on photo",
@@ -36,7 +33,7 @@
     "height_px": 3295,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "0210c56e4f8e6a73bc837c329ec22f9c"
+    "checksum": "d290b6e540062394be67d96bbf0da047"
   },
   "sections": []
 }

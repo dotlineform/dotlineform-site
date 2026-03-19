@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c006d4fc36ba5fd6c3b64b6dfbc0ed46",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d6a204c3af643b9995a77a630d798de0",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00846",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f735906deb9f5f9cda464fb157a1afb4",
+    "work_checksum": "blake2b-d7ffde58014f0f7ca0cfb0dc2d7a9ec3",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c006d4fc36ba5fd6c3b64b6dfbc0ed46"
+    "record_checksum": "blake2b-d6a204c3af643b9995a77a630d798de0"
   },
   "work": {
     "work_id": "00846",
@@ -16,12 +16,9 @@
     "title_sort": "structure iv",
     "year": 2011,
     "year_display": "2011",
-    "series_id": "cube-structure",
     "series_ids": [
       "cube-structure"
     ],
-    "series_title": "cube structure",
-    "series_sort": "00846",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 8858,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f735906deb9f5f9cda464fb157a1afb4"
+    "checksum": "d7ffde58014f0f7ca0cfb0dc2d7a9ec3"
   },
   "sections": []
 }

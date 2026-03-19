@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-78dc2180dc79dee279d956c88115c7b8",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-64da722c91c37f0289198f9d00d77a64",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00584",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-cce79fa2ef073ea1780fd9779bb93005",
+    "work_checksum": "blake2b-b417423015024caa8b5a88c889f496b9",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-78dc2180dc79dee279d956c88115c7b8"
+    "record_checksum": "blake2b-64da722c91c37f0289198f9d00d77a64"
   },
   "work": {
     "work_id": "00584",
@@ -16,12 +16,9 @@
     "title_sort": "form mobile 003",
     "year": 2021,
     "year_display": "2021",
-    "series_id": "form-mobile",
     "series_ids": [
       "form-mobile"
     ],
-    "series_title": "form mobile",
-    "series_sort": "00584",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "cce79fa2ef073ea1780fd9779bb93005"
+    "checksum": "b417423015024caa8b5a88c889f496b9"
   },
   "sections": []
 }

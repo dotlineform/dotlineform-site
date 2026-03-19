@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b5a7d892fa9da5d1961cac471e1f62f6",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-8c57b9e55dd0120467e0bef43899d46c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00161",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0396b1367e0c6dfb13d49b3f02fd91b7",
+    "work_checksum": "blake2b-4f0feea15b77ce6dd2a2c4eefee5d40a",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b5a7d892fa9da5d1961cac471e1f62f6"
+    "record_checksum": "blake2b-8c57b9e55dd0120467e0bef43899d46c"
   },
   "work": {
     "work_id": "00161",
@@ -16,12 +16,9 @@
     "title_sort": "mouse story (extended version)",
     "year": 1993,
     "year_display": "1993",
-    "series_id": "mouse-story",
     "series_ids": [
       "mouse-story"
     ],
-    "series_title": "mouse story",
-    "series_sort": "00161",
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "photocopied printed pages, 13 pages",
@@ -36,7 +33,7 @@
     "height_px": 4405,
     "download": "mouse story (extended version).pdf",
     "artist": "Michael Davies",
-    "checksum": "0396b1367e0c6dfb13d49b3f02fd91b7"
+    "checksum": "4f0feea15b77ce6dd2a2c4eefee5d40a"
   },
   "sections": []
 }

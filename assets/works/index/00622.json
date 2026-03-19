@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3c1d0a1fe7bbc104ce3fda968d68c999",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-40719cdbcee3fc6d78f62d4788e57ba6",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00622",
     "count": 6,
     "hash": "blake2b-90a13ffb537f6fd5a4bb96c16af05777",
-    "work_checksum": "blake2b-7ec83c1ff5a3d2378ded90556957098c",
+    "work_checksum": "blake2b-dd81ff0fb9413f27ec87ff5d2b83fdd7",
     "details_checksum": "blake2b-90a13ffb537f6fd5a4bb96c16af05777",
-    "record_checksum": "blake2b-3c1d0a1fe7bbc104ce3fda968d68c999"
+    "record_checksum": "blake2b-40719cdbcee3fc6d78f62d4788e57ba6"
   },
   "work": {
     "work_id": "00622",
@@ -16,12 +16,9 @@
     "title_sort": "k crystals",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "k-crystals",
     "series_ids": [
       "k-crystals"
     ],
-    "series_title": "k crystals",
-    "series_sort": "00622",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 8858,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7ec83c1ff5a3d2378ded90556957098c"
+    "checksum": "dd81ff0fb9413f27ec87ff5d2b83fdd7"
   },
   "sections": [
     {

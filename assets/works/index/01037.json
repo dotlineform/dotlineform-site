@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d98a0c4801c76a2ec6a1549921a34691",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-d74f246ee8d3fdef45637dd302b58908",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "01037",
     "count": 39,
     "hash": "blake2b-20679bf64cc30ade18600739b443f82d",
-    "work_checksum": "blake2b-7b7c6c760f4891550bfb6c66c80e18a2",
+    "work_checksum": "blake2b-40fcb3f28be85ffaa360fe20415f9ccb",
     "details_checksum": "blake2b-20679bf64cc30ade18600739b443f82d",
-    "record_checksum": "blake2b-d98a0c4801c76a2ec6a1549921a34691"
+    "record_checksum": "blake2b-d74f246ee8d3fdef45637dd302b58908"
   },
   "work": {
     "work_id": "01037",
@@ -16,12 +16,9 @@
     "title_sort": "egg forms",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "egg-forms",
     "series_ids": [
       "egg-forms"
     ],
-    "series_title": "egg forms",
-    "series_sort": "01037",
     "storage": "framed",
     "medium_type": "painting",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 2444,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7b7c6c760f4891550bfb6c66c80e18a2"
+    "checksum": "40fcb3f28be85ffaa360fe20415f9ccb"
   },
   "sections": [
     {

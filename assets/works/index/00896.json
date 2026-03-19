@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8addae28febdce6993560a32565c7ff9",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-c9302d30ae99dce3272aa2dfeb57ed78",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00896",
     "count": 6,
     "hash": "blake2b-9255c5918c4c3e93d17bafbd7b99a85b",
-    "work_checksum": "blake2b-8f660860a59307a4d695d4d7a163f64c",
+    "work_checksum": "blake2b-03df796f33804c8998421922a16ba8dc",
     "details_checksum": "blake2b-9255c5918c4c3e93d17bafbd7b99a85b",
-    "record_checksum": "blake2b-8addae28febdce6993560a32565c7ff9"
+    "record_checksum": "blake2b-c9302d30ae99dce3272aa2dfeb57ed78"
   },
   "work": {
     "work_id": "00896",
@@ -16,12 +16,9 @@
     "title_sort": "doll still life 001",
     "year": 2005,
     "year_display": "2005",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "014-00896",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "8f660860a59307a4d695d4d7a163f64c"
+    "checksum": "03df796f33804c8998421922a16ba8dc"
   },
   "sections": [
     {

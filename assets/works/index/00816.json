@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e04f29c476c3a5160f4b5131e8e41f21",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-f0fcb363a3a49daeb86dd85d9495f9a3",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00816",
     "count": 5,
     "hash": "blake2b-090b197fcc28256a19775a2676d60a3d",
-    "work_checksum": "blake2b-391fec0a74ba36097f2b8b2436c13b0f",
+    "work_checksum": "blake2b-865fd879f8b1541bf215300c45a17d3c",
     "details_checksum": "blake2b-090b197fcc28256a19775a2676d60a3d",
-    "record_checksum": "blake2b-e04f29c476c3a5160f4b5131e8e41f21"
+    "record_checksum": "blake2b-f0fcb363a3a49daeb86dd85d9495f9a3"
   },
   "work": {
     "work_id": "00816",
@@ -16,12 +16,9 @@
     "title_sort": "colours kylie",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "colours",
     "series_ids": [
       "colours"
     ],
-    "series_title": "colours",
-    "series_sort": "00816",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "391fec0a74ba36097f2b8b2436c13b0f"
+    "checksum": "865fd879f8b1541bf215300c45a17d3c"
   },
   "sections": [
     {

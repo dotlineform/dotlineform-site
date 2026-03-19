@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e63a5ddb5a0d60756f80385610ec8d7e",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-c32bbf1dd157a77bca144e52c4f93765",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00037",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-bfc0867e34223437bdc1682d73d9b5bf",
+    "work_checksum": "blake2b-6ccb9ab67b14384e3f769f75c6de1e1c",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e63a5ddb5a0d60756f80385610ec8d7e"
+    "record_checksum": "blake2b-c32bbf1dd157a77bca144e52c4f93765"
   },
   "work": {
     "work_id": "00037",
@@ -16,12 +16,9 @@
     "title_sort": "slaughter (nerve 003)",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "154-00037",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 7021,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "bfc0867e34223437bdc1682d73d9b5bf"
+    "checksum": "6ccb9ab67b14384e3f769f75c6de1e1c"
   },
   "sections": []
 }

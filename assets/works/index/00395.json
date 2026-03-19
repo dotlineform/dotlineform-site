@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cbed5b1ddf3bf591e22f041919590767",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-27951c69276e92934bab76a4fa22c832",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00395",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-03881d17dd7e5f0147912d1fecdc1304",
+    "work_checksum": "blake2b-92e63eb6aa37cfcf69ec1e27219b4ba2",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-cbed5b1ddf3bf591e22f041919590767"
+    "record_checksum": "blake2b-27951c69276e92934bab76a4fa22c832"
   },
   "work": {
     "work_id": "00395",
@@ -16,12 +16,9 @@
     "title_sort": "wa (006)",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "wa",
     "series_ids": [
       "wa"
     ],
-    "series_title": "wa",
-    "series_sort": "00395",
     "storage": "5",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 2870,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "03881d17dd7e5f0147912d1fecdc1304"
+    "checksum": "92e63eb6aa37cfcf69ec1e27219b4ba2"
   },
   "sections": []
 }

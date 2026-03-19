@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a6c33c3aa46ccc9bbff56416c432e451",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-dadd95e1e5eca2b9f04a5cec01ff2a77",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00565",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-12c669ebd5e770f0f4994d4315b5d339",
+    "work_checksum": "blake2b-6723f9c0ee8e25877d49fb030984ddbe",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a6c33c3aa46ccc9bbff56416c432e451"
+    "record_checksum": "blake2b-dadd95e1e5eca2b9f04a5cec01ff2a77"
   },
   "work": {
     "work_id": "00565",
@@ -16,12 +16,9 @@
     "title_sort": "string theory forms 005",
     "year": 2005,
     "year_display": "2005",
-    "series_id": "string-theory",
     "series_ids": [
       "string-theory"
     ],
-    "series_title": "string theory",
-    "series_sort": "00565",
     "storage": null,
     "medium_type": "digital composite",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "12c669ebd5e770f0f4994d4315b5d339"
+    "checksum": "6723f9c0ee8e25877d49fb030984ddbe"
   },
   "sections": []
 }

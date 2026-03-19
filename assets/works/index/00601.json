@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-dd9f7aa858d36766f1a778f8aacfb742",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-9924c6a2a4e470169281bdfd8e3a508a",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00601",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-670276518058e838111b64ec7d8cf94c",
+    "work_checksum": "blake2b-42f3d488aaf3ff73d0ed5b3407276198",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-dd9f7aa858d36766f1a778f8aacfb742"
+    "record_checksum": "blake2b-9924c6a2a4e470169281bdfd8e3a508a"
   },
   "work": {
     "work_id": "00601",
@@ -16,12 +16,9 @@
     "title_sort": "wa 002",
     "year": 2011,
     "year_display": "2011",
-    "series_id": "wa",
     "series_ids": [
       "wa"
     ],
-    "series_title": "wa",
-    "series_sort": "00601",
     "storage": null,
     "medium_type": "digital composite",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 4724,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "670276518058e838111b64ec7d8cf94c"
+    "checksum": "42f3d488aaf3ff73d0ed5b3407276198"
   },
   "sections": []
 }

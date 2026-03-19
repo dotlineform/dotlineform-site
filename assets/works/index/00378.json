@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b1aa50994544456bca949868dd0e4569",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-77f0d6e3a83ac522a9ce7e94d90dc052",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00378",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-13524f5fa43cde6e3cf2f2ae890feeab",
+    "work_checksum": "blake2b-f724ea5bbc5d9f61367183b1b33409f5",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b1aa50994544456bca949868dd0e4569"
+    "record_checksum": "blake2b-77f0d6e3a83ac522a9ce7e94d90dc052"
   },
   "work": {
     "work_id": "00378",
@@ -16,12 +16,9 @@
     "title_sort": "mm quantum",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "mm",
     "series_ids": [
       "mm"
     ],
-    "series_title": "mm",
-    "series_sort": "00378",
     "storage": "6",
     "medium_type": "paper collage",
     "medium_caption": "paper collage",
@@ -36,7 +33,7 @@
     "height_px": 3508,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "13524f5fa43cde6e3cf2f2ae890feeab"
+    "checksum": "f724ea5bbc5d9f61367183b1b33409f5"
   },
   "sections": []
 }

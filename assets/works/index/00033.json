@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ec7e86a153cde850cdd6c07364c27121",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-c33189744b24aa7c9c652592db5d93aa",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00033",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-da0854edbf4045f666f9be5bae4158df",
+    "work_checksum": "blake2b-98a5d612ef669fb5022621bdb11fb5b4",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-ec7e86a153cde850cdd6c07364c27121"
+    "record_checksum": "blake2b-c33189744b24aa7c9c652592db5d93aa"
   },
   "work": {
     "work_id": "00033",
@@ -16,12 +16,9 @@
     "title_sort": "slaughter 006",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "160-00033",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 7015,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "da0854edbf4045f666f9be5bae4158df"
+    "checksum": "98a5d612ef669fb5022621bdb11fb5b4"
   },
   "sections": []
 }

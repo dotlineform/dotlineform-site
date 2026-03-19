@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4b793c6a440897b28b2948a70896ede1",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-bce701df9df631591292fc5eff6e3cb7",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00541",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ba8de7cc86127a2d6887db695a93760d",
+    "work_checksum": "blake2b-37402f8e33e84fc735de9084d238564e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4b793c6a440897b28b2948a70896ede1"
+    "record_checksum": "blake2b-bce701df9df631591292fc5eff6e3cb7"
   },
   "work": {
     "work_id": "00541",
@@ -16,12 +16,9 @@
     "title_sort": "model 007",
     "year": 1994,
     "year_display": "1994",
-    "series_id": "models",
     "series_ids": [
       "models"
     ],
-    "series_title": "models",
-    "series_sort": "00541",
     "storage": "9",
     "medium_type": "collage",
     "medium_caption": "photo collage",
@@ -36,7 +33,7 @@
     "height_px": 3592,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ba8de7cc86127a2d6887db695a93760d"
+    "checksum": "37402f8e33e84fc735de9084d238564e"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a7ebfdfe80674ea2ee61d4c5034f437f",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-27cb47f7587a3dfb1a153e5cd68ef160",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00878",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2998ee5d5aed8ba606587db700c30b4c",
+    "work_checksum": "blake2b-cf8562a90f3ef16235871a66eb317e50",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a7ebfdfe80674ea2ee61d4c5034f437f"
+    "record_checksum": "blake2b-27cb47f7587a3dfb1a153e5cd68ef160"
   },
   "work": {
     "work_id": "00878",
@@ -16,12 +16,9 @@
     "title_sort": "doll face 002",
     "year": 1989,
     "year_display": "c. 1989",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "003-00878",
     "storage": "8",
     "medium_type": "mixed media",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 4591,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "2998ee5d5aed8ba606587db700c30b4c"
+    "checksum": "cf8562a90f3ef16235871a66eb317e50"
   },
   "sections": []
 }

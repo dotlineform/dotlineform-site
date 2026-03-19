@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-11ce2657a2364829ae037a8b4eafa2f0",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-bd688a2a5f27c19b145ae9ad5d87abae",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00815",
     "count": 1,
     "hash": "blake2b-08123ccf5e479f20a203b59f7824b44a",
-    "work_checksum": "blake2b-1f0dd11e560225e0a3b8348bc9007922",
+    "work_checksum": "blake2b-733b68bac7dd45b2095ecaa4f2d4f01a",
     "details_checksum": "blake2b-08123ccf5e479f20a203b59f7824b44a",
-    "record_checksum": "blake2b-11ce2657a2364829ae037a8b4eafa2f0"
+    "record_checksum": "blake2b-bd688a2a5f27c19b145ae9ad5d87abae"
   },
   "work": {
     "work_id": "00815",
@@ -16,12 +16,9 @@
     "title_sort": "colours dachau",
     "year": 2008,
     "year_display": "2008",
-    "series_id": "colours",
     "series_ids": [
       "colours"
     ],
-    "series_title": "colours",
-    "series_sort": "00815",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "1f0dd11e560225e0a3b8348bc9007922"
+    "checksum": "733b68bac7dd45b2095ecaa4f2d4f01a"
   },
   "sections": [
     {

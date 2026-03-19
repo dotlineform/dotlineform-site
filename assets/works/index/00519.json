@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7afbe85f0aaa7fa2c91329425ae3352a",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-b9b6175e1f670fecb6c656032d76cb53",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00519",
     "count": 75,
     "hash": "blake2b-dcd5c06790fd923180f530cb8be182bc",
-    "work_checksum": "blake2b-5699ed6efc66c93f597e37396ba29c9d",
+    "work_checksum": "blake2b-c6707dd2e2a24681fcaf67ac59ac454d",
     "details_checksum": "blake2b-dcd5c06790fd923180f530cb8be182bc",
-    "record_checksum": "blake2b-7afbe85f0aaa7fa2c91329425ae3352a"
+    "record_checksum": "blake2b-b9b6175e1f670fecb6c656032d76cb53"
   },
   "work": {
     "work_id": "00519",
@@ -16,12 +16,9 @@
     "title_sort": "learning to draw landscapes (versions)",
     "year": 2022,
     "year_display": "c. 2022?",
-    "series_id": "learning-to-draw-landscapes",
     "series_ids": [
       "learning-to-draw-landscapes"
     ],
-    "series_title": "learning to draw landscapes",
-    "series_sort": "00519",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 10636,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "5699ed6efc66c93f597e37396ba29c9d"
+    "checksum": "c6707dd2e2a24681fcaf67ac59ac454d"
   },
   "sections": [
     {

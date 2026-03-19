@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-14f4942372f047def8068023fa9a7a2d",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0c23381d0d9f4b9881bc560af8b6c284",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00873",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-06072b8fe77676f53a9d17eb8a8a26e1",
+    "work_checksum": "blake2b-e53dd5a410a8f43fd497c084c2c401ef",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-14f4942372f047def8068023fa9a7a2d"
+    "record_checksum": "blake2b-0c23381d0d9f4b9881bc560af8b6c284"
   },
   "work": {
     "work_id": "00873",
@@ -16,12 +16,9 @@
     "title_sort": "doll cell [framed version]",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "doll",
     "series_ids": [
       "doll"
     ],
-    "series_title": "doll",
-    "series_sort": "018-00873",
     "storage": "extant",
     "medium_type": "mixed media",
     "medium_caption": "framed print with painted forms on glass",
@@ -36,7 +33,7 @@
     "height_px": 2480,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "06072b8fe77676f53a9d17eb8a8a26e1"
+    "checksum": "e53dd5a410a8f43fd497c084c2c401ef"
   },
   "sections": []
 }

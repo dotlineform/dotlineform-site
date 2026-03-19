@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-04b4f217f62979b39bccfbcaac5bdd61",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-858ffd771c5b2c9327fcb06469d6684c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00751",
     "count": 4,
     "hash": "blake2b-0e06e75aff459ca3285797bf027dce80",
-    "work_checksum": "blake2b-a8b0b4bd24f4e6a3974aff5c4ee77e14",
+    "work_checksum": "blake2b-b402b9579a4f9926bfa9738b0ee2458b",
     "details_checksum": "blake2b-0e06e75aff459ca3285797bf027dce80",
-    "record_checksum": "blake2b-04b4f217f62979b39bccfbcaac5bdd61"
+    "record_checksum": "blake2b-858ffd771c5b2c9327fcb06469d6684c"
   },
   "work": {
     "work_id": "00751",
@@ -16,12 +16,9 @@
     "title_sort": "all the little cracks",
     "year": 2010,
     "year_display": "2010",
-    "series_id": "all-the-little-cracks",
     "series_ids": [
       "all-the-little-cracks"
     ],
-    "series_title": "all the little cracks",
-    "series_sort": "00751",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a8b0b4bd24f4e6a3974aff5c4ee77e14"
+    "checksum": "b402b9579a4f9926bfa9738b0ee2458b"
   },
   "sections": [
     {

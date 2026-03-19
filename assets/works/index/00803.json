@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-789856829bf8ebb1f7b7c9d5d1c0c2bc",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-516f3847133ffb4b6a342c0e83e3ef6c",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00803",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-a9725f96bb03a70aaa3e22b4240cbb24",
+    "work_checksum": "blake2b-34b075e6de3a3f6e712ea4a733f301d1",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-789856829bf8ebb1f7b7c9d5d1c0c2bc"
+    "record_checksum": "blake2b-516f3847133ffb4b6a342c0e83e3ef6c"
   },
   "work": {
     "work_id": "00803",
@@ -16,12 +16,9 @@
     "title_sort": "book diagrams 001",
     "year": 2010,
     "year_display": "2010",
-    "series_id": "book-dna",
     "series_ids": [
       "book-dna"
     ],
-    "series_title": "book dna",
-    "series_sort": "00803",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "a9725f96bb03a70aaa3e22b4240cbb24"
+    "checksum": "34b075e6de3a3f6e712ea4a733f301d1"
   },
   "sections": []
 }

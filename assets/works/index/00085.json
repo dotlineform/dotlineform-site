@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a29c7f55ea3eeaa2ed4ed1110f58e273",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-18cec9a25fe2dd7f032c3f9708dc5301",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00085",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-713aa625c220321388a2e40a5972e4ed",
+    "work_checksum": "blake2b-d6bb38279d2e4cd5cadcf0c536975979",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a29c7f55ea3eeaa2ed4ed1110f58e273"
+    "record_checksum": "blake2b-18cec9a25fe2dd7f032c3f9708dc5301"
   },
   "work": {
     "work_id": "00085",
@@ -16,12 +16,9 @@
     "title_sort": "body series dissected 004",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "021-00085",
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
@@ -36,7 +33,7 @@
     "height_px": 7016,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "713aa625c220321388a2e40a5972e4ed"
+    "checksum": "d6bb38279d2e4cd5cadcf0c536975979"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5996cf043648fb040c7fbba3a106eb9d",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-f11c77b9e226f154ba195fe00f9b2132",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00559",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-995e2655e75cb8189e380d462cedddb1",
+    "work_checksum": "blake2b-ca4e36709242f91f5c46f8cee2b7c665",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5996cf043648fb040c7fbba3a106eb9d"
+    "record_checksum": "blake2b-f11c77b9e226f154ba195fe00f9b2132"
   },
   "work": {
     "work_id": "00559",
@@ -16,12 +16,9 @@
     "title_sort": "string theory 006",
     "year": 2005,
     "year_display": "2005",
-    "series_id": "string-theory",
     "series_ids": [
       "string-theory"
     ],
-    "series_title": "string theory",
-    "series_sort": "00559",
     "storage": "12",
     "medium_type": "paper collage",
     "medium_caption": "paper collage",
@@ -36,7 +33,7 @@
     "height_px": 4182,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "995e2655e75cb8189e380d462cedddb1"
+    "checksum": "ca4e36709242f91f5c46f8cee2b7c665"
   },
   "sections": []
 }

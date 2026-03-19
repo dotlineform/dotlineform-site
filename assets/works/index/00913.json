@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-34cd64a8a295081ff2019b123a300565",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-4307f40ee58b1e3e06f5a4e724c25243",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00913",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b66fe46b12f4a0d32eca2bb80bdf60a6",
+    "work_checksum": "blake2b-7438365ef311e0f905ecf06cc0bae0cc",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-34cd64a8a295081ff2019b123a300565"
+    "record_checksum": "blake2b-4307f40ee58b1e3e06f5a4e724c25243"
   },
   "work": {
     "work_id": "00913",
@@ -16,12 +16,9 @@
     "title_sort": "doll sees everything (005)",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "doll-sees-everything",
     "series_ids": [
       "doll-sees-everything"
     ],
-    "series_title": "doll sees everything",
-    "series_sort": "00913",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3780,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "b66fe46b12f4a0d32eca2bb80bdf60a6"
+    "checksum": "7438365ef311e0f905ecf06cc0bae0cc"
   },
   "sections": []
 }

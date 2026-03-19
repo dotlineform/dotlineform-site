@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-9d0c6adc43e2c17b546f5f7c50662d43",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7c79ed5bfa6d45736fe2b8e6cd528170",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00527",
     "count": 3,
     "hash": "blake2b-8c7cf16b265d07b51f515ceeed97b81c",
-    "work_checksum": "blake2b-cf74439fa49e855fc1e5b8b1a51d0ee1",
+    "work_checksum": "blake2b-48e08c26ee5986f5b549e8da579d0fc7",
     "details_checksum": "blake2b-8c7cf16b265d07b51f515ceeed97b81c",
-    "record_checksum": "blake2b-9d0c6adc43e2c17b546f5f7c50662d43"
+    "record_checksum": "blake2b-7c79ed5bfa6d45736fe2b8e6cd528170"
   },
   "work": {
     "work_id": "00527",
@@ -16,12 +16,9 @@
     "title_sort": "body",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "2-bodies",
     "series_ids": [
       "2-bodies"
     ],
-    "series_title": "2 bodies",
-    "series_sort": "00527",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "cf74439fa49e855fc1e5b8b1a51d0ee1"
+    "checksum": "48e08c26ee5986f5b549e8da579d0fc7"
   },
   "sections": [
     {

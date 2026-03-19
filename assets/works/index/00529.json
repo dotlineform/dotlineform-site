@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-eae262007ece71593c00a236328f6571",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-8facde7dcc65eb8b6522186bdd241b6d",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00529",
     "count": 6,
     "hash": "blake2b-822ee2b91a4f5036b4f38c624dc236f2",
-    "work_checksum": "blake2b-f5b80d5d58d7b5720b30cd2cdae7d56f",
+    "work_checksum": "blake2b-570b82894442e5c942dcf626fc3b0225",
     "details_checksum": "blake2b-822ee2b91a4f5036b4f38c624dc236f2",
-    "record_checksum": "blake2b-eae262007ece71593c00a236328f6571"
+    "record_checksum": "blake2b-8facde7dcc65eb8b6522186bdd241b6d"
   },
   "work": {
     "work_id": "00529",
@@ -16,12 +16,9 @@
     "title_sort": "body residue",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "2-bodies",
     "series_ids": [
       "2-bodies"
     ],
-    "series_title": "2 bodies",
-    "series_sort": "00529",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "ink and acrylic on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "f5b80d5d58d7b5720b30cd2cdae7d56f"
+    "checksum": "570b82894442e5c942dcf626fc3b0225"
   },
   "sections": [
     {

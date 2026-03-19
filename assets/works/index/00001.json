@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e6e3029100a7fe77d4c52b0e1e046469",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-52a0ee3affa739a4b9f38f5e74ed8b43",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00001",
     "count": 17,
     "hash": "blake2b-b77df06e0672ff0975a1583a7d01e0b0",
-    "work_checksum": "blake2b-9a6b5c5fb13444cfad363c319781a430",
+    "work_checksum": "blake2b-402e594090821cfe599286fed38c3fd9",
     "details_checksum": "blake2b-b77df06e0672ff0975a1583a7d01e0b0",
-    "record_checksum": "blake2b-e6e3029100a7fe77d4c52b0e1e046469"
+    "record_checksum": "blake2b-52a0ee3affa739a4b9f38f5e74ed8b43"
   },
   "work": {
     "work_id": "00001",
@@ -16,12 +16,9 @@
     "title_sort": "a poem divided into 004 parts (\"our dreams are real\")",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "a-poem-divided-into-4-parts",
     "series_ids": [
       "a-poem-divided-into-4-parts"
     ],
-    "series_title": "a poem divided into 4 parts",
-    "series_sort": "00001",
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on tracing paper",
@@ -36,7 +33,7 @@
     "height_px": 2480,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "9a6b5c5fb13444cfad363c319781a430"
+    "checksum": "402e594090821cfe599286fed38c3fd9"
   },
   "sections": [
     {

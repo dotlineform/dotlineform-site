@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ec004f8d9d0228c7a0462a49c9e8a5af",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-fde77ca5e2c622a7d0848dbf51f5f3ce",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00006",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-22c42e46671d8e3151e40500cb100e49",
+    "work_checksum": "blake2b-e63339459e0d485003d02d19f858e8de",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-ec004f8d9d0228c7a0462a49c9e8a5af"
+    "record_checksum": "blake2b-fde77ca5e2c622a7d0848dbf51f5f3ce"
   },
   "work": {
     "work_id": "00006",
@@ -16,12 +16,9 @@
     "title_sort": "gesture in grey 001",
     "year": 1989,
     "year_display": "c. 1989-98",
-    "series_id": "collected-1989-1998",
     "series_ids": [
       "collected-1989-1998"
     ],
-    "series_title": "collected 1989-1998",
-    "series_sort": "081-00006",
     "storage": "1",
     "medium_type": "painting",
     "medium_caption": "acrylic on paper",
@@ -36,7 +33,7 @@
     "height_px": 3071,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "22c42e46671d8e3151e40500cb100e49"
+    "checksum": "e63339459e0d485003d02d19f858e8de"
   },
   "sections": []
 }

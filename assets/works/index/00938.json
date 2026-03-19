@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5e76ef92bd1334a181ddcd10f4c35461",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-db47b9f5732ed683e70109933b5d6a3a",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00938",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-76619f95355dc8e0ed7d2088017520d4",
+    "work_checksum": "blake2b-74afe6fa2dd70f36fdddc98cbbb627bf",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5e76ef92bd1334a181ddcd10f4c35461"
+    "record_checksum": "blake2b-db47b9f5732ed683e70109933b5d6a3a"
   },
   "work": {
     "work_id": "00938",
@@ -16,12 +16,9 @@
     "title_sort": "dot theory (dots) I",
     "year": 2009,
     "year_display": "2009",
-    "series_id": "dot-theory",
     "series_ids": [
       "dot-theory"
     ],
-    "series_title": "dot theory",
-    "series_sort": "00938",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "76619f95355dc8e0ed7d2088017520d4"
+    "checksum": "74afe6fa2dd70f36fdddc98cbbb627bf"
   },
   "sections": []
 }

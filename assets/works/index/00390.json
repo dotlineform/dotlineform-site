@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-896de4da737c1dbb13578d69b74de162",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-3182f870c4b70034b936b449a28da26e",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00390",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ae4c1488d5dc08d845b07607ec904f85",
+    "work_checksum": "blake2b-e9560c39a678f74855d92ff720831772",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-896de4da737c1dbb13578d69b74de162"
+    "record_checksum": "blake2b-3182f870c4b70034b936b449a28da26e"
   },
   "work": {
     "work_id": "00390",
@@ -16,12 +16,9 @@
     "title_sort": "forest 003",
     "year": 2003,
     "year_display": "2003",
-    "series_id": "forest",
     "series_ids": [
       "forest"
     ],
-    "series_title": "forest",
-    "series_sort": "004-00390",
     "storage": "4",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ae4c1488d5dc08d845b07607ec904f85"
+    "checksum": "e9560c39a678f74855d92ff720831772"
   },
   "sections": []
 }

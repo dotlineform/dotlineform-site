@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cfee04cd3957fafe47c2c568c4847606",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-822af45cca92abf04b600a8136729cec",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00741",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-45e1ac15e036f5dbb2250065d9809117",
+    "work_checksum": "blake2b-ab179db50eeb125ddc0bf43e2e3cd93e",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-cfee04cd3957fafe47c2c568c4847606"
+    "record_checksum": "blake2b-822af45cca92abf04b600a8136729cec"
   },
   "work": {
     "work_id": "00741",
@@ -16,12 +16,9 @@
     "title_sort": "a partial act of kindness [001.001]",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "an-act-of-kindness",
     "series_ids": [
       "an-act-of-kindness"
     ],
-    "series_title": "an act of kindness",
-    "series_sort": "00741",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "45e1ac15e036f5dbb2250065d9809117"
+    "checksum": "ab179db50eeb125ddc0bf43e2e3cd93e"
   },
   "sections": []
 }

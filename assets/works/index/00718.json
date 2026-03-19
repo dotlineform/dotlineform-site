@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-112f2d61522d8a23f75f4fe8033c468c",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-140b8f11dd66fad5b7810cebfca61dfa",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00718",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-fcd2871c752b0ee758233e130204cf58",
+    "work_checksum": "blake2b-bc6aa59d6c0edb2cf38cf976ba3e3729",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-112f2d61522d8a23f75f4fe8033c468c"
+    "record_checksum": "blake2b-140b8f11dd66fad5b7810cebfca61dfa"
   },
   "work": {
     "work_id": "00718",
@@ -16,12 +16,9 @@
     "title_sort": "a feeling that we are part of a structure - 003",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "a-feeling-that-we-are-part-of-a-structure",
     "series_ids": [
       "a-feeling-that-we-are-part-of-a-structure"
     ],
-    "series_title": "a feeling that we are part of a structure",
-    "series_sort": "00718",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "fcd2871c752b0ee758233e130204cf58"
+    "checksum": "bc6aa59d6c0edb2cf38cf976ba3e3729"
   },
   "sections": []
 }

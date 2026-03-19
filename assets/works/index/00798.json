@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e2273df86fca664dffd37e627ced4da4",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-0553bed0b81129b94218dde22e6a603a",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00798",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-05a0d50b99ceb0cb9e6cf53ec724f6d2",
+    "work_checksum": "blake2b-bb86699b8a5cb033193c4f63a756a728",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-e2273df86fca664dffd37e627ced4da4"
+    "record_checksum": "blake2b-0553bed0b81129b94218dde22e6a603a"
   },
   "work": {
     "work_id": "00798",
@@ -16,12 +16,9 @@
     "title_sort": "body space (reclining state) 007",
     "year": 2019,
     "year_display": "2019",
-    "series_id": "body-space-reclining-state",
     "series_ids": [
       "body-space-reclining-state"
     ],
-    "series_title": "body space (reclining state)",
-    "series_sort": "00798",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 2362,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "05a0d50b99ceb0cb9e6cf53ec724f6d2"
+    "checksum": "bb86699b8a5cb033193c4f63a756a728"
   },
   "sections": []
 }

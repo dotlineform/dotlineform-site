@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b3da5a05900c55dc8d451fdfc675aeda",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-3b7bd629ea83ae029420a0ff8615730f",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00467",
     "count": 3,
     "hash": "blake2b-f80b8d0d7c86d97d5ba8e2fd1032df4c",
-    "work_checksum": "blake2b-ebf831e9244ba9a44d4e895623bd300a",
+    "work_checksum": "blake2b-43697881a5699164f53ea368f42d49bd",
     "details_checksum": "blake2b-f80b8d0d7c86d97d5ba8e2fd1032df4c",
-    "record_checksum": "blake2b-b3da5a05900c55dc8d451fdfc675aeda"
+    "record_checksum": "blake2b-3b7bd629ea83ae029420a0ff8615730f"
   },
   "work": {
     "work_id": "00467",
@@ -16,12 +16,9 @@
     "title_sort": "forests (2023) - forest 003",
     "year": 2023,
     "year_display": "2023",
-    "series_id": "forests-2023",
     "series_ids": [
       "forests-2023"
     ],
-    "series_title": "forests (2023)",
-    "series_sort": "00467",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": null,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ebf831e9244ba9a44d4e895623bd300a"
+    "checksum": "43697881a5699164f53ea368f42d49bd"
   },
   "sections": [
     {

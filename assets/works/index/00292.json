@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7a3f314a155aa5adf86645f26c575e48",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-aab2cd26c4e5e8c7262c674cf4e7d243",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00292",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7ed51e7bf68bf2c0ba12ad6efb13d6ee",
+    "work_checksum": "blake2b-2f90b408eade8afd4a1abb5cbe8f7c00",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7a3f314a155aa5adf86645f26c575e48"
+    "record_checksum": "blake2b-aab2cd26c4e5e8c7262c674cf4e7d243"
   },
   "work": {
     "work_id": "00292",
@@ -16,12 +16,9 @@
     "title_sort": "untitled",
     "year": 2024,
     "year_display": "2024",
-    "series_id": "curve-poems",
     "series_ids": [
       "curve-poems"
     ],
-    "series_title": "curve poems",
-    "series_sort": "00292",
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen and white spirit on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "7ed51e7bf68bf2c0ba12ad6efb13d6ee"
+    "checksum": "2f90b408eade8afd4a1abb5cbe8f7c00"
   },
   "sections": []
 }

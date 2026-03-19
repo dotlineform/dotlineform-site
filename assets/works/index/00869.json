@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-70a68a7b6b9f4bdee598af3d084fd775",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-3e4a796a08536bc0d4b7b104813192ab",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00869",
     "count": 12,
     "hash": "blake2b-a1e129a6ae310dc1609e7fe1e888d5c6",
-    "work_checksum": "blake2b-4e7bb3b1dbb47637c4fc4c5afd5d6b31",
+    "work_checksum": "blake2b-ca3bbac33f0363ceade2e8739a36694f",
     "details_checksum": "blake2b-a1e129a6ae310dc1609e7fe1e888d5c6",
-    "record_checksum": "blake2b-70a68a7b6b9f4bdee598af3d084fd775"
+    "record_checksum": "blake2b-3e4a796a08536bc0d4b7b104813192ab"
   },
   "work": {
     "work_id": "00869",
@@ -16,12 +16,9 @@
     "title_sort": "curves",
     "year": 2020,
     "year_display": "2020",
-    "series_id": "curve-machine",
     "series_ids": [
       "curve-machine"
     ],
-    "series_title": "curve machine",
-    "series_sort": "00869",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 5906,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "4e7bb3b1dbb47637c4fc4c5afd5d6b31"
+    "checksum": "ca3bbac33f0363ceade2e8739a36694f"
   },
   "sections": [
     {

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5e81949a35c6fbc5124fd2e0c3a8a8bb",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7d5f5213dec1dc8002d26ac5f78187a7",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00770",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-046388cc7dc9298a017cdb97c1a41143",
+    "work_checksum": "blake2b-4523612125c6a91a8d7d91c0cc13af63",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-5e81949a35c6fbc5124fd2e0c3a8a8bb"
+    "record_checksum": "blake2b-7d5f5213dec1dc8002d26ac5f78187a7"
   },
   "work": {
     "work_id": "00770",
@@ -16,12 +16,9 @@
     "title_sort": "base nerve (003)",
     "year": 2007,
     "year_display": "2007",
-    "series_id": "base-series",
     "series_ids": [
       "base-series"
     ],
-    "series_title": "base series",
-    "series_sort": "00770",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "046388cc7dc9298a017cdb97c1a41143"
+    "checksum": "4523612125c6a91a8d7d91c0cc13af63"
   },
   "sections": []
 }

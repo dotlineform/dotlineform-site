@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-eea162bdc4c88d0d834a310fc1107758",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-dd6674c1da090b3a4ee7a8041ba00529",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00812",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-624195e51f568214f778631acc2e7014",
+    "work_checksum": "blake2b-d0ff74977234f3bb919f919e36ab7cd4",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-eea162bdc4c88d0d834a310fc1107758"
+    "record_checksum": "blake2b-dd6674c1da090b3a4ee7a8041ba00529"
   },
   "work": {
     "work_id": "00812",
@@ -16,12 +16,9 @@
     "title_sort": "closer",
     "year": 2017,
     "year_display": "2017",
-    "series_id": "closeness",
     "series_ids": [
       "closeness"
     ],
-    "series_title": "closeness",
-    "series_sort": "00812",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
@@ -36,7 +33,7 @@
     "height_px": 3543,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "624195e51f568214f778631acc2e7014"
+    "checksum": "d0ff74977234f3bb919f919e36ab7cd4"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-bd9ce5823899ff1063df899c31f097bd",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-877dd94d81fc49d866a336eb427ce7bb",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00735",
     "count": 64,
     "hash": "blake2b-deadce129f03e366607e0b98ae7f5ac8",
-    "work_checksum": "blake2b-023687ebe2daf1313db6d1c7736b0533",
+    "work_checksum": "blake2b-1e032865d0ebe0e85381eabe32897dfb",
     "details_checksum": "blake2b-deadce129f03e366607e0b98ae7f5ac8",
-    "record_checksum": "blake2b-bd9ce5823899ff1063df899c31f097bd"
+    "record_checksum": "blake2b-877dd94d81fc49d866a336eb427ce7bb"
   },
   "work": {
     "work_id": "00735",
@@ -16,12 +16,9 @@
     "title_sort": "a theory of happiness is a theory of everything (064°)",
     "year": 2010,
     "year_display": "2010",
-    "series_id": "a-theory-of-happiness",
     "series_ids": [
       "a-theory-of-happiness"
     ],
-    "series_title": "a theory of happiness is a theory of everything",
-    "series_sort": "00735",
     "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
@@ -36,7 +33,7 @@
     "height_px": 8858,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "023687ebe2daf1313db6d1c7736b0533"
+    "checksum": "1e032865d0ebe0e85381eabe32897dfb"
   },
   "sections": [
     {

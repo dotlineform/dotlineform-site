@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-2caf235f85d9e0333619d613d0d48973",
-    "generated_at_utc": "2026-03-19T14:50:30Z",
+    "version": "blake2b-7b4b88235f30a12bc19c57b4519d67b2",
+    "generated_at_utc": "2026-03-19T21:58:35Z",
     "work_id": "00528",
     "count": 3,
     "hash": "blake2b-0a5369655afec83ba30224e6dbb5bbaf",
-    "work_checksum": "blake2b-ca99bff470ccd36583f153f2ab50518d",
+    "work_checksum": "blake2b-9df7c9f701b532476e426e05fe651c53",
     "details_checksum": "blake2b-0a5369655afec83ba30224e6dbb5bbaf",
-    "record_checksum": "blake2b-2caf235f85d9e0333619d613d0d48973"
+    "record_checksum": "blake2b-7b4b88235f30a12bc19c57b4519d67b2"
   },
   "work": {
     "work_id": "00528",
@@ -16,12 +16,9 @@
     "title_sort": "body",
     "year": 2025,
     "year_display": "2025",
-    "series_id": "2-bodies",
     "series_ids": [
       "2-bodies"
     ],
-    "series_title": "2 bodies",
-    "series_sort": "00528",
     "storage": null,
     "medium_type": "drawing",
     "medium_caption": "pencil and ink on paper",
@@ -36,7 +33,7 @@
     "height_px": 7559,
     "download": null,
     "artist": "Michael Davies",
-    "checksum": "ca99bff470ccd36583f153f2ab50518d"
+    "checksum": "9df7c9f701b532476e426e05fe651c53"
   },
   "sections": [
     {
