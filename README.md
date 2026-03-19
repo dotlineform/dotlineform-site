@@ -45,6 +45,15 @@ Sorting architecture and consistency contract are documented in [`docs/sorting-a
 
 Deferred improvements and follow-up tasks are tracked in [`docs/backlog.md`](docs/backlog.md)
 
+## Shared UI Runtime
+
+The site-wide UI scripts used by the default layout live in:
+
+- `assets/js/site-nav.js` for the compact nav menu
+- `assets/js/theme-toggle.js` for the footer theme toggle
+
+The tiny theme bootstrap in `_layouts/default.html` remains inline in the document `<head>` so the stored theme is applied before first paint.
+
 ## Working on this repo
 
 Basic workflow:
