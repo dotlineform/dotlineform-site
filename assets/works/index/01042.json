@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-38d7c348f01975cd4c29306ec398ed1a",
+    "generated_at_utc": "2026-03-19T15:56:10Z",
+    "work_id": "01042",
+    "count": 0,
+    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "work_checksum": "blake2b-d235a0b273a41cf6a05a738500a9acad",
+    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
+    "record_checksum": "blake2b-38d7c348f01975cd4c29306ec398ed1a"
+  },
+  "work": {
+    "work_id": "01042",
+    "title": "egg print 4",
+    "title_sort": "egg print 004",
+    "year": 2012,
+    "year_display": "2012",
+    "series_id": "egg-prints",
+    "series_ids": [
+      "egg-prints"
+    ],
+    "series_title": "egg prints",
+    "series_sort": "01042",
+    "storage": "5",
+    "medium_type": "monoprint",
+    "medium_caption": "ink on paper",
+    "duration": null,
+    "vimeo_url": null,
+    "youtube_url": null,
+    "bandcamp_url": null,
+    "height_cm": 42.0,
+    "width_cm": 29.7,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 5003,
+    "download": null,
+    "artist": "Michael Davies",
+    "checksum": "d235a0b273a41cf6a05a738500a9acad"
+  },
+  "sections": []
+}
