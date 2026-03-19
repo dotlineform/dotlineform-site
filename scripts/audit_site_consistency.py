@@ -778,16 +778,25 @@ def check_json_schema(
                 errors += 1
                 add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work header missing '{key}'"}, max_samples)
         work_obj = obj.get("work")
-        if isinstance(work_obj, dict) and "series_ids" in work_obj:
-            if not isinstance(work_obj.get("series_ids"), list):
+        if isinstance(work_obj, dict):
+            if "series_ids" not in work_obj:
                 errors += 1
-                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids must be list when present"}, max_samples)
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids missing"}, max_samples)
+            elif not isinstance(work_obj.get("series_ids"), list):
+                errors += 1
+                add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids must be list"}, max_samples)
             else:
                 series_ids = [normalize_text(item) for item in work_obj.get("series_ids", [])]
-                primary_series_id = normalize_text(work_obj.get("series_id"))
-                if primary_series_id and series_ids and series_ids[0] != primary_series_id:
+                if not series_ids:
                     errors += 1
-                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_id must match first work.series_ids value"}, max_samples)
+                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids must not be empty"}, max_samples)
+                elif any(item == "" for item in series_ids):
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work.series_ids must not contain empty values"}, max_samples)
+            for removed_key in ("series_id", "series_title", "series_sort"):
+                if removed_key in work_obj:
+                    errors += 1
+                    add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": f"work.{removed_key} is retired; derive it at runtime instead"}, max_samples)
         if not isinstance(sections, list):
             errors += 1
             add_sample(samples, {"check": "json_schema", "id": wid, "path": str(p), "message": "work sections must be list"}, max_samples)

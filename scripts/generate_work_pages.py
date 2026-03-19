@@ -1116,6 +1116,15 @@ def main() -> None:
             "details_checksum": None,
         }
 
+    def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
+        public_record = dict(work_record)
+        public_record.pop("series_id", None)
+        public_record.pop("series_title", None)
+        public_record.pop("series_sort", None)
+        public_record.pop("checksum", None)
+        public_record["checksum"] = compute_work_checksum(public_record)
+        return public_record
+
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         section_index: Dict[str, int] = {}
         sections: List[Dict[str, Any]] = []
@@ -2094,7 +2103,7 @@ def main() -> None:
 
                 sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
                 details_total = sum(len(s.get("details", [])) for s in sections)
-                work_record = canonical_work_record_by_id.get(wid, {"work_id": wid})
+                work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 work_checksum_raw = coerce_string(work_record.get("checksum"))
                 work_checksum = f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None
                 details_checksum = compute_payload_version({"sections": sections})

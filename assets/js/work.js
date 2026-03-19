@@ -19,6 +19,8 @@
   var prevA = document.getElementById('seriesNavPrev');
   var nextA = document.getElementById('seriesNavNext');
   var counterEl = document.getElementById('seriesNavCounter');
+  var seriesLink = document.getElementById('workSeriesLink');
+  var backLink = document.getElementById('pageBackLink');
   var seriesIndexData = null;
 
   function fetchJson(url) {
@@ -41,9 +43,46 @@
     return normalizeIds(row.works);
   }
 
+  function extractSeriesRow(payload, seriesId) {
+    if (!payload || !payload.series || typeof payload.series !== 'object') return null;
+    var row = payload.series[seriesId];
+    return row && typeof row === 'object' ? row : null;
+  }
+
+  function extractSeriesTitle(payload, seriesId) {
+    var row = extractSeriesRow(payload, seriesId);
+    if (!row) return '';
+    return String(row.title || '').trim();
+  }
+
   function setSeriesLinkVisibilityFromIds(ids) {
     if (!seriesLinkWrap) return;
     seriesLinkWrap.hidden = ids.length <= 1;
+  }
+
+  function setSeriesLinkTarget(seriesId) {
+    if (!seriesLink) return;
+    var sid = String(seriesId || '').trim();
+    if (!sid) {
+      seriesLink.textContent = '';
+      seriesLink.setAttribute('href', baseurl + '/series/');
+      return;
+    }
+    var label = extractSeriesTitle(seriesIndexData, sid) || sid;
+    seriesLink.textContent = label;
+    seriesLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(sid) + '/');
+  }
+
+  function setBackLinkLabel(seriesId) {
+    if (!backLink) return;
+    var sid = String(seriesId || '').trim();
+    if (!sid) return;
+    var label = extractSeriesTitle(seriesIndexData, sid);
+    if (!label) return;
+    backLink.setAttribute('data-series-label', label);
+    if (seriesFromQuery && seriesFromQuery === sid) {
+      backLink.textContent = '← ' + label;
+    }
   }
 
   function configureNav(ids, currentId) {
@@ -75,14 +114,17 @@
     var pageSeriesId = (nav && nav.dataset) ? String(nav.dataset.series || '').trim() : '';
     var currentId = (nav && nav.dataset) ? String(nav.dataset.workId || '').trim() : '';
     if (pageSeriesId) {
+      setSeriesLinkTarget(pageSeriesId);
       setSeriesLinkVisibilityFromIds(extractSeriesIndexIds(seriesIndexData, pageSeriesId));
     } else if (seriesLinkWrap) {
       seriesLinkWrap.hidden = true;
+      setSeriesLinkTarget('');
     }
     if (!seriesFromQuery) {
       if (nav) nav.hidden = true;
       return;
     }
+    setBackLinkLabel(seriesFromQuery);
     var idsForNav = extractSeriesIndexIds(seriesIndexData, seriesFromQuery);
     configureNav(idsForNav, currentId);
   }

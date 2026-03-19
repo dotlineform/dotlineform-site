@@ -28,8 +28,7 @@ layout: default
   "title": {{ title_txt | jsonify }},
   "year": {{ page.year | jsonify }},
   "year_display": {{ page.year_display | jsonify }},
-  "series_id": {{ page.series_id | jsonify }},
-  "series_title": {{ page.series_title | jsonify }},
+  "series_ids": {{ page.series_ids | jsonify }},
   "medium_type": {{ page.medium_type | jsonify }},
   "medium_caption": {{ page.medium_caption | jsonify }},
   "duration": {{ page.duration | jsonify }},
@@ -222,6 +221,13 @@ layout: default
       return Number.isFinite(n) ? n : null;
     }
 
+    function normalizeSeriesIds(raw) {
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .map(function (item) { return text(item).toLowerCase(); })
+        .filter(Boolean);
+    }
+
     function setRowText(rowId, textId, value) {
       var row = document.getElementById(rowId);
       var textEl = document.getElementById(textId);
@@ -297,8 +303,8 @@ layout: default
       var mediumCaption = text(record.medium_caption);
       var duration = text(record.duration);
       var downloadName = text(record.download);
-      var seriesId = text(record.series_id).toLowerCase();
-      var seriesLabel = text(record.series_title) || seriesId;
+      var seriesIds = normalizeSeriesIds(record.series_ids);
+      var seriesId = seriesIds.length ? seriesIds[0] : text(record.series_id).toLowerCase();
 
       var hiddenTitle = document.getElementById('workTitleHidden');
       var mainTitle = document.getElementById('workTitleMainText');
@@ -342,37 +348,17 @@ layout: default
         }
       }
 
-      var seriesLink = document.getElementById('workSeriesLink');
-      if (seriesLink) {
-        if (seriesId) {
-          seriesLink.textContent = seriesLabel || seriesId;
-          seriesLink.setAttribute('href', baseurl + '/series/' + encodeURIComponent(seriesId) + '/');
-        } else {
-          seriesLink.textContent = '';
-          seriesLink.setAttribute('href', baseurl + '/series/');
-        }
-      }
-
       var nav = document.getElementById('seriesNav');
       if (nav) {
         nav.setAttribute('data-work-id', currentWorkId);
         nav.setAttribute('data-series', seriesId);
+        nav.setAttribute('data-series-ids', seriesIds.join(','));
       }
       try {
         document.dispatchEvent(new CustomEvent('dlf:work-metadata-applied', {
-          detail: { work_id: currentWorkId, series_id: seriesId }
+          detail: { work_id: currentWorkId, series_id: seriesId, series_ids: seriesIds }
         }));
       } catch (e) {
-      }
-
-      var backLink = document.getElementById('pageBackLink');
-      if (backLink && seriesLabel) {
-        backLink.setAttribute('data-series-label', seriesLabel);
-        var params = new URLSearchParams(window.location.search);
-        var currentSeries = text(params.get('series')).toLowerCase();
-        if (currentSeries && currentSeries === seriesId) {
-          backLink.textContent = '← ' + seriesLabel;
-        }
       }
 
       updateMedia(record);

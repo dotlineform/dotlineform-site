@@ -152,7 +152,8 @@ Useful flags:
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
-    - `work.series_id` remains the first series derived from `work.series_ids`, and `work.series_ids` preserves the full ordered membership list from the workbook
+    - `work.series_ids` preserves the full ordered membership list from the workbook
+    - work-page primary-series label/link is derived at runtime from `series_index.json`, using `work.series_ids[0]`
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
 
 Runtime canonical data flow:

@@ -115,6 +115,7 @@ Template:
 What `assets/works/index/<work_id>.json` provides:
 
 - canonical work metadata used by the page JS
+- canonical `series_ids` membership for the work
 - `sections[]`
 - each section's `project_subfolder`
 - each detail record in that work
@@ -128,6 +129,7 @@ What `series_index.json` provides on the work page:
 - series context when the work is being viewed from a series
 - previous / next work navigation
 - series membership ordering
+- the primary-series label/link derived from `work.series_ids[0]`
 
 Why this is the right source:
 
