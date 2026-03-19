@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-fafeb074c1e4cac3e1ca06bd69d2600c",
-    "generated_at_utc": "2026-03-19T22:33:37Z",
+    "version": "blake2b-b60592c061c19a0fdd708903a63bb734",
+    "generated_at_utc": "2026-03-19T22:45:01Z",
     "count": 1048
   },
   "works": {
@@ -5058,8 +5058,8 @@
     },
     "00465": {
       "work_id": "00465",
-      "title": "forests (2023) - forest 1",
-      "title_sort": "forests (2023) - forest 001",
+      "title": "forest 1",
+      "title_sort": "forest 001",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [
@@ -5069,8 +5069,8 @@
     },
     "00466": {
       "work_id": "00466",
-      "title": "forests (2023) - forest 2",
-      "title_sort": "forests (2023) - forest 002",
+      "title": "forest 2",
+      "title_sort": "forest 002",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [
@@ -5080,8 +5080,8 @@
     },
     "00467": {
       "work_id": "00467",
-      "title": "forests (2023) - forest 3",
-      "title_sort": "forests (2023) - forest 003",
+      "title": "forest 3",
+      "title_sort": "forest 003",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [
@@ -5091,8 +5091,8 @@
     },
     "00468": {
       "work_id": "00468",
-      "title": "forests (2023) - forest 4",
-      "title_sort": "forests (2023) - forest 004",
+      "title": "forest 4",
+      "title_sort": "forest 004",
       "year": 2023,
       "year_display": "2023",
       "series_ids": [

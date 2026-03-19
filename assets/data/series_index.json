@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-ef5b5a78df5f5b5d84d2f179c11cd585",
-    "generated_at_utc": "2026-03-19T21:32:29Z",
+    "version": "blake2b-2d21a851feda5952277290a8621aae98",
+    "generated_at_utc": "2026-03-19T22:45:01Z",
     "count": 79
   },
   "series": {
@@ -2051,7 +2051,7 @@
       "series_id": "forests-2023",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-19",
       "title": "forests (2023)",
       "title_sort": "forests (2023)",
       "sort_fields": "work_id",
