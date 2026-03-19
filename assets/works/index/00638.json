@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c015f9e2c9fea35c5bff474359d54b94",
-    "generated_at_utc": "2026-03-14T23:11:46Z",
+    "version": "blake2b-4f015ac605ca9a8d083a5b5d08024424",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00638",
     "count": 53,
-    "hash": "blake2b-7af81752d63bc22a0ac45109e137ef9d",
-    "work_checksum": "blake2b-23aaebb4067ddc33a8c80ee189492121",
-    "details_checksum": "blake2b-7af81752d63bc22a0ac45109e137ef9d",
-    "record_checksum": "blake2b-c015f9e2c9fea35c5bff474359d54b94"
+    "hash": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
+    "work_checksum": "blake2b-468507be0e1e87b3f1c269bd7e849077",
+    "details_checksum": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
+    "record_checksum": "blake2b-4f015ac605ca9a8d083a5b5d08024424"
   },
   "work": {
     "work_id": "00638",
@@ -32,10 +32,11 @@
     "height_cm": 75.0,
     "width_cm": 75.0,
     "depth_cm": null,
+    "width_px": 1804,
+    "height_px": 1804,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "23aaebb4067ddc33a8c80ee189492121"
+    "checksum": "468507be0e1e87b3f1c269bd7e849077"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "21ca5f3a1ea45cb06646b9b39ea9123d"
+          "checksum": "32ac6a7f16d8bb4a026d06343f00a205"
         },
         {
           "work_id": "00638",
@@ -63,9 +63,8 @@
           "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8f82e47293e86e838aa63cb9d4a66656"
+          "checksum": "8784a281d9c9a3897c0d05a39ca64a63"
         }
       ]
     },
@@ -81,9 +80,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "17eef809d552b1f03def1d72a5718d62"
+          "checksum": "0524b1892cdb8e5c4bbcec6528da221c"
         },
         {
           "work_id": "00638",
@@ -94,9 +92,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b7cfd8a2a3d6beb435dee157e493be46"
+          "checksum": "9212e0f273b6d6a48e3d0422fba2ef23"
         },
         {
           "work_id": "00638",
@@ -107,9 +104,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b72f33db6b78791e46250bf1f99fd1e7"
+          "checksum": "0b3090ea7025b42b55bb248cb03ffa28"
         },
         {
           "work_id": "00638",
@@ -120,9 +116,8 @@
           "project_subfolder": "details",
           "width_px": 2468,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3eba979e89db6d7b68764cd6a40549be"
+          "checksum": "f314410987d9af6bfd442aee8b317163"
         },
         {
           "work_id": "00638",
@@ -133,9 +128,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8990d8a4e89ee1a154793637e549642e"
+          "checksum": "09b0bc45329f0bc88b182cecb5c4bc2c"
         },
         {
           "work_id": "00638",
@@ -146,9 +140,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "eea8520243c4f62390d9607e0bd68c45"
+          "checksum": "c883fdbc82a917e62696880807fe20ef"
         },
         {
           "work_id": "00638",
@@ -159,9 +152,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7b71a489eb4af34b1e0f0b4ebefee9a4"
+          "checksum": "743bd11cf4d8dcea5dc0c3a08b05f10a"
         },
         {
           "work_id": "00638",
@@ -172,9 +164,8 @@
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9aac754bae67d2c750dd55ea6348ae87"
+          "checksum": "205a8a9eb18124a93f71c29e7ae52f5e"
         }
       ]
     },
@@ -190,9 +181,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7935c7a30ee3b2313958fa205cfaf196"
+          "checksum": "8850467c9987b55aec963f8dad1b9ef3"
         },
         {
           "work_id": "00638",
@@ -203,9 +193,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c4cb83decb7e10350fafa0ee7aef83a0"
+          "checksum": "0023740d8aab5b38a5245f5a537c8878"
         },
         {
           "work_id": "00638",
@@ -216,9 +205,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "24e7b460daf3259af7242d042bc00ffb"
+          "checksum": "a012e6869528319e658f8a444aad8a38"
         },
         {
           "work_id": "00638",
@@ -229,9 +217,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "29a1428b2cec3b85e63da9f689fac128"
+          "checksum": "8262ff6db770262ed3af82e1e435d605"
         },
         {
           "work_id": "00638",
@@ -242,9 +229,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bcdbf210c0859455c12909e05678e4bf"
+          "checksum": "ac4b707412794ae6de296a58f213849c"
         },
         {
           "work_id": "00638",
@@ -255,9 +241,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3def1e19b65848fa9d80eb91f03ad4ed"
+          "checksum": "e02bab70cda3c40735fda7d284cb832a"
         },
         {
           "work_id": "00638",
@@ -268,9 +253,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6b079bd0e06a7d30082d5f2065cc7bb9"
+          "checksum": "6995a79109c488391bb7c61534986687"
         },
         {
           "work_id": "00638",
@@ -281,9 +265,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5d06faddef132b4b04550d532790d91b"
+          "checksum": "35723eeee5d50968c1fa2a322c22a7a7"
         },
         {
           "work_id": "00638",
@@ -294,9 +277,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fabea3f66180da6c7dfc4c3141e3fd47"
+          "checksum": "cdbfbbd4cfda60d40de53ac25d526f52"
         },
         {
           "work_id": "00638",
@@ -307,9 +289,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "451b79abcdfab1b869fa83677a2f5a6d"
+          "checksum": "3873facc441efc039cce827b678ff1d0"
         },
         {
           "work_id": "00638",
@@ -320,9 +301,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "de0eb79e7f2a324e2ea51f625327d2f2"
+          "checksum": "154777adb2a205b41896e7babf2e3578"
         },
         {
           "work_id": "00638",
@@ -333,9 +313,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "229075001cf82929fa88d54c9b725b43"
+          "checksum": "02a208e34a4366f27656621163207cbe"
         },
         {
           "work_id": "00638",
@@ -346,9 +325,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "63abce94e3bf4f70b69750b588d64d45"
+          "checksum": "ad82eac9b33485f1fc91a9411901685c"
         },
         {
           "work_id": "00638",
@@ -359,9 +337,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b95032e56703b0286865e40075d918c0"
+          "checksum": "972cc216566dd1532717872a898a36ae"
         },
         {
           "work_id": "00638",
@@ -372,9 +349,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2715cd83eb589cc0cd248a13a0ac3274"
+          "checksum": "9c47d4ec99965035646f25bccb4a5efa"
         },
         {
           "work_id": "00638",
@@ -385,9 +361,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bea8fa108324f7c0905b941598db40ac"
+          "checksum": "55d44926944b140c13cafd9623797141"
         },
         {
           "work_id": "00638",
@@ -398,9 +373,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b4ae5caa3215cad26c9e10289d0b6b99"
+          "checksum": "eb789258c311652371bc28e61c701b99"
         },
         {
           "work_id": "00638",
@@ -411,9 +385,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5baf74e9ba13a98f19a0d64bbea0d22d"
+          "checksum": "e1f0b3dadeece25f5aa13ff1a86fcf1c"
         },
         {
           "work_id": "00638",
@@ -424,9 +397,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89d2877375a4d699c5a661ee976f80cf"
+          "checksum": "fbf27108044520735169a0c0c585f0d8"
         },
         {
           "work_id": "00638",
@@ -437,9 +409,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "985e562c2cc93beab5404b399c3f7a70"
+          "checksum": "532b654ab13e447cfa3cc648cf318cfd"
         },
         {
           "work_id": "00638",
@@ -450,9 +421,8 @@
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2ba717d7f7adb98d08a3d28a5b335c21"
+          "checksum": "903837bc9ea3c3887bf4b21bc4944908"
         },
         {
           "work_id": "00638",
@@ -463,9 +433,8 @@
           "project_subfolder": "source",
           "width_px": 14056,
           "height_px": 7029,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b2878a34fb9259b5939bb2b4ab9341a7"
+          "checksum": "ab49bebfcf85ba3aedeedd1972e89cd2"
         }
       ]
     },
@@ -481,9 +450,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e20cdf6993140e1486cba093344550f0"
+          "checksum": "06c6fcd5f3e046dd7f4bf4bf13e794ff"
         },
         {
           "work_id": "00638",
@@ -494,9 +462,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "70f99aa49728921e558b317721563175"
+          "checksum": "78b812eb1cbb874cb465be35a5f9e666"
         },
         {
           "work_id": "00638",
@@ -507,9 +474,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "56e2f4c2e6f11e90bf67aa216e9deeea"
+          "checksum": "2b31add04bd3e1822ae3a9a066b7fe41"
         },
         {
           "work_id": "00638",
@@ -520,9 +486,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "facb2ac4b4616a7a2f6a33f1feca08be"
+          "checksum": "6b52acf96728c9688189026b51e38798"
         },
         {
           "work_id": "00638",
@@ -533,9 +498,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "026e2d9598f3ee4aa52bfd1926d7a2c9"
+          "checksum": "3c5266686c8a066c4ddf9ce46d32681e"
         },
         {
           "work_id": "00638",
@@ -546,9 +510,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f26b7065e3a65fae5be0b50f7cbf07fc"
+          "checksum": "2ff95cb05a58c1c4d93b8a266aab8654"
         },
         {
           "work_id": "00638",
@@ -559,9 +522,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "77666bf922722e516a1415d83e686698"
+          "checksum": "75895de0599d11cb0c86517896efb98f"
         },
         {
           "work_id": "00638",
@@ -572,9 +534,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "634137458e463dc643d74520a39671e9"
+          "checksum": "504fbd9da1aecec1cf9ff189c8525af2"
         },
         {
           "work_id": "00638",
@@ -585,9 +546,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "445be9773c5574ac4e4cefa76d79e23e"
+          "checksum": "e1ddda2258ffed3e3b77af1bfb47af80"
         },
         {
           "work_id": "00638",
@@ -598,9 +558,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dac440dd76a4e9cfae2ed1ab6f8af189"
+          "checksum": "e997e59db0945d258508cefe71ef4d23"
         },
         {
           "work_id": "00638",
@@ -611,9 +570,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ee6d0014f5d3bb7b27a9584531dc17f"
+          "checksum": "a7f80bb2cf22466d58df658f35ba0cd8"
         },
         {
           "work_id": "00638",
@@ -624,9 +582,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65b55149d4bf8f65252c2f9632abf70a"
+          "checksum": "0ff7fc464d29afbda9a1544eb9719b14"
         },
         {
           "work_id": "00638",
@@ -637,9 +594,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "91e5c4d5ca00d29a043ae1802b7bc2b1"
+          "checksum": "c0b5302aedef8dd19a18fde36d2eda9e"
         },
         {
           "work_id": "00638",
@@ -650,9 +606,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ba9a904227b5d24ca4ccbb924bb58e43"
+          "checksum": "53b971ce20243bc791fb4b4d2a942596"
         },
         {
           "work_id": "00638",
@@ -663,9 +618,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "83d52c80a5c2a38d0855e04a57cf750f"
+          "checksum": "f327ec7f127a949bf7110437ac18e7ac"
         },
         {
           "work_id": "00638",
@@ -676,9 +630,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c21e083f358d78db005495b4faf27ca9"
+          "checksum": "a5197a57b9620cb3befa2d6d0959327b"
         },
         {
           "work_id": "00638",
@@ -689,9 +642,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b4aafe4b289d688a9b490b1a216aebdb"
+          "checksum": "5eda8ab8ecd474c888f152840a47d96a"
         },
         {
           "work_id": "00638",
@@ -702,9 +654,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a3c46e7a26612afad783e71c37e057cf"
+          "checksum": "bf259cec9ed6a4b800486a752963cb64"
         },
         {
           "work_id": "00638",
@@ -715,9 +666,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5393f98c160022c120bbfbfdd371ac6d"
+          "checksum": "ce606a32c6c176d986ba4c20b47ced56"
         },
         {
           "work_id": "00638",
@@ -728,9 +678,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7694d83d8810da904860f5a71e0d3435"
+          "checksum": "305cbb5f5267315c0f6ff09c015c6498"
         },
         {
           "work_id": "00638",
@@ -741,9 +690,8 @@
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "45dc6d68b2775d4c791facc06fdf9c9f"
+          "checksum": "720535dfd1af5f31a9f55fbfdb91b54e"
         }
       ]
     }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-355c7fd41a67dc20639f0cf7f22f55a3",
-    "generated_at_utc": "2026-03-15T18:47:25Z",
+    "version": "blake2b-135a25418abad9949343925123da05b3",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00805",
     "count": 80,
-    "hash": "blake2b-1366c47a382fdb3e4b89bebd8845c455",
-    "work_checksum": "blake2b-c97fba4d537e97cb1b3f59f8b6fac438",
-    "details_checksum": "blake2b-1366c47a382fdb3e4b89bebd8845c455",
-    "record_checksum": "blake2b-355c7fd41a67dc20639f0cf7f22f55a3"
+    "hash": "blake2b-8d4d282d824909bbe452525ed2336dd7",
+    "work_checksum": "blake2b-32aeeabff066ede815c7cd8dfccf379c",
+    "details_checksum": "blake2b-8d4d282d824909bbe452525ed2336dd7",
+    "record_checksum": "blake2b-135a25418abad9949343925123da05b3"
   },
   "work": {
     "work_id": "00805",
@@ -32,10 +32,11 @@
     "height_cm": 45.0,
     "width_cm": 60.0,
     "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 5315,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "c97fba4d537e97cb1b3f59f8b6fac438"
+    "checksum": "32aeeabff066ede815c7cd8dfccf379c"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b0b0e0188a9c540cab91f017a596b173"
+          "checksum": "2d327616c3784674367be9ad5dd41d3a"
         },
         {
           "work_id": "00805",
@@ -63,9 +63,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "81560df67469d1974c2725764a3dd6d4"
+          "checksum": "f3c005c7569c33554f06f19b951c8c15"
         },
         {
           "work_id": "00805",
@@ -76,9 +75,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a53aeff56587916e564f7e7022b80d13"
+          "checksum": "02bd29de5b71b5e49fdcdcaae84ad4b1"
         },
         {
           "work_id": "00805",
@@ -89,9 +87,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7682dc1a0abc3d88e96aaf4edab6ec7c"
+          "checksum": "8e1e7fb93c02dc8a92a95649801ab3f1"
         },
         {
           "work_id": "00805",
@@ -102,9 +99,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6abd7383cd33a648616f1632c2e28898"
+          "checksum": "758fde192d1781c4ce3a2ef1acc38b2a"
         },
         {
           "work_id": "00805",
@@ -115,9 +111,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fef202171ffbfa42dd520473454190d7"
+          "checksum": "bec535c3ef9b3737a55468bd13a7074c"
         },
         {
           "work_id": "00805",
@@ -128,9 +123,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3efb845b84785d4f7e73b68bd47022f8"
+          "checksum": "d42ad30d1846f82330c82b9e19eae605"
         },
         {
           "work_id": "00805",
@@ -141,9 +135,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9e1544ca5bc189501535401b2683ef12"
+          "checksum": "dc33c918dd852f79a0822bb975d19b24"
         },
         {
           "work_id": "00805",
@@ -154,9 +147,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5e3045c97c028c6e196b30660dffe2e5"
+          "checksum": "0691ff40e8ca433da65ee545d3bd1a51"
         },
         {
           "work_id": "00805",
@@ -167,9 +159,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6a2617245f7b5d1fe50b9c3f8a304fca"
+          "checksum": "5f8146a44c2de8df1a04cedfc49f48b8"
         },
         {
           "work_id": "00805",
@@ -180,9 +171,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "edd2a72db2161a87420d1e1c6e29f693"
+          "checksum": "1d95d4294d5229d54f7c8edec29585f4"
         },
         {
           "work_id": "00805",
@@ -193,9 +183,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7f8bb74624bd11df21a4431983de56e9"
+          "checksum": "8efb6b32a4932d7afa593ff8cc5408ea"
         },
         {
           "work_id": "00805",
@@ -206,9 +195,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9a7345af32026f6ed096f72e4ddf63b7"
+          "checksum": "ba93c83c0e2eabdcbedb88bba8dd9bfa"
         },
         {
           "work_id": "00805",
@@ -219,9 +207,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9f3afc9ae2e8d0cb782dbc04aa0d1be0"
+          "checksum": "5e5cbb6b1dcac9025f634a04b89427c8"
         },
         {
           "work_id": "00805",
@@ -232,9 +219,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f6b088e475301e63a5efd62fa5acb0a2"
+          "checksum": "8249611ca833ec88a96d7dcba125b115"
         },
         {
           "work_id": "00805",
@@ -245,9 +231,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a908900af16c9d25c810de5171b145d7"
+          "checksum": "0f9b4d5d5bf473cb2c5284536057ca8c"
         },
         {
           "work_id": "00805",
@@ -258,9 +243,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "acc8d06b0f83075632c7ee7e946045bf"
+          "checksum": "d0f2ace4d6aa3b29c5bd702a52117c31"
         },
         {
           "work_id": "00805",
@@ -271,9 +255,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6b914dfc3790ad42ed537c89c728b4d4"
+          "checksum": "e7bbc75bdd9334d52d6baff040814e24"
         },
         {
           "work_id": "00805",
@@ -284,9 +267,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d8b6b042e6f5425b08febcc43a30f66"
+          "checksum": "1395b7d64788564c963b62c64b662d21"
         },
         {
           "work_id": "00805",
@@ -297,9 +279,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f070b402971926c8535630b36a8c8f78"
+          "checksum": "b1ca0449ba3813081e528333f21a33a0"
         },
         {
           "work_id": "00805",
@@ -310,9 +291,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a2bc712d1cdb9f1484d1ec3b0764f1e3"
+          "checksum": "311f136a7195c852801faec0a9ce790d"
         },
         {
           "work_id": "00805",
@@ -323,9 +303,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9502c5ed967bb01b477a29b2b6eab0d2"
+          "checksum": "f4814554b4be32ee8417eab2057acacf"
         },
         {
           "work_id": "00805",
@@ -336,9 +315,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8763125ad8d2c2f5e1a4a44586c2e90e"
+          "checksum": "1f5a71c441dea935bb8c485d522cbe85"
         },
         {
           "work_id": "00805",
@@ -349,9 +327,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9d1b077b1a4008d33c2f56ba0cedae04"
+          "checksum": "46ab6d4cba7809dc4a85b3eefa635087"
         },
         {
           "work_id": "00805",
@@ -362,9 +339,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b556f4ea4861d64c7fa0a8d9a6a5abb6"
+          "checksum": "a39fbd793797f89e5ac865c7319c8090"
         },
         {
           "work_id": "00805",
@@ -375,9 +351,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "855f6c36faf9c64df813b86339bfaaf1"
+          "checksum": "2b63d41d879eb7a85ceec885fc836352"
         },
         {
           "work_id": "00805",
@@ -388,9 +363,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7db85dd163387b730c405d8c7ca12587"
+          "checksum": "881c7880ee0a29d8fff2c31485624966"
         },
         {
           "work_id": "00805",
@@ -401,9 +375,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4fde07ad67b8996aba7e494b27276bec"
+          "checksum": "ab291740811413a714f0b56dac603518"
         },
         {
           "work_id": "00805",
@@ -414,9 +387,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5e8ddee4cc8f9e237f475f7bed45de73"
+          "checksum": "988633d37132e7ad3d4c0bd96ab5314d"
         },
         {
           "work_id": "00805",
@@ -427,9 +399,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "72f158e4fc2843c4a586734c91a8474a"
+          "checksum": "1be4cff5520cdd970956f967e4aac773"
         },
         {
           "work_id": "00805",
@@ -440,9 +411,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c395f4809f0fdb626b9e74392be8089a"
+          "checksum": "44fb75cf3910db9d2137692e0aa29b6c"
         },
         {
           "work_id": "00805",
@@ -453,9 +423,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1fce8c3b6bbfd415f836a1eaaaafde58"
+          "checksum": "a0a76caa7f9c5999b1a44f8076475445"
         },
         {
           "work_id": "00805",
@@ -466,9 +435,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e68c6d0c02a1fbf519ab7c4afaf47f48"
+          "checksum": "f9bf3cc1f1e5c286c45c0b18d393fe2d"
         },
         {
           "work_id": "00805",
@@ -479,9 +447,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5c582bcebb816fa24c1efdfbf152e4c8"
+          "checksum": "dcd7bd1c0ad762c5cba71d6605a6a0eb"
         },
         {
           "work_id": "00805",
@@ -492,9 +459,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "67f4bb4d96da4da260e348c9cffa7ebb"
+          "checksum": "75101f020b5f37fd30a1552db74a47ba"
         },
         {
           "work_id": "00805",
@@ -505,9 +471,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "397ab251388630a01a7de414512669b5"
+          "checksum": "ae7787bcb45e5e775567036beca3e90b"
         },
         {
           "work_id": "00805",
@@ -518,9 +483,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ecd269e43e2bf00975fa3a82cb049f8"
+          "checksum": "3e10bc97599c8877185bd3b25e84d852"
         },
         {
           "work_id": "00805",
@@ -531,9 +495,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8e9e00edba629ac851f5a212d81f5e81"
+          "checksum": "45e2886d50330e2d07e44aaedd9c6651"
         },
         {
           "work_id": "00805",
@@ -544,9 +507,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d4d370c98b9d4406f083740e6ba7dc33"
+          "checksum": "8264226d2b377e9ce32177e2e05972b2"
         },
         {
           "work_id": "00805",
@@ -557,9 +519,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4f20b9b20ac7ef2f6973b9f07f5d7c7d"
+          "checksum": "27a456a1740c3e7a2bad2171bc9521eb"
         },
         {
           "work_id": "00805",
@@ -570,9 +531,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "304d1e7e539b521e5c5f1a8ed664d86a"
+          "checksum": "f9dd8bdde0528258019ded721a2813aa"
         },
         {
           "work_id": "00805",
@@ -583,9 +543,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d19cdb57c28c980a7135cc59f598baaf"
+          "checksum": "e212fd5bfc0b315fd85d764699bbc5de"
         },
         {
           "work_id": "00805",
@@ -596,9 +555,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bb7dcead8a982fc7b194f78cb8c618fb"
+          "checksum": "03465a9a681af2830283990565f36193"
         },
         {
           "work_id": "00805",
@@ -609,9 +567,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "467e10c123966269545fd6d0c1adcfca"
+          "checksum": "9dfff3aef96d2b8c005b2fd3d6c8118e"
         },
         {
           "work_id": "00805",
@@ -622,9 +579,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e12ff06e456ca9c76153770967acd046"
+          "checksum": "f0f363f0db5924bf9d1b730230bcd38d"
         },
         {
           "work_id": "00805",
@@ -635,9 +591,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "47b0be255325aa86a5d722dde40939d8"
+          "checksum": "214810c9d6e927e2e0425b4785b6cf6a"
         },
         {
           "work_id": "00805",
@@ -648,9 +603,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ce43b5529423c0591ab7a050322fd548"
+          "checksum": "df159e2a5dd8ec21c58f486935d50556"
         },
         {
           "work_id": "00805",
@@ -661,9 +615,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2a062b70fa7ba5d33bc66b7dde17c90b"
+          "checksum": "f2350e38e86332c325d33c850ab8e50c"
         },
         {
           "work_id": "00805",
@@ -674,9 +627,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b739ef9c0d5dfcc2fe4fa1407d30569"
+          "checksum": "343bb6d95719b21808156d1474bcc199"
         },
         {
           "work_id": "00805",
@@ -687,9 +639,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0bc733b97e0ac6d57688be9fefb029ed"
+          "checksum": "1b544b94706c6bdac885ebeb6a7651a2"
         },
         {
           "work_id": "00805",
@@ -700,9 +651,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "21c079f53959273ae2c3d13d49655274"
+          "checksum": "0a8509a0cda69f00d04bb6d28c579ce3"
         },
         {
           "work_id": "00805",
@@ -713,9 +663,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "376cd78dc9b8eb19154760fe7c284428"
+          "checksum": "0f4c1324f7d058483cf160752aa16a37"
         },
         {
           "work_id": "00805",
@@ -726,9 +675,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c6028f60b65da329f204e167e6d484a3"
+          "checksum": "2f3a606818988007fdd456eb8f7c6db0"
         },
         {
           "work_id": "00805",
@@ -739,9 +687,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "11b8d4c21d22391c7ee41394ac26b814"
+          "checksum": "f050f272a3dafc1266c82bf433e82ec7"
         },
         {
           "work_id": "00805",
@@ -752,9 +699,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bd9dadcf630c278b2afce12f5947f579"
+          "checksum": "4e8231fc48d1d903bf6c783422d37461"
         },
         {
           "work_id": "00805",
@@ -765,9 +711,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "359a5f4bfa0880c0b5f87e2e5c8f3af4"
+          "checksum": "21a73614c52d8d2470bbf7f1c260cfd1"
         },
         {
           "work_id": "00805",
@@ -778,9 +723,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bed15ea95680e2a89072924e46a7f0d0"
+          "checksum": "939501f62081483cff339be4c89a259a"
         },
         {
           "work_id": "00805",
@@ -791,9 +735,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1956867dc9fa6a3ab96c694cc7e2db12"
+          "checksum": "76e1ddf0562bb33a2f203377f556d9cf"
         },
         {
           "work_id": "00805",
@@ -804,9 +747,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a954a233a8debe36263a6c7390134b80"
+          "checksum": "79db69ca3c9478529472d3a887020a5d"
         },
         {
           "work_id": "00805",
@@ -817,9 +759,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "82a84c2ce56665e4054bcac279f1cab6"
+          "checksum": "64c76bf2eac5883a9b249fbfac526bec"
         },
         {
           "work_id": "00805",
@@ -830,9 +771,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "48dfbbe585047bd0c68bad48bc1fbd8f"
+          "checksum": "233c2652a3485d9546e5cd623c4ee1ef"
         },
         {
           "work_id": "00805",
@@ -843,9 +783,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f541bd1080e9ec56b8e3f7bf7a745e3e"
+          "checksum": "47310e14e6113b2999474f2d53cd05b3"
         },
         {
           "work_id": "00805",
@@ -856,9 +795,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6bb6187ff62f19d0bf198445e5d56057"
+          "checksum": "cfcee34998a459f9dd38e1da451c7057"
         },
         {
           "work_id": "00805",
@@ -869,9 +807,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7eae603a4b4085ce9b1a9ac275f03108"
+          "checksum": "dce78f7584e072b1792607169e071acf"
         },
         {
           "work_id": "00805",
@@ -882,9 +819,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fc52cfc0d339357af5690cf71cb08dde"
+          "checksum": "58c1ef448c6b141232d434c5ef2a7075"
         },
         {
           "work_id": "00805",
@@ -895,9 +831,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "43e3a81af0826d090a77f0b981f0d18b"
+          "checksum": "f5451c4ba7d519146b7b2bc4cb4084c0"
         },
         {
           "work_id": "00805",
@@ -908,9 +843,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5838c54cf77c8a545e9ca661e613e45a"
+          "checksum": "9e5bced77c42f011485f7ce03f4f7e68"
         },
         {
           "work_id": "00805",
@@ -921,9 +855,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "05031fac83c6252c038e464fc383c6fc"
+          "checksum": "339e9d8c8e944691d6b81d0de6859541"
         },
         {
           "work_id": "00805",
@@ -934,9 +867,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "723e0a89bc745fe4b470c2d14a5e30a7"
+          "checksum": "3242dd041715582512b284bcf75cbf80"
         },
         {
           "work_id": "00805",
@@ -947,9 +879,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c7f347d38c0543b81efed7d3cc15296e"
+          "checksum": "871c4e334a4c5d5cae01536c5e919564"
         },
         {
           "work_id": "00805",
@@ -960,9 +891,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9a3794955c4f9ce6ca0bbf3ef7385de4"
+          "checksum": "a9d242837df18857c820102fb3e3768f"
         },
         {
           "work_id": "00805",
@@ -973,9 +903,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d8ba8b49c0d07381976a67ea10c242a"
+          "checksum": "a07cdb31d728f6330329ebe4bf8b53c6"
         },
         {
           "work_id": "00805",
@@ -986,9 +915,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f62be29f70fb64bbc5f8176fab986671"
+          "checksum": "c175a028502c00fddf2fde220a55c35e"
         },
         {
           "work_id": "00805",
@@ -999,9 +927,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3229fb0fc152ee91c844454395578959"
+          "checksum": "a384968fe9ef760116a4e32a6da1c605"
         },
         {
           "work_id": "00805",
@@ -1012,9 +939,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "43e6df4a31c5c40a4ed515ad579741e9"
+          "checksum": "c1b6fa1a7432be780883d7a6fa115e51"
         },
         {
           "work_id": "00805",
@@ -1025,9 +951,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1bd198e1305d08c70a0edf414464f13d"
+          "checksum": "0d3eb8d05768cd736da33b84af9acad8"
         },
         {
           "work_id": "00805",
@@ -1038,9 +963,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4a7314c48a5f42b68b4e9d79628adf94"
+          "checksum": "b20467ec564109507c20634d3ce6a9a6"
         },
         {
           "work_id": "00805",
@@ -1051,9 +975,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bbe343201133584042e991060c5a8a62"
+          "checksum": "b6226698ce7b53fe1ec4a05f936df596"
         },
         {
           "work_id": "00805",
@@ -1064,9 +987,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cab89af39011f17b027c78c447cdad72"
+          "checksum": "55e989b59574b51f02dec7fd109e7a30"
         },
         {
           "work_id": "00805",
@@ -1077,9 +999,8 @@
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5123fd69310f25ae28f973a338f17063"
+          "checksum": "65e0e56dce5644e3f59b75d4dd1382c0"
         }
       ]
     }

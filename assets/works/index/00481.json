@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7e878cb467a0313bb190aef807c4f2f8",
-    "generated_at_utc": "2026-03-13T22:24:07Z",
+    "version": "blake2b-046658ae2f31cecc73eed63a93983829",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00481",
     "count": 13,
-    "hash": "blake2b-da037c789297e9c796971e23371858e7",
-    "work_checksum": "blake2b-6edccbf4d90e15bd6d532d413cc679ca",
-    "details_checksum": "blake2b-da037c789297e9c796971e23371858e7",
-    "record_checksum": "blake2b-7e878cb467a0313bb190aef807c4f2f8"
+    "hash": "blake2b-e51c9a0c011a33bd3c717b7c174a707a",
+    "work_checksum": "blake2b-1b769139aed2f92aaff34e984403fbed",
+    "details_checksum": "blake2b-e51c9a0c011a33bd3c717b7c174a707a",
+    "record_checksum": "blake2b-046658ae2f31cecc73eed63a93983829"
   },
   "work": {
     "work_id": "00481",
@@ -32,10 +32,11 @@
     "height_cm": 60.0,
     "width_cm": 70.0,
     "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 7087,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "6edccbf4d90e15bd6d532d413cc679ca"
+    "checksum": "1b769139aed2f92aaff34e984403fbed"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "035cb35f19d7a0747ad495b4751927fc"
+          "checksum": "0e3a6fb8959245d02d668a3c7f64c22f"
         },
         {
           "work_id": "00481",
@@ -63,9 +63,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "593a286c1ab84c1ce37e8e1e964fe497"
+          "checksum": "bd45b4c3f46dbc2ba4ac0a7e79bae848"
         },
         {
           "work_id": "00481",
@@ -76,9 +75,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4d9b6286c07665682f2cadaab0e4b4c5"
+          "checksum": "2563b995c51702934f10da2df61e81f5"
         },
         {
           "work_id": "00481",
@@ -89,9 +87,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fac601b460c20a0d5d1611a3d8bc0e94"
+          "checksum": "ea73e1db01b83e91476aafd1f401f2f3"
         },
         {
           "work_id": "00481",
@@ -102,9 +99,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b7ebc66eff69db2ca07bdbaf9ab64c1f"
+          "checksum": "237228d37c338baa231ee0269ab2df87"
         },
         {
           "work_id": "00481",
@@ -115,9 +111,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e6150abbc1743d20511047e5b5ef86bc"
+          "checksum": "58a23ac24ab4d1141897ef989bb9242b"
         },
         {
           "work_id": "00481",
@@ -128,9 +123,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f91f4a2da50a14e515a9784ac46906b1"
+          "checksum": "43d465d4fa8537784cf590b79866cc04"
         },
         {
           "work_id": "00481",
@@ -141,9 +135,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2ad258be625c8d80d8226c4086b81f64"
+          "checksum": "5a44486fc3cd72b1c16b466ef40709bb"
         },
         {
           "work_id": "00481",
@@ -154,9 +147,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "96dd91e288991aa9c4fd5a00d870b46e"
+          "checksum": "7b426286bb3e3c97ff152c570b342b29"
         },
         {
           "work_id": "00481",
@@ -167,9 +159,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c9f996b488b38c376a620a4f02da5ffa"
+          "checksum": "b70404dc94cf45e27a4e8d36ceb18727"
         },
         {
           "work_id": "00481",
@@ -180,9 +171,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2cfa804e783855375ff810d644a3d4e6"
+          "checksum": "6bc007c34e7c9de43a4ebd6a0ea41191"
         },
         {
           "work_id": "00481",
@@ -193,9 +183,8 @@
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "acdaf816cd3082ce0693c983dd3cd48e"
+          "checksum": "8ef2ac43dfb60aaf15e2c211cc72b225"
         },
         {
           "work_id": "00481",
@@ -206,9 +195,8 @@
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bc1b4aa75463e6a0f3a8c19d24c9632d"
+          "checksum": "5821acd2f1642c1163c773cd2ec609c4"
         }
       ]
     }

@@ -17,27 +17,12 @@ layout: default
 {%- assign src800  = img_base | append: detail_uid | append: "-primary-800.webp" -%}
 {%- assign src1200 = img_base | append: detail_uid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: detail_uid | append: "-primary-1600.webp" -%}
-{%- assign src2400 = img_base | append: detail_uid | append: "-primary-2400.webp" -%}
-{%- assign src2400_path = "/assets/work_details/img/" | append: detail_uid | append: "-primary-2400.webp" -%}
-{%- assign has_local_2400 = false -%}
-{%- assign maybe_2400 = site.static_files | where: "path", src2400_path | first -%}
-{%- if maybe_2400 -%}
-  {%- assign has_local_2400 = true -%}
-{%- endif -%}
-{%- assign has_2400 = has_local_2400 -%}
-{%- if page.has_primary_2400 == true -%}
-  {%- assign has_2400 = true -%}
-{%- endif -%}
 {%- assign full_src = src1600 -%}
-{%- if has_2400 -%}
-  {%- assign full_src = src2400 -%}
-{%- endif -%}
 
 {%- unless img_base contains '://' -%}
   {%- assign src800  = src800  | relative_url -%}
   {%- assign src1200 = src1200 | relative_url -%}
   {%- assign src1600 = src1600 | relative_url -%}
-  {%- assign src2400 = src2400 | relative_url -%}
 {%- endunless -%}
 
 <article
@@ -51,7 +36,6 @@ layout: default
   data-fallback-title="{{ title_txt | escape }}"
   data-fallback-width-px="{{ page.width_px | default: 0 | escape }}"
   data-fallback-height-px="{{ page.height_px | default: 0 | escape }}"
-  data-fallback-has-2400="{{ page.has_primary_2400 | default: false | escape }}"
 >
   <h1 class="visually-hidden" id="detailHiddenTitle">{% if title_txt != "" %}{{ title_txt }}{% else %}Untitled{% endif %}</h1>
 
@@ -71,12 +55,10 @@ layout: default
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w{% if has_2400 %},
-          {{ src2400 }} 2400w{% endif %}"
+          {{ src1600 }} 1600w"
         data-src-800="{{ src800 | escape }}"
         data-src-1200="{{ src1200 | escape }}"
         data-src-1600="{{ src1600 | escape }}"
-        data-src-2400="{{ src2400 | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: detail_uid | escape }}"
         loading="eager"
@@ -144,7 +126,6 @@ layout: default
     var fallbackTitle = String(root.getAttribute('data-fallback-title') || '').trim();
     var fallbackWidthPx = Number(root.getAttribute('data-fallback-width-px') || '0');
     var fallbackHeightPx = Number(root.getAttribute('data-fallback-height-px') || '0');
-    var fallbackHas2400 = String(root.getAttribute('data-fallback-has-2400') || '').trim().toLowerCase() === 'true';
 
     var params = new URLSearchParams(window.location.search);
     var explicitFromWorkTitle = String(params.get('from_work_title') || '').trim() !== '';
@@ -162,8 +143,7 @@ layout: default
       seriesPage: 0,
       title: String(fallbackTitle || detailUid || 'Untitled').trim(),
       widthPx: Number(fallbackWidthPx),
-      heightPx: Number(fallbackHeightPx),
-      has2400: fallbackHas2400
+      heightPx: Number(fallbackHeightPx)
     };
     if (!ctx.fromWorkTitle) ctx.fromWorkTitle = ctx.fromWork;
 
@@ -217,15 +197,13 @@ layout: default
       var src800 = normalize(img.getAttribute('data-src-800'));
       var src1200 = normalize(img.getAttribute('data-src-1200'));
       var src1600 = normalize(img.getAttribute('data-src-1600'));
-      var src2400 = normalize(img.getAttribute('data-src-2400'));
       if (!src1600) return;
 
       var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
-      if (ctx.has2400 && src2400) srcset.push(src2400 + ' 2400w');
       img.setAttribute('src', src1600);
       img.setAttribute('srcset', srcset.join(', '));
       img.setAttribute('alt', ctx.title || ctx.detailUid);
-      mediaLink.setAttribute('href', (ctx.has2400 && src2400) ? src2400 : src1600);
+      mediaLink.setAttribute('href', src1600);
     }
 
     function updateBackLink() {
@@ -359,7 +337,6 @@ layout: default
           var h = Number(detailRecord.height_px);
           if (Number.isFinite(w) && w > 0) ctx.widthPx = w;
           if (Number.isFinite(h) && h > 0) ctx.heightPx = h;
-          if (detailRecord.has_primary_2400 === true) ctx.has2400 = true;
           if (!explicitSection && detailCtx.section_id) ctx.section = detailCtx.section_id;
           if (!explicitDetailsSection && detailCtx.section_id) ctx.detailsSection = detailCtx.section_id;
         }

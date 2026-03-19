@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8a7956e2b3a80f34ee6587b77a06a535",
-    "generated_at_utc": "2026-03-15T16:23:41Z",
+    "version": "blake2b-fc838c0e6514045058dd4b7748893755",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00755",
     "count": 3,
-    "hash": "blake2b-cae476165631fbea7e65bfce5cba2542",
-    "work_checksum": "blake2b-48ad2a19c3982527651ee104d7a94963",
-    "details_checksum": "blake2b-cae476165631fbea7e65bfce5cba2542",
-    "record_checksum": "blake2b-8a7956e2b3a80f34ee6587b77a06a535"
+    "hash": "blake2b-3a99085223a1298993872b5c88f893a8",
+    "work_checksum": "blake2b-1349fc1ef6f75f39d73fcea2dd62aa76",
+    "details_checksum": "blake2b-3a99085223a1298993872b5c88f893a8",
+    "record_checksum": "blake2b-fc838c0e6514045058dd4b7748893755"
   },
   "work": {
     "work_id": "00755",
@@ -32,10 +32,11 @@
     "height_cm": 50.0,
     "width_cm": 120.0,
     "depth_cm": null,
+    "width_px": 14173,
+    "height_px": 5906,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "48ad2a19c3982527651ee104d7a94963"
+    "checksum": "1349fc1ef6f75f39d73fcea2dd62aa76"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6e45d979e75fa1738aec09522dd2ccd9"
+          "checksum": "34277c93457b67674fd03fcf9f919fa6"
         },
         {
           "work_id": "00755",
@@ -63,9 +63,8 @@
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a02cdab4bfe1f5d6797133eb786e9216"
+          "checksum": "3fb768b0961b550f522516d640985a30"
         },
         {
           "work_id": "00755",
@@ -76,9 +75,8 @@
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4f39b2dc8e93cc301c0f754f7e2e4db5"
+          "checksum": "f9ed05fa5c74ffdac331af02fb2d9fe0"
         }
       ]
     }

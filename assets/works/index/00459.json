@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d60a3eddcfd93b8d9012a57add11e381",
-    "generated_at_utc": "2026-03-05T21:25:22Z",
+    "version": "blake2b-10c831333831f8075b060a75c4400a33",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00459",
     "count": 256,
-    "hash": "blake2b-376ef707ce6de204ae2bd5e34f385c77",
-    "work_checksum": "blake2b-100af802303b544dce5959dd8777769d",
-    "details_checksum": "blake2b-376ef707ce6de204ae2bd5e34f385c77",
-    "record_checksum": "blake2b-d60a3eddcfd93b8d9012a57add11e381"
+    "hash": "blake2b-bccfb7fe3d6c27a25c1d5122980fce59",
+    "work_checksum": "blake2b-dab5c42ffd1cb39e69e4e83604ca8454",
+    "details_checksum": "blake2b-bccfb7fe3d6c27a25c1d5122980fce59",
+    "record_checksum": "blake2b-10c831333831f8075b060a75c4400a33"
   },
   "work": {
     "work_id": "00459",
@@ -32,10 +32,11 @@
     "height_cm": 81.3,
     "width_cm": 81.3,
     "depth_cm": null,
+    "width_px": 9600,
+    "height_px": 9600,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "100af802303b544dce5959dd8777769d"
+    "checksum": "dab5c42ffd1cb39e69e4e83604ca8454"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "df5debae35963e4aa859fadb5ffa77b8"
+          "checksum": "54f79008ae787feded21a6e4fa030ba3"
         },
         {
           "work_id": "00459",
@@ -63,9 +63,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ffb369dde9f41306a15e89c0ccef7b44"
+          "checksum": "e31a3afa0ed7da4e83806fa357da22a9"
         },
         {
           "work_id": "00459",
@@ -76,9 +75,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ccd8db00f1f4621e9af1a15e01cd5c91"
+          "checksum": "935a7217734f39032fc948d708ac9815"
         },
         {
           "work_id": "00459",
@@ -89,9 +87,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "97f328d6cb22f9e2b8536425b7e76edb"
+          "checksum": "23e33459188dd916746c8a52b68de526"
         },
         {
           "work_id": "00459",
@@ -102,9 +99,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "51c164e59bb9b6fb26aae8354f8aaf88"
+          "checksum": "f4ecc42defbe659c520c79cae33bc36e"
         },
         {
           "work_id": "00459",
@@ -115,9 +111,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d19418645f7a1c98a13c835e5e2f9324"
+          "checksum": "7e66c7e952820662a4c38b0728351ae0"
         },
         {
           "work_id": "00459",
@@ -128,9 +123,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "616076b430462aa75b0e06a28c528907"
+          "checksum": "335317dab96480616c4b54bb70d97e5b"
         },
         {
           "work_id": "00459",
@@ -141,9 +135,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ebc13d324adabb405241bf2b78750a9"
+          "checksum": "c5ba88e49e9e00de4a38594356fa97b0"
         },
         {
           "work_id": "00459",
@@ -154,9 +147,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "783d1fd6b3458988f6f55a6a09151c60"
+          "checksum": "2910a64176788bdff8e662d28ac402da"
         },
         {
           "work_id": "00459",
@@ -167,9 +159,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "905f18a99c526ffc3c3ecf748354fcc8"
+          "checksum": "470310533b5ac2817a1d57b40e132ec2"
         },
         {
           "work_id": "00459",
@@ -180,9 +171,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d1efeaca65909eee1079cacf74f3a994"
+          "checksum": "3dd7c965611be70d9e823e64551b0e88"
         },
         {
           "work_id": "00459",
@@ -193,9 +183,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5131bbed76a65cbca820b62d33527035"
+          "checksum": "583a96bb44f2fd9218cdc75badd1f314"
         },
         {
           "work_id": "00459",
@@ -206,9 +195,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b57091f1995e7005a282e5866a401b02"
+          "checksum": "519d33b1d3547678e39ec7f97cad4fca"
         },
         {
           "work_id": "00459",
@@ -219,9 +207,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "213d6ef2ad1083e80c33857d968f76d3"
+          "checksum": "5a971f7817ce4d391214a633e722278f"
         },
         {
           "work_id": "00459",
@@ -232,9 +219,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8c0bcf8398d6121401ff6a5ceead4d8c"
+          "checksum": "72840c4b49760ff495243c7efbcc369e"
         },
         {
           "work_id": "00459",
@@ -245,9 +231,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "224b95b99ce1d7aa548bc68d1e463a03"
+          "checksum": "abfe5bdeeed1ad5d87d56a84ba4c5bdd"
         },
         {
           "work_id": "00459",
@@ -258,9 +243,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d1281ef6c115a9519ebc84a4f8219a99"
+          "checksum": "f85cd2e28cb2f524faea99055283a2bd"
         },
         {
           "work_id": "00459",
@@ -271,9 +255,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dd8c83213158b62f25af6671cc70a8f3"
+          "checksum": "bb2cbafb6d26af0f3862ac1a9805e29c"
         },
         {
           "work_id": "00459",
@@ -284,9 +267,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e02cb75acae93ed4257560220ad737ec"
+          "checksum": "115e5dd1036c65676eb41de5f3c5939e"
         },
         {
           "work_id": "00459",
@@ -297,9 +279,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f3d1ebb393467d47911aedce2e1a4688"
+          "checksum": "f7f63d7f6dc8e954b7bb119c91626cb3"
         },
         {
           "work_id": "00459",
@@ -310,9 +291,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ebbb106d1e98501f4afdffcb1d3d4fdf"
+          "checksum": "d68345d869c2622f4888fec498136002"
         },
         {
           "work_id": "00459",
@@ -323,9 +303,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9a2b139d6525d2ae05f3e8103f1fba28"
+          "checksum": "ae9d6720ca10762188a1dea8c3e5cab9"
         },
         {
           "work_id": "00459",
@@ -336,9 +315,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a19259d341d7b180f68e199f0cf70086"
+          "checksum": "73868db4ee9a5596d2c723565054878f"
         },
         {
           "work_id": "00459",
@@ -349,9 +327,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3f2e467812b7d12fe2ebb35ecbc88b4d"
+          "checksum": "077a5512cbc2facb1334a00515632f2b"
         },
         {
           "work_id": "00459",
@@ -362,9 +339,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6437e3bd318c4cafa9e72c4d02b7611f"
+          "checksum": "8f596cec963278ea709a2c526522970c"
         },
         {
           "work_id": "00459",
@@ -375,9 +351,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e67129e4446ff53782eb870478c3807a"
+          "checksum": "22dabbd0ea72c3a1bb63221b94758f92"
         },
         {
           "work_id": "00459",
@@ -388,9 +363,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2c16fea63e9753f476b8e3f125b016c6"
+          "checksum": "52e2923133b4977d7e48e564fb3f66f2"
         },
         {
           "work_id": "00459",
@@ -401,9 +375,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7cd587a8684f13f77b95b79477b1a2bc"
+          "checksum": "e86b6d8a0f2933c9b819f904ccd4bf54"
         },
         {
           "work_id": "00459",
@@ -414,9 +387,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "773f9bdbb5c2b3c714c2df7b7aa396cf"
+          "checksum": "7d926f3e39cde92638279c586ce9041d"
         },
         {
           "work_id": "00459",
@@ -427,9 +399,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7b56a27e6e2224fa66b3cf281ade2b35"
+          "checksum": "8dcb6346fb812c4a87f5c24133cf5152"
         },
         {
           "work_id": "00459",
@@ -440,9 +411,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "30d6c70f1e3e5f57924272057f4784b6"
+          "checksum": "c185d9d477c06f16436f64213252f59c"
         },
         {
           "work_id": "00459",
@@ -453,9 +423,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c259f25343fb246a5c574f3d9026aaac"
+          "checksum": "ba363be219c809c7499b2cbebad3cd52"
         },
         {
           "work_id": "00459",
@@ -466,9 +435,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "321e3c3ec2d3bb01986fa368876df3be"
+          "checksum": "5360dadffbccb8299692c83ddf3e7869"
         },
         {
           "work_id": "00459",
@@ -479,9 +447,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "975894c0dd8571c3d0de30e88d340bae"
+          "checksum": "211fb5da407d6f7fe13edf6d74601789"
         },
         {
           "work_id": "00459",
@@ -492,9 +459,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e0b4f031c1e11fd05d03912a025b786f"
+          "checksum": "11c69d482573c3144fba93cb4449f0f3"
         },
         {
           "work_id": "00459",
@@ -505,9 +471,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6893d55c696482da529f0de331f5f199"
+          "checksum": "e226df61f81abbc8eb3257d4d5a16722"
         },
         {
           "work_id": "00459",
@@ -518,9 +483,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "76b0f178c05e074ab9a9fcf118532dee"
+          "checksum": "c15e509331f31a72a4097ad1eb1f7d40"
         },
         {
           "work_id": "00459",
@@ -531,9 +495,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "19414a68e0227cef3e412d624f891f88"
+          "checksum": "6a77fb9bdfd593f212e379215e4a62f9"
         },
         {
           "work_id": "00459",
@@ -544,9 +507,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "205275806c58c2f3f66cea2eac63fc45"
+          "checksum": "37a7ec947bec62dc9222071ec4cdc63a"
         },
         {
           "work_id": "00459",
@@ -557,9 +519,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "78b7105ff3cfdcdceeaf851afff0c370"
+          "checksum": "3e8448cbffcff1097b14157af460d5e5"
         },
         {
           "work_id": "00459",
@@ -570,9 +531,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e96ed3133bad6a5f13e16fdefc8b621b"
+          "checksum": "c3f4d33cae1c54cc44cd89462b4b62d6"
         },
         {
           "work_id": "00459",
@@ -583,9 +543,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e334193c6d62c0fabed8ea742942bfd4"
+          "checksum": "44123938d74e7bb9ac529187a4d119dc"
         },
         {
           "work_id": "00459",
@@ -596,9 +555,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bff8b303da76b02fa9c3405f57dfbab3"
+          "checksum": "7e80dc97a579c7be166a03d39288071f"
         },
         {
           "work_id": "00459",
@@ -609,9 +567,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ccccd2f4bba7f33e248afeaf7ac32073"
+          "checksum": "4c33893c46e1554b5228e1adbfdf2c8b"
         },
         {
           "work_id": "00459",
@@ -622,9 +579,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fba652e87a2e63f4867519039cd28b3d"
+          "checksum": "fb2e41ae09747fb4d9534bcf47c91f34"
         },
         {
           "work_id": "00459",
@@ -635,9 +591,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7110e24b72c27cd87602e9f631337f28"
+          "checksum": "ed9715322ee533c37a4420471979e4e8"
         },
         {
           "work_id": "00459",
@@ -648,9 +603,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6b35292cb9e399717dc1b9e9625e2671"
+          "checksum": "debe84e0b71cdbdf22c91bd3c29a320a"
         },
         {
           "work_id": "00459",
@@ -661,9 +615,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "01f4f1251f6777dc7be88d02482b9070"
+          "checksum": "f7326055f6e909842c4db65450a379ee"
         },
         {
           "work_id": "00459",
@@ -674,9 +627,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1562e3f7a7d0d4ccbdb167ae5d1d29c"
+          "checksum": "cdc80da96e32d970f96d134157778964"
         },
         {
           "work_id": "00459",
@@ -687,9 +639,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "144aed082b106bb59ea0094bf1b92f3e"
+          "checksum": "d443de2148a8e24d47203bb5daacb74b"
         },
         {
           "work_id": "00459",
@@ -700,9 +651,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3fc8f39d63cdb734e5d7055be906029a"
+          "checksum": "eccc41567fffe578b7452dc6292bccbb"
         },
         {
           "work_id": "00459",
@@ -713,9 +663,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a420e7472e7e50907f1576951006a0e4"
+          "checksum": "2bef8f02d80c458f6e0c4cc21a7f7365"
         },
         {
           "work_id": "00459",
@@ -726,9 +675,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "319c0b43371dc3b761f3ccdb29fdb035"
+          "checksum": "67d9c27f0e5e9f3284b74b17c8ef60a4"
         },
         {
           "work_id": "00459",
@@ -739,9 +687,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "afe11efc70913c2aa1528d1edcf6e96f"
+          "checksum": "37644ca14b87edc40de40ddc3d5a3d31"
         },
         {
           "work_id": "00459",
@@ -752,9 +699,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6a2b8c97a713b038244d516fdc7bfbee"
+          "checksum": "4d4b9cfb8356c728c7dc067772e47c2c"
         },
         {
           "work_id": "00459",
@@ -765,9 +711,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "49e31f57764621c185b6286086d5b0a0"
+          "checksum": "cd07e629af698a5484d67a882d31024e"
         },
         {
           "work_id": "00459",
@@ -778,9 +723,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3c1ba1ab3934526b8ae1b09ac37de0ad"
+          "checksum": "0fcd82c8e46c782ef5cb88abc040f266"
         },
         {
           "work_id": "00459",
@@ -791,9 +735,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7535916f58f90befc52ddec70ea50000"
+          "checksum": "11d17c3d782224e0d3252b91a3be54de"
         },
         {
           "work_id": "00459",
@@ -804,9 +747,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "650f4ae5d6301e6b4f47d9efb35ecc4a"
+          "checksum": "1d657d7bedd16cedd107af3eee885efb"
         },
         {
           "work_id": "00459",
@@ -817,9 +759,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "19ad6c969d96791bc195d01b0e5f77a0"
+          "checksum": "e2d1207bf15d5d1361539dfb752b1925"
         },
         {
           "work_id": "00459",
@@ -830,9 +771,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a92304e6fbb54358b0bcead3eca32fa0"
+          "checksum": "86cba78d647268dd1fbec6646f670d10"
         },
         {
           "work_id": "00459",
@@ -843,9 +783,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5cc0633d98ba58d67d482ecc20b0cbc1"
+          "checksum": "09bd5ed4f99a0a783cb984c0cc171b99"
         },
         {
           "work_id": "00459",
@@ -856,9 +795,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6ae0bb38ca07a50459fb5901288e9961"
+          "checksum": "c8fc8fb43fa0e0c9012ce87b17c9bfed"
         },
         {
           "work_id": "00459",
@@ -869,9 +807,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "76e02c7e94de37e7c10649945ae2e907"
+          "checksum": "ccb0595a55d39687b4a709456d842d2c"
         },
         {
           "work_id": "00459",
@@ -882,9 +819,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "802a2c085133ae65a1fbaea3df1c4341"
+          "checksum": "7e25976378d9fc61dea382cb2e97b2bc"
         },
         {
           "work_id": "00459",
@@ -895,9 +831,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "05586f0c1cce61c207700aff20472e2b"
+          "checksum": "f4739e4a540e63f88db619a3555b53f3"
         },
         {
           "work_id": "00459",
@@ -908,9 +843,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "30f81c0a6a194bb9f1d269921c89210b"
+          "checksum": "0a92a8973044af0326a20d0541e18af3"
         },
         {
           "work_id": "00459",
@@ -921,9 +855,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "91f2c8f49f89f6185089aecd2b58bed7"
+          "checksum": "a72ed142d20618f6b05ea000b1ec8555"
         },
         {
           "work_id": "00459",
@@ -934,9 +867,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7d6b5ff83e5d33cae4d75dbc0c8ba313"
+          "checksum": "ccb4aef0efc9b7624dba53b3ed9176c9"
         },
         {
           "work_id": "00459",
@@ -947,9 +879,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0235166252c2fa6acd0b2fd48cac0406"
+          "checksum": "416c5324a8556b62258687e887dba333"
         },
         {
           "work_id": "00459",
@@ -960,9 +891,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b81215e6ee887d6ee99707b0edc5bed8"
+          "checksum": "f26988912766009c7b96aaf11cef8fe8"
         },
         {
           "work_id": "00459",
@@ -973,9 +903,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dc3d63ec659f03cb7309bd4686e89ce9"
+          "checksum": "6306e48485fb02555e6f9890d73ce6b3"
         },
         {
           "work_id": "00459",
@@ -986,9 +915,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5556c0ee92d212a44ae99e259c419b7c"
+          "checksum": "bce94c65468972682082306418a50461"
         },
         {
           "work_id": "00459",
@@ -999,9 +927,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b1dc54c3494bfc07c15d7e8b72285ee"
+          "checksum": "b4e0a4f511e2fa37e8389b9c7265f5ea"
         },
         {
           "work_id": "00459",
@@ -1012,9 +939,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e056539566a1666df0ee74370e85416b"
+          "checksum": "12cf7e9e7fee104f4094b12cf7489d85"
         },
         {
           "work_id": "00459",
@@ -1025,9 +951,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "96ea4aaf204794bf1e6e923a2644778b"
+          "checksum": "b3103a675acbdea22bec5387c5c1267f"
         },
         {
           "work_id": "00459",
@@ -1038,9 +963,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e8c18f1b411ea23e25f9554e3651b388"
+          "checksum": "8a505a48fbd73b950ad1d8e241395c95"
         },
         {
           "work_id": "00459",
@@ -1051,9 +975,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8da2bc361063b8f1a2e12235091dc781"
+          "checksum": "c693f2634c8ae760d34a547946af3b34"
         },
         {
           "work_id": "00459",
@@ -1064,9 +987,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0916387761fae9626d8344ca7f6ee051"
+          "checksum": "2946dccf885a0966b9ae0e62c9532ae1"
         },
         {
           "work_id": "00459",
@@ -1077,9 +999,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "76663ecab80b170a76fc1e09164b0ed8"
+          "checksum": "5ed29ba6bf5f52f71ddaa4827359abe9"
         },
         {
           "work_id": "00459",
@@ -1090,9 +1011,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1c1eb2fa949530410b8dd9d49ad81b94"
+          "checksum": "fc1aa19c6a0dd7f5d39a8e027da5230c"
         },
         {
           "work_id": "00459",
@@ -1103,9 +1023,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "eff675a25fdbd90ca2ae14758386cf1b"
+          "checksum": "63a5d452eb6b25175c148ae821425c7e"
         },
         {
           "work_id": "00459",
@@ -1116,9 +1035,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d24cb408c18bc4ba1617724a990b3497"
+          "checksum": "e4c1138bbd6d036035210525042866dc"
         },
         {
           "work_id": "00459",
@@ -1129,9 +1047,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9c3e046767f064420c7c59a780b1fe34"
+          "checksum": "0156bc7de2e08b44deb96b561fdbe324"
         },
         {
           "work_id": "00459",
@@ -1142,9 +1059,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e8a98cd00254ac6666ca0e8eb3ae35d8"
+          "checksum": "a99df191268b66a94ed7baa8795d0eb1"
         },
         {
           "work_id": "00459",
@@ -1155,9 +1071,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "01482574070f6cff8bb22301f9f4505a"
+          "checksum": "0f580394016fbc12dc0331847002d7fb"
         },
         {
           "work_id": "00459",
@@ -1168,9 +1083,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9368e2ba52cc3eaa0d36b610258c24a3"
+          "checksum": "a50f3badae0ea4569e1740ef73a308f4"
         },
         {
           "work_id": "00459",
@@ -1181,9 +1095,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "235c4655fbf9e801f35bbeebdbbc5ba9"
+          "checksum": "b1dd50e20635a63129cb96a262003e91"
         },
         {
           "work_id": "00459",
@@ -1194,9 +1107,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b8285ea8dbb571c2062451d8b6fde731"
+          "checksum": "de91a401d6abd7608ac7525c111d7e59"
         },
         {
           "work_id": "00459",
@@ -1207,9 +1119,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e5342f36449eb8406a6ec4a24b372f9a"
+          "checksum": "c18b541da9a6638676168e5b1d344b30"
         },
         {
           "work_id": "00459",
@@ -1220,9 +1131,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6c9dfe162bbbf4c10c38d46f2e923803"
+          "checksum": "ef6e27b5affce71b4e9877e04412ec7a"
         },
         {
           "work_id": "00459",
@@ -1233,9 +1143,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9084e0c28853a28aa8e65789b58e1c87"
+          "checksum": "bbda7b948c9732b438546055fa8ed01c"
         },
         {
           "work_id": "00459",
@@ -1246,9 +1155,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3c9c9604cb4d93779860f5fd432b6b34"
+          "checksum": "84d7cd949a1ba71f59308b686d393656"
         },
         {
           "work_id": "00459",
@@ -1259,9 +1167,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "55e341ba58465f715cec5925b12b6f15"
+          "checksum": "04549e25f84052502b146929fecb1885"
         },
         {
           "work_id": "00459",
@@ -1272,9 +1179,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "83490ef9e8847be75a3995f98b39ac61"
+          "checksum": "7ffd838bf69a27c5c04622436a5003f1"
         },
         {
           "work_id": "00459",
@@ -1285,9 +1191,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "129983aca70f7a98aaa3d8a5b4bfb141"
+          "checksum": "644229bc923e1c5d351c1348c30e6af6"
         },
         {
           "work_id": "00459",
@@ -1298,9 +1203,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0c09b0746832f51b973f694ab2f159f9"
+          "checksum": "818a82c09305d27aad80d03924f9794f"
         },
         {
           "work_id": "00459",
@@ -1311,9 +1215,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "50cdbc11aeae95f6e35418bd066a3f9f"
+          "checksum": "9097e9c14785a0561ec3b7235dca5d7c"
         },
         {
           "work_id": "00459",
@@ -1324,9 +1227,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e01510719eca66a2dab0810887e1c37f"
+          "checksum": "2e905479b4e06f2da71f01b637580023"
         },
         {
           "work_id": "00459",
@@ -1337,9 +1239,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "35bd2e327e9276f00c550f1d9994d9e3"
+          "checksum": "40c336dee1d412169fa032956b0dab94"
         },
         {
           "work_id": "00459",
@@ -1350,9 +1251,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fbe50a406be541a0b0bafdff5cfe1396"
+          "checksum": "292585868221628822d13fe22e4c1953"
         },
         {
           "work_id": "00459",
@@ -1363,9 +1263,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "09e794499ff6dfb25c1c4152c1693b81"
+          "checksum": "b71c3525555ca0d6ee089b931e18d01f"
         },
         {
           "work_id": "00459",
@@ -1376,9 +1275,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "41626c38afb651e263228027fdd13264"
+          "checksum": "4b04661445e5279a889ff278fa042a71"
         },
         {
           "work_id": "00459",
@@ -1389,9 +1287,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "962c4e22651f579a6b917641bf564ba9"
+          "checksum": "b13a91a0c1590437c593b4d624261209"
         },
         {
           "work_id": "00459",
@@ -1402,9 +1299,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1f5155d2cd77463780fb3f716784510"
+          "checksum": "f70f3c66f78a17b703c02f2da3e3d065"
         },
         {
           "work_id": "00459",
@@ -1415,9 +1311,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b4008258bdf7e34b77626bd0488caf31"
+          "checksum": "2088441a4fd140b3c40556d6cabb6279"
         },
         {
           "work_id": "00459",
@@ -1428,9 +1323,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f9eb718aa17e4576b36287a1d7773a50"
+          "checksum": "f0323ad9b92350a0a99ce68d052a4d24"
         },
         {
           "work_id": "00459",
@@ -1441,9 +1335,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6664ce682ac0f7c5ade9667d6c773854"
+          "checksum": "37788458c241fceccd649c07b79a5aba"
         },
         {
           "work_id": "00459",
@@ -1454,9 +1347,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0025147880ee40e741ee4b035cd218d2"
+          "checksum": "edc6af2e7ac5a08ffc8ea210e9994e4a"
         },
         {
           "work_id": "00459",
@@ -1467,9 +1359,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "33325b9eaaa6fbc953fd4b4287526a40"
+          "checksum": "3697117df7033d8fc05e54788203d800"
         },
         {
           "work_id": "00459",
@@ -1480,9 +1371,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d47fa6de11b2ba8dd92c3dab85222c18"
+          "checksum": "98959ef60689f61f3def3aaf93296652"
         },
         {
           "work_id": "00459",
@@ -1493,9 +1383,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "53e25f519cdae689b4b5d0a85d4cf878"
+          "checksum": "c39cd388e8eecc9c10c50ded12a9e4d9"
         },
         {
           "work_id": "00459",
@@ -1506,9 +1395,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3e269a6d3a4f613488f8030bb40c417f"
+          "checksum": "a5bc208dadc79c96e944bbf7cc8591b9"
         },
         {
           "work_id": "00459",
@@ -1519,9 +1407,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4313591a0dec2f0d8f0e935a28d67bbf"
+          "checksum": "4484cf33c41225ede46eff7f3b44aff1"
         },
         {
           "work_id": "00459",
@@ -1532,9 +1419,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b1e8b30fb18c0250080502ec5642fcc8"
+          "checksum": "94d75b2ac3db044c9f0e8579ee3813d6"
         },
         {
           "work_id": "00459",
@@ -1545,9 +1431,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ada2ad11d922f56dc4dfcb7326c13404"
+          "checksum": "1466e42b61365b00f450dd6cf583e74b"
         },
         {
           "work_id": "00459",
@@ -1558,9 +1443,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "efa5eca7b4f6b1b413a06b0809bec23b"
+          "checksum": "7498d152b33d8516e162a70a73f37230"
         },
         {
           "work_id": "00459",
@@ -1571,9 +1455,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b77ff3d19318e17f49b6d7600eb4fea"
+          "checksum": "09ae64da140c0bd5af6ab83d55101035"
         },
         {
           "work_id": "00459",
@@ -1584,9 +1467,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e1dd12bf94fcddc9c26f58050169a2e3"
+          "checksum": "872e7f6f24f2278f4d7091e27d5f0994"
         },
         {
           "work_id": "00459",
@@ -1597,9 +1479,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d52314985c85435b985bf4266851aa06"
+          "checksum": "0729af7e9282b431c4a0dbd69782eb32"
         },
         {
           "work_id": "00459",
@@ -1610,9 +1491,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a7346d3742d55868d88a1ba14024fc9c"
+          "checksum": "17c74a0ca1e20de5d3bf5a77c5b19dbe"
         },
         {
           "work_id": "00459",
@@ -1623,9 +1503,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2ac1515c9bcfa1d79cacb6e89a9513cc"
+          "checksum": "702872b820f3dd4d29a56ce6621fae8a"
         },
         {
           "work_id": "00459",
@@ -1636,9 +1515,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e668ffe7f76447d6cd70b4977e32bc53"
+          "checksum": "6a575977205cea5b211fbfa8d9ffa43b"
         },
         {
           "work_id": "00459",
@@ -1649,9 +1527,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "96f068bc80a1f7cee02201e502af67b3"
+          "checksum": "8b0226367d26a264d59858e263f21dc8"
         },
         {
           "work_id": "00459",
@@ -1662,9 +1539,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a4e13ff92981e5ea6d982c7eef7af189"
+          "checksum": "a8875d409795be002ed35f82a205f14f"
         },
         {
           "work_id": "00459",
@@ -1675,9 +1551,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "633cc0aaca04f061e90fb30e3e65f0bc"
+          "checksum": "4a1248d4682c2beaefeb8b3cddf4efda"
         },
         {
           "work_id": "00459",
@@ -1688,9 +1563,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9958028ae10d94c95a6fdf9b7834621d"
+          "checksum": "9ca7c9896d63f3c3343398ee003f461f"
         },
         {
           "work_id": "00459",
@@ -1701,9 +1575,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "77b09bf8ec52ff5c5683f493ac9fac67"
+          "checksum": "40a5ba73c7a2917e993c8160f1c7aafa"
         },
         {
           "work_id": "00459",
@@ -1714,9 +1587,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "32887d33381cc1fa2c670032933db0a2"
+          "checksum": "7fb42ede9f39349b3672249fedcbce23"
         },
         {
           "work_id": "00459",
@@ -1727,9 +1599,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "72f11e97a89825a83f61f29c4b547d06"
+          "checksum": "13b0017e6733c21bf01c91a714b575e6"
         },
         {
           "work_id": "00459",
@@ -1740,9 +1611,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "64a1c64b179a3f309246ecbc2f2de1d6"
+          "checksum": "376a05869ccc54e1ae34d2c0da6f7f64"
         },
         {
           "work_id": "00459",
@@ -1753,9 +1623,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fc0eb645e39bca80b654445657b8788f"
+          "checksum": "0609cf41152bc897e0606c6f61f0fda4"
         },
         {
           "work_id": "00459",
@@ -1766,9 +1635,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2f7eece7c3221ddb53c5b9858110afc9"
+          "checksum": "8578f0729b381b71299f3aedbd3bd736"
         },
         {
           "work_id": "00459",
@@ -1779,9 +1647,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "198281f886f2a902e32e9b45a3437f6b"
+          "checksum": "1113af9d4dfce2f4e618168f0ee65933"
         },
         {
           "work_id": "00459",
@@ -1792,9 +1659,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8c9a8255059eb5dd11a2e8d9e9bc9df2"
+          "checksum": "90411321cec92fc030a0960b540e3234"
         },
         {
           "work_id": "00459",
@@ -1805,9 +1671,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4be56cd3ea1833cbde906ab14b78fd83"
+          "checksum": "1c6299585f1cc13fdf7c211187bafd46"
         },
         {
           "work_id": "00459",
@@ -1818,9 +1683,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6e2e8e16e8adc608f838d9e75dd418a0"
+          "checksum": "31600d5251875f8d1cc9d86e161aed67"
         },
         {
           "work_id": "00459",
@@ -1831,9 +1695,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d30419b84e77fcfa8f6ab249c3e7f4f4"
+          "checksum": "a654f013d695b51b7e3e66d1fb7c6def"
         },
         {
           "work_id": "00459",
@@ -1844,9 +1707,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bb057d360fb7f566d23ae055fbf2c633"
+          "checksum": "a04a1712b06008633106ccaf2e7d6e8d"
         },
         {
           "work_id": "00459",
@@ -1857,9 +1719,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "93f761113b27540ccb4fc9d1460f31ef"
+          "checksum": "49394302cd16fa203dc59b47704bee70"
         },
         {
           "work_id": "00459",
@@ -1870,9 +1731,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5a9318104984fa84739812ba433d026c"
+          "checksum": "d4348c87234e5579512a2587ac297fe4"
         },
         {
           "work_id": "00459",
@@ -1883,9 +1743,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ba9d709551b19d1c5d666d4e61616f16"
+          "checksum": "c1f1b96a34e187fb1624d031536b6922"
         },
         {
           "work_id": "00459",
@@ -1896,9 +1755,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bc15a1054baf979679b5923ecf366611"
+          "checksum": "87cd47e6d6b9f8e2e36510165c976148"
         },
         {
           "work_id": "00459",
@@ -1909,9 +1767,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "219233a1f5754bed69529a03be2fb1cb"
+          "checksum": "2ec37292a9dc36046dfeb914f17bb832"
         },
         {
           "work_id": "00459",
@@ -1922,9 +1779,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b2526d9a6d069b0e81eee50aa1644c88"
+          "checksum": "71260756604ce822034af8767f73bf52"
         },
         {
           "work_id": "00459",
@@ -1935,9 +1791,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2b55fca3815634820c4a41a5db55786f"
+          "checksum": "3ae7005aae318fbd64cb6bcc2a7cbbd3"
         },
         {
           "work_id": "00459",
@@ -1948,9 +1803,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b742c8a04746f14c744ef3ff0a6ac944"
+          "checksum": "0bca5c0bba19c34c324705a177b31cc3"
         },
         {
           "work_id": "00459",
@@ -1961,9 +1815,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ebad96e8abb110b1d44a79ba4910e7d9"
+          "checksum": "c4a1683eab271e7053af9e4a8637f9cf"
         },
         {
           "work_id": "00459",
@@ -1974,9 +1827,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b28670aea15dc579627fdef14ccc9dfd"
+          "checksum": "4e643b8b45443c6c07670f04b2f595b3"
         },
         {
           "work_id": "00459",
@@ -1987,9 +1839,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "404040eb2fd6cd8813b8582115688236"
+          "checksum": "fb8802951ecdb40aae714e5aacdb755b"
         },
         {
           "work_id": "00459",
@@ -2000,9 +1851,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6d33846c88d47d68c24cbc51bcef31d7"
+          "checksum": "8d121485e466a20215585500abff245c"
         },
         {
           "work_id": "00459",
@@ -2013,9 +1863,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3669a005f85ceae427aa62a4e5710d9a"
+          "checksum": "24223301f3efa66c0eba75b971a6a2de"
         },
         {
           "work_id": "00459",
@@ -2026,9 +1875,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "87428610511865d85660061d1a5d1c7f"
+          "checksum": "673bdc7238d3e01b5e87a4c46de7c4b1"
         },
         {
           "work_id": "00459",
@@ -2039,9 +1887,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "326aa123f2eedfe08d7342d77a01dd1d"
+          "checksum": "cf0c048d1e30b1c7f6d8fc58b8ddc6e9"
         },
         {
           "work_id": "00459",
@@ -2052,9 +1899,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "33649722ab0aa2dd3608d1ae17121916"
+          "checksum": "0339e08b362c0f32f0fcce2157467d11"
         },
         {
           "work_id": "00459",
@@ -2065,9 +1911,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c7eeff2bbdc771248029a873a14c723c"
+          "checksum": "8a2b5349d58d336583add0cf36b9fddc"
         },
         {
           "work_id": "00459",
@@ -2078,9 +1923,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8f2492176db97e3b4a88bfdb5c615814"
+          "checksum": "b79b62b4f3ef4233a6f884945d1500a0"
         },
         {
           "work_id": "00459",
@@ -2091,9 +1935,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ad7044815f4dc30397719b134019d3e"
+          "checksum": "21f9dfddba43f4b0b7496f67aca8914c"
         },
         {
           "work_id": "00459",
@@ -2104,9 +1947,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4b39322d0c4457254dc8e9a937721ff6"
+          "checksum": "93ad37eab3319d80cb91b69c67924be2"
         },
         {
           "work_id": "00459",
@@ -2117,9 +1959,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "58f73939a38f31bd048e41beb6cbb9d3"
+          "checksum": "4ec9c32d2f7d21af77768803f1d8c9e5"
         },
         {
           "work_id": "00459",
@@ -2130,9 +1971,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "292d88d0a7f90586fc036855942368f0"
+          "checksum": "82c876f5ff450262a350b10461b58bbd"
         },
         {
           "work_id": "00459",
@@ -2143,9 +1983,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0ff70143ef98ce5c2bebcb16927fb09d"
+          "checksum": "be88d87e96643ab6c7caed34d6b62278"
         },
         {
           "work_id": "00459",
@@ -2156,9 +1995,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a1159af7c831734b54717af518fa2c76"
+          "checksum": "b180d54caeee2b3f2e80b4626e57451e"
         },
         {
           "work_id": "00459",
@@ -2169,9 +2007,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1833e477a5e3815affe99b6e52c197b3"
+          "checksum": "dc1d857eb01ed3b3a95da0c5f5b0a803"
         },
         {
           "work_id": "00459",
@@ -2182,9 +2019,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ed49069c8cc94f192a51a74de888c96c"
+          "checksum": "5ffc7ca607bb6a5abebee564fc2969e5"
         },
         {
           "work_id": "00459",
@@ -2195,9 +2031,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "161e91ffda2d52cca6e22f7d5824c57b"
+          "checksum": "d9ee73bf02865bfd766c5d8b3dc5d729"
         },
         {
           "work_id": "00459",
@@ -2208,9 +2043,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "85f691ee487b27bf06b83e78a90f7861"
+          "checksum": "0fbbf362a034f5d6b3ae7095af42113f"
         },
         {
           "work_id": "00459",
@@ -2221,9 +2055,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "206417138117ef8c5491411c72da1ceb"
+          "checksum": "0bace11f0b8271fdadf0fa5a590d0dac"
         },
         {
           "work_id": "00459",
@@ -2234,9 +2067,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65f94190a27c5b1c30177952fa4765b5"
+          "checksum": "f40176d855330c9b97bb974da9e1f34a"
         },
         {
           "work_id": "00459",
@@ -2247,9 +2079,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f69abd397ac288c4bb6677343db81dce"
+          "checksum": "1f3fd1d4d4648dca4bb2257a929c242c"
         },
         {
           "work_id": "00459",
@@ -2260,9 +2091,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dea709d186d7b5910ff4c10aec8ca052"
+          "checksum": "5b3c880d219cd7136af6a6a91a51c0a2"
         },
         {
           "work_id": "00459",
@@ -2273,9 +2103,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "83256d4f781a4781820d0fc50966ecbe"
+          "checksum": "6f7fd6dd9238429772198fa2afbd2f06"
         },
         {
           "work_id": "00459",
@@ -2286,9 +2115,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "484e91622c4e1cc1d02cc9020e500f2c"
+          "checksum": "34ce59e586013021785a91c42af651b3"
         },
         {
           "work_id": "00459",
@@ -2299,9 +2127,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1d039b13c1c404b4e9fe161e459d1377"
+          "checksum": "0cf400d5342d7cf8e94c1cf933774cd9"
         },
         {
           "work_id": "00459",
@@ -2312,9 +2139,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f99f4d09e5b2de78bede22380b2fbf34"
+          "checksum": "256f5726d0b225f5e49cdf12d468f5ef"
         },
         {
           "work_id": "00459",
@@ -2325,9 +2151,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c30e824275ff0d1cec21cc2dd43d8184"
+          "checksum": "b89c7b87b9aed60cb1bdaaf5dd4873ec"
         },
         {
           "work_id": "00459",
@@ -2338,9 +2163,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "03eb175a85597ad78249abe253a2246a"
+          "checksum": "d0e4736dea063b0c702df145efca5112"
         },
         {
           "work_id": "00459",
@@ -2351,9 +2175,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "28bb3e7244cf151fe4d6d589f9e9baa6"
+          "checksum": "30de2f7864bec03d9d066e0388e4df74"
         },
         {
           "work_id": "00459",
@@ -2364,9 +2187,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "232dc3ce37539e33c874ef9523923a47"
+          "checksum": "5cf29feaa1b0248d63a17badf44d6775"
         },
         {
           "work_id": "00459",
@@ -2377,9 +2199,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5aeb033a83eafc51ec03baf5a86b2330"
+          "checksum": "a801c35fce97024efa60332adf97f9f7"
         },
         {
           "work_id": "00459",
@@ -2390,9 +2211,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0edfbc06b6bdb2be3edb4b355bc52b41"
+          "checksum": "70e1b608f9fa2ec7a426500f9ad87c82"
         },
         {
           "work_id": "00459",
@@ -2403,9 +2223,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "74d6c1b75b2fbbc774711a8acffd91fa"
+          "checksum": "e70430db76d7f0230eccc94811b1e0cd"
         },
         {
           "work_id": "00459",
@@ -2416,9 +2235,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "43b30dae33f4e44234dca77efacbd7e5"
+          "checksum": "2e63931d4b8ce2d9873cb5086ae0cba0"
         },
         {
           "work_id": "00459",
@@ -2429,9 +2247,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b55b1d418a7f26bffed9e66addaf4f09"
+          "checksum": "5207f2e45e1cad2cce9466e1aa422e2b"
         },
         {
           "work_id": "00459",
@@ -2442,9 +2259,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f5d37ff3bb060b5046ea8a0adada9746"
+          "checksum": "1e4168bb08a6a3c54fb0adee4021e4c0"
         },
         {
           "work_id": "00459",
@@ -2455,9 +2271,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "517189b98598bcf9278ec2de74c86e08"
+          "checksum": "d9918851b8e926667782f639b597e0c7"
         },
         {
           "work_id": "00459",
@@ -2468,9 +2283,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "525fb4f81b2a7c2ae7e2b88e34ebbfe4"
+          "checksum": "b03be3c24746bf5add5ab9ec5684ef17"
         },
         {
           "work_id": "00459",
@@ -2481,9 +2295,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0c4f1310d04a6529d0a8fcf476c37a73"
+          "checksum": "be0f48a95ff5225461217b34c6aaab9c"
         },
         {
           "work_id": "00459",
@@ -2494,9 +2307,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e193a12e09fa4efa1b32d6e151207ef1"
+          "checksum": "a43d19af46cc2da5f5d510198b190601"
         },
         {
           "work_id": "00459",
@@ -2507,9 +2319,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "67167f9cf7d5c9c7143e54366276e69c"
+          "checksum": "8985ee7206c4c4a0debed2b01b99fb9a"
         },
         {
           "work_id": "00459",
@@ -2520,9 +2331,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1b0233febe8d772a608d2d65e7ce70d8"
+          "checksum": "520e3a15ccf0d6bb15fda118503b150f"
         },
         {
           "work_id": "00459",
@@ -2533,9 +2343,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f715db8b1664c28454bb3277e47b9a30"
+          "checksum": "f427b99d9d1b4d3afe0f3ab9d7c9e054"
         },
         {
           "work_id": "00459",
@@ -2546,9 +2355,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "acfa349231e13c47e5e601b510e757c7"
+          "checksum": "ebf977deddc49aa1e0645bc4b6525438"
         },
         {
           "work_id": "00459",
@@ -2559,9 +2367,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "85602cb8fcb8eda86158b10a62d545c8"
+          "checksum": "0eb761bf9cddefc6e375496284a92c53"
         },
         {
           "work_id": "00459",
@@ -2572,9 +2379,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "838d26501a28d2638da771caee42f39d"
+          "checksum": "a69b2d568a2a6bcbf5e9739948b16008"
         },
         {
           "work_id": "00459",
@@ -2585,9 +2391,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0d8725fca4d8433c442a782ae9ee6190"
+          "checksum": "09db49084fa9c1efae15a6f728467710"
         },
         {
           "work_id": "00459",
@@ -2598,9 +2403,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a1f91a6a17b8681298aa441934660d79"
+          "checksum": "71d8e74e24b0efc81818150bdfc02859"
         },
         {
           "work_id": "00459",
@@ -2611,9 +2415,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ef95b605cd42d0175ff7998e7564b92e"
+          "checksum": "72fb6a5a73d594b6d7412c2c1e0927fa"
         },
         {
           "work_id": "00459",
@@ -2624,9 +2427,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0d306d3013068a8b49957575bd8a8d97"
+          "checksum": "2066e7d044a88709b4d59ed8fd402df6"
         },
         {
           "work_id": "00459",
@@ -2637,9 +2439,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ea08e6bdb34a7a0bf55cac536dee9557"
+          "checksum": "8c3521e7e329b431bc8bcedce3579bfd"
         },
         {
           "work_id": "00459",
@@ -2650,9 +2451,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "93d66fa8524a20378ae07d7370b32432"
+          "checksum": "6cb6d0dba3c08c91deef79016ab5f347"
         },
         {
           "work_id": "00459",
@@ -2663,9 +2463,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "75c0eec7b10bb100836a4b8476d226eb"
+          "checksum": "69429b65b1691209951667ff6a689229"
         },
         {
           "work_id": "00459",
@@ -2676,9 +2475,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e14e0ff7d2f599df4d016b6530670d87"
+          "checksum": "a21bbab89f20525a428985f2026b172e"
         },
         {
           "work_id": "00459",
@@ -2689,9 +2487,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0932e630c5e3b90c95827006a5a32529"
+          "checksum": "4249db38517073bb9fd1967549094c0f"
         },
         {
           "work_id": "00459",
@@ -2702,9 +2499,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "11cd083fe8b909a48e1b3d10ec0ca9d8"
+          "checksum": "cd3430d82b7e0b0fc60043eff0695fe6"
         },
         {
           "work_id": "00459",
@@ -2715,9 +2511,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b48b6bb3bf8c1e2ecbada468978548b6"
+          "checksum": "af977c427b8ab51e52ee89fb984905bf"
         },
         {
           "work_id": "00459",
@@ -2728,9 +2523,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9e4a90a94c41cc1d5b18e0323681aa26"
+          "checksum": "697d6df8e4f3ae8a10a9e78d1402f9e2"
         },
         {
           "work_id": "00459",
@@ -2741,9 +2535,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "57990c5612dc792fdfe6a50368ff8846"
+          "checksum": "c9eda04aebe0b9ef9f1cbc47f3a5bcdd"
         },
         {
           "work_id": "00459",
@@ -2754,9 +2547,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5d033d185f81cb01d1fe867817ca98a0"
+          "checksum": "9f7eacdfd3052be7cff412eb1d124395"
         },
         {
           "work_id": "00459",
@@ -2767,9 +2559,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bd887c2725b55d67861b6b2936f95676"
+          "checksum": "194a526782e69d60ad112ad70b62b808"
         },
         {
           "work_id": "00459",
@@ -2780,9 +2571,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e7ccd0a63f58d9773f86cd90caae2e30"
+          "checksum": "2abca4d29c97ff3b0c8c097a7b585b17"
         },
         {
           "work_id": "00459",
@@ -2793,9 +2583,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5cc6743bf557e9d418ca555c855c4b83"
+          "checksum": "5e397626a6547e33cb2218c65d244b24"
         },
         {
           "work_id": "00459",
@@ -2806,9 +2595,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "adcb89064da03cd5e0b5d00b557a9bbc"
+          "checksum": "108b03890a61d2eeee993ee2387d9813"
         },
         {
           "work_id": "00459",
@@ -2819,9 +2607,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a22dedf244a4be8889a9571b2c2b496c"
+          "checksum": "4963a7ab2f917d4ad9dd5f5375588742"
         },
         {
           "work_id": "00459",
@@ -2832,9 +2619,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dd5759e3e6fe2f3a72b40d93c6d43133"
+          "checksum": "33ea9519570bc7003a9c16c394c83912"
         },
         {
           "work_id": "00459",
@@ -2845,9 +2631,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e71536a6c0036ef7864c3687432b99c4"
+          "checksum": "29538113805c21f0b02dd851ed542497"
         },
         {
           "work_id": "00459",
@@ -2858,9 +2643,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "918f572019d5f88d89566c72b30d4b36"
+          "checksum": "d7755e1c40111c82b33899748c287792"
         },
         {
           "work_id": "00459",
@@ -2871,9 +2655,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f257d55511f0a745e33a433c0f00465f"
+          "checksum": "98b6f9228c442490103ab3e12c38f706"
         },
         {
           "work_id": "00459",
@@ -2884,9 +2667,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d8646747c04acf8ae6aeb70d27d10357"
+          "checksum": "2ce74195c94168193f4905bc40034629"
         },
         {
           "work_id": "00459",
@@ -2897,9 +2679,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "572896bc21071f2c94cae8b122ca0df3"
+          "checksum": "6dce99d51fd4d5ab76f65e76c7d18fce"
         },
         {
           "work_id": "00459",
@@ -2910,9 +2691,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b0761d48b2b46006dff3f44ab718794d"
+          "checksum": "5aeee1b403a4c2fc269f5041f44a7930"
         },
         {
           "work_id": "00459",
@@ -2923,9 +2703,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "701aeae4dfa0e667b41907302ed91012"
+          "checksum": "3607b54985665e3a4fdda235e788015d"
         },
         {
           "work_id": "00459",
@@ -2936,9 +2715,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3adcbd40e56e7434a8f27d70ed52d31a"
+          "checksum": "a3a88a4321b2ec0ac674d320e7089a40"
         },
         {
           "work_id": "00459",
@@ -2949,9 +2727,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d30b3bddb9c1a6f1f88426b61360dc6"
+          "checksum": "88f119de3552db5dc550c63d02f324e3"
         },
         {
           "work_id": "00459",
@@ -2962,9 +2739,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3c6e09113ffdcc9c1fdff0c832120d07"
+          "checksum": "466424b8cf519d2d3398d914b6c65ca0"
         },
         {
           "work_id": "00459",
@@ -2975,9 +2751,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8432dae151c369dc12b38ab4a940a858"
+          "checksum": "ad51239991ce3583afd58ac35f630c8e"
         },
         {
           "work_id": "00459",
@@ -2988,9 +2763,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6adaace0c7c4fa01bb6617ecbbda8f89"
+          "checksum": "e318f040f78d7c989ebccd6106d8c88f"
         },
         {
           "work_id": "00459",
@@ -3001,9 +2775,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a967144b2ecc554a970093f4f340af02"
+          "checksum": "a661d4e9d689f38da7c9433db704737a"
         },
         {
           "work_id": "00459",
@@ -3014,9 +2787,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "832fb4a1c4bd98cd5fb9369fe93b0a96"
+          "checksum": "b01c2dd7285ceee299a120cdb191c89e"
         },
         {
           "work_id": "00459",
@@ -3027,9 +2799,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3043d3eb3ae3f91ffc7420710e2c9a89"
+          "checksum": "7bb0633c4b3cf71a53f07dea7673033a"
         },
         {
           "work_id": "00459",
@@ -3040,9 +2811,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d06021c4ee2316dc478d9efee1d7f611"
+          "checksum": "cd1fcebc030dd6bac3c388123b343325"
         },
         {
           "work_id": "00459",
@@ -3053,9 +2823,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0ff726515fc3d66dc10287c69de32f74"
+          "checksum": "fa5c4854ede0a7f76c6a12f00228cf79"
         },
         {
           "work_id": "00459",
@@ -3066,9 +2835,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f2fc4da53e705af57fea0fe752e5b58b"
+          "checksum": "1eaa36064782e5598d7e324711ecf302"
         },
         {
           "work_id": "00459",
@@ -3079,9 +2847,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1b68987cf59b47b48a14c615649bca31"
+          "checksum": "a14f613799ceb97d46bd9cccba32db1b"
         },
         {
           "work_id": "00459",
@@ -3092,9 +2859,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "555689e0eface8caf07bebe8ea6d190a"
+          "checksum": "7dcaa1c3c20ee7dd2c6b73e39f6fb9c5"
         },
         {
           "work_id": "00459",
@@ -3105,9 +2871,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "540b4283591fd828d4b6de194accd8d4"
+          "checksum": "f437bbd5b2c9806284bac83b9b38c535"
         },
         {
           "work_id": "00459",
@@ -3118,9 +2883,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "df8f3cb236958b7b64d4a647cc6f1372"
+          "checksum": "a18315cb7655d3236e5b3ba600d13556"
         },
         {
           "work_id": "00459",
@@ -3131,9 +2895,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aaba6fde96b81b8364643f9f7fe00870"
+          "checksum": "4eeacaae4d9c3aec24ed7f2ebc897003"
         },
         {
           "work_id": "00459",
@@ -3144,9 +2907,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e3a7f21f7b2c1b902e3bd3dba7404cec"
+          "checksum": "aefa573d38da2e41d5ddba3c6de085bf"
         },
         {
           "work_id": "00459",
@@ -3157,9 +2919,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4adbd20be8261baa559fbb927f2d8218"
+          "checksum": "56060abc400fe15a7df9b4ff1594b2f1"
         },
         {
           "work_id": "00459",
@@ -3170,9 +2931,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6d796cd893be15f9607ea7b3f47dbd5a"
+          "checksum": "09dbd506042d114b9e5873df97572a43"
         },
         {
           "work_id": "00459",
@@ -3183,9 +2943,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b09f9a15f76d6f56b6249c028dc94f99"
+          "checksum": "012ceff7b95df8f6bb88891dfb8ff58a"
         },
         {
           "work_id": "00459",
@@ -3196,9 +2955,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "abb59c10b28d926b404e0462ce799bfe"
+          "checksum": "e4ac7118690bb5517de22e0638c98056"
         },
         {
           "work_id": "00459",
@@ -3209,9 +2967,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f2d72fb7164809d789b79ce95c56f14a"
+          "checksum": "e715b71f2bd36c270c516c930c8db211"
         },
         {
           "work_id": "00459",
@@ -3222,9 +2979,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5cdb567ce1e6818fb3a75c5ffc0e696c"
+          "checksum": "3abd3b4d61343d3a8d2354a048ba973e"
         },
         {
           "work_id": "00459",
@@ -3235,9 +2991,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4e71153f6d82c8d633dcbd07fa10edec"
+          "checksum": "7e5bf6c7ff5cfdb06fa49fe0526c5242"
         },
         {
           "work_id": "00459",
@@ -3248,9 +3003,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "398bb25fe6c74f89f874892bf68d66bb"
+          "checksum": "701b81bf73767c5e95c9472f642ad06a"
         },
         {
           "work_id": "00459",
@@ -3261,9 +3015,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "453ffb9c504af16351f1fe5679a3e415"
+          "checksum": "eb4ec216b3a1d5b766918031edaea9a0"
         },
         {
           "work_id": "00459",
@@ -3274,9 +3027,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0c1f2328c1c931ebef6cd80f280ceea7"
+          "checksum": "38d2ff141b9a6e40ca41d77978786e84"
         },
         {
           "work_id": "00459",
@@ -3287,9 +3039,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f8d409b36d7aa73cfb936f7fef2bd385"
+          "checksum": "57adfa5472d1729e285700bf7df54dd9"
         },
         {
           "work_id": "00459",
@@ -3300,9 +3051,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2167a161281a9f27be4f71d353453a85"
+          "checksum": "e634cfa4ec2716490b27c182080b83b1"
         },
         {
           "work_id": "00459",
@@ -3313,9 +3063,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c9b7cfe8f42b0a7f6ffa63018f7f79ae"
+          "checksum": "0b9e02587683d518e5169adcd19c1a01"
         },
         {
           "work_id": "00459",
@@ -3326,9 +3075,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4814916af369ce8ddc21f60a389391d6"
+          "checksum": "21958c15f9392064f896f242b2490324"
         },
         {
           "work_id": "00459",
@@ -3339,9 +3087,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b7482a5f53c2b06557fcdea1e12a28a6"
+          "checksum": "a9aea987a78c4b23cbfd344cb997751d"
         },
         {
           "work_id": "00459",
@@ -3352,9 +3099,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "16a27f1f4823d3b83c0233445a4fff67"
+          "checksum": "659de8bc4ced41068b11af79ba7c9a27"
         },
         {
           "work_id": "00459",
@@ -3365,9 +3111,8 @@
           "project_subfolder": "molecules",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "09a49e646e7e1a81a00eb787ae22d325"
+          "checksum": "916f5b88c495aa763cd735e4698f8715"
         }
       ]
     }

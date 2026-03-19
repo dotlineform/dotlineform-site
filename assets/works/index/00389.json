@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-2cab339a206b54e035053203c6c699cd",
-    "generated_at_utc": "2026-03-13T21:45:06Z",
+    "version": "blake2b-5f8edd39ba1bbd5cebce47aa81280388",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00389",
     "count": 523,
-    "hash": "blake2b-5ecb50cba6db9af1012d2e52600184b2",
-    "work_checksum": "blake2b-71d8ff64ef26c00c226f51431fbb0817",
-    "details_checksum": "blake2b-5ecb50cba6db9af1012d2e52600184b2",
-    "record_checksum": "blake2b-2cab339a206b54e035053203c6c699cd"
+    "hash": "blake2b-26553f4f59800e322c07ca671f57fbcd",
+    "work_checksum": "blake2b-2388f060a14830fcec2b5ac205c6dc4b",
+    "details_checksum": "blake2b-26553f4f59800e322c07ca671f57fbcd",
+    "record_checksum": "blake2b-5f8edd39ba1bbd5cebce47aa81280388"
   },
   "work": {
     "work_id": "00389",
@@ -32,10 +32,11 @@
     "height_cm": 50.0,
     "width_cm": 30.0,
     "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 5905,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "71d8ff64ef26c00c226f51431fbb0817"
+    "checksum": "2388f060a14830fcec2b5ac205c6dc4b"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "photos",
           "width_px": 2038,
           "height_px": 1465,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fe95f040cb880e1bd71e6c9fdeb13f40"
+          "checksum": "6f116f79b19e4eb10e10806317e875a1"
         },
         {
           "work_id": "00389",
@@ -63,9 +63,8 @@
           "project_subfolder": "photos",
           "width_px": 2031,
           "height_px": 1470,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1b4111a0f96e1c1df0c5d32ad0cdbbdb"
+          "checksum": "bea62dbcfc28c4ea896929b41b7dd9a2"
         },
         {
           "work_id": "00389",
@@ -76,9 +75,8 @@
           "project_subfolder": "photos",
           "width_px": 2712,
           "height_px": 1970,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f150f92074c464f52b6dec8bb6314b59"
+          "checksum": "18d86548b61bbc6e6b494b27abab36c9"
         },
         {
           "work_id": "00389",
@@ -89,9 +87,8 @@
           "project_subfolder": "photos",
           "width_px": 2025,
           "height_px": 1477,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d2e3284b3fdc819553b53f8633c7c994"
+          "checksum": "b3bd943af932c463adec8af72d5b516e"
         },
         {
           "work_id": "00389",
@@ -102,9 +99,8 @@
           "project_subfolder": "photos",
           "width_px": 2051,
           "height_px": 1464,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f95c31a531487c8496d04fcdbeafc855"
+          "checksum": "d0313866f377eb35cd0080cef8a5b107"
         },
         {
           "work_id": "00389",
@@ -115,9 +111,8 @@
           "project_subfolder": "photos",
           "width_px": 2034,
           "height_px": 1470,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "657746a1169030bda9e2f89166a6ed10"
+          "checksum": "a179a9e8e4093d26ed44afc6acf39b4f"
         },
         {
           "work_id": "00389",
@@ -128,9 +123,8 @@
           "project_subfolder": "photos",
           "width_px": 2037,
           "height_px": 1465,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fb4ffb9ada0e95cfb3eea3647c3b61ac"
+          "checksum": "7dc7b226ba05756359944a7f4d6c2c67"
         },
         {
           "work_id": "00389",
@@ -141,9 +135,8 @@
           "project_subfolder": "photos",
           "width_px": 2031,
           "height_px": 1465,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1854d51ca428655f3795653fdbaeeb20"
+          "checksum": "ae63154267746ad090d3df06831c0899"
         },
         {
           "work_id": "00389",
@@ -154,9 +147,8 @@
           "project_subfolder": "photos",
           "width_px": 600,
           "height_px": 440,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a3f530ffce39c6710b7a2ccac2952c40"
+          "checksum": "f1fe58cef61e7c3ae595f326b98b3a45"
         },
         {
           "work_id": "00389",
@@ -167,9 +159,8 @@
           "project_subfolder": "photos",
           "width_px": 2834,
           "height_px": 1889,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ca1ff78aa1fe6e729469c0beebe89bf8"
+          "checksum": "981222ef5676308b47bc21cba2762570"
         },
         {
           "work_id": "00389",
@@ -180,9 +171,8 @@
           "project_subfolder": "photos",
           "width_px": 2834,
           "height_px": 1889,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1017bf8e974f96ebb196bc766e757bf2"
+          "checksum": "38ea9efbf9cf94225df1da0a427f2c51"
         },
         {
           "work_id": "00389",
@@ -193,9 +183,8 @@
           "project_subfolder": "photos",
           "width_px": 2834,
           "height_px": 1889,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4278ebf13bb40d0fbe6756c719d1b999"
+          "checksum": "17d173a56d1da20192da6e63ea2ed0cf"
         },
         {
           "work_id": "00389",
@@ -206,9 +195,8 @@
           "project_subfolder": "photos",
           "width_px": 2834,
           "height_px": 1889,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7cd33ae16819845f43871cbab890a433"
+          "checksum": "bb57ba5ca8aeb55be3d0cde5ef15909a"
         },
         {
           "work_id": "00389",
@@ -219,9 +207,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "69264903637955046a223be55f0540d7"
+          "checksum": "4cc83db45761875131624f90121ee844"
         },
         {
           "work_id": "00389",
@@ -232,9 +219,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a3b62802165b7795e0756bc92abbab27"
+          "checksum": "994db4c9bcfcff8971002ab368edf05f"
         },
         {
           "work_id": "00389",
@@ -245,9 +231,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9799d639b7815b059a3b76c560a45766"
+          "checksum": "bc384f0b0d6d12c9f5c01f558fbdc169"
         },
         {
           "work_id": "00389",
@@ -258,9 +243,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "68c1672ce91fcd2363f912190395d6c3"
+          "checksum": "f343640aab6076e7ec72a480708f9230"
         },
         {
           "work_id": "00389",
@@ -271,9 +255,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3877edfb9c25662501a35a20b9d2ee22"
+          "checksum": "a8736cc6e6e194d3fed6c3288a872bed"
         },
         {
           "work_id": "00389",
@@ -284,9 +267,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fc6c3e159406930db0079aa4cb4b7788"
+          "checksum": "2b42156d0717265556e081d6c1727a71"
         },
         {
           "work_id": "00389",
@@ -297,9 +279,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f6c350973412f55d8c58fba958ba61aa"
+          "checksum": "df0a9c07f995707547f044604f92e43d"
         },
         {
           "work_id": "00389",
@@ -310,9 +291,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1456bce2134a6fb9bd6fd30308321718"
+          "checksum": "dfec361c37a02592772e66791396b2e6"
         },
         {
           "work_id": "00389",
@@ -323,9 +303,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "43c78907fc8af7b27f21478e36ff98ae"
+          "checksum": "89835f06b7315962600cb6618175ddf8"
         },
         {
           "work_id": "00389",
@@ -336,9 +315,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9fb0d818acf8e160118f55014b1708fa"
+          "checksum": "0569afa06b5bc19668efe6a107630bec"
         },
         {
           "work_id": "00389",
@@ -349,9 +327,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b3c1834c5dabd00284fa48704fa31989"
+          "checksum": "040d4af3ba1ef509b9c353b0f58dcc7b"
         },
         {
           "work_id": "00389",
@@ -362,9 +339,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8d0293fe19b0ad28e9e4371c6145fbc5"
+          "checksum": "0bda4b25a5b38f766fef96103d63ee61"
         },
         {
           "work_id": "00389",
@@ -375,9 +351,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9e11b023c9242b6bb0f8dd6e6d0e8fcf"
+          "checksum": "29655b87b5581a835dd6f924e48c76a0"
         },
         {
           "work_id": "00389",
@@ -388,9 +363,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e983797c3b7b7745aa3b0ab917d9631e"
+          "checksum": "ea5724e859c9f409ddee26c358548f5a"
         },
         {
           "work_id": "00389",
@@ -401,9 +375,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "db5cf08a831f2a2d01cee638c3a45664"
+          "checksum": "f089a6e35ae03cd7093d710bec723dcf"
         },
         {
           "work_id": "00389",
@@ -414,9 +387,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0aabca5c2aa2a33e28cd8a3e23408ac8"
+          "checksum": "d6595263cf2901774a5484c0efd69b60"
         },
         {
           "work_id": "00389",
@@ -427,9 +399,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "16f2296bfe831838383a96da0db0714d"
+          "checksum": "06142897f405292afd9d5af7df57380c"
         },
         {
           "work_id": "00389",
@@ -440,9 +411,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "48f774671bb596a4776873b253600659"
+          "checksum": "9b329f180d123792de0effc252d0a83b"
         },
         {
           "work_id": "00389",
@@ -453,9 +423,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "baf01c354e9d281581b7fe39b8107c28"
+          "checksum": "7dfaba9d78b0c6de32d895f5535f9435"
         },
         {
           "work_id": "00389",
@@ -466,9 +435,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8ea36fc878daf54bd63d258662d5a0a3"
+          "checksum": "7806d3ef840aa60465c2708d4e38b480"
         },
         {
           "work_id": "00389",
@@ -479,9 +447,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "634a19a629e7459839489f0ff0f3990b"
+          "checksum": "923f703284aa2d0c3bd0c8614334daee"
         },
         {
           "work_id": "00389",
@@ -492,9 +459,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a2759c47e6ea46298dd7a95b531358a4"
+          "checksum": "1362f7a55970282196bac7357ee99f05"
         },
         {
           "work_id": "00389",
@@ -505,9 +471,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2b2575bb989fe7dfd4f8a795d10547b4"
+          "checksum": "834083e95d2bd59ab5f5ac6ceee9eba9"
         },
         {
           "work_id": "00389",
@@ -518,9 +483,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ecdf7f7ae17a93b7267f5e890cbd9850"
+          "checksum": "a44ef1c2fd2864bf355bef3e84cc825f"
         },
         {
           "work_id": "00389",
@@ -531,9 +495,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ebf5790774711f90e5e361b8832d9921"
+          "checksum": "d520ffb624ce29fdbe904fb98b6567a9"
         },
         {
           "work_id": "00389",
@@ -544,9 +507,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ea0e97b4eb5231e289a3863b2279e8f"
+          "checksum": "41f7a5f09541aab779ee916be46d4052"
         },
         {
           "work_id": "00389",
@@ -557,9 +519,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "91f1db43117f1158ff39c1e927546b92"
+          "checksum": "b9e8fbaac40c1962a229250a6d27048b"
         },
         {
           "work_id": "00389",
@@ -570,9 +531,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7214bab0d42afeb7e3601c8b11adb279"
+          "checksum": "0d35d56ad538c1ada4ee195e647c3d6f"
         },
         {
           "work_id": "00389",
@@ -583,9 +543,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1764a86cb117890c053e549ea1842df2"
+          "checksum": "84a8b4adc1f411a86ab4dd21dbad626c"
         },
         {
           "work_id": "00389",
@@ -596,9 +555,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "82846b60cd584ef6417e54f03be64f81"
+          "checksum": "84076e4fdcd08aeaa65d486185f5d9b3"
         },
         {
           "work_id": "00389",
@@ -609,9 +567,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5047436bad1962ee9baddffba5b3fdb5"
+          "checksum": "fd9280e51b2b93011ba8619d40b0c4c7"
         },
         {
           "work_id": "00389",
@@ -622,9 +579,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "02f8d77e362ab9168310a13876d489a6"
+          "checksum": "c1f9b4e65e92780b0aec41121da85c71"
         },
         {
           "work_id": "00389",
@@ -635,9 +591,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c758ae26c1606a6bdf4eb026f76c1b6a"
+          "checksum": "00f2d75860f9c04360f8596607bab270"
         },
         {
           "work_id": "00389",
@@ -648,9 +603,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "451d47c4a5f4d85053a1506f28b57f6e"
+          "checksum": "470646c3f6666f6904f1065750d6d05d"
         },
         {
           "work_id": "00389",
@@ -661,9 +615,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3e0536dd7da1faed31686f7582a4fd68"
+          "checksum": "9c1038f407a0ea9edd25cc8e206a15a7"
         },
         {
           "work_id": "00389",
@@ -674,9 +627,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fbc1fb6e4fdcd118b1e2ca92fc26f72b"
+          "checksum": "85d54f6cbd5b165f85846c2cda082540"
         },
         {
           "work_id": "00389",
@@ -687,9 +639,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "70d4e7f3cc79db48273e862fa6c3b9d0"
+          "checksum": "3709638844b49def6b7ff891c324ec3e"
         },
         {
           "work_id": "00389",
@@ -700,9 +651,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6e1aef2e5040883c57e1e488cf14c91b"
+          "checksum": "4e101135510098502c26d8580f3e36a2"
         },
         {
           "work_id": "00389",
@@ -713,9 +663,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fd91e93f347f529878c7cc641fb9af11"
+          "checksum": "18f97b4a9f9a96969f0cfbaff43d4512"
         },
         {
           "work_id": "00389",
@@ -726,9 +675,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5c3f5259a24d3149a2e882ec4377ebd2"
+          "checksum": "ee046d1ca75ddc002b4eb43164cfa372"
         },
         {
           "work_id": "00389",
@@ -739,9 +687,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6125fdbeb155482f9ff24eee44799b31"
+          "checksum": "b4f5cf5b5d009da79d2bbe9a821eb34e"
         },
         {
           "work_id": "00389",
@@ -752,9 +699,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1da563a079728984548c00042b44b048"
+          "checksum": "1859ecee814a995a4c1641490091b8a0"
         },
         {
           "work_id": "00389",
@@ -765,9 +711,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e347dc166907e07ccfb397b9a92a76c2"
+          "checksum": "511d0f8cf7138c8a9e878fb6ae324c32"
         },
         {
           "work_id": "00389",
@@ -778,9 +723,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1dc6f0b77f6aa219c422fdc727ea59e5"
+          "checksum": "321cde9676dbd7b5c71db964928fb79d"
         },
         {
           "work_id": "00389",
@@ -791,9 +735,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e3151b023108aef628cd4ae81139f70c"
+          "checksum": "cdadb99220b90bf91835834487dba113"
         },
         {
           "work_id": "00389",
@@ -804,9 +747,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dc6b3ef911c54d46821e90ea6faf7fba"
+          "checksum": "09524858a15a92bb5d4ac11abde2339d"
         },
         {
           "work_id": "00389",
@@ -817,9 +759,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "747e209815a89daf8edcfa861abb9da9"
+          "checksum": "74dcb1652515603921ee38eecc19310b"
         },
         {
           "work_id": "00389",
@@ -830,9 +771,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "78b8204878d258dd82fd6aad19875246"
+          "checksum": "2df58edd85458d6891d7425c86daaaf8"
         },
         {
           "work_id": "00389",
@@ -843,9 +783,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6f596741baff450303c1e7aee6e18aea"
+          "checksum": "3ab92d8ea2873289cd5ce39f83a78b13"
         },
         {
           "work_id": "00389",
@@ -856,9 +795,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "20dda5635c43f14e48c98b2e750e83a7"
+          "checksum": "06c6d7eae73b41452cc184c24282ce1f"
         },
         {
           "work_id": "00389",
@@ -869,9 +807,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3b2014663aa2bccdfdc326e7b7403b03"
+          "checksum": "0a22d7e299b309d91d44504c38921689"
         },
         {
           "work_id": "00389",
@@ -882,9 +819,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "94c354630508a48b8577eaf814d66cef"
+          "checksum": "572bcbcb92197911bf166058f7df2012"
         },
         {
           "work_id": "00389",
@@ -895,9 +831,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "691889b318b4ffc9a07826c615253a97"
+          "checksum": "d832cf598c8f6987654c88a01d0b7aa6"
         },
         {
           "work_id": "00389",
@@ -908,9 +843,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bfa0497ed3665a3378a52bc96cf7bf9b"
+          "checksum": "c31a50748b7ee40ea701cd2a25cc312e"
         },
         {
           "work_id": "00389",
@@ -921,9 +855,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ba11245b37847abed476f4d5512ff83c"
+          "checksum": "72e63eba46669f642fb4a6d83905c37e"
         },
         {
           "work_id": "00389",
@@ -934,9 +867,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ff2fcdf71b840e2c0689193866175f0b"
+          "checksum": "a74cc589b89b102803760a2678dece3e"
         },
         {
           "work_id": "00389",
@@ -947,9 +879,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "438bf7640fdbc35ab22efc9f971cbb62"
+          "checksum": "362209a362254824d9ca82890a9f2810"
         },
         {
           "work_id": "00389",
@@ -960,9 +891,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "198c5f353140838f8cc3a6886df40458"
+          "checksum": "037a6c204f70c73fdc6ef171c2f4e490"
         },
         {
           "work_id": "00389",
@@ -973,9 +903,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ce7c98ba5d29b22367ac580a1cd1551"
+          "checksum": "cb612e8bc2c1031bd5a1f306b4980ef8"
         },
         {
           "work_id": "00389",
@@ -986,9 +915,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "390ba7d373a2ecbab1547e48c5c981d9"
+          "checksum": "9e8c722d5b3ee35c85c9e8d735c45ada"
         },
         {
           "work_id": "00389",
@@ -999,9 +927,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d461e50f8163776aed67a957d2490bd6"
+          "checksum": "851adc2b7e7a919826324ae6d7fdb5f8"
         },
         {
           "work_id": "00389",
@@ -1012,9 +939,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bebc7f9e8538e9fb4bf1f8dab84fb61e"
+          "checksum": "94220fec2b0b70349ce18e3d0138b9fb"
         },
         {
           "work_id": "00389",
@@ -1025,9 +951,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "39280e17cd66dd1f0efaac26c2425f40"
+          "checksum": "ca55d9806933488d9ae56e8c5063413e"
         },
         {
           "work_id": "00389",
@@ -1038,9 +963,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7ec58f64b5e3864f487d8d2f90f5cb24"
+          "checksum": "2a9073cc47256f72e2e85e54c2fc68d1"
         },
         {
           "work_id": "00389",
@@ -1051,9 +975,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6f712c7130e5a959a92f63c530d048c2"
+          "checksum": "dc4eb30131c329e64a14f10abae4c2a0"
         },
         {
           "work_id": "00389",
@@ -1064,9 +987,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a0a9114ad74c6fb48af9101cbe14e7c5"
+          "checksum": "7a4d4e28f2e88586e2849ad3b37f8b43"
         },
         {
           "work_id": "00389",
@@ -1077,9 +999,8 @@
           "project_subfolder": "photos",
           "width_px": 2123,
           "height_px": 1512,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ae726e2958887af687e36404fbc11d34"
+          "checksum": "df5adc8186c72ea1312925d9d6c59aff"
         },
         {
           "work_id": "00389",
@@ -1090,9 +1011,8 @@
           "project_subfolder": "photos",
           "width_px": 2123,
           "height_px": 1509,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "98ae6aeb1651fe90f60f074c5ddc200c"
+          "checksum": "8d924476fb7656f7c54464d8b0a773b1"
         },
         {
           "work_id": "00389",
@@ -1103,9 +1023,8 @@
           "project_subfolder": "photos",
           "width_px": 2126,
           "height_px": 1506,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "50e90597b4470cc1983da40900d13c01"
+          "checksum": "35077b51285aa6d6f45f131c27d75a42"
         },
         {
           "work_id": "00389",
@@ -1116,9 +1035,8 @@
           "project_subfolder": "photos",
           "width_px": 2123,
           "height_px": 1513,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "81df6fb714bf259d4d932a36f428d6fa"
+          "checksum": "f31ae35debe5c1f55bfae00495a74229"
         },
         {
           "work_id": "00389",
@@ -1129,9 +1047,8 @@
           "project_subfolder": "photos",
           "width_px": 1513,
           "height_px": 2124,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "141923a8735c07742d2eb9afca0eb627"
+          "checksum": "26ba15e3a7143fa7bb61c2b67c8344ae"
         },
         {
           "work_id": "00389",
@@ -1142,9 +1059,8 @@
           "project_subfolder": "photos",
           "width_px": 1518,
           "height_px": 2127,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6ad92226473d9b7cff8441ff5384324c"
+          "checksum": "42afb3eb7c8a466f330e25db344cb6c0"
         },
         {
           "work_id": "00389",
@@ -1155,9 +1071,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f82b512546f3974f50fd8ad894622047"
+          "checksum": "ffea936aec12ffaf6bbdd0f668d4ff6c"
         },
         {
           "work_id": "00389",
@@ -1168,9 +1083,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aaaafdfec7005c52378e952ecaa96517"
+          "checksum": "ed2d554152ed8473413d65be944573ac"
         },
         {
           "work_id": "00389",
@@ -1181,9 +1095,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5f7f8bc84bf5e1e78ff33db919b87593"
+          "checksum": "2cd59ac2fcba8010ad9829f2637e7d11"
         },
         {
           "work_id": "00389",
@@ -1194,9 +1107,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d57cd3e1d60291d340433e0526ca2b2"
+          "checksum": "1919487ddf8a1154ad834509eb4d69e8"
         },
         {
           "work_id": "00389",
@@ -1207,9 +1119,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1ed20541ad4c46c2598eb9edf5f56daa"
+          "checksum": "c8bb96ddbdf3d72d1420af9c90bff3e1"
         },
         {
           "work_id": "00389",
@@ -1220,9 +1131,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "92d8f2b1d2d3650bf796f29fe68f1e3a"
+          "checksum": "86e1188b817dbfcda51844557c3209ea"
         },
         {
           "work_id": "00389",
@@ -1233,9 +1143,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b334ae78c8a40bff18c014cd0d15747a"
+          "checksum": "e21dead51af6b93a545b7e114d5d0327"
         },
         {
           "work_id": "00389",
@@ -1246,9 +1155,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "991d0183a7ac7c84461b24f855af4275"
+          "checksum": "e68c3a1b727867edca3cb53ddef8e900"
         },
         {
           "work_id": "00389",
@@ -1259,9 +1167,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1b0263b4159de6964a6af9f82f364460"
+          "checksum": "d7a70f6aeb7865ade4276bf12b8349ff"
         },
         {
           "work_id": "00389",
@@ -1272,9 +1179,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6ea433fd74ac188344e5253d6b322921"
+          "checksum": "291eba47655908c643492ccd8b34bdc8"
         },
         {
           "work_id": "00389",
@@ -1285,9 +1191,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dadf3d813c0e3c8907fc6f882aaa64d3"
+          "checksum": "9c452e6745f5b94f16cf4056a0875cff"
         },
         {
           "work_id": "00389",
@@ -1298,9 +1203,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "429cbd2a560ff6884ecb41f06178ecd4"
+          "checksum": "c90c3354649aca7a97d0c062d32eaa0c"
         },
         {
           "work_id": "00389",
@@ -1311,9 +1215,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3b071df1118cada0b0044ae9dda1882a"
+          "checksum": "0d1059ca979f707e3ab4ce03636f336e"
         },
         {
           "work_id": "00389",
@@ -1324,9 +1227,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4cf4ac2c128d5cf7e4333880d13b57d0"
+          "checksum": "d51fa7ce77bed1893932383de2965794"
         },
         {
           "work_id": "00389",
@@ -1337,9 +1239,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d05d89ea05f929b0ec0c7e36b37ea5bd"
+          "checksum": "bd7e7c18a33e4f2a27f17aac78d7a6fe"
         },
         {
           "work_id": "00389",
@@ -1350,9 +1251,8 @@
           "project_subfolder": "photos",
           "width_px": 1280,
           "height_px": 960,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c9b8886cd4372766cd01bdf050362436"
+          "checksum": "528d36320ec5848dc9087bb37fd18601"
         },
         {
           "work_id": "00389",
@@ -1363,9 +1263,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a47121157c3e490746052cc6ef999ef9"
+          "checksum": "a984ed016b4d57d2181822f39957df41"
         },
         {
           "work_id": "00389",
@@ -1376,9 +1275,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c11b52a9d92316904764517c9cc0c2bf"
+          "checksum": "59bc4dda89f6dc86d6f513fd194d3b38"
         },
         {
           "work_id": "00389",
@@ -1389,9 +1287,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0b0f69b39a8152479f08b9708a4424f8"
+          "checksum": "0ad83259526a0ffc319dc705588ea393"
         },
         {
           "work_id": "00389",
@@ -1402,9 +1299,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cb82dfe155983f7a2795378cfa57f684"
+          "checksum": "ab90bc7b92445e15d094a221be6b4e70"
         },
         {
           "work_id": "00389",
@@ -1415,9 +1311,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "adc1726a311823399f9b5dc69b0b0f51"
+          "checksum": "c5e0c264ac511a2a38b8451be7c4e288"
         },
         {
           "work_id": "00389",
@@ -1428,9 +1323,8 @@
           "project_subfolder": "photos",
           "width_px": 2272,
           "height_px": 1704,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d461c484bed19b64a5d1ca541f8bc49e"
+          "checksum": "44ff06a839eda21e505667ecd1cec784"
         },
         {
           "work_id": "00389",
@@ -1441,9 +1335,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d584c28a819297df673f5a22a1860520"
+          "checksum": "f5b231479e932046b09ac7e733feacd4"
         },
         {
           "work_id": "00389",
@@ -1454,9 +1347,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "243a726e0639257b24eab0b96eaeb188"
+          "checksum": "ce6efec4f342d157b19b6a5ba55a2524"
         },
         {
           "work_id": "00389",
@@ -1467,9 +1359,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0952c02cf4c523f89dbcab305d43ca83"
+          "checksum": "fd634639ea6f155520db9ef654101d37"
         },
         {
           "work_id": "00389",
@@ -1480,9 +1371,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b8f5aba1a5c2297cc244f835cbda0d0f"
+          "checksum": "7a66197185150edf51841645ddf77a13"
         },
         {
           "work_id": "00389",
@@ -1493,9 +1383,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "80576310daabd66eeada75a77d25fe0f"
+          "checksum": "31f7279dbe0eff2e380497bee19bc8dc"
         },
         {
           "work_id": "00389",
@@ -1506,9 +1395,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3f49ad8d4cad36c4671bac4ba31de7c1"
+          "checksum": "f1227884c3630cbe5938a34a4fbf10b8"
         },
         {
           "work_id": "00389",
@@ -1519,9 +1407,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5508a1dc4e6be7a93a3fe0c49ebe2d08"
+          "checksum": "a4848d6a6a0c4a140e725d024686366f"
         },
         {
           "work_id": "00389",
@@ -1532,9 +1419,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4b6c436217fb6717886a578fd8d6cf2d"
+          "checksum": "1379fac7b2a484391e18fe6cd6c96b52"
         },
         {
           "work_id": "00389",
@@ -1545,9 +1431,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "363b63145909776d2f394ba2336d8674"
+          "checksum": "ff21df50778967ccd22c5ae2a29bed4b"
         },
         {
           "work_id": "00389",
@@ -1558,9 +1443,8 @@
           "project_subfolder": "photos",
           "width_px": 640,
           "height_px": 480,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4becfb710876aa2790b9f7759d89bbd6"
+          "checksum": "44b45011d9af8d9a2857d6ba12aa68ea"
         },
         {
           "work_id": "00389",
@@ -1571,9 +1455,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "eb4ebbee0269a00f0d0f8604400b31f0"
+          "checksum": "4bf43d8a1434b7645d71aed3ff63f34b"
         },
         {
           "work_id": "00389",
@@ -1584,9 +1467,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "24313082b8d2471a49f2071d8521a81c"
+          "checksum": "699e4b734f133f5dc85ead6eb1e65c14"
         },
         {
           "work_id": "00389",
@@ -1597,9 +1479,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f613c9b81e1afce7fb86de8bfe298948"
+          "checksum": "6c33dffa5374fae82099d94567f98746"
         },
         {
           "work_id": "00389",
@@ -1610,9 +1491,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a4e283a8c223696dd3ce949d480f58d2"
+          "checksum": "78a94d7b0a66c6ab4fae2ec2cfee9fa5"
         },
         {
           "work_id": "00389",
@@ -1623,9 +1503,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c6c108661e700701ced2471c4d3cbcd9"
+          "checksum": "e9d4a44f31955191c5a4a2f8fb938501"
         },
         {
           "work_id": "00389",
@@ -1636,9 +1515,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "22ab1cc25bd1e7c2af6da736fa1803a5"
+          "checksum": "b8502ede3429dbc84de7d5fb0e1562c4"
         },
         {
           "work_id": "00389",
@@ -1649,9 +1527,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0f77ec341cffb39863b6822e548cd7cc"
+          "checksum": "71392aa788e59b2670eaf29be8b4cdac"
         },
         {
           "work_id": "00389",
@@ -1662,9 +1539,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1d63e8438ed51d533df1b28dd6ca11b"
+          "checksum": "d2e2589c622a847dc000d9728036ca27"
         },
         {
           "work_id": "00389",
@@ -1675,9 +1551,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2926502d5a2dcb06e4455d136608fe93"
+          "checksum": "9566a01fabba0669df07c2fbfed2c007"
         },
         {
           "work_id": "00389",
@@ -1688,9 +1563,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "513efe7e1425d2c75316d872b1b67cc7"
+          "checksum": "e8350357bb6311e8e143d2b507f09d5d"
         },
         {
           "work_id": "00389",
@@ -1701,9 +1575,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8f218ac4ac1bed00e3e4748df28fb2e9"
+          "checksum": "c0ad2a1b4c576966ece536d323636d06"
         },
         {
           "work_id": "00389",
@@ -1714,9 +1587,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6148a243458346213b57692f1d073620"
+          "checksum": "1e585955e62a32c9023b6ea6bc538fa6"
         },
         {
           "work_id": "00389",
@@ -1727,9 +1599,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b71c80cd67b1538bcdcf4a91c8d4f149"
+          "checksum": "4fef708e17f7aafb838c1a4db68b9edb"
         },
         {
           "work_id": "00389",
@@ -1740,9 +1611,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7fbd2ed6712deaa8a587014a292dfb29"
+          "checksum": "d8324fa540f9e5e6afc94f476ee79306"
         },
         {
           "work_id": "00389",
@@ -1753,9 +1623,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5701df6ad4632e7fcceee146563f4d87"
+          "checksum": "511425c07053c12a65c85b77b345b5d0"
         },
         {
           "work_id": "00389",
@@ -1766,9 +1635,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0ff969c290541507fdc2a242bc83bff4"
+          "checksum": "34bc33fdddbaba49081690186a88eabf"
         },
         {
           "work_id": "00389",
@@ -1779,9 +1647,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cc5368b8a0596efa8a6720ecf400cf68"
+          "checksum": "b15f0cb19bed246ed2e8f33d2fe0e6f6"
         },
         {
           "work_id": "00389",
@@ -1792,9 +1659,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8633574a448fa95173f33b82e5729000"
+          "checksum": "ff155e43b5cf2a335d29735c27f74ef5"
         },
         {
           "work_id": "00389",
@@ -1805,9 +1671,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "eb15015f5966514ceae6609532c2ef56"
+          "checksum": "93bb3f0a582bbf8f825cf034187531f5"
         },
         {
           "work_id": "00389",
@@ -1818,9 +1683,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6c838dd474303291d3aad2dffe33be82"
+          "checksum": "7e00a3ef25499bc1603f5fcf5180af42"
         },
         {
           "work_id": "00389",
@@ -1831,9 +1695,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f6881fe34c4c798ad2f329093ab24563"
+          "checksum": "b56215eef304c072298adb0d277e3104"
         },
         {
           "work_id": "00389",
@@ -1844,9 +1707,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8481b804c0b693fadfbf4690911af3cf"
+          "checksum": "4a7542dd3768eff7cabec715e5b78ea4"
         },
         {
           "work_id": "00389",
@@ -1857,9 +1719,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5b456a76cb999ba48d5b75e08d712f96"
+          "checksum": "74327c4bb44878e52bf175304bf6c1d4"
         },
         {
           "work_id": "00389",
@@ -1870,9 +1731,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0d4270b44e56559d2edd10b2fc1d6012"
+          "checksum": "c0632c520831e8d06b72c243f84e9abd"
         },
         {
           "work_id": "00389",
@@ -1883,9 +1743,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7748bed038bd6f6ff2c59b5175c5af95"
+          "checksum": "c5d38a5cfbc1b94d15c34f2d79f57cce"
         },
         {
           "work_id": "00389",
@@ -1896,9 +1755,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "04573210293fadf6c1f3284eef863cf3"
+          "checksum": "c74cb9507ba46625cf254a7303b55a27"
         },
         {
           "work_id": "00389",
@@ -1909,9 +1767,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fc2e98361228603d0f7987ee6d4d74bf"
+          "checksum": "8c928adf834a62c598b125081fb9bd7a"
         },
         {
           "work_id": "00389",
@@ -1922,9 +1779,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "305888cd91ac4ad11b9535f9f90df2f5"
+          "checksum": "3552b6829b6ba62b9e304b00db1efb2f"
         },
         {
           "work_id": "00389",
@@ -1935,9 +1791,8 @@
           "project_subfolder": "photos",
           "width_px": 1536,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "59485ec1202c2863b2a9584776e47820"
+          "checksum": "5f3bea70521bee5824a747784a3e64c2"
         },
         {
           "work_id": "00389",
@@ -1948,9 +1803,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dde424dc7d36566d3bfa93aa68433035"
+          "checksum": "447175806e8e7093436d9dad17e76a2c"
         },
         {
           "work_id": "00389",
@@ -1961,9 +1815,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8f8adab025a07b3af754fb46a662f278"
+          "checksum": "23f9780d929130abcfa6c108fe565b89"
         },
         {
           "work_id": "00389",
@@ -1974,9 +1827,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "da6e5a09cc3a262ffaae1f3ad5db136e"
+          "checksum": "eea77cf0bd97ae48b99acb38dd59272a"
         },
         {
           "work_id": "00389",
@@ -1987,9 +1839,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "13894e005565bbdbb0bd395277ef6423"
+          "checksum": "7a4a4d1052b02f74afaa0c1da8776ea9"
         },
         {
           "work_id": "00389",
@@ -2000,9 +1851,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "21e5f1e214a4ad0fa538771130df209c"
+          "checksum": "555431a708f500187cc9688d4d58966b"
         },
         {
           "work_id": "00389",
@@ -2013,9 +1863,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "028cd80937bc8899e7d00b7ea11fa29d"
+          "checksum": "066f966c5bd8789b7fdafa3b7489db47"
         },
         {
           "work_id": "00389",
@@ -2026,9 +1875,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f129abcad61c91dad81bc9cd070857f2"
+          "checksum": "da388b186981f564becf0876b8dc377d"
         },
         {
           "work_id": "00389",
@@ -2039,9 +1887,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e4fd7340f09b9ef2dcbbcc5464f6b214"
+          "checksum": "4888983483f7b4111bf7ac87d3e05d2c"
         },
         {
           "work_id": "00389",
@@ -2052,9 +1899,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3d12521df67948b16063162dfdce7065"
+          "checksum": "9fc98c753224e81117ce20a51dcec9c4"
         },
         {
           "work_id": "00389",
@@ -2065,9 +1911,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7ec2a857155bde2cc09471f71fd8f83e"
+          "checksum": "aed247fac009662ff5554cb7ca288f29"
         },
         {
           "work_id": "00389",
@@ -2078,9 +1923,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f5161bae1e902ce1e4f18a090fcb584a"
+          "checksum": "b794fab0d20e9f80ea3f960767e4a702"
         },
         {
           "work_id": "00389",
@@ -2091,9 +1935,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7ff9bdc59f58a2c75af67ab8a00f372f"
+          "checksum": "65e5d40283c07d403d0810a2ff11b531"
         },
         {
           "work_id": "00389",
@@ -2104,9 +1947,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b7a63d9aadb0595224ca655af36e7d15"
+          "checksum": "793aa65c3c6453ccd528737c7bf41331"
         },
         {
           "work_id": "00389",
@@ -2117,9 +1959,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e0f145db1df8e31d9584c69e9c3bbdec"
+          "checksum": "dc9c5f7f44f7cffa8799b3e35666f476"
         },
         {
           "work_id": "00389",
@@ -2130,9 +1971,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "38127768e330a50e042c49a2a5fcf230"
+          "checksum": "b3c67f1c9606ddc76239afd1057634c9"
         },
         {
           "work_id": "00389",
@@ -2143,9 +1983,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "78a3215468ede1247f82c7ca30b96351"
+          "checksum": "c901985289aaba9862e02549b8d531a1"
         },
         {
           "work_id": "00389",
@@ -2156,9 +1995,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "23a56f2293a99f4a191d5b8c0e160713"
+          "checksum": "77e5f89781251b0f6c384de5c715c67a"
         },
         {
           "work_id": "00389",
@@ -2169,9 +2007,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4268bd46aac087ec13900e067eddf438"
+          "checksum": "a73ba2944c560d7eb89f7d9cf1333bf1"
         },
         {
           "work_id": "00389",
@@ -2182,9 +2019,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bc316d966d66dee19f54b59561042097"
+          "checksum": "888448449b826571bd67c6923f77a48b"
         },
         {
           "work_id": "00389",
@@ -2195,9 +2031,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e77097440ea0c95acc4c579968d36724"
+          "checksum": "85cb962587ff3d7bc687b153c12b3ea1"
         },
         {
           "work_id": "00389",
@@ -2208,9 +2043,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fa8d922c99c152da24e50257159e405f"
+          "checksum": "416382298a03f866bd15c182157c940d"
         },
         {
           "work_id": "00389",
@@ -2221,9 +2055,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e61855d7cf60226d5762cd693e2eee39"
+          "checksum": "2acaf28a564c7ae7972498386cdc1a82"
         },
         {
           "work_id": "00389",
@@ -2234,9 +2067,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b6ceaaebe981e488cc047a2d05afb2df"
+          "checksum": "986b85c25d4baac607f4ae069ca95a26"
         },
         {
           "work_id": "00389",
@@ -2247,9 +2079,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "637798fd1b44794718a5ae7f88b4f86d"
+          "checksum": "b7d5ecd786e13174e8f7782c74417a12"
         },
         {
           "work_id": "00389",
@@ -2260,9 +2091,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "de3f267e4356a9bdcb503451fc280e3e"
+          "checksum": "665ad37b68b7564336f750b51b30a1ae"
         },
         {
           "work_id": "00389",
@@ -2273,9 +2103,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a010f2a55ed15dc7a57962261cf402d2"
+          "checksum": "3dbecb72080b2954f9ad84260dfbb4c2"
         },
         {
           "work_id": "00389",
@@ -2286,9 +2115,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "55227e0ecf1285c96448d2c824aad163"
+          "checksum": "17032fb43c4ec2b4dccf8aebd48c5f1a"
         },
         {
           "work_id": "00389",
@@ -2299,9 +2127,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9011cf3ba92f2c6ae56861d8dfe0b10f"
+          "checksum": "f3385ea15c2f4d66112372373b31e9a7"
         },
         {
           "work_id": "00389",
@@ -2312,9 +2139,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "779d261b9ffd06f73a5e52454a6221e3"
+          "checksum": "01507a71e9ca480b54fb39afd8d98b40"
         },
         {
           "work_id": "00389",
@@ -2325,9 +2151,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "87dd5bc49f285378f1c0fc25ffe2e80b"
+          "checksum": "893589618ac04208bf7fa774fd0efcdb"
         },
         {
           "work_id": "00389",
@@ -2338,9 +2163,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "812dffb302f3b9d28197a121dca2d2d5"
+          "checksum": "7b80425ffd0f4437e7b9ef8c533d45ad"
         },
         {
           "work_id": "00389",
@@ -2351,9 +2175,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "20a67a5baa691f442df6ad9ef5cb0f16"
+          "checksum": "1519f8f1dc475bb81c44218f3d5fa4f3"
         },
         {
           "work_id": "00389",
@@ -2364,9 +2187,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "af009e64822eefdda14c5de067e84706"
+          "checksum": "4586daa664feaff36937bc7c1e0214d5"
         },
         {
           "work_id": "00389",
@@ -2377,9 +2199,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "20f001cf095a9a77e94d0785136cca42"
+          "checksum": "515d6815a66dc5815834abbd8327d27b"
         },
         {
           "work_id": "00389",
@@ -2390,9 +2211,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "72e5c9d0b13b983d8dd828e6fd2382de"
+          "checksum": "e787da3344d41efab3fd8cde00db765f"
         },
         {
           "work_id": "00389",
@@ -2403,9 +2223,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8c6c2cc8343bffba73991768af83f85a"
+          "checksum": "33a92b37b1603d29acd6e2ea78b23816"
         },
         {
           "work_id": "00389",
@@ -2416,9 +2235,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "690542b54c8896515ce6f8712e639a76"
+          "checksum": "b15d0680d60d7bf4de48fcdae7b2a301"
         },
         {
           "work_id": "00389",
@@ -2429,9 +2247,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d3bd711a6ea9e2a5c512883729cbaa3b"
+          "checksum": "465902e88bc666aecb9270909cda24dd"
         },
         {
           "work_id": "00389",
@@ -2442,9 +2259,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "371755417b08c6c1533135c053bbfcf9"
+          "checksum": "2b9a8708669c0f505d20d37a1ddeab6e"
         },
         {
           "work_id": "00389",
@@ -2455,9 +2271,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f72cdc3d1354565471436b833290bd17"
+          "checksum": "e667540921c86d5b3caa3fc789008fe5"
         },
         {
           "work_id": "00389",
@@ -2468,9 +2283,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "293e16483b5844cbefa7e5fa22ab029e"
+          "checksum": "2cabb4a3c7ad9bfdde8f394912b6852a"
         },
         {
           "work_id": "00389",
@@ -2481,9 +2295,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ef438ce4c73f3ca1ac70189cf409ee63"
+          "checksum": "93f8cbdfabbf07cf59c9a84d5e4fdae5"
         },
         {
           "work_id": "00389",
@@ -2494,9 +2307,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "42d3362856be35831f27231417cf5d81"
+          "checksum": "829980c86e8cd44b58f8d92451db3bbd"
         },
         {
           "work_id": "00389",
@@ -2507,9 +2319,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b2e191a17a02bc292edfd1bd9c963df6"
+          "checksum": "69b8315603dae278097f7a28aa0e5e51"
         },
         {
           "work_id": "00389",
@@ -2520,9 +2331,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c365060ce520e2e58cced1be812b04c9"
+          "checksum": "00bf2e9adde8b2334e25121e101f1e81"
         },
         {
           "work_id": "00389",
@@ -2533,9 +2343,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4445afcf406efabbbeac626360027663"
+          "checksum": "22463d99176c1a82ac787db3c9e3e826"
         },
         {
           "work_id": "00389",
@@ -2546,9 +2355,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "51e7a50fc8c882a1b7076583654b209c"
+          "checksum": "54b4bb08271256508e19dcd1515db0a7"
         },
         {
           "work_id": "00389",
@@ -2559,9 +2367,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c49aa01bd6a06b14d25bd1daa625db1f"
+          "checksum": "6b53f7607314131fd953116c64da8ca5"
         },
         {
           "work_id": "00389",
@@ -2572,9 +2379,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ca5fe62c57209a7881e3c09d24a4c3f8"
+          "checksum": "f06845b26e11fd288bd52d81ab577cb0"
         },
         {
           "work_id": "00389",
@@ -2585,9 +2391,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "25fea7d20177fa06a8fd6e31aa7b2cf2"
+          "checksum": "d45cad0338a93f9adf9585a54e878770"
         },
         {
           "work_id": "00389",
@@ -2598,9 +2403,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4f31942abc83f0866297ceb1e6d77fca"
+          "checksum": "6e622f2c3ee862cca4fddd4590b5e051"
         },
         {
           "work_id": "00389",
@@ -2611,9 +2415,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a2817a4f6976f8696d4042e1932db4c1"
+          "checksum": "9e0fb20e46d85a740c802abb290609ff"
         },
         {
           "work_id": "00389",
@@ -2624,9 +2427,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "40223f5d486714a2bd4466d9b3b276e9"
+          "checksum": "429e68cbb026cb7b15681687cb283c6f"
         },
         {
           "work_id": "00389",
@@ -2637,9 +2439,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "05a4d854f349dc4359e06e68397b7062"
+          "checksum": "91bb6bc834dabe7b3854b76a0f4753e4"
         },
         {
           "work_id": "00389",
@@ -2650,9 +2451,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f5c73e7ee94ef9a0dc77a7d68eed33fc"
+          "checksum": "6787bd025062faa610555302b20ff3f8"
         },
         {
           "work_id": "00389",
@@ -2663,9 +2463,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6fe80c4d7b2c0c1e106f5074d21edc5e"
+          "checksum": "8cbf01065fb0968d34ddf09b2d13db2d"
         },
         {
           "work_id": "00389",
@@ -2676,9 +2475,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dc3ffa791a23c5cfd61a090283fbf198"
+          "checksum": "07a8efd47d88c71f68450de974cbca3a"
         },
         {
           "work_id": "00389",
@@ -2689,9 +2487,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "42adb4719716774cfb5b5687b8c325a4"
+          "checksum": "a28f22aaea050dc3373e91e95d07d7df"
         },
         {
           "work_id": "00389",
@@ -2702,9 +2499,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ad69872c7f9fa2d98df46ccd3a9f101b"
+          "checksum": "3a0c5e95fa381bde7c9bac5550d5808a"
         },
         {
           "work_id": "00389",
@@ -2715,9 +2511,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cd85f060e155394d949113903ac66e4d"
+          "checksum": "2751b22236287ad741351ea66555208e"
         },
         {
           "work_id": "00389",
@@ -2728,9 +2523,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4243a88e5865f8fed176925d28a6e723"
+          "checksum": "b9cfdf542a9ebb173f9c50fb7403fef5"
         },
         {
           "work_id": "00389",
@@ -2741,9 +2535,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fd5e58b7bf5a51d483529f2c0f5abc8f"
+          "checksum": "7b8af2d6bf7a85492292615d0003694f"
         },
         {
           "work_id": "00389",
@@ -2754,9 +2547,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1349fd2dcb4e5148ce6821c05edc1eeb"
+          "checksum": "32edfaa5225b90d317e7375d8965eb42"
         },
         {
           "work_id": "00389",
@@ -2767,9 +2559,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "334a68bca1848d6d760c580a4c7478b9"
+          "checksum": "ee94f4ce5e475b8b4328b16132a4eab2"
         },
         {
           "work_id": "00389",
@@ -2780,9 +2571,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "908e25fd2e91b284359d25453547d566"
+          "checksum": "d1558414a48f40e34e5d894ff83ab408"
         },
         {
           "work_id": "00389",
@@ -2793,9 +2583,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d6683ca6b805d6c668755a69662ca7e1"
+          "checksum": "c34fb8867caf82293406b228bc6ed590"
         },
         {
           "work_id": "00389",
@@ -2806,9 +2595,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cbdf491856b56428bc76b51361602bf8"
+          "checksum": "f113dbef1ce801be21944b73eb8bd7ae"
         },
         {
           "work_id": "00389",
@@ -2819,9 +2607,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "60841814298dfce217c77adb7101d4ed"
+          "checksum": "32dfedb45637aeab5e5f99b9b2f9f9dd"
         },
         {
           "work_id": "00389",
@@ -2832,9 +2619,8 @@
           "project_subfolder": "photos",
           "width_px": 3008,
           "height_px": 2482,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aba9051218557e65f4403ba9c5362cd6"
+          "checksum": "0d942386885791df244c4add729456f7"
         },
         {
           "work_id": "00389",
@@ -2845,9 +2631,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e7524b03e9e905ee2b83efcccd5e6cef"
+          "checksum": "1755406bc67a4a9f38f841325dfcd895"
         },
         {
           "work_id": "00389",
@@ -2858,9 +2643,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b6f19f0f85a31b108d1e8f8824615873"
+          "checksum": "b20f81a3ad1607cca93b5c32e750ab52"
         },
         {
           "work_id": "00389",
@@ -2871,9 +2655,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "edd1b3de63c5258dcbab91850cdc6a00"
+          "checksum": "425c4a454fa42536d9897423bcf8d7f8"
         },
         {
           "work_id": "00389",
@@ -2884,9 +2667,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d3a2a419b7c5c3ef0e8e152a70b78830"
+          "checksum": "4e0f9e0c04dca534bd0d6b7a0064f470"
         },
         {
           "work_id": "00389",
@@ -2897,9 +2679,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3be79eaf2527ec7560956c7be5f6d57b"
+          "checksum": "f1ad208ab8d1dd9c1784d2ccf5efa1a6"
         },
         {
           "work_id": "00389",
@@ -2910,9 +2691,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "74c96a8091ef7a00551a0f482336629e"
+          "checksum": "92e28b6691677d08070b5399f25fe082"
         },
         {
           "work_id": "00389",
@@ -2923,9 +2703,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "322edbc2234badcffae4dbc0fafdc834"
+          "checksum": "2a8f0f5a37fde2a6e6c0a22bf3017a24"
         },
         {
           "work_id": "00389",
@@ -2936,9 +2715,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ef11a66a7ff395eda1d82b0aba5db1cd"
+          "checksum": "06c508b924f5126c74c9bae32a78ac72"
         },
         {
           "work_id": "00389",
@@ -2949,9 +2727,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3d4ea5fe6ba92d8d6072fea786f71538"
+          "checksum": "15bb8f767d5b28c1c27500607d34a783"
         },
         {
           "work_id": "00389",
@@ -2962,9 +2739,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d2f2b74b064d6fd73003ffaa886b505"
+          "checksum": "1faaee618510a426c5e38f20e6c19bf3"
         },
         {
           "work_id": "00389",
@@ -2975,9 +2751,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c6d9f4fbe3c2c9b0d005daa819da3ad6"
+          "checksum": "fb00b362b1f596e05d6a06f65f6ad2b7"
         },
         {
           "work_id": "00389",
@@ -2988,9 +2763,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cd6bd8d8f00f281d1c1f4d77413d3f14"
+          "checksum": "70bd6db175f6d883c7040349ad8afcec"
         },
         {
           "work_id": "00389",
@@ -3001,9 +2775,8 @@
           "project_subfolder": "photos",
           "width_px": 3578,
           "height_px": 2375,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f8b21c5446c2153a1afef98fcdc8224d"
+          "checksum": "dd6bd34d911c9c69aaec3d0b3e8d88e4"
         },
         {
           "work_id": "00389",
@@ -3014,9 +2787,8 @@
           "project_subfolder": "photos",
           "width_px": 2368,
           "height_px": 2368,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "37b97dbf80311780b45c1fce3648e58c"
+          "checksum": "12f7abbfebd0e6e7a218f2f1fa70a2c3"
         },
         {
           "work_id": "00389",
@@ -3027,9 +2799,8 @@
           "project_subfolder": "photos",
           "width_px": 2371,
           "height_px": 2371,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2f3ef1698b466ae2279c131d353bd9ff"
+          "checksum": "2ba063d2da29f445399593da6d0628c3"
         },
         {
           "work_id": "00389",
@@ -3040,9 +2811,8 @@
           "project_subfolder": "photos",
           "width_px": 3562,
           "height_px": 2365,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c19b0070f13732a8833f4d7b9f7bbd25"
+          "checksum": "33088d6153cdafdbb2f118996ff76afb"
         },
         {
           "work_id": "00389",
@@ -3053,9 +2823,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "75525fc0c883ca4104e33ffc46c87194"
+          "checksum": "b119e77251892dd3a877e91f6859fb7a"
         },
         {
           "work_id": "00389",
@@ -3066,9 +2835,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e1d81ff4deea0a338d85d5b420592db7"
+          "checksum": "8613572220b489c5417c0be336582c82"
         },
         {
           "work_id": "00389",
@@ -3079,9 +2847,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "20812ba35c73bf5dbe72da3d6a76f772"
+          "checksum": "ed699dcc848b8e19a70c2c3009c85d80"
         },
         {
           "work_id": "00389",
@@ -3092,9 +2859,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aa4f5b8ea178d563394d43a7d31f0858"
+          "checksum": "0a18ea696d6491d8fd4aab9af91e071c"
         },
         {
           "work_id": "00389",
@@ -3105,9 +2871,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "287ca20b6aa463cf80881cf438d62468"
+          "checksum": "45b98166c12adcf08c84c68b370bce97"
         },
         {
           "work_id": "00389",
@@ -3118,9 +2883,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4ab922a83e25d3501c663febeb9badaa"
+          "checksum": "b4cbd9e2d0ba9f94c74773eb8e871ab7"
         },
         {
           "work_id": "00389",
@@ -3131,9 +2895,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4b9ffe01cfc810909d3f689139a329b0"
+          "checksum": "35515b30f8ba2fd8963bc01bd258c077"
         },
         {
           "work_id": "00389",
@@ -3144,9 +2907,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e1ca2c584995054d0996c16a6418a1b7"
+          "checksum": "df0e99caec54ce3878bca462f1051bfe"
         },
         {
           "work_id": "00389",
@@ -3157,9 +2919,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ba252155205fa46034e9275991a670c2"
+          "checksum": "6c8f73892c91f578ee259c7eee7df2b6"
         },
         {
           "work_id": "00389",
@@ -3170,9 +2931,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "004029ef9f2330a862f67fa3e84d5eff"
+          "checksum": "574d611521a4b810360e4a5151f68ade"
         },
         {
           "work_id": "00389",
@@ -3183,9 +2943,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "967a13420504304ca6e4519d8f099c97"
+          "checksum": "9560d51f5e431363ec6bbdea59767162"
         },
         {
           "work_id": "00389",
@@ -3196,9 +2955,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89d51047a1e35c8470783953229ec5db"
+          "checksum": "af7eb674e26eaf31b6ddb65488a9438a"
         },
         {
           "work_id": "00389",
@@ -3209,9 +2967,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4b74d9b5fc86424722c580d2695b1087"
+          "checksum": "dac5edd9cd008635030f4c93ce6b534b"
         },
         {
           "work_id": "00389",
@@ -3222,9 +2979,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b0b6e1df2d021f6a9ce1030548f3fb1f"
+          "checksum": "905725749ca1ac32e56c95626d8f8d19"
         },
         {
           "work_id": "00389",
@@ -3235,9 +2991,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6634c81cd0b362867c9cfc714c9aef94"
+          "checksum": "43ca81847d4916ee86fe7dcbe6bb44ea"
         },
         {
           "work_id": "00389",
@@ -3248,9 +3003,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1098ffc11fe50520246fe5315f09146b"
+          "checksum": "94abc1f88de197035648f495303c486a"
         },
         {
           "work_id": "00389",
@@ -3261,9 +3015,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "194017287372c7109aa6284aed271cab"
+          "checksum": "098797e47175a89105ba0f31c34fe28c"
         },
         {
           "work_id": "00389",
@@ -3274,9 +3027,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "64edd36dd890ba12b385a4e0b9c44d1c"
+          "checksum": "04bc980d6fa4b5b1ef79478e6b0dafb4"
         },
         {
           "work_id": "00389",
@@ -3287,9 +3039,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ee81c21d9173e0228cba03f8d224961a"
+          "checksum": "03d70b1b765ada6b8361fd72c7f1eff7"
         },
         {
           "work_id": "00389",
@@ -3300,9 +3051,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4c9d6fd6f5984e1e5789d537a7547ce0"
+          "checksum": "196b196933295bf1e317f5fab5a3926d"
         },
         {
           "work_id": "00389",
@@ -3313,9 +3063,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "baa81c7029f791e6e77706a832329afd"
+          "checksum": "d4360d0e20af41a3ed690ce420de841d"
         },
         {
           "work_id": "00389",
@@ -3326,9 +3075,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5e08d5c3809de9c7bc2923d84bc53f4c"
+          "checksum": "02c226c42161dc2431aad7cb489103fa"
         },
         {
           "work_id": "00389",
@@ -3339,9 +3087,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "df702df304b60c1efffe7c02e9ce02c0"
+          "checksum": "6edb6fa9e7dc68c60534845e4c09c557"
         },
         {
           "work_id": "00389",
@@ -3352,9 +3099,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3dcbc0ab688098ab232a135647ca449b"
+          "checksum": "d0dcc84c4a96504ed8d2a27e40509735"
         },
         {
           "work_id": "00389",
@@ -3365,9 +3111,8 @@
           "project_subfolder": "photos",
           "width_px": 640,
           "height_px": 480,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "766d35154ebab1fcc7f875a3619f9aba"
+          "checksum": "285f83134b3d9d50a7758b84c0721132"
         },
         {
           "work_id": "00389",
@@ -3378,9 +3123,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2489bda2f43025fe479d1bc8ee59fd48"
+          "checksum": "1c16d6a26cf0ce40cbdf9283424aed40"
         },
         {
           "work_id": "00389",
@@ -3391,9 +3135,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5a1a1fbc57ebdc628e4a88be03d97d29"
+          "checksum": "a975c6fe618fe789d0307135a8f59446"
         },
         {
           "work_id": "00389",
@@ -3404,9 +3147,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f95b3dca4c070fc7bca0d494898b49ee"
+          "checksum": "8585a2125aac19b0f64d78ccd097231b"
         },
         {
           "work_id": "00389",
@@ -3417,9 +3159,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a97ebc2b45954fb83c352a6babf89c88"
+          "checksum": "45affa06131a66876d85087836cbd20b"
         },
         {
           "work_id": "00389",
@@ -3430,9 +3171,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0403ab99f3d9621fa9d106da6813fb5a"
+          "checksum": "b1d5035e9f5b867cdb53fcdce3c39b1d"
         },
         {
           "work_id": "00389",
@@ -3443,9 +3183,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f9dcd47030fa1e68e8806423778d4022"
+          "checksum": "73065bf2b4f0f61f446848d2ebb125a3"
         },
         {
           "work_id": "00389",
@@ -3456,9 +3195,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1764db54753ad5cfe6e59a5d1b94712f"
+          "checksum": "912f751cdd74bf2e63663ab6ffc5dfab"
         },
         {
           "work_id": "00389",
@@ -3469,9 +3207,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "11edfd6d39ecc7bea4a0a08b64e7f88a"
+          "checksum": "c80cee43950adb448a61653d3cf7987a"
         },
         {
           "work_id": "00389",
@@ -3482,9 +3219,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f4a04287aff16863b71c900cc4cc5855"
+          "checksum": "76597633a3048be641157e2e15f7cf2c"
         },
         {
           "work_id": "00389",
@@ -3495,9 +3231,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9f7cebb8004b0c5966c2df60672f4f20"
+          "checksum": "1a3a86a80230c18e2eadcd08b897d812"
         },
         {
           "work_id": "00389",
@@ -3508,9 +3243,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a181d15201d56abdc705fce2e5bf4cbc"
+          "checksum": "ba6316bea737953f436a8aee54706f41"
         },
         {
           "work_id": "00389",
@@ -3521,9 +3255,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b32d093b9dcd68bda855adaffc340cac"
+          "checksum": "7fcfdb50d6503c72cb4a8cff970385cd"
         },
         {
           "work_id": "00389",
@@ -3534,9 +3267,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5c92a8a362c82b9c6348931f603b7e12"
+          "checksum": "a8030c13f16907d2241bc3705b52f043"
         },
         {
           "work_id": "00389",
@@ -3547,9 +3279,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fb92ed840d416fc1659dd3077aa7f0bb"
+          "checksum": "52b17198f1df1df9eddfec78d0d3e50c"
         },
         {
           "work_id": "00389",
@@ -3560,9 +3291,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1e448abc1cb1a4a3510227ec58e803c"
+          "checksum": "b599552bc6329581408f7bd2a19d115d"
         },
         {
           "work_id": "00389",
@@ -3573,9 +3303,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a3775461710af74028e5002f3e56cede"
+          "checksum": "1cdec286ac77633d8872a5e84d8261db"
         },
         {
           "work_id": "00389",
@@ -3586,9 +3315,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4377df5d2ffaa43b38876cac13ea4282"
+          "checksum": "d417b39f4c32c49b7bfbe224dd1d552d"
         },
         {
           "work_id": "00389",
@@ -3599,9 +3327,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "488cb05dc9a08229cee8f3a2e1ea36c5"
+          "checksum": "4d02ebb97f5b71e48292ad0bd61b5868"
         },
         {
           "work_id": "00389",
@@ -3612,9 +3339,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a7fb5b621d20cc695005159c1fd83232"
+          "checksum": "2d8008d333dcb8cc001a9da5307609f9"
         },
         {
           "work_id": "00389",
@@ -3625,9 +3351,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bb40f6d84aa93022a7c485083aefd437"
+          "checksum": "d3323ddcb0148ab8c4573712348abe2a"
         },
         {
           "work_id": "00389",
@@ -3638,9 +3363,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "349a10329f1cfa5ec175c2b46dc372b6"
+          "checksum": "bc56b91a9087020d18df38d11c12138d"
         },
         {
           "work_id": "00389",
@@ -3651,9 +3375,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e406c223178551eb957ce0d1468af4f8"
+          "checksum": "bd7bcce3c4c9fd39fe5cc6b12c560ea7"
         },
         {
           "work_id": "00389",
@@ -3664,9 +3387,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "87f3c52d4aa917f55ed668eddff0fa1a"
+          "checksum": "5f9ce78a0c53ff19bdbe457dc4a637d9"
         },
         {
           "work_id": "00389",
@@ -3677,9 +3399,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "191c08c09e7d9fee24ba3a9ae8762bed"
+          "checksum": "4bd33fcc4d352a5595d7bfad099ff9c0"
         },
         {
           "work_id": "00389",
@@ -3690,9 +3411,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bf249ac7ab5bc98f26cf9c52edb0c39c"
+          "checksum": "d3205b2767dfad1aa5204a1605d14c1f"
         },
         {
           "work_id": "00389",
@@ -3703,9 +3423,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "408d4448fab19f09dec16bd86a905d9b"
+          "checksum": "39de2361ae0e1e6620d24c7137a8c457"
         },
         {
           "work_id": "00389",
@@ -3716,9 +3435,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5b07aec06bc8e8fac62dcbf8059699a5"
+          "checksum": "f69c72a10ff746ecbdc8bc3174e41033"
         },
         {
           "work_id": "00389",
@@ -3729,9 +3447,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89e86cad70c32808fa933f359139883c"
+          "checksum": "05142cb7add405a48fb6a54e6c81547e"
         },
         {
           "work_id": "00389",
@@ -3742,9 +3459,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5d8772f4571ec4c512aecf7026954c78"
+          "checksum": "1306679d29b252c7b3eadb5f57eb4c84"
         },
         {
           "work_id": "00389",
@@ -3755,9 +3471,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "25f8cb271cf0b25239b50008020f56ec"
+          "checksum": "c3e8baaaa832f0d22743e5fe36ab4336"
         },
         {
           "work_id": "00389",
@@ -3768,9 +3483,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f3a8e0a59fb3d12fc1cf44a5194bbc69"
+          "checksum": "5b5a42eb2ccd73f7f1468ef04e98d96f"
         },
         {
           "work_id": "00389",
@@ -3781,9 +3495,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4a1144bdaea32f350667b1adffba5549"
+          "checksum": "079911998ee50b387ca1842ba344281f"
         },
         {
           "work_id": "00389",
@@ -3794,9 +3507,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "20ef6b7c25625caf3f79189ee4b75f9f"
+          "checksum": "8cf7c46877f4cbb21a4c9d477da29c8b"
         },
         {
           "work_id": "00389",
@@ -3807,9 +3519,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fd0664f40a7242e6809f5d4cad09c9f5"
+          "checksum": "6ea378b8921d560ad3e1851bf8cff3b4"
         },
         {
           "work_id": "00389",
@@ -3820,9 +3531,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "46291d32d58a8496f33afcbdd05914db"
+          "checksum": "e50d5d8d68d20a23825059293d5e7504"
         },
         {
           "work_id": "00389",
@@ -3833,9 +3543,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9773256609ffc7508f4bde412385084e"
+          "checksum": "354fc456c06dc6f9be98cd02d11033ae"
         },
         {
           "work_id": "00389",
@@ -3846,9 +3555,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4adf2e68fa15a81356d393557b23332d"
+          "checksum": "118a6922f50ff020700d9b44bef390ec"
         },
         {
           "work_id": "00389",
@@ -3859,9 +3567,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "939b495712203987e35a0c9944f46074"
+          "checksum": "2fa5eedfa9d769e48622472d69e4462b"
         },
         {
           "work_id": "00389",
@@ -3872,9 +3579,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a696fef7c654a6d6c6aa6fa08bb1092e"
+          "checksum": "1acc9c01bc10c72f5c48bfaad3b78408"
         },
         {
           "work_id": "00389",
@@ -3885,9 +3591,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b9d4097fcf8f22d61a9c26f52b321cc"
+          "checksum": "7d1c76633a5ed929a20bf1f98ccc3b93"
         },
         {
           "work_id": "00389",
@@ -3898,9 +3603,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ffd159a7af6e369edc5ddb07b1838fd6"
+          "checksum": "1be25a14f3f4ad12d285b4b334cff0e5"
         },
         {
           "work_id": "00389",
@@ -3911,9 +3615,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "61407e5936bd7d46aa822507b64e707d"
+          "checksum": "913195c830bc016b86583a74bc6ab4b0"
         },
         {
           "work_id": "00389",
@@ -3924,9 +3627,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "06a5eaa2e02df9b4130303c07df4399d"
+          "checksum": "8e33ed740dbced55ad97aef555a003d5"
         },
         {
           "work_id": "00389",
@@ -3937,9 +3639,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6303621f935874ea844b0364471d7259"
+          "checksum": "390c588b5a15e5b7914cc3e22111b8b8"
         },
         {
           "work_id": "00389",
@@ -3950,9 +3651,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a6db4fd8d32954a3aabbed3cdacc5bbe"
+          "checksum": "d81c015c690dc8f501524e857ccc1cc6"
         },
         {
           "work_id": "00389",
@@ -3963,9 +3663,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1131a728eb8c8a5bd534a805b021a664"
+          "checksum": "cbb6db34a2be9d8d72c63b95d172ca87"
         },
         {
           "work_id": "00389",
@@ -3976,9 +3675,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5835a3e297ae3c4431e2fc28a471be83"
+          "checksum": "cb2d588a75b64a66198e51f65b265c5f"
         },
         {
           "work_id": "00389",
@@ -3989,9 +3687,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9750e4a67ac1a187c894f7e5105a8bc1"
+          "checksum": "bbf689159e4ccecf9dd98d1032c2087c"
         },
         {
           "work_id": "00389",
@@ -4002,9 +3699,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "96b13244eba358e018b07a7c31ac7a8b"
+          "checksum": "4cd1720d671a1f6c7ccda09174a879c9"
         },
         {
           "work_id": "00389",
@@ -4015,9 +3711,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "00100cd11a476f0eada53292d6baebb2"
+          "checksum": "0fb08b7f4fd58af7d13a69689c242aa8"
         },
         {
           "work_id": "00389",
@@ -4028,9 +3723,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c3afbe3593fe25dc92c1ad1a27117461"
+          "checksum": "bd579d1a1b3ceee4731207a8a7fc4003"
         },
         {
           "work_id": "00389",
@@ -4041,9 +3735,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "702c4d5718ae9d3128e51e1b4aa76d09"
+          "checksum": "1fd8141682530fb4c80a27c4c539c1ca"
         },
         {
           "work_id": "00389",
@@ -4054,9 +3747,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fbe7ac17a5a0000f5ed90767ecd5c6bf"
+          "checksum": "6da963c9f75dafb8420e35392f13c163"
         },
         {
           "work_id": "00389",
@@ -4067,9 +3759,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "19311ba0ae9c221ff79efdde4152cedf"
+          "checksum": "960ab7e510bfd6e9a10328a934e302b5"
         },
         {
           "work_id": "00389",
@@ -4080,9 +3771,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "42ea79414e03a646366d1845940d5276"
+          "checksum": "7d5d6bfce9715d59ecdc0f0a2cdf0a61"
         },
         {
           "work_id": "00389",
@@ -4093,9 +3783,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6370793bde666dd35380b5f4e524239e"
+          "checksum": "8eb84c80f6568deb4a5ffb887a1226fa"
         },
         {
           "work_id": "00389",
@@ -4106,9 +3795,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cd0f2142190bf21d2f4f44cb7edbe8c6"
+          "checksum": "07a22918d404be89f32aebb402043cba"
         },
         {
           "work_id": "00389",
@@ -4119,9 +3807,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b5f2c24fc04535c4c764d54b2c34c46"
+          "checksum": "eb99710df711b2834660e6597291b80d"
         },
         {
           "work_id": "00389",
@@ -4132,9 +3819,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "50aa69f5c01377530d6ee208b6f2b5a6"
+          "checksum": "5a855720f06118a82b63ccb8ae1e4106"
         },
         {
           "work_id": "00389",
@@ -4145,9 +3831,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "adfd18481d278ec9dfd18dde2df6bc30"
+          "checksum": "77c1c4476a679bc17872d1e278febb43"
         },
         {
           "work_id": "00389",
@@ -4158,9 +3843,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "637b05c529bfc85fc6f92774c43af339"
+          "checksum": "d1d677e3354f24af4d37f14b7a5de1fe"
         },
         {
           "work_id": "00389",
@@ -4171,9 +3855,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e9901c607cc8cae6db084f07b9f03f66"
+          "checksum": "71fa74024c7af0f3da3b38b1d3de8028"
         },
         {
           "work_id": "00389",
@@ -4184,9 +3867,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c88c4f71beaac70a2fe291fc7a29de43"
+          "checksum": "ad56157256fddb26ceef9efa9797af54"
         },
         {
           "work_id": "00389",
@@ -4197,9 +3879,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b73355b895e459f3e5557588ed5ab0f8"
+          "checksum": "d9188b0c5a87b5c66df2ca932247c545"
         },
         {
           "work_id": "00389",
@@ -4210,9 +3891,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "78c242a293f7da1021a653e49b8f6e96"
+          "checksum": "ba53a60ab8ea162610c42f12e02c69cf"
         },
         {
           "work_id": "00389",
@@ -4223,9 +3903,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ebbc7b21e46facb5a46973e5095661ba"
+          "checksum": "f0cae5ca081af8173ad2e130487e2087"
         },
         {
           "work_id": "00389",
@@ -4236,9 +3915,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "793b1909966eef5f313ab5a21e409ad5"
+          "checksum": "caa5c685ed96bc609e09cedeaa05aba1"
         },
         {
           "work_id": "00389",
@@ -4249,9 +3927,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "441964feb5ae7eb64e0084c8c7c5a59d"
+          "checksum": "01106fe69a5beb25b55c8f56d9b9da0a"
         },
         {
           "work_id": "00389",
@@ -4262,9 +3939,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e494d2e865b370d0b1b6666e87579647"
+          "checksum": "9bf68c2a620a246cf6c40331fc0c81fc"
         },
         {
           "work_id": "00389",
@@ -4275,9 +3951,8 @@
           "project_subfolder": "photos",
           "width_px": 1536,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3b5d2ec32625562c0a799f0d8de31406"
+          "checksum": "70ea1215e7793e23ce802b91a58483f6"
         },
         {
           "work_id": "00389",
@@ -4288,9 +3963,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9f54ff93cde351eafc351955b528ac05"
+          "checksum": "44c79c7ac90e941fd6b19b8020a25c60"
         },
         {
           "work_id": "00389",
@@ -4301,9 +3975,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "010f5194f9330a2cca39395df0389e9e"
+          "checksum": "f230c7fa5e63915adad8f3332536a372"
         },
         {
           "work_id": "00389",
@@ -4314,9 +3987,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3300fddff47b7fc973e0e7e0a3a1e86e"
+          "checksum": "dad426fb3558c2f74cc67d362ac60637"
         },
         {
           "work_id": "00389",
@@ -4327,9 +3999,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b4ae0c9a0536ce6301ce8df80bb278c4"
+          "checksum": "7f800b546f55041ac494cb248f23b947"
         },
         {
           "work_id": "00389",
@@ -4340,9 +4011,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fc61f5287f609278b579a384924cfd1f"
+          "checksum": "bd711ade48e0d968107ed09bd4c02169"
         },
         {
           "work_id": "00389",
@@ -4353,9 +4023,8 @@
           "project_subfolder": "photos",
           "width_px": 2048,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5346b03843b5d0e19c4e943e74f2ce90"
+          "checksum": "60026c00ec6f48268928dc55c173b660"
         },
         {
           "work_id": "00389",
@@ -4366,9 +4035,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fa09aafe59c75a72c756ba0fd1ad4978"
+          "checksum": "be04e023157fd9e25415bdbfeef43602"
         },
         {
           "work_id": "00389",
@@ -4379,9 +4047,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a81281d54f23fd30110d014bf4966dd4"
+          "checksum": "5ee5b848cf9c165aaa996c7f1053ce4f"
         },
         {
           "work_id": "00389",
@@ -4392,9 +4059,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "131a3fc9982bdca755f553b36300af89"
+          "checksum": "c7581b9efc4c1667021284317f7a9890"
         },
         {
           "work_id": "00389",
@@ -4405,9 +4071,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9046625df14a9ae6a71a42e321ac88ea"
+          "checksum": "8d49670dd29093d312c173f636dc54ae"
         },
         {
           "work_id": "00389",
@@ -4418,9 +4083,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c7225bee1df50a8e032ed59b22b1c45d"
+          "checksum": "dc9773121e5f3735c2b46c0f77d3ebb4"
         },
         {
           "work_id": "00389",
@@ -4431,9 +4095,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6c5b958272ebf14fc86c7bb3530b1375"
+          "checksum": "dba158bafe3e960be5817fe07bd287d8"
         },
         {
           "work_id": "00389",
@@ -4444,9 +4107,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2ce17f783dd92a14aa4e4f8612854b7a"
+          "checksum": "1c4942d0d7cd30d5e75627e202b76a5a"
         },
         {
           "work_id": "00389",
@@ -4457,9 +4119,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "98334e6689d15a6d0f1c5cac2167c289"
+          "checksum": "437be63df84c5d0d203ed9db6c47d4a4"
         },
         {
           "work_id": "00389",
@@ -4470,9 +4131,8 @@
           "project_subfolder": "photos",
           "width_px": 3424,
           "height_px": 3424,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6829e9bbbeb91690de22236d0de8c03b"
+          "checksum": "1e7ac8179b6963d2a61b7bdbdce3c915"
         },
         {
           "work_id": "00389",
@@ -4483,9 +4143,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "47f1a54ceba5fa943484b99a4d7e586d"
+          "checksum": "db512d4c72bd5d4203dfa5485b5eccbe"
         },
         {
           "work_id": "00389",
@@ -4496,9 +4155,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bbf3d228f10f9a35b6a9fdc68414d914"
+          "checksum": "4f582135070f8b4f4b4c8f7371363c73"
         },
         {
           "work_id": "00389",
@@ -4509,9 +4167,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1bb997912da2f8f98c8f17e3e8cd8ba0"
+          "checksum": "1cc34c9bd5afe42f0e12e0a91258e495"
         },
         {
           "work_id": "00389",
@@ -4522,9 +4179,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "603912908181e496a027a71d2de0ed23"
+          "checksum": "0fd7799e791ddc9c0851364bf29c8040"
         },
         {
           "work_id": "00389",
@@ -4535,9 +4191,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bafc2458ebb1a9255c27e7b855188873"
+          "checksum": "37aa5643404ac5ffc43d10a9721d686b"
         },
         {
           "work_id": "00389",
@@ -4548,9 +4203,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4be0c311b9a41a4cda03fc7b5ede330a"
+          "checksum": "607599a64b7e6a4ef36a1254acdb27f0"
         },
         {
           "work_id": "00389",
@@ -4561,9 +4215,8 @@
           "project_subfolder": "photos",
           "width_px": 2520,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ccc99662b8620fea7fff0f47452a9245"
+          "checksum": "f4bfc95a40d2fe67156fa247479b9dbb"
         },
         {
           "work_id": "00389",
@@ -4574,9 +4227,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cb605860b509160149f46d2525cf8931"
+          "checksum": "14f38baae823f3ce6fd71e0fe4bff745"
         },
         {
           "work_id": "00389",
@@ -4587,9 +4239,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "82b77ffda351a2af21116594a55dad7c"
+          "checksum": "ab29345df7dc63c7dc592c2839675054"
         },
         {
           "work_id": "00389",
@@ -4600,9 +4251,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d0d5d3d1d10642ed8c145a622c57c673"
+          "checksum": "daebed08f9ee293c7777348339baff6e"
         },
         {
           "work_id": "00389",
@@ -4613,9 +4263,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2bc193f50437e72e32d4e6f9cad9ab08"
+          "checksum": "c67655623b6afeb2fe650ea25a8a6ede"
         },
         {
           "work_id": "00389",
@@ -4626,9 +4275,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1c57f647a25f33531b3a40bf42ce37b4"
+          "checksum": "c70bcc35c2924f5fe6de7d9764d49a51"
         },
         {
           "work_id": "00389",
@@ -4639,9 +4287,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0964947123d3d81dba58f9de580d2903"
+          "checksum": "0dc1655f2cfb784f7d25fff0b443406b"
         },
         {
           "work_id": "00389",
@@ -4652,9 +4299,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b9fc2cb20cd0bf673571d40a7280acad"
+          "checksum": "c0651fdff7cbf1c303e4dbdb20690ae4"
         },
         {
           "work_id": "00389",
@@ -4665,9 +4311,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "284beeece836b469b4f3e59efeb81d23"
+          "checksum": "d92eb820b3bab9bc4acdd83a7eb0d563"
         },
         {
           "work_id": "00389",
@@ -4678,9 +4323,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1fb17977fb4fbbdb472a46c5312290b6"
+          "checksum": "afd806d42247bd6c4f3cdd1c410a05ad"
         },
         {
           "work_id": "00389",
@@ -4691,9 +4335,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "82f450a0ebc8815186236d807a2ab4b6"
+          "checksum": "68b31636aae726c101519140c325cbdf"
         },
         {
           "work_id": "00389",
@@ -4704,9 +4347,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0f413d3250e97bd59d2692f116b6a43d"
+          "checksum": "c7a02f73cef0247eb40fbd30aa5b30a4"
         },
         {
           "work_id": "00389",
@@ -4717,9 +4359,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ac8cc0450e09365c42007971666765e"
+          "checksum": "ea08baca87c0750cb652d283b2796ec6"
         },
         {
           "work_id": "00389",
@@ -4730,9 +4371,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "727f99f5aff90ef5d07256d81430a0eb"
+          "checksum": "a8224bc4721903b3981a976914cd6c00"
         },
         {
           "work_id": "00389",
@@ -4743,9 +4383,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4d0083b6ab86cc0d42032dd530c15bbf"
+          "checksum": "f1b5e353850383323fce48c8a2cd6a9c"
         },
         {
           "work_id": "00389",
@@ -4756,9 +4395,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65e7f20c0daf75b70ec87214f2551ccc"
+          "checksum": "4bc2adf43311d6a8c306011fe71243ff"
         },
         {
           "work_id": "00389",
@@ -4769,9 +4407,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0864241cc9dcd17ada71599d662d5aa5"
+          "checksum": "7271b39e3d7d720f82a2333e52973c7d"
         },
         {
           "work_id": "00389",
@@ -4782,9 +4419,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "042d001961b11c804ce4ecb4279d5ebc"
+          "checksum": "f5579ed83524ddea4a52510328959ffc"
         },
         {
           "work_id": "00389",
@@ -4795,9 +4431,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "26e17df991fc901202ce2ee3427c27ba"
+          "checksum": "12d84baf7ddf4222f73edca08f56a4ad"
         },
         {
           "work_id": "00389",
@@ -4808,9 +4443,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7a074504d4c15faa8b1e0c8d7f31405b"
+          "checksum": "680943e8c938cc4b1bea78454ea4bc7f"
         },
         {
           "work_id": "00389",
@@ -4821,9 +4455,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7cfe4dc9beaf063d6da07356a9d074e0"
+          "checksum": "acd0fce18c0c4b028eb7e0e1b5b7cb40"
         },
         {
           "work_id": "00389",
@@ -4834,9 +4467,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "03ec2e78f64de303b31fe250f0151034"
+          "checksum": "e245dddfa200677ea53d32ca52005281"
         },
         {
           "work_id": "00389",
@@ -4847,9 +4479,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6cc6c7de9e01d4e0292e421589c78413"
+          "checksum": "830efc7c7a98fedbdb23cfce837c7ffc"
         },
         {
           "work_id": "00389",
@@ -4860,9 +4491,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3c0c0d606128fd3c310da6158c23a4e5"
+          "checksum": "bfc7bc3bfbc2fab1c612e24ad65d67d7"
         },
         {
           "work_id": "00389",
@@ -4873,9 +4503,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ca7d8ab49b5cc254c2a7beb74f967176"
+          "checksum": "38c339cac15d954f0e0f1abb6eb3fc8f"
         },
         {
           "work_id": "00389",
@@ -4886,9 +4515,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1d90ab7407eaaf5fe7c2d59b17934046"
+          "checksum": "e2ff6ae5f41b608c70a43bcf3a9d0a49"
         },
         {
           "work_id": "00389",
@@ -4899,9 +4527,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "533e95010399651520fa0d56a7d7378b"
+          "checksum": "dea13cc3e59f0ad845ef21ba7b0df4f1"
         },
         {
           "work_id": "00389",
@@ -4912,9 +4539,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "55b00f295d8275ef9a096b215607e2b2"
+          "checksum": "e79e010b4e950ff5f8af1eaae1853daa"
         },
         {
           "work_id": "00389",
@@ -4925,9 +4551,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f4bc2f304460e385e2b93094abdfee80"
+          "checksum": "68d1efbc677f39c97f38a09b15839c42"
         },
         {
           "work_id": "00389",
@@ -4938,9 +4563,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "72d3a9102f834f23d1c6f8f7d961919b"
+          "checksum": "707d83d9e0dd9c5f071a5a6e078fa231"
         },
         {
           "work_id": "00389",
@@ -4951,9 +4575,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3c7a6a87086763b76a74d39ffce440e3"
+          "checksum": "14617fc7f70c292c7ddb834c8a8f62f7"
         },
         {
           "work_id": "00389",
@@ -4964,9 +4587,8 @@
           "project_subfolder": "photos",
           "width_px": 4480,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65d79f0300cdbf8db17d2a75ab192df5"
+          "checksum": "de7b5a0d50fcd730451f2a598e20d1e1"
         },
         {
           "work_id": "00389",
@@ -4977,9 +4599,8 @@
           "project_subfolder": "photos",
           "width_px": 3264,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b56a2680993cfcfc2c05ff6c2eb730bf"
+          "checksum": "847694e39752acc17dfcd9320be3e7d3"
         },
         {
           "work_id": "00389",
@@ -4990,9 +4611,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "042a17dae8ec0585ae14cdb49c4def4f"
+          "checksum": "b7e09e368858363bf492c846aaca94a1"
         },
         {
           "work_id": "00389",
@@ -5003,9 +4623,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "86b6c68d508828c8f4141bfbd03e5e2b"
+          "checksum": "97dcd3f846f58ed99878476678d97db3"
         },
         {
           "work_id": "00389",
@@ -5016,9 +4635,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7020d3dd0effb2dae1bfb7077fe46ddb"
+          "checksum": "b26de730a8c6ee3374cbc136fc34055e"
         },
         {
           "work_id": "00389",
@@ -5029,9 +4647,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1e3c50b4de7ba7a5ef604ac9ac9e5e9a"
+          "checksum": "a7310c1e6fa29e27845c4658669a5c9c"
         },
         {
           "work_id": "00389",
@@ -5042,9 +4659,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d5e84daa61025cf1dd21aaa3cf3fdb80"
+          "checksum": "707d889a9dc971368035e2e55b04b237"
         },
         {
           "work_id": "00389",
@@ -5055,9 +4671,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e312c5edea87482ec019ad04bbea98f9"
+          "checksum": "2cdbc7fdde64f3aca6fe8af1eb17fc6d"
         },
         {
           "work_id": "00389",
@@ -5068,9 +4683,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f4881a3b9809ff1fa4f3bef82d4cc3c8"
+          "checksum": "c9663ff8a9e91f7bb092a1568a78c0f0"
         },
         {
           "work_id": "00389",
@@ -5081,9 +4695,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5a2e73ade991669d554524cb882d2986"
+          "checksum": "6303d32ae104397dc3cfefaf4486acb7"
         },
         {
           "work_id": "00389",
@@ -5094,9 +4707,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4aa0624b51242b9295a1bd65432edbf7"
+          "checksum": "a09413a0f0f1e31d9dd7fdde2e706c23"
         },
         {
           "work_id": "00389",
@@ -5107,9 +4719,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 2448,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1ef50e1127e28405b14785a55f982149"
+          "checksum": "28cd0bf8ca2f7025a38f9cc282336b42"
         },
         {
           "work_id": "00389",
@@ -5120,9 +4731,8 @@
           "project_subfolder": "photos",
           "width_px": 2180,
           "height_px": 2180,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "56a590dcdaf68472bb81ffb80bf1ecea"
+          "checksum": "b94fe3d663df166e411980668a3ac2e6"
         },
         {
           "work_id": "00389",
@@ -5133,9 +4743,8 @@
           "project_subfolder": "photos",
           "width_px": 2520,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2789f1a81e1635859f1df98360342826"
+          "checksum": "4f95cb0540a44f80f8af29ec867cebb9"
         },
         {
           "work_id": "00389",
@@ -5146,9 +4755,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0068e6c112c34b8fa810063dcd9035ce"
+          "checksum": "ae7df2fe3843b599b298f821d7dcff95"
         },
         {
           "work_id": "00389",
@@ -5159,9 +4767,8 @@
           "project_subfolder": "photos",
           "width_px": 2520,
           "height_px": 2520,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "95cf04d557db9f1de682beb62f4c3cb6"
+          "checksum": "6f9522d32647bc80b221747a801ade34"
         },
         {
           "work_id": "00389",
@@ -5172,9 +4779,8 @@
           "project_subfolder": "photos",
           "width_px": 2448,
           "height_px": 3264,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cecdaafe1aa5f956d48888b3f4fac742"
+          "checksum": "b869eca96e18b8630bd15a832c2d2dff"
         },
         {
           "work_id": "00389",
@@ -5185,9 +4791,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "492ae8af542d88a46abf4184cdeb396a"
+          "checksum": "7d366cb8a51b3a69df351340c255f764"
         },
         {
           "work_id": "00389",
@@ -5198,9 +4803,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3d30b64b7f638e95a84f3ee54b0862d5"
+          "checksum": "f882b50a9d135a263e10d6f6402f6456"
         },
         {
           "work_id": "00389",
@@ -5211,9 +4815,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b2849552c3a5d722a692d36565550439"
+          "checksum": "7898a7fbf9b5b130748f3686a9d7e897"
         },
         {
           "work_id": "00389",
@@ -5224,9 +4827,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e2c0355c5ba4ca649ee532e63b8a784d"
+          "checksum": "b1596b269ffe296d8f45587d5d2c69f9"
         },
         {
           "work_id": "00389",
@@ -5237,9 +4839,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7619075c0a508ee0d53d48b66756be7e"
+          "checksum": "789376d0dbff7fbf8130d9a08e12c116"
         },
         {
           "work_id": "00389",
@@ -5250,9 +4851,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e82ee56222f46c1ab92cf5df5c139cc7"
+          "checksum": "e01df3ec65506330abc641c9756f64c0"
         },
         {
           "work_id": "00389",
@@ -5263,9 +4863,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aee7c05056bfdfa502ad4e8e84b06935"
+          "checksum": "edd0785fb925ee8cbe07286d04bdc010"
         },
         {
           "work_id": "00389",
@@ -5276,9 +4875,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "230037f3b5705289ca4e99cb5168ee41"
+          "checksum": "bdb63a120b76323ad2cc0c27e49894b2"
         },
         {
           "work_id": "00389",
@@ -5289,9 +4887,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ea14b3c942b1d21efc28c769c5b125ee"
+          "checksum": "3716627711f24230ac95459cdb836c75"
         },
         {
           "work_id": "00389",
@@ -5302,9 +4899,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2c3cf75c299ddcaacfeaf50467a112e2"
+          "checksum": "d319b37653af791e7e22e3c15b5960b1"
         },
         {
           "work_id": "00389",
@@ -5315,9 +4911,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "432774551e70a5d72f8d3c930dc9ac5c"
+          "checksum": "cf69ea47f36af7b25d01c787222bac44"
         },
         {
           "work_id": "00389",
@@ -5328,9 +4923,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "10eaef3b75b443e849458ffe79dec333"
+          "checksum": "3a4d07e3aa1362041e158fe4c0e857c7"
         },
         {
           "work_id": "00389",
@@ -5341,9 +4935,8 @@
           "project_subfolder": "photos",
           "width_px": 3088,
           "height_px": 3088,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0b788895711c7b1da3effa9feef5e895"
+          "checksum": "f1eb8b875fecd92428c9064e12813f71"
         },
         {
           "work_id": "00389",
@@ -5354,9 +4947,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "54662170dddbacd6656caf4ca8d5d462"
+          "checksum": "4df67700ae9cec3736e58995d413db58"
         },
         {
           "work_id": "00389",
@@ -5367,9 +4959,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2c7b014d6196ffeaf7f6a9f77836ea6c"
+          "checksum": "4ccbde18629867048a7f1ff5096bfedb"
         },
         {
           "work_id": "00389",
@@ -5380,9 +4971,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6a01ddc57780ce1516ce65642a23871a"
+          "checksum": "e8f6a92560b10747972c906521c28620"
         },
         {
           "work_id": "00389",
@@ -5393,9 +4983,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "82cf35c341c810402af108306fb7f9f9"
+          "checksum": "82ccafada2c40aad13e1104577cde732"
         },
         {
           "work_id": "00389",
@@ -5406,9 +4995,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "659aeebfd5aee7cd2965c73c9eac120f"
+          "checksum": "58435eac1daf33ada1ae89d92a398e52"
         },
         {
           "work_id": "00389",
@@ -5419,9 +5007,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1033b9d579829fe6996a31527e8dd409"
+          "checksum": "1c129d55db19bbb24f2fe058f10a1546"
         },
         {
           "work_id": "00389",
@@ -5432,9 +5019,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c4dcbda0aaf85898c50b81a2e868d1aa"
+          "checksum": "2bb203e9fc1b0ab4b63c9d336dad3c26"
         },
         {
           "work_id": "00389",
@@ -5445,9 +5031,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2489f183ea76cda244c9ffb5db50bca9"
+          "checksum": "22147d7ce8a8731d1d09edc1bed13f41"
         },
         {
           "work_id": "00389",
@@ -5458,9 +5043,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ffd9a2df986e5da101ffb493efdad9d8"
+          "checksum": "102a04fe65925b1bc1e07c35fc2f3917"
         },
         {
           "work_id": "00389",
@@ -5471,9 +5055,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2c482950b849b889c1d58aba1c15c9ce"
+          "checksum": "9ffc844124511ea344d5b7c1395590c5"
         },
         {
           "work_id": "00389",
@@ -5484,9 +5067,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f874eb040f537ca670900a21999a53be"
+          "checksum": "b08f7f5ef0f64e07ee9d8b34a1045a26"
         },
         {
           "work_id": "00389",
@@ -5497,9 +5079,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2b9d5f811cef88eaf85d0a7023c622f3"
+          "checksum": "1e177fc1b2341a9b08e627ec075dcb8d"
         },
         {
           "work_id": "00389",
@@ -5510,9 +5091,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "73c881828b5560a41e25ed71a1d24bea"
+          "checksum": "23eaa871b21b92d9cf3b06def7eb22d1"
         },
         {
           "work_id": "00389",
@@ -5523,9 +5103,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "34ee950c0bc840f366578277bd9631e3"
+          "checksum": "757ff8cee72b01a0c631ee2f8f513143"
         },
         {
           "work_id": "00389",
@@ -5536,9 +5115,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "23a15d636f33fae45e3f52eb5e803527"
+          "checksum": "531b7b198e1c18eebd6afe6e584e141c"
         },
         {
           "work_id": "00389",
@@ -5549,9 +5127,8 @@
           "project_subfolder": "photos",
           "width_px": 1536,
           "height_px": 2048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9e6bf2052dde003a7463d63c78b7e6cc"
+          "checksum": "888040b84c2c97d88fe8e0cfbeaa7d97"
         },
         {
           "work_id": "00389",
@@ -5562,9 +5139,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a914ac5334f9b78ec64bbc9b296ff727"
+          "checksum": "f699a35f3b48f67357dec74d243380f5"
         },
         {
           "work_id": "00389",
@@ -5575,9 +5151,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "09afc895921b5946a32036a250207f2c"
+          "checksum": "143acd280a4127c8f509d052c5c5c0ef"
         },
         {
           "work_id": "00389",
@@ -5588,9 +5163,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "557c1fbc485e35adac32be0a740f7eaf"
+          "checksum": "c366e5cc4aa69968e4296f41aea2c00c"
         },
         {
           "work_id": "00389",
@@ -5601,9 +5175,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "de83dc6bcb707a2bff2cd5fc4af0ff4c"
+          "checksum": "96cedb9fc0e546dfbbbe9b470f0d6493"
         },
         {
           "work_id": "00389",
@@ -5614,9 +5187,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89eeab3eabd04aa0b1698940bb2be1ea"
+          "checksum": "10cf17996fd7cc3652d8d584f9ef981b"
         },
         {
           "work_id": "00389",
@@ -5627,9 +5199,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0e0ecfbf90e6b946e195bb9c24d418f2"
+          "checksum": "3db013f9ad499d0cb7c30c581ee364f7"
         },
         {
           "work_id": "00389",
@@ -5640,9 +5211,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "35c939d7ec3d54f6a86d26f65aa449b0"
+          "checksum": "53377d283c016967f759ce84f6540679"
         },
         {
           "work_id": "00389",
@@ -5653,9 +5223,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7065d614f64257b2215d10c9efaa6781"
+          "checksum": "5fb06c623e55d7f54181c94e4934c76a"
         },
         {
           "work_id": "00389",
@@ -5666,9 +5235,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "614e6ef6962720682630365174e30e91"
+          "checksum": "7fe9363e9286eef0a3c950514fe7438d"
         },
         {
           "work_id": "00389",
@@ -5679,9 +5247,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "23f733d0554e601fa32ef3b0521f6807"
+          "checksum": "730351ccaded486469353aacc95f5ef4"
         },
         {
           "work_id": "00389",
@@ -5692,9 +5259,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "472bd9bf7ab7ef88fe5331d09675c38e"
+          "checksum": "91ab2d363517958f9210669b144b94ea"
         },
         {
           "work_id": "00389",
@@ -5705,9 +5271,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ac3fa3c6023188be2f5aeeccd3708cf"
+          "checksum": "6bf9a39049a894e68c1bc1c07d9d3ef8"
         },
         {
           "work_id": "00389",
@@ -5718,9 +5283,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ad3f88ec0d7958b8fb56a5d03a54c6a"
+          "checksum": "26927958b5a49b07572ac993d5b61d0c"
         },
         {
           "work_id": "00389",
@@ -5731,9 +5295,8 @@
           "project_subfolder": "photos",
           "width_px": 2663,
           "height_px": 2663,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "44d2e84feac953f535034d962c69bf9b"
+          "checksum": "faf7646638bf20b8107b90f1feca3fe7"
         },
         {
           "work_id": "00389",
@@ -5744,9 +5307,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ac4ce9c897e29e67cd7342af1c32e13c"
+          "checksum": "b8f32a67885398993d062865382ef175"
         },
         {
           "work_id": "00389",
@@ -5757,9 +5319,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ff669253010d1f964360eaffed544887"
+          "checksum": "f5a02f7c29d33dff41c5102c4f5aa333"
         },
         {
           "work_id": "00389",
@@ -5770,9 +5331,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d62b00510f68804c50eec300b6cf8238"
+          "checksum": "3ad90ae12bd458476dde6827aef20524"
         },
         {
           "work_id": "00389",
@@ -5783,9 +5343,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6546d5c9bdd16d87e894baf3608fa080"
+          "checksum": "41d09f8c6f58462c3627ebb185452a64"
         },
         {
           "work_id": "00389",
@@ -5796,9 +5355,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65f88c7186ca476b02733705376966b3"
+          "checksum": "947e4c6b16e58c8254f01a435e02e8a1"
         },
         {
           "work_id": "00389",
@@ -5809,9 +5367,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1056a48465f287760e8221fe08eeb77d"
+          "checksum": "e938ae4daf02e068fa858ed701cedf49"
         },
         {
           "work_id": "00389",
@@ -5822,9 +5379,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7f52d7a99f064b96af38a5d8dd93ff76"
+          "checksum": "08582e87bf70b8e2e02ec35557d5beba"
         },
         {
           "work_id": "00389",
@@ -5835,9 +5391,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5e3d4dae2a9e96d6490dca75c40762de"
+          "checksum": "7642c32f6675d11593ee202e9cede61b"
         },
         {
           "work_id": "00389",
@@ -5848,9 +5403,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1aa0e907a1615b59d8353915ebaec250"
+          "checksum": "4fca9b11833620aed8bd1c723697d24b"
         },
         {
           "work_id": "00389",
@@ -5861,9 +5415,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3765e1b58fb2032271ba832f1f3bb7e9"
+          "checksum": "f8e1fd1cbb46d7a059ac8d82db801cbc"
         },
         {
           "work_id": "00389",
@@ -5874,9 +5427,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "204dc3eca5572afbda7058dccc1c1594"
+          "checksum": "9a315cfdc173924ab8eb1551375aac8d"
         },
         {
           "work_id": "00389",
@@ -5887,9 +5439,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c7fd2b69f771091c3784ea64d62cce8b"
+          "checksum": "cb3cb31d4c54867cf8e273c1e7aefb20"
         },
         {
           "work_id": "00389",
@@ -5900,9 +5451,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c9cd96b61abb8b2df3578f7337ba0c3b"
+          "checksum": "51e7688a44d3fbf44e899c730f891ae3"
         },
         {
           "work_id": "00389",
@@ -5913,9 +5463,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e7bc447bff662778ebd1a13a632a3c08"
+          "checksum": "8b801a48abc044570fcd10706ebab594"
         },
         {
           "work_id": "00389",
@@ -5926,9 +5475,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c6af99e49bcf384dceb8b3f2a83e4096"
+          "checksum": "8219e6718455a05363c51b3f63cbca9a"
         },
         {
           "work_id": "00389",
@@ -5939,9 +5487,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f9e489d9d884d1f85a2a4e216afdd0b3"
+          "checksum": "8d111f7f82f135b47c2b23f4d3011f52"
         },
         {
           "work_id": "00389",
@@ -5952,9 +5499,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ed160d24c12ecc31bac693cbb05f4d3c"
+          "checksum": "45ede24cf09434893095a5b1aecf03bc"
         },
         {
           "work_id": "00389",
@@ -5965,9 +5511,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "815b439f8680e1877dc73402594ee93f"
+          "checksum": "00c67b9049be09b6c883524328cdfcf8"
         },
         {
           "work_id": "00389",
@@ -5978,9 +5523,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e0b067fde6cf1a81e3ad502fe39a98f5"
+          "checksum": "01d82e1af7b1f0e354a67d9d0b82902e"
         },
         {
           "work_id": "00389",
@@ -5991,9 +5535,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "daf77be1c3e1198a2070a0d45ce0c87d"
+          "checksum": "c33ca09d9da92b2e6252e8f90533c7ae"
         },
         {
           "work_id": "00389",
@@ -6004,9 +5547,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "805169d91a744bb44ba689c51446c951"
+          "checksum": "72b79fddb21111b775ecf3b125964973"
         },
         {
           "work_id": "00389",
@@ -6017,9 +5559,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2daff18529e6b17c655c762fa515f856"
+          "checksum": "37ac896a40a6e1faf46ac6e2fe95f902"
         },
         {
           "work_id": "00389",
@@ -6030,9 +5571,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8e81ab2ae0a5d89c506b18d0667853e5"
+          "checksum": "2823412f6e0597097a5163fb6c5d4df0"
         },
         {
           "work_id": "00389",
@@ -6043,9 +5583,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "56194e7f3562d9be404f3985345c0915"
+          "checksum": "c3ea545abb3d940f97d68a5d186fc95a"
         },
         {
           "work_id": "00389",
@@ -6056,9 +5595,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6fae4937ae670f96d0b6714214075333"
+          "checksum": "74d7a56fd0b6b63a4c196a8d380c25d6"
         },
         {
           "work_id": "00389",
@@ -6069,9 +5607,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b0729fcd8f67ce183a310211c4728093"
+          "checksum": "6a30e2ed51eb48f8cf9b5a44286e128b"
         },
         {
           "work_id": "00389",
@@ -6082,9 +5619,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ecfbbc11e6919e7ef87fe29712a16cc0"
+          "checksum": "5c60e9788e7ac0af590ca7d9961ca294"
         },
         {
           "work_id": "00389",
@@ -6095,9 +5631,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a00f02599edfcafd77b271220e92e70e"
+          "checksum": "124ee688189ccff32d612dadee2066be"
         },
         {
           "work_id": "00389",
@@ -6108,9 +5643,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1c7e690c66cff41da6e72b2db9530df8"
+          "checksum": "5c1c74f7b156ce904452c3e25e679384"
         },
         {
           "work_id": "00389",
@@ -6121,9 +5655,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6951817c7d32a55d6a5be0131791e642"
+          "checksum": "cc8f041c0dc18164c1c60a6bfac71ba1"
         },
         {
           "work_id": "00389",
@@ -6134,9 +5667,8 @@
           "project_subfolder": "photos",
           "width_px": 1434,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "65e637469ca2d4c8f1e22eda3e98a4d0"
+          "checksum": "e196318c0a87722b85f342a5631e224a"
         },
         {
           "work_id": "00389",
@@ -6147,9 +5679,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4a04c2bfc84105a49b17b2bf2dfb3a0b"
+          "checksum": "34212c995950e11d3e466c8053477c28"
         },
         {
           "work_id": "00389",
@@ -6160,9 +5691,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fb07f30afe53023af9be3f3b5a65d0dd"
+          "checksum": "fbe4915e288e6ddeff4de44218b4db5e"
         },
         {
           "work_id": "00389",
@@ -6173,9 +5703,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "50dbb2dcefb2a4a1bfbb066f86f7d0e8"
+          "checksum": "9ce37ddca8f559bcb22c4767f1d7ed0a"
         },
         {
           "work_id": "00389",
@@ -6186,9 +5715,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9c29686fd1c5476b4a4d707c7f4a65ff"
+          "checksum": "e05174151686f7f77b30c6950d350b7a"
         },
         {
           "work_id": "00389",
@@ -6199,9 +5727,8 @@
           "project_subfolder": "photos",
           "width_px": 3779,
           "height_px": 2126,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d9be0e193ee3dfc52de4f6591fa9791a"
+          "checksum": "89dcd970260312529fe7a78448c2b0b9"
         },
         {
           "work_id": "00389",
@@ -6212,9 +5739,8 @@
           "project_subfolder": "photos",
           "width_px": 3024,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "67dc1d9eff10221b3cfd1813d4a0805b"
+          "checksum": "e40a5f437660ce0c667d86cc237d43dc"
         },
         {
           "work_id": "00389",
@@ -6225,9 +5751,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3917a9b7c51403c08716a212bf10287e"
+          "checksum": "81d30b6100c747c17f93c54e48614a5b"
         },
         {
           "work_id": "00389",
@@ -6238,9 +5763,8 @@
           "project_subfolder": "photos",
           "width_px": 2094,
           "height_px": 2094,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89b5b7c42ca8c45e0a267a5d36278df2"
+          "checksum": "3fe8fb438269c6c3b8385d29c2110b0d"
         },
         {
           "work_id": "00389",
@@ -6251,9 +5775,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "49ed8ea1649eef8dd05011dcbf3d1330"
+          "checksum": "bf002731d5c7cc6b6bce11355fe8cf35"
         },
         {
           "work_id": "00389",
@@ -6264,9 +5787,8 @@
           "project_subfolder": "photos",
           "width_px": 3780,
           "height_px": 3780,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "07e9ec70ac2a2609370f3cc5f1536d04"
+          "checksum": "76ce02a25c63c0aec608ee9c66286c9a"
         },
         {
           "work_id": "00389",
@@ -6277,9 +5799,8 @@
           "project_subfolder": "photos",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "174c3f59d775b1cecd87948ce5ce8823"
+          "checksum": "dddd5e3579c9326aa790ff115960f91e"
         },
         {
           "work_id": "00389",
@@ -6290,9 +5811,8 @@
           "project_subfolder": "photos",
           "width_px": 4724,
           "height_px": 4724,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3e0880ae99e30deef4fa32ce037272d4"
+          "checksum": "c26d2ffdc7819ded356348aba1132fea"
         },
         {
           "work_id": "00389",
@@ -6303,9 +5823,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "818f6008610a2c20d9edc69a847221c9"
+          "checksum": "fac053ba0807abe8f5f5c8a4a615d0a1"
         },
         {
           "work_id": "00389",
@@ -6316,9 +5835,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9cd067223a6d338b92f0e34a7cbeb117"
+          "checksum": "2c651c42c9cf1b2ac1adcfb9be43bb88"
         },
         {
           "work_id": "00389",
@@ -6329,9 +5847,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2d742704295e75cc8086a362b9443d00"
+          "checksum": "8a1fba3ab6b940ffba2485295cb24d39"
         },
         {
           "work_id": "00389",
@@ -6342,9 +5859,8 @@
           "project_subfolder": "photos",
           "width_px": 8268,
           "height_px": 4651,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ad1921037a2962b82b224191de74651d"
+          "checksum": "3a932e0693c1f0263c2915d2258c5b75"
         },
         {
           "work_id": "00389",
@@ -6355,9 +5871,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d66983150ca8606e0de0fd49b07c509f"
+          "checksum": "213d4d8b99ca927adfd45af727b1be0e"
         },
         {
           "work_id": "00389",
@@ -6368,9 +5883,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dd5bfbcf0f38a56e287f09227b3665cc"
+          "checksum": "936dad80c3eb2a13762f27893ab41507"
         },
         {
           "work_id": "00389",
@@ -6381,9 +5895,8 @@
           "project_subfolder": "photos",
           "width_px": 1271,
           "height_px": 1271,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f152bb9574bbeac7f05453fb0f9ffc3f"
+          "checksum": "e041342c4fdb6170731038426a48fa2a"
         },
         {
           "work_id": "00389",
@@ -6394,9 +5907,8 @@
           "project_subfolder": "photos",
           "width_px": 2635,
           "height_px": 2635,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d685bac9a58fbacc456b64d5cb193467"
+          "checksum": "d97d3eec756b2861eca7eb6bb3582efa"
         },
         {
           "work_id": "00389",
@@ -6407,9 +5919,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1cd74e01556c29f8c8853614c68bd61f"
+          "checksum": "31c454d4234a50d7daa16ed0af59ffb0"
         },
         {
           "work_id": "00389",
@@ -6420,9 +5931,8 @@
           "project_subfolder": "photos",
           "width_px": 1448,
           "height_px": 2573,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5c03801776a5a6386d9a8573d5484d0d"
+          "checksum": "6d9e88a5c9517b44248c9461c94821d2"
         },
         {
           "work_id": "00389",
@@ -6433,9 +5943,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8ab06b189e2240c1d89ecc6abcff9253"
+          "checksum": "145b506fc1e1a974935525a412049ae7"
         },
         {
           "work_id": "00389",
@@ -6446,9 +5955,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "97917a0e4800ac8bc08eae02fc668394"
+          "checksum": "5856a8ff18e1a0136b254dc8d5adcb4d"
         },
         {
           "work_id": "00389",
@@ -6459,9 +5967,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "563c29c695d50eab12c75423db899191"
+          "checksum": "03f3c00e68791e0ecfacfa748ea5eae7"
         },
         {
           "work_id": "00389",
@@ -6472,9 +5979,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d53fcb44956b7a25116c22a8cde58bec"
+          "checksum": "29464d57223e747db323fb46cf0a7a19"
         },
         {
           "work_id": "00389",
@@ -6485,9 +5991,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5c11fed3102c76743e4969ce363b86ca"
+          "checksum": "8d1964506d34e5c973e9753b16008e98"
         },
         {
           "work_id": "00389",
@@ -6498,9 +6003,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e992e4176c4e157ae5bcf71818334204"
+          "checksum": "4c5aa0a8d24f25154802616904152203"
         },
         {
           "work_id": "00389",
@@ -6511,9 +6015,8 @@
           "project_subfolder": "photos",
           "width_px": 2097,
           "height_px": 2097,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "88c62ff5da5ee2244277b66c92904631"
+          "checksum": "6d0c5bb4e20b4674864649db40f098bb"
         },
         {
           "work_id": "00389",
@@ -6524,9 +6027,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2af29e6db336730861d28729e8b2da9b"
+          "checksum": "44da29b57d830bb4da2731900b4dfafc"
         },
         {
           "work_id": "00389",
@@ -6537,9 +6039,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a971143f363eb03ee30aebbb29c5fd85"
+          "checksum": "881ef115e03bf5064c028ee18a9fd61a"
         },
         {
           "work_id": "00389",
@@ -6550,9 +6051,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d6ce513ef2ec75007f429c7708ea1bbb"
+          "checksum": "b4fa6a442dc39ee8b8b5c2279c4346e4"
         },
         {
           "work_id": "00389",
@@ -6563,9 +6063,8 @@
           "project_subfolder": "photos",
           "width_px": 3402,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7e3bf304661d973522bdc0101b3d37b0"
+          "checksum": "31976ca6dea4cfdb387c5b09b679e3db"
         },
         {
           "work_id": "00389",
@@ -6576,9 +6075,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9f3f4190a894bdf2308259383f3b2f76"
+          "checksum": "261309e77fd524a2ed754954b8daed3f"
         },
         {
           "work_id": "00389",
@@ -6589,9 +6087,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d09ff5b12f11c018b0fb51a35c691f3e"
+          "checksum": "1e95042711487f114a5d01928943c157"
         },
         {
           "work_id": "00389",
@@ -6602,9 +6099,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1b36d966963cb196d8b0eb935091fbce"
+          "checksum": "db040a083997339a6170aa4570c1b9b3"
         },
         {
           "work_id": "00389",
@@ -6615,9 +6111,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 4032,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "770fe3d9de8c279a4812f16fbc16dcb4"
+          "checksum": "b6d423f8ac195a470ee4242eaf662381"
         },
         {
           "work_id": "00389",
@@ -6628,9 +6123,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ea774f5b1044accce38d447a7ce994b"
+          "checksum": "f75c3ce01d9a2af2f892d12e9f5fc0bc"
         },
         {
           "work_id": "00389",
@@ -6641,9 +6135,8 @@
           "project_subfolder": "photos",
           "width_px": 2268,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cf4a64fa4206a357cdf15b060414a714"
+          "checksum": "a8d8ae94b8fb8c26df47f716c67257ea"
         },
         {
           "work_id": "00389",
@@ -6654,9 +6147,8 @@
           "project_subfolder": "photos",
           "width_px": 6048,
           "height_px": 6048,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f1a4660c32201d66cd090d5b72841bcd"
+          "checksum": "6478944a9f2da8c496b15f9cfd50eb8f"
         },
         {
           "work_id": "00389",
@@ -6667,9 +6159,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "95ae488405aaf8aaa7b816bb53d14695"
+          "checksum": "2bd686e1b86e8196eb6d19383d555d16"
         },
         {
           "work_id": "00389",
@@ -6680,9 +6171,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "402dc90d7a195e5aa6032697287ddc8b"
+          "checksum": "25b44fd3e9fefd5b38ba42214fc654d8"
         },
         {
           "work_id": "00389",
@@ -6693,9 +6183,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e6db9e9fb1c00772283bb68f0183dfc1"
+          "checksum": "d977d49b864dd033132e6ff0c231e4d3"
         },
         {
           "work_id": "00389",
@@ -6706,9 +6195,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e6eccd10aa34450348b847d2ccd3533f"
+          "checksum": "644d6b2cb75c33ed4bd544053de8070b"
         },
         {
           "work_id": "00389",
@@ -6719,9 +6207,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "46fa23e654f07e6300abf39b96bb4821"
+          "checksum": "1e867fe780b524e1605ecf8a845b3e13"
         },
         {
           "work_id": "00389",
@@ -6732,9 +6219,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "62724eba7cb7a9002989ea491bad279a"
+          "checksum": "488ee902239a411f63351e3fec9f7e1c"
         },
         {
           "work_id": "00389",
@@ -6745,9 +6231,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "917a96694738ba4f15e190bbedbb8d81"
+          "checksum": "9aa8328b506dfefc3ec1a99c3adb87ed"
         },
         {
           "work_id": "00389",
@@ -6758,9 +6243,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6115ff0fdf6090842ac8d9f160ecd92e"
+          "checksum": "72250ca3fe341f3fc996a2b90ba909c4"
         },
         {
           "work_id": "00389",
@@ -6771,9 +6255,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b60497598978ac83cdc813f9b2b26d62"
+          "checksum": "af8ee02fe52da0e0357fc3f475260223"
         },
         {
           "work_id": "00389",
@@ -6784,9 +6267,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "098034af4d9f40ad3c7ee8671b60b445"
+          "checksum": "dfee8046a0129c6e3e7edbec642a0c52"
         },
         {
           "work_id": "00389",
@@ -6797,9 +6279,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9a3e23238576823d762e6fe1918a6249"
+          "checksum": "ee1c43cc8b27f555f250a7bac606d0a8"
         },
         {
           "work_id": "00389",
@@ -6810,9 +6291,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e40561fe9c853d8861937eb826182beb"
+          "checksum": "2503084c5875d0e53e61d87a492589b5"
         },
         {
           "work_id": "00389",
@@ -6823,9 +6303,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0a9c3cceebf82d724741629b6c9daeb4"
+          "checksum": "5feafdd04861814b99455c873527077b"
         },
         {
           "work_id": "00389",
@@ -6836,9 +6315,8 @@
           "project_subfolder": "photos",
           "width_px": 4032,
           "height_px": 3024,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b82de834b1bd2740e0404308043bb1e9"
+          "checksum": "b9e0813912c0c116381517325d1cad96"
         }
       ]
     }

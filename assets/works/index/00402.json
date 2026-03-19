@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-04b901a90d650b6898019000c36dedc7",
-    "generated_at_utc": "2026-03-13T14:20:15Z",
+    "version": "blake2b-9626b3716c348b9473cb10571503972a",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00402",
     "count": 6,
-    "hash": "blake2b-d664f6f8a4eb18016ff982b56dde07a8",
-    "work_checksum": "blake2b-78ace45664bccaa75973a08942c1c8ee",
-    "details_checksum": "blake2b-d664f6f8a4eb18016ff982b56dde07a8",
-    "record_checksum": "blake2b-04b901a90d650b6898019000c36dedc7"
+    "hash": "blake2b-e945c07c9f8dd0deaa18b1b8374cc147",
+    "work_checksum": "blake2b-8534071b9f1f1e685e325658d4e5006f",
+    "details_checksum": "blake2b-e945c07c9f8dd0deaa18b1b8374cc147",
+    "record_checksum": "blake2b-9626b3716c348b9473cb10571503972a"
   },
   "work": {
     "work_id": "00402",
@@ -32,10 +32,11 @@
     "height_cm": 30.0,
     "width_cm": 40.0,
     "depth_cm": null,
+    "width_px": 5680,
+    "height_px": 4241,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "78ace45664bccaa75973a08942c1c8ee"
+    "checksum": "8534071b9f1f1e685e325658d4e5006f"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "26c299ac19c756c9d68adc6d6e5332c3"
+          "checksum": "f4b7e5e658e9cb7a1c2a3af865a7846a"
         },
         {
           "work_id": "00402",
@@ -63,9 +63,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f54804cc836391b72041650f22b2a3ba"
+          "checksum": "5b75f9c2ec497a669a77a8171550321f"
         },
         {
           "work_id": "00402",
@@ -76,9 +75,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c208151b0fe7f4c7bf6a1bd014fa2f30"
+          "checksum": "720d0da41eda1a40f4efa629d98fc0cc"
         },
         {
           "work_id": "00402",
@@ -89,9 +87,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "53357c71a9bde70d8e8ff1fd747b5741"
+          "checksum": "ccdad20eb49ff836308e8e10ff8c5aa6"
         },
         {
           "work_id": "00402",
@@ -102,9 +99,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4da4133f9f2f2872de8f93298cb1436c"
+          "checksum": "6db231bc573cc4e39361ae5884e972a0"
         },
         {
           "work_id": "00402",
@@ -115,9 +111,8 @@
           "project_subfolder": "photos",
           "width_px": 2816,
           "height_px": 2112,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e9c576d5388baebdec945f9612d83432"
+          "checksum": "a91c821a5eb123655f426087841ea841"
         }
       ]
     }

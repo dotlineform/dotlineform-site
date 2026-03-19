@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-af46fda5668913517dfe2c70605e75d3",
-    "generated_at_utc": "2026-03-14T19:34:36Z",
+    "version": "blake2b-b8c42c943591f3ae52061f0617717d09",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00634",
     "count": 25,
-    "hash": "blake2b-a5950774522220e0489e614c03d00ac9",
-    "work_checksum": "blake2b-cfb7428d7f7fe0886e62217ce5353185",
-    "details_checksum": "blake2b-a5950774522220e0489e614c03d00ac9",
-    "record_checksum": "blake2b-af46fda5668913517dfe2c70605e75d3"
+    "hash": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
+    "work_checksum": "blake2b-177cd755f29ee904dc7494b8e9943967",
+    "details_checksum": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
+    "record_checksum": "blake2b-b8c42c943591f3ae52061f0617717d09"
   },
   "work": {
     "work_id": "00634",
@@ -32,10 +32,11 @@
     "height_cm": 75.0,
     "width_cm": 75.0,
     "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "cfb7428d7f7fe0886e62217ce5353185"
+    "checksum": "177cd755f29ee904dc7494b8e9943967"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "versions",
           "width_px": 8858,
           "height_px": 8858,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "92cb97138967e089c1ad74073a5eb90f"
+          "checksum": "b6671691ca6486264c62ad9afccefcdd"
         },
         {
           "work_id": "00634",
@@ -63,9 +63,8 @@
           "project_subfolder": "versions",
           "width_px": 17717,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "58c7a94bf348d738a0a60439599b05d6"
+          "checksum": "ba4840d70200dc6590f89747f5962893"
         },
         {
           "work_id": "00634",
@@ -76,9 +75,8 @@
           "project_subfolder": "versions",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "467b759e5061af76a950c74dc02d0aa6"
+          "checksum": "0a4d6bc38c17313a72ec81266dfa7623"
         },
         {
           "work_id": "00634",
@@ -89,9 +87,8 @@
           "project_subfolder": "versions",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c4c72cec6ad4b7db424d6b1491f19c36"
+          "checksum": "cc7f3c2f3d44524f60bb007563fc0570"
         }
       ]
     },
@@ -107,9 +104,8 @@
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2b8dcda65f99293a13df8faba0aae4dd"
+          "checksum": "748107aa0b294bd3c353fec3a1f71aad"
         },
         {
           "work_id": "00634",
@@ -120,9 +116,8 @@
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "499fcb1683dac4b8c009caa19a45c835"
+          "checksum": "02d65524dfb78be494523e27e9d177d1"
         },
         {
           "work_id": "00634",
@@ -133,9 +128,8 @@
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "820a596f36779446c91cee7e40b4b26c"
+          "checksum": "7b7b9cd22177aa82c459060138e50278"
         },
         {
           "work_id": "00634",
@@ -146,9 +140,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d1a380386bdd9a1bba405a79cea7211f"
+          "checksum": "45758a9762a4bf9516cafaf3d848a804"
         },
         {
           "work_id": "00634",
@@ -159,9 +152,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5183b5c324d02fd2933cf6f741690a4a"
+          "checksum": "349070c00e8df34ee0db4d3bb2ff177f"
         },
         {
           "work_id": "00634",
@@ -172,9 +164,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "289bd432b25929085dbe907228085cab"
+          "checksum": "9115e05952211da9a9ce2874e98c5ed7"
         },
         {
           "work_id": "00634",
@@ -185,9 +176,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a60dbed36fb87d43924be09b80d6d3bd"
+          "checksum": "cb048edd55f657c7f6b8fb89c86220b7"
         },
         {
           "work_id": "00634",
@@ -198,9 +188,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d51ca6223d3042955b9f82b363e6f93d"
+          "checksum": "41aacaa6f4f88c6f72778eaddfc8deb7"
         },
         {
           "work_id": "00634",
@@ -211,9 +200,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "becf4d39623356951c086c4b25c9aa71"
+          "checksum": "9e59e8049e90f3cd8bdfaf1cf7621c7f"
         },
         {
           "work_id": "00634",
@@ -224,9 +212,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "97141013620598fbbcbfd6553b56a856"
+          "checksum": "26109102e26637f72c6d8b7840b99d44"
         },
         {
           "work_id": "00634",
@@ -237,9 +224,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3cf9ffbbabba37ace5b929d682264ebf"
+          "checksum": "9adb96a2e8f3b621e96ccfa9a0c8632e"
         },
         {
           "work_id": "00634",
@@ -250,9 +236,8 @@
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "341b5bbc9fa167e2a4234536696647f4"
+          "checksum": "738ade4f4975a4e0972f65b20f3c90ee"
         }
       ]
     },
@@ -268,9 +253,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "822731db481e105fece4b3e847957bf7"
+          "checksum": "e789d66f40a1270f7a3e111e1a5375a7"
         },
         {
           "work_id": "00634",
@@ -281,9 +265,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "50718dc3faf888d80b46650867a4eb2b"
+          "checksum": "210b6a9dd52c5992009f997ca8276216"
         },
         {
           "work_id": "00634",
@@ -294,9 +277,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6b44d6a58fbf5055a2cdfe966b56b7f1"
+          "checksum": "66ac9a610bdfd640f299bd59c66fbe5e"
         },
         {
           "work_id": "00634",
@@ -307,9 +289,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "45a92bae1bdd4ac4ced508f114015c5d"
+          "checksum": "9bfe2562707395217ac6061b13ecebe6"
         },
         {
           "work_id": "00634",
@@ -320,9 +301,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3f45fde224a7c82c6d74f7b115b97d5b"
+          "checksum": "90e89fa00743a6c7ad860e87d6d9fe2f"
         },
         {
           "work_id": "00634",
@@ -333,9 +313,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1fe15d76a93d4ef51e8b6fe1d91f693"
+          "checksum": "d5422978b2eb6052ca5a7b4a8dc50a07"
         },
         {
           "work_id": "00634",
@@ -346,9 +325,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7d3bf257fc8a565435d4082432a6494b"
+          "checksum": "1154d05490a92c80fd7d2b1352154479"
         },
         {
           "work_id": "00634",
@@ -359,9 +337,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "54686877760056d4bb866bf3fc775a2e"
+          "checksum": "972cd583550084f2a0882c526cb1477d"
         },
         {
           "work_id": "00634",
@@ -372,9 +349,8 @@
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a4bb7277293504b456d34b3b89c46c1d"
+          "checksum": "4d0398f168bda99a4881589fe250cd67"
         }
       ]
     }

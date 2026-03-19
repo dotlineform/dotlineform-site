@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-fe02585f6b756640caa477e90cdd2dcb",
-    "generated_at_utc": "2026-03-17T13:05:18Z",
+    "version": "blake2b-0e304f208787839c9c0bda11e77b9420",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00893",
     "count": 8,
-    "hash": "blake2b-d23254b5ba25eacd4581d685eb05a956",
-    "work_checksum": "blake2b-a83b8893148d290bdd9d776e36753115",
-    "details_checksum": "blake2b-d23254b5ba25eacd4581d685eb05a956",
-    "record_checksum": "blake2b-fe02585f6b756640caa477e90cdd2dcb"
+    "hash": "blake2b-11c0554ce16cb616550938ade0e48bd5",
+    "work_checksum": "blake2b-eb96c8942e7e6069202703c27a842f68",
+    "details_checksum": "blake2b-11c0554ce16cb616550938ade0e48bd5",
+    "record_checksum": "blake2b-0e304f208787839c9c0bda11e77b9420"
   },
   "work": {
     "work_id": "00893",
@@ -35,9 +35,8 @@
     "width_px": 1240,
     "height_px": 1909,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "a83b8893148d290bdd9d776e36753115"
+    "checksum": "eb96c8942e7e6069202703c27a842f68"
   },
   "sections": [
     {
@@ -52,9 +51,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d5ca7e6a6afacc0d3e415a8389f1ebcf"
+          "checksum": "a3d5e50cde31bb7029ba5a0ab97e9a1b"
         },
         {
           "work_id": "00893",
@@ -65,9 +63,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "986787649d798b4dbb1e04f7f73459f6"
+          "checksum": "d7e621662d50f026c994c883fc3fd9bd"
         },
         {
           "work_id": "00893",
@@ -78,9 +75,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9c966e620a7255bf685874c190dd5b0d"
+          "checksum": "30cdd3ff89180c21b4a9b78aa8c89763"
         },
         {
           "work_id": "00893",
@@ -91,9 +87,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 2000,
           "height_px": 2000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dffcbf7013d33b5b877088e1916f8aa6"
+          "checksum": "3cc23fe9bf284016cdb43547bede0f34"
         },
         {
           "work_id": "00893",
@@ -104,9 +99,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f9e3217f1f9e5d0ce4d7c8a9c520cdeb"
+          "checksum": "3a6a4374689745d58c9d2df934e63272"
         },
         {
           "work_id": "00893",
@@ -117,9 +111,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d0a1b53abbb947b386341666a3e151ea"
+          "checksum": "66e94bdec3bebfba61aeda885949527e"
         },
         {
           "work_id": "00893",
@@ -130,9 +123,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "919686b3507ce11afd280a5648aaa168"
+          "checksum": "667b2402ebff69a741e68eb66888deaa"
         },
         {
           "work_id": "00893",
@@ -143,9 +135,8 @@
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2c8d0d1275e0139a08517db3072eb617"
+          "checksum": "8f7a2698d5797c73ecd15c7c48bd5adb"
         }
       ]
     }

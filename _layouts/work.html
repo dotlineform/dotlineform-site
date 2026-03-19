@@ -14,36 +14,18 @@ layout: default
 {%- assign src800  = img_base | append: wid | append: "-primary-800.webp" -%}
 {%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
 {%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
-{%- assign src2400 = img_base | append: wid | append: "-primary-2400.webp" -%}
 {%- assign work_details_json_path = "/assets/works/index/" | append: wid | append: ".json" -%}
 {%- assign work_details_json_file = site.static_files | where: "path", work_details_json_path | first -%}
 {%- assign has_work_details_json = false -%}
 {%- if work_details_json_file -%}
   {%- assign has_work_details_json = true -%}
 {%- endif -%}
-{%- assign src2400_path = "/assets/works/img/" | append: wid | append: "-primary-2400.webp" -%}
-{%- assign has_local_2400 = false -%}
-<!-- this existence check is local to Jekyll’s static files (/assets/...).
-If you later serve images only from external media_base (CDN/R2), this check won’t know what exists remotely. -->
-{%- assign maybe_2400 = site.static_files | where: "path", src2400_path | first -%}
-{%- if maybe_2400 -%}
-  {%- assign has_local_2400 = true -%}
-{%- endif -%}
-{%- assign has_2400 = has_local_2400 -%}
-<!-- external-hosted 2400 images can be enabled via front matter even when local existence check is false. -->
-{%- if page.has_primary_2400 == true -%}
-  {%- assign has_2400 = true -%}
-{%- endif -%}
 {%- assign full_src = src1600 -%}
-{%- if has_2400 -%}
-  {%- assign full_src = src2400 -%}
-{%- endif -%}
 
 {%- unless img_base contains '://' -%}
   {%- assign src800  = src800  | relative_url -%}
   {%- assign src1200 = src1200 | relative_url -%}
   {%- assign src1600 = src1600 | relative_url -%}
-  {%- assign src2400 = src2400 | relative_url -%}
 {%- endunless -%}
 
 {%- capture fallback_work_json -%}
@@ -65,8 +47,7 @@ If you later serve images only from external media_base (CDN/R2), this check won
   "height_cm": {{ page.height_cm | jsonify }},
   "width_cm": {{ page.width_cm | jsonify }},
   "depth_cm": {{ page.depth_cm | jsonify }},
-  "download": {{ page.download | jsonify }},
-  "has_primary_2400": {{ page.has_primary_2400 | default: false | jsonify }}
+  "download": {{ page.download | jsonify }}
 }
 {%- endcapture -%}
 
@@ -88,12 +69,10 @@ If you later serve images only from external media_base (CDN/R2), this check won
         srcset="
           {{ src800 }} 800w,
           {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w{% if has_2400 %},
-          {{ src2400 }} 2400w{% endif %}"
+          {{ src1600 }} 1600w"
         data-src-800="{{ src800 | escape }}"
         data-src-1200="{{ src1200 | escape }}"
         data-src-1600="{{ src1600 | escape }}"
-        data-src-2400="{{ src2400 | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ wid | escape }}"
         loading="eager"
@@ -250,12 +229,6 @@ If you later serve images only from external media_base (CDN/R2), this check won
       return Number.isFinite(n) ? n : null;
     }
 
-    function boolish(v) {
-      if (v === true) return true;
-      if (v === false) return false;
-      return text(v).toLowerCase() === 'true';
-    }
-
     function setRowText(rowId, textId, value) {
       var row = document.getElementById(rowId);
       var textEl = document.getElementById(textId);
@@ -315,15 +288,12 @@ If you later serve images only from external media_base (CDN/R2), this check won
       var src800 = text(img.getAttribute('data-src-800'));
       var src1200 = text(img.getAttribute('data-src-1200'));
       var src1600 = text(img.getAttribute('data-src-1600'));
-      var src2400 = text(img.getAttribute('data-src-2400'));
       if (!src1600) return;
 
-      var has2400 = boolish(meta && meta.has_primary_2400);
       var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
-      if (has2400 && src2400) srcset.push(src2400 + ' 2400w');
       img.setAttribute('src', src1600);
       img.setAttribute('srcset', srcset.join(', '));
-      mediaLink.setAttribute('href', (has2400 && src2400) ? src2400 : src1600);
+      mediaLink.setAttribute('href', src1600);
     }
 
     function applyMetadata(meta) {

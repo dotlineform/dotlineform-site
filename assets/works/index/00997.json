@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7a8be21344949b4c338fbc9aa597ef7b",
-    "generated_at_utc": "2026-03-18T19:41:53Z",
+    "version": "blake2b-46f89769894d43e434de87c11c5ec61b",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00997",
     "count": 0,
     "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-70d85aaf10152369f2265de265c6c4a3",
+    "work_checksum": "blake2b-c5dabe265db909e71224c1b9e4c06f48",
     "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7a8be21344949b4c338fbc9aa597ef7b"
+    "record_checksum": "blake2b-46f89769894d43e434de87c11c5ec61b"
   },
   "work": {
     "work_id": "00997",
@@ -35,9 +35,8 @@
     "width_px": 2953,
     "height_px": 2953,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "70d85aaf10152369f2265de265c6c4a3"
+    "checksum": "c5dabe265db909e71224c1b9e4c06f48"
   },
   "sections": []
 }

@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b6831bfbccf71376c4115f6523f1e87e",
-    "generated_at_utc": "2026-03-14T23:39:50Z",
+    "version": "blake2b-6257da3434a820a104ae84a21559a704",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00639",
     "count": 48,
-    "hash": "blake2b-346e1364e94785a7c772bddb79afebec",
-    "work_checksum": "blake2b-12a3f5795bb645807949067d31535124",
-    "details_checksum": "blake2b-346e1364e94785a7c772bddb79afebec",
-    "record_checksum": "blake2b-b6831bfbccf71376c4115f6523f1e87e"
+    "hash": "blake2b-aba949c1bec4c891ea1ea9355a857307",
+    "work_checksum": "blake2b-5eb0d267bc85c1c80f2ee513ce9c7202",
+    "details_checksum": "blake2b-aba949c1bec4c891ea1ea9355a857307",
+    "record_checksum": "blake2b-6257da3434a820a104ae84a21559a704"
   },
   "work": {
     "work_id": "00639",
@@ -32,10 +32,11 @@
     "height_cm": 70.0,
     "width_cm": 70.0,
     "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 8268,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "12a3f5795bb645807949067d31535124"
+    "checksum": "5eb0d267bc85c1c80f2ee513ce9c7202"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "source",
           "width_px": 4453,
           "height_px": 4453,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "acf2f6aee6e068930c34d7e60b346086"
+          "checksum": "29139048cd308c9d42f5a941efaef7e0"
         }
       ]
     },
@@ -68,9 +68,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "498f11c7e33264d8dccb9626d27c7471"
+          "checksum": "c076d4c8e191e34585311bef247ca7f0"
         },
         {
           "work_id": "00639",
@@ -81,9 +80,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1ff4f61404f1f7213e544350eed3c69a"
+          "checksum": "2094298a3d25ba560eed48843132c118"
         },
         {
           "work_id": "00639",
@@ -94,9 +92,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1fa3b1d531c577cde4b7998dc5a552de"
+          "checksum": "a9888fb329ec8e2a1b31fa106c5d2814"
         },
         {
           "work_id": "00639",
@@ -107,9 +104,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3977506f404f992e67399c3582d9312b"
+          "checksum": "e1272ea19b44a522a22fcb86aa2c7480"
         },
         {
           "work_id": "00639",
@@ -120,9 +116,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1ce213b892da7290d06ed0d7c062467d"
+          "checksum": "b3e43908383fe2c66f49f8919c4318e8"
         },
         {
           "work_id": "00639",
@@ -133,9 +128,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3d5d9168d825dc7df4f8289a61d87b65"
+          "checksum": "175daab2776613df3496c534a1429b10"
         },
         {
           "work_id": "00639",
@@ -146,9 +140,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4757b555dd2f39d10d2f46328229d738"
+          "checksum": "933a782e850ae138fa6855b41cb0a920"
         },
         {
           "work_id": "00639",
@@ -159,9 +152,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5629b8c7a8ea437d8d900a82554a7187"
+          "checksum": "e08f88f656c6cf9a58839093180a7617"
         },
         {
           "work_id": "00639",
@@ -172,9 +164,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e9892160d8ade76ac102929a6110969d"
+          "checksum": "b430b5c46188083220b1dc85793042f5"
         },
         {
           "work_id": "00639",
@@ -185,9 +176,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d9a814fefe8d8ee805deb6e1a22a4dba"
+          "checksum": "ea105952bc8a6d546dd735dd460eb881"
         },
         {
           "work_id": "00639",
@@ -198,9 +188,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c0b2009c4206bdca52de4557fa04d8a3"
+          "checksum": "20d7d89ed76afdb0eaa2c46db6624c1a"
         },
         {
           "work_id": "00639",
@@ -211,9 +200,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e29c05206aa3ead917c4b81bb6f2f0e8"
+          "checksum": "e00351f1b9612a92272eca83ce87066d"
         },
         {
           "work_id": "00639",
@@ -224,9 +212,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2007e74f994b98ff092f9132cc81b06b"
+          "checksum": "a1cc3b9495d7cdd3a504292ae2c02e79"
         },
         {
           "work_id": "00639",
@@ -237,9 +224,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5b15c12c159e3db5a38573ee7464d57b"
+          "checksum": "1f00c7191d3d5912944853a37bbd8624"
         },
         {
           "work_id": "00639",
@@ -250,9 +236,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "683a5cdae8e1baa9092b5899aa16829e"
+          "checksum": "6f2212611a6c8aba57b40c1b80cd3c10"
         },
         {
           "work_id": "00639",
@@ -263,9 +248,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2aa3d99cd87cf8d871991751b98ad9c1"
+          "checksum": "aa586202ccedeb282b677efc3b1998f6"
         },
         {
           "work_id": "00639",
@@ -276,9 +260,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ccf5e63fdd069947182d61dd169df89e"
+          "checksum": "87452a7be5e174477f2d95a9118becec"
         },
         {
           "work_id": "00639",
@@ -289,9 +272,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ce83c85c8d8cb104b0e275732b3e5b22"
+          "checksum": "3e0f0e29d879b947c8c20cdd432728d5"
         },
         {
           "work_id": "00639",
@@ -302,9 +284,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2b0619af3f64c9c39c28caf70a514c47"
+          "checksum": "317f07c461dd0a7c23c1e52a39dffad5"
         },
         {
           "work_id": "00639",
@@ -315,9 +296,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8b280f65e522036c7b88c9e12282cbfd"
+          "checksum": "af24b8ac2256e3cd1dcd82e130c53ae5"
         },
         {
           "work_id": "00639",
@@ -328,9 +308,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3ff771a06ead43b05d40cde2460c33d0"
+          "checksum": "144e7faa4863d0e4cec4a4b011ef0b96"
         },
         {
           "work_id": "00639",
@@ -341,9 +320,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "42d6ceb3e0871e59369d9fe6f2f1beee"
+          "checksum": "06503ebbdc67f7be6201f9a1a888309c"
         },
         {
           "work_id": "00639",
@@ -354,9 +332,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5a2f1b4383720578d95cbac74b1c87e9"
+          "checksum": "868c88f4db9abeb28c89912bcfe33a3d"
         },
         {
           "work_id": "00639",
@@ -367,9 +344,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1707c6fa6bed892943f7c0697be8ab9f"
+          "checksum": "7fa2179e6fcb4f087d48e9700afecb45"
         },
         {
           "work_id": "00639",
@@ -380,9 +356,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "446d8cda585a7f16f40e8dcfd7c15d10"
+          "checksum": "ca1a5ca13f668351f572dd65cc7ec060"
         },
         {
           "work_id": "00639",
@@ -393,9 +368,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1630ce8fd4afa6ebf828efd1ec3eab8f"
+          "checksum": "0b488c2b977d86bba1b2b09fd1c92958"
         },
         {
           "work_id": "00639",
@@ -406,9 +380,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f44b5400d44099e71cd64f6fc84a08b4"
+          "checksum": "422ade1ac7eb2a3e6aa7499d6df174d1"
         },
         {
           "work_id": "00639",
@@ -419,9 +392,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5ceb63019909c25efa2981b6e2fd31f1"
+          "checksum": "3f94b2cc649dab4c7ac866bdeff52700"
         },
         {
           "work_id": "00639",
@@ -432,9 +404,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e48745b8432cc433c3f159d3129def87"
+          "checksum": "7643d224e3797150fcdf0753291f75ec"
         },
         {
           "work_id": "00639",
@@ -445,9 +416,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3bfaecd3e838da6541414d84acc359ca"
+          "checksum": "e14d9bfde2f4a9f14540bd114896fc47"
         },
         {
           "work_id": "00639",
@@ -458,9 +428,8 @@
           "project_subfolder": "forms",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "968026063b1a504b887406b2f2e11013"
+          "checksum": "045a867aa06cb9126aab66724c73fd4f"
         }
       ]
     },
@@ -476,9 +445,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1d177a3f7c2f2822e879d4b5bd44afa7"
+          "checksum": "41d8e422c307a7d07d066c10881f2f4f"
         },
         {
           "work_id": "00639",
@@ -489,9 +457,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a159853af78f52abb39ee7265b13782a"
+          "checksum": "538597fd76f7788e2f84472398897c15"
         },
         {
           "work_id": "00639",
@@ -502,9 +469,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9b94e02c246fade8f1673aa5fb1af1e2"
+          "checksum": "cd5c238f2804688a9d7ea207ffe0c2f5"
         },
         {
           "work_id": "00639",
@@ -515,9 +481,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6d6e4766eb2e2c5aa2ed6623581b9b7f"
+          "checksum": "ee2f8fddb6233a2f91363ce23d243a01"
         },
         {
           "work_id": "00639",
@@ -528,9 +493,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f1d7108d42338a995b41f3e3fae57a42"
+          "checksum": "1e10b935d5f626ebbee5809f6618fc91"
         },
         {
           "work_id": "00639",
@@ -541,9 +505,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ed8dc7f35bb3ce7ec46b43ad504d9348"
+          "checksum": "5ca86bc559fd208a35787b7fe833d7f6"
         },
         {
           "work_id": "00639",
@@ -554,9 +517,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "5533947bc10ad0a7dda04608573ffa30"
+          "checksum": "250dd541eba6928ec767224d97759e7a"
         },
         {
           "work_id": "00639",
@@ -567,9 +529,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c428d84710c21b2b12c90c0d1ce65ab9"
+          "checksum": "e7fcfb136738f805b06c66f571d4f819"
         },
         {
           "work_id": "00639",
@@ -580,9 +541,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c46a98fc721720ed7212ccec97e7efcc"
+          "checksum": "60d21527011f2ddb7577707f583e0202"
         },
         {
           "work_id": "00639",
@@ -593,9 +553,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "18f43c0c8f74f74a90e6c96a36e0462c"
+          "checksum": "d8becdf9cc4ce231360b7a60d8c0bb02"
         },
         {
           "work_id": "00639",
@@ -606,9 +565,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "14a12a471ff638729ea2b00a033a03f1"
+          "checksum": "b548ec6809c678693550dd9e45252f1b"
         },
         {
           "work_id": "00639",
@@ -619,9 +577,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "017811d29b618d2a43b7cc2e10682d36"
+          "checksum": "025eafcf0ea616cdc95eb5f2d97a2a53"
         },
         {
           "work_id": "00639",
@@ -632,9 +589,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e8068f2264ef8079bd06e4a90b67090d"
+          "checksum": "0bcd133c5977ed9a7c8257551c45fd13"
         },
         {
           "work_id": "00639",
@@ -645,9 +601,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f6badd2e135c3a952bc6aa608554243a"
+          "checksum": "e6e5fb7d13beec2206700b0168d5a0d4"
         },
         {
           "work_id": "00639",
@@ -658,9 +613,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "21a1642b8b7e2bea02689fbea0b96cb6"
+          "checksum": "060bce643de419e7d61d6472172fd173"
         },
         {
           "work_id": "00639",
@@ -671,9 +625,8 @@
           "project_subfolder": "transformed forms",
           "width_px": 1600,
           "height_px": 1600,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6981895c0d64ef49b6332bbcb9657143"
+          "checksum": "8b380fb08c96a2cbd8b03fd3fa1c1b02"
         }
       ]
     }

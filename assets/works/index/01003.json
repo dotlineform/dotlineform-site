@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ef276ded75ea748510b7d48fa84e1912",
-    "generated_at_utc": "2026-03-18T20:14:09Z",
+    "version": "blake2b-c95cfaa033a806b0942c3b1ea057618e",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "01003",
     "count": 3,
-    "hash": "blake2b-dd8c9a48e230269fcf47e2e6b0d1b54e",
-    "work_checksum": "blake2b-2d5ad218956d5b25bcaeb0c96b9c655b",
-    "details_checksum": "blake2b-dd8c9a48e230269fcf47e2e6b0d1b54e",
-    "record_checksum": "blake2b-ef276ded75ea748510b7d48fa84e1912"
+    "hash": "blake2b-5748ba64787d914ff445ac613f4f09f6",
+    "work_checksum": "blake2b-58f1734ec47b7cd5740d4701f9fa3810",
+    "details_checksum": "blake2b-5748ba64787d914ff445ac613f4f09f6",
+    "record_checksum": "blake2b-c95cfaa033a806b0942c3b1ea057618e"
   },
   "work": {
     "work_id": "01003",
@@ -35,9 +35,8 @@
     "width_px": 5906,
     "height_px": 5906,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "2d5ad218956d5b25bcaeb0c96b9c655b"
+    "checksum": "58f1734ec47b7cd5740d4701f9fa3810"
   },
   "sections": [
     {
@@ -52,9 +51,8 @@
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cb49cd9333ffc07e9d3f764c546fd7ff"
+          "checksum": "ce404dfa7dde901be11193815de3231d"
         },
         {
           "work_id": "01003",
@@ -65,9 +63,8 @@
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d50f4528048f4c0f9e788d715fed7afc"
+          "checksum": "0163f26c353a3b00c1f153ba0c0b3ebb"
         },
         {
           "work_id": "01003",
@@ -78,9 +75,8 @@
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "edaf1ed64681a7eaf3eb2fd286a2dc5a"
+          "checksum": "9c503e341cfd4d79cbf6fb029a7a7e07"
         }
       ]
     }

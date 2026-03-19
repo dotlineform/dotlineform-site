@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-85e8bad817d3903a96743b05d16ea0bc",
-    "generated_at_utc": "2026-03-05T21:25:22Z",
+    "version": "blake2b-0f6785868afb466d21a0f89b65c5df76",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00469",
     "count": 8,
-    "hash": "blake2b-b9eeb533fcdd1faedb7c69f1439856cb",
-    "work_checksum": "blake2b-63c00cc0cd367bd8674c2302020746ad",
-    "details_checksum": "blake2b-b9eeb533fcdd1faedb7c69f1439856cb",
-    "record_checksum": "blake2b-85e8bad817d3903a96743b05d16ea0bc"
+    "hash": "blake2b-818459e7aacf34e5de3ea6605820941a",
+    "work_checksum": "blake2b-2ee2d03a06e708894891876d89b58e6b",
+    "details_checksum": "blake2b-818459e7aacf34e5de3ea6605820941a",
+    "record_checksum": "blake2b-0f6785868afb466d21a0f89b65c5df76"
   },
   "work": {
     "work_id": "00469",
@@ -32,10 +32,11 @@
     "height_cm": 75.0,
     "width_cm": 50.0,
     "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 8859,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "63c00cc0cd367bd8674c2302020746ad"
+    "checksum": "2ee2d03a06e708894891876d89b58e6b"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "water series",
           "width_px": 7087,
           "height_px": 2409,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d3072a543bb2ba837d15053c030097a2"
+          "checksum": "5d045f79e2d5e82a0cc817545f76d852"
         },
         {
           "work_id": "00469",
@@ -63,9 +63,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c83edd42ac0a1c5c6adcb4b4adea3b92"
+          "checksum": "682b9a8f362346dd48760aaffbc6a8d0"
         },
         {
           "work_id": "00469",
@@ -76,9 +75,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dc6cd492b4fe218aeaf083b492a4789e"
+          "checksum": "4cdb95effcd0628f47cb2bc8a1c4ec61"
         },
         {
           "work_id": "00469",
@@ -89,9 +87,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6d7d5aec8633714f160ddcd1a521d1d2"
+          "checksum": "e552cfff246625594f7568b91b971eb3"
         },
         {
           "work_id": "00469",
@@ -102,9 +99,8 @@
           "project_subfolder": "water series",
           "width_px": 7087,
           "height_px": 2409,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7c5447977535e51adcca859dfc1eece0"
+          "checksum": "23f52184e23660e06360e556664e87d7"
         },
         {
           "work_id": "00469",
@@ -115,9 +111,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9b82742020fae848deb82fe4ea3d5bcf"
+          "checksum": "8f3855a0dd3de5a932f1db6a6b0d99d1"
         },
         {
           "work_id": "00469",
@@ -128,9 +123,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4e0200b1cfb8fd2f0053a8649e2dcdda"
+          "checksum": "cae31653aedd8612eee8b15c9242f396"
         },
         {
           "work_id": "00469",
@@ -141,9 +135,8 @@
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "18bb42c390e3411069bf30c7b8b7f9be"
+          "checksum": "69cd3857e9c65cff7eda7b899bd66b7d"
         }
       ]
     }

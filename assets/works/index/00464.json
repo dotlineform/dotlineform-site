@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-9a9f08ca5af6b208ee819c7eb908419a",
-    "generated_at_utc": "2026-03-05T21:25:22Z",
+    "version": "blake2b-2572f72db5c2038003132e6a74b5624b",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00464",
     "count": 60,
-    "hash": "blake2b-af1e96846bab9b2df025a5b0ae380462",
-    "work_checksum": "blake2b-6d06eff1db89a3689b5ce159af74bcd3",
-    "details_checksum": "blake2b-af1e96846bab9b2df025a5b0ae380462",
-    "record_checksum": "blake2b-9a9f08ca5af6b208ee819c7eb908419a"
+    "hash": "blake2b-9458a64a46aa5ed3b06dc3e18357f992",
+    "work_checksum": "blake2b-a442578bbeccd2c19d5263c08a119d16",
+    "details_checksum": "blake2b-9458a64a46aa5ed3b06dc3e18357f992",
+    "record_checksum": "blake2b-2572f72db5c2038003132e6a74b5624b"
   },
   "work": {
     "work_id": "00464",
@@ -32,10 +32,11 @@
     "height_cm": 50.0,
     "width_cm": 120.0,
     "depth_cm": null,
+    "width_px": 14173,
+    "height_px": 5906,
     "download": null,
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "6d06eff1db89a3689b5ce159af74bcd3"
+    "checksum": "a442578bbeccd2c19d5263c08a119d16"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d75680cb3fdf7988af4509a50e45bf35"
+          "checksum": "3c035b0ce2cb11fbc113f4d2f92f6837"
         },
         {
           "work_id": "00464",
@@ -63,9 +63,8 @@
           "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "29e788317ea2adcb1c6c317971732adf"
+          "checksum": "ae8a097978f532eec7570df0f84bafd2"
         },
         {
           "work_id": "00464",
@@ -76,9 +75,8 @@
           "project_subfolder": "moments",
           "width_px": 8268,
           "height_px": 8268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0f975899800a59eb74eca6b7ae39acea"
+          "checksum": "68506b0e0476401ff7f917181279a1db"
         },
         {
           "work_id": "00464",
@@ -89,9 +87,8 @@
           "project_subfolder": "moments",
           "width_px": 4000,
           "height_px": 4000,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "bd33e5fe3439959800ae8339a0f0a2de"
+          "checksum": "1d0da5c8608c7cb51088b3b33ab834ba"
         }
       ]
     },
@@ -107,9 +104,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "30cec114f3db2bf0e0f9f8d43dff7d7c"
+          "checksum": "25f04f92f43f409aab09dc3485ef36f5"
         },
         {
           "work_id": "00464",
@@ -120,9 +116,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d42d5df9747fac423873cf21558b6dac"
+          "checksum": "d138049aff92c9886c2d3c45d18dda95"
         },
         {
           "work_id": "00464",
@@ -133,9 +128,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ff2ef597ba5767834d9f48e200a3cf41"
+          "checksum": "eb87f4f8c92f9e8d06e40c2ddf66b0bf"
         },
         {
           "work_id": "00464",
@@ -146,9 +140,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "63c48b2af962983781881626a4f3656a"
+          "checksum": "e4ec93d26f877a98774a7dfeeb3a685c"
         },
         {
           "work_id": "00464",
@@ -159,9 +152,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "901071f2c9259ccc4fab58e5d20c8a6f"
+          "checksum": "e1bc9cfd6b089e3365547f4c94b01a51"
         },
         {
           "work_id": "00464",
@@ -172,9 +164,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "61551c507f5323623a3535f9be637beb"
+          "checksum": "3378d9e2dfabc5295eb5c163d4a9d639"
         },
         {
           "work_id": "00464",
@@ -185,9 +176,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "aa028269b0e22c02dd29e96403323bd6"
+          "checksum": "cff14210b50b59baa7ad72b083d9d4fb"
         },
         {
           "work_id": "00464",
@@ -198,9 +188,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0bef5bf84b4799dada85875cd9501d2a"
+          "checksum": "d38ff6fc9cacae0c98756bf228ee91eb"
         },
         {
           "work_id": "00464",
@@ -211,9 +200,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d45e2b38910ba6b5d2dd331c949279d8"
+          "checksum": "c71e010f924b32f1a9f75c2d256ce395"
         },
         {
           "work_id": "00464",
@@ -224,9 +212,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "70b2d4c77685212172d16b95cfaed556"
+          "checksum": "3e0968f3190fdcc6f641c5f2d32a7a5c"
         },
         {
           "work_id": "00464",
@@ -237,9 +224,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "09e06533f0ed3f333bc042306f55b988"
+          "checksum": "34e2128213ba25454ce7e2fb334cb3ee"
         },
         {
           "work_id": "00464",
@@ -250,9 +236,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6c00e2cf2fd6ad5b92c63f966eaa794f"
+          "checksum": "9c8938e1704edccc10851d79d30584b9"
         },
         {
           "work_id": "00464",
@@ -263,9 +248,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ba03ba66d4e2075c40a0e3094ba974c5"
+          "checksum": "b815a07ffc6233cf5a6d66252515093c"
         },
         {
           "work_id": "00464",
@@ -276,9 +260,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d070fb65fc43521656adad1477947048"
+          "checksum": "0003cf0b8df4eac7478570bbcc6f847f"
         },
         {
           "work_id": "00464",
@@ -289,9 +272,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "2dc83c8d03f84b866bbab4114926fb3c"
+          "checksum": "52a3d21bf8fe74557a4fff6bfb009b2f"
         },
         {
           "work_id": "00464",
@@ -302,9 +284,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a070f20fa2a65a5d5d59f0e698966285"
+          "checksum": "7c3d88d588cad2d50f2d8fbb0e56b7de"
         },
         {
           "work_id": "00464",
@@ -315,9 +296,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "89bb511001124421ae0164ae768e2d13"
+          "checksum": "217a72b48b0095a7c6bb220d58cd36f6"
         },
         {
           "work_id": "00464",
@@ -328,9 +308,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "95902abb590ab6e88c548b764e3bd086"
+          "checksum": "9b42e68516af6b3e9ccfc08d8594740a"
         },
         {
           "work_id": "00464",
@@ -341,9 +320,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "36282a36943a5b3ce28bd88316328950"
+          "checksum": "b7f1f2b8a85f24cc5b6a33af8c94639c"
         },
         {
           "work_id": "00464",
@@ -354,9 +332,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9d3a98634756cd095a37ed9584aec2f0"
+          "checksum": "a91b2fbf1d5c0b150e79eef748c0a1f5"
         },
         {
           "work_id": "00464",
@@ -367,9 +344,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "1ded74d3948fab9d0a37ef51d92ca7ad"
+          "checksum": "cddabb5e6e6f5acb5289955b8d8c3843"
         },
         {
           "work_id": "00464",
@@ -380,9 +356,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f139e1e40849a18e648f4b27771094c6"
+          "checksum": "d5308a2c2d6cd1489cc5e77c3b64fe48"
         },
         {
           "work_id": "00464",
@@ -393,9 +368,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c1bf02edd940e5236ae919eecddb7a43"
+          "checksum": "83f81d8e32ed0e9d6033a1ea1997299b"
         },
         {
           "work_id": "00464",
@@ -406,9 +380,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e4bc802313c43a8718f0c5ef80e251a6"
+          "checksum": "7090ff09c5211e2f9037cb60259cdf7e"
         },
         {
           "work_id": "00464",
@@ -419,9 +392,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6c60a8d98db2ac6e9dc77cc65386007a"
+          "checksum": "a607b185e690e36dbab1da9d1a8bed9b"
         },
         {
           "work_id": "00464",
@@ -432,9 +404,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "fff3b339e87f1261124ce813a2f47e44"
+          "checksum": "3b1c67ef7db2faff899351c0247a8c42"
         },
         {
           "work_id": "00464",
@@ -445,9 +416,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ea1dd603b59cfffdedd08c851bd5f590"
+          "checksum": "7a9e0412b16e9c0f159e0b2d7550e67b"
         },
         {
           "work_id": "00464",
@@ -458,9 +428,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7698a9353ff3d9c2c76acde840156624"
+          "checksum": "85a9cd5715c2bc2ce70e5abce8cce1b3"
         },
         {
           "work_id": "00464",
@@ -471,9 +440,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f60164c8ac5a76a0affb0ac7cde7f2ce"
+          "checksum": "e802d3c9722f33ac68bf477e78a551b1"
         },
         {
           "work_id": "00464",
@@ -484,9 +452,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c819f026ea060ada78d009a00664c495"
+          "checksum": "f76dbf39c52eb2d924afca27c103d7ec"
         },
         {
           "work_id": "00464",
@@ -497,9 +464,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "22e3239482871f00ae126b5f4f798db2"
+          "checksum": "1ed205860f4bebb521997e709a9d3839"
         },
         {
           "work_id": "00464",
@@ -510,9 +476,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "d39e09dad1a7ed479fec22738bb5fd8a"
+          "checksum": "d151f94238aecd56c42dd29d73d0e9a1"
         },
         {
           "work_id": "00464",
@@ -523,9 +488,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "e9f524bbbff53dd2274fedd2941cf962"
+          "checksum": "42bb4c0deff68567fa77f4cdaf9b775d"
         },
         {
           "work_id": "00464",
@@ -536,9 +500,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "49b1e0d6fc8de2a0d0b32381851a2ea7"
+          "checksum": "bc828e5b326be9ac49897631e165f764"
         },
         {
           "work_id": "00464",
@@ -549,9 +512,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0c092e4731896168feab626ae997ca51"
+          "checksum": "843a4c18eb7f82b074e15427e0d5d09b"
         },
         {
           "work_id": "00464",
@@ -562,9 +524,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "af2cfc74239d407896f8acdb42f758d7"
+          "checksum": "0afa4160886a13a87da0fd2d55884441"
         },
         {
           "work_id": "00464",
@@ -575,9 +536,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c407ac9023f8fd9f16a3869ed327eff1"
+          "checksum": "063c4d2a3b41229f173b0c5988b88f3d"
         },
         {
           "work_id": "00464",
@@ -588,9 +548,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "ace8b5bee9545464aec7a302db43ebf3"
+          "checksum": "83b696b80b81ebf5bd1383d7d9cdfc95"
         },
         {
           "work_id": "00464",
@@ -601,9 +560,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "db4209607572b18391565e5e884ab5d9"
+          "checksum": "d82d22753e5dbad89b5a6c0eb7b90fa5"
         },
         {
           "work_id": "00464",
@@ -614,9 +572,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "80d39dde3ca5295d174e91aae83d95b4"
+          "checksum": "5bcf5e248c4ca981a52ba21420c4853c"
         },
         {
           "work_id": "00464",
@@ -627,9 +584,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "0a0b39404717981a7b4421635673c68e"
+          "checksum": "d1e8e991c5a8e14b75b84a1279072cd5"
         },
         {
           "work_id": "00464",
@@ -640,9 +596,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9476fbaa5a550bdc4b229b5f1f82c0fd"
+          "checksum": "758578391cb2190535226c37f08f6eb4"
         },
         {
           "work_id": "00464",
@@ -653,9 +608,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "3870c61c78a1c33f2952fe3d539633ee"
+          "checksum": "3d8b3cf32d7803d190a781746ecd1b30"
         },
         {
           "work_id": "00464",
@@ -666,9 +620,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "232b1e93bac3e75d459d10c42ce0f938"
+          "checksum": "a26d39868d6ecae3a443c6720dd0502c"
         },
         {
           "work_id": "00464",
@@ -679,9 +632,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "67b91381126ae4e6543056d44585d217"
+          "checksum": "a2a34ec88acecffda58401945b830c86"
         },
         {
           "work_id": "00464",
@@ -692,9 +644,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dd6d1f79453803215d9de7c0b1be55c2"
+          "checksum": "04e514c93abf8f375542ea1dae03e636"
         },
         {
           "work_id": "00464",
@@ -705,9 +656,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "23bb20e3b38c59459550d2525ae6e6bf"
+          "checksum": "c6a7ab5c08a109f2d36d17329f7806a6"
         },
         {
           "work_id": "00464",
@@ -718,9 +668,8 @@
           "project_subfolder": "memories",
           "width_px": 2362,
           "height_px": 2362,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "a904092137e3e03568612d0393181f1e"
+          "checksum": "31ddaabef32f29c36e8294b79b6a2a2b"
         }
       ]
     },
@@ -736,9 +685,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "dc6e40b33a1f655d5730111e34691a16"
+          "checksum": "20a05014a5913f2881fc33f9c39cba59"
         },
         {
           "work_id": "00464",
@@ -749,9 +697,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "9ad1aa6f1ea6515d9445afa23d9d1966"
+          "checksum": "87ae59bfc436b47ec635bd8909707e9c"
         },
         {
           "work_id": "00464",
@@ -762,9 +709,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "80217d1d5e5cee53ff8e4d274b2e45b2"
+          "checksum": "cb2b5c37898d036fc888091e8c04bafe"
         },
         {
           "work_id": "00464",
@@ -775,9 +721,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7b3297d68f11363e4ca96af5a349323d"
+          "checksum": "87cad7ae2ec1491dc48c2dfa058ca9d6"
         },
         {
           "work_id": "00464",
@@ -788,9 +733,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "05536bacb8517e927dd36e5485dfd18e"
+          "checksum": "896deb0ff5e4fddd01bf027a4fc3f213"
         },
         {
           "work_id": "00464",
@@ -801,9 +745,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "63dee33054249bea512a81d6835eda03"
+          "checksum": "b808190ea0394783a02ea4092ce07c73"
         },
         {
           "work_id": "00464",
@@ -814,9 +757,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "c3fd1c939a2ee56ecb649f5f195988eb"
+          "checksum": "6d67526764243b3393fa4979a7c25de8"
         },
         {
           "work_id": "00464",
@@ -827,9 +769,8 @@
           "project_subfolder": "composite memories",
           "width_px": 5906,
           "height_px": 5906,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "21012645b1e51a904b976be52a431128"
+          "checksum": "14ce3629a87c520576754aa37a422d87"
         }
       ]
     }

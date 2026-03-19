@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a23aaa4e44d8f44d9203e88f18f69fc6",
-    "generated_at_utc": "2026-03-05T21:25:22Z",
+    "version": "blake2b-99f186cbf89d3d1bcb7b153707c268ed",
+    "generated_at_utc": "2026-03-19T14:50:30Z",
     "work_id": "00163",
     "count": 10,
-    "hash": "blake2b-12170e703d421e1bf114b3717124f9a6",
-    "work_checksum": "blake2b-4aa6236759efcfd65a5a8410a2548416",
-    "details_checksum": "blake2b-12170e703d421e1bf114b3717124f9a6",
-    "record_checksum": "blake2b-a23aaa4e44d8f44d9203e88f18f69fc6"
+    "hash": "blake2b-4ebffb098962fcbb27ac7042d8ed4bef",
+    "work_checksum": "blake2b-81b8d120624d9c6e8f8cfaf295761c18",
+    "details_checksum": "blake2b-4ebffb098962fcbb27ac7042d8ed4bef",
+    "record_checksum": "blake2b-99f186cbf89d3d1bcb7b153707c268ed"
   },
   "work": {
     "work_id": "00163",
@@ -32,10 +32,11 @@
     "height_cm": 30.5,
     "width_cm": 21.5,
     "depth_cm": null,
+    "width_px": 1545,
+    "height_px": 2193,
     "download": "nerve (abattoir).pdf",
-    "has_primary_2400": false,
     "artist": "Michael Davies",
-    "checksum": "4aa6236759efcfd65a5a8410a2548416"
+    "checksum": "81b8d120624d9c6e8f8cfaf295761c18"
   },
   "sections": [
     {
@@ -50,9 +51,8 @@
           "project_subfolder": "pages",
           "width_px": 2242,
           "height_px": 2242,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "4f06cf9d7afda5a0c6944fa1270a6339"
+          "checksum": "f59c06cf909d5daf5b15d836ce52bbb6"
         },
         {
           "work_id": "00163",
@@ -63,9 +63,8 @@
           "project_subfolder": "pages",
           "width_px": 3240,
           "height_px": 2268,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "8e1c10149bd6b0e7accf16e0901a8d3c"
+          "checksum": "025c97f6de04de87f8f9174456a9fcc9"
         },
         {
           "work_id": "00163",
@@ -76,9 +75,8 @@
           "project_subfolder": "pages",
           "width_px": 2869,
           "height_px": 2008,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "6d3d8bd87bedfea0c63aba9de015bb23"
+          "checksum": "7373ee75b493ed1465008c0e02301862"
         },
         {
           "work_id": "00163",
@@ -89,9 +87,8 @@
           "project_subfolder": "pages",
           "width_px": 2750,
           "height_px": 1925,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "501cb9129f0299b3e75d914d05752958"
+          "checksum": "05f6399975a5dbedf914bda7e821af78"
         },
         {
           "work_id": "00163",
@@ -102,9 +99,8 @@
           "project_subfolder": "pages",
           "width_px": 2665,
           "height_px": 1866,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "7db76bc41150d759ef5f24e3e9dfc9cd"
+          "checksum": "c4c3bf677c5b8643fb5121e4b5c4fe76"
         },
         {
           "work_id": "00163",
@@ -115,9 +111,8 @@
           "project_subfolder": "pages",
           "width_px": 2971,
           "height_px": 2080,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "b705a724420ca3ce1f905cc358179c48"
+          "checksum": "eac8a893a476b93e96751e510d1c4ab4"
         },
         {
           "work_id": "00163",
@@ -128,9 +123,8 @@
           "project_subfolder": "pages",
           "width_px": 2979,
           "height_px": 2085,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "f1916624a385f587ebc8247979312114"
+          "checksum": "1c7f7c38a5bbef4a71ff62d8981a8b25"
         },
         {
           "work_id": "00163",
@@ -141,9 +135,8 @@
           "project_subfolder": "pages",
           "width_px": 2896,
           "height_px": 2027,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "978aab8b2cf7aab117e4030be3f77317"
+          "checksum": "5480caf7d0eff17c8bf7aefeaa29ad1a"
         },
         {
           "work_id": "00163",
@@ -154,9 +147,8 @@
           "project_subfolder": "pages",
           "width_px": 3015,
           "height_px": 2111,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "75f5abad7a1192c5b42f67537c4f9e11"
+          "checksum": "b8ce562a476e7d1beb5c23c732eed5c1"
         },
         {
           "work_id": "00163",
@@ -167,9 +159,8 @@
           "project_subfolder": "pages",
           "width_px": 1985,
           "height_px": 1985,
-          "has_primary_2400": false,
           "layout": "work_details",
-          "checksum": "cef46781deb04f7da561120e156e3584"
+          "checksum": "f13b41caf10ec4b3c0ccbdd813e10782"
         }
       ]
     }
