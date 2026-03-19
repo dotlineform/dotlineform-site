@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-cc7ea01ceef50752bdab495aac0b955e",
-    "generated_at_utc": "2026-03-19T16:47:26Z",
-    "count": 75
+    "version": "blake2b-208f07d8b1b1b242c96bb0ea0f4965a8",
+    "generated_at_utc": "2026-03-19T17:08:56Z",
+    "count": 76
   },
   "series": {
     "10000": {
@@ -1832,8 +1832,8 @@
     "entangled-form": {
       "series_id": "entangled-form",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-19",
       "title": "entangled form",
       "title_sort": "entangled form",
       "sort_fields": "work_id",
@@ -1854,6 +1854,32 @@
         "work_id": "01044",
         "thumb_96": "/assets/works/img/01044-thumb-96.webp",
         "thumb_192": "/assets/works/img/01044-thumb-192.webp"
+      }
+    },
+    "espresso": {
+      "series_id": "espresso",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "espresso",
+      "title_sort": "espresso",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012",
+      "primary_work_id": "01046",
+      "notes": null,
+      "project_folders": [
+        "espresso"
+      ],
+      "checksum": "7f93a6dab8fd3fcd485e74de88f4457f",
+      "works": [
+        "01046"
+      ],
+      "thumb": {
+        "work_id": "01046",
+        "thumb_96": "/assets/works/img/01046-thumb-96.webp",
+        "thumb_192": "/assets/works/img/01046-thumb-192.webp"
       }
     },
     "for-david-lynch": {

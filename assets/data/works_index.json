@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-61f356c0c79436e135caaaa65548cc76",
-    "generated_at_utc": "2026-03-19T16:47:27Z",
-    "count": 1039
+    "version": "blake2b-ee2aee0eb7a29d851dfb4da6e329870d",
+    "generated_at_utc": "2026-03-19T17:08:57Z",
+    "count": 1040
   },
   "works": {
     "00001": {
@@ -14552,6 +14552,20 @@
       "storage": "framed",
       "work_checksum": "blake2b-8f13c53783fd4c53571bc5f2b6c2a4ca",
       "details_checksum": "blake2b-760343f71d7d9d13aeb36ad4d747874a"
+    },
+    "01046": {
+      "work_id": "01046",
+      "title": "espresso",
+      "title_sort": "espresso",
+      "year": 2012,
+      "year_display": "2012",
+      "series_id": "espresso",
+      "series_ids": [
+        "espresso"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-982bf4be32d69b187c0231d5648eeb00",
+      "details_checksum": "blake2b-1effaa2dd8ee2f3cfcdf9376139f0f9a"
     }
   }
 }
