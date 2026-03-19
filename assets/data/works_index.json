@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-6318f120c11af6d20a7ed4fdbd054191",
-    "generated_at_utc": "2026-03-19T17:32:01Z",
-    "count": 1042
+    "version": "blake2b-7ac92788904a2acba7abdca0d6447e24",
+    "generated_at_utc": "2026-03-19T19:57:41Z",
+    "count": 1045
   },
   "works": {
     "00001": {
@@ -14594,6 +14594,48 @@
       "storage": null,
       "work_checksum": "blake2b-8c52fc4cc7b754e243382d3f2d930d33",
       "details_checksum": "blake2b-0bba73ea1db9b8aa89da07355ce280ac"
+    },
+    "01049": {
+      "work_id": "01049",
+      "title": "fireworks form",
+      "title_sort": "fireworks form",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "fireworks-form",
+      "series_ids": [
+        "fireworks-form"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-d818ef44bdff007b26ce74fa3ba53a47",
+      "details_checksum": "blake2b-acd984695a3269b5b1795a7e957edaad"
+    },
+    "01050": {
+      "work_id": "01050",
+      "title": "fireworks particles",
+      "title_sort": "fireworks particles",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "fireworks-form",
+      "series_ids": [
+        "fireworks-form"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-5c597e13377ed62a641b13c69f0bedb8",
+      "details_checksum": "blake2b-84701a22d819341e242406bff2c8a344"
+    },
+    "01051": {
+      "work_id": "01051",
+      "title": "fireworks particles version",
+      "title_sort": "fireworks particles version",
+      "year": 2023,
+      "year_display": "2023",
+      "series_id": "fireworks-form",
+      "series_ids": [
+        "fireworks-form"
+      ],
+      "storage": null,
+      "work_checksum": "blake2b-e305e5e3c6ea49ce95ebaa7e2303635e",
+      "details_checksum": "blake2b-5541cf6c982ad0bded9456e2d17c854b"
     }
   }
 }

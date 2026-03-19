@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-949ded2d181fd14b6be6f086fb6513f5",
-    "generated_at_utc": "2026-03-19T17:32:01Z",
-    "count": 77
+    "version": "blake2b-596a5f8f77e9f08e97ddc65d956ee808",
+    "generated_at_utc": "2026-03-19T19:57:32Z",
+    "count": 78
   },
   "series": {
     "10000": {
@@ -1885,8 +1885,8 @@
     "field": {
       "series_id": "field",
       "layout": "series",
-      "status": "draft",
-      "published_date": null,
+      "status": "published",
+      "published_date": "2026-03-19",
       "title": "field",
       "title_sort": "field",
       "sort_fields": "work_id",
@@ -1907,6 +1907,34 @@
         "work_id": "01047",
         "thumb_96": "/assets/works/img/01047-thumb-96.webp",
         "thumb_192": "/assets/works/img/01047-thumb-192.webp"
+      }
+    },
+    "fireworks-form": {
+      "series_id": "fireworks-form",
+      "layout": "series",
+      "status": "draft",
+      "published_date": null,
+      "title": "fireworks form",
+      "title_sort": "fireworks form",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01050",
+      "notes": null,
+      "project_folders": [
+        "fireworks form"
+      ],
+      "checksum": "f6a8a87a8110fa6c0720771c39da9e89",
+      "works": [
+        "01049",
+        "01050",
+        "01051"
+      ],
+      "thumb": {
+        "work_id": "01050",
+        "thumb_96": "/assets/works/img/01050-thumb-96.webp",
+        "thumb_192": "/assets/works/img/01050-thumb-192.webp"
       }
     },
     "for-david-lynch": {
