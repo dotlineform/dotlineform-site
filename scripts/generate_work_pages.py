@@ -1098,7 +1098,6 @@ def main() -> None:
 
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         wid = str(work_record.get("work_id", ""))
-        work_checksum_raw = coerce_string(work_record.get("checksum"))
         title_value = coerce_string(work_record.get("title"))
         title_sort_value = coerce_string(work_record.get("title_sort"))
         year_value = work_record.get("year")
@@ -1112,8 +1111,6 @@ def main() -> None:
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
             "storage": storage_value,
-            "work_checksum": f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None,
-            "details_checksum": None,
         }
 
     def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
@@ -2186,12 +2183,6 @@ def main() -> None:
                         height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
                     )
                 )
-
-        for wid in sorted(works_payload.keys()):
-            item = works_payload[wid]
-            detail_records = detail_records_by_work.get(wid, [])
-            detail_sections = build_sections_from_detail_records(detail_records)
-            item["details_checksum"] = compute_payload_version({"sections": detail_sections})
 
         version_payload = {
             "schema": "works_index_v3",
