@@ -312,7 +312,8 @@ function initStudioWorksPage() {
   function makeWorkRow(work, seriesMetaById) {
     const wid = normalizeText(work && work.work_id);
     if (!wid) return null;
-    const sid = slugSortKey(work && work.series_id);
+    const rawSeriesIds = Array.isArray(work && work.series_ids) ? work.series_ids : [];
+    const sid = slugSortKey(rawSeriesIds.length ? rawSeriesIds[0] : "");
     const sm = sid ? seriesMetaById[sid] || null : null;
     const seriesLabel = sm && sm.label ? sm.label : sid || "";
     const seriesPrimarySort = sm && sm.primary_sort ? sm.primary_sort : "";

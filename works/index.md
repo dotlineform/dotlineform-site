@@ -288,7 +288,8 @@ section: works
     function makeWorkRow(work, seriesMetaById) {
       var wid = normalizeText(work && work.work_id);
       if (!wid) return null;
-      var sid = slugSortKey(work && work.series_id);
+      var rawSeriesIds = Array.isArray(work && work.series_ids) ? work.series_ids : [];
+      var sid = slugSortKey(rawSeriesIds.length ? rawSeriesIds[0] : '');
       var sm = sid ? (seriesMetaById[sid] || null) : null;
       var seriesLabel = (sm && sm.label) ? sm.label : (sid || '');
       var seriesPrimarySort = (sm && sm.primary_sort) ? sm.primary_sort : '';

@@ -479,6 +479,34 @@ def compute_payload_version(payload: Any) -> str:
     return f"blake2b-{compute_payload_hash_hex(payload)}"
 
 
+def compact_json_value(value: Any, *, prune_empty_dicts: bool = True) -> Any:
+    """Drop null object fields recursively while preserving empty lists."""
+    if isinstance(value, dict):
+        out: Dict[str, Any] = {}
+        for key, item in value.items():
+            compacted = compact_json_value(item, prune_empty_dicts=prune_empty_dicts)
+            if compacted is None:
+                continue
+            out[key] = compacted
+        if prune_empty_dicts and not out:
+            return None
+        return out
+    if isinstance(value, list):
+        out_list = []
+        for item in value:
+            compacted = compact_json_value(item, prune_empty_dicts=prune_empty_dicts)
+            if compacted is None:
+                continue
+            out_list.append(compacted)
+        return out_list
+    return value
+
+
+def compact_json_object(payload: Dict[str, Any]) -> Dict[str, Any]:
+    compacted = compact_json_value(payload, prune_empty_dicts=False)
+    return compacted if isinstance(compacted, dict) else {}
+
+
 def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     """Extract header.<key> from an existing JSON payload."""
     try:
@@ -1093,7 +1121,7 @@ def main() -> None:
             "layout": "work_details",
         }
         dfm["checksum"] = compute_work_checksum(dfm)
-        return dfm
+        return compact_json_object(dfm)
 
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         wid = str(work_record.get("work_id", ""))
@@ -1101,14 +1129,14 @@ def main() -> None:
         year_value = work_record.get("year")
         year_display_value = coerce_string(work_record.get("year_display"))
         storage_value = coerce_string(work_record.get("storage"))
-        return {
+        return compact_json_object({
             "work_id": wid,
             "title": title_value,
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
             "storage": storage_value,
-        }
+        })
 
     def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         public_record = dict(work_record)
@@ -1117,8 +1145,9 @@ def main() -> None:
         public_record.pop("series_sort", None)
         public_record.pop("title_sort", None)
         public_record.pop("checksum", None)
+        public_record = compact_json_object(public_record)
         public_record["checksum"] = compute_work_checksum(public_record)
-        return public_record
+        return compact_json_object(public_record)
 
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         section_index: Dict[str, int] = {}
@@ -1789,7 +1818,7 @@ def main() -> None:
             }
             series_checksum = compute_work_checksum(series_front_matter_like)
 
-            series_payload_unsorted[sid] = {
+            series_payload_unsorted[sid] = compact_json_object({
                 "series_id": sid,
                 "layout": "series",
                 "status": status,
@@ -1805,18 +1834,18 @@ def main() -> None:
                 "checksum": series_checksum,
                 "works": ordered_work_ids,
                 "thumb": thumb,
-            }
+            })
 
         series_payload: Dict[str, Dict[str, Any]] = {
             sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())
         }
 
-        series_version_payload = {
+        series_version_payload = compact_json_object({
             "schema": "series_index_v2",
             "series": series_payload,
-        }
+        })
         series_version = compute_payload_version(series_version_payload)
-        series_index_payload = {
+        series_index_payload = compact_json_object({
             "header": {
                 "schema": "series_index_v2",
                 "version": series_version,
@@ -1824,7 +1853,7 @@ def main() -> None:
                 "count": len(series_payload),
             },
             "series": series_payload,
-        }
+        })
 
         exists = series_index_json_path.exists()
         existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
@@ -2097,10 +2126,12 @@ def main() -> None:
                 work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
                 work_checksum_raw = coerce_string(work_record.get("checksum"))
                 work_checksum = f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None
-                details_checksum = compute_payload_version({"sections": sections})
-                record_checksum = compute_payload_version({"work": work_record, "sections": sections})
+                details_version_payload = compact_json_object({"sections": sections})
+                record_version_payload = compact_json_object({"work": work_record, "sections": sections})
+                details_checksum = compute_payload_version(details_version_payload)
+                record_checksum = compute_payload_version(record_version_payload)
 
-                payload = {
+                payload = compact_json_object({
                     "header": {
                         "schema": "work_record_v2",
                         "version": record_checksum,
@@ -2114,7 +2145,7 @@ def main() -> None:
                     },
                     "work": work_record,
                     "sections": sections,
-                }
+                })
                 out_json_path = works_json_dir / f"{wid}.json"
                 exists = out_json_path.exists()
                 existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
@@ -2178,12 +2209,12 @@ def main() -> None:
                     )
                 )
 
-        version_payload = {
+        version_payload = compact_json_object({
             "schema": "works_index_v3",
             "works": works_payload,
-        }
+        })
         version = compute_payload_version(version_payload)
-        payload = {
+        payload = compact_json_object({
             "header": {
                 "schema": "works_index_v3",
                 "version": version,
@@ -2191,7 +2222,7 @@ def main() -> None:
                 "count": len(works_payload),
             },
             "works": works_payload,
-        }
+        })
         payload_version = payload["header"]["version"]
         exists = works_index_json_path.exists()
         existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
