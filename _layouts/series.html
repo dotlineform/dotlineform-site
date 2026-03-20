@@ -5,6 +5,11 @@ layout: default
 {% assign series_id_fallback = page.series_id | default: page.slug %}
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign thumb_works_base = thumb_base | append: thumb_works | append: "/" %}
 {%- assign thumb_works_base_out = thumb_works_base -%}
 {%- unless thumb_works_base contains '://' -%}
@@ -17,6 +22,9 @@ layout: default
   data-baseurl="{{ site.baseurl | default: '' }}"
   data-series-id="{{ series_id_fallback | default: '' | escape }}"
   data-thumb-works-base="{{ thumb_works_base_out | escape }}"
+  data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}"
+  data-thumb-suffix="{{ thumb_suffix | escape }}"
+  data-asset-format="{{ asset_format | escape }}"
 >
   <header class="page__header">
     <h1 class="page__title" id="seriesPageTitle">{{ page.title | default: series_id_fallback }}</h1>
@@ -63,6 +71,22 @@ layout: default
       var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
       var seriesId = String(root.getAttribute('data-series-id') || '').trim().toLowerCase();
       var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '').trim();
+      var thumbSizes = [];
+      try {
+        thumbSizes = JSON.parse(root.getAttribute('data-thumb-sizes') || '[]');
+      } catch (e) {
+        thumbSizes = [];
+      }
+      thumbSizes = Array.isArray(thumbSizes) ? thumbSizes.map(function (value) {
+        var n = Number(value);
+        return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+      }).filter(function (value) { return value > 0; }) : [];
+      if (!thumbSizes.length) thumbSizes = [96, 192];
+      var primaryThumbSize = thumbSizes[0];
+      var thumbSrcsetSizes = thumbSizes.slice(0, 2);
+      if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
+      var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
+      var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
       var pageSize = 60;
       var params = new URLSearchParams(window.location.search);
       var rawPage = Number(params.get('series_page') || '0');
@@ -102,7 +126,7 @@ layout: default
       }
 
       function thumbUrl(id, size) {
-        return String(thumbWorksBase || '') + id + '-thumb-' + size + '.webp';
+        return String(thumbWorksBase || '') + id + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
       }
 
       function toAssetUrl(path) {
@@ -163,11 +187,11 @@ layout: default
 
             var img = document.createElement('img');
             img.className = 'seriesGrid__img';
-            img.src = String(it.thumb_96 || '');
-            img.srcset = String(it.thumb_96 || '') + ' 96w, ' + String(it.thumb_192 || '') + ' 192w';
+            img.src = String(it.thumb_primary || '');
+            img.srcset = String(it.thumb_srcset || '');
             img.sizes = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
-            img.width = 96;
-            img.height = 96;
+            img.width = primaryThumbSize;
+            img.height = primaryThumbSize;
             img.loading = 'lazy';
             img.decoding = 'async';
             img.alt = String(it.title || it.work_id || '');
@@ -214,14 +238,16 @@ layout: default
           var id = String(rawId || '').trim();
           if (!id) return null;
           var wr = worksMap[id] || {};
-          var thumb96 = thumbUrl(id, '96');
-          var thumb192 = thumbUrl(id, '192');
+          var thumbPrimary = thumbUrl(id, String(primaryThumbSize));
+          var thumbSrcset = thumbSrcsetSizes.map(function (size) {
+            return thumbUrl(id, String(size)) + ' ' + size + 'w';
+          }).join(', ');
           return {
             work_id: id,
             title: String(wr.title || id),
             work_url: workUrl(id),
-            thumb_96: thumb96,
-            thumb_192: thumb192
+            thumb_primary: thumbPrimary,
+            thumb_srcset: thumbSrcset
           };
         }).filter(function (it) { return it && it.work_id.length > 0; });
       }

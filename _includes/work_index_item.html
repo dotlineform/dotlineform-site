@@ -3,9 +3,22 @@
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_prefix = site.thumb_prefix %}
 {% if thumb_prefix == nil %}{% assign thumb_prefix = "/assets" %}{% endif %}
+{% assign pipeline = site.data.pipeline %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
+{% assign primary_thumb_size = thumb_sizes | first %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign base = thumb_base | append: thumb_prefix | append: "/works/img/" %}
 
-{% assign thumb = base | append: w.work_id | append: "-thumb-96.webp" %}
+{%- capture thumb_srcset -%}
+  {%- for size in thumb_sizes -%}
+    {%- assign thumb_src = base | append: w.work_id | append: "-" | append: thumb_suffix | append: "-" | append: size | append: "." | append: asset_format -%}
+    {%- unless base contains '://' -%}{%- assign thumb_src = thumb_src | relative_url -%}{%- endunless -%}
+    {{ thumb_src }} {{ size }}w{%- unless forloop.last -%}, {% endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{% assign thumb = base | append: w.work_id | append: "-" | append: thumb_suffix | append: "-" | append: primary_thumb_size | append: "." | append: asset_format %}
 {% assign thumb_out = thumb %}
 {% unless base contains '://' %}{% assign thumb_out = thumb | relative_url %}{% endunless %}
 
@@ -13,6 +26,9 @@
   <img
     class="workIndexItem__img"
     src="{{ thumb_out }}"
+    srcset="{{ thumb_srcset | strip }}"
+    width="{{ primary_thumb_size }}"
+    height="{{ primary_thumb_size }}"
     alt="{{ w.title | escape }}"
     loading="lazy"
     decoding="async">

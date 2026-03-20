@@ -20,6 +20,38 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
+try:
+    from pipeline_config import load_pipeline_config
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import load_pipeline_config
+
+
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
+THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
+PRIMARY_SUFFIX = str(PIPELINE_CONFIG["variants"]["primary"]["suffix"])
+ASSET_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
+THUMB_SIZES = sorted({int(v) for v in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
+ACCEPTED_THUMB_SIZES = sorted(
+    set(THUMB_SIZES)
+    | {int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"].get("accepted_legacy_thumb_sizes", [])}
+)
+ACCEPTED_PRIMARY_WIDTHS = sorted(
+    {int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"].get("generate_widths", [])}
+    | {int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"].get("accepted_legacy_widths", [])}
+)
+
+
+def expected_thumb_names(item_id: str) -> List[str]:
+    return [f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
+
+
+def media_filename_regex(id_pattern: str) -> re.Pattern[str]:
+    thumb_alt = "|".join(str(size) for size in ACCEPTED_THUMB_SIZES)
+    primary_alt = "|".join(str(width) for width in ACCEPTED_PRIMARY_WIDTHS)
+    return re.compile(
+        rf"^({id_pattern})-(?:{re.escape(THUMB_SUFFIX)}-(?:{thumb_alt})|{re.escape(PRIMARY_SUFFIX)}-(?:{primary_alt}))\.{re.escape(ASSET_FORMAT)}$"
+    )
+
 
 def is_empty(value: Any) -> bool:
     return value is None or str(value).strip() == ""
@@ -958,17 +990,14 @@ def check_media(
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         fm = row["fm"]
-        expected = [
-            f"{wid}-thumb-96.webp",
-            f"{wid}-thumb-192.webp",
-        ]
+        expected = expected_thumb_names(wid)
         for name in expected:
             p = works_img_dir / name
             if not p.exists():
                 errors += 1
                 add_sample(samples, {"check": "media", "id": wid, "path": str(p), "message": f"missing expected work media file: {name}"}, max_samples)
         # Primary files are intentionally remote-hosted in this project.
-        # Do not assert local primary-* presence, including primary-2400.
+        # Do not assert local primary-* presence in this project.
 
     for duid, row in work_details.items():
         fm = row["fm"]
@@ -980,17 +1009,14 @@ def check_media(
             sid = normalize_text(works[wid]["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
-        expected = [
-            f"{duid}-thumb-96.webp",
-            f"{duid}-thumb-192.webp",
-        ]
+        expected = expected_thumb_names(duid)
         for name in expected:
             p = details_img_dir / name
             if not p.exists():
                 errors += 1
                 add_sample(samples, {"check": "media", "id": duid, "path": str(p), "message": f"missing expected detail media file: {name}"}, max_samples)
         # Primary files are intentionally remote-hosted in this project.
-        # Do not assert local primary-* presence, including primary-2400.
+        # Do not assert local primary-* presence in this project.
 
     return {"name": "media", "error_count": errors, "warning_count": warnings, "samples": samples}
 
@@ -1065,9 +1091,11 @@ def check_orphans(
     if include_media_scan:
         works_img_dir = site_root / "assets/works/img"
         details_img_dir = site_root / "assets/work_details/img"
+        works_media_pattern = media_filename_regex(r"\d{5}")
+        details_media_pattern = media_filename_regex(r"\d{5}-\d{3}")
 
-        for p in sorted(works_img_dir.glob("*.webp")):
-            m = re.match(r"^(\d{5})-(?:thumb-(?:96|192)|primary-(?:800|1200|1600|2400))\.webp$", p.name)
+        for p in sorted(works_img_dir.glob(f"*.{ASSET_FORMAT}")):
+            m = works_media_pattern.match(p.name)
             if not m:
                 continue
             wid = m.group(1)
@@ -1077,8 +1105,8 @@ def check_orphans(
                 warnings += 1
                 add_sample(samples, {"check": "orphans", "id": wid, "path": str(p), "message": "orphan work image file (no matching work page)"}, max_samples)
 
-        for p in sorted(details_img_dir.glob("*.webp")):
-            m = re.match(r"^(\d{5}-\d{3})-(?:thumb-(?:96|192)|primary-(?:800|1200|1600|2400))\.webp$", p.name)
+        for p in sorted(details_img_dir.glob(f"*.{ASSET_FORMAT}")):
+            m = details_media_pattern.match(p.name)
             if not m:
                 continue
             duid = m.group(1)

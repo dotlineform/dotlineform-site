@@ -10,18 +10,32 @@ layout: default
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_work_details = site.media_image_work_details | default: "/work_details/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign primary_variants = pipeline.variants.primary %}
+{% assign compatibility_variants = pipeline.variants.compatibility %}
+{% assign primary_render_widths = compatibility_variants.render_widths | default: primary_variants.widths %}
+{% assign primary_display_width = primary_render_widths | last %}
+{% assign primary_full_width = primary_variants.preferred_width | default: primary_display_width %}
+{% assign primary_suffix = primary_variants.suffix | default: "primary" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign img_base = media_base | append: media_image_work_details | append: "/" %}
 
-{%- assign src800  = img_base | append: detail_uid | append: "-primary-800.webp" -%}
-{%- assign src1200 = img_base | append: detail_uid | append: "-primary-1200.webp" -%}
-{%- assign src1600 = img_base | append: detail_uid | append: "-primary-1600.webp" -%}
-{%- assign full_src = src1600 -%}
+{%- assign primary_display_src = img_base | append: detail_uid | append: "-" | append: primary_suffix | append: "-" | append: primary_display_width | append: "." | append: asset_format -%}
+{%- assign primary_full_src = img_base | append: detail_uid | append: "-" | append: primary_suffix | append: "-" | append: primary_full_width | append: "." | append: asset_format -%}
 
 {%- unless img_base contains '://' -%}
-  {%- assign src800  = src800  | relative_url -%}
-  {%- assign src1200 = src1200 | relative_url -%}
-  {%- assign src1600 = src1600 | relative_url -%}
+  {%- assign primary_display_src = primary_display_src | relative_url -%}
+  {%- assign primary_full_src = primary_full_src | relative_url -%}
 {%- endunless -%}
+{%- capture primary_srcset -%}
+  {%- for width in primary_render_widths -%}
+    {%- assign primary_variant_src = img_base | append: detail_uid | append: "-" | append: primary_suffix | append: "-" | append: width | append: "." | append: asset_format -%}
+    {%- unless img_base contains '://' -%}
+      {%- assign primary_variant_src = primary_variant_src | relative_url -%}
+    {%- endunless -%}
+    {{ primary_variant_src }} {{ width }}w{%- unless forloop.last -%}, {% endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
 
 <article
   class="page work"
@@ -42,21 +56,18 @@ layout: default
       class="page__mediaLink"
       id="detailMediaLink"
       data-swipe-nav-zone="detail-media"
-      href="{{ full_src }}"
+      href="{{ primary_full_src }}"
       target="_blank"
       rel="noopener"
       style="--work-ar: {{ page.width_px | default: 4 }} / {{ page.height_px | default: 3 }};">
       <img
         class="page__mediaImg"
         id="detailPrimaryImg"
-        src="{{ src1600 }}"
-        srcset="
-          {{ src800 }} 800w,
-          {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w"
-        data-src-800="{{ src800 | escape }}"
-        data-src-1200="{{ src1200 | escape }}"
-        data-src-1600="{{ src1600 | escape }}"
+        src="{{ primary_display_src }}"
+        srcset="{{ primary_srcset | strip }}"
+        data-primary-display-src="{{ primary_display_src | escape }}"
+        data-primary-full-src="{{ primary_full_src | escape }}"
+        data-primary-srcset="{{ primary_srcset | strip | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ title_txt | default: detail_uid | escape }}"
         loading="eager"
@@ -192,16 +203,15 @@ layout: default
         mediaLink.style.setProperty('--work-ar', String(ctx.widthPx) + ' / ' + String(ctx.heightPx));
       }
 
-      var src800 = normalize(img.getAttribute('data-src-800'));
-      var src1200 = normalize(img.getAttribute('data-src-1200'));
-      var src1600 = normalize(img.getAttribute('data-src-1600'));
-      if (!src1600) return;
+      var displaySrc = normalize(img.getAttribute('data-primary-display-src'));
+      var fullSrc = normalize(img.getAttribute('data-primary-full-src')) || displaySrc;
+      var srcset = normalize(img.getAttribute('data-primary-srcset'));
+      if (!displaySrc) return;
 
-      var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
-      img.setAttribute('src', src1600);
-      img.setAttribute('srcset', srcset.join(', '));
+      img.setAttribute('src', displaySrc);
+      if (srcset) img.setAttribute('srcset', srcset);
       img.setAttribute('alt', ctx.title || ctx.detailUid);
-      mediaLink.setAttribute('href', src1600);
+      mediaLink.setAttribute('href', fullSrc);
     }
 
     function updateBackLink() {

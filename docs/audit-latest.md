@@ -1,8 +1,8 @@
 # Audit Report
 
-- Run at: `2026-03-13T21:07:55+00:00`
-- Duration: `58ms`
-- Checks: `cross_refs, json_schema, links`
+- Run at: `2026-03-20T22:06:53+00:00`
+- Duration: `176ms`
+- Checks: `cross_refs, schema`
 - Errors: `0`
 - Warnings: `0`
 
@@ -12,10 +12,10 @@
 | --- | --- | --- |
 | `--site-root` | `.` | `yes` |
 | `--checks` | `cross_refs,schema` | `yes` |
-| `--check-only` | `cross_refs,json_schema,links` | `no` |
+| `--check-only` | `(none)` | `yes` |
 | `--series-ids` | `(empty)` | `yes` |
-| `--work-ids` | `379,620` | `no` |
-| `--strict` | `False` | `yes` |
+| `--work-ids` | `(empty)` | `yes` |
+| `--strict` | `True` | `no` |
 | `--json-out` | `(empty)` | `yes` |
 | `--md-out` | `docs/audit-latest.md` | `yes` |
 | `--max-samples` | `20` | `yes` |
@@ -24,8 +24,7 @@
 ## Check Summary
 
 - `cross_refs`: errors=0 warnings=0
-- `json_schema`: errors=0 warnings=0
-- `links`: errors=0 warnings=0
+- `schema`: errors=0 warnings=0
 
 ## Findings
 
@@ -33,10 +32,6 @@
 
 - none
 
-### json_schema
-
-- none
-
-### links
+### schema
 
 - none

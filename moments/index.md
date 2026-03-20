@@ -7,6 +7,11 @@ permalink: /moments/
 
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_moments = site.thumb_moments | default: "/assets/moments/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign moments_thumb_base = thumb_base | append: thumb_moments | append: "/" %}
 {%- assign moments_thumb_base_out = moments_thumb_base -%}
 {%- unless moments_thumb_base contains '://' -%}
@@ -40,7 +45,7 @@ permalink: /moments/
 {%- endcapture -%}
 
 <h1 class="index__heading visually-hidden">moments</h1>
-<div id="momentsIndexRoot" data-moments-thumb-base="{{ moments_thumb_base_out | escape }}" hidden>
+<div id="momentsIndexRoot" data-moments-thumb-base="{{ moments_thumb_base_out | escape }}" data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}" data-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" hidden>
   <div class="seriesIndex__toolbar" aria-label="Moments view and sorting">
     <div class="seriesIndex__viewControls" role="group" aria-label="Moments view">
       <button
@@ -120,6 +125,22 @@ permalink: /moments/
     if (!viewButtons.length || !sortButtons.length) return;
 
     var momentsThumbBase = String(root.getAttribute('data-moments-thumb-base') || '');
+    var thumbSizes = [];
+    try {
+      thumbSizes = JSON.parse(root.getAttribute('data-thumb-sizes') || '[]');
+    } catch (e) {
+      thumbSizes = [];
+    }
+    thumbSizes = Array.isArray(thumbSizes) ? thumbSizes.map(function (value) {
+      var n = Number(value);
+      return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+    }).filter(function (value) { return value > 0; }) : [];
+    if (!thumbSizes.length) thumbSizes = [96, 192];
+    var primaryThumbSize = thumbSizes[0];
+    var thumbSrcsetSizes = thumbSizes.slice(0, 2);
+    if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
+    var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
+    var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var momentsItems = {{ moments_index_items | strip_newlines }};
     var viewStorageKey = 'dlf.momentsIndex.view';
     var sortStorageKey = 'dlf.momentsIndex.sort';
@@ -139,7 +160,7 @@ permalink: /moments/
     function thumbUrl(momentId, size) {
       var mid = String(momentId || '').trim();
       if (!mid) return '';
-      return String(momentsThumbBase || '') + mid + '-thumb-' + size + '.webp';
+      return String(momentsThumbBase || '') + mid + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
     }
 
     function normalizeView(value) {
@@ -276,15 +297,17 @@ permalink: /moments/
     function cardThumbData(item) {
       var thumbId = String((item && item.thumb_id) || '').trim();
       return {
-        thumb_96: thumbUrl(thumbId, '96'),
-        thumb_192: thumbUrl(thumbId, '192')
+        thumb_primary: thumbUrl(thumbId, String(primaryThumbSize)),
+        thumb_srcset: thumbSrcsetSizes.map(function (size) {
+          return thumbUrl(thumbId, String(size)) + ' ' + size + 'w';
+        }).join(', ')
       };
     }
 
     function renderMomentCard(item) {
       var href = String((item && item.url) || '').trim();
       var thumbData = cardThumbData(item);
-      var thumb = thumbData.thumb_96;
+      var thumb = thumbData.thumb_primary;
       var title = String((item && item.title) || (item && item.moment_id) || '');
       var yearTxt = yearDisplayText(item);
 
@@ -327,8 +350,8 @@ permalink: /moments/
     function renderMomentGridItem(item) {
       var href = String((item && item.url) || '').trim();
       var thumbData = cardThumbData(item);
-      var thumb96 = String(thumbData.thumb_96 || '');
-      var thumb192 = String(thumbData.thumb_192 || thumb96);
+      var thumbPrimary = String(thumbData.thumb_primary || '');
+      var thumbSrcset = String(thumbData.thumb_srcset || '');
       var title = String((item && item.title) || (item && item.moment_id) || '');
 
       var a = document.createElement('a');
@@ -337,14 +360,14 @@ permalink: /moments/
       a.setAttribute('aria-label', title);
       a.title = title;
 
-      if (thumb96) {
+      if (thumbPrimary) {
         var img = document.createElement('img');
         img.className = 'seriesGrid__img';
-        img.src = thumb96;
-        img.srcset = thumb96 + ' 96w, ' + thumb192 + ' 192w';
+        img.src = thumbPrimary;
+        img.srcset = thumbSrcset;
         img.sizes = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
-        img.width = 96;
-        img.height = 96;
+        img.width = primaryThumbSize;
+        img.height = primaryThumbSize;
         img.loading = 'lazy';
         img.decoding = 'async';
         img.alt = title;

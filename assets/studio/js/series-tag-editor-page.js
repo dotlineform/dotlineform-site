@@ -28,6 +28,21 @@ function initSeriesTagEditorPage() {
   const mediaCaptionEl = document.getElementById("seriesTagEditorMediaCaption");
   const baseurl = String(root.dataset.baseurl || "");
   const mediaImageWorksBase = String(root.dataset.mediaImageWorksBase || "");
+  const primaryDisplayWidth = Number(root.dataset.primaryDisplayWidth || "0");
+  const primaryFullWidth = Number(root.dataset.primaryFullWidth || root.dataset.primaryDisplayWidth || "0");
+  const primarySuffix = String(root.dataset.primarySuffix || "primary").trim() || "primary";
+  const assetFormat = String(root.dataset.assetFormat || "webp").trim() || "webp";
+  let primaryRenderWidths = [];
+  try {
+    primaryRenderWidths = JSON.parse(root.dataset.primaryRenderWidths || "[]");
+  } catch (error) {
+    primaryRenderWidths = [];
+  }
+  primaryRenderWidths = Array.isArray(primaryRenderWidths) ? primaryRenderWidths.map((value) => {
+    const n = Number(value);
+    return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+  }).filter((value) => value > 0) : [];
+  if (!primaryRenderWidths.length) primaryRenderWidths = [800, 1200, 1600];
   const seriesIndexUrl = String(root.dataset.seriesIndexUrl || "");
   const tagStudioModuleUrl = String(root.dataset.tagStudioModuleUrl || "");
   const params = new URLSearchParams(window.location.search);
@@ -78,6 +93,14 @@ function initSeriesTagEditorPage() {
     return String(mediaImageWorksBase || "");
   }
 
+  function buildPrimaryVariantUrl(workId, width) {
+    return `${worksImgBasePath()}${workId}-${primarySuffix}-${width}.${assetFormat}`;
+  }
+
+  function buildPrimarySrcset(workId) {
+    return primaryRenderWidths.map((width) => `${buildPrimaryVariantUrl(workId, width)} ${width}w`).join(", ");
+  }
+
   async function fetchWorkRecord(primaryWorkId) {
     const url = `${baseurl}/assets/works/index/${encodeURIComponent(primaryWorkId)}.json`;
     try {
@@ -97,9 +120,10 @@ function initSeriesTagEditorPage() {
     }
 
     const imgBase = worksImgBasePath();
-    const src800 = `${imgBase}${primaryWorkId}-primary-800.webp`;
-    const src1200 = `${imgBase}${primaryWorkId}-primary-1200.webp`;
-    const src1600 = `${imgBase}${primaryWorkId}-primary-1600.webp`;
+    const displayWidth = primaryDisplayWidth > 0 ? primaryDisplayWidth : primaryRenderWidths[primaryRenderWidths.length - 1];
+    const fullWidth = primaryFullWidth > 0 ? primaryFullWidth : displayWidth;
+    const displaySrc = buildPrimaryVariantUrl(primaryWorkId, displayWidth);
+    const fullSrc = buildPrimaryVariantUrl(primaryWorkId, fullWidth);
     const work = await fetchWorkRecord(primaryWorkId);
     const workTitle = textOrDash(work && work.title ? work.title : displayTitle);
     let width = Number(work && work.width_px);
@@ -110,11 +134,11 @@ function initSeriesTagEditorPage() {
     }
     if (!Number.isFinite(width) || width <= 0) width = 4;
     if (!Number.isFinite(height) || height <= 0) height = 3;
-    let srcset = `${src800} 800w, ${src1200} 1200w, ${src1600} 1600w`;
+    let srcset = buildPrimarySrcset(primaryWorkId);
 
-    mediaLinkEl.href = src1600;
+    mediaLinkEl.href = fullSrc;
     mediaLinkEl.style.setProperty("--work-ar", `${width} / ${height}`);
-    mediaImgEl.src = src1600;
+    mediaImgEl.src = displaySrc;
     mediaImgEl.setAttribute("srcset", srcset);
     mediaImgEl.alt = workTitle;
     mediaCaptionEl.textContent = `${primaryWorkId} - ${workTitle}`;

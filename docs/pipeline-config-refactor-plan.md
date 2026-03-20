@@ -19,17 +19,16 @@ This document tracks the phased refactor to move pipeline policy out of scattere
 
 ## Status
 
-- Overall status: `phase 2 completed`
+- Overall status: `implemented; manual verification follow-up pending`
 - Phase 1: `completed`
 - Phase 2: `completed`
-- Phase 3: `not started`
-- Phase 4: `not started`
+- Phase 3: `completed`
+- Phase 4: `completed`
 
 ## Current Problems
 
-- UI/runtime widths are still duplicated in `_layouts/work.html`, `_layouts/work_details.html`, `_layouts/moment.html`, and `assets/studio/js/series-tag-editor-page.js`.
-- Audit rules still accept a hard-coded set of filenames and widths in `scripts/audit_site_consistency.py`.
-- The shared render-width and legacy-compatibility policy is not yet consumed by templates, Studio, or audits.
+- No known code-level config drift remains across pipeline scripts, templates, Studio, and audits.
+- Manual page checks are still needed after the template changes, especially on desktop and mobile layouts.
 
 ## Working Decisions
 
@@ -67,6 +66,7 @@ The shared config should cover:
 - Compatibility policy
   - `generate_widths`
   - `render_widths`
+  - `accepted_legacy_thumb_sizes`
   - `accepted_legacy_widths`
 
 ## Phase 1: Introduce Shared Config Without Behavior Change
@@ -177,7 +177,7 @@ Reason:
 
 ## Phase 3: Make UI and Studio Read From Shared Variant Policy
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -209,17 +209,32 @@ Status: `not started`
 
 ### Done
 
-- None yet.
+- 2026-03-20: Updated `_layouts/work.html`, `_layouts/work_details.html`, and `_layouts/moment.html` to derive primary media URLs and `srcset` strings from shared config.
+- 2026-03-20: Replaced width-specific work/detail image data attributes with config-derived generic media attributes.
+- 2026-03-20: Updated `_layouts/series.html`, `series/index.md`, `moments/index.md`, and `_includes/work_index_item.html` to derive thumb URLs and `srcset` strings from shared config.
+- 2026-03-20: Updated `studio/series-tag-editor/index.md` and `assets/studio/js/series-tag-editor-page.js` so Studio primary-media rendering reads config-derived variant policy from page data.
 
 ### Verification
 
-- Manual checks on work, work detail, and moment pages.
-- Manual checks on desktop and mobile layouts.
-- Confirm Studio primary-media preview still resolves correctly.
+- 2026-03-20: Ran `node --check assets/studio/js/series-tag-editor-page.js`.
+- 2026-03-20: Ran `bundle exec jekyll build --quiet` successfully.
+- 2026-03-20: Confirmed no remaining hard-coded UI variant references via targeted search for:
+  - `primary-800`
+  - `primary-1200`
+  - `primary-1600`
+  - `thumb-96`
+  - `thumb-192`
+- Manual follow-up still needed:
+  - work page on desktop/mobile
+  - work detail page on desktop/mobile
+  - moment page on desktop/mobile
+  - series page and index grids
+  - moments index grid
+  - Studio series tag editor header media
 
 ## Phase 4: Update Audits, Docs, and Ongoing Maintenance Rules
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -245,13 +260,19 @@ Status: `not started`
 
 ### Done
 
-- None yet.
+- 2026-03-20: Updated `scripts/audit_site_consistency.py` to load shared pipeline config.
+- 2026-03-20: Replaced hard-coded audit thumb expectations with config-driven expected thumb filenames.
+- 2026-03-20: Replaced hard-coded orphan-scan filename regexes with config-driven patterns using accepted legacy thumb sizes and accepted primary widths.
+- 2026-03-20: Extended shared compatibility policy with `accepted_legacy_thumb_sizes`.
+- 2026-03-20: Re-ran the audit report, which updated `docs/audit-latest.md`.
 
 ### Verification
 
-- Run scoped and full audit checks relevant to changed files.
-- Confirm old image files are not incorrectly flagged as invalid.
-- Confirm docs match actual command/runtime behavior.
+- 2026-03-20: Ran Python syntax check for `scripts/audit_site_consistency.py` with `python3 -m py_compile`.
+- 2026-03-20: Ran `bundle exec jekyll build --quiet` successfully after audit integration.
+- 2026-03-20: Ran `python3 scripts/audit_site_consistency.py --strict`.
+- 2026-03-20: Audit result was clean: `Errors: 0  Warnings: 0`.
+- 2026-03-20: Confirmed targeted search no longer finds hard-coded audit media width assumptions.
 
 ## Risks
 

@@ -10,6 +10,14 @@ studio_page_doc: /docs/studio/pages/tag-editor/
 
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_works = site.media_image_works | default: "/works/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign primary_variants = pipeline.variants.primary %}
+{% assign compatibility_variants = pipeline.variants.compatibility %}
+{% assign primary_render_widths = compatibility_variants.render_widths | default: primary_variants.widths %}
+{% assign primary_display_width = primary_render_widths | last %}
+{% assign primary_full_width = primary_variants.preferred_width | default: primary_display_width %}
+{% assign primary_suffix = primary_variants.suffix | default: "primary" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign media_image_works_base = media_base | append: media_image_works | append: "/" %}
 {%- assign media_image_works_base_out = media_image_works_base -%}
 {%- unless media_image_works_base contains '://' -%}
@@ -21,6 +29,11 @@ studio_page_doc: /docs/studio/pages/tag-editor/
   id="seriesTagEditorRoot"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
   data-media-image-works-base="{{ media_image_works_base_out | escape }}"
+  data-primary-render-widths="{{ primary_render_widths | jsonify | escape }}"
+  data-primary-display-width="{{ primary_display_width | escape }}"
+  data-primary-full-width="{{ primary_full_width | escape }}"
+  data-primary-suffix="{{ primary_suffix | escape }}"
+  data-asset-format="{{ asset_format | escape }}"
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
   data-tag-studio-module-url="{{ '/assets/studio/js/tag-studio.js' | relative_url }}"
   hidden

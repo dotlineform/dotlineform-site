@@ -8,13 +8,18 @@ permalink: /series/
 <h1 class="index__heading visually-hidden">works</h1>
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign thumb_works_base = thumb_base | append: thumb_works | append: "/" %}
 {%- assign thumb_works_base_out = thumb_works_base -%}
 {%- unless thumb_works_base contains '://' -%}
   {%- assign thumb_works_base_out = thumb_works_base | relative_url -%}
 {%- endunless -%}
 
-<div id="seriesIndexRoot" data-thumb-works-base="{{ thumb_works_base_out | escape }}" hidden>
+<div id="seriesIndexRoot" data-thumb-works-base="{{ thumb_works_base_out | escape }}" data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}" data-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" hidden>
   <div class="seriesIndex__toolbar" aria-label="Series view and sorting">
     <div class="seriesIndex__viewControls" role="group" aria-label="Series view">
       <button
@@ -95,6 +100,22 @@ permalink: /series/
 
     var baseurl = {{ site.baseurl | default: '' | jsonify }};
     var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '');
+    var thumbSizes = [];
+    try {
+      thumbSizes = JSON.parse(root.getAttribute('data-thumb-sizes') || '[]');
+    } catch (e) {
+      thumbSizes = [];
+    }
+    thumbSizes = Array.isArray(thumbSizes) ? thumbSizes.map(function (value) {
+      var n = Number(value);
+      return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+    }).filter(function (value) { return value > 0; }) : [];
+    if (!thumbSizes.length) thumbSizes = [96, 192];
+    var primaryThumbSize = thumbSizes[0];
+    var thumbSrcsetSizes = thumbSizes.slice(0, 2);
+    if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
+    var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
+    var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var dataUrl = baseurl + '/assets/data/series_index.json';
     var configUrl = baseurl + '/assets/studio/data/studio_config.json';
     var viewStorageKey = 'dlf.seriesIndex.view';
@@ -123,7 +144,7 @@ permalink: /series/
     function thumbUrl(workId, size) {
       var wid = String(workId || '').trim();
       if (!wid) return '';
-      return String(thumbWorksBase || '') + wid + '-thumb-' + size + '.webp';
+      return String(thumbWorksBase || '') + wid + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
     }
 
     function normalizeView(value) {
@@ -292,11 +313,11 @@ permalink: /series/
 
     function cardThumbData(s) {
       var thumbId = String((s && s.primary_work_id) || '').trim();
-      var thumb96 = thumbUrl(thumbId, '96');
-      var thumb192 = thumbUrl(thumbId, '192');
       return {
-        thumb_96: thumb96,
-        thumb_192: thumb192,
+        thumb_primary: thumbUrl(thumbId, String(primaryThumbSize)),
+        thumb_srcset: thumbSrcsetSizes.map(function (size) {
+          return thumbUrl(thumbId, String(size)) + ' ' + size + 'w';
+        }).join(', '),
         thumb_id: thumbId
       };
     }
@@ -304,7 +325,7 @@ permalink: /series/
     function renderSeriesCard(s) {
       var href = cardHref(s);
       var thumbData = cardThumbData(s);
-      var thumb = thumbData.thumb_96;
+      var thumb = thumbData.thumb_primary;
       var title = String((s && s.title) || (s && s.series_id) || '');
       var yearTxt = String((s && (s.year_display != null ? s.year_display : s.year)) || '');
 
@@ -342,8 +363,8 @@ permalink: /series/
     function renderSeriesGridItem(s) {
       var href = cardHref(s);
       var thumbData = cardThumbData(s);
-      var thumb96 = String(thumbData.thumb_96 || '');
-      var thumb192 = String(thumbData.thumb_192 || thumb96);
+      var thumbPrimary = String(thumbData.thumb_primary || '');
+      var thumbSrcset = String(thumbData.thumb_srcset || '');
       var title = String((s && s.title) || (s && s.series_id) || '');
 
       var a = document.createElement('a');
@@ -352,14 +373,14 @@ permalink: /series/
       a.setAttribute('aria-label', title);
       a.title = title;
 
-      if (thumb96) {
+      if (thumbPrimary) {
         var img = document.createElement('img');
         img.className = 'seriesGrid__img';
-        img.src = thumb96;
-        img.srcset = thumb96 + ' 96w, ' + thumb192 + ' 192w';
+        img.src = thumbPrimary;
+        img.srcset = thumbSrcset;
         img.sizes = '(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw';
-        img.width = 96;
-        img.height = 96;
+        img.width = primaryThumbSize;
+        img.height = primaryThumbSize;
         img.loading = 'lazy';
         img.decoding = 'async';
         img.alt = title;

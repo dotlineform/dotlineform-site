@@ -10,21 +10,29 @@ layout: default
 {% assign media_files_works = site.media_files_works | default: "/works/files" %}
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_work_details = site.thumb_work_details | default: "/assets/work_details/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign primary_variants = pipeline.variants.primary %}
+{% assign compatibility_variants = pipeline.variants.compatibility %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign primary_render_widths = compatibility_variants.render_widths | default: primary_variants.widths %}
+{% assign primary_display_width = primary_render_widths | last %}
+{% assign primary_full_width = primary_variants.preferred_width | default: primary_display_width %}
+{% assign primary_suffix = primary_variants.suffix | default: "primary" %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
+{% assign detail_thumb_sizes = thumb_variants.sizes | default: "96,192" %}
 {% assign works_img_base = media_base | append: media_image_works | append: "/" %}
 {% assign works_files_base = media_base | append: media_files_works | append: "/" %}
 {% assign details_thumb_base = thumb_base | append: thumb_work_details | append: "/" %}
 
-{%- assign src800  = works_img_base | append: wid | append: "-primary-800.webp" -%}
-{%- assign src1200 = works_img_base | append: wid | append: "-primary-1200.webp" -%}
-{%- assign src1600 = works_img_base | append: wid | append: "-primary-1600.webp" -%}
-{%- assign full_src = src1600 -%}
-
 {%- assign works_files_base_out = works_files_base -%}
 {%- assign details_thumb_base_out = details_thumb_base -%}
+{%- assign primary_display_src = works_img_base | append: wid | append: "-" | append: primary_suffix | append: "-" | append: primary_display_width | append: "." | append: asset_format -%}
+{%- assign primary_full_src = works_img_base | append: wid | append: "-" | append: primary_suffix | append: "-" | append: primary_full_width | append: "." | append: asset_format -%}
+
 {%- unless works_img_base contains '://' -%}
-  {%- assign src800  = src800  | relative_url -%}
-  {%- assign src1200 = src1200 | relative_url -%}
-  {%- assign src1600 = src1600 | relative_url -%}
+  {%- assign primary_display_src = primary_display_src | relative_url -%}
+  {%- assign primary_full_src = primary_full_src | relative_url -%}
 {%- endunless -%}
 {%- unless works_files_base contains '://' -%}
   {%- assign works_files_base_out = works_files_base | relative_url -%}
@@ -32,6 +40,15 @@ layout: default
 {%- unless details_thumb_base contains '://' -%}
   {%- assign details_thumb_base_out = details_thumb_base | relative_url -%}
 {%- endunless -%}
+{%- capture primary_srcset -%}
+  {%- for width in primary_render_widths -%}
+    {%- assign primary_variant_src = works_img_base | append: wid | append: "-" | append: primary_suffix | append: "-" | append: width | append: "." | append: asset_format -%}
+    {%- unless works_img_base contains '://' -%}
+      {%- assign primary_variant_src = primary_variant_src | relative_url -%}
+    {%- endunless -%}
+    {{ primary_variant_src }} {{ width }}w{%- unless forloop.last -%}, {% endunless -%}
+  {%- endfor -%}
+{%- endcapture -%}
 
 {%- capture fallback_work_json -%}
 {
@@ -53,7 +70,7 @@ layout: default
 }
 {%- endcapture -%}
 
-<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-media-files-works-base="{{ works_files_base_out | escape }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}">
+<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-media-files-works-base="{{ works_files_base_out | escape }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}" data-detail-thumb-sizes="{{ detail_thumb_sizes | jsonify | escape }}" data-detail-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}">
 
   <h1 class="visually-hidden" id="workTitleHidden">{{ wid }}</h1>
 
@@ -62,19 +79,16 @@ layout: default
     <a class="page__mediaLink"
       id="workMediaLink"
       data-swipe-nav-zone="work-media"
-      href="{{ full_src }}" target="_blank" rel="noopener"
+      href="{{ primary_full_src }}" target="_blank" rel="noopener"
       style="--work-ar: 4 / 3;">
       <img
         class="page__mediaImg"
         id="workPrimaryImg"
-        src="{{ src1600 }}"
-        srcset="
-          {{ src800 }} 800w,
-          {{ src1200 }} 1200w,
-          {{ src1600 }} 1600w"
-        data-src-800="{{ src800 | escape }}"
-        data-src-1200="{{ src1200 | escape }}"
-        data-src-1600="{{ src1600 | escape }}"
+        src="{{ primary_display_src }}"
+        srcset="{{ primary_srcset | strip }}"
+        data-primary-display-src="{{ primary_display_src | escape }}"
+        data-primary-full-src="{{ primary_full_src | escape }}"
+        data-primary-srcset="{{ primary_srcset | strip | escape }}"
         sizes="(max-width: 800px) 100vw, 72ch"
         alt="{{ wid | escape }}"
         loading="eager"
@@ -328,15 +342,14 @@ layout: default
         mediaLink.style.setProperty('--work-ar', String(width) + ' / ' + String(height));
       }
 
-      var src800 = text(img.getAttribute('data-src-800'));
-      var src1200 = text(img.getAttribute('data-src-1200'));
-      var src1600 = text(img.getAttribute('data-src-1600'));
-      if (!src1600) return;
+      var displaySrc = text(img.getAttribute('data-primary-display-src'));
+      var fullSrc = text(img.getAttribute('data-primary-full-src')) || displaySrc;
+      var srcset = text(img.getAttribute('data-primary-srcset'));
+      if (!displaySrc) return;
 
-      var srcset = [src800 + ' 800w', src1200 + ' 1200w', src1600 + ' 1600w'];
-      img.setAttribute('src', src1600);
-      img.setAttribute('srcset', srcset.join(', '));
-      mediaLink.setAttribute('href', src1600);
+      img.setAttribute('src', displaySrc);
+      if (srcset) img.setAttribute('srcset', srcset);
+      mediaLink.setAttribute('href', fullSrc);
     }
 
     function applyMetadata(meta) {
@@ -501,6 +514,22 @@ layout: default
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
     var detailsImgBase = String(section.getAttribute('data-thumb-work-details-base') || '');
+    var detailThumbSizes = [];
+    try {
+      detailThumbSizes = JSON.parse(section.getAttribute('data-detail-thumb-sizes') || '[]');
+    } catch (e) {
+      detailThumbSizes = [];
+    }
+    detailThumbSizes = Array.isArray(detailThumbSizes) ? detailThumbSizes.map(function (value) {
+      var n = Number(value);
+      return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0;
+    }).filter(function (value) { return value > 0; }) : [];
+    if (!detailThumbSizes.length) detailThumbSizes = [96, 192];
+    var detailThumbPrimarySize = detailThumbSizes[0];
+    var detailThumbSrcset = detailThumbSizes.slice(0, 2);
+    if (detailThumbSrcset.length < 2) detailThumbSrcset = [detailThumbPrimarySize, detailThumbPrimarySize];
+    var detailThumbSuffix = String(section.getAttribute('data-detail-thumb-suffix') || 'thumb').trim() || 'thumb';
+    var assetFormat = String(section.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var pageSize = 60;
     var query = new URLSearchParams(window.location.search);
     var currentSeries = String(query.get('series') || '').trim();
@@ -562,14 +591,16 @@ layout: default
       details.forEach(function (d) {
         var uid = String((d && d.detail_uid) || '').trim();
         if (!uid) return;
-        var thumb96 = detailsImgBase + uid + '-thumb-96.webp';
-        var thumb192 = detailsImgBase + uid + '-thumb-192.webp';
+        var thumbPrimary = detailsImgBase + uid + '-' + detailThumbSuffix + '-' + detailThumbPrimarySize + '.' + assetFormat;
+        var thumbSrcset = detailThumbSrcset.map(function (size) {
+          return detailsImgBase + uid + '-' + detailThumbSuffix + '-' + size + '.' + assetFormat + ' ' + size + 'w';
+        }).join(', ');
         var title = String((d && d.title) || uid).trim();
         var href = baseurl + '/work_details/' + encodeURIComponent(uid) + '/?from_work=' + encodeURIComponent(workId) + '&from_work_title=' + encodeURIComponent(workTitle || '') + '&section=' + encodeURIComponent(secId) + '&details_section=' + encodeURIComponent(secId) + '&details_page=' + encodeURIComponent(String(currentPage));
         if (currentSeries) href += '&series=' + encodeURIComponent(currentSeries);
         if (currentSeriesPage > 0) href += '&series_page=' + encodeURIComponent(String(currentSeriesPage));
         html += '<a class=\"seriesGrid__item\" href=\"' + esc(href) + '\" title=\"' + esc(title) + '\">';
-        html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumb96) + '\" srcset=\"' + esc(thumb96) + ' 96w, ' + esc(thumb192) + ' 192w\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
+        html += '<img class=\"seriesGrid__img\" src=\"' + esc(thumbPrimary) + '\" srcset=\"' + esc(thumbSrcset) + '\" sizes=\"(min-width: 1200px) 10vw, (min-width: 700px) 14vw, 22vw\" width=\"' + esc(String(detailThumbPrimarySize)) + '\" height=\"' + esc(String(detailThumbPrimarySize)) + '\" loading=\"lazy\" decoding=\"async\" alt=\"' + esc(title) + '\">';
         html += '</a>';
       });
       html += '</div>';
