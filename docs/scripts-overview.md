@@ -153,7 +153,7 @@ Useful flags:
     - optional empty fields are omitted from JSON rather than written as `null`
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
-  - `work-json`: writes `assets/works/index/<work_id>.json` with `header` version/checksums, full `work`, and full `sections[].details[]`
+  - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, and full `sections[].details[]`
     - `work.series_ids` preserves the full ordered membership list from the workbook
     - optional empty fields are omitted from JSON rather than written as `null`
     - work-page primary-series label/link is derived at runtime from `series_index.json`, using `work.series_ids[0]`

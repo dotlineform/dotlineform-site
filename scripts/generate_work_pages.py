@@ -378,8 +378,6 @@ def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict
     for fm_key, col_name, coercer in WORKS_SCHEMA:
         raw = works_row[works_hi[col_name]] if col_name in works_hi else None
         fm[fm_key] = coercer(raw)
-    if fm.get("artist") is None:
-        fm["artist"] = "Michael Davies"
     return fm
 
 
@@ -1120,7 +1118,6 @@ def main() -> None:
             "height_px": height_px,
             "layout": "work_details",
         }
-        dfm["checksum"] = compute_work_checksum(dfm)
         return compact_json_object(dfm)
 
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
@@ -1145,8 +1142,6 @@ def main() -> None:
         public_record.pop("series_sort", None)
         public_record.pop("title_sort", None)
         public_record.pop("checksum", None)
-        public_record = compact_json_object(public_record)
-        public_record["checksum"] = compute_work_checksum(public_record)
         return compact_json_object(public_record)
 
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -2124,24 +2119,15 @@ def main() -> None:
                 sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
-                work_checksum_raw = coerce_string(work_record.get("checksum"))
-                work_checksum = f"blake2b-{work_checksum_raw}" if work_checksum_raw is not None else None
-                details_version_payload = compact_json_object({"sections": sections})
-                record_version_payload = compact_json_object({"work": work_record, "sections": sections})
-                details_checksum = compute_payload_version(details_version_payload)
-                record_checksum = compute_payload_version(record_version_payload)
+                payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections}))
 
                 payload = compact_json_object({
                     "header": {
                         "schema": "work_record_v2",
-                        "version": record_checksum,
+                        "version": payload_version,
                         "generated_at_utc": generated_at_utc,
                         "work_id": wid,
                         "count": details_total,
-                        "hash": details_checksum,
-                        "work_checksum": work_checksum,
-                        "details_checksum": details_checksum,
-                        "record_checksum": record_checksum,
                     },
                     "work": work_record,
                     "sections": sections,

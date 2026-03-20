@@ -122,7 +122,7 @@ What `assets/works/index/<work_id>.json` provides:
 - detail title
 - detail UID
 - detail dimensions
-- detail checksum / detail-level metadata
+- detail-level metadata
 
 What `series_index.json` provides on the work page:
 
