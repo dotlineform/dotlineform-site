@@ -46,7 +46,9 @@ layout: default
               {% assign series_doc = site.series | where: "slug", series_ref | first %}
             {% endif %}
             {% if series_doc %}
-              {% include series_index_item.html series=series_doc %}
+              <div class="index__item">
+                <a class="index__link" href="{{ series_doc.url | relative_url }}">{{ series_doc.title | default: series_ref | escape }}</a>
+              </div>
             {% else %}
               {% assign text = item.label | default: series_ref %}
               <p class="supplements__link supplements__link--html">{{ text | escape }}</p>

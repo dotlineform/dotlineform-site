@@ -15,8 +15,8 @@ media_image_works: "/works/img"
 media_image_work_details: "/work_details/img"
 media_files_works: "/works/files"
 
-# Other media path prefixes
-media_prefix: ""
+# Media origin for moments
+media_image_moments: "/assets/moments/img"
 
 # Home hero media origin/prefix (served remotely, no /assets segment):
 home_media_base: "https://media.dotlineform.com"
