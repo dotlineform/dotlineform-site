@@ -254,8 +254,6 @@ def remove_work_from_series_index(payload: Dict[str, Any], work_id: str) -> Dict
 
     membership_updates = 0
     primary_nulls = 0
-    thumb_nulls = 0
-
     for row in series_map.values():
         if not isinstance(row, dict):
             continue
@@ -271,17 +269,9 @@ def remove_work_from_series_index(payload: Dict[str, Any], work_id: str) -> Dict
             row["primary_work_id"] = None
             primary_nulls += 1
 
-        thumb = row.get("thumb")
-        if isinstance(thumb, dict) and normalize_text(thumb.get("work_id")) == work_id:
-            thumb["work_id"] = None
-            thumb["thumb_96"] = None
-            thumb["thumb_192"] = None
-            thumb_nulls += 1
-
     return {
         "membership_updates": membership_updates,
         "primary_nulls": primary_nulls,
-        "thumb_nulls": thumb_nulls,
     }
 
 
@@ -421,8 +411,7 @@ def main() -> None:
     print(
         "Series index updates: "
         f"membership rows touched={series_stats['membership_updates']}; "
-        f"primary_work_id nulled={series_stats['primary_nulls']}; "
-        f"thumb refs nulled={series_stats['thumb_nulls']}"
+        f"primary_work_id nulled={series_stats['primary_nulls']}"
     )
     print(f"Works index updates: removed entry={1 if works_index_removed else 0}")
     print(

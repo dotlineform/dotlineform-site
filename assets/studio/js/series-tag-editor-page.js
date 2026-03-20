@@ -27,10 +27,7 @@ function initSeriesTagEditorPage() {
   const mediaImgEl = document.getElementById("seriesTagEditorMediaImg");
   const mediaCaptionEl = document.getElementById("seriesTagEditorMediaCaption");
   const baseurl = String(root.dataset.baseurl || "");
-  const mediaBase = String(root.dataset.mediaBase || "");
-  const mediaPrefix = root.dataset.mediaPrefix === undefined
-    ? "/assets"
-    : String(root.dataset.mediaPrefix);
+  const mediaImageWorksBase = String(root.dataset.mediaImageWorksBase || "");
   const seriesIndexUrl = String(root.dataset.seriesIndexUrl || "");
   const tagStudioModuleUrl = String(root.dataset.tagStudioModuleUrl || "");
   const params = new URLSearchParams(window.location.search);
@@ -77,17 +74,8 @@ function initSeriesTagEditorPage() {
     return map;
   }
 
-  function applyBaseurl(url) {
-    if (/^[a-z]+:\/\//i.test(url)) return url;
-    if (url.charAt(0) === "/") return baseurl + url;
-    return url;
-  }
-
   function worksImgBasePath() {
-    const base = String(mediaBase || "").replace(/\/+$/, "");
-    const prefix = String(mediaPrefix || "").replace(/\/+$/, "");
-    if (base) return `${base}${prefix}/works/img/`;
-    return applyBaseurl(`${prefix || ""}/works/img/`).replace(/\/{2,}/g, "/");
+    return String(mediaImageWorksBase || "");
   }
 
   async function fetchWorkRecord(primaryWorkId) {

@@ -8,12 +8,19 @@ studio_page_doc: /docs/studio/pages/tag-editor/
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_image_works = site.media_image_works | default: "/works/img" %}
+{% assign media_image_works_base = media_base | append: media_image_works | append: "/" %}
+{%- assign media_image_works_base_out = media_image_works_base -%}
+{%- unless media_image_works_base contains '://' -%}
+  {%- assign media_image_works_base_out = media_image_works_base | relative_url -%}
+{%- endunless -%}
+
 <article
   class="page tagStudioPage"
   id="seriesTagEditorRoot"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
-  data-media-base="{{ site.media_base | default: '' | escape }}"
-  data-media-prefix="{% if site.media_prefix == nil %}/assets{% else %}{{ site.media_prefix | escape }}{% endif %}"
+  data-media-image-works-base="{{ media_image_works_base_out | escape }}"
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
   data-tag-studio-module-url="{{ '/assets/studio/js/tag-studio.js' | relative_url }}"
   hidden

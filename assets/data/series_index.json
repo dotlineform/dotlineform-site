@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-5be56422f13c6ff01520c26f9c832721",
-    "generated_at_utc": "2026-03-20T13:56:49Z",
+    "version": "blake2b-eea9344b6d3013f2636208de566772ce",
+    "generated_at_utc": "2026-03-20T15:49:45Z",
     "count": 79
   },
   "series": {
@@ -24,12 +24,7 @@
         "00635",
         "00636",
         "00637"
-      ],
-      "thumb": {
-        "work_id": "00635",
-        "thumb_96": "/assets/works/img/00635-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00635-thumb-192.webp"
-      }
+      ]
     },
     "16-forms": {
       "series_id": "16-forms",
@@ -47,12 +42,7 @@
       ],
       "works": [
         "00639"
-      ],
-      "thumb": {
-        "work_id": "00639",
-        "thumb_96": "/assets/works/img/00639-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00639-thumb-192.webp"
-      }
+      ]
     },
     "2-bodies": {
       "series_id": "2-bodies",
@@ -78,12 +68,7 @@
         "00532",
         "00533",
         "00534"
-      ],
-      "thumb": {
-        "work_id": "00533",
-        "thumb_96": "/assets/works/img/00533-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00533-thumb-192.webp"
-      }
+      ]
     },
     "3-symbols": {
       "series_id": "3-symbols",
@@ -101,12 +86,7 @@
       ],
       "works": [
         "00638"
-      ],
-      "thumb": {
-        "work_id": "00638",
-        "thumb_96": "/assets/works/img/00638-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00638-thumb-192.webp"
-      }
+      ]
     },
     "a-doll-story": {
       "series_id": "a-doll-story",
@@ -198,12 +178,7 @@
         "00713",
         "00714",
         "00715"
-      ],
-      "thumb": {
-        "work_id": "00666",
-        "thumb_96": "/assets/works/img/00666-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00666-thumb-192.webp"
-      }
+      ]
     },
     "a-feeling-that-we-are-part-of-a-structure": {
       "series_id": "a-feeling-that-we-are-part-of-a-structure",
@@ -226,12 +201,7 @@
         "00719",
         "00720",
         "00721"
-      ],
-      "thumb": {
-        "work_id": "00717",
-        "thumb_96": "/assets/works/img/00717-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00717-thumb-192.webp"
-      }
+      ]
     },
     "a-humid-home-full-of-light": {
       "series_id": "a-humid-home-full-of-light",
@@ -260,12 +230,7 @@
         "00731",
         "00732",
         "00733"
-      ],
-      "thumb": {
-        "work_id": "00729",
-        "thumb_96": "/assets/works/img/00729-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00729-thumb-192.webp"
-      }
+      ]
     },
     "a-poem-divided-into-4-parts": {
       "series_id": "a-poem-divided-into-4-parts",
@@ -287,12 +252,7 @@
         "00002",
         "00003",
         "00004"
-      ],
-      "thumb": {
-        "work_id": "00001",
-        "thumb_96": "/assets/works/img/00001-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00001-thumb-192.webp"
-      }
+      ]
     },
     "a-theory-of-happiness": {
       "series_id": "a-theory-of-happiness",
@@ -311,12 +271,7 @@
       "works": [
         "00734",
         "00735"
-      ],
-      "thumb": {
-        "work_id": "00734",
-        "thumb_96": "/assets/works/img/00734-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00734-thumb-192.webp"
-      }
+      ]
     },
     "all-the-little-cracks": {
       "series_id": "all-the-little-cracks",
@@ -335,12 +290,7 @@
       "works": [
         "00751",
         "00752"
-      ],
-      "thumb": {
-        "work_id": "00751",
-        "thumb_96": "/assets/works/img/00751-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00751-thumb-192.webp"
-      }
+      ]
     },
     "an-act-of-kindness": {
       "series_id": "an-act-of-kindness",
@@ -372,12 +322,7 @@
         "00748",
         "00749",
         "00750"
-      ],
-      "thumb": {
-        "work_id": "00748",
-        "thumb_96": "/assets/works/img/00748-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00748-thumb-192.webp"
-      }
+      ]
     },
     "assembly-codes": {
       "series_id": "assembly-codes",
@@ -397,12 +342,7 @@
         "00753",
         "00754",
         "00755"
-      ],
-      "thumb": {
-        "work_id": "00753",
-        "thumb_96": "/assets/works/img/00753-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00753-thumb-192.webp"
-      }
+      ]
     },
     "base-series": {
       "series_id": "base-series",
@@ -437,12 +377,7 @@
         "00771",
         "00772",
         "00773"
-      ],
-      "thumb": {
-        "work_id": "00756",
-        "thumb_96": "/assets/works/img/00756-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00756-thumb-192.webp"
-      }
+      ]
     },
     "birds": {
       "series_id": "birds",
@@ -467,12 +402,7 @@
         "00779",
         "00780",
         "00781"
-      ],
-      "thumb": {
-        "work_id": "00781",
-        "thumb_96": "/assets/works/img/00781-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00781-thumb-192.webp"
-      }
+      ]
     },
     "birth-of-healing-forms": {
       "series_id": "birth-of-healing-forms",
@@ -490,12 +420,7 @@
       ],
       "works": [
         "00782"
-      ],
-      "thumb": {
-        "work_id": "00782",
-        "thumb_96": "/assets/works/img/00782-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00782-thumb-192.webp"
-      }
+      ]
     },
     "body-space": {
       "series_id": "body-space",
@@ -521,12 +446,7 @@
         "00789",
         "00790",
         "00791"
-      ],
-      "thumb": {
-        "work_id": "00783",
-        "thumb_96": "/assets/works/img/00783-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00783-thumb-192.webp"
-      }
+      ]
     },
     "body-space-reclining-state": {
       "series_id": "body-space-reclining-state",
@@ -552,12 +472,7 @@
         "00798",
         "00799",
         "00800"
-      ],
-      "thumb": {
-        "work_id": "00792",
-        "thumb_96": "/assets/works/img/00792-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00792-thumb-192.webp"
-      }
+      ]
     },
     "book-dna": {
       "series_id": "book-dna",
@@ -579,12 +494,7 @@
         "00803",
         "00804",
         "00805"
-      ],
-      "thumb": {
-        "work_id": "00801",
-        "thumb_96": "/assets/works/img/00801-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00801-thumb-192.webp"
-      }
+      ]
     },
     "book-of-curves": {
       "series_id": "book-of-curves",
@@ -606,12 +516,7 @@
         "00808",
         "00809",
         "00810"
-      ],
-      "thumb": {
-        "work_id": "00806",
-        "thumb_96": "/assets/works/img/00806-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00806-thumb-192.webp"
-      }
+      ]
     },
     "certainty": {
       "series_id": "certainty",
@@ -629,12 +534,7 @@
       ],
       "works": [
         "00389"
-      ],
-      "thumb": {
-        "work_id": "00389",
-        "thumb_96": "/assets/works/img/00389-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00389-thumb-192.webp"
-      }
+      ]
     },
     "closeness": {
       "series_id": "closeness",
@@ -653,12 +553,7 @@
       "works": [
         "00811",
         "00812"
-      ],
-      "thumb": {
-        "work_id": "00811",
-        "thumb_96": "/assets/works/img/00811-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00811-thumb-192.webp"
-      }
+      ]
     },
     "collected-1989-1998": {
       "series_id": "collected-1989-1998",
@@ -843,12 +738,7 @@
         "00234",
         "00247",
         "00005"
-      ],
-      "thumb": {
-        "work_id": "00049",
-        "thumb_96": "/assets/works/img/00049-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00049-thumb-192.webp"
-      }
+      ]
     },
     "collected-digital-1998": {
       "series_id": "collected-digital-1998",
@@ -860,7 +750,7 @@
       "series_type": "primary",
       "year": 1998,
       "year_display": "c. 1998",
-      "primary_work_id": "00285",
+      "primary_work_id": "00226",
       "project_folders": [
         "collected digital c. 1998"
       ],
@@ -922,12 +812,7 @@
         "00283",
         "00284",
         "00285"
-      ],
-      "thumb": {
-        "work_id": "00285",
-        "thumb_96": "/assets/works/img/00285-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00285-thumb-192.webp"
-      }
+      ]
     },
     "colouring-book": {
       "series_id": "colouring-book",
@@ -953,12 +838,7 @@
         "00223",
         "00224",
         "00225"
-      ],
-      "thumb": {
-        "work_id": "00219",
-        "thumb_96": "/assets/works/img/00219-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00219-thumb-192.webp"
-      }
+      ]
     },
     "colours": {
       "series_id": "colours",
@@ -980,12 +860,7 @@
         "00815",
         "00816",
         "00817"
-      ],
-      "thumb": {
-        "work_id": "00813",
-        "thumb_96": "/assets/works/img/00813-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00813-thumb-192.webp"
-      }
+      ]
     },
     "composite-blue-red-smoke": {
       "series_id": "composite-blue-red-smoke",
@@ -1005,12 +880,7 @@
         "00391",
         "00616",
         "00617"
-      ],
-      "thumb": {
-        "work_id": "00391",
-        "thumb_96": "/assets/works/img/00391-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00391-thumb-192.webp"
-      }
+      ]
     },
     "concrete": {
       "series_id": "concrete",
@@ -1041,12 +911,7 @@
         "00829",
         "00830",
         "00831"
-      ],
-      "thumb": {
-        "work_id": "00830",
-        "thumb_96": "/assets/works/img/00830-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00830-thumb-192.webp"
-      }
+      ]
     },
     "creases": {
       "series_id": "creases",
@@ -1069,12 +934,7 @@
         "00835",
         "00836",
         "00837"
-      ],
-      "thumb": {
-        "work_id": "00833",
-        "thumb_96": "/assets/works/img/00833-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00833-thumb-192.webp"
-      }
+      ]
     },
     "cube-structure": {
       "series_id": "cube-structure",
@@ -1103,12 +963,7 @@
         "00847",
         "00848",
         "00849"
-      ],
-      "thumb": {
-        "work_id": "00849",
-        "thumb_96": "/assets/works/img/00849-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00849-thumb-192.webp"
-      }
+      ]
     },
     "curl": {
       "series_id": "curl",
@@ -1142,12 +997,7 @@
         "00864",
         "00865",
         "00866"
-      ],
-      "thumb": {
-        "work_id": "00851",
-        "thumb_96": "/assets/works/img/00851-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00851-thumb-192.webp"
-      }
+      ]
     },
     "curve-machine": {
       "series_id": "curve-machine",
@@ -1169,12 +1019,7 @@
         "00869",
         "00870",
         "00871"
-      ],
-      "thumb": {
-        "work_id": "00867",
-        "thumb_96": "/assets/works/img/00867-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00867-thumb-192.webp"
-      }
+      ]
     },
     "curve-poems": {
       "series_id": "curve-poems",
@@ -1279,12 +1124,7 @@
         "00371",
         "00372",
         "00454"
-      ],
-      "thumb": {
-        "work_id": "00361",
-        "thumb_96": "/assets/works/img/00361-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00361-thumb-192.webp"
-      }
+      ]
     },
     "doll": {
       "series_id": "doll",
@@ -1330,12 +1170,7 @@
         "00893",
         "00894",
         "00895"
-      ],
-      "thumb": {
-        "work_id": "00872",
-        "thumb_96": "/assets/works/img/00872-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00872-thumb-192.webp"
-      }
+      ]
     },
     "doll-faces": {
       "series_id": "doll-faces",
@@ -1360,12 +1195,7 @@
         "00906",
         "00907",
         "00908"
-      ],
-      "thumb": {
-        "work_id": "00901",
-        "thumb_96": "/assets/works/img/00901-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00901-thumb-192.webp"
-      }
+      ]
     },
     "doll-sees-everything": {
       "series_id": "doll-sees-everything",
@@ -1399,12 +1229,7 @@
         "00923",
         "00924",
         "00925"
-      ],
-      "thumb": {
-        "work_id": "00919",
-        "thumb_96": "/assets/works/img/00919-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00919-thumb-192.webp"
-      }
+      ]
     },
     "dot": {
       "series_id": "dot",
@@ -1432,12 +1257,7 @@
         "00934",
         "00935",
         "00936"
-      ],
-      "thumb": {
-        "work_id": "00936",
-        "thumb_96": "/assets/works/img/00936-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00936-thumb-192.webp"
-      }
+      ]
     },
     "dot-theory": {
       "series_id": "dot-theory",
@@ -1466,12 +1286,7 @@
         "00946",
         "00947",
         "00948"
-      ],
-      "thumb": {
-        "work_id": "00937",
-        "thumb_96": "/assets/works/img/00937-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00937-thumb-192.webp"
-      }
+      ]
     },
     "dotlineform-2021": {
       "series_id": "dotlineform-2021",
@@ -1523,12 +1338,7 @@
         "00981",
         "00982",
         "00983"
-      ],
-      "thumb": {
-        "work_id": "00949",
-        "thumb_96": "/assets/works/img/00949-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00949-thumb-192.webp"
-      }
+      ]
     },
     "dotlineform-2023": {
       "series_id": "dotlineform-2023",
@@ -1563,12 +1373,7 @@
         "00998",
         "00999",
         "01000"
-      ],
-      "thumb": {
-        "work_id": "00455",
-        "thumb_96": "/assets/works/img/00455-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00455-thumb-192.webp"
-      }
+      ]
     },
     "dots": {
       "series_id": "dots",
@@ -1592,12 +1397,7 @@
         "01004",
         "01005",
         "01006"
-      ],
-      "thumb": {
-        "work_id": "00456",
-        "thumb_96": "/assets/works/img/00456-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00456-thumb-192.webp"
-      }
+      ]
     },
     "droplets": {
       "series_id": "droplets",
@@ -1644,12 +1444,7 @@
         "01034",
         "01035",
         "01036"
-      ],
-      "thumb": {
-        "work_id": "01017",
-        "thumb_96": "/assets/works/img/01017-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01017-thumb-192.webp"
-      }
+      ]
     },
     "egg-forms": {
       "series_id": "egg-forms",
@@ -1667,12 +1462,7 @@
       ],
       "works": [
         "01037"
-      ],
-      "thumb": {
-        "work_id": "01037",
-        "thumb_96": "/assets/works/img/01037-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01037-thumb-192.webp"
-      }
+      ]
     },
     "egg-prints": {
       "series_id": "egg-prints",
@@ -1695,12 +1485,7 @@
         "01041",
         "01042",
         "01043"
-      ],
-      "thumb": {
-        "work_id": "01038",
-        "thumb_96": "/assets/works/img/01038-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01038-thumb-192.webp"
-      }
+      ]
     },
     "entangled-form": {
       "series_id": "entangled-form",
@@ -1719,12 +1504,7 @@
       "works": [
         "01044",
         "01045"
-      ],
-      "thumb": {
-        "work_id": "01044",
-        "thumb_96": "/assets/works/img/01044-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01044-thumb-192.webp"
-      }
+      ]
     },
     "espresso": {
       "series_id": "espresso",
@@ -1742,12 +1522,7 @@
       ],
       "works": [
         "01046"
-      ],
-      "thumb": {
-        "work_id": "01046",
-        "thumb_96": "/assets/works/img/01046-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01046-thumb-192.webp"
-      }
+      ]
     },
     "field": {
       "series_id": "field",
@@ -1766,12 +1541,7 @@
       "works": [
         "01047",
         "01048"
-      ],
-      "thumb": {
-        "work_id": "01047",
-        "thumb_96": "/assets/works/img/01047-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01047-thumb-192.webp"
-      }
+      ]
     },
     "fireworks-form": {
       "series_id": "fireworks-form",
@@ -1791,12 +1561,7 @@
         "01049",
         "01050",
         "01051"
-      ],
-      "thumb": {
-        "work_id": "01050",
-        "thumb_96": "/assets/works/img/01050-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01050-thumb-192.webp"
-      }
+      ]
     },
     "flowers": {
       "series_id": "flowers",
@@ -1816,12 +1581,7 @@
         "01052",
         "01053",
         "01054"
-      ],
-      "thumb": {
-        "work_id": "01052",
-        "thumb_96": "/assets/works/img/01052-thumb-96.webp",
-        "thumb_192": "/assets/works/img/01052-thumb-192.webp"
-      }
+      ]
     },
     "for-david-lynch": {
       "series_id": "for-david-lynch",
@@ -1839,12 +1599,7 @@
       ],
       "works": [
         "00346"
-      ],
-      "thumb": {
-        "work_id": "00346",
-        "thumb_96": "/assets/works/img/00346-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00346-thumb-192.webp"
-      }
+      ]
     },
     "forest": {
       "series_id": "forest",
@@ -1866,12 +1621,7 @@
         "00618",
         "00390",
         "00393"
-      ],
-      "thumb": {
-        "work_id": "00392",
-        "thumb_96": "/assets/works/img/00392-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00392-thumb-192.webp"
-      }
+      ]
     },
     "forest-memories-1-48": {
       "series_id": "forest-memories-1-48",
@@ -1889,12 +1639,7 @@
       ],
       "works": [
         "00464"
-      ],
-      "thumb": {
-        "work_id": "00464",
-        "thumb_96": "/assets/works/img/00464-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00464-thumb-192.webp"
-      }
+      ]
     },
     "forests-2023": {
       "series_id": "forests-2023",
@@ -1915,12 +1660,7 @@
         "00466",
         "00467",
         "00468"
-      ],
-      "thumb": {
-        "work_id": "00468",
-        "thumb_96": "/assets/works/img/00468-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00468-thumb-192.webp"
-      }
+      ]
     },
     "form-mobile": {
       "series_id": "form-mobile",
@@ -1956,12 +1696,7 @@
         "00597",
         "00598",
         "00599"
-      ],
-      "thumb": {
-        "work_id": "00535",
-        "thumb_96": "/assets/works/img/00535-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00535-thumb-192.webp"
-      }
+      ]
     },
     "found-forms": {
       "series_id": "found-forms",
@@ -2030,12 +1765,7 @@
         "00451",
         "00452",
         "00453"
-      ],
-      "thumb": {
-        "work_id": "00403",
-        "thumb_96": "/assets/works/img/00403-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00403-thumb-192.webp"
-      }
+      ]
     },
     "glass-forms": {
       "series_id": "glass-forms",
@@ -2053,12 +1783,7 @@
       ],
       "works": [
         "00384"
-      ],
-      "thumb": {
-        "work_id": "00384",
-        "thumb_96": "/assets/works/img/00384-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00384-thumb-192.webp"
-      }
+      ]
     },
     "harmony": {
       "series_id": "harmony",
@@ -2080,12 +1805,7 @@
         "00382",
         "00379",
         "00620"
-      ],
-      "thumb": {
-        "work_id": "00379",
-        "thumb_96": "/assets/works/img/00379-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00379-thumb-192.webp"
-      }
+      ]
     },
     "heaven-and-earth": {
       "series_id": "heaven-and-earth",
@@ -2103,12 +1823,7 @@
       ],
       "works": [
         "00469"
-      ],
-      "thumb": {
-        "work_id": "00469",
-        "thumb_96": "/assets/works/img/00469-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00469-thumb-192.webp"
-      }
+      ]
     },
     "intuition-2020": {
       "series_id": "intuition-2020",
@@ -2127,12 +1842,7 @@
       ],
       "works": [
         "00457"
-      ],
-      "thumb": {
-        "work_id": "00457",
-        "thumb_96": "/assets/works/img/00457-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00457-thumb-192.webp"
-      }
+      ]
     },
     "k-crystals": {
       "series_id": "k-crystals",
@@ -2157,12 +1867,7 @@
         "00626",
         "00627",
         "00628"
-      ],
-      "thumb": {
-        "work_id": "00625",
-        "thumb_96": "/assets/works/img/00625-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00625-thumb-192.webp"
-      }
+      ]
     },
     "kylie-structures": {
       "series_id": "kylie-structures",
@@ -2183,12 +1888,7 @@
         "00521",
         "00522",
         "00523"
-      ],
-      "thumb": {
-        "work_id": "00520",
-        "thumb_96": "/assets/works/img/00520-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00520-thumb-192.webp"
-      }
+      ]
     },
     "landscapes": {
       "series_id": "landscapes",
@@ -2208,12 +1908,7 @@
         "00516",
         "00517",
         "00518"
-      ],
-      "thumb": {
-        "work_id": "00516",
-        "thumb_96": "/assets/works/img/00516-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00516-thumb-192.webp"
-      }
+      ]
     },
     "leaf": {
       "series_id": "leaf",
@@ -2232,12 +1927,7 @@
       ],
       "works": [
         "00458"
-      ],
-      "thumb": {
-        "work_id": "00458",
-        "thumb_96": "/assets/works/img/00458-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00458-thumb-192.webp"
-      }
+      ]
     },
     "learning-to-draw-landscapes": {
       "series_id": "learning-to-draw-landscapes",
@@ -2271,12 +1961,7 @@
         "00128",
         "00129",
         "00519"
-      ],
-      "thumb": {
-        "work_id": "00127",
-        "thumb_96": "/assets/works/img/00127-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00127-thumb-192.webp"
-      }
+      ]
     },
     "lipseyes": {
       "series_id": "lipseyes",
@@ -2294,12 +1979,7 @@
       ],
       "works": [
         "00388"
-      ],
-      "thumb": {
-        "work_id": "00388",
-        "thumb_96": "/assets/works/img/00388-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00388-thumb-192.webp"
-      }
+      ]
     },
     "living-surface-hand-form": {
       "series_id": "living-surface-hand-form",
@@ -2317,12 +1997,7 @@
       ],
       "works": [
         "00463"
-      ],
-      "thumb": {
-        "work_id": "00463",
-        "thumb_96": "/assets/works/img/00463-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00463-thumb-192.webp"
-      }
+      ]
     },
     "mm": {
       "series_id": "mm",
@@ -2387,12 +2062,7 @@
         "00513",
         "00514",
         "00515"
-      ],
-      "thumb": {
-        "work_id": "00477",
-        "thumb_96": "/assets/works/img/00477-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00477-thumb-192.webp"
-      }
+      ]
     },
     "models": {
       "series_id": "models",
@@ -2420,12 +2090,7 @@
         "00543",
         "00544",
         "00545"
-      ],
-      "thumb": {
-        "work_id": "00540",
-        "thumb_96": "/assets/works/img/00540-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00540-thumb-192.webp"
-      }
+      ]
     },
     "molecule-forms": {
       "series_id": "molecule-forms",
@@ -2443,12 +2108,7 @@
       ],
       "works": [
         "00459"
-      ],
-      "thumb": {
-        "work_id": "00459",
-        "thumb_96": "/assets/works/img/00459-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00459-thumb-192.webp"
-      }
+      ]
     },
     "molecules": {
       "series_id": "molecules",
@@ -2468,12 +2128,7 @@
         "00460",
         "00461",
         "00462"
-      ],
-      "thumb": {
-        "work_id": "00460",
-        "thumb_96": "/assets/works/img/00460-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00460-thumb-192.webp"
-      }
+      ]
     },
     "mouse-story": {
       "series_id": "mouse-story",
@@ -2493,12 +2148,7 @@
         "00160",
         "00161",
         "00162"
-      ],
-      "thumb": {
-        "work_id": "00160",
-        "thumb_96": "/assets/works/img/00160-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00160-thumb-192.webp"
-      }
+      ]
     },
     "nerve": {
       "series_id": "nerve",
@@ -2510,7 +2160,7 @@
       "series_type": "primary",
       "year": 1995,
       "year_display": "1990-95",
-      "primary_work_id": "00166",
+      "primary_work_id": "00008",
       "notes": "works and details to publish",
       "project_folders": [
         "nerve",
@@ -2521,12 +2171,7 @@
         "00008",
         "00163",
         "00166"
-      ],
-      "thumb": {
-        "work_id": "00166",
-        "thumb_96": "/assets/works/img/00166-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00166-thumb-192.webp"
-      }
+      ]
     },
     "nerve-forms": {
       "series_id": "nerve-forms",
@@ -2549,12 +2194,7 @@
         "00387",
         "00525",
         "00581"
-      ],
-      "thumb": {
-        "work_id": "00581",
-        "thumb_96": "/assets/works/img/00581-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00581-thumb-192.webp"
-      }
+      ]
     },
     "particle-theory": {
       "series_id": "particle-theory",
@@ -2576,12 +2216,7 @@
         "00551",
         "00552",
         "00553"
-      ],
-      "thumb": {
-        "work_id": "00553",
-        "thumb_96": "/assets/works/img/00553-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00553-thumb-192.webp"
-      }
+      ]
     },
     "qrnt": {
       "series_id": "qrnt",
@@ -2606,12 +2241,7 @@
         "00632",
         "00633",
         "00634"
-      ],
-      "thumb": {
-        "work_id": "00630",
-        "thumb_96": "/assets/works/img/00630-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00630-thumb-192.webp"
-      }
+      ]
     },
     "r": {
       "series_id": "r",
@@ -2655,12 +2285,7 @@
         "00156",
         "00157",
         "00524"
-      ],
-      "thumb": {
-        "work_id": "00142",
-        "thumb_96": "/assets/works/img/00142-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00142-thumb-192.webp"
-      }
+      ]
     },
     "spiders": {
       "series_id": "spiders",
@@ -2678,12 +2303,7 @@
       ],
       "works": [
         "00402"
-      ],
-      "thumb": {
-        "work_id": "00402",
-        "thumb_96": "/assets/works/img/00402-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00402-thumb-192.webp"
-      }
+      ]
     },
     "string-theory": {
       "series_id": "string-theory",
@@ -2727,12 +2347,7 @@
         "00578",
         "00579",
         "00580"
-      ],
-      "thumb": {
-        "work_id": "00573",
-        "thumb_96": "/assets/works/img/00573-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00573-thumb-192.webp"
-      }
+      ]
     },
     "tree": {
       "series_id": "tree",
@@ -2752,12 +2367,7 @@
         "00546",
         "00547",
         "00548"
-      ],
-      "thumb": {
-        "work_id": "00546",
-        "thumb_96": "/assets/works/img/00546-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00546-thumb-192.webp"
-      }
+      ]
     },
     "wa": {
       "series_id": "wa",
@@ -2798,12 +2408,7 @@
         "00613",
         "00614",
         "00615"
-      ],
-      "thumb": {
-        "work_id": "00615",
-        "thumb_96": "/assets/works/img/00615-thumb-96.webp",
-        "thumb_192": "/assets/works/img/00615-thumb-192.webp"
-      }
+      ]
     }
   }
 }

@@ -45,7 +45,7 @@ What this JSON provides:
 - series title
 - year / year display
 - ordered `works` membership for each series
-- selected thumb metadata for each series
+- canonical `primary_work_id` for each series
 - sort metadata and other series-level fields
 
 Why it is used:

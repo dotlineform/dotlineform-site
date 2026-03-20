@@ -6,20 +6,31 @@ layout: default
 {%- assign title_txt = page.title | default: "" | strip -%}
 
 {% assign media_base = site.media_base | default: "" %}
-{% assign media_prefix = site.media_prefix %}
-{% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
-{% assign works_img_prefix = media_prefix | append: "/works/img" %}
-{% assign img_base = media_base | append: works_img_prefix | append: "/" %}
+{% assign media_image_works = site.media_image_works | default: "/works/img" %}
+{% assign media_files_works = site.media_files_works | default: "/works/files" %}
+{% assign thumb_base = site.thumb_base | default: "" %}
+{% assign thumb_work_details = site.thumb_work_details | default: "/assets/work_details/img" %}
+{% assign works_img_base = media_base | append: media_image_works | append: "/" %}
+{% assign works_files_base = media_base | append: media_files_works | append: "/" %}
+{% assign details_thumb_base = thumb_base | append: thumb_work_details | append: "/" %}
 
-{%- assign src800  = img_base | append: wid | append: "-primary-800.webp" -%}
-{%- assign src1200 = img_base | append: wid | append: "-primary-1200.webp" -%}
-{%- assign src1600 = img_base | append: wid | append: "-primary-1600.webp" -%}
+{%- assign src800  = works_img_base | append: wid | append: "-primary-800.webp" -%}
+{%- assign src1200 = works_img_base | append: wid | append: "-primary-1200.webp" -%}
+{%- assign src1600 = works_img_base | append: wid | append: "-primary-1600.webp" -%}
 {%- assign full_src = src1600 -%}
 
-{%- unless img_base contains '://' -%}
+{%- assign works_files_base_out = works_files_base -%}
+{%- assign details_thumb_base_out = details_thumb_base -%}
+{%- unless works_img_base contains '://' -%}
   {%- assign src800  = src800  | relative_url -%}
   {%- assign src1200 = src1200 | relative_url -%}
   {%- assign src1600 = src1600 | relative_url -%}
+{%- endunless -%}
+{%- unless works_files_base contains '://' -%}
+  {%- assign works_files_base_out = works_files_base | relative_url -%}
+{%- endunless -%}
+{%- unless details_thumb_base contains '://' -%}
+  {%- assign details_thumb_base_out = details_thumb_base | relative_url -%}
 {%- endunless -%}
 
 {%- capture fallback_work_json -%}
@@ -44,7 +55,7 @@ layout: default
 }
 {%- endcapture -%}
 
-<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}">
+<article class="page work" id="workPageRoot" data-work-id="{{ wid | escape }}" data-baseurl="{{ site.baseurl | default: '' }}" data-media-files-works-base="{{ works_files_base_out | escape }}" data-fallback-json="{{ fallback_work_json | strip_newlines | escape }}">
 
   <h1 class="visually-hidden" id="workTitleHidden">{{ wid }}</h1>
 
@@ -142,8 +153,8 @@ layout: default
     data-work-id="{{ wid | escape }}"
     data-work-title="{{ wid | escape }}"
     data-baseurl="{{ site.baseurl | default: '' }}"
-    data-thumb-base="{{ site.thumb_base | default: '' }}"
-    data-thumb-prefix="{{ site.thumb_prefix | default: '/assets' }}"
+    data-thumb-work-details-base="{{ details_thumb_base_out | escape }}"
+    data-media-files-works-base="{{ works_files_base_out | escape }}"
     data-enable-hash-scroll="{{ site.enable_details_hash_scroll | default: true }}"
     hidden
   >
@@ -193,6 +204,7 @@ layout: default
     if (!root) return;
 
     var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var worksFilesBase = String(root.getAttribute('data-media-files-works-base') || '');
     var workId = String(root.getAttribute('data-work-id') || '').trim();
     if (!workId) return;
 
@@ -340,7 +352,7 @@ layout: default
         if (downloadName && currentWorkId) {
           downloadRow.hidden = false;
           downloadLink.textContent = downloadName;
-          downloadLink.setAttribute('href', baseurl + '/assets/works/files/' + encodeURIComponent(currentWorkId + '-' + downloadName));
+          downloadLink.setAttribute('href', worksFilesBase + encodeURIComponent(currentWorkId + '-' + downloadName));
         } else {
           downloadRow.hidden = true;
           downloadLink.textContent = '';
@@ -451,9 +463,7 @@ layout: default
     if (!workId) return;
 
     var baseurl = String(section.getAttribute('data-baseurl') || '').replace(/\/$/, '');
-    var thumbBase = String(section.getAttribute('data-thumb-base') || '').replace(/\/$/, '');
-    var thumbPrefix = String(section.getAttribute('data-thumb-prefix') || '/assets').replace(/\/$/, '');
-    var detailsImgBase = thumbBase ? (thumbBase + thumbPrefix + '/work_details/img/') : (baseurl + thumbPrefix + '/work_details/img/');
+    var detailsImgBase = String(section.getAttribute('data-thumb-work-details-base') || '');
     var pageSize = 60;
     var query = new URLSearchParams(window.location.search);
     var currentSeries = String(query.get('series') || '').trim();

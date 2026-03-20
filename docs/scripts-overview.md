@@ -147,7 +147,7 @@ Useful flags:
     - series map keyed by `series_id`
     - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`)
     - optional empty fields are omitted from JSON rather than written as `null`
-    - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
+    - ordered `works` (in canonical series sort order derived from `sort_fields`)
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - each work stores canonical `series_ids` only; series membership is derived from that ordered array
     - optional empty fields are omitted from JSON rather than written as `null`
@@ -188,7 +188,7 @@ Behavior:
   - removes the work from `assets/data/series_index.json`
   - removes the work from `assets/data/works_index.json`
   - removes per-work overrides from `assets/studio/data/tag_assignments.json`
-- if a deleted work is referenced by a series `primary_work_id` or `thumb.work_id`, those fields are set to `null`
+- if a deleted work is referenced by a series `primary_work_id`, that field is set to `null`
 - intentionally leaves these untouched:
   - `assets/work_details/img/*`
   - `_includes/work_prose/<work_id>.md`

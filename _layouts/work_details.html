@@ -9,10 +9,8 @@ layout: default
 {% assign fallback_work_title = page.work_title | default: fallback_work_id %}
 
 {% assign media_base = site.media_base | default: "" %}
-{% assign media_prefix = site.media_prefix %}
-{% if media_prefix == nil %}{% assign media_prefix = "/assets" %}{% endif %}
-{% assign details_img_prefix = media_prefix | append: "/work_details/img" %}
-{% assign img_base = media_base | append: details_img_prefix | append: "/" %}
+{% assign media_image_work_details = site.media_image_work_details | default: "/work_details/img" %}
+{% assign img_base = media_base | append: media_image_work_details | append: "/" %}
 
 {%- assign src800  = img_base | append: detail_uid | append: "-primary-800.webp" -%}
 {%- assign src1200 = img_base | append: detail_uid | append: "-primary-1200.webp" -%}

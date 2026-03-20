@@ -780,6 +780,23 @@ def main() -> None:
         i = header_index.get(col_name)
         return None if i is None or i >= len(row) else row[i]
 
+    def require_series_primary_work_id(
+        sid: str,
+        sr: tuple,
+        *,
+        ordered_work_ids: Optional[List[str]] = None,
+    ) -> str:
+        """Return a required primary_work_id for a series and validate membership when provided."""
+        if "primary_work_id" not in series_hi:
+            raise ValueError("Series sheet missing primary_work_id column")
+        raw = cell(sr, series_hi, "primary_work_id")
+        if is_empty(raw):
+            raise ValueError(f"Series '{sid}' missing primary_work_id")
+        wid = slug_id(raw)
+        if ordered_work_ids and wid not in ordered_work_ids:
+            raise ValueError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
+        return wid
+
     def live_cell_value(row: tuple, row_cells: tuple | None, header_index: Dict[str, int], col_name: str) -> Any:
         i = header_index.get(col_name)
         if i is None:
@@ -1564,6 +1581,12 @@ def main() -> None:
 
                 # Canonical series metadata stays in series_index.json.
                 # Keep _series pages lightweight (routing + prose include + checksum).
+                series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
+                primary_work_id = require_series_primary_work_id(
+                    series_id,
+                    sr,
+                    ordered_work_ids=series_work_ids_sorted,
+                )
                 series_front_matter_like: Dict[str, Any] = {
                     "series_id": series_id,
                     "title": series_title,
@@ -1571,7 +1594,7 @@ def main() -> None:
                     "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                     "year": year,
                     "year_display": year_display,
-                    "primary_work_id": coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None,
+                    "primary_work_id": primary_work_id,
                     "layout": "series",
                 }
                 sfm: Dict[str, Any] = {
@@ -1630,12 +1653,6 @@ def main() -> None:
                         print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
                     else:
                         print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
-
-                primary_work_id = coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None
-                if primary_work_id is None:
-                    series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
-                    if series_work_ids_sorted:
-                        primary_work_id = series_work_ids_sorted[-1]
 
                 if run_studio_series_pages:
                     if studio_series_out_dir is None:
@@ -1780,25 +1797,11 @@ def main() -> None:
             published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
 
             ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
-            primary_work_id = coerce_string(cell(sr, series_hi, "primary_work_id")) if "primary_work_id" in series_hi else None
-            if primary_work_id is None and ordered_work_ids:
-                primary_work_id = sorted(ordered_work_ids)[-1]
-
-            thumb_work_id = primary_work_id
-            if thumb_work_id is None and ordered_work_ids:
-                thumb_work_id = sorted(ordered_work_ids)[-1]
-            if thumb_work_id is None:
-                thumb = {
-                    "work_id": None,
-                    "thumb_96": None,
-                    "thumb_192": None,
-                }
-            else:
-                thumb = {
-                    "work_id": thumb_work_id,
-                    "thumb_96": f"/assets/works/img/{thumb_work_id}-thumb-96.webp",
-                    "thumb_192": f"/assets/works/img/{thumb_work_id}-thumb-192.webp",
-                }
+            primary_work_id = require_series_primary_work_id(
+                sid,
+                sr,
+                ordered_work_ids=ordered_work_ids,
+            )
 
             sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
             series_payload_unsorted[sid] = compact_json_object({
@@ -1815,7 +1818,6 @@ def main() -> None:
                 "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                 "project_folders": series_project_folders_by_id.get(sid, []),
                 "works": ordered_work_ids,
-                "thumb": thumb,
             })
 
         series_payload: Dict[str, Dict[str, Any]] = {

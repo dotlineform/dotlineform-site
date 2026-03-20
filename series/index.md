@@ -6,7 +6,15 @@ permalink: /series/
 ---
 
 <h1 class="index__heading visually-hidden">works</h1>
-<div id="seriesIndexRoot" hidden>
+{% assign thumb_base = site.thumb_base | default: "" %}
+{% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
+{% assign thumb_works_base = thumb_base | append: thumb_works | append: "/" %}
+{%- assign thumb_works_base_out = thumb_works_base -%}
+{%- unless thumb_works_base contains '://' -%}
+  {%- assign thumb_works_base_out = thumb_works_base | relative_url -%}
+{%- endunless -%}
+
+<div id="seriesIndexRoot" data-thumb-works-base="{{ thumb_works_base_out | escape }}" hidden>
   <div class="seriesIndex__toolbar" aria-label="Series view and sorting">
     <div class="seriesIndex__viewControls" role="group" aria-label="Series view">
       <button
@@ -86,6 +94,7 @@ permalink: /series/
     if (!viewButtons.length || !sortButtons.length) return;
 
     var baseurl = {{ site.baseurl | default: '' | jsonify }};
+    var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '');
     var dataUrl = baseurl + '/assets/data/series_index.json';
     var configUrl = baseurl + '/assets/studio/data/studio_config.json';
     var viewStorageKey = 'dlf.seriesIndex.view';
@@ -111,12 +120,10 @@ permalink: /series/
       ? new window.Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
       : null;
 
-    function withBase(path) {
-      var s = String(path || '').trim();
-      if (!s) return '';
-      if (/^https?:\/\//i.test(s)) return s;
-      if (s.charAt(0) === '/') return baseurl + s;
-      return baseurl + '/' + s.replace(/^\/+/, '');
+    function thumbUrl(workId, size) {
+      var wid = String(workId || '').trim();
+      if (!wid) return '';
+      return String(thumbWorksBase || '') + wid + '-thumb-' + size + '.webp';
     }
 
     function normalizeView(value) {
@@ -284,16 +291,9 @@ permalink: /series/
     }
 
     function cardThumbData(s) {
-      var thumb = (s && s.thumb && typeof s.thumb === 'object') ? s.thumb : null;
-      var thumb96 = thumb && thumb.thumb_96 ? withBase(thumb.thumb_96) : '';
-      var thumb192 = thumb && thumb.thumb_192 ? withBase(thumb.thumb_192) : '';
-      var thumbId = String((thumb && thumb.work_id) || '').trim();
-      if (!thumbId) {
-        var works = Array.isArray(s && s.works) ? s.works : [];
-        if (works.length) thumbId = String(works[works.length - 1] || '').trim();
-      }
-      if (!thumb96 && thumbId) thumb96 = withBase('/assets/works/img/' + thumbId + '-thumb-96.webp');
-      if (!thumb192 && thumbId) thumb192 = withBase('/assets/works/img/' + thumbId + '-thumb-192.webp');
+      var thumbId = String((s && s.primary_work_id) || '').trim();
+      var thumb96 = thumbUrl(thumbId, '96');
+      var thumb192 = thumbUrl(thumbId, '192');
       return {
         thumb_96: thumb96,
         thumb_192: thumb192,

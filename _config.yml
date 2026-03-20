@@ -4,21 +4,29 @@ url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
 live_url: "https://www.dotlineform.com"
 
-# Thumbnail origin (default: local repo)
+# Thumbnail origin (local repo)
 thumb_base: ""
-thumb_prefix: "/assets"
+thumb_works: "/assets/works/img"
+thumb_work_details: "/assets/work_details/img"
 
-# Media origin for larger assets (R2):
+# Media origin for work images/files (R2):
 media_base: "https://media.dotlineform.com"
+media_image_works: "/works/img"
+media_image_work_details: "/work_details/img"
+media_files_works: "/works/files"
+
+# Other media path prefixes
 media_prefix: ""
 
 # Home hero media origin/prefix (served remotely, no /assets segment):
 home_media_base: "https://media.dotlineform.com"
 home_media_prefix: "/home/img"
 
-# Local fallback (serve media from this repo):
+# Local fallback (serve work media from this repo):
 # media_base: ""
-# media_prefix: "/assets"
+# media_image_works: "/assets/works/img"
+# media_image_work_details: "/assets/work_details/img"
+# media_files_works: "/assets/works/files"
 
 # Re-apply hash-anchor scrolling on work pages after async detail sections render.
 # Keep true unless you explicitly want to suppress jump-to-section on return from detail pages.
