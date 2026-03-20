@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c1c3f5d940a7a08a28590cdf1cf569ed",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "version": "blake2b-2cb7a8ea5e459a9cce302385efd3647e",
+    "generated_at_utc": "2026-03-20T20:16:30Z",
     "work_id": "00457",
     "count": 0
   },
@@ -16,7 +16,12 @@
     ],
     "medium_type": "music",
     "medium_caption": "audio files (mp3/FLAC/wav)",
-    "bandcamp_url": "https://dotlineform.bandcamp.com/album/intuition",
+    "links": [
+      {
+        "url": "https://dotlineform.bandcamp.com/album/intuition",
+        "label": "Bandcamp"
+      }
+    ],
     "height_cm": 11.8,
     "width_cm": 11.8,
     "width_px": 3543,

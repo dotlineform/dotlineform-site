@@ -43,9 +43,7 @@ layout: default
   "medium_type": {{ page.medium_type | jsonify }},
   "medium_caption": {{ page.medium_caption | jsonify }},
   "duration": {{ page.duration | jsonify }},
-  "vimeo_url": {{ page.vimeo_url | jsonify }},
-  "youtube_url": {{ page.youtube_url | jsonify }},
-  "bandcamp_url": {{ page.bandcamp_url | jsonify }},
+  "links": {{ page.links | jsonify }},
   "width_px": {{ page.width_px | jsonify }},
   "height_px": {{ page.height_px | jsonify }},
   "height_cm": {{ page.height_cm | jsonify }},
@@ -263,6 +261,22 @@ layout: default
         .filter(Boolean);
     }
 
+    function normalizeLinks(raw) {
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .map(function (item) {
+          if (!item || typeof item !== 'object') return null;
+          var url = text(item.url);
+          var label = text(item.label);
+          if (!url || !label) return null;
+          return {
+            url: url,
+            label: label
+          };
+        })
+        .filter(Boolean);
+    }
+
     function setRowText(rowId, textId, value) {
       var row = document.getElementById(rowId);
       var textEl = document.getElementById(textId);
@@ -294,14 +308,9 @@ layout: default
     }
 
     function publishedHtml(meta) {
-      var links = [];
-      var vimeo = text(meta && meta.vimeo_url);
-      var youtube = text(meta && meta.youtube_url);
-      var bandcamp = text(meta && meta.bandcamp_url);
-      if (vimeo) links.push('<a href="' + escAttr(vimeo) + '" target="_blank" rel="noopener">Vimeo</a>');
-      if (youtube) links.push('<a href="' + escAttr(youtube) + '" target="_blank" rel="noopener">YouTube</a>');
-      if (bandcamp) links.push('<a href="' + escAttr(bandcamp) + '" target="_blank" rel="noopener">Bandcamp</a>');
-      return links.join(', ');
+      return normalizeLinks(meta && meta.links).map(function (item) {
+        return '<a href="' + escAttr(item.url) + '" target="_blank" rel="noopener">' + escHtml(item.label) + '</a>';
+      }).join(', ');
     }
 
     function updateMedia(meta) {

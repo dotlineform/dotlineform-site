@@ -128,6 +128,7 @@ Useful flags:
 - `--series-ids`, `--series-ids-file`
 - `--moment-ids`, `--moment-ids-file`
 - `--work-files-sheet` (default `WorkFiles`)
+- `--work-links-sheet` (default `WorkLinks`)
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
@@ -141,9 +142,10 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
+  - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
@@ -482,3 +484,14 @@ If `WorkFiles` contains rows for a work, generation stages those files and expos
   - Label: `download` or `downloads`
   - Link text: `WorkFiles.label`
   - Rendered before `cat. <work_id>`
+
+### Works published links
+
+If `WorkLinks` contains rows for a work, generation exposes them as `work.links` in per-work JSON.
+
+- Source fields:
+  - `WorkLinks.URL`
+  - `WorkLinks.label`
+- Work page row:
+  - Caption stays `published on`
+  - Links render as a comma-delimited list using `WorkLinks.label`

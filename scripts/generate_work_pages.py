@@ -13,6 +13,7 @@ Lightweight works index JSON is written to assets/data/works_index.json (object 
 - Series: series master data (1 row per series_id)
 - WorkDetails: additional detail images associated with a work
 - WorkFiles: downloadable files associated with a work
+- WorkLinks: published links associated with a work
 - Moments: standalone moment entries
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
@@ -360,9 +361,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("medium_type", "medium_type", coerce_string),
     ("medium_caption", "medium_caption", coerce_string),
     ("duration", "duration", coerce_string),
-    ("vimeo_url", "vimeo_url", coerce_string),
-    ("youtube_url", "youtube_url", coerce_string),
-    ("bandcamp_url", "bandcamp_url", coerce_string),
     ("height_cm", "height_cm", coerce_numeric),
     ("width_cm", "width_cm", coerce_numeric),
     ("depth_cm", "depth_cm", coerce_numeric),
@@ -399,6 +397,19 @@ def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
     return {
         "source_filename": source_name,
         "filename": f"{safe_stem}{suffix}",
+        "label": label_value,
+    }
+
+
+def build_link_entry(url: Any, label: Any) -> Dict[str, str]:
+    url_value = coerce_string(url)
+    label_value = coerce_string(label)
+    if url_value is None:
+        raise ValueError("Missing URL")
+    if label_value is None:
+        raise ValueError("Missing label")
+    return {
+        "url": url_value,
         "label": label_value,
     }
 
@@ -639,6 +650,7 @@ def main() -> None:
     ap.add_argument("--series-sort-sheet", default="SeriesSort", help="Worksheet name for custom per-series sorting rules")
     ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
     ap.add_argument("--work-files-sheet", default="WorkFiles", help="Worksheet name for work download-file metadata")
+    ap.add_argument("--work-links-sheet", default="WorkLinks", help="Worksheet name for work published-link metadata")
     ap.add_argument("--moments-sheet", default="Moments", help="Worksheet name for moment metadata")
 
     # Output
@@ -705,7 +717,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments."
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments."
         ),
     )
     args = ap.parse_args()
@@ -721,6 +733,7 @@ def main() -> None:
     valid_artifacts = {
         "work-pages",
         "work-files",
+        "work-links",
         "series-pages",
         "series-index-json",
         "work-details-pages",
@@ -753,6 +766,7 @@ def main() -> None:
 
     run_work_pages = artifact_enabled("work-pages")
     run_work_files = artifact_enabled("work-files")
+    run_work_links = artifact_enabled("work-links")
     run_series_pages = artifact_enabled("series-pages")
     run_series_index_json = artifact_enabled("series-index-json")
     run_work_details_pages = artifact_enabled("work-details-pages")
@@ -907,10 +921,12 @@ def main() -> None:
     series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb.sheetnames else []
     work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb.sheetnames else []
     work_files_rows = read_sheet_rows(args.work_files_sheet)
+    work_links_rows = read_sheet_rows(args.work_links_sheet)
     moments_rows = read_sheet_rows(args.moments_sheet)
     series_ws = wb[args.series_sheet]
     work_details_ws = wb[args.work_details_sheet] if args.work_details_sheet in wb.sheetnames else None
     work_files_ws = wb[args.work_files_sheet]
+    work_links_ws = wb[args.work_links_sheet]
     moments_ws = wb[args.moments_sheet]
 
     if not works_rows:
@@ -921,6 +937,7 @@ def main() -> None:
     series_sort_hi = build_header_index(series_sort_rows) if series_sort_rows else {}
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
     work_files_hi = build_header_index(work_files_rows) if work_files_rows else {}
+    work_links_hi = build_header_index(work_links_rows) if work_links_rows else {}
     moments_hi = build_header_index(moments_rows) if moments_rows else {}
 
     if "status" not in works_hi:
@@ -938,6 +955,10 @@ def main() -> None:
     missing_work_files = [c for c in required_work_files if c not in work_files_hi]
     if missing_work_files:
         raise SystemExit(f"{args.work_files_sheet} sheet missing required columns: {', '.join(missing_work_files)}")
+    required_work_links = ["work_id", "url", "label", "status", "published_date"]
+    missing_work_links = [c for c in required_work_links if c not in work_links_hi]
+    if missing_work_links:
+        raise SystemExit(f"{args.work_links_sheet} sheet missing required columns: {', '.join(missing_work_links)}")
     if moments_rows and "status" not in moments_hi:
         raise SystemExit("Moments sheet missing required column: status")
 
@@ -1131,6 +1152,32 @@ def main() -> None:
                 }
             )
 
+    work_link_entries_by_work_id: Dict[str, List[Dict[str, Any]]] = {}
+    if len(work_links_rows) > 1:
+        for row_number, (wl_row, wl_cells) in enumerate(
+            zip(work_links_rows[1:], work_links_ws.iter_rows(min_row=2), strict=False),
+            start=2,
+        ):
+            wid_raw = cell(wl_row, work_links_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            wid = slug_id(wid_raw)
+            try:
+                link_entry = build_link_entry(
+                    live_cell_value(wl_row, wl_cells, work_links_hi, "url"),
+                    live_cell_value(wl_row, wl_cells, work_links_hi, "label"),
+                )
+            except ValueError as exc:
+                raise SystemExit(f"{args.work_links_sheet} row {row_number}: {exc}") from exc
+            work_link_entries_by_work_id.setdefault(wid, []).append(
+                {
+                    "url": link_entry["url"],
+                    "label": link_entry["label"],
+                    "row_number": row_number,
+                    "row_cells": wl_cells,
+                }
+            )
+
     works_field_order = [
         "work_id",
         "title",
@@ -1144,9 +1191,7 @@ def main() -> None:
         "medium_type",
         "medium_caption",
         "duration",
-        "vimeo_url",
-        "youtube_url",
-        "bandcamp_url",
+        "links",
         "height_cm",
         "width_cm",
         "depth_cm",
@@ -1168,6 +1213,12 @@ def main() -> None:
         ]
         if downloads:
             fm["downloads"] = downloads
+        links = [
+            {"url": entry["url"], "label": entry["label"]}
+            for entry in work_link_entries_by_work_id.get(wid, [])
+        ]
+        if links:
+            fm["links"] = links
         raw_series_ids = fm.get("series_ids")
         series_ids = [coerce_string(item) for item in raw_series_ids] if isinstance(raw_series_ids, list) else []
         series_ids = [item for item in series_ids if item is not None]
@@ -1262,7 +1313,12 @@ def main() -> None:
     work_files_status_idx = work_files_hi.get("status")
     work_files_published_date_idx = work_files_hi.get("published_date")
     work_files_published_date_missing_warned = False
-    run_works_loop = run_work_pages or run_work_files or run_works_index_json
+    work_links_status_updated = 0
+    work_links_published_date_updated = 0
+    work_links_status_idx = work_links_hi.get("status")
+    work_links_published_date_idx = work_links_hi.get("published_date")
+    work_links_published_date_missing_warned = False
+    run_works_loop = run_work_pages or run_work_files or run_work_links or run_works_index_json
 
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
@@ -1565,11 +1621,31 @@ def main() -> None:
                         print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
                         downloads_copied += 1
 
+            if run_work_links:
+                work_link_entries = work_link_entries_by_work_id.get(wid, [])
+                for entry in work_link_entries:
+                    row_cells = entry["row_cells"]
+                    if args.write:
+                        if work_links_status_idx is not None:
+                            status_was = normalize_status(row_cells[work_links_status_idx].value)
+                            if status_was != "published":
+                                row_cells[work_links_status_idx].value = "published"
+                                work_links_status_updated += 1
+                            if (status_was != "published") or args.force:
+                                if work_links_published_date_idx is not None:
+                                    row_cells[work_links_published_date_idx].value = today
+                                    work_links_published_date_updated += 1
+                                elif not work_links_published_date_missing_warned:
+                                    print(f"Warning: {args.work_links_sheet} sheet missing published_date column; skipping date updates.")
+                                    work_links_published_date_missing_warned = True
+
     if run_works_loop and args.write and (
         status_updated > 0
         or work_dimensions_updated > 0
         or work_files_status_updated > 0
         or work_files_published_date_updated > 0
+        or work_links_status_updated > 0
+        or work_links_published_date_updated > 0
     ):
         wb.save(xlsx_path)
         if status_updated > 0:
@@ -1580,6 +1656,10 @@ def main() -> None:
             print(f"Updated {args.work_files_sheet} status to 'published' for {work_files_status_updated} row(s).")
         if work_files_published_date_updated > 0:
             print(f"Set {args.work_files_sheet} published_date for {work_files_published_date_updated} row(s).")
+        if work_links_status_updated > 0:
+            print(f"Updated {args.work_links_sheet} status to 'published' for {work_links_status_updated} row(s).")
+        if work_links_published_date_updated > 0:
+            print(f"Set {args.work_links_sheet} published_date for {work_links_published_date_updated} row(s).")
         if work_dimensions_updated > 0:
             print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
     if run_works_loop:
