@@ -2,7 +2,9 @@
   "env": {
     "projects_base_dir": "DOTLINEFORM_PROJECTS_BASE_DIR",
     "media_base_dir": "DOTLINEFORM_MEDIA_BASE_DIR",
-    "srcset_jobs": "MAKE_SRCSET_JOBS"
+    "srcset_jobs": "MAKE_SRCSET_JOBS",
+    "srcset_selected_ids_file": "MAKE_SRCSET_WORK_IDS_FILE",
+    "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE"
   },
   "paths": {
     "source_roots": {

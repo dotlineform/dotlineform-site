@@ -81,6 +81,8 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
+SRCSET_SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_ids_file")
+SRCSET_SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
 
 
 def normalize_text(value: Any) -> str:
@@ -581,8 +583,8 @@ def main() -> int:
             if copied_ids:
                 # make_srcset_images.sh controls selection via environment variables.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_ids_file)
-                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(success_ids_file)
+                env[SRCSET_SELECTED_IDS_ENV_NAME] = str(copied_ids_file)
+                env[SRCSET_SUCCESS_IDS_ENV_NAME] = str(success_ids_file)
 
                 run_step(
                     "Generate Srcset Derivatives",
@@ -631,8 +633,8 @@ def main() -> int:
             if copied_detail_uids:
                 # Restrict run to copied detail_uids and track success IDs.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_detail_uids_file)
-                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(detail_success_ids_file)
+                env[SRCSET_SELECTED_IDS_ENV_NAME] = str(copied_detail_uids_file)
+                env[SRCSET_SUCCESS_IDS_ENV_NAME] = str(detail_success_ids_file)
 
                 run_step(
                     "Generate Work Detail Srcset Derivatives",
@@ -681,8 +683,8 @@ def main() -> int:
             if copied_moment_ids:
                 # Restrict run to copied moment_ids and track success IDs.
                 env = os.environ.copy()
-                env["MAKE_SRCSET_WORK_IDS_FILE"] = str(copied_moment_ids_file)
-                env["MAKE_SRCSET_SUCCESS_IDS_FILE"] = str(moment_success_ids_file)
+                env[SRCSET_SELECTED_IDS_ENV_NAME] = str(copied_moment_ids_file)
+                env[SRCSET_SUCCESS_IDS_ENV_NAME] = str(moment_success_ids_file)
 
                 run_step(
                     "Generate Moment Srcset Derivatives",

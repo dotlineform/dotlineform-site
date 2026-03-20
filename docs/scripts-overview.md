@@ -24,6 +24,7 @@ Pipeline policy config:
 - Shared pipeline defaults live in `_data/pipeline.json`.
 - That config stores env var names and relative media subpaths.
 - The default env var names remain `DOTLINEFORM_PROJECTS_BASE_DIR`, `DOTLINEFORM_MEDIA_BASE_DIR`, and `MAKE_SRCSET_JOBS`.
+- Srcset manifest env var names also live there; defaults remain `MAKE_SRCSET_WORK_IDS_FILE` and `MAKE_SRCSET_SUCCESS_IDS_FILE`.
 - CLI flags still override config-derived defaults.
 
 Sorting behavior and consistency contract:
@@ -91,6 +92,8 @@ Flags:
 - `--keep-ext` / `--no-ext`: keep/remove source extension in copied filename
 
 ### 2) Build srcset derivatives
+
+The stable shell entrypoint remains `scripts/make_srcset_images.sh`, but it now delegates to the shared config-driven Python implementation.
 
 ```bash
 MAKE_SRCSET_WORK_IDS_FILE=/tmp/copied_work_ids.txt \

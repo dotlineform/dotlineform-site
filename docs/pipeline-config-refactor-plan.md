@@ -19,18 +19,17 @@ This document tracks the phased refactor to move pipeline policy out of scattere
 
 ## Status
 
-- Overall status: `phase 1 completed`
+- Overall status: `phase 2 completed`
 - Phase 1: `completed`
-- Phase 2: `not started`
+- Phase 2: `completed`
 - Phase 3: `not started`
 - Phase 4: `not started`
 
 ## Current Problems
 
-- Srcset widths, thumb sizes, output names, and ffmpeg settings are hard-coded in `scripts/make_srcset_images.sh`.
-- Media subfolder layout and env-var assumptions are duplicated in `scripts/run_draft_pipeline.py`, `scripts/copy_draft_media_files.py`, and `scripts/generate_work_pages.py`.
-- UI/runtime widths are duplicated in `_layouts/work.html`, `_layouts/work_details.html`, `_layouts/moment.html`, and `assets/studio/js/series-tag-editor-page.js`.
-- Audit rules accept a hard-coded set of filenames and widths in `scripts/audit_site_consistency.py`.
+- UI/runtime widths are still duplicated in `_layouts/work.html`, `_layouts/work_details.html`, `_layouts/moment.html`, and `assets/studio/js/series-tag-editor-page.js`.
+- Audit rules still accept a hard-coded set of filenames and widths in `scripts/audit_site_consistency.py`.
+- The shared render-width and legacy-compatibility policy is not yet consumed by templates, Studio, or audits.
 
 ## Working Decisions
 
@@ -117,7 +116,7 @@ Status: `completed`
 
 ## Phase 2: Move Srcset Builder Onto Shared Config
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -152,13 +151,29 @@ Reason:
 
 ### Done
 
-- None yet.
+- 2026-03-20: Added config-backed srcset builder at `scripts/make_srcset_images.py`.
+- 2026-03-20: Reduced `scripts/make_srcset_images.sh` to a stable shell wrapper that delegates to Python.
+- 2026-03-20: Moved srcset generation widths, encoder settings, and manifest env-var names onto shared config.
+- 2026-03-20: Updated `scripts/run_draft_pipeline.py` to use config-backed srcset manifest env names.
+- 2026-03-20: Updated scripts docs to note the config-driven Python srcset implementation behind the shell entrypoint.
 
 ### Verification
 
-- Dry-run srcset generation for `work`, `work_details`, and `moment`.
-- Confirm generated filenames and counts match current behavior.
-- Confirm manifest handling and source cleanup behavior are preserved.
+- 2026-03-20: Ran Python syntax checks with the configured Python interpreter via `python3 -m py_compile` for:
+  - `scripts/make_srcset_images.py`
+  - `scripts/pipeline_config.py`
+  - `scripts/copy_draft_media_files.py`
+  - `scripts/run_draft_pipeline.py`
+  - `scripts/generate_work_pages.py`
+- 2026-03-20: Ran shell syntax check for `scripts/make_srcset_images.sh` with `bash -n`.
+- 2026-03-20: Ran wrapper dry-run check with a generated sample image:
+  - `MAKE_SRCSET_WORK_IDS_FILE=/tmp/.../ids.txt bash scripts/make_srcset_images.sh /tmp/.../in /tmp/.../out 2 --dry-run`
+- 2026-03-20: Ran wrapper write-mode check with a generated sample image:
+  - `MAKE_SRCSET_WORK_IDS_FILE=/tmp/.../ids.txt MAKE_SRCSET_SUCCESS_IDS_FILE=/tmp/.../success.txt bash scripts/make_srcset_images.sh /tmp/.../in /tmp/.../out 2`
+- 2026-03-20: Confirmed expected derivative files were written, the success manifest was written, and the processed source image was deleted.
+- 2026-03-20: Re-ran the constrained pipeline dry-run:
+  - `DOTLINEFORM_PROJECTS_BASE_DIR=/tmp/dlf-pipeline-check DOTLINEFORM_MEDIA_BASE_DIR=/tmp/dlf-pipeline-check python3 scripts/run_draft_pipeline.py --dry-run --mode moment --moment-ids nonexistent-moment`
+- 2026-03-20: Confirmed the pipeline entrypoint still completed successfully through the shell wrapper path.
 
 ## Phase 3: Make UI and Studio Read From Shared Variant Policy
 
