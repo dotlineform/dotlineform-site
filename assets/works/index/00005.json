@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-76e5ada566d3642bad7fd03cda22782b",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-ca2daa23a8d3ffbdff37c2c3d83a1270",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00005",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-30a2fca5281d4fe38bd2700fcce87575",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-76e5ada566d3642bad7fd03cda22782b"
+    "count": 0
   },
   "work": {
     "work_id": "00005",
     "title": "untitled forms",
-    "title_sort": "untitled forms",
     "year": 1998,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "painting",
     "medium_caption": "mixed meda",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 18.0,
     "width_cm": 16.5,
-    "depth_cm": null,
     "width_px": 2074,
-    "height_px": 2262,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "30a2fca5281d4fe38bd2700fcce87575"
+    "height_px": 2262
   },
   "sections": []
 }

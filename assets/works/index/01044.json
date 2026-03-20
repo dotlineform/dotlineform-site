@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a81d7dd0b4c8a5643328b83a660ee99e",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-03c502846c1b9ee75bafe2f1f92f3fbe",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01044",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-5b9b4b73b4bcde772f5215b358070ac3",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a81d7dd0b4c8a5643328b83a660ee99e"
+    "count": 0
   },
   "work": {
     "work_id": "01044",
     "title": "entangled form",
-    "title_sort": "entangled form",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "framed",
     "medium_type": "monoprint",
     "medium_caption": "ink and paint on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 60.0,
     "width_cm": 42.0,
-    "depth_cm": null,
     "width_px": 1855,
-    "height_px": 1855,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "5b9b4b73b4bcde772f5215b358070ac3"
+    "height_px": 1855
   },
   "sections": []
 }

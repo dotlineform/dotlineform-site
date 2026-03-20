@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cf16f1e603042e1dfe6d347d2ec0dac0",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-a34b23ac39d7fbf41f5e4beafce60350",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00469",
-    "count": 8,
-    "hash": "blake2b-818459e7aacf34e5de3ea6605820941a",
-    "work_checksum": "blake2b-b9fa259d3c756a771632ccf8c225c82c",
-    "details_checksum": "blake2b-818459e7aacf34e5de3ea6605820941a",
-    "record_checksum": "blake2b-cf16f1e603042e1dfe6d347d2ec0dac0"
+    "count": 8
   },
   "work": {
     "work_id": "00469",
     "title": "heaven and earth",
-    "title_sort": "heaven and earth",
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
       "heaven-and-earth"
     ],
-    "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 8859,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "b9fa259d3c756a771632ccf8c225c82c"
+    "height_px": 8859
   },
   "sections": [
     {
@@ -44,96 +30,80 @@
           "detail_id": "001",
           "detail_uid": "00469-001",
           "title": "water colour series",
-          "title_sort": "water colour series",
           "project_subfolder": "water series",
           "width_px": 7087,
           "height_px": 2409,
-          "layout": "work_details",
-          "checksum": "5d045f79e2d5e82a0cc817545f76d852"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "002",
           "detail_uid": "00469-002",
           "title": "water blue",
-          "title_sort": "water blue",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "682b9a8f362346dd48760aaffbc6a8d0"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "003",
           "detail_uid": "00469-003",
           "title": "water green",
-          "title_sort": "water green",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "4cdb95effcd0628f47cb2bc8a1c4ec61"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "004",
           "detail_uid": "00469-004",
           "title": "water cyan",
-          "title_sort": "water cyan",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "e552cfff246625594f7568b91b971eb3"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "005",
           "detail_uid": "00469-005",
           "title": "water grey series",
-          "title_sort": "water grey series",
           "project_subfolder": "water series",
           "width_px": 7087,
           "height_px": 2409,
-          "layout": "work_details",
-          "checksum": "23f52184e23660e06360e556664e87d7"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "006",
           "detail_uid": "00469-006",
           "title": "water grey 1",
-          "title_sort": "water grey 001",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "8f3855a0dd3de5a932f1db6a6b0d99d1"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "007",
           "detail_uid": "00469-007",
           "title": "water grey 2",
-          "title_sort": "water grey 002",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "cae31653aedd8612eee8b15c9242f396"
+          "layout": "work_details"
         },
         {
           "work_id": "00469",
           "detail_id": "008",
           "detail_uid": "00469-008",
           "title": "water grey 3",
-          "title_sort": "water grey 003",
           "project_subfolder": "water series",
           "width_px": 5906,
           "height_px": 4429,
-          "layout": "work_details",
-          "checksum": "69cd3857e9c65cff7eda7b899bd66b7d"
+          "layout": "work_details"
         }
       ]
     }

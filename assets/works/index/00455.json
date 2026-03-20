@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f0583246f445d3085fbcc8ccfdbe47df",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-0b41550c99d6a12045845170dc691529",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00455",
-    "count": 50,
-    "hash": "blake2b-46e39d562a186ed03100650923dd8b62",
-    "work_checksum": "blake2b-a3bc9f3bf1a66b216ee572200c579ddc",
-    "details_checksum": "blake2b-46e39d562a186ed03100650923dd8b62",
-    "record_checksum": "blake2b-f0583246f445d3085fbcc8ccfdbe47df"
+    "count": 50
   },
   "work": {
     "work_id": "00455",
     "title": "dotlineform",
-    "title_sort": "dotlineform",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "dotlineform-2023"
     ],
-    "storage": null,
     "medium_type": "mixed media",
     "medium_caption": "mixed media on board",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 111.0,
     "width_cm": 55.0,
-    "depth_cm": null,
     "width_px": 6496,
-    "height_px": 13110,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "a3bc9f3bf1a66b216ee572200c579ddc"
+    "height_px": 13110
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "00455-001",
           "title": "dotlineform - detail 1",
-          "title_sort": "dotlineform - detail 001",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "9cdd9b059d4af13e96b1e445b89240ae"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "002",
           "detail_uid": "00455-002",
           "title": "dotlineform - detail 2",
-          "title_sort": "dotlineform - detail 002",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "0d34b2c60382ccdfc7a3e2fc8617751c"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "003",
           "detail_uid": "00455-003",
           "title": "dotlineform - detail 3",
-          "title_sort": "dotlineform - detail 003",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "fb9c6ff8d7bf610a63dd65fb32f3cfbb"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "004",
           "detail_uid": "00455-004",
           "title": "dotlineform - detail 4",
-          "title_sort": "dotlineform - detail 004",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "29e9e0976b4654926bc7d183b472ce3e"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "005",
           "detail_uid": "00455-005",
           "title": "dotlineform - detail 5",
-          "title_sort": "dotlineform - detail 005",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "ddabb7c7dfe86407551d7a623da0e9dd"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "006",
           "detail_uid": "00455-006",
           "title": "dotlineform - detail 6",
-          "title_sort": "dotlineform - detail 006",
           "project_subfolder": "details",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "ca8083db7b751b2a1aab381ddd1ef74a"
+          "layout": "work_details"
         }
       ]
     },
@@ -121,528 +95,440 @@
           "detail_id": "007",
           "detail_uid": "00455-007",
           "title": "2023-10-01 17꞉53",
-          "title_sort": "2023-010-001 017꞉053",
           "project_subfolder": "work in progress",
           "width_px": 1772,
           "height_px": 3595,
-          "layout": "work_details",
-          "checksum": "e71ebc01821e6ff692176cab30b6f708"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "008",
           "detail_uid": "00455-008",
           "title": "2015-01-21 13꞉21",
-          "title_sort": "2015-001-021 013꞉021",
           "project_subfolder": "work in progress",
           "width_px": 3264,
           "height_px": 2448,
-          "layout": "work_details",
-          "checksum": "54dba2283de7b0661c435560efff7d0e"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "009",
           "detail_uid": "00455-009",
           "title": "2015-06-13 02꞉30",
-          "title_sort": "2015-006-013 002꞉030",
           "project_subfolder": "work in progress",
           "width_px": 2448,
           "height_px": 2448,
-          "layout": "work_details",
-          "checksum": "c66675e90ace381b65d496f2d1d418dc"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "010",
           "detail_uid": "00455-010",
           "title": "2023-10-01 17꞉53 2",
-          "title_sort": "2023-010-001 017꞉053 002",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "e3aaf6160696af477545e44d7725378d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "011",
           "detail_uid": "00455-011",
           "title": "2023-10-01 18꞉07 2",
-          "title_sort": "2023-010-001 018꞉007 002",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "bd5da1d8b6ba473ba9ad0856a37505c9"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "012",
           "detail_uid": "00455-012",
           "title": "2023-10-01 18꞉07 3",
-          "title_sort": "2023-010-001 018꞉007 003",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "29c1f7ff3cf6d4250b8b427cef07b1e9"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "013",
           "detail_uid": "00455-013",
           "title": "2023-10-01 18꞉07",
-          "title_sort": "2023-010-001 018꞉007",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "fa7f653aad4f4b61d10f7665a7216141"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "014",
           "detail_uid": "00455-014",
           "title": "2023-10-01 19꞉18",
-          "title_sort": "2023-010-001 019꞉018",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "2b266d5265e007d1c3c4fbff364beaf4"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "015",
           "detail_uid": "00455-015",
           "title": "2023-10-02 00꞉03 2",
-          "title_sort": "2023-010-002 000꞉003 002",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "36a409665c4673138d490a9ff386679b"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "016",
           "detail_uid": "00455-016",
           "title": "2023-10-02 00꞉03",
-          "title_sort": "2023-010-002 000꞉003",
           "project_subfolder": "work in progress",
           "width_px": 4032,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "09dc43576f4de3751b76464602be04aa"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "017",
           "detail_uid": "00455-017",
           "title": "2023-10-02 19꞉13 2",
-          "title_sort": "2023-010-002 019꞉013 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "23f9ffec974419f710873a3308431d17"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "018",
           "detail_uid": "00455-018",
           "title": "2023-10-02 19꞉13 3",
-          "title_sort": "2023-010-002 019꞉013 003",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "aeaaf14a84086bfbb706a620332bd133"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "019",
           "detail_uid": "00455-019",
           "title": "2023-10-02 19꞉13",
-          "title_sort": "2023-010-002 019꞉013",
           "project_subfolder": "work in progress",
           "width_px": 2397,
           "height_px": 2397,
-          "layout": "work_details",
-          "checksum": "5e45e016da1511aad812cfd7a133c6b4"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "020",
           "detail_uid": "00455-020",
           "title": "2023-10-02 20꞉44",
-          "title_sort": "2023-010-002 020꞉044",
           "project_subfolder": "work in progress",
           "width_px": 4032,
           "height_px": 2268,
-          "layout": "work_details",
-          "checksum": "61e16c490d7bba4cd6f7cc66c19ace8c"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "021",
           "detail_uid": "00455-021",
           "title": "2023-10-02 20꞉45",
-          "title_sort": "2023-010-002 020꞉045",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "56462244276f08212fad6587a6aa81ad"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "022",
           "detail_uid": "00455-022",
           "title": "2023-10-03 20꞉59 2",
-          "title_sort": "2023-010-003 020꞉059 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "ca2315bb1162c3df397cce132000497d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "023",
           "detail_uid": "00455-023",
           "title": "2023-10-03 20꞉59 3",
-          "title_sort": "2023-010-003 020꞉059 003",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "4f1041e4b2d3041aeea4b3633da301cc"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "024",
           "detail_uid": "00455-024",
           "title": "2023-10-03 20꞉59",
-          "title_sort": "2023-010-003 020꞉059",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "af53fa521b452c55eb46ce2ff43b4b90"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "025",
           "detail_uid": "00455-025",
           "title": "2023-10-03 22꞉12 2",
-          "title_sort": "2023-010-003 022꞉012 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "37a5a6e177a2490ba301b8bfd1a5457d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "026",
           "detail_uid": "00455-026",
           "title": "2023-10-03 22꞉12",
-          "title_sort": "2023-010-003 022꞉012",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "802d2ab5150aa99fc2a41d1bd6bf96d9"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "027",
           "detail_uid": "00455-027",
           "title": "2023-10-05 01꞉17",
-          "title_sort": "2023-010-005 001꞉017",
           "project_subfolder": "work in progress",
           "width_px": 2268,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "bfa0458727667e8bfea58f6d560dbfb1"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "028",
           "detail_uid": "00455-028",
           "title": "2023-10-05 01꞉18",
-          "title_sort": "2023-010-005 001꞉018",
           "project_subfolder": "work in progress",
           "width_px": 5249,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "9954662f7b85a76de414bbd118d8c649"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "029",
           "detail_uid": "00455-029",
           "title": "2023-10-05 01꞉19",
-          "title_sort": "2023-010-005 001꞉019",
           "project_subfolder": "work in progress",
           "width_px": 5249,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "c6b8d15ef76bc4624bea93f147855af4"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "030",
           "detail_uid": "00455-030",
           "title": "2023-10-05 20꞉23",
-          "title_sort": "2023-010-005 020꞉023",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "57980385cf6fc93a57b1f3679e12f15d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "031",
           "detail_uid": "00455-031",
           "title": "2023-10-05 21꞉35",
-          "title_sort": "2023-010-005 021꞉035",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "7366cf7e319d473cfac60e51747518ad"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "032",
           "detail_uid": "00455-032",
           "title": "2023-10-06 00꞉43 2",
-          "title_sort": "2023-010-006 000꞉043 002",
           "project_subfolder": "work in progress",
           "width_px": 2765,
           "height_px": 2765,
-          "layout": "work_details",
-          "checksum": "461b0081ea6455e19b088f2484cbd53d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "033",
           "detail_uid": "00455-033",
           "title": "2023-10-06 00꞉43",
-          "title_sort": "2023-010-006 000꞉043",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "c570cff07f656ce68c7aac804b1ba948"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "034",
           "detail_uid": "00455-034",
           "title": "2023-10-06 19꞉26",
-          "title_sort": "2023-010-006 019꞉026",
           "project_subfolder": "work in progress",
           "width_px": 2281,
           "height_px": 2281,
-          "layout": "work_details",
-          "checksum": "8cf32cb02113e7e42383617cba4d49eb"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "035",
           "detail_uid": "00455-035",
           "title": "2023-10-06 19꞉35",
-          "title_sort": "2023-010-006 019꞉035",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "906f2e7ebd52910bce9fae815c79c080"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "036",
           "detail_uid": "00455-036",
           "title": "2023-10-06 20꞉39",
-          "title_sort": "2023-010-006 020꞉039",
           "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 5850,
-          "layout": "work_details",
-          "checksum": "adcd4a8d1cda71e6d306e010c43adb9b"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "037",
           "detail_uid": "00455-037",
           "title": "2023-10-06 23꞉49",
-          "title_sort": "2023-010-006 023꞉049",
           "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 5249,
-          "layout": "work_details",
-          "checksum": "85f7cdf82544d588516673a74b13818e"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "038",
           "detail_uid": "00455-038",
           "title": "2023-10-08 00꞉22",
-          "title_sort": "2023-010-008 000꞉022",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "38b7d95100bd49c695f7f4555502f27f"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "039",
           "detail_uid": "00455-039",
           "title": "2023-10-09 22꞉32",
-          "title_sort": "2023-010-009 022꞉032",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "205e34dbedaa7cecc8e814e16ba94eb0"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "040",
           "detail_uid": "00455-040",
           "title": "2023-10-09 22꞉33 2",
-          "title_sort": "2023-010-009 022꞉033 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "3e7f4d856e4af0b2d94ef0402f1a783e"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "041",
           "detail_uid": "00455-041",
           "title": "2023-10-09 22꞉33",
-          "title_sort": "2023-010-009 022꞉033",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "e10a2bfea5217977f0401d976914e38f"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "042",
           "detail_uid": "00455-042",
           "title": "2023-10-09 22꞉34",
-          "title_sort": "2023-010-009 022꞉034",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "c8978e4b4bebbc551f4ca6901e5e0ec8"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "043",
           "detail_uid": "00455-043",
           "title": "2023-10-09 23꞉13",
-          "title_sort": "2023-010-009 023꞉013",
           "project_subfolder": "work in progress",
           "width_px": 2953,
           "height_px": 2953,
-          "layout": "work_details",
-          "checksum": "58741e7ac6da98d2412130882efc66d0"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "044",
           "detail_uid": "00455-044",
           "title": "2023-10-09 23꞉43",
-          "title_sort": "2023-010-009 023꞉043",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "01974dd2792a3ab34b14b961cbcbac11"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "045",
           "detail_uid": "00455-045",
           "title": "2023-11-13 18꞉51 2",
-          "title_sort": "2023-011-013 018꞉051 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "67c2b3b5acfca6ba706d3bd5fab72007"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "046",
           "detail_uid": "00455-046",
           "title": "2023-11-13 18꞉51 3",
-          "title_sort": "2023-011-013 018꞉051 003",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "d922abc2499602d23deaa0e89533a6a0"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "047",
           "detail_uid": "00455-047",
           "title": "2023-11-13 18꞉51",
-          "title_sort": "2023-011-013 018꞉051",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "f9329501a1c5ac8317b13790ca458594"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "048",
           "detail_uid": "00455-048",
           "title": "2023-11-13 18꞉52",
-          "title_sort": "2023-011-013 018꞉052",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "2a235f7d3e7cc036a4586284ea402d6d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "049",
           "detail_uid": "00455-049",
           "title": "2023-11-13 18꞉54 2",
-          "title_sort": "2023-011-013 018꞉054 002",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "2efb60a19b1ab295935ee8497cd60e0d"
+          "layout": "work_details"
         },
         {
           "work_id": "00455",
           "detail_id": "050",
           "detail_uid": "00455-050",
           "title": "2023-11-13 18꞉54",
-          "title_sort": "2023-011-013 018꞉054",
           "project_subfolder": "work in progress",
           "width_px": 3024,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "eae46a458ae1e06dd20f874c2af0b1df"
+          "layout": "work_details"
         }
       ]
     }

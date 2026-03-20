@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7424c8d52b992825d1f24316199671e1",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-375997b87dca21bc86cd1de7a74a9c37",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00101",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b6a58588a00654cdb31e01f559c1d5dc",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7424c8d52b992825d1f24316199671e1"
+    "count": 0
   },
   "work": {
     "work_id": "00101",
     "title": "dissection in progress",
-    "title_sort": "dissection in progress",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 6981,
-    "height_px": 4936,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "b6a58588a00654cdb31e01f559c1d5dc"
+    "height_px": 4936
   },
   "sections": []
 }

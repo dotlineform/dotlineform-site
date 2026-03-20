@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-dd76417cc6e203a414e4224b9269e559",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-799035787366c7f8eb2620c61179dc73",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00428",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b1eb5a36772a007d98b57bc5e83a5efd",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-dd76417cc6e203a414e4224b9269e559"
+    "count": 0
   },
   "work": {
     "work_id": "00428",
     "title": "found form 13 (mother and child)",
-    "title_sort": "found form 013 (mother and child)",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
       "found-forms"
     ],
-    "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 40.0,
     "width_cm": 40.0,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 4724,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "b1eb5a36772a007d98b57bc5e83a5efd"
+    "height_px": 4724
   },
   "sections": []
 }

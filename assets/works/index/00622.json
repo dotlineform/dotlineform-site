@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-40719cdbcee3fc6d78f62d4788e57ba6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-aa1acf24c6bca80865dcb46f0c5b2a84",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00622",
-    "count": 6,
-    "hash": "blake2b-90a13ffb537f6fd5a4bb96c16af05777",
-    "work_checksum": "blake2b-dd81ff0fb9413f27ec87ff5d2b83fdd7",
-    "details_checksum": "blake2b-90a13ffb537f6fd5a4bb96c16af05777",
-    "record_checksum": "blake2b-40719cdbcee3fc6d78f62d4788e57ba6"
+    "count": 6
   },
   "work": {
     "work_id": "00622",
     "title": "k crystals",
-    "title_sort": "k crystals",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "k-crystals"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 8858,
-    "height_px": 8858,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "dd81ff0fb9413f27ec87ff5d2b83fdd7"
+    "height_px": 8858
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "00622-001",
           "title": "k source",
-          "title_sort": "k source",
           "project_subfolder": "derivation",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "15e310b30937daf2e88f03d21f9c877d"
+          "layout": "work_details"
         },
         {
           "work_id": "00622",
           "detail_id": "002",
           "detail_uid": "00622-002",
           "title": "k crystals bits - detail",
-          "title_sort": "k crystals bits - detail",
           "project_subfolder": "derivation",
           "width_px": 2893,
           "height_px": 1808,
-          "layout": "work_details",
-          "checksum": "26f13ff118bb6889b0f44d955dd94779"
+          "layout": "work_details"
         },
         {
           "work_id": "00622",
           "detail_id": "003",
           "detail_uid": "00622-003",
           "title": "k crystals bits - screenshot - detail",
-          "title_sort": "k crystals bits - screenshot - detail",
           "project_subfolder": "derivation",
           "width_px": 800,
           "height_px": 500,
-          "layout": "work_details",
-          "checksum": "e8037decb8ae0c0ef965eab766e16c2d"
+          "layout": "work_details"
         },
         {
           "work_id": "00622",
           "detail_id": "004",
           "detail_uid": "00622-004",
           "title": "k crystals bits - screenshot",
-          "title_sort": "k crystals bits - screenshot",
           "project_subfolder": "derivation",
           "width_px": 5802,
           "height_px": 4148,
-          "layout": "work_details",
-          "checksum": "02c2f97c5b437cbc95ab42bd93ccea00"
+          "layout": "work_details"
         },
         {
           "work_id": "00622",
           "detail_id": "005",
           "detail_uid": "00622-005",
           "title": "k crystals bits",
-          "title_sort": "k crystals bits",
           "project_subfolder": "derivation",
           "width_px": 8681,
           "height_px": 6300,
-          "layout": "work_details",
-          "checksum": "d5c6605f53a7f9c0058230da5d2a9740"
+          "layout": "work_details"
         },
         {
           "work_id": "00622",
           "detail_id": "006",
           "detail_uid": "00622-006",
           "title": "k crystals colours",
-          "title_sort": "k crystals colours",
           "project_subfolder": "derivation",
           "width_px": 4341,
           "height_px": 3150,
-          "layout": "work_details",
-          "checksum": "13a9da3445a1bf34ee356dad29fc8880"
+          "layout": "work_details"
         }
       ]
     }

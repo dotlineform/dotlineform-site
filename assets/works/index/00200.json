@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c9d4f00f4c2178dee2a5ebaceab48263",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-a946e27308b430284f0ed3e141dcd6dc",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00200",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ba052e449e225b17de2edfd1f8c82c6c",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c9d4f00f4c2178dee2a5ebaceab48263"
+    "count": 0
   },
   "work": {
     "work_id": "00200",
     "title": "book of curves 3",
-    "title_sort": "book of curves 003",
     "year": 1994,
     "year_display": "1994",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2432,
-    "height_px": 3436,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ba052e449e225b17de2edfd1f8c82c6c"
+    "height_px": 3436
   },
   "sections": []
 }

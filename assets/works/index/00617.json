@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-db3e63f6199368c5d20164209f79eca1",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-9b1c9f98b615763f03aa40ca52385a29",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00617",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4b6123907b95f1c5574a95aeff536f3b",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-db3e63f6199368c5d20164209f79eca1"
+    "count": 0
   },
   "work": {
     "work_id": "00617",
     "title": "composite (red)",
-    "title_sort": "composite (red)",
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
       "composite-blue-red-smoke"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.5,
     "width_cm": 30.5,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 4724,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "4b6123907b95f1c5574a95aeff536f3b"
+    "height_px": 4724
   },
   "sections": []
 }

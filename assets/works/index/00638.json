@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4ac1abacd6ffdedb459f49453196aefc",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-42bfb4b31e71447843500e9b3b3d8989",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00638",
-    "count": 53,
-    "hash": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
-    "work_checksum": "blake2b-efa2c5e5af4d29bc2364a1eabdafd6d4",
-    "details_checksum": "blake2b-cf26da35a4bd23b6251c07e27d9026b4",
-    "record_checksum": "blake2b-4ac1abacd6ffdedb459f49453196aefc"
+    "count": 53
   },
   "work": {
     "work_id": "00638",
     "title": "3 symbols",
-    "title_sort": "003 symbols",
     "year": 2007,
     "year_display": "2007",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "framed",
     "medium_type": "mixed media",
     "medium_caption": "enamel paint on c-type print, aluminium mount",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 1804,
-    "height_px": 1804,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "efa2c5e5af4d29bc2364a1eabdafd6d4"
+    "height_px": 1804
   },
   "sections": [
     {
@@ -44,24 +31,20 @@
           "detail_id": "001",
           "detail_uid": "00638-001",
           "title": "3 symbols (composite)",
-          "title_sort": "003 symbols (composite)",
           "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "32ac6a7f16d8bb4a026d06343f00a205"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "002",
           "detail_uid": "00638-002",
           "title": "3 symbols (untreated)",
-          "title_sort": "003 symbols (untreated)",
           "project_subfolder": "versions",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "8784a281d9c9a3897c0d05a39ca64a63"
+          "layout": "work_details"
         }
       ]
     },
@@ -73,96 +56,80 @@
           "detail_id": "003",
           "detail_uid": "00638-003",
           "title": "3 symbols (detail 1)",
-          "title_sort": "003 symbols (detail 001)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "0524b1892cdb8e5c4bbcec6528da221c"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "004",
           "detail_uid": "00638-004",
           "title": "3 symbols (detail 2)",
-          "title_sort": "003 symbols (detail 002)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "9212e0f273b6d6a48e3d0422fba2ef23"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "005",
           "detail_uid": "00638-005",
           "title": "3 symbols (detail 3)",
-          "title_sort": "003 symbols (detail 003)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "0b3090ea7025b42b55bb248cb03ffa28"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "006",
           "detail_uid": "00638-006",
           "title": "3 symbols (detail 4)",
-          "title_sort": "003 symbols (detail 004)",
           "project_subfolder": "details",
           "width_px": 2468,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "f314410987d9af6bfd442aee8b317163"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "007",
           "detail_uid": "00638-007",
           "title": "3 symbols (detail 5)",
-          "title_sort": "003 symbols (detail 005)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "09b0bc45329f0bc88b182cecb5c4bc2c"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "008",
           "detail_uid": "00638-008",
           "title": "3 symbols (detail 6)",
-          "title_sort": "003 symbols (detail 006)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "c883fdbc82a917e62696880807fe20ef"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "009",
           "detail_uid": "00638-009",
           "title": "3 symbols (detail 7)",
-          "title_sort": "003 symbols (detail 007)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "743bd11cf4d8dcea5dc0c3a08b05f10a"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "010",
           "detail_uid": "00638-010",
           "title": "3 symbols (detail 8)",
-          "title_sort": "003 symbols (detail 008)",
           "project_subfolder": "details",
           "width_px": 2816,
           "height_px": 2112,
-          "layout": "work_details",
-          "checksum": "205a8a9eb18124a93f71c29e7ae52f5e"
+          "layout": "work_details"
         }
       ]
     },
@@ -174,264 +141,220 @@
           "detail_id": "011",
           "detail_uid": "00638-011",
           "title": "source - bandage",
-          "title_sort": "source - bandage",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "8850467c9987b55aec963f8dad1b9ef3"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "012",
           "detail_uid": "00638-012",
           "title": "source - before",
-          "title_sort": "source - before",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "0023740d8aab5b38a5245f5a537c8878"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "013",
           "detail_uid": "00638-013",
           "title": "source - blessing",
-          "title_sort": "source - blessing",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "a012e6869528319e658f8a444aad8a38"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "014",
           "detail_uid": "00638-014",
           "title": "source - blindness",
-          "title_sort": "source - blindness",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "8262ff6db770262ed3af82e1e435d605"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "015",
           "detail_uid": "00638-015",
           "title": "source - bridge",
-          "title_sort": "source - bridge",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "ac4b707412794ae6de296a58f213849c"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "016",
           "detail_uid": "00638-016",
           "title": "source - burma",
-          "title_sort": "source - burma",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "e02bab70cda3c40735fda7d284cb832a"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "017",
           "detail_uid": "00638-017",
           "title": "source - burn",
-          "title_sort": "source - burn",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "6995a79109c488391bb7c61534986687"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "018",
           "detail_uid": "00638-018",
           "title": "source - genocide",
-          "title_sort": "source - genocide",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "35723eeee5d50968c1fa2a322c22a7a7"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "019",
           "detail_uid": "00638-019",
           "title": "source - gesture",
-          "title_sort": "source - gesture",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "cdbfbbd4cfda60d40de53ac25d526f52"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "020",
           "detail_uid": "00638-020",
           "title": "source - give",
-          "title_sort": "source - give",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "3873facc441efc039cce827b678ff1d0"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "021",
           "detail_uid": "00638-021",
           "title": "source - grave",
-          "title_sort": "source - grave",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "154777adb2a205b41896e7babf2e3578"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "022",
           "detail_uid": "00638-022",
           "title": "source - grieve",
-          "title_sort": "source - grieve",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "02a208e34a4366f27656621163207cbe"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "023",
           "detail_uid": "00638-023",
           "title": "source - grow",
-          "title_sort": "source - grow",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "ad82eac9b33485f1fc91a9411901685c"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "024",
           "detail_uid": "00638-024",
           "title": "source - guilt",
-          "title_sort": "source - guilt",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "972cc216566dd1532717872a898a36ae"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "025",
           "detail_uid": "00638-025",
           "title": "source - radius",
-          "title_sort": "source - radius",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "9c47d4ec99965035646f25bccb4a5efa"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "026",
           "detail_uid": "00638-026",
           "title": "source - rarefied",
-          "title_sort": "source - rarefied",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "55d44926944b140c13cafd9623797141"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "027",
           "detail_uid": "00638-027",
           "title": "source - reincarnation",
-          "title_sort": "source - reincarnation",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "eb789258c311652371bc28e61c701b99"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "028",
           "detail_uid": "00638-028",
           "title": "source - replenish",
-          "title_sort": "source - replenish",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "e1f0b3dadeece25f5aa13ff1a86fcf1c"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "029",
           "detail_uid": "00638-029",
           "title": "source - restrict",
-          "title_sort": "source - restrict",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "fbf27108044520735169a0c0c585f0d8"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "030",
           "detail_uid": "00638-030",
           "title": "source - ruin",
-          "title_sort": "source - ruin",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "532b654ab13e447cfa3cc648cf318cfd"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "031",
           "detail_uid": "00638-031",
           "title": "source - rwanda",
-          "title_sort": "source - rwanda",
           "project_subfolder": "source",
           "width_px": 1681,
           "height_px": 1393,
-          "layout": "work_details",
-          "checksum": "903837bc9ea3c3887bf4b21bc4944908"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "032",
           "detail_uid": "00638-032",
           "title": "source grid",
-          "title_sort": "source grid",
           "project_subfolder": "source",
           "width_px": 14056,
           "height_px": 7029,
-          "layout": "work_details",
-          "checksum": "ab49bebfcf85ba3aedeedd1972e89cd2"
+          "layout": "work_details"
         }
       ]
     },
@@ -443,252 +366,210 @@
           "detail_id": "033",
           "detail_uid": "00638-033",
           "title": "composite - bandage",
-          "title_sort": "composite - bandage",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "06c6fcd5f3e046dd7f4bf4bf13e794ff"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "034",
           "detail_uid": "00638-034",
           "title": "composite - before",
-          "title_sort": "composite - before",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "78b812eb1cbb874cb465be35a5f9e666"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "035",
           "detail_uid": "00638-035",
           "title": "composite - blessing",
-          "title_sort": "composite - blessing",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "2b31add04bd3e1822ae3a9a066b7fe41"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "036",
           "detail_uid": "00638-036",
           "title": "composite - blindness",
-          "title_sort": "composite - blindness",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "6b52acf96728c9688189026b51e38798"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "037",
           "detail_uid": "00638-037",
           "title": "composite - bridge",
-          "title_sort": "composite - bridge",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "3c5266686c8a066c4ddf9ce46d32681e"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "038",
           "detail_uid": "00638-038",
           "title": "composite - burma",
-          "title_sort": "composite - burma",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "2ff95cb05a58c1c4d93b8a266aab8654"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "039",
           "detail_uid": "00638-039",
           "title": "composite - burn",
-          "title_sort": "composite - burn",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "75895de0599d11cb0c86517896efb98f"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "040",
           "detail_uid": "00638-040",
           "title": "composite - genocide",
-          "title_sort": "composite - genocide",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "504fbd9da1aecec1cf9ff189c8525af2"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "041",
           "detail_uid": "00638-041",
           "title": "composite - gesture",
-          "title_sort": "composite - gesture",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "e1ddda2258ffed3e3b77af1bfb47af80"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "042",
           "detail_uid": "00638-042",
           "title": "composite - give",
-          "title_sort": "composite - give",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "e997e59db0945d258508cefe71ef4d23"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "043",
           "detail_uid": "00638-043",
           "title": "composite - grave",
-          "title_sort": "composite - grave",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "a7f80bb2cf22466d58df658f35ba0cd8"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "044",
           "detail_uid": "00638-044",
           "title": "composite - grieve",
-          "title_sort": "composite - grieve",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "0ff7fc464d29afbda9a1544eb9719b14"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "045",
           "detail_uid": "00638-045",
           "title": "composite - grow",
-          "title_sort": "composite - grow",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "c0b5302aedef8dd19a18fde36d2eda9e"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "046",
           "detail_uid": "00638-046",
           "title": "composite - guilt",
-          "title_sort": "composite - guilt",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "53b971ce20243bc791fb4b4d2a942596"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "047",
           "detail_uid": "00638-047",
           "title": "composite - radius",
-          "title_sort": "composite - radius",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "f327ec7f127a949bf7110437ac18e7ac"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "048",
           "detail_uid": "00638-048",
           "title": "composite - rarefied",
-          "title_sort": "composite - rarefied",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "a5197a57b9620cb3befa2d6d0959327b"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "049",
           "detail_uid": "00638-049",
           "title": "composite - reincarnation",
-          "title_sort": "composite - reincarnation",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "5eda8ab8ecd474c888f152840a47d96a"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "050",
           "detail_uid": "00638-050",
           "title": "composite - replenish",
-          "title_sort": "composite - replenish",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "bf259cec9ed6a4b800486a752963cb64"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "051",
           "detail_uid": "00638-051",
           "title": "composite - restrict",
-          "title_sort": "composite - restrict",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "ce606a32c6c176d986ba4c20b47ced56"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "052",
           "detail_uid": "00638-052",
           "title": "composite - ruin",
-          "title_sort": "composite - ruin",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "305cbb5f5267315c0f6ff09c015c6498"
+          "layout": "work_details"
         },
         {
           "work_id": "00638",
           "detail_id": "053",
           "detail_uid": "00638-053",
           "title": "composite - rwanda",
-          "title_sort": "composite - rwanda",
           "project_subfolder": "composites",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "720535dfd1af5f31a9f55fbfdb91b54e"
+          "layout": "work_details"
         }
       ]
     }

@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-731427ac1a022356f7f8d709537e2694",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-d689808380050ee04c88860ecec62490",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00403",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4c3a5a295df76e1743cd821e9acd3249",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-731427ac1a022356f7f8d709537e2694"
+    "count": 0
   },
   "work": {
     "work_id": "00403",
     "title": "found form (2017-06-29)",
-    "title_sort": "found form (2017-006-029)",
     "year": 2017,
     "year_display": "2017",
     "series_ids": [
       "found-forms"
     ],
-    "storage": null,
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "4c3a5a295df76e1743cd821e9acd3249"
+    "height_px": 3543
   },
   "sections": []
 }

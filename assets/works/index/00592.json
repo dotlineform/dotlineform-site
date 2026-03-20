@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-9bd868e41a69b5861fda86717f7c3ae6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-f613bd316e8495c2ccb505b7e832dcc6",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00592",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-d3cfab17f84bc53570f46a181782e028",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-9bd868e41a69b5861fda86717f7c3ae6"
+    "count": 0
   },
   "work": {
     "work_id": "00592",
     "title": "curve 2",
-    "title_sort": "curve 002",
     "year": 2021,
     "year_display": "2021",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "7",
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 42.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 3508,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "d3cfab17f84bc53570f46a181782e028"
+    "height_px": 3508
   },
   "sections": []
 }

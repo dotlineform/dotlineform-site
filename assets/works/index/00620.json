@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7b14cab3ad7fb9a76c2398a4bcc771b2",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-66527c805eac24a57433aa37e7977f0c",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00620",
-    "count": 13,
-    "hash": "blake2b-b74e2abc88570b4a33d18aa2e2c4d7df",
-    "work_checksum": "blake2b-35100354600df3c156a0c619fe4a10f6",
-    "details_checksum": "blake2b-b74e2abc88570b4a33d18aa2e2c4d7df",
-    "record_checksum": "blake2b-7b14cab3ad7fb9a76c2398a4bcc771b2"
+    "count": 13
   },
   "work": {
     "work_id": "00620",
     "title": "harmony 3 (version)",
-    "title_sort": "harmony 003 (version)",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "harmony"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "35100354600df3c156a0c619fe4a10f6"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,156 +30,130 @@
           "detail_id": "001",
           "detail_uid": "00620-001",
           "title": "harmony 3.1",
-          "title_sort": "harmony 003.001",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "dc49bfb6ef30b6a19d0292a778aa4428"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "002",
           "detail_uid": "00620-002",
           "title": "harmony 3.2",
-          "title_sort": "harmony 003.002",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "5c3e58fee176809bf9fd8bf65af7c0ed"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "003",
           "detail_uid": "00620-003",
           "title": "harmony 3.3",
-          "title_sort": "harmony 003.003",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "1ab99a08766a2c3f1eb0ff5906fe2325"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "004",
           "detail_uid": "00620-004",
           "title": "harmony 3.4",
-          "title_sort": "harmony 003.004",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "87d309f5454475ac28b2717045d9f7e0"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "005",
           "detail_uid": "00620-005",
           "title": "harmony 3.5",
-          "title_sort": "harmony 003.005",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "5865ea2492c9f1225ac719aeee72340f"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "006",
           "detail_uid": "00620-006",
           "title": "harmony 3.6",
-          "title_sort": "harmony 003.006",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "8163eb032b19dc0ff1205a4750b930d0"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "007",
           "detail_uid": "00620-007",
           "title": "harmony 3.7",
-          "title_sort": "harmony 003.007",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "c10726d4c6a17161ccaa1be58bccb483"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "008",
           "detail_uid": "00620-008",
           "title": "harmony 3.8",
-          "title_sort": "harmony 003.008",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "f9a19a3e89f6b749a0e4b6f450028b13"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "009",
           "detail_uid": "00620-009",
           "title": "harmony 3.9",
-          "title_sort": "harmony 003.009",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "e79d9f7ce13bbffd21054120cc10bdeb"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "010",
           "detail_uid": "00620-010",
           "title": "harmony 3.10",
-          "title_sort": "harmony 003.010",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "fcd702fcbaaae2e0c92924545936d726"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "011",
           "detail_uid": "00620-011",
           "title": "harmony 3.11",
-          "title_sort": "harmony 003.011",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "0550065cd469389478cb133aad7b07ce"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "012",
           "detail_uid": "00620-012",
           "title": "harmony 3.12",
-          "title_sort": "harmony 003.012",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "bf0a2fda807aed957ea941920a266050"
+          "layout": "work_details"
         },
         {
           "work_id": "00620",
           "detail_id": "013",
           "detail_uid": "00620-013",
           "title": "harmony 3.13",
-          "title_sort": "harmony 003.013",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "badec44196eaed268839badfeb69b47f"
+          "layout": "work_details"
         }
       ]
     }

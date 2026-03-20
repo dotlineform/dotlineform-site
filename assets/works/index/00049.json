@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-31a5a6b03ba03af7c8dd18651f723b05",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-b022362d7298105059bb23b298024105",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00049",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-7ac6066f71a0c59f324d36532527cdfa",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-31a5a6b03ba03af7c8dd18651f723b05"
+    "count": 0
   },
   "work": {
     "work_id": "00049",
     "title": "slaughter 3",
-    "title_sort": "slaughter 003",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 7016,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "7ac6066f71a0c59f324d36532527cdfa"
+    "height_px": 7016
   },
   "sections": []
 }

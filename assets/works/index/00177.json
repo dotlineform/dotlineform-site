@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8684919f689e68a7d588dbe104048d47",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-d8bcbabff713ee7582f33155609db9a4",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00177",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0417825ed5068b24e114a462198249db",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-8684919f689e68a7d588dbe104048d47"
+    "count": 0
   },
   "work": {
     "work_id": "00177",
     "title": "all chemical 4",
-    "title_sort": "all chemical 004",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "mixed media",
     "medium_caption": "dried leaf mounted on canvas",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 25.5,
     "width_cm": 20.4,
-    "depth_cm": null,
     "width_px": 4742,
-    "height_px": 5928,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "0417825ed5068b24e114a462198249db"
+    "height_px": 5928
   },
   "sections": []
 }

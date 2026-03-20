@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7a867ccb109ae9348dcf3fca13ad7ad6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-7773d50ab3b5d4a71191c650c3b0bc62",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00522",
-    "count": 2,
-    "hash": "blake2b-34c4431dc332b9ec7f3ee2315b388c29",
-    "work_checksum": "blake2b-3a7454cdfbf3dae8814920546e1e6ab3",
-    "details_checksum": "blake2b-34c4431dc332b9ec7f3ee2315b388c29",
-    "record_checksum": "blake2b-7a867ccb109ae9348dcf3fca13ad7ad6"
+    "count": 2
   },
   "work": {
     "work_id": "00522",
     "title": "kylie structure 3",
-    "title_sort": "kylie structure 003",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "kylie-structures"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 45.0,
     "width_cm": 80.0,
-    "depth_cm": null,
     "width_px": 9449,
-    "height_px": 5315,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "3a7454cdfbf3dae8814920546e1e6ab3"
+    "height_px": 5315
   },
   "sections": [
     {
@@ -44,24 +30,20 @@
           "detail_id": "013",
           "detail_uid": "00522-013",
           "title": "kylie structure 3.1",
-          "title_sort": "kylie structure 003.001",
           "project_subfolder": "details",
           "width_px": 3316,
           "height_px": 3316,
-          "layout": "work_details",
-          "checksum": "4c26ced29f19297e3600d508b46131c2"
+          "layout": "work_details"
         },
         {
           "work_id": "00522",
           "detail_id": "014",
           "detail_uid": "00522-014",
           "title": "kylie structure 3.2",
-          "title_sort": "kylie structure 003.002",
           "project_subfolder": "details",
           "width_px": 3316,
           "height_px": 3316,
-          "layout": "work_details",
-          "checksum": "b321ac67d45272a4ba2fbbc3955fcded"
+          "layout": "work_details"
         }
       ]
     }

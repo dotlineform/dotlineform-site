@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7c888df9d50b9d3583acc8468bf1f7a3",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-8397dec554a1dcff8d68a0f43ec97e24",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00481",
-    "count": 13,
-    "hash": "blake2b-e51c9a0c011a33bd3c717b7c174a707a",
-    "work_checksum": "blake2b-ba1d0ced407332560f2c43c8e1753172",
-    "details_checksum": "blake2b-e51c9a0c011a33bd3c717b7c174a707a",
-    "record_checksum": "blake2b-7c888df9d50b9d3583acc8468bf1f7a3"
+    "count": 13
   },
   "work": {
     "work_id": "00481",
     "title": "mm negative future",
-    "title_sort": "mm negative future",
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
       "mm"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 60.0,
     "width_cm": 70.0,
-    "depth_cm": null,
     "width_px": 8268,
-    "height_px": 7087,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ba1d0ced407332560f2c43c8e1753172"
+    "height_px": 7087
   },
   "sections": [
     {
@@ -44,156 +30,130 @@
           "detail_id": "001",
           "detail_uid": "00481-001",
           "title": "mm negative future .1",
-          "title_sort": "mm negative future .001",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "0e3a6fb8959245d02d668a3c7f64c22f"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "002",
           "detail_uid": "00481-002",
           "title": "mm negative future .2",
-          "title_sort": "mm negative future .002",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "bd45b4c3f46dbc2ba4ac0a7e79bae848"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "003",
           "detail_uid": "00481-003",
           "title": "mm negative future .3",
-          "title_sort": "mm negative future .003",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "2563b995c51702934f10da2df61e81f5"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "004",
           "detail_uid": "00481-004",
           "title": "mm negative future .4.1",
-          "title_sort": "mm negative future .004.001",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "ea73e1db01b83e91476aafd1f401f2f3"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "005",
           "detail_uid": "00481-005",
           "title": "mm negative future .4.2",
-          "title_sort": "mm negative future .004.002",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "237228d37c338baa231ee0269ab2df87"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "006",
           "detail_uid": "00481-006",
           "title": "mm negative future .4.3",
-          "title_sort": "mm negative future .004.003",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "58a23ac24ab4d1141897ef989bb9242b"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "007",
           "detail_uid": "00481-007",
           "title": "mm negative future .4.4.1",
-          "title_sort": "mm negative future .004.004.001",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "43d465d4fa8537784cf590b79866cc04"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "008",
           "detail_uid": "00481-008",
           "title": "mm negative future .4.4.2",
-          "title_sort": "mm negative future .004.004.002",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "5a44486fc3cd72b1c16b466ef40709bb"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "009",
           "detail_uid": "00481-009",
           "title": "mm negative future .4.4.3",
-          "title_sort": "mm negative future .004.004.003",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "7b426286bb3e3c97ff152c570b342b29"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "010",
           "detail_uid": "00481-010",
           "title": "mm negative future .4.4.4",
-          "title_sort": "mm negative future .004.004.004",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "b70404dc94cf45e27a4e8d36ceb18727"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "011",
           "detail_uid": "00481-011",
           "title": "mm negative future .4.4",
-          "title_sort": "mm negative future .004.004",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "6bc007c34e7c9de43a4ebd6a0ea41191"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "012",
           "detail_uid": "00481-012",
           "title": "mm negative future .4",
-          "title_sort": "mm negative future .004",
           "project_subfolder": "versions",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "8ef2ac43dfb60aaf15e2c211cc72b225"
+          "layout": "work_details"
         },
         {
           "work_id": "00481",
           "detail_id": "013",
           "detail_uid": "00481-013",
           "title": "versions II (mm)",
-          "title_sort": "versions II (mm)",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "5821acd2f1642c1163c773cd2ec609c4"
+          "layout": "work_details"
         }
       ]
     }

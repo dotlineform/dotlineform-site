@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-38d5af913ee86e92c4f8051245411102",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-64fc61f8ccb2a40289ff89e1833b08b9",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00054",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-06865b4700db63aa5a53fea44ebd7ea6",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-38d5af913ee86e92c4f8051245411102"
+    "count": 0
   },
   "work": {
     "work_id": "00054",
     "title": "preparation for mannequin",
-    "title_sort": "preparation for mannequin",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4919,
-    "height_px": 6957,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "06865b4700db63aa5a53fea44ebd7ea6"
+    "height_px": 6957
   },
   "sections": []
 }

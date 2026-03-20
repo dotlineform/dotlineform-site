@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-61dfcde37686f914b686fa82e5b6c4b6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-11b5905477420bd2565b79dc77d79c2b",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01011",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-45d1645f82153224468a395da8b5278e",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-61dfcde37686f914b686fa82e5b6c4b6"
+    "count": 0
   },
   "work": {
     "work_id": "01011",
     "title": "droplets (2014-06-22 - 13-57-44)",
-    "title_sort": "droplets (2014-006-022 - 013-057-044)",
     "year": 2014,
     "year_display": "2014",
     "series_ids": [
       "droplets"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 60.0,
     "width_cm": 60.0,
-    "depth_cm": null,
     "width_px": 7087,
-    "height_px": 7087,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "45d1645f82153224468a395da8b5278e"
+    "height_px": 7087
   },
   "sections": []
 }

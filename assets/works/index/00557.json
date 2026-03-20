@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ea669050df0ff6cfdecb73bcfb7a3985",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-9cefd6b34149b19501d3ac4be3fcfef9",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00557",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-dca0d6b9975aa06d3894ed17746e3992",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-ea669050df0ff6cfdecb73bcfb7a3985"
+    "count": 0
   },
   "work": {
     "work_id": "00557",
     "title": "string theory 4",
-    "title_sort": "string theory 004",
     "year": 2005,
     "year_display": "2005",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "12",
     "medium_type": "paper collage",
     "medium_caption": "paper collage",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 34.7,
     "width_cm": 25.3,
-    "depth_cm": null,
     "width_px": 2931,
-    "height_px": 4020,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "dca0d6b9975aa06d3894ed17746e3992"
+    "height_px": 4020
   },
   "sections": []
 }

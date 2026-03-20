@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-2150c97a79dbeaf2dfbb83e3539a1430",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-abdcf6759e18040cfb37401d4f191914",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00807",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ffefa9932e0cfa544e9f31dfce0480aa",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-2150c97a79dbeaf2dfbb83e3539a1430"
+    "count": 0
   },
   "work": {
     "work_id": "00807",
     "title": "book of curves 1 and 10",
-    "title_sort": "book of curves 001 and 010",
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
       "book-of-curves"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 60.0,
     "width_cm": 60.0,
-    "depth_cm": null,
     "width_px": 7087,
-    "height_px": 7087,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ffefa9932e0cfa544e9f31dfce0480aa"
+    "height_px": 7087
   },
   "sections": []
 }

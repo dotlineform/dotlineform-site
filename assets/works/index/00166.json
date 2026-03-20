@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-438f6dbb6fcee051f625ff422a623e0e",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-534f56bc96a06a6b9ac360bdcac09da0",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00166",
-    "count": 19,
-    "hash": "blake2b-04e23a5d0f1881ce9c3d3f9741b1c893",
-    "work_checksum": "blake2b-5884d5f164b98693181f41f2441d8ca3",
-    "details_checksum": "blake2b-04e23a5d0f1881ce9c3d3f9741b1c893",
-    "record_checksum": "blake2b-438f6dbb6fcee051f625ff422a623e0e"
+    "count": 19
   },
   "work": {
     "work_id": "00166",
     "title": "nerve (formaldehyde form)",
-    "title_sort": "nerve (formaldehyde form)",
     "year": 1993,
     "year_display": "1993",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "bound printed pages, edition 9 [extant]",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.5,
     "width_cm": 14.5,
-    "depth_cm": null,
     "width_px": 1805,
-    "height_px": 2676,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "5884d5f164b98693181f41f2441d8ca3"
+    "height_px": 2676
   },
   "sections": [
     {
@@ -44,228 +31,190 @@
           "detail_id": "001",
           "detail_uid": "00166-001",
           "title": "nerve (formaldehyde form) - front cover",
-          "title_sort": "nerve (formaldehyde form) - front cover",
           "project_subfolder": "pages",
           "width_px": 1859,
           "height_px": 2676,
-          "layout": "work_details",
-          "checksum": "9d6982b410966e2dd2da8463079ab051"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "002",
           "detail_uid": "00166-002",
           "title": "nerve (formaldehyde form) - 1",
-          "title_sort": "nerve (formaldehyde form) - 001",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "637ebaef856210e71179710956a53a9c"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "003",
           "detail_uid": "00166-003",
           "title": "nerve (formaldehyde form) - 2",
-          "title_sort": "nerve (formaldehyde form) - 002",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "3e77c6cf4c5a5ee968478236c1819eae"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "004",
           "detail_uid": "00166-004",
           "title": "nerve (formaldehyde form) - 3",
-          "title_sort": "nerve (formaldehyde form) - 003",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "200379905195c8a7cb1d01daff9dd2bd"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "005",
           "detail_uid": "00166-005",
           "title": "nerve (formaldehyde form) - 4",
-          "title_sort": "nerve (formaldehyde form) - 004",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "be78948c6da65b2776a0f8fcd828b1f2"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "006",
           "detail_uid": "00166-006",
           "title": "nerve (formaldehyde form) - 5",
-          "title_sort": "nerve (formaldehyde form) - 005",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "977d360b26e10e854d92b32b9fe87514"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "007",
           "detail_uid": "00166-007",
           "title": "nerve (formaldehyde form) - 6",
-          "title_sort": "nerve (formaldehyde form) - 006",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "de97925ad149f940d1cb0f3c552f687a"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "008",
           "detail_uid": "00166-008",
           "title": "nerve (formaldehyde form) - 7",
-          "title_sort": "nerve (formaldehyde form) - 007",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "81d9c08cd9e35289dfc9e1800fa5d89d"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "009",
           "detail_uid": "00166-009",
           "title": "nerve (formaldehyde form) - 8",
-          "title_sort": "nerve (formaldehyde form) - 008",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "287037b2d890196ab8e179f368234eb7"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "010",
           "detail_uid": "00166-010",
           "title": "nerve (formaldehyde form) - 9",
-          "title_sort": "nerve (formaldehyde form) - 009",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "ab9f8a81f568a7e10b5300d98a8b587e"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "011",
           "detail_uid": "00166-011",
           "title": "nerve (formaldehyde form) - 10",
-          "title_sort": "nerve (formaldehyde form) - 010",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "0e3724e27c042f86c9517395b11d0d07"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "012",
           "detail_uid": "00166-012",
           "title": "nerve (formaldehyde form) - 11",
-          "title_sort": "nerve (formaldehyde form) - 011",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "5fdade47f70df19692e3aa6992e8332e"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "013",
           "detail_uid": "00166-013",
           "title": "nerve (formaldehyde form) - 12",
-          "title_sort": "nerve (formaldehyde form) - 012",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "bb4fe626822b1965154cee64d01fee24"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "014",
           "detail_uid": "00166-014",
           "title": "nerve (formaldehyde form) - 13",
-          "title_sort": "nerve (formaldehyde form) - 013",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "403b5fb9c892cf047a2139984d74ebb9"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "015",
           "detail_uid": "00166-015",
           "title": "nerve (formaldehyde form) - 14",
-          "title_sort": "nerve (formaldehyde form) - 014",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "af2af152cc5f3be2e634b21d8b25f20a"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "016",
           "detail_uid": "00166-016",
           "title": "nerve (formaldehyde form) - 15",
-          "title_sort": "nerve (formaldehyde form) - 015",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "c5af94b33f95a4f80ab823938df86d7b"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "017",
           "detail_uid": "00166-017",
           "title": "nerve (formaldehyde form) - 16",
-          "title_sort": "nerve (formaldehyde form) - 016",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "c359db7fb8193c47353a8aaf504deb88"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "018",
           "detail_uid": "00166-018",
           "title": "nerve (formaldehyde form) - 17",
-          "title_sort": "nerve (formaldehyde form) - 017",
           "project_subfolder": "pages",
           "width_px": 3566,
           "height_px": 2594,
-          "layout": "work_details",
-          "checksum": "ab5e66e31251c0f9deea066ae9effbda"
+          "layout": "work_details"
         },
         {
           "work_id": "00166",
           "detail_id": "019",
           "detail_uid": "00166-019",
           "title": "nerve (formaldehyde form) - back cover",
-          "title_sort": "nerve (formaldehyde form) - back cover",
           "project_subfolder": "pages",
           "width_px": 1828,
           "height_px": 2624,
-          "layout": "work_details",
-          "checksum": "7f482cfb6674a7f3391458636499231f"
+          "layout": "work_details"
         }
       ]
     }

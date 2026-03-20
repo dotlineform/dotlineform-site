@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-bd7e66000dcb1fd5ae92b044fc2c10a8",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-47e5bb5f972822f7de4a703b5f6381ab",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00388",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-77ccf03298dc2a6da0de3dff59ee7726",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-bd7e66000dcb1fd5ae92b044fc2c10a8"
+    "count": 0
   },
   "work": {
     "work_id": "00388",
     "title": "lipseyes",
-    "title_sort": "lipseyes",
     "year": 2003,
     "year_display": "2003",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "4",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.5,
     "width_cm": 30.5,
-    "depth_cm": null,
     "width_px": 3602,
-    "height_px": 3602,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "77ccf03298dc2a6da0de3dff59ee7726"
+    "height_px": 3602
   },
   "sections": []
 }

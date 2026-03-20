@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-083df0facc0e53676fe470b1326077b2",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-933609b150438ece429ee0a99abfb9a2",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00458",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f3f69600cb97dd183325879be6a47113",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-083df0facc0e53676fe470b1326077b2"
+    "count": 0
   },
   "work": {
     "work_id": "00458",
     "title": "leaf",
-    "title_sort": "leaf",
     "year": 2016,
     "year_display": "2016",
     "series_ids": [
       "leaf"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 40.0,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "f3f69600cb97dd183325879be6a47113"
+    "height_px": 3543
   },
   "sections": []
 }

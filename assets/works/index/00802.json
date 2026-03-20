@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-17b66790edc42c8874760e254120c3f2",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-01e798b494a88a2430459d9a90101142",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00802",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-311121cf3e7a5ddb0b5bea93c3d91835",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-17b66790edc42c8874760e254120c3f2"
+    "count": 0
   },
   "work": {
     "work_id": "00802",
     "title": "book atomic",
-    "title_sort": "book atomic",
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
       "book-dna"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "311121cf3e7a5ddb0b5bea93c3d91835"
+    "height_px": 3543
   },
   "sections": []
 }

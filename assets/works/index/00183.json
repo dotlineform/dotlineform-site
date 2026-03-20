@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a2d44956c51ec09864b24edad4d62547",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-742c41a6c4de82efa9d5e41741e3bc5e",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00183",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2b56aa82a8c0d8e773c94b6cbc4ad2f0",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a2d44956c51ec09864b24edad4d62547"
+    "count": 0
   },
   "work": {
     "work_id": "00183",
     "title": "little clear vessel",
-    "title_sort": "little clear vessel",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 1200,
-    "height_px": 1687,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "2b56aa82a8c0d8e773c94b6cbc4ad2f0"
+    "height_px": 1687
   },
   "sections": []
 }

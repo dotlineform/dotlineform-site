@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-1473c2da805caab5dafa8be30729c1d6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-73fefda7ad4be43e5e723d881fa54f3b",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00903",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3bb72e5432c4459b1ac2ac724be77813",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-1473c2da805caab5dafa8be30729c1d6"
+    "count": 0
   },
   "work": {
     "work_id": "00903",
     "title": "doll face 3",
-    "title_sort": "doll face 003",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
       "doll-faces"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "3bb72e5432c4459b1ac2ac724be77813"
+    "height_px": 3543
   },
   "sections": []
 }

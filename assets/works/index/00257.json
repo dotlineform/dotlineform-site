@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-12a24aa6078b7718fe9fdacae95bf7d3",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-1c750412bf02f88e34c479bbac7265eb",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00257",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8f05e48a1ec9f28fc57d4c8cfb2bebfc",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-12a24aa6078b7718fe9fdacae95bf7d3"
+    "count": 0
   },
   "work": {
     "work_id": "00257",
     "title": "untitled [257]",
-    "title_sort": "untitled [257]",
     "year": 1998,
     "year_display": "c. 1998",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "3",
     "medium_type": "digital print",
     "medium_caption": "laserjet print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 3508,
-    "height_px": 2480,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "8f05e48a1ec9f28fc57d4c8cfb2bebfc"
+    "height_px": 2480
   },
   "sections": []
 }

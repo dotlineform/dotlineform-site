@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-27cb47f7587a3dfb1a153e5cd68ef160",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-7f71e476e017b9c79a710a967d06a85d",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00878",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-cf8562a90f3ef16235871a66eb317e50",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-27cb47f7587a3dfb1a153e5cd68ef160"
+    "count": 0
   },
   "work": {
     "work_id": "00878",
     "title": "doll face 2",
-    "title_sort": "doll face 002",
     "year": 1989,
     "year_display": "c. 1989",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "8",
     "medium_type": "mixed media",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 40.0,
     "width_cm": 28.0,
-    "depth_cm": null,
     "width_px": 3320,
-    "height_px": 4591,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "cf8562a90f3ef16235871a66eb317e50"
+    "height_px": 4591
   },
   "sections": []
 }

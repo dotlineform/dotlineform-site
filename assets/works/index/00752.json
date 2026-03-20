@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a71984441f62cfaf7287bfc2398cc7f8",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-23cc237a41e1ec86cc9565a1ffffab32",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00752",
-    "count": 4,
-    "hash": "blake2b-d8cdd2548784c807f218b94822df1918",
-    "work_checksum": "blake2b-43f49a9c733876c595d83e87a7a79910",
-    "details_checksum": "blake2b-d8cdd2548784c807f218b94822df1918",
-    "record_checksum": "blake2b-a71984441f62cfaf7287bfc2398cc7f8"
+    "count": 4
   },
   "work": {
     "work_id": "00752",
     "title": "all the little cracks again",
-    "title_sort": "all the little cracks again",
     "year": 2016,
     "year_display": "2016",
     "series_ids": [
       "all-the-little-cracks"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "43f49a9c733876c595d83e87a7a79910"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,48 +30,40 @@
           "detail_id": "005",
           "detail_uid": "00752-005",
           "title": "all the little cracks again - detail 1",
-          "title_sort": "all the little cracks again - detail 001",
           "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3307,
-          "layout": "work_details",
-          "checksum": "dc3a628dfe56dbdecbc8773f0ea2fa82"
+          "layout": "work_details"
         },
         {
           "work_id": "00752",
           "detail_id": "006",
           "detail_uid": "00752-006",
           "title": "all the little cracks again - detail 2",
-          "title_sort": "all the little cracks again - detail 002",
           "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "619b3d27a6526c5c3a45bdec3696d727"
+          "layout": "work_details"
         },
         {
           "work_id": "00752",
           "detail_id": "007",
           "detail_uid": "00752-007",
           "title": "all the little cracks again - detail 3",
-          "title_sort": "all the little cracks again - detail 003",
           "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "c853ddad5fa53eec654e1985562b86bc"
+          "layout": "work_details"
         },
         {
           "work_id": "00752",
           "detail_id": "008",
           "detail_uid": "00752-008",
           "title": "all the little cracks again - detail 4",
-          "title_sort": "all the little cracks again - detail 004",
           "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "af7c1c14e788c4604685c00699625aca"
+          "layout": "work_details"
         }
       ]
     }

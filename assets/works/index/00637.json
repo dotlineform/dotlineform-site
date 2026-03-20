@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5f9cb1d8946153b821cc368fbe69c176",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-278398455bad91eba02a7ec3e369fbb6",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00637",
-    "count": 3,
-    "hash": "blake2b-add38e0f08cb886a13d1acac75001858",
-    "work_checksum": "blake2b-9f36c0c52238d1983f4f1ebcbb49df9c",
-    "details_checksum": "blake2b-add38e0f08cb886a13d1acac75001858",
-    "record_checksum": "blake2b-5f9cb1d8946153b821cc368fbe69c176"
+    "count": 3
   },
   "work": {
     "work_id": "00637",
     "title": "10,000 (3)",
-    "title_sort": "010,000 (003)",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "10000"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "9f36c0c52238d1983f4f1ebcbb49df9c"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "001",
           "detail_uid": "00637-001",
           "title": "10,000 (3.1)",
-          "title_sort": "010,000 (003.001)",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "f48b833bfca5aee1a755241c200e06ef"
+          "layout": "work_details"
         },
         {
           "work_id": "00637",
           "detail_id": "002",
           "detail_uid": "00637-002",
           "title": "10,000 (3.2)",
-          "title_sort": "010,000 (003.002)",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "c5e5476855b88f84c2de94f8c9c5eecc"
+          "layout": "work_details"
         },
         {
           "work_id": "00637",
           "detail_id": "003",
           "detail_uid": "00637-003",
           "title": "10,000 (3.3)",
-          "title_sort": "010,000 (003.003)",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "f4909715b71280d6e529c907ebcb33e7"
+          "layout": "work_details"
         }
       ]
     }

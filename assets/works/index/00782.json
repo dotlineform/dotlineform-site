@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-79981bb2388ef187dc7de665e05ca560",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-c9c691ad4f8e78c636084288253413d3",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00782",
-    "count": 46,
-    "hash": "blake2b-675936d823aa812933984c320d3d98a6",
-    "work_checksum": "blake2b-dae04189208109329035673c52925502",
-    "details_checksum": "blake2b-675936d823aa812933984c320d3d98a6",
-    "record_checksum": "blake2b-79981bb2388ef187dc7de665e05ca560"
+    "count": 46
   },
   "work": {
     "work_id": "00782",
     "title": "birth of healing forms",
-    "title_sort": "birth of healing forms",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "birth-of-healing-forms"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "dae04189208109329035673c52925502"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,48 +30,40 @@
           "detail_id": "001",
           "detail_uid": "00782-001",
           "title": "birth of forms - detail 1",
-          "title_sort": "birth of forms - detail 001",
           "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "eda486b9c0ff0560b19e9126e2e7ff01"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "002",
           "detail_uid": "00782-002",
           "title": "birth of forms - detail 2",
-          "title_sort": "birth of forms - detail 002",
           "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "4131001f7b0978cf10e310ea863ba242"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "003",
           "detail_uid": "00782-003",
           "title": "birth of forms - detail 3",
-          "title_sort": "birth of forms - detail 003",
           "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "1f3ca2ecdcfb33b9f5cd9d87febbc318"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "004",
           "detail_uid": "00782-004",
           "title": "birth of forms - detail 4",
-          "title_sort": "birth of forms - detail 004",
           "project_subfolder": "details",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "d1f69133475b6d53510583403b5df524"
+          "layout": "work_details"
         }
       ]
     },
@@ -97,504 +75,420 @@
           "detail_id": "005",
           "detail_uid": "00782-005",
           "title": "birth of forms (generation 3 version 1)",
-          "title_sort": "birth of forms (generation 003 version 001)",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "02b528cff9a39c999db7581bec393393"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "006",
           "detail_uid": "00782-006",
           "title": "birth of forms (generation 3 version 2)",
-          "title_sort": "birth of forms (generation 003 version 002)",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "3b92ab701a50c914bda87451053b52ec"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "007",
           "detail_uid": "00782-007",
           "title": "birth of forms (generation 3 version 3)",
-          "title_sort": "birth of forms (generation 003 version 003)",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "ddbb4cbea0d107b32aec354416f9a795"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "008",
           "detail_uid": "00782-008",
           "title": "birth of forms (generation 3 version 4)",
-          "title_sort": "birth of forms (generation 003 version 004)",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "46852284430e47414012ddd09566d82c"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "009",
           "detail_uid": "00782-009",
           "title": "birth of healing forms - 1.01",
-          "title_sort": "birth of healing forms - 001.001",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "baff34f6a59f8057313e68a5930e1711"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "010",
           "detail_uid": "00782-010",
           "title": "birth of healing forms - 1.02",
-          "title_sort": "birth of healing forms - 001.002",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "65df05547437833e6b753f6cfac1c091"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "011",
           "detail_uid": "00782-011",
           "title": "birth of healing forms - 1.03",
-          "title_sort": "birth of healing forms - 001.003",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "40f29ad41f5ea1c0c69896ea6ba57d17"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "012",
           "detail_uid": "00782-012",
           "title": "birth of healing forms - 1.04",
-          "title_sort": "birth of healing forms - 001.004",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "dcda63c1c15a3417a7643e16031300d8"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "013",
           "detail_uid": "00782-013",
           "title": "birth of healing forms - 2.01",
-          "title_sort": "birth of healing forms - 002.001",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "4a4d71a58fa1df894063abe139fd8783"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "014",
           "detail_uid": "00782-014",
           "title": "birth of healing forms - 2.02",
-          "title_sort": "birth of healing forms - 002.002",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "0e2a65db07e3d34a4ba9c3d0bfe3b644"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "015",
           "detail_uid": "00782-015",
           "title": "birth of healing forms - 2.03",
-          "title_sort": "birth of healing forms - 002.003",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "16f28cf933273a77d847d266177cb3e3"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "016",
           "detail_uid": "00782-016",
           "title": "birth of healing forms - 2.04",
-          "title_sort": "birth of healing forms - 002.004",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "7bb8b57531c1bf83d342a4ce695aadb3"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "017",
           "detail_uid": "00782-017",
           "title": "birth of healing forms - 2.05",
-          "title_sort": "birth of healing forms - 002.005",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "f7476b513d98c6a9fe7acbe709207cae"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "018",
           "detail_uid": "00782-018",
           "title": "birth of healing forms - 2.06",
-          "title_sort": "birth of healing forms - 002.006",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "3380405f096456bba7fc865413213164"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "019",
           "detail_uid": "00782-019",
           "title": "birth of healing forms - 2.07",
-          "title_sort": "birth of healing forms - 002.007",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "fd50f84febf729d889663fe58a0c7890"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "020",
           "detail_uid": "00782-020",
           "title": "birth of healing forms - 2.09",
-          "title_sort": "birth of healing forms - 002.009",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "cab45a828a66921146c01196485b2e98"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "021",
           "detail_uid": "00782-021",
           "title": "birth of healing forms - 2.10",
-          "title_sort": "birth of healing forms - 002.010",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "edb92c16a7ba9efcd5fb93049e548f38"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "022",
           "detail_uid": "00782-022",
           "title": "birth of healing forms - 2.11",
-          "title_sort": "birth of healing forms - 002.011",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "dd2a22b9e947efdd0c7c8f001edb58c0"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "023",
           "detail_uid": "00782-023",
           "title": "birth of healing forms - 2.12",
-          "title_sort": "birth of healing forms - 002.012",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "17ef6073a6470a1532b7d6c8595ece75"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "024",
           "detail_uid": "00782-024",
           "title": "birth of healing forms - 2.13",
-          "title_sort": "birth of healing forms - 002.013",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "deebbd702120622783c161a0bb1df466"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "025",
           "detail_uid": "00782-025",
           "title": "birth of healing forms - 2.14",
-          "title_sort": "birth of healing forms - 002.014",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "e74ea295e5df2f10859b23550280a0dc"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "026",
           "detail_uid": "00782-026",
           "title": "birth of healing forms - 2.15",
-          "title_sort": "birth of healing forms - 002.015",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "0b789e8658cf3b8695d95a7a4c9fae83"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "027",
           "detail_uid": "00782-027",
           "title": "birth of healing forms - 2.16",
-          "title_sort": "birth of healing forms - 002.016",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "ba89487cee9244603cd3413a33e669ee"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "028",
           "detail_uid": "00782-028",
           "title": "birth of healing forms - 2.17",
-          "title_sort": "birth of healing forms - 002.017",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "ee945e7b7630f9c9ee6ef0676f48cd18"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "029",
           "detail_uid": "00782-029",
           "title": "birth of healing forms - 2.18",
-          "title_sort": "birth of healing forms - 002.018",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "b4464b80cec289f4a9198e719ba25326"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "030",
           "detail_uid": "00782-030",
           "title": "birth of healing forms - 2.19",
-          "title_sort": "birth of healing forms - 002.019",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "f0c763a191775e35d69b5052c5ea6388"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "031",
           "detail_uid": "00782-031",
           "title": "birth of healing forms - 2.20",
-          "title_sort": "birth of healing forms - 002.020",
           "project_subfolder": "versions",
           "width_px": 1181,
           "height_px": 1181,
-          "layout": "work_details",
-          "checksum": "211b4722a8c88f5b6cc0e9e9e76adadd"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "032",
           "detail_uid": "00782-032",
           "title": "birth of healing forms - 2.25",
-          "title_sort": "birth of healing forms - 002.025",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "394957b12f1b410c3ca228654840f476"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "033",
           "detail_uid": "00782-033",
           "title": "birth of healing forms - 2.26",
-          "title_sort": "birth of healing forms - 002.026",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "0d983825ed7b1e30272824f46b7c97b3"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "034",
           "detail_uid": "00782-034",
           "title": "birth of healing forms - 2.27",
-          "title_sort": "birth of healing forms - 002.027",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "73a24f364d4c93c8001994800ab1b1b2"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "035",
           "detail_uid": "00782-035",
           "title": "birth of healing forms - 2.28",
-          "title_sort": "birth of healing forms - 002.028",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "e5e72e2926adde331e165b56b237047c"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "036",
           "detail_uid": "00782-036",
           "title": "birth of healing forms - 2.29",
-          "title_sort": "birth of healing forms - 002.029",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "7774ee3c10d5f807084e8ed4ec491a0f"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "037",
           "detail_uid": "00782-037",
           "title": "birth of healing forms - 2.30",
-          "title_sort": "birth of healing forms - 002.030",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "6b84cf4eaef498051d75ea44f05c0892"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "038",
           "detail_uid": "00782-038",
           "title": "birth of healing forms - 2.31",
-          "title_sort": "birth of healing forms - 002.031",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "6059ebd46f6a764371f9616f73068635"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "039",
           "detail_uid": "00782-039",
           "title": "birth of healing forms - 2.32",
-          "title_sort": "birth of healing forms - 002.032",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "d3586fb7a8c06cc67c7961aa915c0167"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "040",
           "detail_uid": "00782-040",
           "title": "birth of healing forms - 3.01",
-          "title_sort": "birth of healing forms - 003.001",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "fd034fc54beb6e5331aae92d249737e5"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "041",
           "detail_uid": "00782-041",
           "title": "birth of healing forms - 3.02",
-          "title_sort": "birth of healing forms - 003.002",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "9d39d2c3e9267bb9f88e5feabb1aa3f5"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "042",
           "detail_uid": "00782-042",
           "title": "birth of healing forms - 3.04",
-          "title_sort": "birth of healing forms - 003.004",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "05e4733a6c3cd9f74c3279ab979257fe"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "043",
           "detail_uid": "00782-043",
           "title": "birth of healing forms - 3.05",
-          "title_sort": "birth of healing forms - 003.005",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "66ce30d8fadcd9ca0664b9781a306596"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "044",
           "detail_uid": "00782-044",
           "title": "birth of healing forms - 3.06",
-          "title_sort": "birth of healing forms - 003.006",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "0cfc8d4b0685df9c8595d0594270e7d7"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "045",
           "detail_uid": "00782-045",
           "title": "birth of healing forms - 3.07",
-          "title_sort": "birth of healing forms - 003.007",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "53f9dfea8499bad02a16bf5523434b6b"
+          "layout": "work_details"
         },
         {
           "work_id": "00782",
           "detail_id": "046",
           "detail_uid": "00782-046",
           "title": "birth of healing forms - 3.08",
-          "title_sort": "birth of healing forms - 003.008",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "46a6fc26d50eb95f0744a48d7dba1e78"
+          "layout": "work_details"
         }
       ]
     }

@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7d4dd35f6dbf23080ebe8b8d761d1a1c",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-0e488e2fd7938c5864867ccc73a69b50",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00070",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4ac2d869e18d0a1f755cce58df946983",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7d4dd35f6dbf23080ebe8b8d761d1a1c"
+    "count": 0
   },
   "work": {
     "work_id": "00070",
     "title": "nude frame 5",
-    "title_sort": "nude frame 005",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 7016,
-    "height_px": 4961,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "4ac2d869e18d0a1f755cce58df946983"
+    "height_px": 4961
   },
   "sections": []
 }

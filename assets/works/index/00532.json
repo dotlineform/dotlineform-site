@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f31a104b8a89750afcded9c75aa25022",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-2e45df71c09edb31c89b1aa9443e5357",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00532",
-    "count": 4,
-    "hash": "blake2b-3195fe3dcb49fe1350ae475ea1ec112c",
-    "work_checksum": "blake2b-a506d9279c7ef7a3d8f06d0c5bb66da5",
-    "details_checksum": "blake2b-3195fe3dcb49fe1350ae475ea1ec112c",
-    "record_checksum": "blake2b-f31a104b8a89750afcded9c75aa25022"
+    "count": 4
   },
   "work": {
     "work_id": "00532",
     "title": "body monoprint petals",
-    "title_sort": "body monoprint petals",
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
       "2-bodies"
     ],
-    "storage": null,
     "medium_type": "drawing",
     "medium_caption": "mixed media",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 64.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 7559,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "a506d9279c7ef7a3d8f06d0c5bb66da5"
+    "height_px": 7559
   },
   "sections": [
     {
@@ -44,48 +30,40 @@
           "detail_id": "001",
           "detail_uid": "00532-001",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "2dfc638a565189908310512ec8d68134"
+          "layout": "work_details"
         },
         {
           "work_id": "00532",
           "detail_id": "002",
           "detail_uid": "00532-002",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "284c128ff8015d4c51484c899c7919f5"
+          "layout": "work_details"
         },
         {
           "work_id": "00532",
           "detail_id": "003",
           "detail_uid": "00532-003",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "21d55027b594bc665e4d150d33011ef9"
+          "layout": "work_details"
         },
         {
           "work_id": "00532",
           "detail_id": "004",
           "detail_uid": "00532-004",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "bcfc6bd23d0537036d9f6adaad5ac618"
+          "layout": "work_details"
         }
       ]
     }

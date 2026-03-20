@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-131f95a2bfd1780812b33826bf273f59",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-129a6aa069a40f2a5fdc5653c2cc3b2a",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00380",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-495149391511b07e36c81d757f28ff1f",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-131f95a2bfd1780812b33826bf273f59"
+    "count": 0
   },
   "work": {
     "work_id": "00380",
     "title": "harmony 1",
-    "title_sort": "harmony 001",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "6",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 3508,
-    "height_px": 2480,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "495149391511b07e36c81d757f28ff1f"
+    "height_px": 2480
   },
   "sections": []
 }

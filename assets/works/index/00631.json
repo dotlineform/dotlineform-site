@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cb94dce71f7a496545da4c32273adc9e",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-651a02af9853243162fa9e61e45ec0d6",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00631",
-    "count": 4,
-    "hash": "blake2b-fc34b5f7c24ffedebf6c84c217100cb0",
-    "work_checksum": "blake2b-ca86d71fa57b8833e8f5d4054850927e",
-    "details_checksum": "blake2b-fc34b5f7c24ffedebf6c84c217100cb0",
-    "record_checksum": "blake2b-cb94dce71f7a496545da4c32273adc9e"
+    "count": 4
   },
   "work": {
     "work_id": "00631",
     "title": "quantum random number theory (form)",
-    "title_sort": "quantum random number theory (form)",
     "year": 2015,
     "year_display": "2015",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "framed",
     "medium_type": "digital print",
     "medium_caption": "pencil on giclée print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 3088,
-    "height_px": 3088,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ca86d71fa57b8833e8f5d4054850927e"
+    "height_px": 3088
   },
   "sections": [
     {
@@ -44,48 +31,40 @@
           "detail_id": "001",
           "detail_uid": "00631-001",
           "title": "qrnt form (2015-06-06)",
-          "title_sort": "qrnt form (2015-006-006)",
           "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
-          "layout": "work_details",
-          "checksum": "22ffeed3cdda98f725e5d028539b7634"
+          "layout": "work_details"
         },
         {
           "work_id": "00631",
           "detail_id": "002",
           "detail_uid": "00631-002",
           "title": "qrnt form (2015-06-06) detail 1",
-          "title_sort": "qrnt form (2015-006-006) detail 001",
           "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
-          "layout": "work_details",
-          "checksum": "cc2c5859847d0378e3e90c89cf2cb054"
+          "layout": "work_details"
         },
         {
           "work_id": "00631",
           "detail_id": "003",
           "detail_uid": "00631-003",
           "title": "qrnt form (2015-06-06) detail 2",
-          "title_sort": "qrnt form (2015-006-006) detail 002",
           "project_subfolder": "details",
           "width_px": 3088,
           "height_px": 3088,
-          "layout": "work_details",
-          "checksum": "83d02cf630f57b825be76dc157dfc11c"
+          "layout": "work_details"
         },
         {
           "work_id": "00631",
           "detail_id": "004",
           "detail_uid": "00631-004",
           "title": "qrnt form (2015-06-06) detail 3",
-          "title_sort": "qrnt form (2015-006-006) detail 003",
           "project_subfolder": "details",
           "width_px": 3000,
           "height_px": 3000,
-          "layout": "work_details",
-          "checksum": "015f19c2c2d88c5bd97a7aeb33642818"
+          "layout": "work_details"
         }
       ]
     }

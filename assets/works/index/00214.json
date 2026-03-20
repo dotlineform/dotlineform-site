@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b846b7af45f5c29d30624f5d9bb15365",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-f1aa14066299fda94f5079b4ad559856",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00214",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0989744bc7b7c338dc3107e5ee691110",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b846b7af45f5c29d30624f5d9bb15365"
+    "count": 0
   },
   "work": {
     "work_id": "00214",
     "title": "mother and child",
-    "title_sort": "mother and child",
     "year": 1995,
     "year_display": "c. 1995?",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil and pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2362,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "0989744bc7b7c338dc3107e5ee691110"
+    "height_px": 3543
   },
   "sections": []
 }

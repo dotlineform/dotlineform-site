@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-dac86d0697f20f3172c8db08a9cb8cc2",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-f523ab0e757cca7b6f0a1a634d3d1d81",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00169",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-6a318cb3fe8635cc99427e54aac005c6",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-dac86d0697f20f3172c8db08a9cb8cc2"
+    "count": 0
   },
   "work": {
     "work_id": "00169",
     "title": "hand life 3",
-    "title_sort": "hand life 003",
     "year": 1989,
     "year_display": "1989",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 3395,
-    "height_px": 3643,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "6a318cb3fe8635cc99427e54aac005c6"
+    "height_px": 3643
   },
   "sections": []
 }

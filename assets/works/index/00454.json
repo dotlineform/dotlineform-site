@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-14b7afe0f7f063f7b3ba2d0699935093",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-69ee6c0abdc277e79a015fe82a647b6b",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00454",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-c0c3f8f4fa976423c45ff2fb08bca106",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-14b7afe0f7f063f7b3ba2d0699935093"
+    "count": 0
   },
   "work": {
     "work_id": "00454",
     "title": "I bet you look good on the dancefloor",
-    "title_sort": "I bet you look good on the dancefloor",
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
       "curve-poems"
     ],
-    "storage": null,
     "medium_type": "drawing",
     "medium_caption": "pencil and ink on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 42.0,
-    "depth_cm": null,
     "width_px": 3966,
-    "height_px": 2818,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "c0c3f8f4fa976423c45ff2fb08bca106"
+    "height_px": 2818
   },
   "sections": []
 }

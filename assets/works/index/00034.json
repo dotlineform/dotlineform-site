@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-375d6a2dfdda645b59eddb9f6384a11c",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-2e46a42575d5c33c2e793befe8e3d5b8",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00034",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ff911f0651b191a9a842ea4be7915cf5",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-375d6a2dfdda645b59eddb9f6384a11c"
+    "count": 0
   },
   "work": {
     "work_id": "00034",
     "title": "slaughter 7",
-    "title_sort": "slaughter 007",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 7015,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ff911f0651b191a9a842ea4be7915cf5"
+    "height_px": 7015
   },
   "sections": []
 }

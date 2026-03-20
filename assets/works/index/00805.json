@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0af2cccad60bd476a62b115a912efa18",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-443ae5b7313c09f74ed744314b2bd1bf",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00805",
-    "count": 80,
-    "hash": "blake2b-8d4d282d824909bbe452525ed2336dd7",
-    "work_checksum": "blake2b-a1429f93a59839e48c71ee793b7f7509",
-    "details_checksum": "blake2b-8d4d282d824909bbe452525ed2336dd7",
-    "record_checksum": "blake2b-0af2cccad60bd476a62b115a912efa18"
+    "count": 80
   },
   "work": {
     "work_id": "00805",
     "title": "book dna sequence",
-    "title_sort": "book dna sequence",
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
       "book-dna"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 45.0,
     "width_cm": 60.0,
-    "depth_cm": null,
     "width_px": 7087,
-    "height_px": 5315,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "a1429f93a59839e48c71ee793b7f7509"
+    "height_px": 5315
   },
   "sections": [
     {
@@ -44,960 +30,800 @@
           "detail_id": "001",
           "detail_uid": "00805-001",
           "title": "book dna 1",
-          "title_sort": "book dna 001",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "2d327616c3784674367be9ad5dd41d3a"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "002",
           "detail_uid": "00805-002",
           "title": "book dna 2",
-          "title_sort": "book dna 002",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f3c005c7569c33554f06f19b951c8c15"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "003",
           "detail_uid": "00805-003",
           "title": "book dna 3",
-          "title_sort": "book dna 003",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "02bd29de5b71b5e49fdcdcaae84ad4b1"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "004",
           "detail_uid": "00805-004",
           "title": "book dna 4",
-          "title_sort": "book dna 004",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "8e1e7fb93c02dc8a92a95649801ab3f1"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "005",
           "detail_uid": "00805-005",
           "title": "book dna 5",
-          "title_sort": "book dna 005",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "758fde192d1781c4ce3a2ef1acc38b2a"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "006",
           "detail_uid": "00805-006",
           "title": "book dna 6",
-          "title_sort": "book dna 006",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "bec535c3ef9b3737a55468bd13a7074c"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "007",
           "detail_uid": "00805-007",
           "title": "book dna 7",
-          "title_sort": "book dna 007",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "d42ad30d1846f82330c82b9e19eae605"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "008",
           "detail_uid": "00805-008",
           "title": "book dna 8",
-          "title_sort": "book dna 008",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "dc33c918dd852f79a0822bb975d19b24"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "009",
           "detail_uid": "00805-009",
           "title": "book dna 9",
-          "title_sort": "book dna 009",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "0691ff40e8ca433da65ee545d3bd1a51"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "010",
           "detail_uid": "00805-010",
           "title": "book dna 10",
-          "title_sort": "book dna 010",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "5f8146a44c2de8df1a04cedfc49f48b8"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "011",
           "detail_uid": "00805-011",
           "title": "book dna 11",
-          "title_sort": "book dna 011",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "1d95d4294d5229d54f7c8edec29585f4"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "012",
           "detail_uid": "00805-012",
           "title": "book dna 12",
-          "title_sort": "book dna 012",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "8efb6b32a4932d7afa593ff8cc5408ea"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "013",
           "detail_uid": "00805-013",
           "title": "book dna 13",
-          "title_sort": "book dna 013",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "ba93c83c0e2eabdcbedb88bba8dd9bfa"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "014",
           "detail_uid": "00805-014",
           "title": "book dna 14",
-          "title_sort": "book dna 014",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "5e5cbb6b1dcac9025f634a04b89427c8"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "015",
           "detail_uid": "00805-015",
           "title": "book dna 15",
-          "title_sort": "book dna 015",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "8249611ca833ec88a96d7dcba125b115"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "016",
           "detail_uid": "00805-016",
           "title": "book dna 16",
-          "title_sort": "book dna 016",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "0f9b4d5d5bf473cb2c5284536057ca8c"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "017",
           "detail_uid": "00805-017",
           "title": "book dna 17",
-          "title_sort": "book dna 017",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "d0f2ace4d6aa3b29c5bd702a52117c31"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "018",
           "detail_uid": "00805-018",
           "title": "book dna 18",
-          "title_sort": "book dna 018",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "e7bbc75bdd9334d52d6baff040814e24"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "019",
           "detail_uid": "00805-019",
           "title": "book dna 19",
-          "title_sort": "book dna 019",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "1395b7d64788564c963b62c64b662d21"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "020",
           "detail_uid": "00805-020",
           "title": "book dna 20",
-          "title_sort": "book dna 020",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "b1ca0449ba3813081e528333f21a33a0"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "021",
           "detail_uid": "00805-021",
           "title": "book dna 21",
-          "title_sort": "book dna 021",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "311f136a7195c852801faec0a9ce790d"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "022",
           "detail_uid": "00805-022",
           "title": "book dna 22",
-          "title_sort": "book dna 022",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f4814554b4be32ee8417eab2057acacf"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "023",
           "detail_uid": "00805-023",
           "title": "book dna 23",
-          "title_sort": "book dna 023",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "1f5a71c441dea935bb8c485d522cbe85"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "024",
           "detail_uid": "00805-024",
           "title": "book dna 24",
-          "title_sort": "book dna 024",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "46ab6d4cba7809dc4a85b3eefa635087"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "025",
           "detail_uid": "00805-025",
           "title": "book dna 25",
-          "title_sort": "book dna 025",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "a39fbd793797f89e5ac865c7319c8090"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "026",
           "detail_uid": "00805-026",
           "title": "book dna 26",
-          "title_sort": "book dna 026",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "2b63d41d879eb7a85ceec885fc836352"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "027",
           "detail_uid": "00805-027",
           "title": "book dna 27",
-          "title_sort": "book dna 027",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "881c7880ee0a29d8fff2c31485624966"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "028",
           "detail_uid": "00805-028",
           "title": "book dna 28",
-          "title_sort": "book dna 028",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "ab291740811413a714f0b56dac603518"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "029",
           "detail_uid": "00805-029",
           "title": "book dna 29",
-          "title_sort": "book dna 029",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "988633d37132e7ad3d4c0bd96ab5314d"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "030",
           "detail_uid": "00805-030",
           "title": "book dna 30",
-          "title_sort": "book dna 030",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "1be4cff5520cdd970956f967e4aac773"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "031",
           "detail_uid": "00805-031",
           "title": "book dna 31",
-          "title_sort": "book dna 031",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "44fb75cf3910db9d2137692e0aa29b6c"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "032",
           "detail_uid": "00805-032",
           "title": "book dna 32",
-          "title_sort": "book dna 032",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "a0a76caa7f9c5999b1a44f8076475445"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "033",
           "detail_uid": "00805-033",
           "title": "book dna 33",
-          "title_sort": "book dna 033",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f9bf3cc1f1e5c286c45c0b18d393fe2d"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "034",
           "detail_uid": "00805-034",
           "title": "book dna 34",
-          "title_sort": "book dna 034",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "dcd7bd1c0ad762c5cba71d6605a6a0eb"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "035",
           "detail_uid": "00805-035",
           "title": "book dna 35",
-          "title_sort": "book dna 035",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "75101f020b5f37fd30a1552db74a47ba"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "036",
           "detail_uid": "00805-036",
           "title": "book dna 36",
-          "title_sort": "book dna 036",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "ae7787bcb45e5e775567036beca3e90b"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "037",
           "detail_uid": "00805-037",
           "title": "book dna 37",
-          "title_sort": "book dna 037",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "3e10bc97599c8877185bd3b25e84d852"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "038",
           "detail_uid": "00805-038",
           "title": "book dna 38",
-          "title_sort": "book dna 038",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "45e2886d50330e2d07e44aaedd9c6651"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "039",
           "detail_uid": "00805-039",
           "title": "book dna 39",
-          "title_sort": "book dna 039",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "8264226d2b377e9ce32177e2e05972b2"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "040",
           "detail_uid": "00805-040",
           "title": "book dna 40",
-          "title_sort": "book dna 040",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "27a456a1740c3e7a2bad2171bc9521eb"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "041",
           "detail_uid": "00805-041",
           "title": "book dna 41",
-          "title_sort": "book dna 041",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f9dd8bdde0528258019ded721a2813aa"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "042",
           "detail_uid": "00805-042",
           "title": "book dna 42",
-          "title_sort": "book dna 042",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "e212fd5bfc0b315fd85d764699bbc5de"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "043",
           "detail_uid": "00805-043",
           "title": "book dna 43",
-          "title_sort": "book dna 043",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "03465a9a681af2830283990565f36193"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "044",
           "detail_uid": "00805-044",
           "title": "book dna 44",
-          "title_sort": "book dna 044",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "9dfff3aef96d2b8c005b2fd3d6c8118e"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "045",
           "detail_uid": "00805-045",
           "title": "book dna 45",
-          "title_sort": "book dna 045",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f0f363f0db5924bf9d1b730230bcd38d"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "046",
           "detail_uid": "00805-046",
           "title": "book dna 46",
-          "title_sort": "book dna 046",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "214810c9d6e927e2e0425b4785b6cf6a"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "047",
           "detail_uid": "00805-047",
           "title": "book dna 47",
-          "title_sort": "book dna 047",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "df159e2a5dd8ec21c58f486935d50556"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "048",
           "detail_uid": "00805-048",
           "title": "book dna 48",
-          "title_sort": "book dna 048",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f2350e38e86332c325d33c850ab8e50c"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "049",
           "detail_uid": "00805-049",
           "title": "book dna 49",
-          "title_sort": "book dna 049",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "343bb6d95719b21808156d1474bcc199"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "050",
           "detail_uid": "00805-050",
           "title": "book dna 50",
-          "title_sort": "book dna 050",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "1b544b94706c6bdac885ebeb6a7651a2"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "051",
           "detail_uid": "00805-051",
           "title": "book dna 51",
-          "title_sort": "book dna 051",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "0a8509a0cda69f00d04bb6d28c579ce3"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "052",
           "detail_uid": "00805-052",
           "title": "book dna 52",
-          "title_sort": "book dna 052",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "0f4c1324f7d058483cf160752aa16a37"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "053",
           "detail_uid": "00805-053",
           "title": "book dna 53",
-          "title_sort": "book dna 053",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "2f3a606818988007fdd456eb8f7c6db0"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "054",
           "detail_uid": "00805-054",
           "title": "book dna 54",
-          "title_sort": "book dna 054",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f050f272a3dafc1266c82bf433e82ec7"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "055",
           "detail_uid": "00805-055",
           "title": "book dna 55",
-          "title_sort": "book dna 055",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "4e8231fc48d1d903bf6c783422d37461"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "056",
           "detail_uid": "00805-056",
           "title": "book dna 56",
-          "title_sort": "book dna 056",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "21a73614c52d8d2470bbf7f1c260cfd1"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "057",
           "detail_uid": "00805-057",
           "title": "book dna 57",
-          "title_sort": "book dna 057",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "939501f62081483cff339be4c89a259a"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "058",
           "detail_uid": "00805-058",
           "title": "book dna 58",
-          "title_sort": "book dna 058",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "76e1ddf0562bb33a2f203377f556d9cf"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "059",
           "detail_uid": "00805-059",
           "title": "book dna 59",
-          "title_sort": "book dna 059",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "79db69ca3c9478529472d3a887020a5d"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "060",
           "detail_uid": "00805-060",
           "title": "book dna 60",
-          "title_sort": "book dna 060",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "64c76bf2eac5883a9b249fbfac526bec"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "061",
           "detail_uid": "00805-061",
           "title": "book dna 61",
-          "title_sort": "book dna 061",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "233c2652a3485d9546e5cd623c4ee1ef"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "062",
           "detail_uid": "00805-062",
           "title": "book dna 62",
-          "title_sort": "book dna 062",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "47310e14e6113b2999474f2d53cd05b3"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "063",
           "detail_uid": "00805-063",
           "title": "book dna 63",
-          "title_sort": "book dna 063",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "cfcee34998a459f9dd38e1da451c7057"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "064",
           "detail_uid": "00805-064",
           "title": "book dna 64",
-          "title_sort": "book dna 064",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "dce78f7584e072b1792607169e071acf"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "065",
           "detail_uid": "00805-065",
           "title": "book dna 65",
-          "title_sort": "book dna 065",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "58c1ef448c6b141232d434c5ef2a7075"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "066",
           "detail_uid": "00805-066",
           "title": "book dna 66",
-          "title_sort": "book dna 066",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "f5451c4ba7d519146b7b2bc4cb4084c0"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "067",
           "detail_uid": "00805-067",
           "title": "book dna 67",
-          "title_sort": "book dna 067",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "9e5bced77c42f011485f7ce03f4f7e68"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "068",
           "detail_uid": "00805-068",
           "title": "book dna 68",
-          "title_sort": "book dna 068",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "339e9d8c8e944691d6b81d0de6859541"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "069",
           "detail_uid": "00805-069",
           "title": "book dna 69",
-          "title_sort": "book dna 069",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "3242dd041715582512b284bcf75cbf80"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "070",
           "detail_uid": "00805-070",
           "title": "book dna 70",
-          "title_sort": "book dna 070",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "871c4e334a4c5d5cae01536c5e919564"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "071",
           "detail_uid": "00805-071",
           "title": "book dna 71",
-          "title_sort": "book dna 071",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "a9d242837df18857c820102fb3e3768f"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "072",
           "detail_uid": "00805-072",
           "title": "book dna 72",
-          "title_sort": "book dna 072",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "a07cdb31d728f6330329ebe4bf8b53c6"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "073",
           "detail_uid": "00805-073",
           "title": "book dna 73",
-          "title_sort": "book dna 073",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "c175a028502c00fddf2fde220a55c35e"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "074",
           "detail_uid": "00805-074",
           "title": "book dna 74",
-          "title_sort": "book dna 074",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "a384968fe9ef760116a4e32a6da1c605"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "075",
           "detail_uid": "00805-075",
           "title": "book dna 75",
-          "title_sort": "book dna 075",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "c1b6fa1a7432be780883d7a6fa115e51"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "076",
           "detail_uid": "00805-076",
           "title": "book dna 76",
-          "title_sort": "book dna 076",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "0d3eb8d05768cd736da33b84af9acad8"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "077",
           "detail_uid": "00805-077",
           "title": "book dna 77",
-          "title_sort": "book dna 077",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "b20467ec564109507c20634d3ce6a9a6"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "078",
           "detail_uid": "00805-078",
           "title": "book dna 78",
-          "title_sort": "book dna 078",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "b6226698ce7b53fe1ec4a05f936df596"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "079",
           "detail_uid": "00805-079",
           "title": "book dna 79",
-          "title_sort": "book dna 079",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "55e989b59574b51f02dec7fd109e7a30"
+          "layout": "work_details"
         },
         {
           "work_id": "00805",
           "detail_id": "080",
           "detail_uid": "00805-080",
           "title": "book dna 80",
-          "title_sort": "book dna 080",
           "project_subfolder": "dna",
           "width_px": 1200,
           "height_px": 1200,
-          "layout": "work_details",
-          "checksum": "65e0e56dce5644e3f59b75d4dd1382c0"
+          "layout": "work_details"
         }
       ]
     }

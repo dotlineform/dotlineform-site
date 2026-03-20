@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-59ba12a840b4227c59c97cd00eadd5a7",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-5a2a53d5f7dfcf35734d0233ed04d719",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00026",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-771a3087e646454be1e2d0dce62f3ebe",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-59ba12a840b4227c59c97cd00eadd5a7"
+    "count": 0
   },
   "work": {
     "work_id": "00026",
     "title": "collage 5",
-    "title_sort": "collage 005",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 7016,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "771a3087e646454be1e2d0dce62f3ebe"
+    "height_px": 7016
   },
   "sections": []
 }

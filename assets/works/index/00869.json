@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3e4a796a08536bc0d4b7b104813192ab",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-03dbfe72c85b7c4410c98515c5b93ebf",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00869",
-    "count": 12,
-    "hash": "blake2b-a1e129a6ae310dc1609e7fe1e888d5c6",
-    "work_checksum": "blake2b-ca3bbac33f0363ceade2e8739a36694f",
-    "details_checksum": "blake2b-a1e129a6ae310dc1609e7fe1e888d5c6",
-    "record_checksum": "blake2b-3e4a796a08536bc0d4b7b104813192ab"
+    "count": 12
   },
   "work": {
     "work_id": "00869",
     "title": "curves",
-    "title_sort": "curves",
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
       "curve-machine"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ca3bbac33f0363ceade2e8739a36694f"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,144 +30,120 @@
           "detail_id": "001",
           "detail_uid": "00869-001",
           "title": "curve machine [1]",
-          "title_sort": "curve machine [001]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "500cd0362c0b0dc8e41805d9f54581a9"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "002",
           "detail_uid": "00869-002",
           "title": "curve machine [2]",
-          "title_sort": "curve machine [002]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "be47274058706deea1db448c13b1cfb0"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "003",
           "detail_uid": "00869-003",
           "title": "curve machine [3]",
-          "title_sort": "curve machine [003]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "0d58697d1f6edb8320a296a443f38027"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "004",
           "detail_uid": "00869-004",
           "title": "curve machine [4]",
-          "title_sort": "curve machine [004]",
           "project_subfolder": "versions",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "694dfeb30972fc8c2d814242124bd4d7"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "005",
           "detail_uid": "00869-005",
           "title": "curve machine [5]",
-          "title_sort": "curve machine [005]",
           "project_subfolder": "versions",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "7b01053f3cac60fb4e8a834ff9995afd"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "006",
           "detail_uid": "00869-006",
           "title": "curve machine [6]",
-          "title_sort": "curve machine [006]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "608620363fe0078b26bd6e7deab27cd7"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "007",
           "detail_uid": "00869-007",
           "title": "curve machine [7]",
-          "title_sort": "curve machine [007]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "cc779d270d5ee0ad7d1ac6ffb0bea8b7"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "008",
           "detail_uid": "00869-008",
           "title": "curve machine [8]",
-          "title_sort": "curve machine [008]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "b393d2af521b70ad1a83e4db1143c095"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "009",
           "detail_uid": "00869-009",
           "title": "curve machine [9]",
-          "title_sort": "curve machine [009]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "1ac581f33a5a7eb6234fc34c01e831a6"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "010",
           "detail_uid": "00869-010",
           "title": "curve machine [10]",
-          "title_sort": "curve machine [010]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "29766664f89567c4688564e3932996d6"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "011",
           "detail_uid": "00869-011",
           "title": "curve machine [11]",
-          "title_sort": "curve machine [011]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "d2330c142ef1cf7229f30f11c5e0ee1d"
+          "layout": "work_details"
         },
         {
           "work_id": "00869",
           "detail_id": "012",
           "detail_uid": "00869-012",
           "title": "curve machine [12]",
-          "title_sort": "curve machine [012]",
           "project_subfolder": "versions",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "b727ef6b6eb927d94ddb38bfb40911f0"
+          "layout": "work_details"
         }
       ]
     }

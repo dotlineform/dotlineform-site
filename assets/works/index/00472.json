@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-df8af07f9c127f74a0205e027c2e0460",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-bc280f6bbd80db75c23c4d2fa86dc0bd",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00472",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e8eedd0ba518e30f04ed341ead4acd2e",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-df8af07f9c127f74a0205e027c2e0460"
+    "count": 0
   },
   "work": {
     "work_id": "00472",
     "title": "mm 2015-08-24 - 17-17-30",
-    "title_sort": "mm 2015-008-024 - 017-017-030",
     "year": 2015,
     "year_display": "2015",
     "series_ids": [
       "mm"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 40.0,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "e8eedd0ba518e30f04ed341ead4acd2e"
+    "height_px": 3543
   },
   "sections": []
 }

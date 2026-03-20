@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b6ab3e9a570872bd23ef909031bba5a0",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-cd6a8b8846aa671da11b47c53a7442de",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00814",
-    "count": 1,
-    "hash": "blake2b-1d14b47a7aa88aeb727b2c0b43428b7b",
-    "work_checksum": "blake2b-d8120531af9bcb5cadad6500744ad6e5",
-    "details_checksum": "blake2b-1d14b47a7aa88aeb727b2c0b43428b7b",
-    "record_checksum": "blake2b-b6ab3e9a570872bd23ef909031bba5a0"
+    "count": 1
   },
   "work": {
     "work_id": "00814",
     "title": "colours belsen",
-    "title_sort": "colours belsen",
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
       "colours"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "d8120531af9bcb5cadad6500744ad6e5"
+    "height_px": 3543
   },
   "sections": [
     {
@@ -44,12 +30,10 @@
           "detail_id": "001",
           "detail_uid": "00814-001",
           "title": "colours belsen.1",
-          "title_sort": "colours belsen.001",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "e20ddca4e9a8585841c33e68ef825384"
+          "layout": "work_details"
         }
       ]
     }

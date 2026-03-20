@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d004b0f1d4783e6eb5e74d7eb0f8ec70",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-4f8f6ef7fb9a7b2131ace8f2cec0e928",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00813",
-    "count": 5,
-    "hash": "blake2b-e5affc70c29501ec623df5a60058e455",
-    "work_checksum": "blake2b-b6d470d08bfbbcc31ae22550bb609c82",
-    "details_checksum": "blake2b-e5affc70c29501ec623df5a60058e455",
-    "record_checksum": "blake2b-d004b0f1d4783e6eb5e74d7eb0f8ec70"
+    "count": 5
   },
   "work": {
     "work_id": "00813",
     "title": "colours 1958-2001",
-    "title_sort": "colours 1958-2001",
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
       "colours"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "b6d470d08bfbbcc31ae22550bb609c82"
+    "height_px": 3543
   },
   "sections": [
     {
@@ -44,60 +30,50 @@
           "detail_id": "001",
           "detail_uid": "00813-001",
           "title": "colours 1958-2001.1",
-          "title_sort": "colours 1958-2001.001",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "ba4416d8de703c91d31b46ab049449e8"
+          "layout": "work_details"
         },
         {
           "work_id": "00813",
           "detail_id": "002",
           "detail_uid": "00813-002",
           "title": "colours 1958-2001.2",
-          "title_sort": "colours 1958-2001.002",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "5afffd9175b09c32f40503e881c90d99"
+          "layout": "work_details"
         },
         {
           "work_id": "00813",
           "detail_id": "003",
           "detail_uid": "00813-003",
           "title": "colours 1958-2001.3",
-          "title_sort": "colours 1958-2001.003",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "0b8f6a98b56b650df5be5025e2ff47c9"
+          "layout": "work_details"
         },
         {
           "work_id": "00813",
           "detail_id": "004",
           "detail_uid": "00813-004",
           "title": "colours 1958-2001.4",
-          "title_sort": "colours 1958-2001.004",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "052319b5f37a14aa8f5072a2961af920"
+          "layout": "work_details"
         },
         {
           "work_id": "00813",
           "detail_id": "005",
           "detail_uid": "00813-005",
           "title": "colours 1958-2001.5",
-          "title_sort": "colours 1958-2001.005",
           "project_subfolder": "versions",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "c15424964cbfc2bb672368538c8493ab"
+          "layout": "work_details"
         }
       ]
     }

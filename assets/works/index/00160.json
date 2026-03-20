@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3422e5a6a9be8bb2ce0782a76c95dbe8",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-7889b312e8fc1ab37f86c89ab9ef6a67",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00160",
-    "count": 10,
-    "hash": "blake2b-4b0637ea81b6118a11266bedefc4c2ed",
-    "work_checksum": "blake2b-3988a8b59edbacba2dd883d12a230b56",
-    "details_checksum": "blake2b-4b0637ea81b6118a11266bedefc4c2ed",
-    "record_checksum": "blake2b-3422e5a6a9be8bb2ce0782a76c95dbe8"
+    "count": 10
   },
   "work": {
     "work_id": "00160",
     "title": "mouse story",
-    "title_sort": "mouse story",
     "year": 1991,
     "year_display": "1991",
     "series_ids": [
@@ -22,18 +17,11 @@
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "typed text, 5 pages",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2472,
     "height_px": 3498,
-    "download": "mouse story.pdf",
-    "artist": "Michael Davies",
-    "checksum": "3988a8b59edbacba2dd883d12a230b56"
+    "download": "mouse story.pdf"
   },
   "sections": [
     {
@@ -44,60 +32,50 @@
           "detail_id": "001",
           "detail_uid": "00160-001",
           "title": "mouse story - 1",
-          "title_sort": "mouse story - 001",
           "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
-          "layout": "work_details",
-          "checksum": "0b35e723920786958f1cbdcb25cb62f4"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "002",
           "detail_uid": "00160-002",
           "title": "mouse story - 2",
-          "title_sort": "mouse story - 002",
           "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
-          "layout": "work_details",
-          "checksum": "f284a7fc954778aad6c63999e4deba00"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "003",
           "detail_uid": "00160-003",
           "title": "mouse story - 3",
-          "title_sort": "mouse story - 003",
           "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
-          "layout": "work_details",
-          "checksum": "875fbaca7b814258edeb4e8f80624485"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "004",
           "detail_uid": "00160-004",
           "title": "mouse story - 4",
-          "title_sort": "mouse story - 004",
           "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
-          "layout": "work_details",
-          "checksum": "d96c1b4900c164c4075c3f603e49eaa6"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "005",
           "detail_uid": "00160-005",
           "title": "mouse story - 5",
-          "title_sort": "mouse story - 005",
           "project_subfolder": "pages",
           "width_px": 2472,
           "height_px": 3498,
-          "layout": "work_details",
-          "checksum": "d10a903dac0dce42572bf4ab02874d1b"
+          "layout": "work_details"
         }
       ]
     },
@@ -109,60 +87,50 @@
           "detail_id": "006",
           "detail_uid": "00160-006",
           "title": "mouse story - detail 1",
-          "title_sort": "mouse story - detail 001",
           "project_subfolder": "details",
           "width_px": 5192,
           "height_px": 2921,
-          "layout": "work_details",
-          "checksum": "2fa2b1df0871c6708539be272510c341"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "007",
           "detail_uid": "00160-007",
           "title": "mouse story - detail 2",
-          "title_sort": "mouse story - detail 002",
           "project_subfolder": "details",
           "width_px": 6525,
           "height_px": 3671,
-          "layout": "work_details",
-          "checksum": "f4bc6cff8a36feab182af980c08a3c20"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "008",
           "detail_uid": "00160-008",
           "title": "mouse story - detail 3",
-          "title_sort": "mouse story - detail 003",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 1125,
-          "layout": "work_details",
-          "checksum": "394cf8515be39e8632d4db0f1187d083"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "009",
           "detail_uid": "00160-009",
           "title": "mouse story - detail 4",
-          "title_sort": "mouse story - detail 004",
           "project_subfolder": "details",
           "width_px": 4179,
           "height_px": 2350,
-          "layout": "work_details",
-          "checksum": "2da86216fc5848859f1a52268980b986"
+          "layout": "work_details"
         },
         {
           "work_id": "00160",
           "detail_id": "010",
           "detail_uid": "00160-010",
           "title": "mouse story - detail 5",
-          "title_sort": "mouse story - detail 005",
           "project_subfolder": "details",
           "width_px": 5983,
           "height_px": 3367,
-          "layout": "work_details",
-          "checksum": "c87e65118aae7541c26757ba940a4c68"
+          "layout": "work_details"
         }
       ]
     }

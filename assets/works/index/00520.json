@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-ca326ef8bb1d8d43b499683b85df1070",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-b1352de16a990184892d30e7c5dad893",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00520",
-    "count": 6,
-    "hash": "blake2b-c37424de58cac9a950d401c4101c0258",
-    "work_checksum": "blake2b-5ce3d2015c0493eed8b37d0651d0332f",
-    "details_checksum": "blake2b-c37424de58cac9a950d401c4101c0258",
-    "record_checksum": "blake2b-ca326ef8bb1d8d43b499683b85df1070"
+    "count": 6
   },
   "work": {
     "work_id": "00520",
     "title": "kylie structure 1",
-    "title_sort": "kylie structure 001",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "kylie-structures"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 60.0,
     "width_cm": 60.0,
-    "depth_cm": null,
     "width_px": 8000,
-    "height_px": 8000,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "5ce3d2015c0493eed8b37d0651d0332f"
+    "height_px": 8000
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "00520-001",
           "title": "kylie structure 1.1",
-          "title_sort": "kylie structure 001.001",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "57eb6b5fa13994f8cb201274b47f0962"
+          "layout": "work_details"
         },
         {
           "work_id": "00520",
           "detail_id": "002",
           "detail_uid": "00520-002",
           "title": "kylie structure 1.2",
-          "title_sort": "kylie structure 001.002",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "74f84d76543fb8b113e047d1433c2cac"
+          "layout": "work_details"
         },
         {
           "work_id": "00520",
           "detail_id": "003",
           "detail_uid": "00520-003",
           "title": "kylie structure 1.3",
-          "title_sort": "kylie structure 001.003",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "a10887344ebc9f3352ddc975841cdb70"
+          "layout": "work_details"
         },
         {
           "work_id": "00520",
           "detail_id": "004",
           "detail_uid": "00520-004",
           "title": "kylie structure 1.4",
-          "title_sort": "kylie structure 001.004",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "c237cfb1135b7ebcb57cb13505b35b4e"
+          "layout": "work_details"
         },
         {
           "work_id": "00520",
           "detail_id": "005",
           "detail_uid": "00520-005",
           "title": "kylie structure 1.5",
-          "title_sort": "kylie structure 001.005",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "4276bd9c48a5530e7af989f15e50ab82"
+          "layout": "work_details"
         },
         {
           "work_id": "00520",
           "detail_id": "006",
           "detail_uid": "00520-006",
           "title": "kylie structure 1.6",
-          "title_sort": "kylie structure 001.006",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "c1da7d51009f469478c54c07c885808f"
+          "layout": "work_details"
         }
       ]
     }

@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f70a59c7fac2a2aebf2c6a87cc16c769",
-    "generated_at_utc": "2026-03-19T22:40:30Z",
+    "version": "blake2b-390d9caa8b6d45e3f79848dc340ea818",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00467",
-    "count": 3,
-    "hash": "blake2b-f80b8d0d7c86d97d5ba8e2fd1032df4c",
-    "work_checksum": "blake2b-61fd912cebb0068d50b3baff282bfb32",
-    "details_checksum": "blake2b-f80b8d0d7c86d97d5ba8e2fd1032df4c",
-    "record_checksum": "blake2b-f70a59c7fac2a2aebf2c6a87cc16c769"
+    "count": 3
   },
   "work": {
     "work_id": "00467",
     "title": "forest 3",
-    "title_sort": "forest 003",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "forests-2023"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 120.0,
-    "depth_cm": null,
     "width_px": 14173,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "61fd912cebb0068d50b3baff282bfb32"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "001",
           "detail_uid": "00467-001",
           "title": "forest 3 - detail 1",
-          "title_sort": "forest 003 - detail 001",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
-          "layout": "work_details",
-          "checksum": "5b985f2d8602925a43fe269aee127ccd"
+          "layout": "work_details"
         },
         {
           "work_id": "00467",
           "detail_id": "002",
           "detail_uid": "00467-002",
           "title": "forest 3 - detail 2",
-          "title_sort": "forest 003 - detail 002",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
-          "layout": "work_details",
-          "checksum": "2e1efc20e15fbf520d22e0c293673b0f"
+          "layout": "work_details"
         },
         {
           "work_id": "00467",
           "detail_id": "003",
           "detail_uid": "00467-003",
           "title": "forest 3 - detail 3",
-          "title_sort": "forest 003 - detail 003",
           "project_subfolder": "details",
           "width_px": 4000,
           "height_px": 4000,
-          "layout": "work_details",
-          "checksum": "ad7bc60adc06ebda326f513c34ae020e"
+          "layout": "work_details"
         }
       ]
     }

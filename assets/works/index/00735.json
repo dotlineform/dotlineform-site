@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-877dd94d81fc49d866a336eb427ce7bb",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-03b52f49db939a7fbae3f373962f8119",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00735",
-    "count": 64,
-    "hash": "blake2b-deadce129f03e366607e0b98ae7f5ac8",
-    "work_checksum": "blake2b-1e032865d0ebe0e85381eabe32897dfb",
-    "details_checksum": "blake2b-deadce129f03e366607e0b98ae7f5ac8",
-    "record_checksum": "blake2b-877dd94d81fc49d866a336eb427ce7bb"
+    "count": 64
   },
   "work": {
     "work_id": "00735",
     "title": "a theory of happiness is a theory of everything (64°)",
-    "title_sort": "a theory of happiness is a theory of everything (064°)",
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
       "a-theory-of-happiness"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 8858,
-    "height_px": 8858,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "1e032865d0ebe0e85381eabe32897dfb"
+    "height_px": 8858
   },
   "sections": [
     {
@@ -44,768 +30,640 @@
           "detail_id": "001",
           "detail_uid": "00735-001",
           "title": "happiness 1°",
-          "title_sort": "happiness 001°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "6b1f1f2b072a053577c1454dfed630ec"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "002",
           "detail_uid": "00735-002",
           "title": "happiness 2°",
-          "title_sort": "happiness 002°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "c1872754cf91d87e12aad510f828ea22"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "003",
           "detail_uid": "00735-003",
           "title": "happiness 3°",
-          "title_sort": "happiness 003°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "e7c948c520f43212b15027439c0dc435"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "004",
           "detail_uid": "00735-004",
           "title": "happiness 4°",
-          "title_sort": "happiness 004°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "5b8fd41d2b138fb274779b0a17ff7579"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "005",
           "detail_uid": "00735-005",
           "title": "happiness 5°",
-          "title_sort": "happiness 005°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "ef7e13fe1558d1c7dea1199cf0a6b6a9"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "006",
           "detail_uid": "00735-006",
           "title": "happiness 6°",
-          "title_sort": "happiness 006°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "7feca80bf970c7f05bb7a3cf3f64532c"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "007",
           "detail_uid": "00735-007",
           "title": "happiness 7°",
-          "title_sort": "happiness 007°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "d1e240054a106e401be6253d3b297323"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "008",
           "detail_uid": "00735-008",
           "title": "happiness 8°",
-          "title_sort": "happiness 008°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "30f198ffb66fc486cd22b62f907b4877"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "009",
           "detail_uid": "00735-009",
           "title": "happiness 9°",
-          "title_sort": "happiness 009°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "6a7835edc7383467510f2ad1b6334778"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "010",
           "detail_uid": "00735-010",
           "title": "happiness 10°",
-          "title_sort": "happiness 010°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "cee37f1f200fd4e1d709bc50de6db2af"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "011",
           "detail_uid": "00735-011",
           "title": "happiness 11°",
-          "title_sort": "happiness 011°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "aff9b14c25ff4335c3c5bbf5d53e3dd8"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "012",
           "detail_uid": "00735-012",
           "title": "happiness 12°",
-          "title_sort": "happiness 012°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "8641585eb1a3dd0351bf6fed1d27dffd"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "013",
           "detail_uid": "00735-013",
           "title": "happiness 13°",
-          "title_sort": "happiness 013°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "5e3b24350c402dadcc64be9cc37b43e3"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "014",
           "detail_uid": "00735-014",
           "title": "happiness 14°",
-          "title_sort": "happiness 014°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "06d6114194172c6d5d16a9cc96b4426d"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "015",
           "detail_uid": "00735-015",
           "title": "happiness 15°",
-          "title_sort": "happiness 015°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "db341317a8d45218049ee693c12f3f6b"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "016",
           "detail_uid": "00735-016",
           "title": "happiness 16°",
-          "title_sort": "happiness 016°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "58acf5c106ee368e9f3e679badd53756"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "017",
           "detail_uid": "00735-017",
           "title": "happiness 17°",
-          "title_sort": "happiness 017°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "3e95dc20d925095da3f75a424c814653"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "018",
           "detail_uid": "00735-018",
           "title": "happiness 18°",
-          "title_sort": "happiness 018°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "58adbfadb3b5f8642fdec314c198e833"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "019",
           "detail_uid": "00735-019",
           "title": "happiness 19°",
-          "title_sort": "happiness 019°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "ada8430b144b5bcb8131ee86835ea391"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "020",
           "detail_uid": "00735-020",
           "title": "happiness 20°",
-          "title_sort": "happiness 020°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "21a6ebc6757a9870925e33cee5872fde"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "021",
           "detail_uid": "00735-021",
           "title": "happiness 21°",
-          "title_sort": "happiness 021°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "9ce7c67e46b9bf68fe0d50f297c3f0e1"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "022",
           "detail_uid": "00735-022",
           "title": "happiness 22°",
-          "title_sort": "happiness 022°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "d67076b51256a8db22e9d7e2957bbfee"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "023",
           "detail_uid": "00735-023",
           "title": "happiness 23°",
-          "title_sort": "happiness 023°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "3f030caa8a81bda99516e33adcb93e71"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "024",
           "detail_uid": "00735-024",
           "title": "happiness 24°",
-          "title_sort": "happiness 024°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "134f56cdd50308be62ed5dee8cc87ed6"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "025",
           "detail_uid": "00735-025",
           "title": "happiness 25°",
-          "title_sort": "happiness 025°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "f8a6cbe6133cdcb9abb50d6802a4c5b5"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "026",
           "detail_uid": "00735-026",
           "title": "happiness 26°",
-          "title_sort": "happiness 026°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "ec6625e2f30b6e885800b61965c44291"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "027",
           "detail_uid": "00735-027",
           "title": "happiness 27°",
-          "title_sort": "happiness 027°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "76a07dfa44ea9ca3026138aa6c14f70e"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "028",
           "detail_uid": "00735-028",
           "title": "happiness 28°",
-          "title_sort": "happiness 028°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "213e797606677a165483bb8bcf068fb9"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "029",
           "detail_uid": "00735-029",
           "title": "happiness 29°",
-          "title_sort": "happiness 029°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "19f58ff7955be996b483da550883938c"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "030",
           "detail_uid": "00735-030",
           "title": "happiness 30°",
-          "title_sort": "happiness 030°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "0ace40f563159fa81d2a0c08251301c1"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "031",
           "detail_uid": "00735-031",
           "title": "happiness 31°",
-          "title_sort": "happiness 031°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "a07dda805ec6654dc929df57276bcec0"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "032",
           "detail_uid": "00735-032",
           "title": "happiness 32°",
-          "title_sort": "happiness 032°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "8e259f2fc70a13ac6f6bf879db7c0929"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "033",
           "detail_uid": "00735-033",
           "title": "happiness 33°",
-          "title_sort": "happiness 033°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "7509a54c4427659087ccea3b0d188c40"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "034",
           "detail_uid": "00735-034",
           "title": "happiness 34°",
-          "title_sort": "happiness 034°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "2e49690859c8ed4fc5a107709e667368"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "035",
           "detail_uid": "00735-035",
           "title": "happiness 35°",
-          "title_sort": "happiness 035°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "7422e0e2c5a2dc260409353844ecd353"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "036",
           "detail_uid": "00735-036",
           "title": "happiness 36°",
-          "title_sort": "happiness 036°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "e6c01b308766cf75cb075398aef2e8f2"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "037",
           "detail_uid": "00735-037",
           "title": "happiness 37°",
-          "title_sort": "happiness 037°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "24decd568e1c79ff94e57bcb4c0d4325"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "038",
           "detail_uid": "00735-038",
           "title": "happiness 38°",
-          "title_sort": "happiness 038°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "2b94bd39588a78e17436d5ebd3bd26e6"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "039",
           "detail_uid": "00735-039",
           "title": "happiness 39°",
-          "title_sort": "happiness 039°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "a460292c8d3c9cfb5fe13d87949da781"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "040",
           "detail_uid": "00735-040",
           "title": "happiness 40°",
-          "title_sort": "happiness 040°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "076c3724e3200b545d57ccd69774eda4"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "041",
           "detail_uid": "00735-041",
           "title": "happiness 41°",
-          "title_sort": "happiness 041°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "97c5545a9f6c6435088b9103a878153e"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "042",
           "detail_uid": "00735-042",
           "title": "happiness 42°",
-          "title_sort": "happiness 042°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "769a5412e9fe01f7a36303aa1e372fb4"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "043",
           "detail_uid": "00735-043",
           "title": "happiness 43°",
-          "title_sort": "happiness 043°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "badb695e647ce819acd9430cf515965a"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "044",
           "detail_uid": "00735-044",
           "title": "happiness 44°",
-          "title_sort": "happiness 044°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "9b610d5fcdd04e774af36b16df0d1950"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "045",
           "detail_uid": "00735-045",
           "title": "happiness 45°",
-          "title_sort": "happiness 045°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "3c0d5e756f4420deb37ddae20e64a142"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "046",
           "detail_uid": "00735-046",
           "title": "happiness 46°",
-          "title_sort": "happiness 046°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "9b2327cc9af23630400eea96246aaef1"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "047",
           "detail_uid": "00735-047",
           "title": "happiness 47°",
-          "title_sort": "happiness 047°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "5fcf012419897935b10393b42af94f2d"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "048",
           "detail_uid": "00735-048",
           "title": "happiness 48°",
-          "title_sort": "happiness 048°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "9de75e1c328d5ca19da709838db8b80a"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "049",
           "detail_uid": "00735-049",
           "title": "happiness 49°",
-          "title_sort": "happiness 049°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "a19c2b09d9d8aa5915fbed2229e80dbf"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "050",
           "detail_uid": "00735-050",
           "title": "happiness 50°",
-          "title_sort": "happiness 050°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "56569e17a57edfec44a39b3c17e70314"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "051",
           "detail_uid": "00735-051",
           "title": "happiness 51°",
-          "title_sort": "happiness 051°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "14efa894139f1a701c206fc9ba831198"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "052",
           "detail_uid": "00735-052",
           "title": "happiness 52°",
-          "title_sort": "happiness 052°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "015adc483ee0ccf0d96e31a13a6ed804"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "053",
           "detail_uid": "00735-053",
           "title": "happiness 53°",
-          "title_sort": "happiness 053°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "89d1e38f6f59e908d00604c8b5106d6d"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "054",
           "detail_uid": "00735-054",
           "title": "happiness 54°",
-          "title_sort": "happiness 054°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "36ba8c5ce75a1d3af7e7de8708977d94"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "055",
           "detail_uid": "00735-055",
           "title": "happiness 55°",
-          "title_sort": "happiness 055°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "fc868bd4662d0b968bc9d33d0ce0c4c9"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "056",
           "detail_uid": "00735-056",
           "title": "happiness 56°",
-          "title_sort": "happiness 056°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "c5d5d0eeba01ea2b655cdafb36d3906a"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "057",
           "detail_uid": "00735-057",
           "title": "happiness 57°",
-          "title_sort": "happiness 057°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "a6e3044855a49648fbf25f3a2d7295bb"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "058",
           "detail_uid": "00735-058",
           "title": "happiness 58°",
-          "title_sort": "happiness 058°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "1c8aff5c6737506ed99e6351ff1496e0"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "059",
           "detail_uid": "00735-059",
           "title": "happiness 59°",
-          "title_sort": "happiness 059°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "e4212b90c0a5213ad6c49e96b925211f"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "060",
           "detail_uid": "00735-060",
           "title": "happiness 60°",
-          "title_sort": "happiness 060°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "aff94511d7129538881fabe01a95a1b3"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "061",
           "detail_uid": "00735-061",
           "title": "happiness 61°",
-          "title_sort": "happiness 061°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "9967c5c0df93ee86bc42496679f34e74"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "062",
           "detail_uid": "00735-062",
           "title": "happiness 62°",
-          "title_sort": "happiness 062°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "22ac47153eafa9e6befe2f65eedf6d00"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "063",
           "detail_uid": "00735-063",
           "title": "happiness 63°",
-          "title_sort": "happiness 063°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "38ba8de7ff1fa3cd270a15da44a53b41"
+          "layout": "work_details"
         },
         {
           "work_id": "00735",
           "detail_id": "064",
           "detail_uid": "00735-064",
           "title": "happiness 64°",
-          "title_sort": "happiness 064°",
           "project_subfolder": "64 degrees",
           "width_px": 2362,
           "height_px": 2362,
-          "layout": "work_details",
-          "checksum": "b3234dc0fd274bc1eeca6e6a4fd0a4a2"
+          "layout": "work_details"
         }
       ]
     }

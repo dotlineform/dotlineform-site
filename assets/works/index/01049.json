@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cec6edf9d2b54a4c0cf58b96413a321a",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-697586121cdfab510813d6e1451623a9",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01049",
-    "count": 6,
-    "hash": "blake2b-acd984695a3269b5b1795a7e957edaad",
-    "work_checksum": "blake2b-199212d78cd13bdb360ca9aaec37d7ac",
-    "details_checksum": "blake2b-acd984695a3269b5b1795a7e957edaad",
-    "record_checksum": "blake2b-cec6edf9d2b54a4c0cf58b96413a321a"
+    "count": 6
   },
   "work": {
     "work_id": "01049",
     "title": "fireworks form",
-    "title_sort": "fireworks form",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "fireworks-form"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 80.0,
     "width_cm": 80.0,
-    "depth_cm": null,
     "width_px": 9449,
-    "height_px": 9449,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "199212d78cd13bdb360ca9aaec37d7ac"
+    "height_px": 9449
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "01049-001",
           "title": "fireworks form - detail 1",
-          "title_sort": "fireworks form - detail 001",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "f21c2f61aaa999a5cd2449bb86094866"
+          "layout": "work_details"
         },
         {
           "work_id": "01049",
           "detail_id": "002",
           "detail_uid": "01049-002",
           "title": "fireworks form - detail 2",
-          "title_sort": "fireworks form - detail 002",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "048b10baa4aef31d2af9881e9fc52a39"
+          "layout": "work_details"
         },
         {
           "work_id": "01049",
           "detail_id": "003",
           "detail_uid": "01049-003",
           "title": "fireworks form - detail 3",
-          "title_sort": "fireworks form - detail 003",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "34643e2bff80ccd7415a202520cf610e"
+          "layout": "work_details"
         },
         {
           "work_id": "01049",
           "detail_id": "004",
           "detail_uid": "01049-004",
           "title": "fireworks form - detail 4",
-          "title_sort": "fireworks form - detail 004",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "b34d326d5d3c1a6e05642046c5f3f38e"
+          "layout": "work_details"
         },
         {
           "work_id": "01049",
           "detail_id": "005",
           "detail_uid": "01049-005",
           "title": "fireworks form - detail 5",
-          "title_sort": "fireworks form - detail 005",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "4a39a3cb1060cd44e7f527ef6f5200b4"
+          "layout": "work_details"
         },
         {
           "work_id": "01049",
           "detail_id": "006",
           "detail_uid": "01049-006",
           "title": "fireworks form - detail 6",
-          "title_sort": "fireworks form - detail 006",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "bb000d1682ef0a75674fd434e947f58f"
+          "layout": "work_details"
         }
       ]
     }

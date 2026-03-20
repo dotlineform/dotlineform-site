@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-468ea1e127359456a6d8f5be98ab961b",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-fa5a8af8ce2cf263a7b679257b31af6e",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00893",
-    "count": 8,
-    "hash": "blake2b-11c0554ce16cb616550938ade0e48bd5",
-    "work_checksum": "blake2b-2468f133fa95578e1b87702575a09814",
-    "details_checksum": "blake2b-11c0554ce16cb616550938ade0e48bd5",
-    "record_checksum": "blake2b-468ea1e127359456a6d8f5be98ab961b"
+    "count": 8
   },
   "work": {
     "work_id": "00893",
     "title": "doll moiré",
-    "title_sort": "doll moiré",
     "year": 2008,
     "year_display": "c. 2008",
     "series_ids": [
       "doll"
     ],
-    "storage": null,
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 42.0,
     "width_cm": 59.4,
-    "depth_cm": null,
     "width_px": 1240,
-    "height_px": 1909,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "2468f133fa95578e1b87702575a09814"
+    "height_px": 1909
   },
   "sections": [
     {
@@ -44,96 +30,80 @@
           "detail_id": "001",
           "detail_uid": "00893-001",
           "title": "doll moiré (version 1)",
-          "title_sort": "doll moiré (version 001)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "a3d5e50cde31bb7029ba5a0ab97e9a1b"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "002",
           "detail_uid": "00893-002",
           "title": "doll moiré (version 2)",
-          "title_sort": "doll moiré (version 002)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "d7e621662d50f026c994c883fc3fd9bd"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "003",
           "detail_uid": "00893-003",
           "title": "doll moiré (version 3)",
-          "title_sort": "doll moiré (version 003)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "30cdd3ff89180c21b4a9b78aa8c89763"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "004",
           "detail_uid": "00893-004",
           "title": "doll moiré (version 4)",
-          "title_sort": "doll moiré (version 004)",
           "project_subfolder": "versions (2022)",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "3cc23fe9bf284016cdb43547bede0f34"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "005",
           "detail_uid": "00893-005",
           "title": "doll moiré (version 4.1)",
-          "title_sort": "doll moiré (version 004.001)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "3a6a4374689745d58c9d2df934e63272"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "006",
           "detail_uid": "00893-006",
           "title": "doll moiré (version 4.2)",
-          "title_sort": "doll moiré (version 004.002)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "66e94bdec3bebfba61aeda885949527e"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "007",
           "detail_uid": "00893-007",
           "title": "doll moiré (version 4.3)",
-          "title_sort": "doll moiré (version 004.003)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "667b2402ebff69a741e68eb66888deaa"
+          "layout": "work_details"
         },
         {
           "work_id": "00893",
           "detail_id": "008",
           "detail_uid": "00893-008",
           "title": "doll moiré (version 4.4)",
-          "title_sort": "doll moiré (version 004.004)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "8f7a2698d5797c73ecd15c7c48bd5adb"
+          "layout": "work_details"
         }
       ]
     }

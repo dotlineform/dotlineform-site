@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b38edf8cf2fdf5a135214fa1a6cb6fc9",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-1af666b2064ea149f114174e30669a0c",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01051",
-    "count": 6,
-    "hash": "blake2b-5541cf6c982ad0bded9456e2d17c854b",
-    "work_checksum": "blake2b-cdb6f19dc8f77602f2071c0487657bff",
-    "details_checksum": "blake2b-5541cf6c982ad0bded9456e2d17c854b",
-    "record_checksum": "blake2b-b38edf8cf2fdf5a135214fa1a6cb6fc9"
+    "count": 6
   },
   "work": {
     "work_id": "01051",
     "title": "fireworks particles version",
-    "title_sort": "fireworks particles version",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "fireworks-form"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 76.0,
     "width_cm": 76.0,
-    "depth_cm": null,
     "width_px": 8976,
-    "height_px": 8976,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "cdb6f19dc8f77602f2071c0487657bff"
+    "height_px": 8976
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "01051-001",
           "title": "fireworks particles version - detail 1",
-          "title_sort": "fireworks particles version - detail 001",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "d5f0cf3c4b2991eb848fe822b619c93a"
+          "layout": "work_details"
         },
         {
           "work_id": "01051",
           "detail_id": "002",
           "detail_uid": "01051-002",
           "title": "fireworks particles version - detail 2",
-          "title_sort": "fireworks particles version - detail 002",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "edb3d05edf0fd1658c30b859ad315faa"
+          "layout": "work_details"
         },
         {
           "work_id": "01051",
           "detail_id": "003",
           "detail_uid": "01051-003",
           "title": "fireworks particles version - detail 3",
-          "title_sort": "fireworks particles version - detail 003",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "f6175e97b2bdf4ea9e31f6fc1c7e6d51"
+          "layout": "work_details"
         },
         {
           "work_id": "01051",
           "detail_id": "004",
           "detail_uid": "01051-004",
           "title": "fireworks particles version - detail 4",
-          "title_sort": "fireworks particles version - detail 004",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "3201fef97be9a83a76b3e25bedd406ac"
+          "layout": "work_details"
         },
         {
           "work_id": "01051",
           "detail_id": "005",
           "detail_uid": "01051-005",
           "title": "fireworks particles version - detail 5",
-          "title_sort": "fireworks particles version - detail 005",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "3499455bd8e789d5b2dc404b745d2a7a"
+          "layout": "work_details"
         },
         {
           "work_id": "01051",
           "detail_id": "006",
           "detail_uid": "01051-006",
           "title": "fireworks particles version - detail 6",
-          "title_sort": "fireworks particles version - detail 006",
           "project_subfolder": "details",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "60490c0e223a7e59dd233abac09a3c48"
+          "layout": "work_details"
         }
       ]
     }

@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c5c6a807287dbfb0b81d6bbf3fdebc9f",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-0799e89b0dc4ac92a0b69ee038d5a53a",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00525",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-2c486cad56109b2c1bec59a074b7b971",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c5c6a807287dbfb0b81d6bbf3fdebc9f"
+    "count": 0
   },
   "work": {
     "work_id": "00525",
     "title": "nerve 2",
-    "title_sort": "nerve 002",
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "4",
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 40.0,
-    "depth_cm": null,
     "width_px": 4800,
-    "height_px": 3600,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "2c486cad56109b2c1bec59a074b7b971"
+    "height_px": 3600
   },
   "sections": []
 }

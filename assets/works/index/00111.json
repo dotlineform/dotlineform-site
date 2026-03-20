@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-14a659e1ea250387957518fc24d6bd36",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-8ad8b84d5c3b9614c1e682eb80c46f8d",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00111",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-db02276e6990a8af75e992ab4bb67276",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-14a659e1ea250387957518fc24d6bd36"
+    "count": 0
   },
   "work": {
     "work_id": "00111",
     "title": "response to standing nude",
-    "title_sort": "response to standing nude",
     "year": 1990,
     "year_display": "1990",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "ink on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 7016,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "db02276e6990a8af75e992ab4bb67276"
+    "height_px": 7016
   },
   "sections": []
 }

@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-9f2f733ecfc81abb7c1588999077a143",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-83a9d868bef1165710be0d08e6476c9f",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00121",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-083fa4c72d562acce617928653066164",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-9f2f733ecfc81abb7c1588999077a143"
+    "count": 0
   },
   "work": {
     "work_id": "00121",
     "title": "learning to draw landscapes 8",
-    "title_sort": "learning to draw landscapes 008",
     "year": 2010,
     "year_display": "c. 2010?",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 20.5,
-    "depth_cm": null,
     "width_px": 2480,
-    "height_px": 3508,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "083fa4c72d562acce617928653066164"
+    "height_px": 3508
   },
   "sections": []
 }

@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a0941a4a2a287cd4d1be4242ee365c92",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-da238c1bbce115091b3a1587b276c1ac",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00755",
-    "count": 3,
-    "hash": "blake2b-3a99085223a1298993872b5c88f893a8",
-    "work_checksum": "blake2b-2a4a59cc9f324ab1b1ae3cb9c7022ca0",
-    "details_checksum": "blake2b-3a99085223a1298993872b5c88f893a8",
-    "record_checksum": "blake2b-a0941a4a2a287cd4d1be4242ee365c92"
+    "count": 3
   },
   "work": {
     "work_id": "00755",
     "title": "assembly code 3",
-    "title_sort": "assembly code 003",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "assembly-codes"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 120.0,
-    "depth_cm": null,
     "width_px": 14173,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "2a4a59cc9f324ab1b1ae3cb9c7022ca0"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "007",
           "detail_uid": "00755-007",
           "title": "assembly code 3 (detail 1)",
-          "title_sort": "assembly code 003 (detail 001)",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "34277c93457b67674fd03fcf9f919fa6"
+          "layout": "work_details"
         },
         {
           "work_id": "00755",
           "detail_id": "008",
           "detail_uid": "00755-008",
           "title": "assembly code 3 (detail 2)",
-          "title_sort": "assembly code 003 (detail 002)",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "3fb768b0961b550f522516d640985a30"
+          "layout": "work_details"
         },
         {
           "work_id": "00755",
           "detail_id": "009",
           "detail_uid": "00755-009",
           "title": "assembly code 3 (detail 3)",
-          "title_sort": "assembly code 003 (detail 003)",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "f9ed05fa5c74ffdac331af02fb2d9fe0"
+          "layout": "work_details"
         }
       ]
     }

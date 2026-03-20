@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-b20e163df42d66e4e835ba3607329a40",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-0b2b861a04be4647d9da347ad6fbf775",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00222",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-9f898e319c530565cb51719d42eeb6e7",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-b20e163df42d66e4e835ba3607329a40"
+    "count": 0
   },
   "work": {
     "work_id": "00222",
     "title": "colouring book 6",
-    "title_sort": "colouring book 006",
     "year": 1996,
     "year_display": "1996",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 27.0,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2480,
-    "height_px": 3213,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "9f898e319c530565cb51719d42eeb6e7"
+    "height_px": 3213
   },
   "sections": []
 }

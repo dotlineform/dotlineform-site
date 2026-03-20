@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-9f6a0f635d3d8187ae349d9b563770ac",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-bda3ecbcbf051f827324c22cba99dffc",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00761",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-10cb79c6a41feb9bb448032f6f1d08e5",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-9f6a0f635d3d8187ae349d9b563770ac"
+    "count": 0
   },
   "work": {
     "work_id": "00761",
     "title": "base k (2) edit",
-    "title_sort": "base k (002) edit",
     "year": 2007,
     "year_display": "2007",
     "series_ids": [
       "base-series"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "10cb79c6a41feb9bb448032f6f1d08e5"
+    "height_px": 3543
   },
   "sections": []
 }

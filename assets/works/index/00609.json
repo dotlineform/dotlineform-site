@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-600d20b496cc39b0f6424e1cd6545164",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-84574414ac0e7b84879d3663309e4591",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00609",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-0354a8ae3f4382d0a37a87774cf2d020",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-600d20b496cc39b0f6424e1cd6545164"
+    "count": 0
   },
   "work": {
     "work_id": "00609",
     "title": "wa 10",
-    "title_sort": "wa 010",
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
       "wa"
     ],
-    "storage": null,
     "medium_type": "digital composite",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 40.0,
     "width_cm": 40.0,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 4724,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "0354a8ae3f4382d0a37a87774cf2d020"
+    "height_px": 4724
   },
   "sections": []
 }

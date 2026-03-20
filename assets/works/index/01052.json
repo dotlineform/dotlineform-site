@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8a26040ab68235508dea1c015c0ba6cd",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-e4f35a16d412a995451e9c72cf32a490",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01052",
-    "count": 3,
-    "hash": "blake2b-20f164672348b734e2a8228c0b5958a1",
-    "work_checksum": "blake2b-a46397bccb234f8bbf43d7f6b8954e1f",
-    "details_checksum": "blake2b-20f164672348b734e2a8228c0b5958a1",
-    "record_checksum": "blake2b-8a26040ab68235508dea1c015c0ba6cd"
+    "count": 3
   },
   "work": {
     "work_id": "01052",
     "title": "flowers 1.jpg",
-    "title_sort": "flowers 001.jpg",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
       "flowers"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 120.0,
-    "depth_cm": null,
     "width_px": 14173,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "a46397bccb234f8bbf43d7f6b8954e1f"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "001",
           "detail_uid": "01052-001",
           "title": "flowers 1 - detail 1",
-          "title_sort": "flowers 001 - detail 001",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "5aafb75fcf1e7153ca04554c99eb70b4"
+          "layout": "work_details"
         },
         {
           "work_id": "01052",
           "detail_id": "002",
           "detail_uid": "01052-002",
           "title": "flowers 1 - detail 2",
-          "title_sort": "flowers 001 - detail 002",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "4f5bf4a68f0fcda4d5460e9a844f77b9"
+          "layout": "work_details"
         },
         {
           "work_id": "01052",
           "detail_id": "003",
           "detail_uid": "01052-003",
           "title": "flowers 1 - detail 3",
-          "title_sort": "flowers 001 - detail 003",
           "project_subfolder": "details",
           "width_px": 2000,
           "height_px": 2000,
-          "layout": "work_details",
-          "checksum": "74f1d31e88934a72bca9817d791d84db"
+          "layout": "work_details"
         }
       ]
     }

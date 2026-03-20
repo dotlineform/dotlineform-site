@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a70490d95895635b6d1637b646e802db",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-689b1cd1ff19c1abfdc92055c1c885fa",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00165",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-e21abf24a73073d30fc101d7e3bcf8bd",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-a70490d95895635b6d1637b646e802db"
+    "count": 0
   },
   "work": {
     "work_id": "00165",
     "title": "angels",
-    "title_sort": "angels",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "writing",
     "medium_caption": "printed page",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2862,
-    "height_px": 4061,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "e21abf24a73073d30fc101d7e3bcf8bd"
+    "height_px": 4061
   },
   "sections": []
 }

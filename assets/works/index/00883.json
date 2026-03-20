@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-663a51d7aa814dffe57baae969bdc942",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-89202da583f6e409c60094029185694f",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00883",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-5fa4f227699d9cd92a15d7dec595857a",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-663a51d7aa814dffe57baae969bdc942"
+    "count": 0
   },
   "work": {
     "work_id": "00883",
     "title": "doll forest (green)",
-    "title_sort": "doll forest (green)",
     "year": 2007,
     "year_display": "2007",
     "series_ids": [
       "doll"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "5fa4f227699d9cd92a15d7dec595857a"
+    "height_px": 5906
   },
   "sections": []
 }

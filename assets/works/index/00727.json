@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-2e45082362abea9007ae211a7a5aff2b",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-2a48cc7ebe060eb950e0a08581de9fe2",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00727",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8916879d5c8a3dbf36a4a963acd5b62a",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-2e45082362abea9007ae211a7a5aff2b"
+    "count": 0
   },
   "work": {
     "work_id": "00727",
     "title": "a humid home full of light [6]",
-    "title_sort": "a humid home full of light [006]",
     "year": 2013,
     "year_display": "2013",
     "series_ids": [
       "a-humid-home-full-of-light"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 36.0,
     "width_cm": 48.0,
-    "depth_cm": null,
     "width_px": 5669,
-    "height_px": 4252,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "8916879d5c8a3dbf36a4a963acd5b62a"
+    "height_px": 4252
   },
   "sections": []
 }

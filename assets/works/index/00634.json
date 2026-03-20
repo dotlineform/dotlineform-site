@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d0bf43f653febccb86824dd33ac4f7f5",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-cff8bb18a08b100c3b52a52c7c181b17",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00634",
-    "count": 25,
-    "hash": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
-    "work_checksum": "blake2b-159cc4af724543db3916469d8dcce6f8",
-    "details_checksum": "blake2b-b4581f0bdf4c580b2ec67e64bfea19b2",
-    "record_checksum": "blake2b-d0bf43f653febccb86824dd33ac4f7f5"
+    "count": 25
   },
   "work": {
     "work_id": "00634",
     "title": "bits symbols 1",
-    "title_sort": "bits symbols 001",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "qrnt"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 8858,
-    "height_px": 8858,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "159cc4af724543db3916469d8dcce6f8"
+    "height_px": 8858
   },
   "sections": [
     {
@@ -44,48 +30,40 @@
           "detail_id": "001",
           "detail_uid": "00634-001",
           "title": "bits symbols 1",
-          "title_sort": "bits symbols 001",
           "project_subfolder": "versions",
           "width_px": 8858,
           "height_px": 8858,
-          "layout": "work_details",
-          "checksum": "b6671691ca6486264c62ad9afccefcdd"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "002",
           "detail_uid": "00634-002",
           "title": "bits symbols 2",
-          "title_sort": "bits symbols 002",
           "project_subfolder": "versions",
           "width_px": 17717,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "ba4840d70200dc6590f89747f5962893"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "003",
           "detail_uid": "00634-003",
           "title": "bits symbols 3",
-          "title_sort": "bits symbols 003",
           "project_subfolder": "versions",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "0a4d6bc38c17313a72ec81266dfa7623"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "004",
           "detail_uid": "00634-004",
           "title": "bits symbols 4",
-          "title_sort": "bits symbols 004",
           "project_subfolder": "versions",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "cc7f3c2f3d44524f60bb007563fc0570"
+          "layout": "work_details"
         }
       ]
     },
@@ -97,144 +75,120 @@
           "detail_id": "005",
           "detail_uid": "00634-005",
           "title": "bits symbols 1.1",
-          "title_sort": "bits symbols 001.001",
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "layout": "work_details",
-          "checksum": "748107aa0b294bd3c353fec3a1f71aad"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "006",
           "detail_uid": "00634-006",
           "title": "bits symbols 1.2",
-          "title_sort": "bits symbols 001.002",
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "layout": "work_details",
-          "checksum": "02d65524dfb78be494523e27e9d177d1"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "007",
           "detail_uid": "00634-007",
           "title": "bits symbols 1.3",
-          "title_sort": "bits symbols 001.003",
           "project_subfolder": "details",
           "width_px": 8858,
           "height_px": 8858,
-          "layout": "work_details",
-          "checksum": "7b7b9cd22177aa82c459060138e50278"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "008",
           "detail_uid": "00634-008",
           "title": "bits symbols 2.1",
-          "title_sort": "bits symbols 002.001",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "45758a9762a4bf9516cafaf3d848a804"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "009",
           "detail_uid": "00634-009",
           "title": "bits symbols 2.2",
-          "title_sort": "bits symbols 002.002",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "349070c00e8df34ee0db4d3bb2ff177f"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "010",
           "detail_uid": "00634-010",
           "title": "bits symbols 2.3",
-          "title_sort": "bits symbols 002.003",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "9115e05952211da9a9ce2874e98c5ed7"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "011",
           "detail_uid": "00634-011",
           "title": "bits symbols 3.1",
-          "title_sort": "bits symbols 003.001",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "cb048edd55f657c7f6b8fb89c86220b7"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "012",
           "detail_uid": "00634-012",
           "title": "bits symbols 3.2",
-          "title_sort": "bits symbols 003.002",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "41aacaa6f4f88c6f72778eaddfc8deb7"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "013",
           "detail_uid": "00634-013",
           "title": "bits symbols 3.3",
-          "title_sort": "bits symbols 003.003",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "9e59e8049e90f3cd8bdfaf1cf7621c7f"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "014",
           "detail_uid": "00634-014",
           "title": "bits symbols 4.1",
-          "title_sort": "bits symbols 004.001",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "26109102e26637f72c6d8b7840b99d44"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "015",
           "detail_uid": "00634-015",
           "title": "bits symbols 4.2",
-          "title_sort": "bits symbols 004.002",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "9adb96a2e8f3b621e96ccfa9a0c8632e"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "016",
           "detail_uid": "00634-016",
           "title": "bits symbols 4.3",
-          "title_sort": "bits symbols 004.003",
           "project_subfolder": "details",
           "width_px": 11811,
           "height_px": 11811,
-          "layout": "work_details",
-          "checksum": "738ade4f4975a4e0972f65b20f3c90ee"
+          "layout": "work_details"
         }
       ]
     },
@@ -246,108 +200,90 @@
           "detail_id": "017",
           "detail_uid": "00634-017",
           "title": "bits symbols 1.1.1",
-          "title_sort": "bits symbols 001.001.001",
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "layout": "work_details",
-          "checksum": "e789d66f40a1270f7a3e111e1a5375a7"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "018",
           "detail_uid": "00634-018",
           "title": "bits symbols 1.1.2",
-          "title_sort": "bits symbols 001.001.002",
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "layout": "work_details",
-          "checksum": "210b6a9dd52c5992009f997ca8276216"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "019",
           "detail_uid": "00634-019",
           "title": "bits symbols 1.1.3",
-          "title_sort": "bits symbols 001.001.003",
           "project_subfolder": "details ^2",
           "width_px": 1536,
           "height_px": 1536,
-          "layout": "work_details",
-          "checksum": "66ac9a610bdfd640f299bd59c66fbe5e"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "020",
           "detail_uid": "00634-020",
           "title": "bits symbols 1.2.1",
-          "title_sort": "bits symbols 001.002.001",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "9bfe2562707395217ac6061b13ecebe6"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "021",
           "detail_uid": "00634-021",
           "title": "bits symbols 1.2.2",
-          "title_sort": "bits symbols 001.002.002",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "90e89fa00743a6c7ad860e87d6d9fe2f"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "022",
           "detail_uid": "00634-022",
           "title": "bits symbols 1.2.3",
-          "title_sort": "bits symbols 001.002.003",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "d5422978b2eb6052ca5a7b4a8dc50a07"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "023",
           "detail_uid": "00634-023",
           "title": "bits symbols 1.3.1",
-          "title_sort": "bits symbols 001.003.001",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "1154d05490a92c80fd7d2b1352154479"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "024",
           "detail_uid": "00634-024",
           "title": "bits symbols 1.3.2",
-          "title_sort": "bits symbols 001.003.002",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "972cd583550084f2a0882c526cb1477d"
+          "layout": "work_details"
         },
         {
           "work_id": "00634",
           "detail_id": "025",
           "detail_uid": "00634-025",
           "title": "bits symbols 1.3.3",
-          "title_sort": "bits symbols 001.003.003",
           "project_subfolder": "details ^2",
           "width_px": 1535,
           "height_px": 1535,
-          "layout": "work_details",
-          "checksum": "4d0398f168bda99a4881589fe250cd67"
+          "layout": "work_details"
         }
       ]
     }

@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3e9be74f7eb636bb366cb1ef473a2e20",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-8775b577242b8beb94d45489c51f97d8",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00495",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-66c17d52ff733c2f651dd7cf8dfb0a89",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-3e9be74f7eb636bb366cb1ef473a2e20"
+    "count": 0
   },
   "work": {
     "work_id": "00495",
     "title": "mm quantum 1.7",
-    "title_sort": "mm quantum 001.007",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "mm"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "66c17d52ff733c2f651dd7cf8dfb0a89"
+    "height_px": 3543
   },
   "sections": []
 }

@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-965699c2b7f4360273f1e56812183ac5",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-49bef29836e1d70a0249c74d4c4081d6",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00508",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-50ed03a420ad6e7a6c2409b1996b6dc1",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-965699c2b7f4360273f1e56812183ac5"
+    "count": 0
   },
   "work": {
     "work_id": "00508",
     "title": "mm quantum 2.6",
-    "title_sort": "mm quantum 002.006",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "mm"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 4724,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "50ed03a420ad6e7a6c2409b1996b6dc1"
+    "height_px": 3543
   },
   "sections": []
 }

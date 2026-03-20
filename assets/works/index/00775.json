@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c5d4f17d9209ca1fc7978ca467406aef",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-c89e92ff17a3647d1864a1c6e7500991",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00775",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-9d104c03075ef97f5167b6821d1f84a4",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-c5d4f17d9209ca1fc7978ca467406aef"
+    "count": 0
   },
   "work": {
     "work_id": "00775",
     "title": "birds [2]",
-    "title_sort": "birds [002]",
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
       "birds"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 56.0,
     "width_cm": 100.0,
-    "depth_cm": null,
     "width_px": 11811,
-    "height_px": 6644,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "9d104c03075ef97f5167b6821d1f84a4"
+    "height_px": 6644
   },
   "sections": []
 }

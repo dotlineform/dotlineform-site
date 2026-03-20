@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7a2ccbb7783ad3c7a6e3e31b356807b1",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-8fa259b901d381f25faa0e842ad38874",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00797",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-f11e020df214e94f41438b709825eca5",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7a2ccbb7783ad3c7a6e3e31b356807b1"
+    "count": 0
   },
   "work": {
     "work_id": "00797",
     "title": "body space (reclining state) 6",
-    "title_sort": "body space (reclining state) 006",
     "year": 2019,
     "year_display": "2019",
     "series_ids": [
       "body-space-reclining-state"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 20.0,
     "width_cm": 20.0,
-    "depth_cm": null,
     "width_px": 2362,
-    "height_px": 2362,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "f11e020df214e94f41438b709825eca5"
+    "height_px": 2362
   },
   "sections": []
 }

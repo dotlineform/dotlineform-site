@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e335eef968c71e79656215c1d515228e",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-d936c91b2692fc54a1c9518b1ade1802",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00463",
-    "count": 7,
-    "hash": "blake2b-928cf9d608756578feab4a12984c31c9",
-    "work_checksum": "blake2b-04cb4bd1dc53cb7f66794bf8ddcfdbf3",
-    "details_checksum": "blake2b-928cf9d608756578feab4a12984c31c9",
-    "record_checksum": "blake2b-e335eef968c71e79656215c1d515228e"
+    "count": 7
   },
   "work": {
     "work_id": "00463",
     "title": "living surface hand form",
-    "title_sort": "living surface hand form",
     "year": 2004,
     "year_display": "1989, 2004",
     "series_ids": [
       "living-surface-hand-form"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 68.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 8031,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "04cb4bd1dc53cb7f66794bf8ddcfdbf3"
+    "height_px": 8031
   },
   "sections": [
     {
@@ -44,12 +30,10 @@
           "detail_id": "001",
           "detail_uid": "00463-001",
           "title": "living surface hand form (original painting, 1989)",
-          "title_sort": "living surface hand form (original painting, 1989)",
           "project_subfolder": "original painting",
           "width_px": 2169,
           "height_px": 2830,
-          "layout": "work_details",
-          "checksum": "d1b56989df2085b073d3ce4a1c8a531f"
+          "layout": "work_details"
         }
       ]
     },
@@ -61,72 +45,60 @@
           "detail_id": "002",
           "detail_uid": "00463-002",
           "title": "living surface (version 1)",
-          "title_sort": "living surface (version 001)",
           "project_subfolder": "versions",
           "width_px": 5315,
           "height_px": 5315,
-          "layout": "work_details",
-          "checksum": "c20ce5a83191546b6dccbb110f02a9e8"
+          "layout": "work_details"
         },
         {
           "work_id": "00463",
           "detail_id": "003",
           "detail_uid": "00463-003",
           "title": "living surface (version 2)",
-          "title_sort": "living surface (version 002)",
           "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
-          "layout": "work_details",
-          "checksum": "b7c825d04f7b10e496ddf6dfc7d08ba4"
+          "layout": "work_details"
         },
         {
           "work_id": "00463",
           "detail_id": "004",
           "detail_uid": "00463-004",
           "title": "living surface (version 3)",
-          "title_sort": "living surface (version 003)",
           "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
-          "layout": "work_details",
-          "checksum": "5483ab958e6e49659839c14652f3c663"
+          "layout": "work_details"
         },
         {
           "work_id": "00463",
           "detail_id": "005",
           "detail_uid": "00463-005",
           "title": "living surface (version 3) detail",
-          "title_sort": "living surface (version 003) detail",
           "project_subfolder": "versions",
           "width_px": 1400,
           "height_px": 1400,
-          "layout": "work_details",
-          "checksum": "cabaadfa21e84ca0ade65ee919c71b6a"
+          "layout": "work_details"
         },
         {
           "work_id": "00463",
           "detail_id": "006",
           "detail_uid": "00463-006",
           "title": "living surface (version 4)",
-          "title_sort": "living surface (version 004)",
           "project_subfolder": "versions",
           "width_px": 7087,
           "height_px": 7087,
-          "layout": "work_details",
-          "checksum": "95a59eff9f21aa6a2324fe8f183b3b41"
+          "layout": "work_details"
         },
         {
           "work_id": "00463",
           "detail_id": "007",
           "detail_uid": "00463-007",
           "title": "living surface (version 4) detail",
-          "title_sort": "living surface (version 004) detail",
           "project_subfolder": "versions",
           "width_px": 1400,
           "height_px": 1400,
-          "layout": "work_details",
-          "checksum": "f0dda0d6459ce2f103a8b253e8126428"
+          "layout": "work_details"
         }
       ]
     }

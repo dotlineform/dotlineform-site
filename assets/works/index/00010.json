@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f6e75327945bbe3d8bede65cc99d70e4",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-970a78f5c78c3ce32869ef8e627bd558",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00010",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8373c2efc14d5bb2eafeefb4fec8b7b0",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f6e75327945bbe3d8bede65cc99d70e4"
+    "count": 0
   },
   "work": {
     "work_id": "00010",
     "title": "slaughter (composite)",
-    "title_sort": "slaughter (composite)",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photocopy",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4961,
-    "height_px": 7015,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "8373c2efc14d5bb2eafeefb4fec8b7b0"
+    "height_px": 7015
   },
   "sections": []
 }

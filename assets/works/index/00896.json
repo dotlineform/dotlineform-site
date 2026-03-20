@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-c9302d30ae99dce3272aa2dfeb57ed78",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-8ab816b48e9706bd0cac4a4e6e15451a",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00896",
-    "count": 6,
-    "hash": "blake2b-9255c5918c4c3e93d17bafbd7b99a85b",
-    "work_checksum": "blake2b-03df796f33804c8998421922a16ba8dc",
-    "details_checksum": "blake2b-9255c5918c4c3e93d17bafbd7b99a85b",
-    "record_checksum": "blake2b-c9302d30ae99dce3272aa2dfeb57ed78"
+    "count": 6
   },
   "work": {
     "work_id": "00896",
     "title": "doll still life 1",
-    "title_sort": "doll still life 001",
     "year": 2005,
     "year_display": "2005",
     "series_ids": [
       "doll"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "giclée print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 40.0,
     "width_cm": 30.0,
-    "depth_cm": null,
     "width_px": 3543,
-    "height_px": 4724,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "03df796f33804c8998421922a16ba8dc"
+    "height_px": 4724
   },
   "sections": [
     {
@@ -44,72 +30,60 @@
           "detail_id": "001",
           "detail_uid": "00896-001",
           "title": "doll still life 1 (version 1)",
-          "title_sort": "doll still life 001 (version 001)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "c7141ee43e2e6d89561e791d2d708dab"
+          "layout": "work_details"
         },
         {
           "work_id": "00896",
           "detail_id": "002",
           "detail_uid": "00896-002",
           "title": "doll still life 1 (version 2)",
-          "title_sort": "doll still life 001 (version 002)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "74d7ed8c3e687bccbb93b489b70b36f8"
+          "layout": "work_details"
         },
         {
           "work_id": "00896",
           "detail_id": "003",
           "detail_uid": "00896-003",
           "title": "doll still life 1 (version 3)",
-          "title_sort": "doll still life 001 (version 003)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "458aeb001b61dee479cd5d372b7310f8"
+          "layout": "work_details"
         },
         {
           "work_id": "00896",
           "detail_id": "004",
           "detail_uid": "00896-004",
           "title": "doll still life 1 (version 4)",
-          "title_sort": "doll still life 001 (version 004)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "8494f58aa3cf3f9576cdd24c6e0ccf32"
+          "layout": "work_details"
         },
         {
           "work_id": "00896",
           "detail_id": "005",
           "detail_uid": "00896-005",
           "title": "doll still life 1 (version 5)",
-          "title_sort": "doll still life 001 (version 005)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "849af2753e3286e4f82e623131b529e5"
+          "layout": "work_details"
         },
         {
           "work_id": "00896",
           "detail_id": "006",
           "detail_uid": "00896-006",
           "title": "doll still life 1 (version 6)",
-          "title_sort": "doll still life 001 (version 006)",
           "project_subfolder": "versions (2022)",
           "width_px": 3543,
           "height_px": 3543,
-          "layout": "work_details",
-          "checksum": "65fa700d4be55febd7325ac9b3c175e2"
+          "layout": "work_details"
         }
       ]
     }

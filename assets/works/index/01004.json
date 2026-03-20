@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-8f67e14bce5f203d5036fa2512f9ed5d",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-4c084d027060c80069ccc8a1914be836",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01004",
-    "count": 4,
-    "hash": "blake2b-2f670d5157938bcad44e44b4af54e2d4",
-    "work_checksum": "blake2b-f768c0f5a38ccf3e3457ed7986aa3087",
-    "details_checksum": "blake2b-2f670d5157938bcad44e44b4af54e2d4",
-    "record_checksum": "blake2b-8f67e14bce5f203d5036fa2512f9ed5d"
+    "count": 4
   },
   "work": {
     "work_id": "01004",
     "title": "dots (equations)",
-    "title_sort": "dots (equations)",
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
       "dots"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "f768c0f5a38ccf3e3457ed7986aa3087"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,48 +30,40 @@
           "detail_id": "001",
           "detail_uid": "01004-001",
           "title": "dots (equations) [detail 1]",
-          "title_sort": "dots (equations) [detail 001]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "1e2d71db8d6c0ea4580dd0f636351367"
+          "layout": "work_details"
         },
         {
           "work_id": "01004",
           "detail_id": "002",
           "detail_uid": "01004-002",
           "title": "dots (equations) [detail 2]",
-          "title_sort": "dots (equations) [detail 002]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "d15aa8ebd7ab63dce2691ebee214a0b7"
+          "layout": "work_details"
         },
         {
           "work_id": "01004",
           "detail_id": "003",
           "detail_uid": "01004-003",
           "title": "dots (equations) [detail 3]",
-          "title_sort": "dots (equations) [detail 003]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "a10d88ba2451f33237e7f5653bd789f5"
+          "layout": "work_details"
         },
         {
           "work_id": "01004",
           "detail_id": "004",
           "detail_uid": "01004-004",
           "title": "dots (equations) [detail 4]",
-          "title_sort": "dots (equations) [detail 004]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "2d484f57804f4f5982f860b4685f55f5"
+          "layout": "work_details"
         }
       ]
     }

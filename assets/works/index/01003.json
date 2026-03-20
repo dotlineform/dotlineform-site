@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7e02f123b0d8814c72c16b4205b68d3f",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-433f93cad0c5de86164c802092853956",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "01003",
-    "count": 3,
-    "hash": "blake2b-5748ba64787d914ff445ac613f4f09f6",
-    "work_checksum": "blake2b-e9e519a533ecc7927e674512d2456015",
-    "details_checksum": "blake2b-5748ba64787d914ff445ac613f4f09f6",
-    "record_checksum": "blake2b-7e02f123b0d8814c72c16b4205b68d3f"
+    "count": 3
   },
   "work": {
     "work_id": "01003",
     "title": "dots (second normal form)",
-    "title_sort": "dots (second normal form)",
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
       "dots"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "e9e519a533ecc7927e674512d2456015"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "001",
           "detail_uid": "01003-001",
           "title": "dots (second normal form) [detail 1]",
-          "title_sort": "dots (second normal form) [detail 001]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "ce404dfa7dde901be11193815de3231d"
+          "layout": "work_details"
         },
         {
           "work_id": "01003",
           "detail_id": "002",
           "detail_uid": "01003-002",
           "title": "dots (second normal form) [detail 2]",
-          "title_sort": "dots (second normal form) [detail 002]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "0163f26c353a3b00c1f153ba0c0b3ebb"
+          "layout": "work_details"
         },
         {
           "work_id": "01003",
           "detail_id": "003",
           "detail_uid": "01003-003",
           "title": "dots (second normal form) [detail 3]",
-          "title_sort": "dots (second normal form) [detail 003]",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 5906,
-          "layout": "work_details",
-          "checksum": "9c503e341cfd4d79cbf6fb029a7a7e07"
+          "layout": "work_details"
         }
       ]
     }

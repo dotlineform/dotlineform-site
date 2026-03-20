@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7f71a5fbdf25ef22340e9949354ea359",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-ceae7839e0ad6ab5185b5f748d61b092",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00219",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-8e276da40f6e8d025c13d9bbf7b1f9a7",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-7f71a5fbdf25ef22340e9949354ea359"
+    "count": 0
   },
   "work": {
     "work_id": "00219",
     "title": "colouring book 3",
-    "title_sort": "colouring book 003",
     "year": 1996,
     "year_display": "1996",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 1200,
-    "height_px": 1707,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "8e276da40f6e8d025c13d9bbf7b1f9a7"
+    "height_px": 1707
   },
   "sections": []
 }

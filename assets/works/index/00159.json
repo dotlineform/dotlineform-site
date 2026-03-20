@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-3ba4cdb6107a472d8f6330a4fd11d51f",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-40167226dccfbff97aa920ad74528c33",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00159",
-    "count": 2,
-    "hash": "blake2b-079a035c219ac5325acc9299dcf01d6a",
-    "work_checksum": "blake2b-9205321db61bac29cb38743994f5da69",
-    "details_checksum": "blake2b-079a035c219ac5325acc9299dcf01d6a",
-    "record_checksum": "blake2b-3ba4cdb6107a472d8f6330a4fd11d51f"
+    "count": 2
   },
   "work": {
     "work_id": "00159",
     "title": "Michelle Pfeiffer",
-    "title_sort": "Michelle Pfeiffer",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "photograph",
     "medium_caption": "colour photographs mounted in A4 booklet",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 4038,
-    "height_px": 5712,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "9205321db61bac29cb38743994f5da69"
+    "height_px": 5712
   },
   "sections": [
     {
@@ -44,24 +31,20 @@
           "detail_id": "001",
           "detail_uid": "00159-001",
           "title": "Michelle Pfeiffer - page 1",
-          "title_sort": "Michelle Pfeiffer - page 001",
           "project_subfolder": "details",
           "width_px": 4038,
           "height_px": 5712,
-          "layout": "work_details",
-          "checksum": "4239a9ab30d069487888e6581c81bcf2"
+          "layout": "work_details"
         },
         {
           "work_id": "00159",
           "detail_id": "002",
           "detail_uid": "00159-002",
           "title": "Michelle Pfeiffer - pages 2-3",
-          "title_sort": "Michelle Pfeiffer - pages 002-003",
           "project_subfolder": "details",
           "width_px": 5712,
           "height_px": 4038,
-          "layout": "work_details",
-          "checksum": "02c683bf57aae20c9b6c7eda1f895d62"
+          "layout": "work_details"
         }
       ]
     }

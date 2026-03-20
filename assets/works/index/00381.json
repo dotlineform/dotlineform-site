@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-da438543391f10b58dad3a32ef25e2ce",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-655470bb28511547975bee8c7633dec3",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00381",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-ea087edd83358db7c3e5f7da3737d350",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-da438543391f10b58dad3a32ef25e2ce"
+    "count": 0
   },
   "work": {
     "work_id": "00381",
     "title": "harmony 2",
-    "title_sort": "harmony 002",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "6",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 3508,
-    "height_px": 2480,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "ea087edd83358db7c3e5f7da3737d350"
+    "height_px": 2480
   },
   "sections": []
 }

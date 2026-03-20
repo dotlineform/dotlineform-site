@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-f0765aa8a5bcb50c04d6862413aaa035",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-89d7338f555b46cc24e17a1d5d12a6d2",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00546",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-576047e3c1f9a69bf2dff2fca1b8f29f",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-f0765aa8a5bcb50c04d6862413aaa035"
+    "count": 0
   },
   "work": {
     "work_id": "00546",
     "title": "tree.jpg",
-    "title_sort": "tree.jpg",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "framed",
     "medium_type": "photograph",
     "medium_caption": "platinum palladium print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 20.9,
     "width_cm": 30.2,
-    "depth_cm": null,
     "width_px": 3570,
-    "height_px": 2472,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "576047e3c1f9a69bf2dff2fca1b8f29f"
+    "height_px": 2472
   },
   "sections": []
 }

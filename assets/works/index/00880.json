@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-caabf2ca289e0d2c734ec251b0ba2707",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-95bb711ac3d0fad361b0e6bb1e8af25c",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00880",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-92271f939f9b0d1b06b7175adceeb9eb",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-caabf2ca289e0d2c734ec251b0ba2707"
+    "count": 0
   },
   "work": {
     "work_id": "00880",
     "title": "doll face 4",
-    "title_sort": "doll face 004",
     "year": 1989,
     "year_display": "c. 1989",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "8",
     "medium_type": "mixed media",
     "medium_caption": "photocopy",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 40.0,
     "width_cm": 28.0,
-    "depth_cm": null,
     "width_px": 3362,
-    "height_px": 4600,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "92271f939f9b0d1b06b7175adceeb9eb"
+    "height_px": 4600
   },
   "sections": []
 }

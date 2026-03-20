@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-02e7e266ae78783d03db982f6b3cf27a",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-1db81b45cf414fb92e7643239b7a9749",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00365",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-4ebb27af29fb41056ed938a8c60be98d",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-02e7e266ae78783d03db982f6b3cf27a"
+    "count": 0
   },
   "work": {
     "work_id": "00365",
     "title": "the eye",
-    "title_sort": "the eye",
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "ink and pencil on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 42.0,
-    "depth_cm": null,
     "width_px": 4960,
-    "height_px": 3508,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "4ebb27af29fb41056ed938a8c60be98d"
+    "height_px": 3508
   },
   "sections": []
 }

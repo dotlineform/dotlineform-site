@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-5e4f35b3a64baca3694634a464b897b6",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-77615aef4e163ca1e0e561f642f89970",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00533",
-    "count": 5,
-    "hash": "blake2b-c6a059f6fa4c98765f302c0ac8a0bba4",
-    "work_checksum": "blake2b-e99bf89c2ff3c9298a32ba5b5473ad02",
-    "details_checksum": "blake2b-c6a059f6fa4c98765f302c0ac8a0bba4",
-    "record_checksum": "blake2b-5e4f35b3a64baca3694634a464b897b6"
+    "count": 5
   },
   "work": {
     "work_id": "00533",
     "title": "2 bodies monoprint",
-    "title_sort": "002 bodies monoprint",
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
       "2-bodies"
     ],
-    "storage": null,
     "medium_type": "drawing",
     "medium_caption": "ink and acrylic on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 50.0,
     "width_cm": 64.0,
-    "depth_cm": null,
     "width_px": 7559,
-    "height_px": 5906,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "e99bf89c2ff3c9298a32ba5b5473ad02"
+    "height_px": 5906
   },
   "sections": [
     {
@@ -44,60 +30,50 @@
           "detail_id": "001",
           "detail_uid": "00533-001",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "fb66fdafe86141803f4c5874a72e528f"
+          "layout": "work_details"
         },
         {
           "work_id": "00533",
           "detail_id": "002",
           "detail_uid": "00533-002",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "8f2cc47eea33a4cb3fe7948a0f006f0a"
+          "layout": "work_details"
         },
         {
           "work_id": "00533",
           "detail_id": "003",
           "detail_uid": "00533-003",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 4032,
           "height_px": 3024,
-          "layout": "work_details",
-          "checksum": "043d2b0c06114108c684a3b3fd99288d"
+          "layout": "work_details"
         },
         {
           "work_id": "00533",
           "detail_id": "004",
           "detail_uid": "00533-004",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "5e696bbc2c9607605af9d7e012770b10"
+          "layout": "work_details"
         },
         {
           "work_id": "00533",
           "detail_id": "005",
           "detail_uid": "00533-005",
           "title": "body detail",
-          "title_sort": "body detail",
           "project_subfolder": "details",
           "width_px": 3024,
           "height_px": 4032,
-          "layout": "work_details",
-          "checksum": "6eaaed9412e93277bab544247d5ccfb1"
+          "layout": "work_details"
         }
       ]
     }

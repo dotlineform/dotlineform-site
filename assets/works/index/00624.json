@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-986adeca1ab69f62ae51decdf522d501",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-880b84c786717566af5ed59a9d094bd9",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00624",
-    "count": 3,
-    "hash": "blake2b-03b2d2dc16e6ad8a4aa65ab9abd939a4",
-    "work_checksum": "blake2b-74bd5b6bd274fa619e9cb77a681a29e4",
-    "details_checksum": "blake2b-03b2d2dc16e6ad8a4aa65ab9abd939a4",
-    "record_checksum": "blake2b-986adeca1ab69f62ae51decdf522d501"
+    "count": 3
   },
   "work": {
     "work_id": "00624",
     "title": "k crystals (squared transparent)",
-    "title_sort": "k crystals (squared transparent)",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "k-crystals"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 75.0,
     "width_cm": 75.0,
-    "depth_cm": null,
     "width_px": 8858,
-    "height_px": 8858,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "74bd5b6bd274fa619e9cb77a681a29e4"
+    "height_px": 8858
   },
   "sections": [
     {
@@ -44,36 +30,30 @@
           "detail_id": "001",
           "detail_uid": "00624-001",
           "title": "k crystals (squared transparent) - detail 1",
-          "title_sort": "k crystals (squared transparent) - detail 001",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
-          "layout": "work_details",
-          "checksum": "78f7b3ea376dca448bdf250e6fd55ed4"
+          "layout": "work_details"
         },
         {
           "work_id": "00624",
           "detail_id": "002",
           "detail_uid": "00624-002",
           "title": "k crystals (squared transparent) - detail 2",
-          "title_sort": "k crystals (squared transparent) - detail 002",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
-          "layout": "work_details",
-          "checksum": "de613b8b6916fe6804101eba4b9e1967"
+          "layout": "work_details"
         },
         {
           "work_id": "00624",
           "detail_id": "003",
           "detail_uid": "00624-003",
           "title": "k crystals (squared transparent) - detail 3",
-          "title_sort": "k crystals (squared transparent) - detail 003",
           "project_subfolder": "details",
           "width_px": 5906,
           "height_px": 4134,
-          "layout": "work_details",
-          "checksum": "18ea50625bf0615a5fa9df40f62ee0e2"
+          "layout": "work_details"
         }
       ]
     }

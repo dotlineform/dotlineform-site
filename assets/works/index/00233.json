@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-bec82193861856e4f492cc10d463bde3",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-641a48bf823a879eaa1db8d319c80610",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00233",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-1f87835fccf1b5546cbca90df5bf8d3b",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-bec82193861856e4f492cc10d463bde3"
+    "count": 0
   },
   "work": {
     "work_id": "00233",
     "title": "untitled [0233]",
-    "title_sort": "untitled [0233]",
     "year": 1989,
     "year_display": "c. 1989-98",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pen on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 29.7,
     "width_cm": 21.0,
-    "depth_cm": null,
     "width_px": 2480,
-    "height_px": 3508,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "1f87835fccf1b5546cbca90df5bf8d3b"
+    "height_px": 3508
   },
   "sections": []
 }

@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-cff7b81644ee03817b15f0b9b292a5d3",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-49370b6e13b6678d0ac080d9db9d16f1",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00003",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-3ce6127f198b623bb2bd43fd23222e97",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-cff7b81644ee03817b15f0b9b292a5d3"
+    "count": 0
   },
   "work": {
     "work_id": "00003",
     "title": "a poem divided into 4 parts (\"we are not lost\")",
-    "title_sort": "a poem divided into 004 parts (\"we are not lost\")",
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "1",
     "medium_type": "drawing",
     "medium_caption": "pencil on tracing paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 21.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 3508,
-    "height_px": 2480,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "3ce6127f198b623bb2bd43fd23222e97"
+    "height_px": 2480
   },
   "sections": []
 }

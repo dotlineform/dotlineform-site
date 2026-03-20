@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-4e142c50383c051e7b63a22264ce977c",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-ac9aebfdd93d0900725a17a0d781e4cb",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00997",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-b1390fe1cc79b5f4be3f4c64772f241f",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-4e142c50383c051e7b63a22264ce977c"
+    "count": 0
   },
   "work": {
     "work_id": "00997",
     "title": "dotlineform - monoprint 13",
-    "title_sort": "dotlineform - monoprint 013",
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "6",
     "medium_type": "painting",
     "medium_caption": "ink on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 25.0,
     "width_cm": 25.0,
-    "depth_cm": null,
     "width_px": 2953,
-    "height_px": 2953,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "b1390fe1cc79b5f4be3f4c64772f241f"
+    "height_px": 2953
   },
   "sections": []
 }

@@ -1,19 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-0622fb6c786dbe9f90dc48eb7a750469",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-50b893f32b1b48dd7269b3a722e99c3e",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00342",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-bd91b2535e7288ce82c83fb3612c58e8",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-0622fb6c786dbe9f90dc48eb7a750469"
+    "count": 0
   },
   "work": {
     "work_id": "00342",
     "title": "9 moments that are exactly the same but different and unique",
-    "title_sort": "009 moments that are exactly the same but different and unique",
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
@@ -22,18 +17,10 @@
     "storage": "2",
     "medium_type": "drawing",
     "medium_caption": "pen and pencil on paper",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 42.0,
     "width_cm": 29.7,
-    "depth_cm": null,
     "width_px": 3508,
-    "height_px": 4960,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "bd91b2535e7288ce82c83fb3612c58e8"
+    "height_px": 4960
   },
   "sections": []
 }

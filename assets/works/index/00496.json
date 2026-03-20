@@ -1,39 +1,25 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-62b5e02724be34604c7bf13e296a1ec1",
-    "generated_at_utc": "2026-03-19T21:58:35Z",
+    "version": "blake2b-f81597a95de7f19cd7b6328da441d078",
+    "generated_at_utc": "2026-03-20T13:50:43Z",
     "work_id": "00496",
-    "count": 0,
-    "hash": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "work_checksum": "blake2b-dc2b0a9a6d6f63db9e9e1c11159acff2",
-    "details_checksum": "blake2b-657ab8f5009d3816a8a0ee10f2bc49e0",
-    "record_checksum": "blake2b-62b5e02724be34604c7bf13e296a1ec1"
+    "count": 0
   },
   "work": {
     "work_id": "00496",
     "title": "mm quantum 1.8",
-    "title_sort": "mm quantum 001.008",
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
       "mm"
     ],
-    "storage": null,
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",
-    "duration": null,
-    "vimeo_url": null,
-    "youtube_url": null,
-    "bandcamp_url": null,
     "height_cm": 30.0,
     "width_cm": 50.0,
-    "depth_cm": null,
     "width_px": 5906,
-    "height_px": 3543,
-    "download": null,
-    "artist": "Michael Davies",
-    "checksum": "dc2b0a9a6d6f63db9e9e1c11159acff2"
+    "height_px": 3543
   },
   "sections": []
 }
