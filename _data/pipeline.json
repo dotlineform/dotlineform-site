@@ -1,0 +1,54 @@
+{
+  "env": {
+    "projects_base_dir": "DOTLINEFORM_PROJECTS_BASE_DIR",
+    "media_base_dir": "DOTLINEFORM_MEDIA_BASE_DIR",
+    "srcset_jobs": "MAKE_SRCSET_JOBS"
+  },
+  "paths": {
+    "source_roots": {
+      "works": "projects",
+      "moments": "moments"
+    },
+    "media": {
+      "work": {
+        "input_subdir": "works/make_srcset_images",
+        "output_subdir": "works/srcset_images"
+      },
+      "work_details": {
+        "input_subdir": "work_details/make_srcset_images",
+        "output_subdir": "work_details/srcset_images"
+      },
+      "moment": {
+        "input_subdir": "moments/make_srcset_images",
+        "output_subdir": "moments/srcset_images"
+      },
+      "work_files_subdir": "works/files"
+    }
+  },
+  "variants": {
+    "primary": {
+      "widths": [800, 1200, 1600],
+      "suffix": "primary",
+      "output_subdir": "primary",
+      "preferred_width": 1600
+    },
+    "thumb": {
+      "sizes": [96, 192],
+      "suffix": "thumb",
+      "output_subdir": "thumb"
+    },
+    "compatibility": {
+      "generate_widths": [800, 1200, 1600],
+      "render_widths": [800, 1200, 1600],
+      "accepted_legacy_widths": [800, 1200, 1600, 2400]
+    }
+  },
+  "encoding": {
+    "format": "webp",
+    "codec": "libwebp",
+    "preset": "photo",
+    "primary_quality": 82,
+    "thumb_quality": 78,
+    "compression_level": 6
+  }
+}

@@ -15,8 +15,8 @@ Use --ids-file to limit processing to selected IDs (one per line):
 Defaults to dry-run. Pass --write to actually copy files.
 
 Required local environment:
-- DOTLINEFORM_PROJECTS_BASE_DIR: base path containing projects/ and moments/ sources
-- DOTLINEFORM_MEDIA_BASE_DIR: base path containing works/work_details/moments make_srcset_images folders
+- env vars are resolved from `_data/pipeline.json`
+- defaults remain `DOTLINEFORM_PROJECTS_BASE_DIR` and `DOTLINEFORM_MEDIA_BASE_DIR`
 
 Flag behavior:
 - --mode: selects worksheet mapping and source/target paths.
@@ -35,14 +35,36 @@ from typing import Any, Dict, List, Optional, Set
 
 import openpyxl
 
+try:
+    from pipeline_config import (
+        env_var_name,
+        env_var_value,
+        load_pipeline_config,
+        media_mode_input_subdir,
+        source_moments_root_subdir,
+        source_works_root_subdir,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import (
+        env_var_name,
+        env_var_value,
+        load_pipeline_config,
+        media_mode_input_subdir,
+        source_moments_root_subdir,
+        source_works_root_subdir,
+    )
+
 
 # Source roots:
 # - projects/ for works + work_details
 # - moments/ for moments
-PROJECTS_BASE_DIR_ENV = os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR", "").strip()
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
+PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
+MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
+PROJECTS_BASE_DIR_ENV = env_var_value(PIPELINE_CONFIG, "projects_base_dir")
 PROJECTS_BASE_DIR = Path(PROJECTS_BASE_DIR_ENV).expanduser() if PROJECTS_BASE_DIR_ENV else Path(".")
 # Destination root where make_srcset_images.sh picks up copied source files.
-WORKS_BASE_DIR_ENV = os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip()
+WORKS_BASE_DIR_ENV = env_var_value(PIPELINE_CONFIG, "media_base_dir")
 WORKS_BASE_DIR = Path(WORKS_BASE_DIR_ENV).expanduser() if WORKS_BASE_DIR_ENV else Path(".")
 WORKBOOK_PATH = Path("data/works.xlsx")
 
@@ -122,7 +144,7 @@ def copy_work(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write:
     if missing:
         raise SystemExit(f"Missing required columns in Works sheet: {', '.join(missing)}")
 
-    dest_dir = WORKS_BASE_DIR / "works/make_srcset_images"
+    dest_dir = WORKS_BASE_DIR / media_mode_input_subdir(PIPELINE_CONFIG, "work")
     if write:
         dest_dir.mkdir(parents=True, exist_ok=True)
 
@@ -137,7 +159,7 @@ def copy_work(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write:
         if selected_ids is not None and wid not in selected_ids:
             continue
 
-        src = PROJECTS_BASE_DIR / "projects" / str(folder).strip() / str(filename).strip()
+        src = PROJECTS_BASE_DIR / source_works_root_subdir(PIPELINE_CONFIG) / str(folder).strip() / str(filename).strip()
         ext = Path(str(filename).strip()).suffix
         dest = (dest_dir / f"{wid}{ext}") if keep_ext else (dest_dir / wid)
 
@@ -184,7 +206,7 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
         if wid and folder:
             work_folder_by_id[wid] = str(folder).strip()
 
-    dest_dir = WORKS_BASE_DIR / "work_details/make_srcset_images"
+    dest_dir = WORKS_BASE_DIR / media_mode_input_subdir(PIPELINE_CONFIG, "work_details")
     if write:
         dest_dir.mkdir(parents=True, exist_ok=True)
 
@@ -210,7 +232,7 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
 
         subfolder_str = str(subfolder).strip() if subfolder else ""
         filename_str = str(filename).strip()
-        src = PROJECTS_BASE_DIR / "projects" / folder
+        src = PROJECTS_BASE_DIR / source_works_root_subdir(PIPELINE_CONFIG) / folder
         if subfolder_str:
             src = src / subfolder_str
         src = src / filename_str
@@ -242,7 +264,7 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
     if missing:
         raise SystemExit(f"Missing required columns in Moments sheet: {', '.join(missing)}")
 
-    dest_dir = WORKS_BASE_DIR / "moments/make_srcset_images"
+    dest_dir = WORKS_BASE_DIR / media_mode_input_subdir(PIPELINE_CONFIG, "moment")
     if write:
         dest_dir.mkdir(parents=True, exist_ok=True)
 
@@ -257,7 +279,7 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
         if selected_ids is not None and mid not in selected_ids:
             continue
 
-        src = PROJECTS_BASE_DIR / "moments" / str(folder).strip() / str(filename).strip()
+        src = PROJECTS_BASE_DIR / source_moments_root_subdir(PIPELINE_CONFIG) / str(folder).strip() / str(filename).strip()
         ext = Path(str(filename).strip()).suffix
         dest = (dest_dir / f"{mid}{ext}") if keep_ext else (dest_dir / mid)
         total += 1
@@ -310,9 +332,9 @@ def main() -> int:
     args = parser.parse_args()
 
     if PROJECTS_BASE_DIR_ENV == "":
-        raise SystemExit("Missing DOTLINEFORM_PROJECTS_BASE_DIR. Set it in your local environment.")
+        raise SystemExit(f"Missing {PROJECTS_BASE_DIR_ENV_NAME}. Set it in your local environment.")
     if WORKS_BASE_DIR_ENV == "":
-        raise SystemExit("Missing DOTLINEFORM_MEDIA_BASE_DIR. Set it in your local environment.")
+        raise SystemExit(f"Missing {MEDIA_BASE_DIR_ENV_NAME}. Set it in your local environment.")
 
     keep_ext = not args.no_ext
     if args.keep_ext:

@@ -19,6 +19,13 @@ export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
 export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 ```
 
+Pipeline policy config:
+
+- Shared pipeline defaults live in `_data/pipeline.json`.
+- That config stores env var names and relative media subpaths.
+- The default env var names remain `DOTLINEFORM_PROJECTS_BASE_DIR`, `DOTLINEFORM_MEDIA_BASE_DIR`, and `MAKE_SRCSET_JOBS`.
+- CLI flags still override config-derived defaults.
+
 Sorting behavior and consistency contract:
 
 - `docs/sorting-architecture.md`

@@ -79,6 +79,30 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.script_logging import append_script_log
 
+try:
+    from pipeline_config import (
+        env_var_name,
+        env_var_value,
+        load_pipeline_config,
+        media_work_files_subdir,
+        source_moments_root_subdir,
+        source_works_root_subdir,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import (
+        env_var_name,
+        env_var_value,
+        load_pipeline_config,
+        media_work_files_subdir,
+        source_moments_root_subdir,
+        source_works_root_subdir,
+    )
+
+
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
+PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
+MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
+
 
 # ----------------------------
 # Helpers (ID/date/YAML parsing)
@@ -666,12 +690,12 @@ def main() -> None:
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
     ap.add_argument(
         "--projects-base-dir",
-        default=os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR", "").strip(),
+        default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
         help="Base folder containing the projects directory used to resolve WorkDetails and WorkFiles source files",
     )
     ap.add_argument(
         "--media-base-dir",
-        default=os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip(),
+        default=env_var_value(PIPELINE_CONFIG, "media_base_dir"),
         help="Base folder containing staged media outputs such as works/files",
     )
 
@@ -778,12 +802,12 @@ def main() -> None:
     needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
-            "Missing projects base directory. Set DOTLINEFORM_PROJECTS_BASE_DIR "
+            f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
             "or pass --projects-base-dir."
         )
     if run_work_files and normalize_text(args.media_base_dir) == "":
         raise SystemExit(
-            "Missing media base directory. Set DOTLINEFORM_MEDIA_BASE_DIR "
+            f"Missing media base directory. Set {MEDIA_BASE_DIR_ENV_NAME} "
             "or pass --media-base-dir."
         )
 
@@ -909,9 +933,9 @@ def main() -> None:
     moments_prose_dir = Path(args.moments_prose_dir).expanduser()
     moments_prose_dir.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
-    projects_root = projects_base_dir / "projects"
+    projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
     media_base_dir = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) != "" else None
-    work_files_stage_dir = (media_base_dir / "works" / "files") if media_base_dir is not None else None
+    work_files_stage_dir = (media_base_dir / media_work_files_subdir(PIPELINE_CONFIG)) if media_base_dir is not None else None
     if run_work_files and work_files_stage_dir is not None:
         work_files_stage_dir.mkdir(parents=True, exist_ok=True)
 
@@ -2059,7 +2083,7 @@ def main() -> None:
             raise SystemExit(f"WorkDetails sheet missing required columns: {', '.join(missing_details)}")
 
         projects_base_dir = Path(args.projects_base_dir).expanduser()
-        projects_root = projects_base_dir / "projects"
+        projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
 
         # Ensure width/height columns exist when writing so dimensions persist in the sheet.
         width_px_idx = work_details_hi.get("width_px")
@@ -2469,7 +2493,7 @@ def main() -> None:
                 moments_hi["height_px"] = moments_height_px_idx
 
         projects_base_dir = Path(args.projects_base_dir).expanduser()
-        moments_root = projects_base_dir / "moments"
+        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
 
         def is_actionable_moment_status(status_value: str) -> bool:
             if status_value == "draft":

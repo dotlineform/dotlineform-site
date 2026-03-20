@@ -35,6 +35,8 @@ export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
 export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 ```
 
+Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var names and relative media subpaths, while absolute local paths stay in your shell environment.
+
 Quick audit command:
 
 ```bash

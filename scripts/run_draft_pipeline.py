@@ -26,8 +26,8 @@ Flag usage summary:
 - --moment-ids / --moment-ids-file: limit moment processing scope
 
 Required local environment (when path flags are not passed):
-- DOTLINEFORM_MEDIA_BASE_DIR
-- DOTLINEFORM_PROJECTS_BASE_DIR
+- env vars are resolved from `_data/pipeline.json`
+- defaults remain `DOTLINEFORM_MEDIA_BASE_DIR` and `DOTLINEFORM_PROJECTS_BASE_DIR`
 
 Behavior note:
 - When mode includes `work` and no explicit `--series-ids*` are provided,
@@ -57,6 +57,30 @@ try:
     from script_logging import append_script_log
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.script_logging import append_script_log
+
+try:
+    from pipeline_config import (
+        env_var_name,
+        env_var_value,
+        join_base_and_subdir,
+        load_pipeline_config,
+        media_mode_input_subdir,
+        media_mode_output_subdir,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import (
+        env_var_name,
+        env_var_value,
+        join_base_and_subdir,
+        load_pipeline_config,
+        media_mode_input_subdir,
+        media_mode_output_subdir,
+    )
+
+
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
+MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
+SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
 
 
 def normalize_text(value: Any) -> str:
@@ -359,13 +383,13 @@ def work_ids_from_detail_uids(detail_uids: Iterable[str]) -> Set[str]:
 
 
 def main() -> int:
-    media_base = os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip()
-    default_work_input = f"{media_base}/works/make_srcset_images" if media_base else ""
-    default_work_output = f"{media_base}/works/srcset_images" if media_base else ""
-    default_detail_input = f"{media_base}/work_details/make_srcset_images" if media_base else ""
-    default_detail_output = f"{media_base}/work_details/srcset_images" if media_base else ""
-    default_moment_input = f"{media_base}/moments/make_srcset_images" if media_base else ""
-    default_moment_output = f"{media_base}/moments/srcset_images" if media_base else ""
+    media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
+    default_work_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work"))
+    default_work_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "work"))
+    default_detail_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work_details"))
+    default_detail_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "work_details"))
+    default_moment_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "moment"))
+    default_moment_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "moment"))
 
     ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> generate pipeline.")
     ap.add_argument("--xlsx", default="data/works.xlsx", help="Path to workbook")
@@ -405,7 +429,12 @@ def main() -> int:
         default=default_moment_output,
         help="Output directory for moment srcset derivatives",
     )
-    ap.add_argument("--jobs", type=int, default=int(os.environ.get("MAKE_SRCSET_JOBS", "4")), help="Parallel jobs")
+    ap.add_argument(
+        "--jobs",
+        type=int,
+        default=int(os.environ.get(SRCSET_JOBS_ENV_NAME, "4")),
+        help="Parallel jobs",
+    )
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
     ap.add_argument(
@@ -424,7 +453,7 @@ def main() -> int:
     def require_non_empty(label: str, value: str, flag: str) -> None:
         if normalize_text(value) == "":
             raise SystemExit(
-                f"Missing {label}. Set DOTLINEFORM_MEDIA_BASE_DIR or pass {flag}."
+                f"Missing {label}. Set {MEDIA_BASE_DIR_ENV_NAME} or pass {flag}."
             )
 
     if "work" in selected_modes:
