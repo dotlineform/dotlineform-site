@@ -928,7 +928,6 @@ def main() -> None:
         meta["series_ids"] = series_ids
         meta["series_id"] = sid
         meta["series_title"] = series_title_by_id.get(sid) if sid else None
-        meta["title_sort"] = numeric_aware_sort_key(meta.get("title"))
         work_meta_by_id[wid] = meta
         for series_id in series_ids:
             work_ids_by_series_all.setdefault(series_id, []).append(wid)
@@ -990,7 +989,10 @@ def main() -> None:
                 continue
 
             def sortable_value(wid: str, field: str) -> Any:
-                value = work_meta_by_id[wid].get(field)
+                if field == "title_sort":
+                    value = numeric_aware_sort_key(work_meta_by_id[wid].get("title"))
+                else:
+                    value = work_meta_by_id[wid].get(field)
                 if field in numeric_sort_fields:
                     nv = coerce_numeric(value)
                     return float("-inf") if nv is None else nv
@@ -1021,7 +1023,6 @@ def main() -> None:
     works_field_order = [
         "work_id",
         "title",
-        "title_sort",
         "year",
         "year_display",
         "series_id",
@@ -1060,7 +1061,6 @@ def main() -> None:
         fm["series_ids"] = series_ids
         fm["series_title"] = series_title_by_id.get(sid) if sid is not None else None
         fm["series_sort"] = series_sort_by_series_id.get(sid, {}).get(wid, wid) if sid is not None else wid
-        fm["title_sort"] = numeric_aware_sort_key(fm.get("title"))
 
         fm_ordered: Dict[str, Any] = {}
         for key in works_field_order:
@@ -1087,7 +1087,6 @@ def main() -> None:
             "detail_id": did,
             "detail_uid": detail_uid,
             "title": title,
-            "title_sort": numeric_aware_sort_key(title),
             "project_subfolder": project_subfolder,
             "width_px": width_px,
             "height_px": height_px,
@@ -1099,14 +1098,12 @@ def main() -> None:
     def build_work_index_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
         wid = str(work_record.get("work_id", ""))
         title_value = coerce_string(work_record.get("title"))
-        title_sort_value = coerce_string(work_record.get("title_sort"))
         year_value = work_record.get("year")
         year_display_value = coerce_string(work_record.get("year_display"))
         storage_value = coerce_string(work_record.get("storage"))
         return {
             "work_id": wid,
             "title": title_value,
-            "title_sort": title_sort_value if title_sort_value is not None else numeric_aware_sort_key(title_value),
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
@@ -1118,6 +1115,7 @@ def main() -> None:
         public_record.pop("series_id", None)
         public_record.pop("series_title", None)
         public_record.pop("series_sort", None)
+        public_record.pop("title_sort", None)
         public_record.pop("checksum", None)
         public_record["checksum"] = compute_work_checksum(public_record)
         return public_record
@@ -1545,7 +1543,6 @@ def main() -> None:
                 series_front_matter_like: Dict[str, Any] = {
                     "series_id": series_id,
                     "title": series_title,
-                    "title_sort": numeric_aware_sort_key(series_title),
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                     "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                     "year": year,
@@ -1623,7 +1620,6 @@ def main() -> None:
                         "layout": "studio_series",
                         "series_id": series_id,
                         "title": series_title,
-                        "title_sort": numeric_aware_sort_key(series_title),
                         "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                         "year": year,
                         "year_display": year_display,
@@ -1785,7 +1781,6 @@ def main() -> None:
             series_front_matter_like = {
                 "series_id": sid,
                 "title": series_title,
-                "title_sort": numeric_aware_sort_key(series_title),
                 "sort_fields": sort_fields,
                 "year": year,
                 "year_display": year_display,
@@ -1800,7 +1795,6 @@ def main() -> None:
                 "status": status,
                 "published_date": published_date,
                 "title": series_title,
-                "title_sort": numeric_aware_sort_key(series_title),
                 "sort_fields": sort_fields,
                 "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                 "year": year,
@@ -2402,7 +2396,6 @@ def main() -> None:
             mfm: Dict[str, Any] = {
                 "moment_id": moment_id,
                 "title": title or moment_id,
-                "title_sort": numeric_aware_sort_key(title or moment_id),
                 "date": date_value,
                 "date_display": date_display,
                 "images": images_list,

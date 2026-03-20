@@ -61,8 +61,8 @@ function initStudioWorksPage() {
   }
 
   function compareSeriesRows(a, b) {
-    const at = normalizeText(a && (a.title_sort || a.title || a.series_id));
-    const bt = normalizeText(b && (b.title_sort || b.title || b.series_id));
+    const at = numericAwareSortKey(a && (a.title || a.series_id));
+    const bt = numericAwareSortKey(b && (b.title || b.series_id));
     const titleCmp = collator.compare(at, bt);
     if (titleCmp !== 0) return titleCmp;
 

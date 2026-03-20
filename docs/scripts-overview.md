@@ -145,7 +145,7 @@ Useful flags:
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
-    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `title_sort`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
+    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - each work stores canonical `series_ids` only; series membership is derived from that ordered array
@@ -437,9 +437,10 @@ Known limits:
 Warning policy:
 
 - Treat schema warnings as backlog by default.
-- Current warning rule: `_works.title_sort` is only warned when `title` contains digits and `title_sort` is missing.
 
-### 5) Autofix missing numeric `title_sort` on works
+### 5) Legacy autofix for numeric `title_sort` on works front matter
+
+Generated site JSON no longer persists `title_sort`. This helper remains only for older or hand-authored `_works` front matter that still uses that field.
 
 Dry-run:
 

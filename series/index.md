@@ -211,8 +211,14 @@ permalink: /series/
       return compareText(a && a.series_id, b && b.series_id);
     }
 
+    function numericAwareSortKey(value) {
+      return String(value == null ? '' : value).trim().replace(/\d+/g, function (m) {
+        return m.padStart(3, '0');
+      });
+    }
+
     function titleValue(item) {
-      return String((item && (item.title_sort || item.title || item.series_id)) || '');
+      return numericAwareSortKey(item && (item.title || item.series_id));
     }
 
     function titleCompare(a, b) {
