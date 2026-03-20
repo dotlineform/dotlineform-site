@@ -2,8 +2,9 @@
 layout: default
 ---
 
-{% assign media_image_moments = site.media_image_moments | default: "/assets/moments/img" %}
-{% assign img_base = media_image_moments | append: "/" %}
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_image_moments = site.media_image_moments | default: "/moments/img" %}
+{% assign img_base = media_base | append: media_image_moments | append: "/" %}
 
 <article class="page moment">
   <header class="page__header moment-header">

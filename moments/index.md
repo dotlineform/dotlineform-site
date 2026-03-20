@@ -5,11 +5,12 @@ section: moments
 permalink: /moments/
 ---
 
-{% assign media_image_moments = site.media_image_moments | default: "/assets/moments/img" %}
-{% assign moments_img_base = media_image_moments | append: "/" %}
-{%- assign moments_img_base_out = moments_img_base -%}
-{%- unless moments_img_base contains '://' -%}
-  {%- assign moments_img_base_out = moments_img_base | relative_url -%}
+{% assign thumb_base = site.thumb_base | default: "" %}
+{% assign thumb_moments = site.thumb_moments | default: "/assets/moments/img" %}
+{% assign moments_thumb_base = thumb_base | append: thumb_moments | append: "/" %}
+{%- assign moments_thumb_base_out = moments_thumb_base -%}
+{%- unless moments_thumb_base contains '://' -%}
+  {%- assign moments_thumb_base_out = moments_thumb_base | relative_url -%}
 {%- endunless -%}
 
 {%- capture moments_index_items -%}
@@ -39,7 +40,7 @@ permalink: /moments/
 {%- endcapture -%}
 
 <h1 class="index__heading visually-hidden">moments</h1>
-<div id="momentsIndexRoot" data-moments-image-base="{{ moments_img_base_out | escape }}" hidden>
+<div id="momentsIndexRoot" data-moments-thumb-base="{{ moments_thumb_base_out | escape }}" hidden>
   <div class="seriesIndex__toolbar" aria-label="Moments view and sorting">
     <div class="seriesIndex__viewControls" role="group" aria-label="Moments view">
       <button
@@ -118,7 +119,7 @@ permalink: /moments/
     var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="moments-index-sort-btn"]'));
     if (!viewButtons.length || !sortButtons.length) return;
 
-    var momentsImageBase = String(root.getAttribute('data-moments-image-base') || '');
+    var momentsThumbBase = String(root.getAttribute('data-moments-thumb-base') || '');
     var momentsItems = {{ moments_index_items | strip_newlines }};
     var viewStorageKey = 'dlf.momentsIndex.view';
     var sortStorageKey = 'dlf.momentsIndex.sort';
@@ -138,7 +139,7 @@ permalink: /moments/
     function thumbUrl(momentId, size) {
       var mid = String(momentId || '').trim();
       if (!mid) return '';
-      return String(momentsImageBase || '') + mid + '-thumb-' + size + '.webp';
+      return String(momentsThumbBase || '') + mid + '-thumb-' + size + '.webp';
     }
 
     function normalizeView(value) {
@@ -299,6 +300,11 @@ permalink: /moments/
         img.loading = 'lazy';
         img.decoding = 'async';
         a.appendChild(img);
+      } else {
+        var placeholder = document.createElement('span');
+        placeholder.className = 'seriesIndexItem__img';
+        placeholder.setAttribute('aria-hidden', 'true');
+        a.appendChild(placeholder);
       }
 
       var meta = document.createElement('div');

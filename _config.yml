@@ -4,19 +4,19 @@ url: "https://www.dotlineform.com"
 baseurl: ""  # custom domain: leave empty
 live_url: "https://www.dotlineform.com"
 
-# Thumbnail origin (local repo)
+# Thumbnails (local repo
+# (thumb_base is to let thumbnail URLs come from a different origin than the site itself. Set to "" to serve from repo, or a full URL to serve from a different origin.)
 thumb_base: ""
 thumb_works: "/assets/works/img"
 thumb_work_details: "/assets/work_details/img"
+thumb_moments: "/assets/moments/img"
 
-# Media origin for work images/files (R2):
+# Media (R2):
 media_base: "https://media.dotlineform.com"
 media_image_works: "/works/img"
-media_image_work_details: "/work_details/img"
 media_files_works: "/works/files"
-
-# Media origin for moments
-media_image_moments: "/assets/moments/img"
+media_image_work_details: "/work_details/img"
+media_image_moments: "/moments/img"
 
 # Home hero media origin/prefix (served remotely, no /assets segment):
 home_media_base: "https://media.dotlineform.com"
