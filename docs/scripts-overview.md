@@ -127,19 +127,23 @@ Useful flags:
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
 - `--moment-ids`, `--moment-ids-file`
-- `--works-files-dir` (default `assets/works/files`)
+- `--work-files-sheet` (default `WorkFiles`)
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for work primary images as well as work detail and moment source images
+  - used for work primary images as well as work detail, work file, and moment source files
   - when source files are found, `Works.width_px`/`height_px` and detail/moment dimension columns are refreshed on `--write`
+- `--media-base-dir`: base path used for staged media outputs
+  - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
+  - `work-files` stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
   - allowed: `work-pages`, `work-files`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
+  - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
@@ -192,7 +196,7 @@ Behavior:
 - intentionally leaves these untouched:
   - `assets/work_details/img/*`
   - `_includes/work_prose/<work_id>.md`
-  - `assets/works/files/<work_id>-*`
+  - staged media under `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/<work_id>-*`
 
 Backups:
 
@@ -394,7 +398,7 @@ Current checks:
   - `assets/data/works_index.json`
   - `assets/works/index/*.json`
 - `links`: validates sitemap source/URL targets and query-parameter contract sanity across generated pages
-- `media`: validates expected local thumbs/download files for published `_works` and `_work_details` (primaries are treated as remote-hosted and are not asserted locally)
+- `media`: validates expected local thumbs for published `_works` and `_work_details` (primaries and download files are treated as remote/staged and are not asserted locally)
 - `orphans`: reports orphan pages/JSON; optionally include orphan media files with `--orphans-media`
 
 `--strict` behavior and value:
@@ -432,7 +436,7 @@ To write to a different path:
 
 Known limits:
 
-- `media` assumes primaries are remote-hosted and checks local thumbs/downloads only.
+- `media` assumes primaries and work download files are remote/staged and checks local thumbs only.
 - `json_schema` validates structure/counts, not recomputed payload hash integrity.
 - `links` query-contract checks are static sanity checks; they do not execute browser flows.
 - Orphan checks currently focus on works/series/work_details artifacts.
@@ -467,13 +471,13 @@ Scope to selected IDs/ranges:
 
 ### Works download files
 
-If `Works.download` is set, generation also copies that file and links it on the work page.
+If `WorkFiles` contains rows for a work, generation stages those files and exposes them as `work.downloads` in per-work JSON.
 
 - Source path:
-  - `[projects-base-dir]/projects/[project_folder]/[download]`
+  - `[projects-base-dir]/projects/[project_folder]/[filename]`
 - Destination path:
-  - `assets/works/files/[work_id]-[filename.ext]`
+  - `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/[work_id]-[filename.ext]`
 - Work page link:
-  - Label: `download`
-  - Link text: `filename.ext`
+  - Label: `download` or `downloads`
+  - Link text: `WorkFiles.label`
   - Rendered before `cat. <work_id>`

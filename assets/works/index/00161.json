@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-7837c04d4cb87f3b8514836aaf5c77e7",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "version": "blake2b-e3941fdfa4db6b53c042cb095bbcf01c",
+    "generated_at_utc": "2026-03-20T19:14:08Z",
     "work_id": "00161",
     "count": 0
   },
@@ -20,8 +20,7 @@
     "height_cm": 29.7,
     "width_cm": 21.0,
     "width_px": 3115,
-    "height_px": 4405,
-    "download": "mouse story (extended version).pdf"
+    "height_px": 4405
   },
   "sections": []
 }

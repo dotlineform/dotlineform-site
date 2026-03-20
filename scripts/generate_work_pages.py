@@ -12,6 +12,7 @@ Lightweight works index JSON is written to assets/data/works_index.json (object 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
 - WorkDetails: additional detail images associated with a work
+- WorkFiles: downloadable files associated with a work
 - Moments: standalone moment entries
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
@@ -45,10 +46,11 @@ Common flags:
 - --moment-ids / --moment-ids-file: limit moments generation scope
 - --moments-sheet: worksheet name for moments (default: Moments)
 - --moments-output-dir / --moments-prose-dir: moment page/prose destinations
-- --projects-base-dir: base path used for dimension lookups in WorkDetails/Moments
+- --projects-base-dir: base path used for dimension lookups and WorkFiles source lookup
+- --media-base-dir: base path used for staging work download files into works/files
 
 Path variables used by the script:
-- projects_root = [projects-base-dir]/projects (work + work_details source image lookup)
+- projects_root = [projects-base-dir]/projects (work + work_details + work_files source lookup)
 - moments_root = [projects-base-dir]/moments (moment source image lookup)
 
 """
@@ -366,7 +368,6 @@ WORKS_SCHEMA: List[tuple[str, str, Any]] = [
     ("depth_cm", "depth_cm", coerce_numeric),
     ("width_px", "width_px", coerce_int),
     ("height_px", "height_px", coerce_int),
-    ("download", "download", coerce_string),
     # tags handled separately (csv list)
     # checksum is always computed, not sourced from Excel
 ]
@@ -379,6 +380,19 @@ def build_works_front_matter(works_row: tuple, works_hi: Dict[str, int]) -> Dict
         raw = works_row[works_hi[col_name]] if col_name in works_hi else None
         fm[fm_key] = coercer(raw)
     return fm
+
+
+def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
+    filename_value = coerce_string(filename)
+    label_value = coerce_string(label)
+    if filename_value is None:
+        raise ValueError("Missing filename")
+    if label_value is None:
+        raise ValueError("Missing label")
+    return {
+        "filename": Path(filename_value).name,
+        "label": label_value,
+    }
 
 
 # ----------------------------
@@ -616,6 +630,7 @@ def main() -> None:
     ap.add_argument("--series-sheet", default="Series", help="Worksheet name for series master data")
     ap.add_argument("--series-sort-sheet", default="SeriesSort", help="Worksheet name for custom per-series sorting rules")
     ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
+    ap.add_argument("--work-files-sheet", default="WorkFiles", help="Worksheet name for work download-file metadata")
     ap.add_argument("--moments-sheet", default="Moments", help="Worksheet name for moment metadata")
 
     # Output
@@ -627,13 +642,17 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
-    ap.add_argument("--works-files-dir", default="assets/works/files", help="Output folder for copied work download files")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
     ap.add_argument(
         "--projects-base-dir",
         default=os.environ.get("DOTLINEFORM_PROJECTS_BASE_DIR", "").strip(),
-        help="Base folder containing the projects directory used to resolve WorkDetails source images",
+        help="Base folder containing the projects directory used to resolve WorkDetails and WorkFiles source files",
+    )
+    ap.add_argument(
+        "--media-base-dir",
+        default=os.environ.get("DOTLINEFORM_MEDIA_BASE_DIR", "").strip(),
+        help="Base folder containing staged media outputs such as works/files",
     )
 
     # Write controls
@@ -739,6 +758,11 @@ def main() -> None:
         raise SystemExit(
             "Missing projects base directory. Set DOTLINEFORM_PROJECTS_BASE_DIR "
             "or pass --projects-base-dir."
+        )
+    if run_work_files and normalize_text(args.media_base_dir) == "":
+        raise SystemExit(
+            "Missing media base directory. Set DOTLINEFORM_MEDIA_BASE_DIR "
+            "or pass --media-base-dir."
         )
 
     # Resolve the workbook path and fail fast if it is missing.
@@ -858,23 +882,27 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
     works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    works_files_dir = Path(args.works_files_dir).expanduser()
-    works_files_dir.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_prose_dir = Path(args.moments_prose_dir).expanduser()
     moments_prose_dir.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / "projects"
+    media_base_dir = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) != "" else None
+    work_files_stage_dir = (media_base_dir / "works" / "files") if media_base_dir is not None else None
+    if run_work_files and work_files_stage_dir is not None:
+        work_files_stage_dir.mkdir(parents=True, exist_ok=True)
 
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
     series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb.sheetnames else []
     work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb.sheetnames else []
+    work_files_rows = read_sheet_rows(args.work_files_sheet)
     moments_rows = read_sheet_rows(args.moments_sheet)
     series_ws = wb[args.series_sheet]
     work_details_ws = wb[args.work_details_sheet] if args.work_details_sheet in wb.sheetnames else None
+    work_files_ws = wb[args.work_files_sheet]
     moments_ws = wb[args.moments_sheet]
 
     if not works_rows:
@@ -884,6 +912,7 @@ def main() -> None:
     series_hi = build_header_index(series_rows) if series_rows else {}
     series_sort_hi = build_header_index(series_sort_rows) if series_sort_rows else {}
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
+    work_files_hi = build_header_index(work_files_rows) if work_files_rows else {}
     moments_hi = build_header_index(moments_rows) if moments_rows else {}
 
     if "status" not in works_hi:
@@ -897,6 +926,10 @@ def main() -> None:
             raise SystemExit(f"{args.series_sort_sheet} sheet missing required columns: {', '.join(missing_series_sort)}")
     if work_details_rows and "status" not in work_details_hi:
         raise SystemExit("WorkDetails sheet missing required column: status")
+    required_work_files = ["work_id", "filename", "label", "status", "published_date"]
+    missing_work_files = [c for c in required_work_files if c not in work_files_hi]
+    if missing_work_files:
+        raise SystemExit(f"{args.work_files_sheet} sheet missing required columns: {', '.join(missing_work_files)}")
     if moments_rows and "status" not in moments_hi:
         raise SystemExit("Moments sheet missing required column: status")
 
@@ -1063,6 +1096,32 @@ def main() -> None:
                 continue
             work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
 
+    work_file_entries_by_work_id: Dict[str, List[Dict[str, Any]]] = {}
+    if len(work_files_rows) > 1:
+        for row_number, (wf_row, wf_cells) in enumerate(
+            zip(work_files_rows[1:], work_files_ws.iter_rows(min_row=2), strict=False),
+            start=2,
+        ):
+            wid_raw = cell(wf_row, work_files_hi, "work_id")
+            if is_empty(wid_raw):
+                continue
+            wid = slug_id(wid_raw)
+            try:
+                download_entry = build_download_entry(
+                    live_cell_value(wf_row, wf_cells, work_files_hi, "filename"),
+                    live_cell_value(wf_row, wf_cells, work_files_hi, "label"),
+                )
+            except ValueError as exc:
+                raise SystemExit(f"{args.work_files_sheet} row {row_number}: {exc}") from exc
+            work_file_entries_by_work_id.setdefault(wid, []).append(
+                {
+                    "filename": download_entry["filename"],
+                    "label": download_entry["label"],
+                    "row_number": row_number,
+                    "row_cells": wf_cells,
+                }
+            )
+
     works_field_order = [
         "work_id",
         "title",
@@ -1084,7 +1143,7 @@ def main() -> None:
         "depth_cm",
         "width_px",
         "height_px",
-        "download",
+        "downloads",
         "artist",
     ]
 
@@ -1094,8 +1153,12 @@ def main() -> None:
             return None
         fm: Dict[str, Any] = {"work_id": wid}
         fm.update(base)
-        download_rel = coerce_string(fm.get("download"))
-        fm["download"] = Path(download_rel).name if download_rel is not None else None
+        downloads = [
+            {"filename": entry["filename"], "label": entry["label"]}
+            for entry in work_file_entries_by_work_id.get(wid, [])
+        ]
+        if downloads:
+            fm["downloads"] = downloads
         raw_series_ids = fm.get("series_ids")
         series_ids = [coerce_string(item) for item in raw_series_ids] if isinstance(raw_series_ids, list) else []
         series_ids = [item for item in series_ids if item is not None]
@@ -1185,6 +1248,11 @@ def main() -> None:
     skipped = 0
     downloads_copied = 0
     downloads_missing = 0
+    work_files_status_updated = 0
+    work_files_published_date_updated = 0
+    work_files_status_idx = work_files_hi.get("status")
+    work_files_published_date_idx = work_files_hi.get("published_date")
+    work_files_published_date_missing_warned = False
     run_works_loop = run_work_pages or run_work_files or run_works_index_json
 
     def is_actionable_status(status_value: str) -> bool:
@@ -1379,8 +1447,6 @@ def main() -> None:
 
             processed += 1
             prefix = f"[{processed}/{total}] "
-            # Normalise download to a filename (basename only) for front matter/link text.
-            download_rel = coerce_string(cell(r, works_hi, "download")) if "download" in works_hi else None
             canonical_work_fm = build_canonical_work_record(wid)
             if canonical_work_fm is None:
                 skipped += 1
@@ -1440,40 +1506,70 @@ def main() -> None:
                 else:
                     skipped += 1
 
-            if run_work_files and download_rel is not None:
+            if run_work_files:
                 project_folder = work_project_folder_by_id.get(wid)
-                if Path(download_rel).is_absolute():
-                    download_src = Path(download_rel)
-                elif project_folder:
-                    download_src = projects_root / project_folder / download_rel
-                else:
-                    download_src = None
+                work_file_entries = work_file_entries_by_work_id.get(wid, [])
+                for entry in work_file_entries:
+                    download_name = entry["filename"]
+                    row_cells = entry["row_cells"]
+                    if project_folder:
+                        download_src = projects_root / project_folder / download_name
+                    else:
+                        download_src = None
+                    if work_files_stage_dir is None:
+                        download_dest = None
+                    else:
+                        download_dest = work_files_stage_dir / f"{wid}-{download_name}"
 
-                download_name = Path(download_rel).name
-                download_dest = works_files_dir / f"{wid}-{download_name}"
+                    if download_src is None:
+                        print(f"{prefix}Warning: cannot resolve download source for {wid} ({download_name})")
+                        downloads_missing += 1
+                        continue
+                    if not download_src.exists():
+                        print(f"{prefix}Warning: missing download source: {download_src}")
+                        downloads_missing += 1
+                        continue
+                    if download_dest is None:
+                        print(f"{prefix}Warning: cannot resolve work file staging destination for {wid} ({download_name})")
+                        downloads_missing += 1
+                        continue
 
-                if download_src is None:
-                    print(f"{prefix}Warning: cannot resolve download source for {wid} ({download_rel})")
-                    downloads_missing += 1
-                elif not download_src.exists():
-                    print(f"{prefix}Warning: missing download source: {download_src}")
-                    downloads_missing += 1
-                else:
                     if args.write:
                         download_dest.parent.mkdir(parents=True, exist_ok=True)
                         shutil.copy2(download_src, download_dest)
                         print(f"{prefix}COPY download: {download_src} -> {download_dest}")
                         downloads_copied += 1
+                        if work_files_status_idx is not None:
+                            status_was = normalize_status(row_cells[work_files_status_idx].value)
+                            if status_was != "published":
+                                row_cells[work_files_status_idx].value = "published"
+                                work_files_status_updated += 1
+                            if (status_was != "published") or args.force:
+                                if work_files_published_date_idx is not None:
+                                    row_cells[work_files_published_date_idx].value = today
+                                    work_files_published_date_updated += 1
+                                elif not work_files_published_date_missing_warned:
+                                    print(f"Warning: {args.work_files_sheet} sheet missing published_date column; skipping date updates.")
+                                    work_files_published_date_missing_warned = True
                     else:
                         print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
                         downloads_copied += 1
 
-    if run_works_loop and args.write and (status_updated > 0 or work_dimensions_updated > 0):
+    if run_works_loop and args.write and (
+        status_updated > 0
+        or work_dimensions_updated > 0
+        or work_files_status_updated > 0
+        or work_files_published_date_updated > 0
+    ):
         wb.save(xlsx_path)
         if status_updated > 0:
             print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
             print(f"Set published_date for {published_date_updated} row(s).")
+        if work_files_status_updated > 0:
+            print(f"Updated {args.work_files_sheet} status to 'published' for {work_files_status_updated} row(s).")
+        if work_files_published_date_updated > 0:
+            print(f"Set {args.work_files_sheet} published_date for {work_files_published_date_updated} row(s).")
         if work_dimensions_updated > 0:
             print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
     if run_works_loop:

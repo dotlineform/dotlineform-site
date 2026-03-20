@@ -19,7 +19,7 @@ Deletion scope:
 Intentionally left untouched:
 - assets/work_details/img/*
 - _includes/work_prose/<work_id>.md
-- assets/works/files/<work_id>-*
+- staged media under $DOTLINEFORM_MEDIA_BASE_DIR/works/files/<work_id>-*
 """
 
 from __future__ import annotations

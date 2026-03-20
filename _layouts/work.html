@@ -51,7 +51,7 @@ layout: default
   "height_cm": {{ page.height_cm | jsonify }},
   "width_cm": {{ page.width_cm | jsonify }},
   "depth_cm": {{ page.depth_cm | jsonify }},
-  "download": {{ page.download | jsonify }}
+  "downloads": {{ page.downloads | jsonify }}
 }
 {%- endcapture -%}
 
@@ -133,7 +133,7 @@ layout: default
       </div>
 
       <div class="page__row" id="workDownloadRow" hidden>
-        download <a id="workDownloadLink" target="_blank" rel="noopener"></a>
+        <span id="workDownloadLabel">download</span> <span id="workDownloadLinks"></span>
       </div>
 
       <div class="page__row" id="workCatRow">
@@ -228,6 +228,13 @@ layout: default
         .replace(/>/g, '&gt;');
     }
 
+    function escHtml(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
     function toNumber(v) {
       var n = Number(v);
       return Number.isFinite(n) ? n : null;
@@ -237,6 +244,22 @@ layout: default
       if (!Array.isArray(raw)) return [];
       return raw
         .map(function (item) { return text(item).toLowerCase(); })
+        .filter(Boolean);
+    }
+
+    function normalizeDownloads(raw) {
+      if (!Array.isArray(raw)) return [];
+      return raw
+        .map(function (item) {
+          if (!item || typeof item !== 'object') return null;
+          var filename = text(item.filename);
+          var label = text(item.label);
+          if (!filename || !label) return null;
+          return {
+            filename: filename,
+            label: label
+          };
+        })
         .filter(Boolean);
     }
 
@@ -314,7 +337,7 @@ layout: default
       var yearDisplay = text(record.year_display) || text(record.year);
       var mediumCaption = text(record.medium_caption);
       var duration = text(record.duration);
-      var downloadName = text(record.download);
+      var downloads = normalizeDownloads(record.downloads);
       var seriesIds = normalizeSeriesIds(record.series_ids);
       var seriesId = seriesIds.length ? seriesIds[0] : text(record.series_id).toLowerCase();
 
@@ -347,16 +370,21 @@ layout: default
       if (catId) catId.textContent = currentWorkId;
 
       var downloadRow = document.getElementById('workDownloadRow');
-      var downloadLink = document.getElementById('workDownloadLink');
-      if (downloadRow && downloadLink) {
-        if (downloadName && currentWorkId) {
+      var downloadLabel = document.getElementById('workDownloadLabel');
+      var downloadLinks = document.getElementById('workDownloadLinks');
+      if (downloadRow && downloadLabel && downloadLinks) {
+        if (downloads.length && currentWorkId) {
+          var linksHtml = downloads.map(function (item) {
+            var href = worksFilesBase + encodeURIComponent(currentWorkId + '-' + item.filename);
+            return '<a target="_blank" rel="noopener" href="' + escAttr(href) + '">' + escHtml(item.label) + '</a>';
+          }).join(', ');
           downloadRow.hidden = false;
-          downloadLink.textContent = downloadName;
-          downloadLink.setAttribute('href', worksFilesBase + encodeURIComponent(currentWorkId + '-' + downloadName));
+          downloadLabel.textContent = downloads.length > 1 ? 'downloads' : 'download';
+          downloadLinks.innerHTML = linksHtml;
         } else {
           downloadRow.hidden = true;
-          downloadLink.textContent = '';
-          downloadLink.removeAttribute('href');
+          downloadLabel.textContent = 'download';
+          downloadLinks.textContent = '';
         }
       }
 

@@ -950,7 +950,6 @@ def check_media(
     samples: List[Dict[str, Any]] = []
     works_img_dir = site_root / "assets/works/img"
     details_img_dir = site_root / "assets/work_details/img"
-    works_files_dir = site_root / "assets/works/files"
 
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
@@ -970,13 +969,6 @@ def check_media(
                 add_sample(samples, {"check": "media", "id": wid, "path": str(p), "message": f"missing expected work media file: {name}"}, max_samples)
         # Primary files are intentionally remote-hosted in this project.
         # Do not assert local primary-* presence, including primary-2400.
-
-        download = normalize_text(fm.get("download"))
-        if download != "":
-            expected_download = works_files_dir / f"{wid}-{Path(download).name}"
-            if not expected_download.exists():
-                errors += 1
-                add_sample(samples, {"check": "media", "id": wid, "path": str(expected_download), "message": "download declared but file missing in assets/works/files"}, max_samples)
 
     for duid, row in work_details.items():
         fm = row["fm"]
@@ -1073,7 +1065,6 @@ def check_orphans(
     if include_media_scan:
         works_img_dir = site_root / "assets/works/img"
         details_img_dir = site_root / "assets/work_details/img"
-        works_files_dir = site_root / "assets/works/files"
 
         for p in sorted(works_img_dir.glob("*.webp")):
             m = re.match(r"^(\d{5})-(?:thumb-(?:96|192)|primary-(?:800|1200|1600|2400))\.webp$", p.name)
@@ -1097,19 +1088,6 @@ def check_orphans(
             if duid not in detail_ids and duid not in canonical_detail_ids:
                 warnings += 1
                 add_sample(samples, {"check": "orphans", "id": duid, "path": str(p), "message": "orphan detail image file (no matching detail page)"}, max_samples)
-
-        for p in sorted(works_files_dir.glob("*")):
-            if not p.is_file():
-                continue
-            m = re.match(r"^(\d{5})-.+$", p.name)
-            if not m:
-                continue
-            wid = m.group(1)
-            if work_ids_scope is not None and wid not in work_ids_scope:
-                continue
-            if wid not in work_ids:
-                warnings += 1
-                add_sample(samples, {"check": "orphans", "id": wid, "path": str(p), "message": "orphan work download file (no matching work page)"}, max_samples)
 
     return {"name": "orphans", "error_count": errors, "warning_count": warnings, "samples": samples}
 
