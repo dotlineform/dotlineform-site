@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-2d21a851feda5952277290a8621aae98",
-    "generated_at_utc": "2026-03-19T22:45:01Z",
+    "version": "blake2b-5be56422f13c6ff01520c26f9c832721",
+    "generated_at_utc": "2026-03-20T13:56:49Z",
     "count": 79
   },
   "series": {
@@ -12,17 +12,14 @@
       "status": "published",
       "published_date": "2026-03-14",
       "title": "10,000",
-      "title_sort": "010,000",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00635",
-      "notes": null,
       "project_folders": [
         "10000"
       ],
-      "checksum": "949f7936521ad766775b9bb6f07724e3",
       "works": [
         "00635",
         "00636",
@@ -40,17 +37,14 @@
       "status": "published",
       "published_date": "2026-03-14",
       "title": "16 forms",
-      "title_sort": "016 forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00639",
-      "notes": null,
       "project_folders": [
         "16 forms"
       ],
-      "checksum": "adcb04d7b159c9e5268b15827adc50a6",
       "works": [
         "00639"
       ],
@@ -66,17 +60,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "2 bodies",
-      "title_sort": "002 bodies",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00533",
-      "notes": null,
       "project_folders": [
         "2 bodies"
       ],
-      "checksum": "08b62442f4463511d4f496d1f4fd88c3",
       "works": [
         "00526",
         "00527",
@@ -100,17 +91,14 @@
       "status": "published",
       "published_date": "2026-03-14",
       "title": "3 symbols",
-      "title_sort": "003 symbols",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00638",
-      "notes": null,
       "project_folders": [
         "3 symbols"
       ],
-      "checksum": "878d0f2bcfc45e81450f6902bf02c8b9",
       "works": [
         "00638"
       ],
@@ -126,17 +114,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "a doll story",
-      "title_sort": "a doll story",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00666",
-      "notes": null,
       "project_folders": [
         "a doll story"
       ],
-      "checksum": "1e789bd61e755824f20e094781ccb56a",
       "works": [
         "00641",
         "00642",
@@ -226,17 +211,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "a feeling that we are part of a structure",
-      "title_sort": "a feeling that we are part of a structure",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00717",
-      "notes": null,
       "project_folders": [
         "a feeling that we are part of a structure"
       ],
-      "checksum": "2fd4c8576e67b319f8450a68ad4b710a",
       "works": [
         "00716",
         "00717",
@@ -257,17 +239,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "a humid home full of light",
-      "title_sort": "a humid home full of light",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00729",
-      "notes": null,
       "project_folders": [
         "a humid home full of light"
       ],
-      "checksum": "95a82c701699964b494dcbd27115e8c0",
       "works": [
         "00722",
         "00723",
@@ -294,7 +273,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "a poem divided into 4 parts",
-      "title_sort": "a poem divided into 004 parts",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
@@ -304,7 +282,6 @@
       "project_folders": [
         "a poem divided into 4 parts"
       ],
-      "checksum": "f61b7748f9230643bb84300f69a05ba2",
       "works": [
         "00001",
         "00002",
@@ -323,17 +300,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "a theory of happiness is a theory of everything",
-      "title_sort": "a theory of happiness is a theory of everything",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2008,
       "year_display": "2008-10",
       "primary_work_id": "00734",
-      "notes": null,
       "project_folders": [
         "a theory of happiness.._"
       ],
-      "checksum": "e5385440331c3afedc25fa279585f6fb",
       "works": [
         "00734",
         "00735"
@@ -350,17 +324,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "all the little cracks",
-      "title_sort": "all the little cracks",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "2010, 2016",
       "primary_work_id": "00751",
-      "notes": null,
       "project_folders": [
         "all the little cracks"
       ],
-      "checksum": "e5642a538d0d8aecbd24926632dafb59",
       "works": [
         "00751",
         "00752"
@@ -377,17 +348,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "an act of kindness",
-      "title_sort": "an act of kindness",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00748",
-      "notes": null,
       "project_folders": [
         "an act of kindness"
       ],
-      "checksum": "0e9a3ad8288e999df2e2c647598aaa9f",
       "works": [
         "00736",
         "00737",
@@ -417,17 +385,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "assembly codes",
-      "title_sort": "assembly codes",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00753",
-      "notes": null,
       "project_folders": [
         "assembly codes"
       ],
-      "checksum": "800643f2b3de4d7ae460a9ff8ccb804d",
       "works": [
         "00753",
         "00754",
@@ -445,17 +410,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "base series",
-      "title_sort": "base series",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00756",
-      "notes": null,
       "project_folders": [
         "base series"
       ],
-      "checksum": "06e12019fb2939bd9376ee07fe34993c",
       "works": [
         "00756",
         "00757",
@@ -488,17 +450,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "birds",
-      "title_sort": "birds",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2020,
       "year_display": "2020",
       "primary_work_id": "00781",
-      "notes": null,
       "project_folders": [
         "birds"
       ],
-      "checksum": "eff6972646840ee90d0f23c2843e817b",
       "works": [
         "00774",
         "00775",
@@ -521,17 +480,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "birth of healing forms",
-      "title_sort": "birth of healing forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00782",
-      "notes": null,
       "project_folders": [
         "birth of healing forms"
       ],
-      "checksum": "6570f213eb426da606864c91e4f7a76e",
       "works": [
         "00782"
       ],
@@ -547,17 +503,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "body space",
-      "title_sort": "body space",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2007,
       "year_display": "2007",
       "primary_work_id": "00783",
-      "notes": null,
       "project_folders": [
         "body space"
       ],
-      "checksum": "bb99e0300b72de995ea45c9e0785a357",
       "works": [
         "00783",
         "00784",
@@ -581,17 +534,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "body space (reclining state)",
-      "title_sort": "body space (reclining state)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2019,
       "year_display": "2019",
       "primary_work_id": "00792",
-      "notes": null,
       "project_folders": [
         "body space (reclining state)"
       ],
-      "checksum": "7ffb4bccaade3bdae76b9a8feff47356",
       "works": [
         "00792",
         "00793",
@@ -615,17 +565,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "book dna",
-      "title_sort": "book dna",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "00801",
-      "notes": null,
       "project_folders": [
         "book dna"
       ],
-      "checksum": "eca4ad1cf0845cbdb054264e01e049b9",
       "works": [
         "00801",
         "00802",
@@ -645,17 +592,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "book of curves",
-      "title_sort": "book of curves",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00806",
-      "notes": null,
       "project_folders": [
         "book of curves"
       ],
-      "checksum": "f715dc7cbeaf2abcf8b93c37b2207d28",
       "works": [
         "00806",
         "00807",
@@ -675,17 +619,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "certainty",
-      "title_sort": "certainty",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2026,
       "year_display": "2001-26",
       "primary_work_id": "00389",
-      "notes": null,
       "project_folders": [
         "certainty"
       ],
-      "checksum": "a0a0656b078fdad14d8ec6c6c6643e0e",
       "works": [
         "00389"
       ],
@@ -701,17 +642,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "closeness",
-      "title_sort": "closeness",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2017,
       "year_display": "2017",
       "primary_work_id": "00811",
-      "notes": null,
       "project_folders": [
         "closeness"
       ],
-      "checksum": "67d929d3146f60129bbf7d4f5ba850b0",
       "works": [
         "00811",
         "00812"
@@ -728,18 +666,15 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "collected 1989-1998",
-      "title_sort": "collected 1989-1998",
       "sort_fields": "title,work_id",
       "series_type": "holding",
       "year": 1998,
       "year_display": "c. 1989-98",
       "primary_work_id": "00049",
-      "notes": null,
       "project_folders": [
         "collected 1989-1998",
         "nerve"
       ],
-      "checksum": "9319a0a70a8d896425be6c96c82769ed",
       "works": [
         "00093",
         "00174",
@@ -921,17 +856,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "collected digital c. 1998",
-      "title_sort": "collected digital c. 1998",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1998,
       "year_display": "c. 1998",
       "primary_work_id": "00285",
-      "notes": null,
       "project_folders": [
         "collected digital c. 1998"
       ],
-      "checksum": "2b380315ffc35dd4749a401061687223",
       "works": [
         "00226",
         "00227",
@@ -1003,17 +935,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "colouring book",
-      "title_sort": "colouring book",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1996,
       "year_display": "1996",
       "primary_work_id": "00219",
-      "notes": null,
       "project_folders": [
         "colouring book"
       ],
-      "checksum": "067d9906beaf05a5ee22dd67cc34d003",
       "works": [
         "00217",
         "00218",
@@ -1037,17 +966,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "colours",
-      "title_sort": "colours",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "00813",
-      "notes": null,
       "project_folders": [
         "colours"
       ],
-      "checksum": "fa7a72b3094f889e34bd2979d272ec66",
       "works": [
         "00813",
         "00814",
@@ -1067,17 +993,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "composite (blue red smoke)",
-      "title_sort": "composite (blue red smoke)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2004,
       "year_display": "2004",
       "primary_work_id": "00391",
-      "notes": null,
       "project_folders": [
         "composite (blue red smoke)"
       ],
-      "checksum": "e1db796f7bbe6440af6c79c739f1456c",
       "works": [
         "00391",
         "00616",
@@ -1095,17 +1018,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "concrete",
-      "title_sort": "concrete",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "00830",
-      "notes": null,
       "project_folders": [
         "concrete"
       ],
-      "checksum": "f20bbe7077011c9152ee1e29baf77866",
       "works": [
         "00818",
         "00819",
@@ -1134,17 +1054,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "creases",
-      "title_sort": "creases",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2016,
       "year_display": "2016",
       "primary_work_id": "00833",
-      "notes": null,
       "project_folders": [
         "creases"
       ],
-      "checksum": "3de0fd54897f249b5d42f2f9bf4e5bd8",
       "works": [
         "00832",
         "00833",
@@ -1165,17 +1082,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "cube structure",
-      "title_sort": "cube structure",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00849",
-      "notes": null,
       "project_folders": [
         "cube structure"
       ],
-      "checksum": "cc1077a7b8cc5cdfedcf159a6ff82dcb",
       "works": [
         "00838",
         "00839",
@@ -1202,17 +1116,14 @@
       "status": "published",
       "published_date": "2026-03-15",
       "title": "curl",
-      "title_sort": "curl",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2017,
       "year_display": "2017, 2022",
       "primary_work_id": "00851",
-      "notes": null,
       "project_folders": [
         "curl"
       ],
-      "checksum": "f7d392e676d4bdd1cc70974b89d4381e",
       "works": [
         "00850",
         "00851",
@@ -1244,17 +1155,14 @@
       "status": "published",
       "published_date": "2026-03-16",
       "title": "curve machine",
-      "title_sort": "curve machine",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2020,
       "year_display": "2020",
       "primary_work_id": "00867",
-      "notes": null,
       "project_folders": [
         "curve machine"
       ],
-      "checksum": "8e45a00275e127346fead66cdc588b8f",
       "works": [
         "00867",
         "00868",
@@ -1274,7 +1182,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "curve poems",
-      "title_sort": "curve poems",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
@@ -1284,7 +1191,6 @@
       "project_folders": [
         "curve poems (2025)"
       ],
-      "checksum": "2c2eff1b90fd5ff052208a60868904b7",
       "works": [
         "00286",
         "00287",
@@ -1386,17 +1292,14 @@
       "status": "published",
       "published_date": "2026-03-17",
       "title": "doll",
-      "title_sort": "doll",
       "sort_fields": "year,work_id",
       "series_type": "primary",
       "year": 1989,
       "year_display": "1989-2008",
       "primary_work_id": "00872",
-      "notes": null,
       "project_folders": [
         "doll"
       ],
-      "checksum": "fa3399521d9d83fed82867038083d335",
       "works": [
         "00872",
         "00877",
@@ -1440,17 +1343,14 @@
       "status": "published",
       "published_date": "2026-03-17",
       "title": "doll faces",
-      "title_sort": "doll faces",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00901",
-      "notes": null,
       "project_folders": [
         "doll faces"
       ],
-      "checksum": "a7325c53001a81391c30287112b04816",
       "works": [
         "00901",
         "00902",
@@ -1473,17 +1373,14 @@
       "status": "published",
       "published_date": "2026-03-17",
       "title": "doll sees everything",
-      "title_sort": "doll sees everything",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00919",
-      "notes": null,
       "project_folders": [
         "doll sees everything"
       ],
-      "checksum": "38a148a223cfd9d835fe50b1f2334470",
       "works": [
         "00909",
         "00910",
@@ -1515,17 +1412,14 @@
       "status": "published",
       "published_date": "2026-03-17",
       "title": "dot",
-      "title_sort": "dot",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "2010, 2012",
       "primary_work_id": "00936",
-      "notes": null,
       "project_folders": [
         "dot"
       ],
-      "checksum": "bc3adf98eb001c9db5bc327acd123286",
       "works": [
         "00926",
         "00927",
@@ -1551,17 +1445,14 @@
       "status": "published",
       "published_date": "2026-03-17",
       "title": "dot theory",
-      "title_sort": "dot theory",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00937",
-      "notes": null,
       "project_folders": [
         "dot theory"
       ],
-      "checksum": "fbba63c35344acd2508d6f0ab0f5c78f",
       "works": [
         "00937",
         "00938",
@@ -1588,17 +1479,14 @@
       "status": "published",
       "published_date": "2026-03-18",
       "title": "dotlineform (2021)",
-      "title_sort": "dotlineform (2021)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "00949",
-      "notes": null,
       "project_folders": [
         "dotlineform (2021)"
       ],
-      "checksum": "dee5e24494d8fc4a7d8aded06fb86b60",
       "works": [
         "00949",
         "00950",
@@ -1648,17 +1536,14 @@
       "status": "published",
       "published_date": "2026-03-18",
       "title": "dotlineform (2023)",
-      "title_sort": "dotlineform (2023)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00455",
-      "notes": null,
       "project_folders": [
         "dotlineform (2023)"
       ],
-      "checksum": "e2e74f476e77ba582ea58b8d9ca0f68b",
       "works": [
         "00455",
         "00984",
@@ -1691,17 +1576,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "dots",
-      "title_sort": "dots",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "2010",
       "primary_work_id": "00456",
-      "notes": null,
       "project_folders": [
         "dots"
       ],
-      "checksum": "ebfb48815c448a17aa1f08c9e6ebc7f0",
       "works": [
         "00456",
         "01001",
@@ -1723,17 +1605,14 @@
       "status": "published",
       "published_date": "2026-03-18",
       "title": "droplets",
-      "title_sort": "droplets",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2016,
       "year_display": "2014-16",
       "primary_work_id": "01017",
-      "notes": null,
       "project_folders": [
         "droplets"
       ],
-      "checksum": "20c9b0e8f3a5468154f7468d10d88657",
       "works": [
         "01007",
         "01008",
@@ -1778,17 +1657,14 @@
       "status": "published",
       "published_date": "2026-03-18",
       "title": "egg forms",
-      "title_sort": "egg forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "01037",
-      "notes": null,
       "project_folders": [
         "egg forms"
       ],
-      "checksum": "8668fc5fea6aad08fe37c47c78a9e2a1",
       "works": [
         "01037"
       ],
@@ -1804,17 +1680,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "egg prints",
-      "title_sort": "egg prints",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01038",
-      "notes": null,
       "project_folders": [
         "egg prints"
       ],
-      "checksum": "572cb719b2bf3eff6f78bb39f9921ced",
       "works": [
         "01038",
         "01039",
@@ -1835,17 +1708,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "entangled form",
-      "title_sort": "entangled form",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01044",
-      "notes": null,
       "project_folders": [
         "entangled form"
       ],
-      "checksum": "2b65f3ca660eb6b708ea9794ccad7edd",
       "works": [
         "01044",
         "01045"
@@ -1862,17 +1732,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "espresso",
-      "title_sort": "espresso",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2012,
       "year_display": "2012",
       "primary_work_id": "01046",
-      "notes": null,
       "project_folders": [
         "espresso"
       ],
-      "checksum": "7f93a6dab8fd3fcd485e74de88f4457f",
       "works": [
         "01046"
       ],
@@ -1888,17 +1755,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "field",
-      "title_sort": "field",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "01047",
-      "notes": null,
       "project_folders": [
         "field"
       ],
-      "checksum": "721c497e6574bd5461b80fce23bf75da",
       "works": [
         "01047",
         "01048"
@@ -1915,17 +1779,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "fireworks form",
-      "title_sort": "fireworks form",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01050",
-      "notes": null,
       "project_folders": [
         "fireworks form"
       ],
-      "checksum": "f6a8a87a8110fa6c0720771c39da9e89",
       "works": [
         "01049",
         "01050",
@@ -1943,17 +1804,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "flowers",
-      "title_sort": "flowers",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "01052",
-      "notes": null,
       "project_folders": [
         "flowers"
       ],
-      "checksum": "8f5263efe21fd4b8a626e4df12d1dd66",
       "works": [
         "01052",
         "01053",
@@ -1971,17 +1829,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "for David Lynch (2025)",
-      "title_sort": "for David Lynch (2025)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
       "year_display": "2025",
       "primary_work_id": "00346",
-      "notes": null,
       "project_folders": [
         "for David Lynch"
       ],
-      "checksum": "b5ace155d21da1e30b9a2bed963dd8b7",
       "works": [
         "00346"
       ],
@@ -1997,17 +1852,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "forest",
-      "title_sort": "forest",
       "sort_fields": "title,work_id",
       "series_type": "primary",
       "year": 2003,
       "year_display": "2003",
       "primary_work_id": "00392",
-      "notes": null,
       "project_folders": [
         "forest"
       ],
-      "checksum": "9f997efbf7f6d8a4f9c6ebff7bf34132",
       "works": [
         "00619",
         "00392",
@@ -2027,17 +1879,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "forest memories 1-48",
-      "title_sort": "forest memories 001-048",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00464",
-      "notes": null,
       "project_folders": [
         "forest memories 1-48"
       ],
-      "checksum": "48659cb7c524efd8021efd86e63d3529",
       "works": [
         "00464"
       ],
@@ -2053,17 +1902,14 @@
       "status": "published",
       "published_date": "2026-03-19",
       "title": "forests (2023)",
-      "title_sort": "forests (2023)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00468",
-      "notes": null,
       "project_folders": [
         "forests (2023)"
       ],
-      "checksum": "b3de9bac0970c30f7cb6ea9ea80bcae4",
       "works": [
         "00465",
         "00466",
@@ -2082,17 +1928,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "form mobile",
-      "title_sort": "form mobile",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2021,
       "year_display": "2021",
       "primary_work_id": "00535",
-      "notes": null,
       "project_folders": [
         "form mobile"
       ],
-      "checksum": "04480e143c84e9f15564fd28ef926180",
       "works": [
         "00535",
         "00582",
@@ -2126,7 +1969,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "found forms",
-      "title_sort": "found forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2025,
@@ -2136,7 +1978,6 @@
       "project_folders": [
         "found forms"
       ],
-      "checksum": "54b66f66c1f16d3fe341ffa630d90c84",
       "works": [
         "00403",
         "00404",
@@ -2202,17 +2043,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "glass forms",
-      "title_sort": "glass forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "c. 2010?",
       "primary_work_id": "00384",
-      "notes": null,
       "project_folders": [
         "glass forms"
       ],
-      "checksum": "7fd5ab49764097377225d13b6b969200",
       "works": [
         "00384"
       ],
@@ -2228,17 +2066,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "harmony",
-      "title_sort": "harmony",
       "sort_fields": "title,work_id",
       "series_type": "primary",
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00379",
-      "notes": null,
       "project_folders": [
         "harmony"
       ],
-      "checksum": "5efd51d1b1a0cd5ccb83812f2e4417a2",
       "works": [
         "00380",
         "00381",
@@ -2258,17 +2093,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "heaven and earth",
-      "title_sort": "heaven and earth",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2011,
       "year_display": "2011",
       "primary_work_id": "00469",
-      "notes": null,
       "project_folders": [
         "heaven and earth"
       ],
-      "checksum": "0dab5b5a776d710ba20a2d4ef9365441",
       "works": [
         "00469"
       ],
@@ -2284,7 +2116,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "intuition (2020)",
-      "title_sort": "intuition (2020)",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2020,
@@ -2294,7 +2125,6 @@
       "project_folders": [
         "intuition (2020)"
       ],
-      "checksum": "a31604db7a245cbae0ac46f9096f532f",
       "works": [
         "00457"
       ],
@@ -2310,17 +2140,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "k crystals",
-      "title_sort": "k crystals",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2009,
       "year_display": "2009",
       "primary_work_id": "00625",
-      "notes": null,
       "project_folders": [
         "k crystals"
       ],
-      "checksum": "b26b18cca82b35ff667c376ad374e070",
       "works": [
         "00621",
         "00622",
@@ -2343,17 +2170,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "kylie structures",
-      "title_sort": "kylie structures",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00520",
-      "notes": null,
       "project_folders": [
         "kylie structures"
       ],
-      "checksum": "c65100e781794803d5a156a8552b1e90",
       "works": [
         "00520",
         "00521",
@@ -2372,17 +2196,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "landscapes",
-      "title_sort": "landscapes",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2023,
       "year_display": "2023",
       "primary_work_id": "00516",
-      "notes": null,
       "project_folders": [
         "landscapes"
       ],
-      "checksum": "16255c493f9d857644a439c2051aa3c4",
       "works": [
         "00516",
         "00517",
@@ -2400,7 +2221,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "leaf",
-      "title_sort": "leaf",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2016,
@@ -2410,7 +2230,6 @@
       "project_folders": [
         "leaf"
       ],
-      "checksum": "67e86c336168988b8ab4f7b81d9bf723",
       "works": [
         "00458"
       ],
@@ -2426,17 +2245,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "learning to draw landscapes",
-      "title_sort": "learning to draw landscapes",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2010,
       "year_display": "c. 2010?, 2022",
       "primary_work_id": "00127",
-      "notes": null,
       "project_folders": [
         "learning to draw landscapes"
       ],
-      "checksum": "34067b7cdc52716def48a4fb4454ae69",
       "works": [
         "00114",
         "00115",
@@ -2468,17 +2284,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "lipseyes",
-      "title_sort": "lipseyes",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2003,
       "year_display": "2003",
       "primary_work_id": "00388",
-      "notes": null,
       "project_folders": [
         "lipseyes"
       ],
-      "checksum": "2ba38f3aa97274d0c27437796a6ddd4b",
       "works": [
         "00388"
       ],
@@ -2494,17 +2307,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "living surface hand form",
-      "title_sort": "living surface hand form",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2004,
       "year_display": "1989, 2004",
       "primary_work_id": "00463",
-      "notes": null,
       "project_folders": [
         "living surface hand form"
       ],
-      "checksum": "b3755e1f4f341a1c9cb9297c1d926050",
       "works": [
         "00463"
       ],
@@ -2520,7 +2330,6 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "mm",
-      "title_sort": "mm",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2009,
@@ -2530,7 +2339,6 @@
       "project_folders": [
         "mm"
       ],
-      "checksum": "e57de7f96a627003d69893645dd35f2a",
       "works": [
         "00378",
         "00470",
@@ -2592,17 +2400,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "models",
-      "title_sort": "models",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1994,
       "year_display": "1994",
       "primary_work_id": "00540",
-      "notes": null,
       "project_folders": [
         "models"
       ],
-      "checksum": "dca90daa075b2a1ae20c838617bfb77a",
       "works": [
         "00130",
         "00536",
@@ -2628,17 +2433,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "molecule forms",
-      "title_sort": "molecule forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00459",
-      "notes": null,
       "project_folders": [
         "molecule forms"
       ],
-      "checksum": "41830518e1202b423dba865e11bf9525",
       "works": [
         "00459"
       ],
@@ -2654,17 +2456,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "molecules",
-      "title_sort": "molecules",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2013,
       "year_display": "2013",
       "primary_work_id": "00460",
-      "notes": null,
       "project_folders": [
         "molecules"
       ],
-      "checksum": "e75878ced66c6c9b2f85bc7d4fd60d49",
       "works": [
         "00460",
         "00461",
@@ -2682,17 +2481,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "mouse story",
-      "title_sort": "mouse story",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1993,
       "year_display": "1991-93",
       "primary_work_id": "00160",
-      "notes": null,
       "project_folders": [
         "mouse story"
       ],
-      "checksum": "55a01154e84bd093748902f3b84c3288",
       "works": [
         "00160",
         "00161",
@@ -2710,7 +2506,6 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "nerve",
-      "title_sort": "nerve",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 1995,
@@ -2722,7 +2517,6 @@
         "nerve (abattoir)",
         "nerve (formaldehyde form)"
       ],
-      "checksum": "3076d2b709dcac0ec1a4c2d59c53145a",
       "works": [
         "00008",
         "00163",
@@ -2740,7 +2534,6 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "nerve forms",
-      "title_sort": "nerve forms",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2004,
@@ -2750,7 +2543,6 @@
       "project_folders": [
         "nerve forms"
       ],
-      "checksum": "0b5b8efb462703ff1eb528c97b7d8872",
       "works": [
         "00385",
         "00386",
@@ -2770,17 +2562,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "particle theory",
-      "title_sort": "particle theory",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2008,
       "year_display": "2008",
       "primary_work_id": "00553",
-      "notes": null,
       "project_folders": [
         "particle theory"
       ],
-      "checksum": "a92b37c9471c1036e661113973690fcd",
       "works": [
         "00549",
         "00550",
@@ -2800,18 +2589,15 @@
       "status": "published",
       "published_date": "2026-03-14",
       "title": "quantum random number theory",
-      "title_sort": "quantum random number theory",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2015,
       "year_display": "2009, 2015",
       "primary_work_id": "00630",
-      "notes": null,
       "project_folders": [
         "qrnt",
         "qrnt (bits symbols)"
       ],
-      "checksum": "d22e8d371d97b13627c4a6ee3d38d9b6",
       "works": [
         "00383",
         "00629",
@@ -2833,17 +2619,14 @@
       "status": "published",
       "published_date": "2026-03-05",
       "title": "r",
-      "title_sort": "r",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2001,
       "year_display": "2001",
       "primary_work_id": "00142",
-      "notes": null,
       "project_folders": [
         "r"
       ],
-      "checksum": "6263673c3d0a43da25e92ecef2e5fa67",
       "works": [
         "00132",
         "00133",
@@ -2885,17 +2668,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "spiders",
-      "title_sort": "spiders",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2006,
       "year_display": "2006",
       "primary_work_id": "00402",
-      "notes": null,
       "project_folders": [
         "spiders"
       ],
-      "checksum": "694847eb79201781979e53ac08af423e",
       "works": [
         "00402"
       ],
@@ -2911,17 +2691,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "string theory",
-      "title_sort": "string theory",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2012,
       "year_display": "2005-12",
       "primary_work_id": "00573",
-      "notes": null,
       "project_folders": [
         "string theory"
       ],
-      "checksum": "f98064b7d3d1325885e847ca6e72886c",
       "works": [
         "00554",
         "00555",
@@ -2963,17 +2740,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "tree",
-      "title_sort": "tree",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2024,
       "year_display": "2024",
       "primary_work_id": "00546",
-      "notes": null,
       "project_folders": [
         "tree"
       ],
-      "checksum": "14446d467f069f408891d3740637819d",
       "works": [
         "00546",
         "00547",
@@ -2991,17 +2765,14 @@
       "status": "published",
       "published_date": "2026-03-13",
       "title": "wa",
-      "title_sort": "wa",
       "sort_fields": "work_id",
       "series_type": "primary",
       "year": 2008,
       "year_display": "2008, 2011",
       "primary_work_id": "00615",
-      "notes": null,
       "project_folders": [
         "wa"
       ],
-      "checksum": "e6bb9e2deb23a7d6b8ebdbfaeb8314c4",
       "works": [
         "00394",
         "00395",

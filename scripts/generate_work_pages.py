@@ -1801,18 +1801,6 @@ def main() -> None:
                 }
 
             sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
-            # Keep checksum semantics aligned with generated _series/<series_id>.md.
-            series_front_matter_like = {
-                "series_id": sid,
-                "title": series_title,
-                "sort_fields": sort_fields,
-                "year": year,
-                "year_display": year_display,
-                "primary_work_id": primary_work_id,
-                "layout": "series",
-            }
-            series_checksum = compute_work_checksum(series_front_matter_like)
-
             series_payload_unsorted[sid] = compact_json_object({
                 "series_id": sid,
                 "layout": "series",
@@ -1826,7 +1814,6 @@ def main() -> None:
                 "primary_work_id": primary_work_id,
                 "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
                 "project_folders": series_project_folders_by_id.get(sid, []),
-                "checksum": series_checksum,
                 "works": ordered_work_ids,
                 "thumb": thumb,
             })

@@ -145,7 +145,7 @@ Useful flags:
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
-    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`, `checksum`)
+    - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`)
     - optional empty fields are omitted from JSON rather than written as `null`
     - ordered `works` (in canonical series sort order derived from `sort_fields`) and `thumb` selection
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
