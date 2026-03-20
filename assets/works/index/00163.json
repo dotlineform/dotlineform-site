@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-a56dfa67e1c5f6be2336d4e3ea813551",
-    "generated_at_utc": "2026-03-20T19:14:08Z",
+    "version": "blake2b-67772bb86690e05c5102f9947c4b1a7a",
+    "generated_at_utc": "2026-03-20T19:38:38Z",
     "work_id": "00163",
     "count": 10
   },
@@ -20,7 +20,13 @@
     "height_cm": 30.5,
     "width_cm": 21.5,
     "width_px": 1545,
-    "height_px": 2193
+    "height_px": 2193,
+    "downloads": [
+      {
+        "filename": "nerve (abattoir).pdf",
+        "label": "nerve (abattoir).pdf"
+      }
+    ]
   },
   "sections": [
     {
