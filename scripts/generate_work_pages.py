@@ -389,8 +389,16 @@ def build_download_entry(filename: Any, label: Any) -> Dict[str, str]:
         raise ValueError("Missing filename")
     if label_value is None:
         raise ValueError("Missing label")
+    source_name = Path(filename_value).name
+    stem = Path(source_name).stem
+    suffix = "".join(Path(source_name).suffixes)
+    safe_stem = re.sub(r"[^A-Za-z0-9._-]+", "-", stem).strip("-._")
+    safe_stem = re.sub(r"-{2,}", "-", safe_stem)
+    if safe_stem == "":
+        safe_stem = "file"
     return {
-        "filename": Path(filename_value).name,
+        "source_filename": source_name,
+        "filename": f"{safe_stem}{suffix}",
         "label": label_value,
     }
 
@@ -1115,6 +1123,7 @@ def main() -> None:
                 raise SystemExit(f"{args.work_files_sheet} row {row_number}: {exc}") from exc
             work_file_entries_by_work_id.setdefault(wid, []).append(
                 {
+                    "source_filename": download_entry["source_filename"],
                     "filename": download_entry["filename"],
                     "label": download_entry["label"],
                     "row_number": row_number,
@@ -1155,7 +1164,7 @@ def main() -> None:
         fm.update(base)
         downloads = [
             {"filename": entry["filename"], "label": entry["label"]}
-            for entry in work_file_entries_by_work_id.get(wid, [])
+                for entry in work_file_entries_by_work_id.get(wid, [])
         ]
         if downloads:
             fm["downloads"] = downloads
@@ -1510,10 +1519,11 @@ def main() -> None:
                 project_folder = work_project_folder_by_id.get(wid)
                 work_file_entries = work_file_entries_by_work_id.get(wid, [])
                 for entry in work_file_entries:
+                    source_filename = entry["source_filename"]
                     download_name = entry["filename"]
                     row_cells = entry["row_cells"]
                     if project_folder:
-                        download_src = projects_root / project_folder / download_name
+                        download_src = projects_root / project_folder / source_filename
                     else:
                         download_src = None
                     if work_files_stage_dir is None:

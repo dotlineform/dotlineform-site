@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-861abf379a8f54be4cb51b784c955249",
-    "generated_at_utc": "2026-03-20T19:38:38Z",
+    "version": "blake2b-ca257267305a7cec014ebe2bc2a755bc",
+    "generated_at_utc": "2026-03-20T19:59:27Z",
     "work_id": "00161",
     "count": 0
   },
@@ -23,7 +23,7 @@
     "height_px": 4405,
     "downloads": [
       {
-        "filename": "mouse story (extended version).pdf",
+        "filename": "mouse-story-extended-version.pdf",
         "label": "mouse story (extended version).pdf"
       }
     ]

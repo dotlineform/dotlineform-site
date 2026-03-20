@@ -476,7 +476,8 @@ If `WorkFiles` contains rows for a work, generation stages those files and expos
 - Source path:
   - `[projects-base-dir]/projects/[project_folder]/[filename]`
 - Destination path:
-  - `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/[work_id]-[filename.ext]`
+  - `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/[work_id]-[url-safe-filename.ext]`
+  - staged filenames preserve the extension and normalize the basename for URLs (for example spaces become `-`)
 - Work page link:
   - Label: `download` or `downloads`
   - Link text: `WorkFiles.label`
