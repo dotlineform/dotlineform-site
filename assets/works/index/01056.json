@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-14773185d59281daa0f431aafb225364",
+    "generated_at_utc": "2026-03-20T23:15:45Z",
+    "work_id": "01056",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01056",
+    "title": "fluid form 2",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "fluid-forms"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

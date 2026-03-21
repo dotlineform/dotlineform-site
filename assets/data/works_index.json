@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-0c47ddd4430efe2d56aa1aa735b84350",
-    "generated_at_utc": "2026-03-20T13:11:51Z",
-    "count": 1048
+    "version": "blake2b-779890052d67889c74eed10fee92fb07",
+    "generated_at_utc": "2026-03-20T23:15:45Z",
+    "count": 1064
   },
   "works": {
     "00001": {
@@ -9915,6 +9915,150 @@
       "year_display": "2023",
       "series_ids": [
         "flowers"
+      ]
+    },
+    "01055": {
+      "work_id": "01055",
+      "title": "fluid form 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01056": {
+      "work_id": "01056",
+      "title": "fluid form 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01057": {
+      "work_id": "01057",
+      "title": "fluid form 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01058": {
+      "work_id": "01058",
+      "title": "fluid form 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01059": {
+      "work_id": "01059",
+      "title": "fluid form 5",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01060": {
+      "work_id": "01060",
+      "title": "fluid form 6",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01061": {
+      "work_id": "01061",
+      "title": "fluid form 7",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01062": {
+      "work_id": "01062",
+      "title": "fluid form 8",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01063": {
+      "work_id": "01063",
+      "title": "fluid form 9",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01064": {
+      "work_id": "01064",
+      "title": "fluid form 10",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01065": {
+      "work_id": "01065",
+      "title": "fluid form 11",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01066": {
+      "work_id": "01066",
+      "title": "fluid form 12",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01067": {
+      "work_id": "01067",
+      "title": "fluid form 13",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01068": {
+      "work_id": "01068",
+      "title": "fluid form 14",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01069": {
+      "work_id": "01069",
+      "title": "fluid form 15",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
+      ]
+    },
+    "01070": {
+      "work_id": "01070",
+      "title": "fluid form 16",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fluid-forms"
       ]
     }
   }

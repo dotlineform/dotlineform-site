@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-eea9344b6d3013f2636208de566772ce",
-    "generated_at_utc": "2026-03-20T15:49:45Z",
-    "count": 79
+    "version": "blake2b-89d96d36a244041c502b597eb46bef5f",
+    "generated_at_utc": "2026-03-20T23:15:44Z",
+    "count": 80
   },
   "series": {
     "10000": {
@@ -1581,6 +1581,38 @@
         "01052",
         "01053",
         "01054"
+      ]
+    },
+    "fluid-forms": {
+      "series_id": "fluid-forms",
+      "layout": "series",
+      "status": "draft",
+      "title": "fluid forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012",
+      "primary_work_id": "01055",
+      "project_folders": [
+        "fluid forms"
+      ],
+      "works": [
+        "01055",
+        "01056",
+        "01057",
+        "01058",
+        "01059",
+        "01060",
+        "01061",
+        "01062",
+        "01063",
+        "01064",
+        "01065",
+        "01066",
+        "01067",
+        "01068",
+        "01069",
+        "01070"
       ]
     },
     "for-david-lynch": {
