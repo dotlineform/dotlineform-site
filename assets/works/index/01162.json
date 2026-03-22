@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-26e8c3cf7c471cb48a8a025c68a20ccc",
+    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "work_id": "01162",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01162",
+    "title": "folding structure 2",
+    "year": 2016,
+    "year_display": "2016",
+    "series_ids": [
+      "folding-structure"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

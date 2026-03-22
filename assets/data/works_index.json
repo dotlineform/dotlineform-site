@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-559640c4c12bfa35c4214f550b5044a5",
-    "generated_at_utc": "2026-03-22T18:43:50Z",
-    "count": 1154
+    "version": "blake2b-dc0bd14b52100ee9d6a3aedf930f333b",
+    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "count": 1167
   },
   "works": {
     "00001": {
@@ -10869,6 +10869,123 @@
       "year_display": "2022",
       "series_ids": [
         "folding-forms"
+      ]
+    },
+    "01161": {
+      "work_id": "01161",
+      "title": "folding structure 1",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01162": {
+      "work_id": "01162",
+      "title": "folding structure 2",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01163": {
+      "work_id": "01163",
+      "title": "folding structure 3",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01164": {
+      "work_id": "01164",
+      "title": "folding structure 4",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01165": {
+      "work_id": "01165",
+      "title": "folding structure 5",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01166": {
+      "work_id": "01166",
+      "title": "folding structure 6",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01167": {
+      "work_id": "01167",
+      "title": "folding structure 7",
+      "year": 2016,
+      "year_display": "2016",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01169": {
+      "work_id": "01169",
+      "title": "folding structure 8",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01170": {
+      "work_id": "01170",
+      "title": "folding structure 9",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01171": {
+      "work_id": "01171",
+      "title": "folding structure - version 1",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01172": {
+      "work_id": "01172",
+      "title": "folding structure - version 2",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01173": {
+      "work_id": "01173",
+      "title": "folding structure - version 2 (detail)",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "folding-structure"
+      ]
+    },
+    "01174": {
+      "work_id": "01174",
+      "title": "folding structure - version 3",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "folding-structure"
       ]
     }
   }

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9c2666a6ac0872e346a77973d7f1bdc0",
+    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "work_id": "01164",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01164",
+    "title": "folding structure 4",
+    "year": 2016,
+    "year_display": "2016",
+    "series_ids": [
+      "folding-structure"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

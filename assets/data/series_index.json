@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-8a203514f2340740dfd8fb5fa87894ac",
-    "generated_at_utc": "2026-03-22T18:43:50Z",
-    "count": 82
+    "version": "blake2b-68c34f3c244e17fb04283acdaa4e2ff2",
+    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "count": 83
   },
   "series": {
     "10000": {
@@ -1672,7 +1672,8 @@
     "folding-forms": {
       "series_id": "folding-forms",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-22",
       "title": "folding forms",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1737,6 +1738,35 @@
         "01158",
         "01159",
         "01160"
+      ]
+    },
+    "folding-structure": {
+      "series_id": "folding-structure",
+      "layout": "series",
+      "status": "draft",
+      "title": "folding structure",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2013,
+      "year_display": "2013-20",
+      "primary_work_id": "01161",
+      "project_folders": [
+        "folding structure"
+      ],
+      "works": [
+        "01161",
+        "01162",
+        "01163",
+        "01164",
+        "01165",
+        "01166",
+        "01167",
+        "01169",
+        "01170",
+        "01171",
+        "01172",
+        "01173",
+        "01174"
       ]
     },
     "for-david-lynch": {
