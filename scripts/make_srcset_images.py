@@ -137,7 +137,7 @@ def output_path(output_dir: Path, variant_subdir: str, item_id: str, variant_lab
 
 
 def run_ffmpeg(cmd: Sequence[str]) -> None:
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, stdin=subprocess.DEVNULL)
 
 
 def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessResult) -> None:
@@ -153,6 +153,7 @@ def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessRe
             "-hide_banner",
             "-loglevel",
             "error",
+            "-nostdin",
             "-y",
             "-i",
             str(src),
@@ -188,6 +189,7 @@ def make_primary(src: Path, width: int, out: Path, dry_run: bool, result: Proces
             "-hide_banner",
             "-loglevel",
             "error",
+            "-nostdin",
             "-y",
             "-i",
             str(src),
@@ -225,6 +227,7 @@ def convert_heif_source(src: Path, item_id: str, dry_run: bool, has_sips: bool, 
         subprocess.run(
             ["sips", "-s", "format", "jpeg", "-s", "formatOptions", "90", str(src), "--out", str(tmp_jpg)],
             check=True,
+            stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
         )
         return tmp_jpg, tmp_dir
@@ -236,6 +239,7 @@ def convert_heif_source(src: Path, item_id: str, dry_run: bool, has_sips: bool, 
         subprocess.run(
             ["heif-convert", "-q", "90", str(src), str(tmp_jpg)],
             check=True,
+            stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
         )
         return tmp_jpg, tmp_dir
