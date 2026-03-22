@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-144f935079e25d7e30e542a0069a3dd4",
+    "generated_at_utc": "2026-03-22T18:43:50Z",
+    "work_id": "01148",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01148",
+    "title": "folding version 4",
+    "year": 2022,
+    "year_display": "2022",
+    "series_ids": [
+      "folding-forms"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

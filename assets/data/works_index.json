@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-9962fb34cd89630e34646907fbb64e1c",
-    "generated_at_utc": "2026-03-22T15:14:29Z",
-    "count": 1100
+    "version": "blake2b-559640c4c12bfa35c4214f550b5044a5",
+    "generated_at_utc": "2026-03-22T18:43:50Z",
+    "count": 1154
   },
   "works": {
     "00001": {
@@ -10383,6 +10383,492 @@
       "year_display": "2019",
       "series_ids": [
         "fog"
+      ]
+    },
+    "01107": {
+      "work_id": "01107",
+      "title": "folding forms 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01108": {
+      "work_id": "01108",
+      "title": "folding forms 1'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01109": {
+      "work_id": "01109",
+      "title": "folding forms 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01110": {
+      "work_id": "01110",
+      "title": "folding forms 2'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01111": {
+      "work_id": "01111",
+      "title": "folding forms 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01112": {
+      "work_id": "01112",
+      "title": "folding forms 3'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01113": {
+      "work_id": "01113",
+      "title": "folding forms 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01114": {
+      "work_id": "01114",
+      "title": "folding forms 4'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01115": {
+      "work_id": "01115",
+      "title": "folding forms 5",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01116": {
+      "work_id": "01116",
+      "title": "folding forms 5'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01117": {
+      "work_id": "01117",
+      "title": "folding forms 6",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01118": {
+      "work_id": "01118",
+      "title": "folding forms 6'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01119": {
+      "work_id": "01119",
+      "title": "folding forms 7",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01120": {
+      "work_id": "01120",
+      "title": "folding forms 7' reverse",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01121": {
+      "work_id": "01121",
+      "title": "folding forms 7'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01122": {
+      "work_id": "01122",
+      "title": "folding forms 8",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01123": {
+      "work_id": "01123",
+      "title": "folding forms 8'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01124": {
+      "work_id": "01124",
+      "title": "folding forms 9 open (1)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01125": {
+      "work_id": "01125",
+      "title": "folding forms 9 open (2)",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01126": {
+      "work_id": "01126",
+      "title": "folding forms 9",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01127": {
+      "work_id": "01127",
+      "title": "folding forms 9'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01128": {
+      "work_id": "01128",
+      "title": "folding forms 10",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01129": {
+      "work_id": "01129",
+      "title": "folding forms 10'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01130": {
+      "work_id": "01130",
+      "title": "folding forms 11",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01131": {
+      "work_id": "01131",
+      "title": "folding forms 11'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01132": {
+      "work_id": "01132",
+      "title": "folding forms 12",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01133": {
+      "work_id": "01133",
+      "title": "folding forms 12'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01134": {
+      "work_id": "01134",
+      "title": "folding forms 13",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01135": {
+      "work_id": "01135",
+      "title": "folding forms 13'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01136": {
+      "work_id": "01136",
+      "title": "folding forms 14",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01137": {
+      "work_id": "01137",
+      "title": "folding forms 14' reverse",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01138": {
+      "work_id": "01138",
+      "title": "folding forms 14'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01139": {
+      "work_id": "01139",
+      "title": "folding forms 15",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01140": {
+      "work_id": "01140",
+      "title": "folding forms 15'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01141": {
+      "work_id": "01141",
+      "title": "folding forms 16",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01142": {
+      "work_id": "01142",
+      "title": "folding forms 16'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01143": {
+      "work_id": "01143",
+      "title": "folding forms 17",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01144": {
+      "work_id": "01144",
+      "title": "folding forms 17'",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01145": {
+      "work_id": "01145",
+      "title": "folding version 1",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01146": {
+      "work_id": "01146",
+      "title": "folding version 2",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01147": {
+      "work_id": "01147",
+      "title": "folding version 3",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01148": {
+      "work_id": "01148",
+      "title": "folding version 4",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01149": {
+      "work_id": "01149",
+      "title": "folding version 5",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01150": {
+      "work_id": "01150",
+      "title": "folding version 6",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01151": {
+      "work_id": "01151",
+      "title": "folding version 7",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01152": {
+      "work_id": "01152",
+      "title": "folding version 8",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01153": {
+      "work_id": "01153",
+      "title": "folding version 9",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01154": {
+      "work_id": "01154",
+      "title": "folding version 10",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01155": {
+      "work_id": "01155",
+      "title": "folding version 11",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01156": {
+      "work_id": "01156",
+      "title": "folding version 12",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01157": {
+      "work_id": "01157",
+      "title": "folding version 13",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01158": {
+      "work_id": "01158",
+      "title": "folding version 14",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01159": {
+      "work_id": "01159",
+      "title": "folding version 15",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
+      ]
+    },
+    "01160": {
+      "work_id": "01160",
+      "title": "folding version 16",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "folding-forms"
       ]
     }
   }

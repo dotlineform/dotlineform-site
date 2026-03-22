@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d09d3fba27664a3e3c76262faa52c9c8",
+    "generated_at_utc": "2026-03-22T18:43:50Z",
+    "work_id": "01131",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01131",
+    "title": "folding forms 11'",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "folding-forms"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 29.7,
+    "width_cm": 21.0,
+    "width_px": 1671,
+    "height_px": 2363
+  },
+  "sections": []
+}
