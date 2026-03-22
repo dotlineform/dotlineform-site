@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-68c34f3c244e17fb04283acdaa4e2ff2",
-    "generated_at_utc": "2026-03-22T20:32:22Z",
-    "count": 83
+    "version": "blake2b-0278ff0a0af287e589fa79547dec749a",
+    "generated_at_utc": "2026-03-22T21:20:18Z",
+    "count": 84
   },
   "series": {
     "10000": {
@@ -1743,7 +1743,8 @@
     "folding-structure": {
       "series_id": "folding-structure",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-22",
       "title": "folding structure",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1807,6 +1808,23 @@
         "00618",
         "00390",
         "00393"
+      ]
+    },
+    "forest-2024": {
+      "series_id": "forest-2024",
+      "layout": "series",
+      "status": "draft",
+      "title": "forest (2024)",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "01175",
+      "project_folders": [
+        "forest (2024)"
+      ],
+      "works": [
+        "01175"
       ]
     },
     "forest-memories-1-48": {

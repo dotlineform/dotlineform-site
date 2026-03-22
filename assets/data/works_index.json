@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-dc0bd14b52100ee9d6a3aedf930f333b",
-    "generated_at_utc": "2026-03-22T20:32:22Z",
-    "count": 1167
+    "version": "blake2b-d759a50b06ec2f063e2aff65e6e651b9",
+    "generated_at_utc": "2026-03-22T21:20:19Z",
+    "count": 1168
   },
   "works": {
     "00001": {
@@ -10986,6 +10986,15 @@
       "year_display": "2020",
       "series_ids": [
         "folding-structure"
+      ]
+    },
+    "01175": {
+      "work_id": "01175",
+      "title": "forest",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "forest-2024"
       ]
     }
   }

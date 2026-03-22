@@ -1,0 +1,191 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-e3130eca1dc90a9209ed0170757f3cf5",
+    "generated_at_utc": "2026-03-22T21:20:19Z",
+    "work_id": "01175",
+    "count": 16
+  },
+  "work": {
+    "work_id": "01175",
+    "title": "forest",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "forest-2024"
+    ],
+    "medium_type": "painting",
+    "medium_caption": "mixed media on board",
+    "height_cm": 61.0,
+    "width_cm": 91.0,
+    "width_px": 8268,
+    "height_px": 5560
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01175",
+          "detail_id": "001",
+          "detail_uid": "01175-001",
+          "title": "forest detail 1",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "002",
+          "detail_uid": "01175-002",
+          "title": "forest detail 2",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "003",
+          "detail_uid": "01175-003",
+          "title": "forest detail 3",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "004",
+          "detail_uid": "01175-004",
+          "title": "forest detail 4",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "005",
+          "detail_uid": "01175-005",
+          "title": "forest detail 5",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "006",
+          "detail_uid": "01175-006",
+          "title": "forest detail 6",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "007",
+          "detail_uid": "01175-007",
+          "title": "forest detail 7",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "008",
+          "detail_uid": "01175-008",
+          "title": "forest detail 8",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "009",
+          "detail_uid": "01175-009",
+          "title": "forest detail 9",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "010",
+          "detail_uid": "01175-010",
+          "title": "forest detail 10",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "011",
+          "detail_uid": "01175-011",
+          "title": "forest detail 11",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "012",
+          "detail_uid": "01175-012",
+          "title": "forest detail 12",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "013",
+          "detail_uid": "01175-013",
+          "title": "forest detail 13",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "014",
+          "detail_uid": "01175-014",
+          "title": "forest detail 14",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "015",
+          "detail_uid": "01175-015",
+          "title": "forest detail 15",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01175",
+          "detail_id": "016",
+          "detail_uid": "01175-016",
+          "title": "forest detail 16",
+          "project_subfolder": "details",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}
