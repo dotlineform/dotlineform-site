@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-0278ff0a0af287e589fa79547dec749a",
-    "generated_at_utc": "2026-03-22T21:20:18Z",
-    "count": 84
+    "version": "blake2b-edc0e74082dbc9e336791721a6117ac5",
+    "generated_at_utc": "2026-03-22T21:48:00Z",
+    "count": 85
   },
   "series": {
     "10000": {
@@ -1813,7 +1813,8 @@
     "forest-2024": {
       "series_id": "forest-2024",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-22",
       "title": "forest (2024)",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1900,6 +1901,42 @@
         "00597",
         "00598",
         "00599"
+      ]
+    },
+    "form-space": {
+      "series_id": "form-space",
+      "layout": "series",
+      "status": "draft",
+      "title": "form space",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2007,
+      "year_display": "2007",
+      "primary_work_id": "01183",
+      "project_folders": [
+        "form space"
+      ],
+      "works": [
+        "01176",
+        "01177",
+        "01178",
+        "01179",
+        "01180",
+        "01181",
+        "01182",
+        "01183",
+        "01184",
+        "01185",
+        "01186",
+        "01187",
+        "01188",
+        "01189",
+        "01190",
+        "01191",
+        "01192",
+        "01193",
+        "01194",
+        "01195"
       ]
     },
     "found-forms": {

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-429c2cc2ede674e16c61b5c5c9e9767a",
+    "generated_at_utc": "2026-03-22T21:48:01Z",
+    "work_id": "01180",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01180",
+    "title": "form space 5",
+    "year": 2007,
+    "year_display": "2007",
+    "series_ids": [
+      "form-space"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}
