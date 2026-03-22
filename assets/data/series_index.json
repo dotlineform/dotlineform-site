@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-89d96d36a244041c502b597eb46bef5f",
-    "generated_at_utc": "2026-03-20T23:15:44Z",
-    "count": 80
+    "version": "blake2b-f212379a10e26682bf334a0bb25ff77c",
+    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "count": 81
   },
   "series": {
     "10000": {
@@ -1586,7 +1586,8 @@
     "fluid-forms": {
       "series_id": "fluid-forms",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-20",
       "title": "fluid forms",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1613,6 +1614,59 @@
         "01068",
         "01069",
         "01070"
+      ]
+    },
+    "fog": {
+      "series_id": "fog",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-22",
+      "title": "fog",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2006,
+      "year_display": "2006-19",
+      "primary_work_id": "01099",
+      "project_folders": [
+        "fog"
+      ],
+      "works": [
+        "01071",
+        "01072",
+        "01073",
+        "01074",
+        "01075",
+        "01076",
+        "01077",
+        "01078",
+        "01079",
+        "01080",
+        "01081",
+        "01082",
+        "01083",
+        "01084",
+        "01085",
+        "01086",
+        "01087",
+        "01088",
+        "01089",
+        "01090",
+        "01091",
+        "01092",
+        "01093",
+        "01094",
+        "01095",
+        "01096",
+        "01097",
+        "01098",
+        "01099",
+        "01100",
+        "01101",
+        "01102",
+        "01103",
+        "01104",
+        "01105",
+        "01106"
       ]
     },
     "for-david-lynch": {

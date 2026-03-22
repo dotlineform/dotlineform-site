@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-779890052d67889c74eed10fee92fb07",
-    "generated_at_utc": "2026-03-20T23:15:45Z",
-    "count": 1064
+    "version": "blake2b-9962fb34cd89630e34646907fbb64e1c",
+    "generated_at_utc": "2026-03-22T15:14:29Z",
+    "count": 1100
   },
   "works": {
     "00001": {
@@ -10059,6 +10059,330 @@
       "year_display": "2012",
       "series_ids": [
         "fluid-forms"
+      ]
+    },
+    "01071": {
+      "work_id": "01071",
+      "title": "fog 1",
+      "year": 2006,
+      "year_display": "2006",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01072": {
+      "work_id": "01072",
+      "title": "fog 2",
+      "year": 2010,
+      "year_display": "2010",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01073": {
+      "work_id": "01073",
+      "title": "fog 3",
+      "year": 2010,
+      "year_display": "2010",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01074": {
+      "work_id": "01074",
+      "title": "fog 4",
+      "year": 2010,
+      "year_display": "2010",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01075": {
+      "work_id": "01075",
+      "title": "fog 5",
+      "year": 2010,
+      "year_display": "2010",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01076": {
+      "work_id": "01076",
+      "title": "fog 6",
+      "year": 2010,
+      "year_display": "2010",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01077": {
+      "work_id": "01077",
+      "title": "fog 7",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01078": {
+      "work_id": "01078",
+      "title": "fog 8",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01079": {
+      "work_id": "01079",
+      "title": "fog 9",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01080": {
+      "work_id": "01080",
+      "title": "fog 10",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01081": {
+      "work_id": "01081",
+      "title": "fog 11",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01082": {
+      "work_id": "01082",
+      "title": "fog 12",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01083": {
+      "work_id": "01083",
+      "title": "fog 13",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01084": {
+      "work_id": "01084",
+      "title": "fog 14",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01085": {
+      "work_id": "01085",
+      "title": "fog 15",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01086": {
+      "work_id": "01086",
+      "title": "fog 16",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01087": {
+      "work_id": "01087",
+      "title": "fog 17",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01088": {
+      "work_id": "01088",
+      "title": "fog 18",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01089": {
+      "work_id": "01089",
+      "title": "fog 19",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01090": {
+      "work_id": "01090",
+      "title": "fog 20",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01091": {
+      "work_id": "01091",
+      "title": "fog 21",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01092": {
+      "work_id": "01092",
+      "title": "fog 22",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01093": {
+      "work_id": "01093",
+      "title": "fog 23",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01094": {
+      "work_id": "01094",
+      "title": "fog 24",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01095": {
+      "work_id": "01095",
+      "title": "fog 25",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01096": {
+      "work_id": "01096",
+      "title": "fog 26",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01097": {
+      "work_id": "01097",
+      "title": "fog 27",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01098": {
+      "work_id": "01098",
+      "title": "fog 28",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01099": {
+      "work_id": "01099",
+      "title": "fog 29",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01100": {
+      "work_id": "01100",
+      "title": "fog 30",
+      "year": 2015,
+      "year_display": "2015",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01101": {
+      "work_id": "01101",
+      "title": "fog 31",
+      "year": 2015,
+      "year_display": "2015",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01102": {
+      "work_id": "01102",
+      "title": "fog 32",
+      "year": 2015,
+      "year_display": "2015",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01103": {
+      "work_id": "01103",
+      "title": "fog 33",
+      "year": 2015,
+      "year_display": "2015",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01104": {
+      "work_id": "01104",
+      "title": "fog 34",
+      "year": 2015,
+      "year_display": "2015",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01105": {
+      "work_id": "01105",
+      "title": "fog 35",
+      "year": 2019,
+      "year_display": "2019",
+      "series_ids": [
+        "fog"
+      ]
+    },
+    "01106": {
+      "work_id": "01106",
+      "title": "fog 36",
+      "year": 2019,
+      "year_display": "2019",
+      "series_ids": [
+        "fog"
       ]
     }
   }

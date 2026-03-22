@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-f87924cc1988dfe1b29959396f411c93",
+    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "work_id": "01089",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01089",
+    "title": "fog 19",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "fog"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 60.0,
+    "width_cm": 45.0,
+    "width_px": 5315,
+    "height_px": 7087
+  },
+  "sections": []
+}

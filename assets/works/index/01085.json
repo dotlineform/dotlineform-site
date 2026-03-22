@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-4a91e5233bf2b08c00c203fa4ee7e9cc",
+    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "work_id": "01085",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01085",
+    "title": "fog 15",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "fog"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 60.0,
+    "width_cm": 45.0,
+    "width_px": 5315,
+    "height_px": 7087
+  },
+  "sections": []
+}

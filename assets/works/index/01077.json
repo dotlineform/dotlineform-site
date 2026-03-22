@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-91fe1df1d83afac6db1b992fcab4732f",
+    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "work_id": "01077",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01077",
+    "title": "fog 7",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "fog"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3544
+  },
+  "sections": []
+}

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-eb0d6d2e532595702480febc616d8089",
+    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "work_id": "01082",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01082",
+    "title": "fog 12",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "fog"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 4724
+  },
+  "sections": []
+}
