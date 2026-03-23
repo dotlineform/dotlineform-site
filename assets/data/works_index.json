@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-9ef782c3c6e7711eaff54909c4964141",
-    "generated_at_utc": "2026-03-23T15:26:00Z",
-    "count": 1193
+    "version": "blake2b-b3e7f06c348bb9b2b81929a44e1b97ff",
+    "generated_at_utc": "2026-03-23T15:35:09Z",
+    "count": 1194
   },
   "works": {
     "00001": {
@@ -11216,6 +11216,15 @@
     "01200": {
       "work_id": "01200",
       "title": "forms painting",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_ids": [
+        "forms-painting"
+      ]
+    },
+    "01201": {
+      "work_id": "01201",
+      "title": "forms painting (reverse)",
       "year": 1990,
       "year_display": "c. 1990-92?",
       "series_ids": [

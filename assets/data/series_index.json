@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-6eae9b42b3bd3b5547d1344195a598ce",
-    "generated_at_utc": "2026-03-23T15:26:00Z",
+    "version": "blake2b-b52ade043f389dd3c5415f7cd61ecc18",
+    "generated_at_utc": "2026-03-23T15:35:09Z",
     "count": 87
   },
   "series": {
@@ -1964,7 +1964,8 @@
     "forms-painting": {
       "series_id": "forms-painting",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-23",
       "title": "forms painting",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1975,7 +1976,8 @@
         "forms painting"
       ],
       "works": [
-        "01200"
+        "01200",
+        "01201"
       ]
     },
     "found-forms": {
