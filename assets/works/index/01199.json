@@ -1,0 +1,451 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-77986e27a81bf0cc5142678111c51aaa",
+    "generated_at_utc": "2026-03-23T13:50:04Z",
+    "work_id": "01199",
+    "count": 42
+  },
+  "work": {
+    "work_id": "01199",
+    "title": "form particles",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "forms"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "project_subfolder": "particles",
+      "details": [
+        {
+          "work_id": "01199",
+          "detail_id": "001",
+          "detail_uid": "01199-001",
+          "title": "particle (3 symbols)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "002",
+          "detail_uid": "01199-002",
+          "title": "particle (10000)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "003",
+          "detail_uid": "01199-003",
+          "title": "particle (a world of non-linearity)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "004",
+          "detail_uid": "01199-004",
+          "title": "particle (architecture)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "005",
+          "detail_uid": "01199-005",
+          "title": "particle (balance machine)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "006",
+          "detail_uid": "01199-006",
+          "title": "particle (base series)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "007",
+          "detail_uid": "01199-007",
+          "title": "particle (bird nature)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "008",
+          "detail_uid": "01199-008",
+          "title": "particle (body space)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "009",
+          "detail_uid": "01199-009",
+          "title": "particle (colours)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "010",
+          "detail_uid": "01199-010",
+          "title": "particle (composit red blue smoke)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "011",
+          "detail_uid": "01199-011",
+          "title": "particle (dependent origination)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "012",
+          "detail_uid": "01199-012",
+          "title": "particle (doll dissection)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "013",
+          "detail_uid": "01199-013",
+          "title": "particle (doll forest)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "014",
+          "detail_uid": "01199-014",
+          "title": "particle (doll internal)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "015",
+          "detail_uid": "01199-015",
+          "title": "particle (doll still life)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "016",
+          "detail_uid": "01199-016",
+          "title": "particle (dots)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "017",
+          "detail_uid": "01199-017",
+          "title": "particle (forest)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "018",
+          "detail_uid": "01199-018",
+          "title": "particle (form space)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "019",
+          "detail_uid": "01199-019",
+          "title": "particle (fur map)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "020",
+          "detail_uid": "01199-020",
+          "title": "particle (gesture)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "021",
+          "detail_uid": "01199-021",
+          "title": "particle (harmony)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "022",
+          "detail_uid": "01199-022",
+          "title": "particle (interior design)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "023",
+          "detail_uid": "01199-023",
+          "title": "particle (lava disco)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "024",
+          "detail_uid": "01199-024",
+          "title": "particle (lipseyes)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "025",
+          "detail_uid": "01199-025",
+          "title": "particle (memory loss hope)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "026",
+          "detail_uid": "01199-026",
+          "title": "particle (mm)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "027",
+          "detail_uid": "01199-027",
+          "title": "particle (nerve text)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "028",
+          "detail_uid": "01199-028",
+          "title": "particle (nerve)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "029",
+          "detail_uid": "01199-029",
+          "title": "particle (particle forms)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "030",
+          "detail_uid": "01199-030",
+          "title": "particle (particle theory)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "031",
+          "detail_uid": "01199-031",
+          "title": "particle (petri)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "032",
+          "detail_uid": "01199-032",
+          "title": "particle (poa4)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "033",
+          "detail_uid": "01199-033",
+          "title": "particle (pole vault)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "034",
+          "detail_uid": "01199-034",
+          "title": "particle (qrnt)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "035",
+          "detail_uid": "01199-035",
+          "title": "particle (qtot)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "036",
+          "detail_uid": "01199-036",
+          "title": "particle (reduce and return)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "037",
+          "detail_uid": "01199-037",
+          "title": "particle (string theory)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "038",
+          "detail_uid": "01199-038",
+          "title": "particle (structure)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "039",
+          "detail_uid": "01199-039",
+          "title": "particle (theory of happiness)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "040",
+          "detail_uid": "01199-040",
+          "title": "particle (train moments)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "041",
+          "detail_uid": "01199-041",
+          "title": "particle (wa)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01199",
+          "detail_id": "042",
+          "detail_uid": "01199-042",
+          "title": "particle (water)",
+          "project_subfolder": "particles",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-edc0e74082dbc9e336791721a6117ac5",
-    "generated_at_utc": "2026-03-22T21:48:00Z",
-    "count": 85
+    "version": "blake2b-6eae9b42b3bd3b5547d1344195a598ce",
+    "generated_at_utc": "2026-03-23T15:26:00Z",
+    "count": 87
   },
   "series": {
     "10000": {
@@ -1906,7 +1906,8 @@
     "form-space": {
       "series_id": "form-space",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-22",
       "title": "form space",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -1937,6 +1938,44 @@
         "01193",
         "01194",
         "01195"
+      ]
+    },
+    "forms": {
+      "series_id": "forms",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2011,
+      "year_display": "2011",
+      "primary_work_id": "01199",
+      "project_folders": [
+        "forms"
+      ],
+      "works": [
+        "01196",
+        "01197",
+        "01198",
+        "01199"
+      ]
+    },
+    "forms-painting": {
+      "series_id": "forms-painting",
+      "layout": "series",
+      "status": "draft",
+      "title": "forms painting",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "primary_work_id": "01200",
+      "project_folders": [
+        "forms painting"
+      ],
+      "works": [
+        "01200"
       ]
     },
     "found-forms": {

@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-8f07e848df7a6074bce58d789fb6af59",
+    "generated_at_utc": "2026-03-23T15:26:00Z",
+    "work_id": "01200",
+    "count": 5
+  },
+  "work": {
+    "work_id": "01200",
+    "title": "forms painting",
+    "year": 1990,
+    "year_display": "c. 1990-92?",
+    "series_ids": [
+      "forms-painting"
+    ],
+    "medium_type": "painting",
+    "medium_caption": "mixed media on canvas",
+    "height_cm": 31.0,
+    "width_cm": 41.0,
+    "width_px": 4843,
+    "height_px": 3632
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01200",
+          "detail_id": "001",
+          "detail_uid": "01200-001",
+          "title": "forms painting - detail 1",
+          "project_subfolder": "details",
+          "width_px": 2535,
+          "height_px": 2535,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01200",
+          "detail_id": "002",
+          "detail_uid": "01200-002",
+          "title": "forms painting - detail 2",
+          "project_subfolder": "details",
+          "width_px": 2712,
+          "height_px": 2712,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01200",
+          "detail_id": "003",
+          "detail_uid": "01200-003",
+          "title": "forms painting - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01200",
+          "detail_id": "004",
+          "detail_uid": "01200-004",
+          "title": "forms painting - detail 4",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 1814,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01200",
+          "detail_id": "005",
+          "detail_uid": "01200-005",
+          "title": "forms painting - detail 5",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

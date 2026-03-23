@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-6e0868cf347942af8f737d6d45e19c04",
-    "generated_at_utc": "2026-03-22T21:48:01Z",
-    "count": 1188
+    "version": "blake2b-9ef782c3c6e7711eaff54909c4964141",
+    "generated_at_utc": "2026-03-23T15:26:00Z",
+    "count": 1193
   },
   "works": {
     "00001": {
@@ -11175,6 +11175,51 @@
       "year_display": "2007",
       "series_ids": [
         "form-space"
+      ]
+    },
+    "01196": {
+      "work_id": "01196",
+      "title": "forms",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "forms"
+      ]
+    },
+    "01197": {
+      "work_id": "01197",
+      "title": "form paths",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "forms"
+      ]
+    },
+    "01198": {
+      "work_id": "01198",
+      "title": "4 form paths",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "forms"
+      ]
+    },
+    "01199": {
+      "work_id": "01199",
+      "title": "form particles",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "forms"
+      ]
+    },
+    "01200": {
+      "work_id": "01200",
+      "title": "forms painting",
+      "year": 1990,
+      "year_display": "c. 1990-92?",
+      "series_ids": [
+        "forms-painting"
       ]
     }
   }

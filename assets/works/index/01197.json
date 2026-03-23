@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-6458a768b5559dbbe26d85f5990fb447",
+    "generated_at_utc": "2026-03-23T13:50:04Z",
+    "work_id": "01197",
+    "count": 8
+  },
+  "work": {
+    "work_id": "01197",
+    "title": "form paths",
+    "year": 2011,
+    "year_display": "2011",
+    "series_ids": [
+      "forms"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": [
+    {
+      "project_subfolder": "paths",
+      "details": [
+        {
+          "work_id": "01197",
+          "detail_id": "001",
+          "detail_uid": "01197-001",
+          "title": "form paths 1-8",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "002",
+          "detail_uid": "01197-002",
+          "title": "form paths 9-16",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "003",
+          "detail_uid": "01197-003",
+          "title": "form paths 17-24",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "004",
+          "detail_uid": "01197-004",
+          "title": "form paths 25-32",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "005",
+          "detail_uid": "01197-005",
+          "title": "form paths 33-40",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "006",
+          "detail_uid": "01197-006",
+          "title": "form paths 41-48",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "007",
+          "detail_uid": "01197-007",
+          "title": "form paths 49-56",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01197",
+          "detail_id": "008",
+          "detail_uid": "01197-008",
+          "title": "form paths 57-64",
+          "project_subfolder": "paths",
+          "width_px": 5906,
+          "height_px": 5906,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}
