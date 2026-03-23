@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-3cd850adf955c5d413073c21644eb62d",
-    "generated_at_utc": "2026-03-23T16:32:41Z",
-    "count": 1242
+    "version": "blake2b-5cb6207a4ef7d058b8e404eb543a0578",
+    "generated_at_utc": "2026-03-23T18:03:07Z",
+    "count": 1256
   },
   "works": {
     "00001": {
@@ -11661,6 +11661,132 @@
       "year_display": "1990",
       "series_ids": [
         "fragments"
+      ]
+    },
+    "01250": {
+      "work_id": "01250",
+      "title": "genetic",
+      "year": 2020,
+      "year_display": "c. 2001-11",
+      "series_ids": [
+        "genetic-2020"
+      ]
+    },
+    "01251": {
+      "work_id": "01251",
+      "title": "grey series 1",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01252": {
+      "work_id": "01252",
+      "title": "grey series 2",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01253": {
+      "work_id": "01253",
+      "title": "grey series 3",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01254": {
+      "work_id": "01254",
+      "title": "grey series 4",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01255": {
+      "work_id": "01255",
+      "title": "grey series 5",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01256": {
+      "work_id": "01256",
+      "title": "grey series 6",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01257": {
+      "work_id": "01257",
+      "title": "grey series 7",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01258": {
+      "work_id": "01258",
+      "title": "grey series 8",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01259": {
+      "work_id": "01259",
+      "title": "grey series 9",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01260": {
+      "work_id": "01260",
+      "title": "grey series 10",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01261": {
+      "work_id": "01261",
+      "title": "grey series 11",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01262": {
+      "work_id": "01262",
+      "title": "grey series 12",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
+      ]
+    },
+    "01263": {
+      "work_id": "01263",
+      "title": "grey series 13",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "grey-series"
       ]
     }
   }

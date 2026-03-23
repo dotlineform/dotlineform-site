@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-cb61aadb3af1e5fe351f180a132afd0b",
+    "generated_at_utc": "2026-03-23T18:03:07Z",
+    "work_id": "01258",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01258",
+    "title": "grey series 8",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "grey-series"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

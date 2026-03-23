@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-3e935b8d167b88be54075e59f5483ffb",
-    "generated_at_utc": "2026-03-23T16:34:52Z",
-    "count": 88
+    "version": "blake2b-59a45418aa7e64de9c038359ba0ce4f7",
+    "generated_at_utc": "2026-03-23T18:03:07Z",
+    "count": 90
   },
   "series": {
     "10000": {
@@ -2114,6 +2114,25 @@
         "01249"
       ]
     },
+    "genetic-2020": {
+      "series_id": "genetic-2020",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "genetic (2020)",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2020,
+      "year_display": "c. 2001-11",
+      "primary_work_id": "01250",
+      "notes": "put track listing in work_prose",
+      "project_folders": [
+        "genetic (2020)"
+      ],
+      "works": [
+        "01250"
+      ]
+    },
     "glass-forms": {
       "series_id": "glass-forms",
       "layout": "series",
@@ -2130,6 +2149,36 @@
       ],
       "works": [
         "00384"
+      ]
+    },
+    "grey-series": {
+      "series_id": "grey-series",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "grey series",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2025,
+      "year_display": "2025",
+      "primary_work_id": "01258",
+      "project_folders": [
+        "grey series"
+      ],
+      "works": [
+        "01251",
+        "01252",
+        "01253",
+        "01254",
+        "01255",
+        "01256",
+        "01257",
+        "01258",
+        "01259",
+        "01260",
+        "01261",
+        "01262",
+        "01263"
       ]
     },
     "harmony": {
