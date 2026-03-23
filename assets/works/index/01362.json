@@ -1,0 +1,24 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-44dc8d6ccb6dffa0a0752f891bd6833c",
+    "generated_at_utc": "2026-03-23T19:10:42Z",
+    "work_id": "01362",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01362",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "grid-theory"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

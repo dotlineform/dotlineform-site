@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-04bf5212422adf11062faeb17f537094",
-    "generated_at_utc": "2026-03-23T18:43:40Z",
-    "count": 1351
+    "version": "blake2b-da89b02f931d7d30fd10d06c8a85c4d0",
+    "generated_at_utc": "2026-03-23T19:10:42Z",
+    "count": 1355
   },
   "works": {
     "00001": {
@@ -12642,6 +12642,41 @@
       "year_display": "2018",
       "series_ids": [
         "grid-fields"
+      ]
+    },
+    "01359": {
+      "work_id": "01359",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "grid-theory"
+      ],
+      "storage": "7"
+    },
+    "01360": {
+      "work_id": "01360",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "grid-theory"
+      ],
+      "storage": "7"
+    },
+    "01361": {
+      "work_id": "01361",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "grid-theory"
+      ],
+      "storage": "7"
+    },
+    "01362": {
+      "work_id": "01362",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "grid-theory"
       ]
     }
   }
