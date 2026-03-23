@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-c6af501a7ab209fd4ddbb5caf76e6f39",
-    "generated_at_utc": "2026-03-23T20:43:45Z",
-    "count": 1367
+    "version": "blake2b-2945893e3fad7e57bf49ebbff15dea6b",
+    "generated_at_utc": "2026-03-23T21:31:00Z",
+    "count": 1386
   },
   "works": {
     "00001": {
@@ -12789,6 +12789,177 @@
       "year_display": "2021",
       "series_ids": [
         "home-land-loss"
+      ]
+    },
+    "01375": {
+      "work_id": "01375",
+      "title": "in the end we'll know [1]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01376": {
+      "work_id": "01376",
+      "title": "in the end we'll know [2]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01377": {
+      "work_id": "01377",
+      "title": "in the end we'll know [3]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01378": {
+      "work_id": "01378",
+      "title": "in the end we'll know [4]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01379": {
+      "work_id": "01379",
+      "title": "in the end we'll know [5]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01380": {
+      "work_id": "01380",
+      "title": "in the end we'll know [6]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01381": {
+      "work_id": "01381",
+      "title": "in the end we'll know [7]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01382": {
+      "work_id": "01382",
+      "title": "in the end we'll know [8]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01383": {
+      "work_id": "01383",
+      "title": "in the end we'll know [9]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01384": {
+      "work_id": "01384",
+      "title": "in the end we'll know [10]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01385": {
+      "work_id": "01385",
+      "title": "in the end we'll know [11]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01386": {
+      "work_id": "01386",
+      "title": "in the end we'll know [12]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01387": {
+      "work_id": "01387",
+      "title": "in the end we'll know [13]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01388": {
+      "work_id": "01388",
+      "title": "in the end we'll know [14]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01389": {
+      "work_id": "01389",
+      "title": "in the end we'll know [15]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01390": {
+      "work_id": "01390",
+      "title": "in the end we'll know [16]",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "in-the-end-we-know"
+      ]
+    },
+    "01391": {
+      "work_id": "01391",
+      "title": "interior design 1",
+      "year": 2005,
+      "year_display": "2005",
+      "series_ids": [
+        "interior-design"
+      ]
+    },
+    "01392": {
+      "work_id": "01392",
+      "title": "interior design 2",
+      "year": 2005,
+      "year_display": "2005",
+      "series_ids": [
+        "interior-design"
+      ]
+    },
+    "01393": {
+      "work_id": "01393",
+      "title": "interior design 3",
+      "year": 2005,
+      "year_display": "2005",
+      "series_ids": [
+        "interior-design"
       ]
     }
   }

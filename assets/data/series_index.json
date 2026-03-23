@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-0041ca7800c4eed43549160610cdc651",
-    "generated_at_utc": "2026-03-23T20:43:45Z",
-    "count": 95
+    "version": "blake2b-1592eee9d224a65197308b4ad3b51a98",
+    "generated_at_utc": "2026-03-23T21:30:59Z",
+    "count": 97
   },
   "series": {
     "10000": {
@@ -2400,7 +2400,8 @@
     "home-land-loss": {
       "series_id": "home-land-loss",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-23",
       "title": "home land loss",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2414,6 +2415,58 @@
         "01372",
         "01373",
         "01374"
+      ]
+    },
+    "in-the-end-we-know": {
+      "series_id": "in-the-end-we-know",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "in the end we'll know",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2024,
+      "year_display": "2024",
+      "primary_work_id": "01377",
+      "project_folders": [
+        "in the end we'll know"
+      ],
+      "works": [
+        "01375",
+        "01376",
+        "01377",
+        "01378",
+        "01379",
+        "01380",
+        "01381",
+        "01382",
+        "01383",
+        "01384",
+        "01385",
+        "01386",
+        "01387",
+        "01388",
+        "01389",
+        "01390"
+      ]
+    },
+    "interior-design": {
+      "series_id": "interior-design",
+      "layout": "series",
+      "status": "draft",
+      "title": "interior design",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2005,
+      "year_display": "2005",
+      "primary_work_id": "01393",
+      "project_folders": [
+        "interior design"
+      ],
+      "works": [
+        "01391",
+        "01392",
+        "01393"
       ]
     },
     "intuition-2020": {

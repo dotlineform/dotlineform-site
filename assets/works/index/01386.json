@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d6df9dc5adef7ee94caf6c2527686eb9",
+    "generated_at_utc": "2026-03-23T21:12:48Z",
+    "work_id": "01386",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01386",
+    "title": "in the end we'll know [12]",
+    "year": 2024,
+    "year_display": "2024",
+    "series_ids": [
+      "in-the-end-we-know"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 22.5,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 2657
+  },
+  "sections": []
+}

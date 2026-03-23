@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-78a21fc7a6a6e17a008883d279b1826b",
+    "generated_at_utc": "2026-03-23T21:31:00Z",
+    "work_id": "01391",
+    "count": 3
+  },
+  "work": {
+    "work_id": "01391",
+    "title": "interior design 1",
+    "year": 2005,
+    "year_display": "2005",
+    "series_ids": [
+      "interior-design"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 3543
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01391",
+          "detail_id": "001",
+          "detail_uid": "01391-001",
+          "title": "interior design 1 - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01391",
+          "detail_id": "002",
+          "detail_uid": "01391-002",
+          "title": "interior design 1 - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01391",
+          "detail_id": "003",
+          "detail_uid": "01391-003",
+          "title": "interior design 1 - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}
