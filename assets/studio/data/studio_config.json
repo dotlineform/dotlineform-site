@@ -132,7 +132,9 @@
       "sort_year_label": "year",
       "sort_title_label": "title",
       "sort_direction_asc": "↑",
-      "sort_direction_desc": "↓"
+      "sort_direction_desc": "↓",
+      "pager_prev_label": "Previous page",
+      "pager_next_label": "Next page"
     },
     "tag_registry": {
       "load_failed_error": "Failed to load tag data from /assets/studio/data/tag_registry.json and /assets/studio/data/tag_aliases.json.",

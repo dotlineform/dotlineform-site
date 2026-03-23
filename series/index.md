@@ -83,6 +83,11 @@ permalink: /series/
   </div>
   <div class="index seriesIndex__list" id="seriesIndexList" aria-live="polite"></div>
   <div class="seriesGrid seriesIndex__grid" id="seriesIndexThumbGrid" aria-live="polite" hidden></div>
+  <nav class="gridPager seriesIndex__pager" id="seriesIndexPager" aria-label="series index pagination" hidden>
+    <span class="gridPager__status" id="seriesIndexPagerStatus"></span>
+    <button class="gridPager__btn" type="button" id="seriesIndexPrev" aria-label="Previous page">←</button>
+    <button class="gridPager__btn" type="button" id="seriesIndexNext" aria-label="Next page">→</button>
+  </nav>
 </div>
 <p id="seriesIndexEmpty" hidden>no series yet</p>
 
@@ -91,8 +96,12 @@ permalink: /series/
     var root = document.getElementById('seriesIndexRoot');
     var list = document.getElementById('seriesIndexList');
     var thumbGrid = document.getElementById('seriesIndexThumbGrid');
+    var pager = document.getElementById('seriesIndexPager');
+    var pagerStatus = document.getElementById('seriesIndexPagerStatus');
+    var prevBtn = document.getElementById('seriesIndexPrev');
+    var nextBtn = document.getElementById('seriesIndexNext');
     var empty = document.getElementById('seriesIndexEmpty');
-    if (!root || !list || !thumbGrid || !empty) return;
+    if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
 
     var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="series-index-view-btn"]'));
     var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="series-index-sort-btn"]'));
@@ -120,6 +129,8 @@ permalink: /series/
     var configUrl = baseurl + '/assets/studio/data/studio_config.json';
     var viewStorageKey = 'dlf.seriesIndex.view';
     var sortStorageKey = 'dlf.seriesIndex.sort';
+    var pageStorageKey = 'dlf.seriesIndex.page';
+    var pageSize = 80;
     var defaultSort = {
       key: 'year',
       directions: {
@@ -131,10 +142,13 @@ permalink: /series/
       sort_year_label: 'year',
       sort_title_label: 'title',
       sort_direction_asc: '↑',
-      sort_direction_desc: '↓'
+      sort_direction_desc: '↓',
+      pager_prev_label: 'Previous page',
+      pager_next_label: 'Next page'
     };
     var currentView = readStoredView();
     var currentSort = readStoredSort();
+    var currentPage = readStoredPage();
     var uiText = copyUiText(uiTextDefaults);
     var seriesItems = [];
     var titleCollator = (window.Intl && typeof window.Intl.Collator === 'function')
@@ -212,12 +226,36 @@ permalink: /series/
       }
     }
 
+    function normalizePage(value) {
+      var page = Number(value);
+      if (!Number.isFinite(page) || page < 1) return 1;
+      return Math.floor(page);
+    }
+
+    function readStoredPage() {
+      try {
+        return normalizePage(window.localStorage.getItem(pageStorageKey));
+      } catch (err) {
+        return 1;
+      }
+    }
+
+    function persistPage(page) {
+      try {
+        window.localStorage.setItem(pageStorageKey, String(normalizePage(page)));
+      } catch (err) {
+        // Ignore storage failures; the page still works with in-memory state.
+      }
+    }
+
     function copyUiText(source) {
       return {
         sort_year_label: String((source && source.sort_year_label) || uiTextDefaults.sort_year_label),
         sort_title_label: String((source && source.sort_title_label) || uiTextDefaults.sort_title_label),
         sort_direction_asc: String((source && source.sort_direction_asc) || uiTextDefaults.sort_direction_asc),
-        sort_direction_desc: String((source && source.sort_direction_desc) || uiTextDefaults.sort_direction_desc)
+        sort_direction_desc: String((source && source.sort_direction_desc) || uiTextDefaults.sort_direction_desc),
+        pager_prev_label: String((source && source.pager_prev_label) || uiTextDefaults.pager_prev_label),
+        pager_next_label: String((source && source.pager_next_label) || uiTextDefaults.pager_next_label)
       };
     }
 
@@ -414,6 +452,7 @@ permalink: /series/
       var showingGrid = currentView === 'grid';
       list.hidden = showingGrid;
       thumbGrid.hidden = !showingGrid;
+      pager.classList.toggle('seriesIndex__pager--list', !showingGrid);
       viewButtons.forEach(function (button) {
         var buttonView = String(button.getAttribute('data-view') || '').trim().toLowerCase();
         var active = buttonView === currentView;
@@ -421,26 +460,46 @@ permalink: /series/
       });
     }
 
+    function updatePagerUi(pageCount) {
+      var safePageCount = Math.max(1, Number(pageCount) || 1);
+      currentPage = Math.min(normalizePage(currentPage), safePageCount);
+      pagerStatus.textContent = String(currentPage) + '/' + String(safePageCount);
+      pager.hidden = safePageCount < 2;
+      prevBtn.disabled = safePageCount < 2;
+      nextBtn.disabled = safePageCount < 2;
+      prevBtn.setAttribute('aria-label', uiText.pager_prev_label);
+      nextBtn.setAttribute('aria-label', uiText.pager_next_label);
+      persistPage(currentPage);
+    }
+
     function renderCurrentView() {
       var sortedItems = getSortedItems(seriesItems, currentSort);
+      var pageCount = Math.max(1, Math.ceil(sortedItems.length / pageSize));
+      currentPage = Math.min(normalizePage(currentPage), pageCount);
+      var start = (currentPage - 1) * pageSize;
+      var end = Math.min(start + pageSize, sortedItems.length);
+      var pageItems = sortedItems.slice(start, end);
       list.innerHTML = '';
       thumbGrid.innerHTML = '';
+      pager.hidden = true;
       if (!sortedItems.length) return;
 
       var frag = document.createDocumentFragment();
       var i;
 
       if (currentView === 'grid') {
-        for (i = 0; i < sortedItems.length; i += 1) {
-          frag.appendChild(renderSeriesGridItem(sortedItems[i]));
+        for (i = 0; i < pageItems.length; i += 1) {
+          frag.appendChild(renderSeriesGridItem(pageItems[i]));
         }
         thumbGrid.appendChild(frag);
       } else {
-        for (i = 0; i < sortedItems.length; i += 1) {
-          frag.appendChild(renderSeriesCard(sortedItems[i]));
+        for (i = 0; i < pageItems.length; i += 1) {
+          frag.appendChild(renderSeriesCard(pageItems[i]));
         }
         list.appendChild(frag);
       }
+
+      updatePagerUi(pageCount);
     }
 
     viewButtons.forEach(function (button) {
@@ -467,6 +526,22 @@ permalink: /series/
         updateSortUi();
         persistSort(currentSort);
       })
+    });
+
+    prevBtn.addEventListener('click', function () {
+      var pageCount = Math.max(1, Math.ceil(seriesItems.length / pageSize));
+      if (pageCount < 2) return;
+      currentPage = (currentPage - 1 + pageCount - 1) % pageCount + 1;
+      renderCurrentView();
+      updateViewUi();
+    });
+
+    nextBtn.addEventListener('click', function () {
+      var pageCount = Math.max(1, Math.ceil(seriesItems.length / pageSize));
+      if (pageCount < 2) return;
+      currentPage = (currentPage % pageCount) + 1;
+      renderCurrentView();
+      updateViewUi();
     });
 
     Promise.all([
