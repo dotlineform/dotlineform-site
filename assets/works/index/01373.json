@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d3a478bdf60e02f6676c94b1ed2aa7c7",
+    "generated_at_utc": "2026-03-23T20:43:45Z",
+    "work_id": "01373",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01373",
+    "title": "land",
+    "year": 2021,
+    "year_display": "2021",
+    "series_ids": [
+      "home-land-loss"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 45.0,
+    "width_cm": 80.0,
+    "width_px": 9449,
+    "height_px": 5317
+  },
+  "sections": []
+}

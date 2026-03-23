@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-931d296bee5152c569f8293d00bdef58",
-    "generated_at_utc": "2026-03-23T19:10:42Z",
-    "count": 92
+    "version": "blake2b-0041ca7800c4eed43549160610cdc651",
+    "generated_at_utc": "2026-03-23T20:43:45Z",
+    "count": 95
   },
   "series": {
     "10000": {
@@ -2181,6 +2181,25 @@
         "01263"
       ]
     },
+    "grid-cells": {
+      "series_id": "grid-cells",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "grid cells",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2013,
+      "year_display": "2013",
+      "primary_work_id": "01363",
+      "project_folders": [
+        "grid cells"
+      ],
+      "works": [
+        "01363",
+        "01364"
+      ]
+    },
     "grid-fields": {
       "series_id": "grid-fields",
       "layout": "series",
@@ -2296,7 +2315,8 @@
     "grid-theory": {
       "series_id": "grid-theory",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-23",
       "title": "grid theory",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2350,7 +2370,50 @@
         "heaven and earth"
       ],
       "works": [
-        "00469"
+        "00469",
+        "01365",
+        "01366"
+      ]
+    },
+    "home": {
+      "series_id": "home",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-23",
+      "title": "home",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01367",
+      "project_folders": [
+        "home"
+      ],
+      "works": [
+        "01367",
+        "01368",
+        "01369",
+        "01370",
+        "01371"
+      ]
+    },
+    "home-land-loss": {
+      "series_id": "home-land-loss",
+      "layout": "series",
+      "status": "draft",
+      "title": "home land loss",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2021,
+      "year_display": "2021",
+      "primary_work_id": "01372",
+      "project_folders": [
+        "home land loss"
+      ],
+      "works": [
+        "01372",
+        "01373",
+        "01374"
       ]
     },
     "intuition-2020": {

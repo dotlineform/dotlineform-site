@@ -1,13 +1,14 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-e41eef35f1fab692e710f1e9573a5ccd",
-    "generated_at_utc": "2026-03-23T19:10:42Z",
+    "version": "blake2b-c66db44056a6bc5614dfe6073b1d9df9",
+    "generated_at_utc": "2026-03-23T19:17:59Z",
     "work_id": "01360",
     "count": 0
   },
   "work": {
     "work_id": "01360",
+    "title": "grid theory 1.2",
     "year": 2008,
     "year_display": "2008",
     "series_ids": [

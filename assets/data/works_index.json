@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-da89b02f931d7d30fd10d06c8a85c4d0",
-    "generated_at_utc": "2026-03-23T19:10:42Z",
-    "count": 1355
+    "version": "blake2b-c6af501a7ab209fd4ddbb5caf76e6f39",
+    "generated_at_utc": "2026-03-23T20:43:45Z",
+    "count": 1367
   },
   "works": {
     "00001": {
@@ -12646,6 +12646,7 @@
     },
     "01359": {
       "work_id": "01359",
+      "title": "grid theory 1.1",
       "year": 2008,
       "year_display": "2008",
       "series_ids": [
@@ -12655,6 +12656,7 @@
     },
     "01360": {
       "work_id": "01360",
+      "title": "grid theory 1.2",
       "year": 2008,
       "year_display": "2008",
       "series_ids": [
@@ -12664,6 +12666,7 @@
     },
     "01361": {
       "work_id": "01361",
+      "title": "grid theory 1.3",
       "year": 2008,
       "year_display": "2008",
       "series_ids": [
@@ -12673,10 +12676,119 @@
     },
     "01362": {
       "work_id": "01362",
+      "title": "grid theory 1.3 version",
       "year": 2008,
       "year_display": "2008",
       "series_ids": [
         "grid-theory"
+      ]
+    },
+    "01363": {
+      "work_id": "01363",
+      "title": "grid cells",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "grid-cells"
+      ]
+    },
+    "01364": {
+      "work_id": "01364",
+      "title": "grid",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "grid-cells"
+      ]
+    },
+    "01365": {
+      "work_id": "01365",
+      "title": "heaven and earth (grey series)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "heaven-and-earth"
+      ]
+    },
+    "01366": {
+      "work_id": "01366",
+      "title": "heaven and earth (colour series)",
+      "year": 2011,
+      "year_display": "2011",
+      "series_ids": [
+        "heaven-and-earth"
+      ]
+    },
+    "01367": {
+      "work_id": "01367",
+      "title": "home 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "home"
+      ]
+    },
+    "01368": {
+      "work_id": "01368",
+      "title": "home 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "home"
+      ]
+    },
+    "01369": {
+      "work_id": "01369",
+      "title": "home 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "home"
+      ]
+    },
+    "01370": {
+      "work_id": "01370",
+      "title": "home 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "home"
+      ]
+    },
+    "01371": {
+      "work_id": "01371",
+      "title": "home 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "home"
+      ]
+    },
+    "01372": {
+      "work_id": "01372",
+      "title": "home",
+      "year": 2021,
+      "year_display": "2021",
+      "series_ids": [
+        "home-land-loss"
+      ]
+    },
+    "01373": {
+      "work_id": "01373",
+      "title": "land",
+      "year": 2021,
+      "year_display": "2021",
+      "series_ids": [
+        "home-land-loss"
+      ]
+    },
+    "01374": {
+      "work_id": "01374",
+      "title": "loss",
+      "year": 2021,
+      "year_display": "2021",
+      "series_ids": [
+        "home-land-loss"
       ]
     }
   }

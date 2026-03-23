@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-20ecb0842b6d5cc9234073bbb0344ea5",
+    "generated_at_utc": "2026-03-23T20:32:43Z",
+    "work_id": "01367",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01367",
+    "title": "home 1",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "home"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01367",
+          "detail_id": "001",
+          "detail_uid": "01367-001",
+          "title": "home 1 - detail 1",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01367",
+          "detail_id": "002",
+          "detail_uid": "01367-002",
+          "title": "home 1 - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01367",
+          "detail_id": "003",
+          "detail_uid": "01367-003",
+          "title": "home 1 - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01367",
+          "detail_id": "004",
+          "detail_uid": "01367-004",
+          "title": "home 1 - detail 4",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

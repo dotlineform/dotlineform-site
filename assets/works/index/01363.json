@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-c5fa4ef68d2f9dffcd8fca95f250a0bc",
+    "generated_at_utc": "2026-03-23T19:27:43Z",
+    "work_id": "01363",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01363",
+    "title": "grid cells",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "grid-cells"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}
