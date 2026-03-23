@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-23T21:30:59Z",
+  "updated_at_utc": "2026-03-23T21:58:38Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -545,6 +545,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-23T21:30:59Z"
+    },
+    "kylie-wax-model": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-23T21:58:38Z"
     }
   }
 }

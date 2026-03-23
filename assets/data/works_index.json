@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-2945893e3fad7e57bf49ebbff15dea6b",
-    "generated_at_utc": "2026-03-23T21:31:00Z",
-    "count": 1386
+    "version": "blake2b-be13a28f5a80f4813a64074c6bfa1720",
+    "generated_at_utc": "2026-03-23T21:58:39Z",
+    "count": 1392
   },
   "works": {
     "00001": {
@@ -12960,6 +12960,60 @@
       "year_display": "2005",
       "series_ids": [
         "interior-design"
+      ]
+    },
+    "01394": {
+      "work_id": "01394",
+      "title": "kylie wax model 1.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
+      ]
+    },
+    "01395": {
+      "work_id": "01395",
+      "title": "kylie wax model 2.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
+      ]
+    },
+    "01396": {
+      "work_id": "01396",
+      "title": "kylie wax model 3.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
+      ]
+    },
+    "01397": {
+      "work_id": "01397",
+      "title": "kylie wax model 4.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
+      ]
+    },
+    "01398": {
+      "work_id": "01398",
+      "title": "kylie wax model 5.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
+      ]
+    },
+    "01399": {
+      "work_id": "01399",
+      "title": "kylie wax model 6.0",
+      "year": 2024,
+      "year_display": "2024",
+      "series_ids": [
+        "kylie-wax-model"
       ]
     }
   }
