@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-25c0cd32add4cfaf787ec33e04ab423d",
+    "generated_at_utc": "2026-03-23T16:34:52Z",
+    "work_id": "01248",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01248",
+    "title": "fragment 47",
+    "year": 1990,
+    "year_display": "1990",
+    "series_ids": [
+      "fragments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}
