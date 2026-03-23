@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-78e29e3507317830b115b273ad488b4a",
-    "generated_at_utc": "2026-03-23T21:58:38Z",
+    "version": "blake2b-17ade77580a981e7a2498aec3cfb681f",
+    "generated_at_utc": "2026-03-23T22:13:07Z",
     "count": 98
   },
   "series": {
@@ -2538,7 +2538,8 @@
     "kylie-wax-model": {
       "series_id": "kylie-wax-model",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-23",
       "title": "kylie wax model",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2561,7 +2562,7 @@
       "series_id": "landscapes",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-23",
       "title": "landscapes",
       "sort_fields": "work_id",
       "series_type": "primary",

@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-39fae9d4fa5a1e50e90936a3e02756af",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "version": "blake2b-4c04789edfef2c79096cad237ec9878d",
+    "generated_at_utc": "2026-03-23T22:13:07Z",
     "work_id": "00516",
-    "count": 0
+    "count": 3
   },
   "work": {
     "work_id": "00516",
@@ -21,5 +21,41 @@
     "width_px": 14173,
     "height_px": 5906
   },
-  "sections": []
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00516",
+          "detail_id": "001",
+          "detail_uid": "00516-001",
+          "title": "landscape 1 - detail 1",
+          "project_subfolder": "details",
+          "width_px": 2362,
+          "height_px": 2362,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "00516",
+          "detail_id": "002",
+          "detail_uid": "00516-002",
+          "title": "landscape 1 - detail 2",
+          "project_subfolder": "details",
+          "width_px": 2362,
+          "height_px": 2362,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "00516",
+          "detail_id": "003",
+          "detail_uid": "00516-003",
+          "title": "landscape 1 - detail 3",
+          "project_subfolder": "details",
+          "width_px": 2362,
+          "height_px": 2362,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
 }
