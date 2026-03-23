@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-a8ee4707cf1a1f13f74a4eaf2e7e558a",
+    "generated_at_utc": "2026-03-23T18:43:40Z",
+    "work_id": "01340",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01340",
+    "title": "grid field 77",
+    "year": 2018,
+    "year_display": "2018",
+    "series_ids": [
+      "grid-fields"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 80.0,
+    "width_cm": 80.0,
+    "width_px": 9449,
+    "height_px": 9449
+  },
+  "sections": []
+}

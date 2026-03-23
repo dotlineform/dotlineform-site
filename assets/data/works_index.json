@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-5cb6207a4ef7d058b8e404eb543a0578",
-    "generated_at_utc": "2026-03-23T18:03:07Z",
-    "count": 1256
+    "version": "blake2b-04bf5212422adf11062faeb17f537094",
+    "generated_at_utc": "2026-03-23T18:43:40Z",
+    "count": 1351
   },
   "works": {
     "00001": {
@@ -11787,6 +11787,861 @@
       "year_display": "2025",
       "series_ids": [
         "grey-series"
+      ]
+    },
+    "01264": {
+      "work_id": "01264",
+      "title": "grid field 1",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01265": {
+      "work_id": "01265",
+      "title": "grid field 2",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01266": {
+      "work_id": "01266",
+      "title": "grid field 3",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01267": {
+      "work_id": "01267",
+      "title": "grid field 4",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01268": {
+      "work_id": "01268",
+      "title": "grid field 5",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01269": {
+      "work_id": "01269",
+      "title": "grid field 6",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01270": {
+      "work_id": "01270",
+      "title": "grid field 7",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01271": {
+      "work_id": "01271",
+      "title": "grid field 8",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01272": {
+      "work_id": "01272",
+      "title": "grid field 9",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01273": {
+      "work_id": "01273",
+      "title": "grid field 10",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01274": {
+      "work_id": "01274",
+      "title": "grid field 11",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01275": {
+      "work_id": "01275",
+      "title": "grid field 12",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01276": {
+      "work_id": "01276",
+      "title": "grid field 13",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01277": {
+      "work_id": "01277",
+      "title": "grid field 14",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01278": {
+      "work_id": "01278",
+      "title": "grid field 15",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01279": {
+      "work_id": "01279",
+      "title": "grid field 16",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01280": {
+      "work_id": "01280",
+      "title": "grid field 17",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01281": {
+      "work_id": "01281",
+      "title": "grid field 18",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01282": {
+      "work_id": "01282",
+      "title": "grid field 19",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01283": {
+      "work_id": "01283",
+      "title": "grid field 20",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01284": {
+      "work_id": "01284",
+      "title": "grid field 21",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01285": {
+      "work_id": "01285",
+      "title": "grid field 22",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01286": {
+      "work_id": "01286",
+      "title": "grid field 23",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01287": {
+      "work_id": "01287",
+      "title": "grid field 24",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01288": {
+      "work_id": "01288",
+      "title": "grid field 25",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01289": {
+      "work_id": "01289",
+      "title": "grid field 26",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01290": {
+      "work_id": "01290",
+      "title": "grid field 27",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01291": {
+      "work_id": "01291",
+      "title": "grid field 28",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01292": {
+      "work_id": "01292",
+      "title": "grid field 29",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01293": {
+      "work_id": "01293",
+      "title": "grid field 30",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01294": {
+      "work_id": "01294",
+      "title": "grid field 31",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01295": {
+      "work_id": "01295",
+      "title": "grid field 32",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01296": {
+      "work_id": "01296",
+      "title": "grid field 33",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01297": {
+      "work_id": "01297",
+      "title": "grid field 34",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01298": {
+      "work_id": "01298",
+      "title": "grid field 35",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01299": {
+      "work_id": "01299",
+      "title": "grid field 36",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01300": {
+      "work_id": "01300",
+      "title": "grid field 37",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01301": {
+      "work_id": "01301",
+      "title": "grid field 38",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01302": {
+      "work_id": "01302",
+      "title": "grid field 39",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01303": {
+      "work_id": "01303",
+      "title": "grid field 40",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01304": {
+      "work_id": "01304",
+      "title": "grid field 41",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01305": {
+      "work_id": "01305",
+      "title": "grid field 42",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01306": {
+      "work_id": "01306",
+      "title": "grid field 43",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01307": {
+      "work_id": "01307",
+      "title": "grid field 44",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01308": {
+      "work_id": "01308",
+      "title": "grid field 45",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01309": {
+      "work_id": "01309",
+      "title": "grid field 46",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01310": {
+      "work_id": "01310",
+      "title": "grid field 47",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01311": {
+      "work_id": "01311",
+      "title": "grid field 48",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01312": {
+      "work_id": "01312",
+      "title": "grid field 49",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01313": {
+      "work_id": "01313",
+      "title": "grid field 50",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01314": {
+      "work_id": "01314",
+      "title": "grid field 51",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01315": {
+      "work_id": "01315",
+      "title": "grid field 52",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01316": {
+      "work_id": "01316",
+      "title": "grid field 53",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01317": {
+      "work_id": "01317",
+      "title": "grid field 54",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01318": {
+      "work_id": "01318",
+      "title": "grid field 55",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01319": {
+      "work_id": "01319",
+      "title": "grid field 56",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01320": {
+      "work_id": "01320",
+      "title": "grid field 57",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01321": {
+      "work_id": "01321",
+      "title": "grid field 58",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01322": {
+      "work_id": "01322",
+      "title": "grid field 59",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01323": {
+      "work_id": "01323",
+      "title": "grid field 60",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01324": {
+      "work_id": "01324",
+      "title": "grid field 61",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01325": {
+      "work_id": "01325",
+      "title": "grid field 62",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01326": {
+      "work_id": "01326",
+      "title": "grid field 63",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01327": {
+      "work_id": "01327",
+      "title": "grid field 64",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01328": {
+      "work_id": "01328",
+      "title": "grid field 65",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01329": {
+      "work_id": "01329",
+      "title": "grid field 66",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01330": {
+      "work_id": "01330",
+      "title": "grid field 67",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01331": {
+      "work_id": "01331",
+      "title": "grid field 68",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01332": {
+      "work_id": "01332",
+      "title": "grid field 69",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01333": {
+      "work_id": "01333",
+      "title": "grid field 70",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01334": {
+      "work_id": "01334",
+      "title": "grid field 71",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01335": {
+      "work_id": "01335",
+      "title": "grid field 72",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01336": {
+      "work_id": "01336",
+      "title": "grid field 73",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01337": {
+      "work_id": "01337",
+      "title": "grid field 74",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01338": {
+      "work_id": "01338",
+      "title": "grid field 75",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01339": {
+      "work_id": "01339",
+      "title": "grid field 76",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01340": {
+      "work_id": "01340",
+      "title": "grid field 77",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01341": {
+      "work_id": "01341",
+      "title": "grid field 78",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01342": {
+      "work_id": "01342",
+      "title": "grid field 79",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01343": {
+      "work_id": "01343",
+      "title": "grid field 80",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01344": {
+      "work_id": "01344",
+      "title": "grid field 81",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01345": {
+      "work_id": "01345",
+      "title": "grid field 82",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01346": {
+      "work_id": "01346",
+      "title": "grid field 83",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01347": {
+      "work_id": "01347",
+      "title": "grid field 84",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01348": {
+      "work_id": "01348",
+      "title": "grid field 85",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01349": {
+      "work_id": "01349",
+      "title": "grid field 86",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01350": {
+      "work_id": "01350",
+      "title": "grid field 87",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01351": {
+      "work_id": "01351",
+      "title": "grid field 88",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01352": {
+      "work_id": "01352",
+      "title": "grid field 89",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01353": {
+      "work_id": "01353",
+      "title": "grid field 90",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01354": {
+      "work_id": "01354",
+      "title": "grid field 91",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01355": {
+      "work_id": "01355",
+      "title": "grid field 92",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01356": {
+      "work_id": "01356",
+      "title": "grid field 93",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01357": {
+      "work_id": "01357",
+      "title": "grid field 94",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
+      ]
+    },
+    "01358": {
+      "work_id": "01358",
+      "title": "grid field 95",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "grid-fields"
       ]
     }
   }
