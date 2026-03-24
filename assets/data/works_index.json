@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-be13a28f5a80f4813a64074c6bfa1720",
-    "generated_at_utc": "2026-03-23T22:13:07Z",
-    "count": 1392
+    "version": "blake2b-054ed5c31df82c4ea0304494883aceb9",
+    "generated_at_utc": "2026-03-24T10:48:09Z",
+    "count": 1393
   },
   "works": {
     "00001": {
@@ -13014,6 +13014,15 @@
       "year_display": "2024",
       "series_ids": [
         "kylie-wax-model"
+      ]
+    },
+    "01400": {
+      "work_id": "01400",
+      "title": "landscape for symbols",
+      "year": 2021,
+      "year_display": "2021",
+      "series_ids": [
+        "landscape-for-symbols"
       ]
     }
   }
