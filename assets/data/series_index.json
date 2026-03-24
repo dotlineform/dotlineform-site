@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-db4f611346529867f5270d06d50603dd",
-    "generated_at_utc": "2026-03-24T20:18:23Z",
+    "version": "blake2b-75a4f88eea6d4dd578700b399a9d1c5a",
+    "generated_at_utc": "2026-03-24T20:44:47Z",
     "count": 106
   },
   "series": {
@@ -2967,7 +2967,8 @@
     "mother-and-child": {
       "series_id": "mother-and-child",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-24",
       "title": "mother and child",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2975,9 +2976,11 @@
       "year_display": "1995",
       "primary_work_id": "01447",
       "project_folders": [
+        "collected 1989-1998",
         "mother and child"
       ],
       "works": [
+        "00214",
         "01447"
       ]
     },
