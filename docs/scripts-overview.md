@@ -12,6 +12,8 @@ Use this command prefix for all script commands:
 
 All commands below assume you are in `dotlineform-site/`.
 
+For the centralized local install/setup guide, see [`docs/local-setup.md`](local-setup.md).
+
 Local environment variables (required for media/generation scripts):
 
 ```bash
@@ -118,16 +120,16 @@ bash scripts/make_srcset_images.sh \
 ### 3) Generate Jekyll pages from workbook
 
 ```bash
-./scripts/generate_work_pages.py data/works.xlsx
-./scripts/generate_work_pages.py data/works.xlsx --write
+./scripts/generate_work_pages.py
+./scripts/generate_work_pages.py --write
 ```
 
 Common scoped runs:
 
 ```bash
-./scripts/generate_work_pages.py data/works.xlsx --work-ids 00456 --write
-./scripts/generate_work_pages.py data/works.xlsx --work-ids-file /tmp/work_ids.txt --write
-./scripts/generate_work_pages.py data/works.xlsx --series-ids curve-poems,dots --write
+./scripts/generate_work_pages.py --work-ids 00456 --write
+./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
+./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
 ```
 
 Useful flags:
@@ -220,7 +222,7 @@ Backups:
 Run:
 
 ```bash
-python3 scripts/studio/tag_write_server.py
+./scripts/studio/tag_write_server.py
 ```
 
 Optional flags:
@@ -351,7 +353,7 @@ Script logging:
 Run:
 
 ```bash
-python3 scripts/css_token_audit.py
+./scripts/css_token_audit.py
 ```
 
 Optional flags:

@@ -28,6 +28,8 @@ Works are identified by a stable ID (e.g. `00361`). The site expects as a minimu
 
 Scripts are run locally from the repo root. They are designed to keep the catalogue consistent and reduce manual work. See [`/docs/scripts-overview.md`](docs/scripts-overview.md) for details.
 
+For a centralized local install/setup guide covering Python, Ruby, external tools, env vars, and version checks, see [`/docs/local-setup.md`](docs/local-setup.md).
+
 Before running media/generation scripts, set local environment variables:
 
 ```bash
