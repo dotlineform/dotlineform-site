@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-967bf58457ad708a7f70bf4f75649e42",
-    "generated_at_utc": "2026-03-24T21:09:23Z",
-    "count": 107
+    "version": "blake2b-5474dc73918d5332f17a8d86fd7585d8",
+    "generated_at_utc": "2026-03-24T21:55:32Z",
+    "count": 109
   },
   "series": {
     "10000": {
@@ -3053,7 +3053,8 @@
     "nothing-is-missing": {
       "series_id": "nothing-is-missing",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-24",
       "title": "nothing is missing",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3095,6 +3096,51 @@
         "01476",
         "01477",
         "01478"
+      ]
+    },
+    "olive-tree": {
+      "series_id": "olive-tree",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-24",
+      "title": "olive tree",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012",
+      "primary_work_id": "01479",
+      "project_folders": [
+        "olive tree"
+      ],
+      "works": [
+        "01479"
+      ]
+    },
+    "particle-machine": {
+      "series_id": "particle-machine",
+      "layout": "series",
+      "status": "draft",
+      "title": "particle machine",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2020,
+      "year_display": "2020",
+      "primary_work_id": "01480",
+      "project_folders": [
+        "particle machine"
+      ],
+      "works": [
+        "01480",
+        "01481",
+        "01482",
+        "01483",
+        "01484",
+        "01485",
+        "01486",
+        "01487",
+        "01488",
+        "01489",
+        "01490"
       ]
     },
     "particle-theory": {

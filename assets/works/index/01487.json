@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-b216efb6d409fe3eebcf81af7b415431",
+    "generated_at_utc": "2026-03-24T21:55:32Z",
+    "work_id": "01487",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01487",
+    "title": "surface 3",
+    "year": 2020,
+    "year_display": "2020",
+    "series_ids": [
+      "particle-machine"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-cf5a1aece9f85492069dc3e2d7d08306",
-    "generated_at_utc": "2026-03-24T21:09:23Z",
-    "count": 1471
+    "version": "blake2b-b0aa65ac789ce8716b26690c14584d5d",
+    "generated_at_utc": "2026-03-24T21:55:32Z",
+    "count": 1483
   },
   "works": {
     "00001": {
@@ -13726,6 +13726,114 @@
       "year_display": "2023",
       "series_ids": [
         "nothing-is-missing"
+      ]
+    },
+    "01479": {
+      "work_id": "01479",
+      "title": "olive tree",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "olive-tree"
+      ]
+    },
+    "01480": {
+      "work_id": "01480",
+      "title": "particle path 1",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01481": {
+      "work_id": "01481",
+      "title": "particle path 2",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01482": {
+      "work_id": "01482",
+      "title": "particle path 3",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01483": {
+      "work_id": "01483",
+      "title": "particle path 4",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01484": {
+      "work_id": "01484",
+      "title": "particle path 5",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01485": {
+      "work_id": "01485",
+      "title": "surface 1",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01486": {
+      "work_id": "01486",
+      "title": "surface 2",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01487": {
+      "work_id": "01487",
+      "title": "surface 3",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01488": {
+      "work_id": "01488",
+      "title": "surface 4",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01489": {
+      "work_id": "01489",
+      "title": "surface 5",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
+      ]
+    },
+    "01490": {
+      "work_id": "01490",
+      "title": "surface 6",
+      "year": 2020,
+      "year_display": "2020",
+      "series_ids": [
+        "particle-machine"
       ]
     }
   }
