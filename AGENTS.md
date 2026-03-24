@@ -13,6 +13,9 @@
 - Media/generator scripts should rely on `DOTLINEFORM_PROJECTS_BASE_DIR` by default for source image lookups.
 - Only pass `--projects-base-dir` when intentionally overriding `DOTLINEFORM_PROJECTS_BASE_DIR`.
 - If work/detail/moment dimension lookups fail unexpectedly, verify `DOTLINEFORM_PROJECTS_BASE_DIR` in the current shell before supplying a manual `--projects-base-dir`.
+- In repo docs and command examples, prefer the shortest project-local script form unless explicitly needed:
+  - use `./scripts/...` rather than `python3 scripts/...`
+  - omit the positional `data/works.xlsx` argument when using the default workbook
 
 ## Ruby / Jekyll Toolchain
 
@@ -63,7 +66,7 @@
 - Scan changed files for local path leaks and sensitive terms before final response:
   - `rg -n "/Users/|/home/|C:\\\\|miniconda|rbenv|api[_-]?key|token|secret|password|PRIVATE KEY" <changed-files>`
 - Remove user-specific absolute paths from comments/docs/examples unless explicitly required by the user.
-- Keep script examples generic (`python3 scripts/...`) unless a project policy explicitly requires a pinned binary path.
+- Keep script examples generic and project-local (`./scripts/...`) unless a pinned interpreter or non-default workbook path is explicitly needed.
 - Do not publish machine-specific usernames, absolute filesystem paths, or local mount details in repo docs.
 - Never hardcode credentials, tokens, or private keys in source/docs; use env vars and redact examples.
 - Keep logs for local write services minimal (ids/counts/status), not full payload/file-content dumps.

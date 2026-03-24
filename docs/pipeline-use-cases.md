@@ -46,24 +46,24 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234 --dry-run
-python3 scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234 --dry-run
+./scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234
+./scripts/generate_work_pages.py \
   --series-ids existing-series \
   --only work-pages \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids existing-series \
   --only work-pages \
   --force \
   --write
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
   --only series-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
@@ -109,8 +109,8 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/run_draft_pipeline.py --mode work_details --work-ids 01234 --dry-run
-python3 scripts/run_draft_pipeline.py --mode work_details --work-ids 01234
+./scripts/run_draft_pipeline.py --mode work_details --work-ids 01234 --dry-run
+./scripts/run_draft_pipeline.py --mode work_details --work-ids 01234
 ```
 
 Repo artifacts touched by the call:
@@ -142,13 +142,13 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-files \
   --only work-json \
   --only works-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-files \
   --only work-json \
@@ -193,13 +193,13 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-links \
   --only work-json \
   --only works-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-links \
   --only work-json \
@@ -238,11 +238,11 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
@@ -278,11 +278,11 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
@@ -320,22 +320,22 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids old-series \
   --only work-pages \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids old-series \
   --only work-pages \
   --force \
   --write
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
   --only series-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
@@ -377,22 +377,22 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids old-series,new-series \
   --only work-pages \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids old-series,new-series \
   --only work-pages \
   --force \
   --write
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
   --only series-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-json \
   --only works-index-json \
@@ -434,14 +434,14 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-pages \
   --only work-json \
   --only works-index-json \
   --only series-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-pages \
   --only work-json \
@@ -449,11 +449,11 @@ python3 scripts/generate_work_pages.py data/works.xlsx \
   --only series-index-json \
   --force \
   --write
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids additional-series \
   --only work-pages \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids additional-series \
   --only work-pages \
   --force \
@@ -493,8 +493,8 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/delete_work.py --work-id 01234
-python3 scripts/delete_work.py --work-id 01234 --write
+./scripts/delete_work.py --work-id 01234
+./scripts/delete_work.py --work-id 01234 --write
 ```
 
 Repo artifacts touched by the call:
@@ -538,12 +538,12 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/delete_work.py --work-id 01234
-python3 scripts/delete_work.py --work-id 01234 --write
-python3 scripts/delete_work.py --work-id 04567
-python3 scripts/delete_work.py --work-id 04567 --write
-python3 scripts/generate_work_pages.py data/works.xlsx --only series-index-json
-python3 scripts/generate_work_pages.py data/works.xlsx --only series-index-json --write
+./scripts/delete_work.py --work-id 01234
+./scripts/delete_work.py --work-id 01234 --write
+./scripts/delete_work.py --work-id 04567
+./scripts/delete_work.py --work-id 04567 --write
+./scripts/generate_work_pages.py --only series-index-json
+./scripts/generate_work_pages.py --only series-index-json --write
 ```
 
 Run the delete command once per work in the series. If any works are being reassigned instead of deleted, also run the relevant membership-change workflow from sections 7 to 9.
@@ -575,12 +575,12 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids some-series \
   --only series-pages \
   --only series-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --series-ids some-series \
   --only series-pages \
   --only series-index-json \
@@ -621,13 +621,13 @@ Workbook edits before run:
 CLI:
 
 ```bash
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-pages \
   --only work-json \
   --only works-index-json \
   --force
-python3 scripts/generate_work_pages.py data/works.xlsx \
+./scripts/generate_work_pages.py \
   --work-ids 01234 \
   --only work-pages \
   --only work-json \
@@ -639,8 +639,8 @@ python3 scripts/generate_work_pages.py data/works.xlsx \
 If the primary source image changed as well, run the media pipeline first:
 
 ```bash
-python3 scripts/run_draft_pipeline.py --mode work --work-ids 01234 --dry-run
-python3 scripts/run_draft_pipeline.py --mode work --work-ids 01234
+./scripts/run_draft_pipeline.py --mode work --work-ids 01234 --dry-run
+./scripts/run_draft_pipeline.py --mode work --work-ids 01234
 ```
 
 Repo artifacts touched by the call:
