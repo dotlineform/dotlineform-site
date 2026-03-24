@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-e6a0563fe25784cc3b6ccc190eb80fa2",
+    "generated_at_utc": "2026-03-24T16:06:41Z",
+    "work_id": "01420",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01420",
+    "title": "kylie grid map",
+    "year": 2004,
+    "year_display": "2004, 2011",
+    "series_ids": [
+      "maps"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

@@ -1,0 +1,121 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d6618ebae4fb5eacee5c1e0ec661eab0",
+    "generated_at_utc": "2026-03-24T16:21:36Z",
+    "work_id": "01422",
+    "count": 9
+  },
+  "work": {
+    "work_id": "01422",
+    "title": "matter",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "matter"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 54.0,
+    "width_cm": 96.0,
+    "width_px": 11339,
+    "height_px": 6378
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01422",
+          "detail_id": "001",
+          "detail_uid": "01422-001",
+          "title": "matter - detail 1",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "002",
+          "detail_uid": "01422-002",
+          "title": "matter - detail 2",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "003",
+          "detail_uid": "01422-003",
+          "title": "matter - detail 3",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "004",
+          "detail_uid": "01422-004",
+          "title": "matter - detail 4",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "005",
+          "detail_uid": "01422-005",
+          "title": "matter - detail 5",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "006",
+          "detail_uid": "01422-006",
+          "title": "matter - detail 6",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "007",
+          "detail_uid": "01422-007",
+          "title": "matter - detail 7",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "008",
+          "detail_uid": "01422-008",
+          "title": "matter - detail 8",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01422",
+          "detail_id": "009",
+          "detail_uid": "01422-009",
+          "title": "matter - detail 9",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

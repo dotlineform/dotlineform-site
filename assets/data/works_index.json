@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-2843f9314242d7bf49eea2c52c3e72af",
-    "generated_at_utc": "2026-03-24T15:16:13Z",
-    "count": 1409
+    "version": "blake2b-53d650fc371e695c9fb4199c324367d6",
+    "generated_at_utc": "2026-03-24T16:21:36Z",
+    "count": 1415
   },
   "works": {
     "00001": {
@@ -13167,6 +13167,60 @@
       "year_display": "2013",
       "series_ids": [
         "lights"
+      ]
+    },
+    "01417": {
+      "work_id": "01417",
+      "title": "fur map",
+      "year": 2004,
+      "year_display": "2004, 2011",
+      "series_ids": [
+        "maps"
+      ]
+    },
+    "01418": {
+      "work_id": "01418",
+      "title": "hudf (black)",
+      "year": 2004,
+      "year_display": "2004, 2011",
+      "series_ids": [
+        "maps"
+      ]
+    },
+    "01419": {
+      "work_id": "01419",
+      "title": "hudf (white)",
+      "year": 2004,
+      "year_display": "2004, 2011",
+      "series_ids": [
+        "maps"
+      ]
+    },
+    "01420": {
+      "work_id": "01420",
+      "title": "kylie grid map",
+      "year": 2004,
+      "year_display": "2004, 2011",
+      "series_ids": [
+        "maps"
+      ]
+    },
+    "01421": {
+      "work_id": "01421",
+      "title": "kylie map",
+      "year": 2004,
+      "year_display": "2004, 2011",
+      "series_ids": [
+        "maps"
+      ]
+    },
+    "01422": {
+      "work_id": "01422",
+      "title": "matter",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "matter"
       ]
     }
   }

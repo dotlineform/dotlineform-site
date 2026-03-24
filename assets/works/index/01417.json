@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-6050bae5ce135191dd1837f2870d7afb",
+    "generated_at_utc": "2026-03-24T16:06:41Z",
+    "work_id": "01417",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01417",
+    "title": "fur map",
+    "year": 2004,
+    "year_display": "2004, 2011",
+    "series_ids": [
+      "maps"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 55.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 6496
+  },
+  "sections": []
+}
