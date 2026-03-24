@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-3c13361e6dfae7a70e76a8091cc632b5",
-    "generated_at_utc": "2026-03-24T10:48:09Z",
-    "count": 99
+    "version": "blake2b-ae1aaca5a1b32e953207a10b3b7aa9e7",
+    "generated_at_utc": "2026-03-24T15:16:13Z",
+    "count": 100
   },
   "series": {
     "10000": {
@@ -2561,7 +2561,8 @@
     "landscape-for-symbols": {
       "series_id": "landscape-for-symbols",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-24",
       "title": "landscape for symbols",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2646,6 +2647,38 @@
         "00128",
         "00129",
         "00519"
+      ]
+    },
+    "lights": {
+      "series_id": "lights",
+      "layout": "series",
+      "status": "draft",
+      "title": "lights",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012-13",
+      "primary_work_id": "01401",
+      "project_folders": [
+        "lights"
+      ],
+      "works": [
+        "01401",
+        "01402",
+        "01403",
+        "01404",
+        "01405",
+        "01406",
+        "01407",
+        "01408",
+        "01409",
+        "01410",
+        "01411",
+        "01412",
+        "01413",
+        "01414",
+        "01415",
+        "01416"
       ]
     },
     "lipseyes": {

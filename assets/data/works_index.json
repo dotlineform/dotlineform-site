@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-054ed5c31df82c4ea0304494883aceb9",
-    "generated_at_utc": "2026-03-24T10:48:09Z",
-    "count": 1393
+    "version": "blake2b-2843f9314242d7bf49eea2c52c3e72af",
+    "generated_at_utc": "2026-03-24T15:16:13Z",
+    "count": 1409
   },
   "works": {
     "00001": {
@@ -13023,6 +13023,150 @@
       "year_display": "2021",
       "series_ids": [
         "landscape-for-symbols"
+      ]
+    },
+    "01401": {
+      "work_id": "01401",
+      "title": "lights 1",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01402": {
+      "work_id": "01402",
+      "title": "lights 2",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01403": {
+      "work_id": "01403",
+      "title": "lights 3",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01404": {
+      "work_id": "01404",
+      "title": "lights 4",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01405": {
+      "work_id": "01405",
+      "title": "lights 5",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01406": {
+      "work_id": "01406",
+      "title": "lights 6",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01407": {
+      "work_id": "01407",
+      "title": "lights 7",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01408": {
+      "work_id": "01408",
+      "title": "lights 8",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01409": {
+      "work_id": "01409",
+      "title": "lights 9",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01410": {
+      "work_id": "01410",
+      "title": "lights 10",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01411": {
+      "work_id": "01411",
+      "title": "lights 11",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01412": {
+      "work_id": "01412",
+      "title": "lights 12",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01413": {
+      "work_id": "01413",
+      "title": "lights 13",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01414": {
+      "work_id": "01414",
+      "title": "lights 14",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01415": {
+      "work_id": "01415",
+      "title": "lights 15",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
+      ]
+    },
+    "01416": {
+      "work_id": "01416",
+      "title": "lights 16",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "lights"
       ]
     }
   }
