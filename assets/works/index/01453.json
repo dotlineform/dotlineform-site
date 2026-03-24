@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-cedcae123f234866f502695d2c1fceaa",
+    "generated_at_utc": "2026-03-24T21:09:23Z",
+    "work_id": "01453",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01453",
+    "title": "nothing is missing - I - 6 (2023-10-09 21꞉01)",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "nothing-is-missing"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

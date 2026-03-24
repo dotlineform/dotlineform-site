@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-c49c464b7fb7b205a63b8a63106376a5",
-    "generated_at_utc": "2026-03-24T20:44:47Z",
-    "count": 1440
+    "version": "blake2b-cf5a1aece9f85492069dc3e2d7d08306",
+    "generated_at_utc": "2026-03-24T21:09:23Z",
+    "count": 1471
   },
   "works": {
     "00001": {
@@ -13447,6 +13447,285 @@
       "year_display": "1995",
       "series_ids": [
         "mother-and-child"
+      ]
+    },
+    "01448": {
+      "work_id": "01448",
+      "title": "nothing is missing - I - 1 (2023-10-08 19꞉09)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01449": {
+      "work_id": "01449",
+      "title": "nothing is missing - I - 2 (2023-10-08 19꞉10)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01450": {
+      "work_id": "01450",
+      "title": "nothing is missing - I - 3 (2023-10-08 19꞉10)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01451": {
+      "work_id": "01451",
+      "title": "nothing is missing - I - 4 (2023-10-08 19꞉11)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01452": {
+      "work_id": "01452",
+      "title": "nothing is missing - I - 5 (2023-10-08 19꞉11)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01453": {
+      "work_id": "01453",
+      "title": "nothing is missing - I - 6 (2023-10-09 21꞉01)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01454": {
+      "work_id": "01454",
+      "title": "nothing is missing - I - 7 (2023-10-09 21꞉03)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01455": {
+      "work_id": "01455",
+      "title": "nothing is missing - I - 8 (2023-10-11 18꞉43)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01456": {
+      "work_id": "01456",
+      "title": "nothing is missing - I - 9 (2023-10-11 18꞉45)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01457": {
+      "work_id": "01457",
+      "title": "nothing is missing - I - 10 (2023-10-11 18꞉46)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01458": {
+      "work_id": "01458",
+      "title": "nothing is missing - I - 11 (2023-10-11 18꞉46)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01459": {
+      "work_id": "01459",
+      "title": "nothing is missing - I - 12 (2023-10-11 18꞉47)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01460": {
+      "work_id": "01460",
+      "title": "nothing is missing - I - 13 (2023-10-11 18꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01461": {
+      "work_id": "01461",
+      "title": "nothing is missing - II - 1 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01462": {
+      "work_id": "01462",
+      "title": "nothing is missing - II - 1 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01463": {
+      "work_id": "01463",
+      "title": "nothing is missing - II - 2 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01464": {
+      "work_id": "01464",
+      "title": "nothing is missing - II - 2 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01465": {
+      "work_id": "01465",
+      "title": "nothing is missing - II - 2 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01466": {
+      "work_id": "01466",
+      "title": "nothing is missing - II - 2 - 4 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01467": {
+      "work_id": "01467",
+      "title": "nothing is missing - II - 3 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01468": {
+      "work_id": "01468",
+      "title": "nothing is missing - II - 3 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01469": {
+      "work_id": "01469",
+      "title": "nothing is missing - II - 4 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01470": {
+      "work_id": "01470",
+      "title": "nothing is missing - II - 4 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01471": {
+      "work_id": "01471",
+      "title": "nothing is missing - II - 4 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01472": {
+      "work_id": "01472",
+      "title": "nothing is missing - II - 5 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01473": {
+      "work_id": "01473",
+      "title": "nothing is missing - II - 5 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01474": {
+      "work_id": "01474",
+      "title": "nothing is missing - II - 6 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01475": {
+      "work_id": "01475",
+      "title": "nothing is missing - II - 6 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01476": {
+      "work_id": "01476",
+      "title": "nothing is missing - II - 6 - 3 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01477": {
+      "work_id": "01477",
+      "title": "nothing is missing - II - 7 - 1 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
+      ]
+    },
+    "01478": {
+      "work_id": "01478",
+      "title": "nothing is missing - II - 7 - 2 (2023-10-12 19꞉48)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "nothing-is-missing"
       ]
     }
   }
