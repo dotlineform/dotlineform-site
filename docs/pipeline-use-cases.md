@@ -23,6 +23,15 @@ Two current CLI rules matter for almost every use case:
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
 - removal flows do not fully clean up stale generated artifacts; only full work deletion has a dedicated script, and even that still leaves workbook/source cleanup to you.
 
+Scoping notes:
+
+- `--work-ids` scopes work-loop artifacts such as `work-pages`, `work-json`, `work-files`, `work-links`, and `work-details-pages` to those work IDs.
+- `--series-ids` plus any work-loop artifact expands the run to all works in those series.
+- `--only series-pages` respects `--series-ids`.
+- `--only series-index-json` always rebuilds the single global `assets/data/series_index.json` file.
+- `--only works-index-json` always rebuilds the single global `assets/data/works_index.json` file.
+- To avoid rewriting unaffected per-work files, prefer a series-scoped call for `work-pages` only, and a separate work-scoped call for `work-json` plus the global index files.
+
 ## 1) Add a new work to an existing series
 
 Workbook edits before run:
@@ -42,21 +51,28 @@ python3 scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids existing-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
-  --only work-json \
   --force
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids existing-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
+  --force \
+  --write
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
   --only work-json \
+  --only works-index-json \
+  --only series-index-json \
+  --force
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
+  --only work-json \
+  --only works-index-json \
+  --only series-index-json \
   --force \
   --write
 ```
 
-Add `--only series-pages` to the last two commands if you also changed `Series` metadata such as `primary_work_id`.
+Add a separate `--only series-pages` pass if you also changed `Series` metadata such as `primary_work_id`.
 
 Repo artifacts touched by the calls:
 
@@ -71,7 +87,9 @@ Repo artifacts touched by the calls:
 Workbook/manual follow-up after run:
 
 - None normally.
-- If the series ordering changed, keep the second `generate_work_pages.py` pass. `run_draft_pipeline.py` only regenerates the selected work, not every existing work in the series.
+- Keep the series-scoped `work-pages` pass. `run_draft_pipeline.py` only regenerates the selected work, not every existing work in the series.
+- The work-scoped `work-json` pass avoids rewriting per-work JSON for unaffected works in the series.
+- `series-index-json` and `works-index-json` are still global rebuilds in the work-scoped pass.
 - If you backed out any new detail rows after the first run, manually remove stale `_work_details/<detail_uid>.md` files and stale staged media.
 
 Potential improvements:
@@ -154,6 +172,11 @@ Workbook/manual follow-up after run:
 - Delete stale staged files under `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` when a file row was removed or renamed.
 - Do not leave retired `WorkFiles` rows in place expecting `status` alone to hide them. Remove or archive those rows instead.
 
+Scoping note:
+
+- `assets/works/index/01234.json` is work-scoped here.
+- `assets/data/works_index.json` is still rebuilt globally.
+
 Potential improvements:
 
 - Make `WorkFiles.status` authoritative.
@@ -195,6 +218,11 @@ Workbook/manual follow-up after run:
 
 - Remove or archive retired `WorkLinks` rows. Leaving the row in the workbook can cause the link to be republished on later forced runs.
 
+Scoping note:
+
+- `assets/works/index/01234.json` is work-scoped here.
+- `assets/data/works_index.json` is still rebuilt globally.
+
 Potential improvements:
 
 - Make `WorkLinks.status` authoritative.
@@ -232,6 +260,11 @@ Workbook/manual follow-up after run:
 - Manually delete stale detail media and derivatives for that work if they should no longer exist anywhere in the publishing pipeline.
 - No further workbook edit is needed if the rows were already removed before the run.
 
+Scoping note:
+
+- `assets/works/index/01234.json` is work-scoped here.
+- `assets/data/works_index.json` is still rebuilt globally.
+
 Potential improvements:
 
 - Add a `delete-work-details --work-id <id>` command that prunes detail stubs and derivative media in sync with the workbook.
@@ -266,6 +299,11 @@ Workbook/manual follow-up after run:
 - Manually delete the stale stub files for the removed detail IDs, for example `_work_details/01234-005.md`.
 - Manually delete stale detail media and derivatives for the removed detail IDs if they should no longer exist.
 
+Scoping note:
+
+- `assets/works/index/01234.json` is work-scoped here.
+- `assets/data/works_index.json` is still rebuilt globally.
+
 Potential improvements:
 
 - Add a `delete-work-detail --detail-uid <uid>` command.
@@ -285,21 +323,28 @@ CLI:
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids old-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
-  --only work-json \
   --force
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids old-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
+  --force \
+  --write
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
   --only work-json \
+  --only works-index-json \
+  --only series-index-json \
+  --force
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
+  --only work-json \
+  --only works-index-json \
+  --only series-index-json \
   --force \
   --write
 ```
 
-Add `--only series-pages` to the last two commands if you also changed the `Series` row, for example to replace `primary_work_id`.
+Add a separate `--only series-pages` pass if you also changed the `Series` row, for example to replace `primary_work_id`.
 
 Repo artifacts touched by the call:
 
@@ -314,6 +359,8 @@ Workbook/manual follow-up after run:
 
 - Remove stale `SeriesSort` rows or stale sort-field assumptions if they no longer make sense for the series.
 - If the removed series is now empty, decide whether to keep it or use the series-deletion workflow below.
+- The work-scoped call avoids rewriting `assets/works/index/*.json` for unrelated works.
+- `series-index-json` and `works-index-json` are still global rebuilds in that work-scoped call.
 
 Potential improvements:
 
@@ -333,21 +380,28 @@ CLI:
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids old-series,new-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
-  --only work-json \
   --force
 python3 scripts/generate_work_pages.py data/works.xlsx \
   --series-ids old-series,new-series \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
+  --force \
+  --write
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
   --only work-json \
+  --only works-index-json \
+  --only series-index-json \
+  --force
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --work-ids 01234 \
+  --only work-json \
+  --only works-index-json \
+  --only series-index-json \
   --force \
   --write
 ```
 
-Add `--only series-pages` to the last two commands if you also changed either affected `Series` row.
+Add a separate `--only series-pages` pass if you also changed either affected `Series` row.
 
 Repo artifacts touched by the call:
 
@@ -362,6 +416,8 @@ Repo artifacts touched by the call:
 Workbook/manual follow-up after run:
 
 - Clean up `SeriesSort` rows for the old and new series if the reassignment made them stale.
+- The work-scoped call avoids rewriting `assets/works/index/*.json` for unrelated works.
+- `series-index-json` and `works-index-json` are still global rebuilds in that work-scoped call.
 
 Potential improvements:
 
@@ -379,23 +435,34 @@ CLI:
 
 ```bash
 python3 scripts/generate_work_pages.py data/works.xlsx \
-  --series-ids existing-series,additional-series \
+  --work-ids 01234 \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
   --only work-json \
+  --only works-index-json \
+  --only series-index-json \
   --force
 python3 scripts/generate_work_pages.py data/works.xlsx \
-  --series-ids existing-series,additional-series \
+  --work-ids 01234 \
   --only work-pages \
-  --only series-index-json \
-  --only works-index-json \
   --only work-json \
+  --only works-index-json \
+  --only series-index-json \
+  --force \
+  --write
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --series-ids additional-series \
+  --only work-pages \
+  --force
+python3 scripts/generate_work_pages.py data/works.xlsx \
+  --series-ids additional-series \
+  --only work-pages \
   --force \
   --write
 ```
 
-Add `--only series-pages` to the last two commands if you also changed the target `Series` row, for example to promote the work to `primary_work_id`.
+The first pair is the narrow work-scoped publish pass. The second pair is optional and broader: use it only if you need to refresh cached `series_sort` values for all works in the additional series.
+
+Add a separate `--only series-pages` pass if you also changed the target `Series` row, for example to promote the work to `primary_work_id`.
 
 Repo artifacts touched by the call:
 
@@ -409,6 +476,7 @@ Repo artifacts touched by the call:
 Workbook/manual follow-up after run:
 
 - Clean up `SeriesSort` if the added membership requires explicit ordering rules.
+- `series-index-json` and `works-index-json` are global rebuilds even in the narrow work-scoped pass.
 
 Potential improvements:
 
@@ -522,6 +590,11 @@ python3 scripts/generate_work_pages.py data/works.xlsx \
 
 If you also changed `SeriesSort`, add `--only work-pages` so `_works/<work_id>.md` gets fresh `series_sort` values for that series.
 
+Scoping note:
+
+- `series-pages` is scoped to `some-series`.
+- `series-index-json` is still a global rebuild of one file.
+
 Repo artifacts touched by the call:
 
 - `data/works.xlsx`
@@ -576,6 +649,11 @@ Repo artifacts touched by the call:
 - `_works/01234.md`
 - `assets/works/index/01234.json`
 - `assets/data/works_index.json`
+
+Scoping note:
+
+- `_works/01234.md` and `assets/works/index/01234.json` are work-scoped here.
+- `assets/data/works_index.json` is still rebuilt globally.
 
 Workbook/manual follow-up after run:
 
