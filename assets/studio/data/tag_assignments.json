@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-24T17:52:33Z",
+  "updated_at_utc": "2026-03-24T20:18:23Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -585,6 +585,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-24T17:52:33Z"
+    },
+    "mother-and-child": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-24T20:18:23Z"
     }
   }
 }
