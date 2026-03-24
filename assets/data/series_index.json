@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-5f5c7191ff056166df61d09041044529",
-    "generated_at_utc": "2026-03-24T16:55:53Z",
-    "count": 103
+    "version": "blake2b-1e4f75e243e94629b1f181d15ec11e10",
+    "generated_at_utc": "2026-03-24T17:37:10Z",
+    "count": 104
   },
   "series": {
     "10000": {
@@ -2761,7 +2761,8 @@
     "melancholy-hope-cell": {
       "series_id": "melancholy-hope-cell",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-24",
       "title": "melancholy hope cell",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -2790,6 +2791,24 @@
         "01438",
         "01439",
         "01440"
+      ]
+    },
+    "memory-loss-hope": {
+      "series_id": "memory-loss-hope",
+      "layout": "series",
+      "status": "draft",
+      "title": "memory loss hope",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2010,
+      "year_display": "2010",
+      "primary_work_id": "01441",
+      "project_folders": [
+        "memory loss hope"
+      ],
+      "works": [
+        "01441",
+        "01442"
       ]
     },
     "mm": {
