@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-b4e30f17c474b084f32a47fb77fdc3a0",
-    "generated_at_utc": "2026-03-24T17:37:10Z",
-    "count": 1435
+    "version": "blake2b-9acd96a3e2700e9f4fdae9d138b5d62e",
+    "generated_at_utc": "2026-03-24T17:52:33Z",
+    "count": 1439
   },
   "works": {
     "00001": {
@@ -13401,6 +13401,42 @@
       "year_display": "2010",
       "series_ids": [
         "memory-loss-hope"
+      ]
+    },
+    "01443": {
+      "work_id": "01443",
+      "title": "memory loss vessels I",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "memory-loss-vessels"
+      ]
+    },
+    "01444": {
+      "work_id": "01444",
+      "title": "memory loss vessels II",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "memory-loss-vessels"
+      ]
+    },
+    "01445": {
+      "work_id": "01445",
+      "title": "memory loss vessels III",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "memory-loss-vessels"
+      ]
+    },
+    "01446": {
+      "work_id": "01446",
+      "title": "memory loss",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "memory-loss-vessels"
       ]
     }
   }
