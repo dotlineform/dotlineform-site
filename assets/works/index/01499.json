@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-16c2d82cee3752fd4c4e0bbd4c4a4164",
+    "generated_at_utc": "2026-03-25T15:02:18Z",
+    "work_id": "01499",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01499",
+    "title": "k particle",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "k-particles"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

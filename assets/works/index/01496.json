@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-cde2d283f9294cfd62edce72fd0f8329",
+    "generated_at_utc": "2026-03-25T14:25:39Z",
+    "work_id": "01496",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01496",
+    "title": "particles 6",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "particles"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": []
+}

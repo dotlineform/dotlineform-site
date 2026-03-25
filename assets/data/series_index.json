@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-5474dc73918d5332f17a8d86fd7585d8",
-    "generated_at_utc": "2026-03-24T21:55:32Z",
-    "count": 109
+    "version": "blake2b-032bd0b1b5bd13e10d9615ae7619de9e",
+    "generated_at_utc": "2026-03-25T15:10:15Z",
+    "count": 111
   },
   "series": {
     "10000": {
@@ -2514,6 +2514,25 @@
         "00628"
       ]
     },
+    "k-particles": {
+      "series_id": "k-particles",
+      "layout": "series",
+      "status": "draft",
+      "title": "k particles",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2008,
+      "year_display": "2008",
+      "primary_work_id": "01498",
+      "project_folders": [
+        "k particles"
+      ],
+      "works": [
+        "01498",
+        "01499",
+        "01500"
+      ]
+    },
     "kylie-structures": {
       "series_id": "kylie-structures",
       "layout": "series",
@@ -3119,7 +3138,8 @@
     "particle-machine": {
       "series_id": "particle-machine",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-24",
       "title": "particle machine",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3163,6 +3183,30 @@
         "00551",
         "00552",
         "00553"
+      ]
+    },
+    "particles": {
+      "series_id": "particles",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-25",
+      "title": "particles",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2013,
+      "year_display": "2013",
+      "primary_work_id": "01491",
+      "project_folders": [
+        "particles"
+      ],
+      "works": [
+        "01491",
+        "01492",
+        "01493",
+        "01494",
+        "01495",
+        "01496",
+        "01497"
       ]
     },
     "qrnt": {

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-b0aa65ac789ce8716b26690c14584d5d",
-    "generated_at_utc": "2026-03-24T21:55:32Z",
-    "count": 1483
+    "version": "blake2b-35fe837df3b2b8e0b2270054b77b30d3",
+    "generated_at_utc": "2026-03-25T15:10:15Z",
+    "count": 1493
   },
   "works": {
     "00001": {
@@ -13834,6 +13834,96 @@
       "year_display": "2020",
       "series_ids": [
         "particle-machine"
+      ]
+    },
+    "01491": {
+      "work_id": "01491",
+      "title": "particles 1",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01492": {
+      "work_id": "01492",
+      "title": "particles 2",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01493": {
+      "work_id": "01493",
+      "title": "particles 3",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01494": {
+      "work_id": "01494",
+      "title": "particles 4",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01495": {
+      "work_id": "01495",
+      "title": "particles 5",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01496": {
+      "work_id": "01496",
+      "title": "particles 6",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01497": {
+      "work_id": "01497",
+      "title": "particles 7",
+      "year": 2013,
+      "year_display": "2013",
+      "series_ids": [
+        "particles"
+      ]
+    },
+    "01498": {
+      "work_id": "01498",
+      "title": "k particles",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "k-particles"
+      ]
+    },
+    "01499": {
+      "work_id": "01499",
+      "title": "k particle",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "k-particles"
+      ]
+    },
+    "01500": {
+      "work_id": "01500",
+      "title": "k particles grid",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "k-particles"
       ]
     }
   }

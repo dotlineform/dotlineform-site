@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-e6c30accbc833d3fe1ddcac1861307a2",
+    "generated_at_utc": "2026-03-25T15:02:18Z",
+    "work_id": "01498",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01498",
+    "title": "k particles",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "k-particles"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 75.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 8858
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01498",
+          "detail_id": "001",
+          "detail_uid": "01498-001",
+          "title": "k particles - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01498",
+          "detail_id": "002",
+          "detail_uid": "01498-002",
+          "title": "k particles - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01498",
+          "detail_id": "003",
+          "detail_uid": "01498-003",
+          "title": "k particles - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01498",
+          "detail_id": "004",
+          "detail_uid": "01498-004",
+          "title": "k particles - detail 4",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}
