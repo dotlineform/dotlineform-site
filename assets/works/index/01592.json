@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-515d631f461b0b7f7525989d11c605e0",
+    "generated_at_utc": "2026-03-25T19:18:01Z",
+    "work_id": "01592",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01592",
+    "title": "untitled",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "porto-santo"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 27.0,
+    "width_cm": 27.0,
+    "width_px": 3189,
+    "height_px": 3189
+  },
+  "sections": []
+}

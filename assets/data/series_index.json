@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-cf23255abb8cc6d979c1d1e2cb9e3f44",
-    "generated_at_utc": "2026-03-25T18:08:29Z",
-    "count": 116
+    "version": "blake2b-038c9f6e67a7de4190ccc840acd121b5",
+    "generated_at_utc": "2026-03-25T19:18:01Z",
+    "count": 117
   },
   "series": {
     "10000": {
@@ -3346,7 +3346,8 @@
     "pole-vault": {
       "series_id": "pole-vault",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "pole vault",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3374,6 +3375,35 @@
         "01580",
         "01581",
         "01582"
+      ]
+    },
+    "porto-santo": {
+      "series_id": "porto-santo",
+      "layout": "series",
+      "status": "draft",
+      "title": "porto santo",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2025,
+      "year_display": "2025",
+      "primary_work_id": "01593",
+      "project_folders": [
+        "porto santo"
+      ],
+      "works": [
+        "01583",
+        "01584",
+        "01585",
+        "01586",
+        "01587",
+        "01588",
+        "01589",
+        "01590",
+        "01591",
+        "01592",
+        "01593",
+        "01594",
+        "01595"
       ]
     },
     "qrnt": {

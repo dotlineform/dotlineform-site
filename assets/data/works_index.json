@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-a73a18d26725bf68950a76c9176f4c2d",
-    "generated_at_utc": "2026-03-25T18:08:29Z",
-    "count": 1575
+    "version": "blake2b-1f6b107919dc3751c69c0f9fe06a318d",
+    "generated_at_utc": "2026-03-25T19:18:01Z",
+    "count": 1588
   },
   "works": {
     "00001": {
@@ -14662,6 +14662,123 @@
       "year_display": "2004",
       "series_ids": [
         "pole-vault"
+      ]
+    },
+    "01583": {
+      "work_id": "01583",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01584": {
+      "work_id": "01584",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01585": {
+      "work_id": "01585",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01586": {
+      "work_id": "01586",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01587": {
+      "work_id": "01587",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01588": {
+      "work_id": "01588",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01589": {
+      "work_id": "01589",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01590": {
+      "work_id": "01590",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01591": {
+      "work_id": "01591",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01592": {
+      "work_id": "01592",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01593": {
+      "work_id": "01593",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01594": {
+      "work_id": "01594",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
+      ]
+    },
+    "01595": {
+      "work_id": "01595",
+      "title": "untitled",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "porto-santo"
       ]
     }
   }
