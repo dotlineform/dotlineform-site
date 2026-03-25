@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-34a7d2daa019ef2572531180970e5c6f",
+    "generated_at_utc": "2026-03-25T20:47:00Z",
+    "work_id": "01606",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01606",
+    "title": "residues 1.1",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "residues"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}

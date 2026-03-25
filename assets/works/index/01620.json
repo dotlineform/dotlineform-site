@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-bf51d6062ac8d4183a011b9268fd3baa",
+    "generated_at_utc": "2026-03-25T20:47:00Z",
+    "work_id": "01620",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01620",
+    "title": "residues 2.5",
+    "year": 2021,
+    "year_display": "2021",
+    "series_ids": [
+      "residues"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 4724
+  },
+  "sections": []
+}
