@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-0acf451df98a8873bd33fbb84867dfc5",
+    "generated_at_utc": "2026-03-25T18:08:29Z",
+    "work_id": "01570",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01570",
+    "title": "pole vault (5)",
+    "year": 2004,
+    "year_display": "2004",
+    "series_ids": [
+      "pole-vault"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 3543
+  },
+  "sections": []
+}

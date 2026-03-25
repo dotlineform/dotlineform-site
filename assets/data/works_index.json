@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-dd6829a8c39e27dd526589f08da100aa",
-    "generated_at_utc": "2026-03-25T16:43:41Z",
-    "count": 1558
+    "version": "blake2b-a73a18d26725bf68950a76c9176f4c2d",
+    "generated_at_utc": "2026-03-25T18:08:29Z",
+    "count": 1575
   },
   "works": {
     "00001": {
@@ -14509,6 +14509,159 @@
       "year_display": "2001-04",
       "series_ids": [
         "poa"
+      ]
+    },
+    "01566": {
+      "work_id": "01566",
+      "title": "pole vault (1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01567": {
+      "work_id": "01567",
+      "title": "pole vault (2)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01568": {
+      "work_id": "01568",
+      "title": "pole vault (3)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01569": {
+      "work_id": "01569",
+      "title": "pole vault (4)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01570": {
+      "work_id": "01570",
+      "title": "pole vault (5)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01571": {
+      "work_id": "01571",
+      "title": "pole vault (becker)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01572": {
+      "work_id": "01572",
+      "title": "pole vault (elisdottir 1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01573": {
+      "work_id": "01573",
+      "title": "pole vault (elisdottir 2)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01574": {
+      "work_id": "01574",
+      "title": "pole vault (feofanova 1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01575": {
+      "work_id": "01575",
+      "title": "pole vault (grigorieva 1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01576": {
+      "work_id": "01576",
+      "title": "pole vault (grigorieva 2)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01577": {
+      "work_id": "01577",
+      "title": "pole vault (grigorieva 3)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01578": {
+      "work_id": "01578",
+      "title": "pole vault (isinbajeva 1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01579": {
+      "work_id": "01579",
+      "title": "pole vault (pyrek 1)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01580": {
+      "work_id": "01580",
+      "title": "pole vault (pyrek 2)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01581": {
+      "work_id": "01581",
+      "title": "pole vault (pyrek 3)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
+      ]
+    },
+    "01582": {
+      "work_id": "01582",
+      "title": "pole vault (pyrek 4)",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "pole-vault"
       ]
     }
   }

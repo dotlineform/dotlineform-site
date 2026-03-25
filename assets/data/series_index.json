@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-4336284b05673b6d1ab4f5a5d9819345",
-    "generated_at_utc": "2026-03-25T16:43:40Z",
-    "count": 115
+    "version": "blake2b-cf23255abb8cc6d979c1d1e2cb9e3f44",
+    "generated_at_utc": "2026-03-25T18:08:29Z",
+    "count": 116
   },
   "series": {
     "10000": {
@@ -3297,7 +3297,8 @@
     "poa": {
       "series_id": "poa",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "poa",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3340,6 +3341,39 @@
         "01563",
         "01564",
         "01565"
+      ]
+    },
+    "pole-vault": {
+      "series_id": "pole-vault",
+      "layout": "series",
+      "status": "draft",
+      "title": "pole vault",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2004,
+      "year_display": "2004",
+      "primary_work_id": "01580",
+      "project_folders": [
+        "pole vault"
+      ],
+      "works": [
+        "01566",
+        "01567",
+        "01568",
+        "01569",
+        "01570",
+        "01571",
+        "01572",
+        "01573",
+        "01574",
+        "01575",
+        "01576",
+        "01577",
+        "01578",
+        "01579",
+        "01580",
+        "01581",
+        "01582"
       ]
     },
     "qrnt": {
