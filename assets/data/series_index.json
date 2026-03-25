@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-1851b33d31f015111ca7d9c4a1d5ed3a",
-    "generated_at_utc": "2026-03-25T15:54:16Z",
-    "count": 113
+    "version": "blake2b-73acf21ab1a3c2b62df2c8cfceeaeabc",
+    "generated_at_utc": "2026-03-25T16:09:06Z",
+    "count": 114
   },
   "series": {
     "10000": {
@@ -3252,7 +3252,8 @@
     "pi-particles": {
       "series_id": "pi-particles",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "pi particles",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3267,6 +3268,29 @@
         "01524",
         "01525",
         "01526"
+      ]
+    },
+    "plant-forms": {
+      "series_id": "plant-forms",
+      "layout": "series",
+      "status": "draft",
+      "title": "plant forms",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2022,
+      "year_display": "2022",
+      "primary_work_id": "01530",
+      "project_folders": [
+        "plant forms"
+      ],
+      "works": [
+        "01527",
+        "01528",
+        "01529",
+        "01530",
+        "01531",
+        "01532",
+        "01533"
       ]
     },
     "qrnt": {

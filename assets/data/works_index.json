@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-78a05bdccee3c77ae5ccafdb155171da",
-    "generated_at_utc": "2026-03-25T15:54:17Z",
-    "count": 1519
+    "version": "blake2b-4012c14aaf25b48869ede537cafa3de3",
+    "generated_at_utc": "2026-03-25T16:09:06Z",
+    "count": 1526
   },
   "works": {
     "00001": {
@@ -14158,6 +14158,69 @@
       "year_display": "2012",
       "series_ids": [
         "pi-particles"
+      ]
+    },
+    "01527": {
+      "work_id": "01527",
+      "title": "plant form 1",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01528": {
+      "work_id": "01528",
+      "title": "plant form 2",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01529": {
+      "work_id": "01529",
+      "title": "plant form 3",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01530": {
+      "work_id": "01530",
+      "title": "plant form 4",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01531": {
+      "work_id": "01531",
+      "title": "plant form 5",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01532": {
+      "work_id": "01532",
+      "title": "plant form 6",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
+      ]
+    },
+    "01533": {
+      "work_id": "01533",
+      "title": "plant form 7",
+      "year": 2022,
+      "year_display": "2022",
+      "series_ids": [
+        "plant-forms"
       ]
     }
   }
