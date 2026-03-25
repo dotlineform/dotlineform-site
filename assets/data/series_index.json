@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-038c9f6e67a7de4190ccc840acd121b5",
-    "generated_at_utc": "2026-03-25T19:18:01Z",
-    "count": 117
+    "version": "blake2b-703dbc57efc27a09b6639768fdfdd2c6",
+    "generated_at_utc": "2026-03-25T20:18:44Z",
+    "count": 118
   },
   "series": {
     "10000": {
@@ -3380,7 +3380,8 @@
     "porto-santo": {
       "series_id": "porto-santo",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "porto santo",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3473,6 +3474,32 @@
         "00156",
         "00157",
         "00524"
+      ]
+    },
+    "reduce-and-return": {
+      "series_id": "reduce-and-return",
+      "layout": "series",
+      "status": "draft",
+      "title": "reduce and return",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2005,
+      "year_display": "2005-07",
+      "primary_work_id": "01596",
+      "project_folders": [
+        "reduce and return"
+      ],
+      "works": [
+        "01596",
+        "01597",
+        "01598",
+        "01599",
+        "01600",
+        "01601",
+        "01602",
+        "01603",
+        "01604",
+        "01605"
       ]
     },
     "spiders": {

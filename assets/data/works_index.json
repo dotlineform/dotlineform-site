@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-1f6b107919dc3751c69c0f9fe06a318d",
-    "generated_at_utc": "2026-03-25T19:18:01Z",
-    "count": 1588
+    "version": "blake2b-884bc6d889ee7e76a2f5a7d542d7cc1f",
+    "generated_at_utc": "2026-03-25T20:18:44Z",
+    "count": 1598
   },
   "works": {
     "00001": {
@@ -14779,6 +14779,96 @@
       "year_display": "2025",
       "series_ids": [
         "porto-santo"
+      ]
+    },
+    "01596": {
+      "work_id": "01596",
+      "title": "reduce 1",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01597": {
+      "work_id": "01597",
+      "title": "reduce 2",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01598": {
+      "work_id": "01598",
+      "title": "reduce 3",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01599": {
+      "work_id": "01599",
+      "title": "reduce 4",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01600": {
+      "work_id": "01600",
+      "title": "reduce 5",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01601": {
+      "work_id": "01601",
+      "title": "return 1",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01602": {
+      "work_id": "01602",
+      "title": "return 2",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01603": {
+      "work_id": "01603",
+      "title": "return 3",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01604": {
+      "work_id": "01604",
+      "title": "return 4",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
+      ]
+    },
+    "01605": {
+      "work_id": "01605",
+      "title": "return 5",
+      "year": 2005,
+      "year_display": "2005-07",
+      "series_ids": [
+        "reduce-and-return"
       ]
     }
   }
