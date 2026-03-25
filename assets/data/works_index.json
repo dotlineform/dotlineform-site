@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-0f1ce8f2f10fcfb4819004490fb6dd4f",
-    "generated_at_utc": "2026-03-25T15:21:07Z",
-    "count": 1515
+    "version": "blake2b-78a05bdccee3c77ae5ccafdb155171da",
+    "generated_at_utc": "2026-03-25T15:54:17Z",
+    "count": 1519
   },
   "works": {
     "00001": {
@@ -14122,6 +14122,42 @@
       "year_display": "2004",
       "series_ids": [
         "petri"
+      ]
+    },
+    "01523": {
+      "work_id": "01523",
+      "title": "pi",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "pi-particles"
+      ]
+    },
+    "01524": {
+      "work_id": "01524",
+      "title": "pi molecule grid",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "pi-particles"
+      ]
+    },
+    "01525": {
+      "work_id": "01525",
+      "title": "pi circle",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "pi-particles"
+      ]
+    },
+    "01526": {
+      "work_id": "01526",
+      "title": "all the particles are connected",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "pi-particles"
       ]
     }
   }

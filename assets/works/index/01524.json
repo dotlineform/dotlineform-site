@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-8711e5476616f2a423fb074153eb64c7",
+    "generated_at_utc": "2026-03-25T15:54:17Z",
+    "work_id": "01524",
+    "count": 3
+  },
+  "work": {
+    "work_id": "01524",
+    "title": "pi molecule grid",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "pi-particles"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 75.0,
+    "width_cm": 75.0,
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01524",
+          "detail_id": "001",
+          "detail_uid": "01524-001",
+          "title": "pi molecule grid - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01524",
+          "detail_id": "002",
+          "detail_uid": "01524-002",
+          "title": "pi molecule grid - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01524",
+          "detail_id": "003",
+          "detail_uid": "01524-003",
+          "title": "pi molecule grid - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

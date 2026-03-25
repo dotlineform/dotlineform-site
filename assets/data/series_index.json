@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-47cc3bc3a9b6a2cd0dc3f9e9c2021cce",
-    "generated_at_utc": "2026-03-25T15:21:07Z",
-    "count": 112
+    "version": "blake2b-1851b33d31f015111ca7d9c4a1d5ed3a",
+    "generated_at_utc": "2026-03-25T15:54:16Z",
+    "count": 113
   },
   "series": {
     "10000": {
@@ -3213,7 +3213,8 @@
     "petri": {
       "series_id": "petri",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "petri",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3246,6 +3247,26 @@
         "01520",
         "01521",
         "01522"
+      ]
+    },
+    "pi-particles": {
+      "series_id": "pi-particles",
+      "layout": "series",
+      "status": "draft",
+      "title": "pi particles",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012",
+      "primary_work_id": "01525",
+      "project_folders": [
+        "pi particles"
+      ],
+      "works": [
+        "01523",
+        "01524",
+        "01525",
+        "01526"
       ]
     },
     "qrnt": {
