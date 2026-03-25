@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-25T20:47:00Z",
+  "updated_at_utc": "2026-03-25T20:54:01Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -655,6 +655,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-25T20:47:00Z"
+    },
+    "room": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-25T20:54:01Z"
     }
   }
 }

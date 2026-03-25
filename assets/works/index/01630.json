@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-ad8705bd331acaea7481b2de2c873a2b",
+    "generated_at_utc": "2026-03-25T20:54:02Z",
+    "work_id": "01630",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01630",
+    "title": "room 2",
+    "year": 2007,
+    "year_display": "2007",
+    "series_ids": [
+      "room"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 25.0,
+    "width_cm": 100.0,
+    "width_px": 11811,
+    "height_px": 2953
+  },
+  "sections": []
+}

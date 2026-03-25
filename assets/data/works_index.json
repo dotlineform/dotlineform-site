@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-3632025a01452bf23c74d94154d3ee59",
-    "generated_at_utc": "2026-03-25T20:47:00Z",
-    "count": 1621
+    "version": "blake2b-31f56b4c8a9c892fa083d781076c9049",
+    "generated_at_utc": "2026-03-25T20:54:02Z",
+    "count": 1625
   },
   "works": {
     "00001": {
@@ -15076,6 +15076,42 @@
       "year_display": "2021",
       "series_ids": [
         "residues"
+      ]
+    },
+    "01629": {
+      "work_id": "01629",
+      "title": "room 1",
+      "year": 2007,
+      "year_display": "2007",
+      "series_ids": [
+        "room"
+      ]
+    },
+    "01630": {
+      "work_id": "01630",
+      "title": "room 2",
+      "year": 2007,
+      "year_display": "2007",
+      "series_ids": [
+        "room"
+      ]
+    },
+    "01631": {
+      "work_id": "01631",
+      "title": "room 3",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "room"
+      ]
+    },
+    "01632": {
+      "work_id": "01632",
+      "title": "room 4",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "room"
       ]
     }
   }

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-a356c4b18f98de46c688253ec4e45a74",
-    "generated_at_utc": "2026-03-25T20:47:00Z",
-    "count": 119
+    "version": "blake2b-610126a05bc66073b8ad326eee470c0d",
+    "generated_at_utc": "2026-03-25T20:54:02Z",
+    "count": 120
   },
   "series": {
     "10000": {
@@ -3506,7 +3506,8 @@
     "residues": {
       "series_id": "residues",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "residues",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3540,6 +3541,26 @@
         "01626",
         "01627",
         "01628"
+      ]
+    },
+    "room": {
+      "series_id": "room",
+      "layout": "series",
+      "status": "draft",
+      "title": "room",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2007,
+      "year_display": "2007-08",
+      "primary_work_id": "01629",
+      "project_folders": [
+        "room"
+      ],
+      "works": [
+        "01629",
+        "01630",
+        "01631",
+        "01632"
       ]
     },
     "spiders": {
