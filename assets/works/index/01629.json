@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-d443d2dd2a816f2551230d1d9ed1b04d",
-    "generated_at_utc": "2026-03-25T20:54:02Z",
+    "version": "blake2b-69421d66c4f5d50c50af36b7f86a50fe",
+    "generated_at_utc": "2026-03-25T21:10:08Z",
     "work_id": "01629",
-    "count": 0
+    "count": 3
   },
   "work": {
     "work_id": "01629",
@@ -21,5 +21,41 @@
     "width_px": 11811,
     "height_px": 2953
   },
-  "sections": []
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01629",
+          "detail_id": "001",
+          "detail_uid": "01629-001",
+          "title": "room 1 - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01629",
+          "detail_id": "002",
+          "detail_uid": "01629-002",
+          "title": "room 1 - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01629",
+          "detail_id": "003",
+          "detail_uid": "01629-003",
+          "title": "room 1 - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
 }

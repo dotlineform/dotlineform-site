@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-610126a05bc66073b8ad326eee470c0d",
-    "generated_at_utc": "2026-03-25T20:54:02Z",
+    "version": "blake2b-260c6a7bf21649b3684ab77ca4493bc3",
+    "generated_at_utc": "2026-03-25T21:10:07Z",
     "count": 120
   },
   "series": {
@@ -3546,7 +3546,8 @@
     "room": {
       "series_id": "room",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "room",
       "sort_fields": "work_id",
       "series_type": "primary",
