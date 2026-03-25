@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-73acf21ab1a3c2b62df2c8cfceeaeabc",
-    "generated_at_utc": "2026-03-25T16:09:06Z",
-    "count": 114
+    "version": "blake2b-4336284b05673b6d1ab4f5a5d9819345",
+    "generated_at_utc": "2026-03-25T16:43:40Z",
+    "count": 115
   },
   "series": {
     "10000": {
@@ -3273,7 +3273,8 @@
     "plant-forms": {
       "series_id": "plant-forms",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "plant forms",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3291,6 +3292,54 @@
         "01531",
         "01532",
         "01533"
+      ]
+    },
+    "poa": {
+      "series_id": "poa",
+      "layout": "series",
+      "status": "draft",
+      "title": "poa",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2001,
+      "year_display": "2001-04",
+      "primary_work_id": "01538",
+      "project_folders": [
+        "poa"
+      ],
+      "works": [
+        "01534",
+        "01535",
+        "01536",
+        "01537",
+        "01538",
+        "01539",
+        "01540",
+        "01541",
+        "01542",
+        "01543",
+        "01544",
+        "01545",
+        "01546",
+        "01547",
+        "01548",
+        "01549",
+        "01550",
+        "01551",
+        "01552",
+        "01553",
+        "01554",
+        "01555",
+        "01556",
+        "01557",
+        "01558",
+        "01559",
+        "01560",
+        "01561",
+        "01562",
+        "01563",
+        "01564",
+        "01565"
       ]
     },
     "qrnt": {

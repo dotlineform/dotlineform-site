@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-3461a7e49d63cf8bef5c486df8fb7dab",
+    "generated_at_utc": "2026-03-25T16:43:41Z",
+    "work_id": "01560",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01560",
+    "title": "poa 3.4.1",
+    "year": 2004,
+    "year_display": "2001-04",
+    "series_ids": [
+      "poa"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 5906
+  },
+  "sections": []
+}

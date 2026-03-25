@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-4012c14aaf25b48869ede537cafa3de3",
-    "generated_at_utc": "2026-03-25T16:09:06Z",
-    "count": 1526
+    "version": "blake2b-dd6829a8c39e27dd526589f08da100aa",
+    "generated_at_utc": "2026-03-25T16:43:41Z",
+    "count": 1558
   },
   "works": {
     "00001": {
@@ -14221,6 +14221,294 @@
       "year_display": "2022",
       "series_ids": [
         "plant-forms"
+      ]
+    },
+    "01534": {
+      "work_id": "01534",
+      "title": "poa 1 (map 1-500)",
+      "year": 2001,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01535": {
+      "work_id": "01535",
+      "title": "poa 1 (map 501-1000)",
+      "year": 2001,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01536": {
+      "work_id": "01536",
+      "title": "poa 1 (map 1001-1500)",
+      "year": 2001,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01537": {
+      "work_id": "01537",
+      "title": "poa 1 (map 1501-2000)",
+      "year": 2001,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01538": {
+      "work_id": "01538",
+      "title": "poa 2.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01539": {
+      "work_id": "01539",
+      "title": "poa 2.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01540": {
+      "work_id": "01540",
+      "title": "poa 2.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01541": {
+      "work_id": "01541",
+      "title": "poa 2.4",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01542": {
+      "work_id": "01542",
+      "title": "poa 2.5",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01543": {
+      "work_id": "01543",
+      "title": "poa 2.6",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01544": {
+      "work_id": "01544",
+      "title": "poa 2.7",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01545": {
+      "work_id": "01545",
+      "title": "poa 2.8",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01546": {
+      "work_id": "01546",
+      "title": "poa 2.9",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01547": {
+      "work_id": "01547",
+      "title": "poa 2.10",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01548": {
+      "work_id": "01548",
+      "title": "poa 2.11",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01549": {
+      "work_id": "01549",
+      "title": "poa 2.12",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01550": {
+      "work_id": "01550",
+      "title": "poa 2.13",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01551": {
+      "work_id": "01551",
+      "title": "poa 3.1.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01552": {
+      "work_id": "01552",
+      "title": "poa 3.1.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01553": {
+      "work_id": "01553",
+      "title": "poa 3.1.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01554": {
+      "work_id": "01554",
+      "title": "poa 3.2.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01555": {
+      "work_id": "01555",
+      "title": "poa 3.2.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01556": {
+      "work_id": "01556",
+      "title": "poa 3.2.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01557": {
+      "work_id": "01557",
+      "title": "poa 3.3.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01558": {
+      "work_id": "01558",
+      "title": "poa 3.3.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01559": {
+      "work_id": "01559",
+      "title": "poa 3.3.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01560": {
+      "work_id": "01560",
+      "title": "poa 3.4.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01561": {
+      "work_id": "01561",
+      "title": "poa 3.4.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01562": {
+      "work_id": "01562",
+      "title": "poa 3.4.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01563": {
+      "work_id": "01563",
+      "title": "poa 3.5.1",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01564": {
+      "work_id": "01564",
+      "title": "poa 3.5.2",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
+      ]
+    },
+    "01565": {
+      "work_id": "01565",
+      "title": "poa 3.5.3",
+      "year": 2004,
+      "year_display": "2001-04",
+      "series_ids": [
+        "poa"
       ]
     }
   }
