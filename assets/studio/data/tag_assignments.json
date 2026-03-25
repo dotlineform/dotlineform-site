@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-25T15:10:14Z",
+  "updated_at_utc": "2026-03-25T15:21:07Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -615,6 +615,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-25T15:10:14Z"
+    },
+    "petri": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-25T15:21:07Z"
     }
   }
 }

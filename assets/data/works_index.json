@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-35fe837df3b2b8e0b2270054b77b30d3",
-    "generated_at_utc": "2026-03-25T15:10:15Z",
-    "count": 1493
+    "version": "blake2b-0f1ce8f2f10fcfb4819004490fb6dd4f",
+    "generated_at_utc": "2026-03-25T15:21:07Z",
+    "count": 1515
   },
   "works": {
     "00001": {
@@ -13924,6 +13924,204 @@
       "year_display": "2008",
       "series_ids": [
         "k-particles"
+      ]
+    },
+    "01501": {
+      "work_id": "01501",
+      "title": "petri 1",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01502": {
+      "work_id": "01502",
+      "title": "petri 2",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01503": {
+      "work_id": "01503",
+      "title": "petri 3",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01504": {
+      "work_id": "01504",
+      "title": "petri 4",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01505": {
+      "work_id": "01505",
+      "title": "petri 5",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01506": {
+      "work_id": "01506",
+      "title": "petri 6",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01507": {
+      "work_id": "01507",
+      "title": "petri 7",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01508": {
+      "work_id": "01508",
+      "title": "petri 8",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01509": {
+      "work_id": "01509",
+      "title": "petri 9",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01510": {
+      "work_id": "01510",
+      "title": "petri 10",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01511": {
+      "work_id": "01511",
+      "title": "petri 11",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01512": {
+      "work_id": "01512",
+      "title": "petri 12",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01513": {
+      "work_id": "01513",
+      "title": "petri 13",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01514": {
+      "work_id": "01514",
+      "title": "petri 14",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01515": {
+      "work_id": "01515",
+      "title": "petri 15",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01516": {
+      "work_id": "01516",
+      "title": "petri 16",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01517": {
+      "work_id": "01517",
+      "title": "petri 17",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01518": {
+      "work_id": "01518",
+      "title": "petri 18",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01519": {
+      "work_id": "01519",
+      "title": "petri 19",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01520": {
+      "work_id": "01520",
+      "title": "petri 20",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01521": {
+      "work_id": "01521",
+      "title": "petri 21",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
+      ]
+    },
+    "01522": {
+      "work_id": "01522",
+      "title": "petri 22",
+      "year": 2004,
+      "year_display": "2004",
+      "series_ids": [
+        "petri"
       ]
     }
   }

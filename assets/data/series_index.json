@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-032bd0b1b5bd13e10d9615ae7619de9e",
-    "generated_at_utc": "2026-03-25T15:10:15Z",
-    "count": 111
+    "version": "blake2b-47cc3bc3a9b6a2cd0dc3f9e9c2021cce",
+    "generated_at_utc": "2026-03-25T15:21:07Z",
+    "count": 112
   },
   "series": {
     "10000": {
@@ -2517,7 +2517,8 @@
     "k-particles": {
       "series_id": "k-particles",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "k particles",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3207,6 +3208,44 @@
         "01495",
         "01496",
         "01497"
+      ]
+    },
+    "petri": {
+      "series_id": "petri",
+      "layout": "series",
+      "status": "draft",
+      "title": "petri",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2004,
+      "year_display": "2004",
+      "primary_work_id": "01501",
+      "project_folders": [
+        "petri"
+      ],
+      "works": [
+        "01501",
+        "01502",
+        "01503",
+        "01504",
+        "01505",
+        "01506",
+        "01507",
+        "01508",
+        "01509",
+        "01510",
+        "01511",
+        "01512",
+        "01513",
+        "01514",
+        "01515",
+        "01516",
+        "01517",
+        "01518",
+        "01519",
+        "01520",
+        "01521",
+        "01522"
       ]
     },
     "qrnt": {
