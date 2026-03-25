@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-087f311a7c8258d63f174de900f62dac",
+    "generated_at_utc": "2026-03-25T22:04:21Z",
+    "work_id": "01633",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01633",
+    "title": "body form",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "body-form"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print (reverse perspex mount)",
+    "height_cm": 76.2,
+    "width_cm": 50.8,
+    "width_px": 6000,
+    "height_px": 9000
+  },
+  "sections": []
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-260c6a7bf21649b3684ab77ca4493bc3",
-    "generated_at_utc": "2026-03-25T21:10:07Z",
-    "count": 120
+    "version": "blake2b-09c3631b9b96359c6946d41757bba322",
+    "generated_at_utc": "2026-03-25T22:04:21Z",
+    "count": 121
   },
   "series": {
     "10000": {
@@ -420,6 +420,23 @@
       ],
       "works": [
         "00782"
+      ]
+    },
+    "body-form": {
+      "series_id": "body-form",
+      "layout": "series",
+      "status": "draft",
+      "title": "body form",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2008,
+      "year_display": "2008",
+      "primary_work_id": "01633",
+      "project_folders": [
+        "body form"
+      ],
+      "works": [
+        "01633"
       ]
     },
     "body-space": {
