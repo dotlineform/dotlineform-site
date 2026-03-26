@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-12092de48179e5ef1b5543ac8cb06fec",
-    "generated_at_utc": "2026-03-26T19:51:41Z",
-    "count": 1727
+    "version": "blake2b-9ef9d9d2fdd70275828857ff59902aa9",
+    "generated_at_utc": "2026-03-26T20:08:01Z",
+    "count": 1730
   },
   "works": {
     "00001": {
@@ -16030,6 +16030,33 @@
       "year_display": "2014",
       "series_ids": [
         "still-life"
+      ]
+    },
+    "01735": {
+      "work_id": "01735",
+      "title": "sunflower forms",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "sunflower"
+      ]
+    },
+    "01736": {
+      "work_id": "01736",
+      "title": "sunflower forms grid",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "sunflower"
+      ]
+    },
+    "01737": {
+      "work_id": "01737",
+      "title": "sunflower path",
+      "year": 2012,
+      "year_display": "2012",
+      "series_ids": [
+        "sunflower"
       ]
     }
   }

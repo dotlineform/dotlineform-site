@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d5ed8cf8f9f9c8ea3f7ea6bb7bbb6cd0",
+    "generated_at_utc": "2026-03-26T20:08:01Z",
+    "work_id": "01736",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01736",
+    "title": "sunflower forms grid",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "sunflower"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 52.0,
+    "width_cm": 52.0,
+    "width_px": 6142,
+    "height_px": 6142
+  },
+  "sections": []
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-62474813157e69d1e50cb6b447b5b24b",
-    "generated_at_utc": "2026-03-26T19:51:41Z",
-    "count": 127
+    "version": "blake2b-7856a69b58c662768714b66a447d9d94",
+    "generated_at_utc": "2026-03-26T20:08:01Z",
+    "count": 128
   },
   "series": {
     "10000": {
@@ -3776,7 +3776,8 @@
     "still-life": {
       "series_id": "still-life",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "still life",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3844,6 +3845,25 @@
         "00578",
         "00579",
         "00580"
+      ]
+    },
+    "sunflower": {
+      "series_id": "sunflower",
+      "layout": "series",
+      "status": "draft",
+      "title": "sunflower",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2012,
+      "year_display": "2012",
+      "primary_work_id": "01735",
+      "project_folders": [
+        "sunflower"
+      ],
+      "works": [
+        "01735",
+        "01736",
+        "01737"
       ]
     },
     "tree": {
