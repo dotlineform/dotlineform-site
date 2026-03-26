@@ -1,0 +1,136 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-a83d9e23191f33bff75d25993c5a37fe",
+    "generated_at_utc": "2026-03-26T20:33:31Z",
+    "work_id": "01744",
+    "count": 10
+  },
+  "work": {
+    "work_id": "01744",
+    "title": "tabula rasa",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "tabula-rasa"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 76.2,
+    "width_cm": 76.2,
+    "width_px": 12000,
+    "height_px": 12000
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01744",
+          "detail_id": "001",
+          "detail_uid": "01744-001",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "002",
+          "detail_uid": "01744-002",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "003",
+          "detail_uid": "01744-003",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "004",
+          "detail_uid": "01744-004",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "005",
+          "detail_uid": "01744-005",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "006",
+          "detail_uid": "01744-006",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "007",
+          "detail_uid": "01744-007",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "008",
+          "detail_uid": "01744-008",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01744",
+          "detail_id": "009",
+          "detail_uid": "01744-009",
+          "title": "tabula rasa - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3600,
+          "height_px": 3600,
+          "layout": "work_details"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "source",
+      "details": [
+        {
+          "work_id": "01744",
+          "detail_id": "010",
+          "detail_uid": "01744-010",
+          "title": "tabula rasa - source",
+          "project_subfolder": "source",
+          "width_px": 3543,
+          "height_px": 3543,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

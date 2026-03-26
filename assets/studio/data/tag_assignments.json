@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-26T20:21:49Z",
+  "updated_at_utc": "2026-03-26T20:33:30Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -705,6 +705,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-26T20:21:49Z"
+    },
+    "tabula-rasa": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-26T20:33:30Z"
     }
   }
 }

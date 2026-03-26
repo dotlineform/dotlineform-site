@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-d62c9b4f9b35b20866e5b502f8b6873b",
-    "generated_at_utc": "2026-03-26T20:21:49Z",
-    "count": 1736
+    "version": "blake2b-4c6807796c0a9af3defc8c8c99c7fb35",
+    "generated_at_utc": "2026-03-26T20:33:31Z",
+    "count": 1737
   },
   "works": {
     "00001": {
@@ -16111,6 +16111,15 @@
       "year_display": "2018",
       "series_ids": [
         "surface-history"
+      ]
+    },
+    "01744": {
+      "work_id": "01744",
+      "title": "tabula rasa",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "tabula-rasa"
       ]
     }
   }
