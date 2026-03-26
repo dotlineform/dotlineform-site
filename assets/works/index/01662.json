@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-548266f71cd026de94cfd0d1dbbe212f",
+    "generated_at_utc": "2026-03-26T14:18:55Z",
+    "work_id": "01662",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01662",
+    "title": "snow",
+    "year": 2018,
+    "year_display": "2018",
+    "series_ids": [
+      "snow"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 50.0,
+    "width_cm": 50.0,
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "sections": []
+}

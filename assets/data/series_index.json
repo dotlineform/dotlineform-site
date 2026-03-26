@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-6e1950d1af62ce1c699e4cc73ead26f6",
-    "generated_at_utc": "2026-03-26T13:55:09Z",
-    "count": 122
+    "version": "blake2b-d3d5345eca80446247ab613e85e04172",
+    "generated_at_utc": "2026-03-26T14:18:55Z",
+    "count": 123
   },
   "series": {
     "10000": {
@@ -557,7 +557,8 @@
     "changed-photos": {
       "series_id": "changed-photos",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "changed photos",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3617,6 +3618,42 @@
         "01630",
         "01631",
         "01632"
+      ]
+    },
+    "snow": {
+      "series_id": "snow",
+      "layout": "series",
+      "status": "draft",
+      "title": "snow",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2018,
+      "year_display": "2018",
+      "primary_work_id": "01655",
+      "project_folders": [
+        "snow"
+      ],
+      "works": [
+        "01655",
+        "01656",
+        "01657",
+        "01658",
+        "01659",
+        "01660",
+        "01661",
+        "01662",
+        "01663",
+        "01664",
+        "01665",
+        "01666",
+        "01667",
+        "01668",
+        "01669",
+        "01670",
+        "01671",
+        "01672",
+        "01673",
+        "01674"
       ]
     },
     "spiders": {
