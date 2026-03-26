@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-419736c44f59f446a1ce446f1b7129b2",
-    "generated_at_utc": "2026-03-26T18:41:03Z",
-    "count": 125
+    "version": "blake2b-62474813157e69d1e50cb6b447b5b24b",
+    "generated_at_utc": "2026-03-26T19:51:41Z",
+    "count": 127
   },
   "series": {
     "10000": {
@@ -3740,7 +3740,8 @@
     "spine-symbols": {
       "series_id": "spine-symbols",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "spine symbols",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3752,6 +3753,53 @@
       ],
       "works": [
         "01720"
+      ]
+    },
+    "state-of-mind": {
+      "series_id": "state-of-mind",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-26",
+      "title": "state of mind",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01721",
+      "project_folders": [
+        "state of mind"
+      ],
+      "works": [
+        "01721"
+      ]
+    },
+    "still-life": {
+      "series_id": "still-life",
+      "layout": "series",
+      "status": "draft",
+      "title": "still life",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2014,
+      "year_display": "2014",
+      "primary_work_id": "01732",
+      "project_folders": [
+        "still life"
+      ],
+      "works": [
+        "01722",
+        "01723",
+        "01724",
+        "01725",
+        "01726",
+        "01727",
+        "01728",
+        "01729",
+        "01730",
+        "01731",
+        "01732",
+        "01733",
+        "01734"
       ]
     },
     "string-theory": {

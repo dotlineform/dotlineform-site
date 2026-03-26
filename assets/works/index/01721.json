@@ -1,0 +1,1226 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-ae697f80b72ecf9c394d125c8e4e5eeb",
+    "generated_at_utc": "2026-03-26T19:02:28Z",
+    "work_id": "01721",
+    "count": 119
+  },
+  "work": {
+    "work_id": "01721",
+    "title": "state of mind",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "state-of-mind"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01721",
+          "detail_id": "001",
+          "detail_uid": "01721-001",
+          "title": "state of mind - detail (jewels)",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "002",
+          "detail_uid": "01721-002",
+          "title": "state of mind - detail (leaf)",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "003",
+          "detail_uid": "01721-003",
+          "title": "state of mind - detail (thorns)",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "004",
+          "detail_uid": "01721-004",
+          "title": "state of mind - detail 1",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "005",
+          "detail_uid": "01721-005",
+          "title": "state of mind - detail 2",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "006",
+          "detail_uid": "01721-006",
+          "title": "state of mind - detail 3",
+          "project_subfolder": "details",
+          "width_px": 2000,
+          "height_px": 2000,
+          "layout": "work_details"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "source",
+      "details": [
+        {
+          "work_id": "01721",
+          "detail_id": "007",
+          "detail_uid": "01721-007",
+          "title": "state of mind - source 1",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "008",
+          "detail_uid": "01721-008",
+          "title": "state of mind - source 2",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "009",
+          "detail_uid": "01721-009",
+          "title": "state of mind - source 3",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "010",
+          "detail_uid": "01721-010",
+          "title": "state of mind - source 4",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "011",
+          "detail_uid": "01721-011",
+          "title": "state of mind - source 5",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "012",
+          "detail_uid": "01721-012",
+          "title": "state of mind - source 6",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "013",
+          "detail_uid": "01721-013",
+          "title": "state of mind - source 7",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "014",
+          "detail_uid": "01721-014",
+          "title": "state of mind - source 8",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "015",
+          "detail_uid": "01721-015",
+          "title": "state of mind - source 9",
+          "project_subfolder": "source",
+          "width_px": 1600,
+          "height_px": 1600,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "016",
+          "detail_uid": "01721-016",
+          "title": "state of mind - source 10",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "017",
+          "detail_uid": "01721-017",
+          "title": "state of mind - source 11",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 2268,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "018",
+          "detail_uid": "01721-018",
+          "title": "state of mind - source 12",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "019",
+          "detail_uid": "01721-019",
+          "title": "state of mind - source 13",
+          "project_subfolder": "source",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "020",
+          "detail_uid": "01721-020",
+          "title": "state of mind - source 14",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "021",
+          "detail_uid": "01721-021",
+          "title": "state of mind - source 15",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "022",
+          "detail_uid": "01721-022",
+          "title": "state of mind - source 16",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "023",
+          "detail_uid": "01721-023",
+          "title": "state of mind - source 17",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "024",
+          "detail_uid": "01721-024",
+          "title": "state of mind - source 18",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "025",
+          "detail_uid": "01721-025",
+          "title": "state of mind - source 19",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "026",
+          "detail_uid": "01721-026",
+          "title": "state of mind - source 20",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "027",
+          "detail_uid": "01721-027",
+          "title": "state of mind - source 21",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "028",
+          "detail_uid": "01721-028",
+          "title": "state of mind - source 22",
+          "project_subfolder": "source",
+          "width_px": 4112,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "029",
+          "detail_uid": "01721-029",
+          "title": "state of mind - source 23",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "030",
+          "detail_uid": "01721-030",
+          "title": "state of mind - source 24",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "031",
+          "detail_uid": "01721-031",
+          "title": "state of mind - source 25",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "032",
+          "detail_uid": "01721-032",
+          "title": "state of mind - source 26",
+          "project_subfolder": "source",
+          "width_px": 2268,
+          "height_px": 4032,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "033",
+          "detail_uid": "01721-033",
+          "title": "state of mind - source 27",
+          "project_subfolder": "source",
+          "width_px": 2268,
+          "height_px": 4032,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "034",
+          "detail_uid": "01721-034",
+          "title": "state of mind - source 28",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "035",
+          "detail_uid": "01721-035",
+          "title": "state of mind - source 29",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "036",
+          "detail_uid": "01721-036",
+          "title": "state of mind - source 30",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "037",
+          "detail_uid": "01721-037",
+          "title": "state of mind - source 31",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "038",
+          "detail_uid": "01721-038",
+          "title": "state of mind - source 32",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "039",
+          "detail_uid": "01721-039",
+          "title": "state of mind - source 33",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "040",
+          "detail_uid": "01721-040",
+          "title": "state of mind - source 34",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "041",
+          "detail_uid": "01721-041",
+          "title": "state of mind - source 35",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "042",
+          "detail_uid": "01721-042",
+          "title": "state of mind - source 36",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "043",
+          "detail_uid": "01721-043",
+          "title": "state of mind - source 37",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "044",
+          "detail_uid": "01721-044",
+          "title": "state of mind - source 38",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "045",
+          "detail_uid": "01721-045",
+          "title": "state of mind - source 39",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "046",
+          "detail_uid": "01721-046",
+          "title": "state of mind - source 40",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "047",
+          "detail_uid": "01721-047",
+          "title": "state of mind - source 41",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "048",
+          "detail_uid": "01721-048",
+          "title": "state of mind - source 42",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "049",
+          "detail_uid": "01721-049",
+          "title": "state of mind - source 43",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "050",
+          "detail_uid": "01721-050",
+          "title": "state of mind - source 44",
+          "project_subfolder": "source",
+          "width_px": 4112,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "051",
+          "detail_uid": "01721-051",
+          "title": "state of mind - source 45",
+          "project_subfolder": "source",
+          "width_px": 1200,
+          "height_px": 857,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "052",
+          "detail_uid": "01721-052",
+          "title": "state of mind - source 46",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "053",
+          "detail_uid": "01721-053",
+          "title": "state of mind - source 47",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 2268,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "054",
+          "detail_uid": "01721-054",
+          "title": "state of mind - source 48",
+          "project_subfolder": "source",
+          "width_px": 2272,
+          "height_px": 1704,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "055",
+          "detail_uid": "01721-055",
+          "title": "state of mind - source 49",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "056",
+          "detail_uid": "01721-056",
+          "title": "state of mind - source 50",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "057",
+          "detail_uid": "01721-057",
+          "title": "state of mind - source 51",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "058",
+          "detail_uid": "01721-058",
+          "title": "state of mind - source 52",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "059",
+          "detail_uid": "01721-059",
+          "title": "state of mind - source 53",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "060",
+          "detail_uid": "01721-060",
+          "title": "state of mind - source 54",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "061",
+          "detail_uid": "01721-061",
+          "title": "state of mind - source 55",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "062",
+          "detail_uid": "01721-062",
+          "title": "state of mind - source 56",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "063",
+          "detail_uid": "01721-063",
+          "title": "state of mind - source 57",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "064",
+          "detail_uid": "01721-064",
+          "title": "state of mind - source 58",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 2268,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "065",
+          "detail_uid": "01721-065",
+          "title": "state of mind - source 59",
+          "project_subfolder": "source",
+          "width_px": 2448,
+          "height_px": 3264,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "066",
+          "detail_uid": "01721-066",
+          "title": "state of mind - source 60",
+          "project_subfolder": "source",
+          "width_px": 2048,
+          "height_px": 1536,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "067",
+          "detail_uid": "01721-067",
+          "title": "state of mind - source 61",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "068",
+          "detail_uid": "01721-068",
+          "title": "state of mind - source 62",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "069",
+          "detail_uid": "01721-069",
+          "title": "state of mind - source 63",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "070",
+          "detail_uid": "01721-070",
+          "title": "state of mind - source 64",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 2268,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "071",
+          "detail_uid": "01721-071",
+          "title": "state of mind - source 65",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "072",
+          "detail_uid": "01721-072",
+          "title": "state of mind - source 66",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "073",
+          "detail_uid": "01721-073",
+          "title": "state of mind - source 67",
+          "project_subfolder": "source",
+          "width_px": 2048,
+          "height_px": 1536,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "074",
+          "detail_uid": "01721-074",
+          "title": "state of mind - source 68",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "075",
+          "detail_uid": "01721-075",
+          "title": "state of mind - source 69",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "076",
+          "detail_uid": "01721-076",
+          "title": "state of mind - source 70",
+          "project_subfolder": "source",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "077",
+          "detail_uid": "01721-077",
+          "title": "state of mind - source 71",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "078",
+          "detail_uid": "01721-078",
+          "title": "state of mind - source 72",
+          "project_subfolder": "source",
+          "width_px": 2448,
+          "height_px": 3264,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "079",
+          "detail_uid": "01721-079",
+          "title": "state of mind - source 73",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "080",
+          "detail_uid": "01721-080",
+          "title": "state of mind - source 74",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "081",
+          "detail_uid": "01721-081",
+          "title": "state of mind - source 75",
+          "project_subfolder": "source",
+          "width_px": 4288,
+          "height_px": 2848,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "082",
+          "detail_uid": "01721-082",
+          "title": "state of mind - source 76",
+          "project_subfolder": "source",
+          "width_px": 2048,
+          "height_px": 1536,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "083",
+          "detail_uid": "01721-083",
+          "title": "state of mind - source 77",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "084",
+          "detail_uid": "01721-084",
+          "title": "state of mind - source 78",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "085",
+          "detail_uid": "01721-085",
+          "title": "state of mind - source 79",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "086",
+          "detail_uid": "01721-086",
+          "title": "state of mind - source 80",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "087",
+          "detail_uid": "01721-087",
+          "title": "state of mind - source 81",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "088",
+          "detail_uid": "01721-088",
+          "title": "state of mind - source 82",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "089",
+          "detail_uid": "01721-089",
+          "title": "state of mind - source 83",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "090",
+          "detail_uid": "01721-090",
+          "title": "state of mind - source 84",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "091",
+          "detail_uid": "01721-091",
+          "title": "state of mind - source 85",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "092",
+          "detail_uid": "01721-092",
+          "title": "state of mind - source 86",
+          "project_subfolder": "source",
+          "width_px": 2448,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "093",
+          "detail_uid": "01721-093",
+          "title": "state of mind - source 87",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "094",
+          "detail_uid": "01721-094",
+          "title": "state of mind - source 88",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "095",
+          "detail_uid": "01721-095",
+          "title": "state of mind - source 89",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "096",
+          "detail_uid": "01721-096",
+          "title": "state of mind - source 90",
+          "project_subfolder": "source",
+          "width_px": 2422,
+          "height_px": 2422,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "097",
+          "detail_uid": "01721-097",
+          "title": "state of mind - source 91",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "098",
+          "detail_uid": "01721-098",
+          "title": "state of mind - source 92",
+          "project_subfolder": "source",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "099",
+          "detail_uid": "01721-099",
+          "title": "state of mind - source 93",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "100",
+          "detail_uid": "01721-100",
+          "title": "state of mind - source 94",
+          "project_subfolder": "source",
+          "width_px": 2048,
+          "height_px": 2048,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "101",
+          "detail_uid": "01721-101",
+          "title": "state of mind - source 95",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "102",
+          "detail_uid": "01721-102",
+          "title": "state of mind - source 96",
+          "project_subfolder": "source",
+          "width_px": 4112,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "103",
+          "detail_uid": "01721-103",
+          "title": "state of mind - source 97",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "104",
+          "detail_uid": "01721-104",
+          "title": "state of mind - source 98",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "105",
+          "detail_uid": "01721-105",
+          "title": "state of mind - source 99",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "106",
+          "detail_uid": "01721-106",
+          "title": "state of mind - source 100",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "107",
+          "detail_uid": "01721-107",
+          "title": "state of mind - source 101",
+          "project_subfolder": "source",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "108",
+          "detail_uid": "01721-108",
+          "title": "state of mind - source 102",
+          "project_subfolder": "source",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "109",
+          "detail_uid": "01721-109",
+          "title": "state of mind - source 103",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "110",
+          "detail_uid": "01721-110",
+          "title": "state of mind - source 104",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "111",
+          "detail_uid": "01721-111",
+          "title": "state of mind - source 105",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "112",
+          "detail_uid": "01721-112",
+          "title": "state of mind - source 106",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "113",
+          "detail_uid": "01721-113",
+          "title": "state of mind - source 107",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "114",
+          "detail_uid": "01721-114",
+          "title": "state of mind - source 108",
+          "project_subfolder": "source",
+          "width_px": 2272,
+          "height_px": 1704,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "115",
+          "detail_uid": "01721-115",
+          "title": "state of mind - source 109",
+          "project_subfolder": "source",
+          "width_px": 3264,
+          "height_px": 2448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "116",
+          "detail_uid": "01721-116",
+          "title": "state of mind - source 110",
+          "project_subfolder": "source",
+          "width_px": 4032,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "117",
+          "detail_uid": "01721-117",
+          "title": "state of mind - source 111",
+          "project_subfolder": "source",
+          "width_px": 3088,
+          "height_px": 3088,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "118",
+          "detail_uid": "01721-118",
+          "title": "state of mind - source 112",
+          "project_subfolder": "source",
+          "width_px": 4480,
+          "height_px": 2520,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01721",
+          "detail_id": "119",
+          "detail_uid": "01721-119",
+          "title": "state of mind - source 113",
+          "project_subfolder": "source",
+          "width_px": 2816,
+          "height_px": 2112,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

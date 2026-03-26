@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-f576aa499ee851dda6a877135a2612f7",
-    "generated_at_utc": "2026-03-26T18:41:04Z",
-    "count": 1713
+    "version": "blake2b-12092de48179e5ef1b5543ac8cb06fec",
+    "generated_at_utc": "2026-03-26T19:51:41Z",
+    "count": 1727
   },
   "works": {
     "00001": {
@@ -15904,6 +15904,132 @@
       "year_display": "2008",
       "series_ids": [
         "spine-symbols"
+      ]
+    },
+    "01721": {
+      "work_id": "01721",
+      "title": "state of mind",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "state-of-mind"
+      ]
+    },
+    "01722": {
+      "work_id": "01722",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01723": {
+      "work_id": "01723",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01724": {
+      "work_id": "01724",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01725": {
+      "work_id": "01725",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01726": {
+      "work_id": "01726",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01727": {
+      "work_id": "01727",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01728": {
+      "work_id": "01728",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01729": {
+      "work_id": "01729",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01730": {
+      "work_id": "01730",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01731": {
+      "work_id": "01731",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01732": {
+      "work_id": "01732",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01733": {
+      "work_id": "01733",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
+      ]
+    },
+    "01734": {
+      "work_id": "01734",
+      "title": "still life",
+      "year": 2014,
+      "year_display": "2014",
+      "series_ids": [
+        "still-life"
       ]
     }
   }
