@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-9ef9d9d2fdd70275828857ff59902aa9",
-    "generated_at_utc": "2026-03-26T20:08:01Z",
-    "count": 1730
+    "version": "blake2b-d62c9b4f9b35b20866e5b502f8b6873b",
+    "generated_at_utc": "2026-03-26T20:21:49Z",
+    "count": 1736
   },
   "works": {
     "00001": {
@@ -16057,6 +16057,60 @@
       "year_display": "2012",
       "series_ids": [
         "sunflower"
+      ]
+    },
+    "01738": {
+      "work_id": "01738",
+      "title": "2017-02-11 13꞉01",
+      "year": 2017,
+      "year_display": "2017",
+      "series_ids": [
+        "surface-history"
+      ]
+    },
+    "01739": {
+      "work_id": "01739",
+      "title": "2017-10-30 21꞉11",
+      "year": 2017,
+      "year_display": "2017",
+      "series_ids": [
+        "surface-history"
+      ]
+    },
+    "01740": {
+      "work_id": "01740",
+      "title": "2017-11-04 15꞉42",
+      "year": 2017,
+      "year_display": "2017",
+      "series_ids": [
+        "surface-history"
+      ]
+    },
+    "01741": {
+      "work_id": "01741",
+      "title": "2018-01-20 15꞉52",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "surface-history"
+      ]
+    },
+    "01742": {
+      "work_id": "01742",
+      "title": "2018-01-20 15꞉53",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "surface-history"
+      ]
+    },
+    "01743": {
+      "work_id": "01743",
+      "title": "2018-02-10 10꞉35",
+      "year": 2018,
+      "year_display": "2018",
+      "series_ids": [
+        "surface-history"
       ]
     }
   }

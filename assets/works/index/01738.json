@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-f96b0f434d1e791c9bf93c33c555d669",
+    "generated_at_utc": "2026-03-26T20:21:49Z",
+    "work_id": "01738",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01738",
+    "title": "2017-02-11 13꞉01",
+    "year": 2017,
+    "year_display": "2017",
+    "series_ids": [
+      "surface-history"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "sections": []
+}
