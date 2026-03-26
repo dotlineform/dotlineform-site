@@ -10,6 +10,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
@@ -140,6 +141,22 @@ def run_ffmpeg(cmd: Sequence[str]) -> None:
     subprocess.run(cmd, check=True, stdin=subprocess.DEVNULL)
 
 
+def timestamp_now() -> str:
+    return time.strftime("%H:%M:%S")
+
+
+def log_progress(message: str) -> None:
+    print(f"[{timestamp_now()}] {message}", flush=True)
+
+
+def result_summary(result: ProcessResult, dry_run: bool) -> str:
+    counts = result.dry_counts if dry_run else result.written_counts
+    total = sum(counts.values())
+    if total == 0:
+        return "no derivatives written"
+    return format_summary(counts)
+
+
 def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessResult) -> None:
     label = THUMB_SUFFIX
     if dry_run:
@@ -266,13 +283,13 @@ def process_one(
         result.messages.append(f"Skipping {src.name} ({item_id} not listed in {SELECTED_IDS_ENV_NAME})")
         return result
 
+    log_progress(f"START {src.name} -> {item_id}")
     tmp_dir: Path | None = None
     try:
         src_use, tmp_dir = convert_heif_source(src, item_id, dry_run, has_sips, has_heif_convert, result)
         if src_use is None:
             return result
 
-        result.messages.append(f"Processing {src.name} -> {item_id}")
         for size in THUMB_SIZES:
             make_thumb(
                 src_use,
@@ -347,6 +364,8 @@ def main() -> int:
             results.append(result)
             for message in result.messages:
                 print(message)
+            if result.success_id is not None:
+                log_progress(f"DONE  {result.item_id} ({result_summary(result, dry_run)})")
     else:
         with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
             futures = {
@@ -359,6 +378,8 @@ def main() -> int:
                     results.append(result)
                     for message in result.messages:
                         print(message)
+                    if result.success_id is not None:
+                        log_progress(f"DONE  {result.item_id} ({result_summary(result, dry_run)})")
             except Exception:
                 for future in futures:
                     future.cancel()
