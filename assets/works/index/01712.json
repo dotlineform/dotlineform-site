@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-48ada67670419a9415da0cef57602ed6",
+    "generated_at_utc": "2026-03-26T16:17:51Z",
+    "work_id": "01712",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01712",
+    "title": "spider webs distillation 11",
+    "year": 2023,
+    "year_display": "2023-24",
+    "series_ids": [
+      "spider-webs"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

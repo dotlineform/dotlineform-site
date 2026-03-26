@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-d3d5345eca80446247ab613e85e04172",
-    "generated_at_utc": "2026-03-26T14:18:55Z",
-    "count": 123
+    "version": "blake2b-bd17e4a64b56466ac68e8a94d6590f4d",
+    "generated_at_utc": "2026-03-26T16:17:51Z",
+    "count": 124
   },
   "series": {
     "10000": {
@@ -3623,7 +3623,8 @@
     "snow": {
       "series_id": "snow",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "snow",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3654,6 +3655,67 @@
         "01672",
         "01673",
         "01674"
+      ]
+    },
+    "spider-webs": {
+      "series_id": "spider-webs",
+      "layout": "series",
+      "status": "draft",
+      "title": "spider webs",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023-24",
+      "primary_work_id": "01710",
+      "project_folders": [
+        "spider webs"
+      ],
+      "works": [
+        "01675",
+        "01676",
+        "01677",
+        "01678",
+        "01679",
+        "01680",
+        "01681",
+        "01682",
+        "01683",
+        "01684",
+        "01685",
+        "01686",
+        "01687",
+        "01688",
+        "01689",
+        "01690",
+        "01691",
+        "01692",
+        "01693",
+        "01694",
+        "01695",
+        "01696",
+        "01697",
+        "01698",
+        "01699",
+        "01700",
+        "01701",
+        "01702",
+        "01703",
+        "01704",
+        "01705",
+        "01706",
+        "01707",
+        "01708",
+        "01709",
+        "01710",
+        "01711",
+        "01712",
+        "01713",
+        "01714",
+        "01715",
+        "01716",
+        "01717",
+        "01718",
+        "01719"
       ]
     },
     "spiders": {
