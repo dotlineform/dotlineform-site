@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-d142f72108445f70593213f8b67dc345",
-    "generated_at_utc": "2026-03-26T21:04:04Z",
-    "count": 130
+    "version": "blake2b-1425d9e6f4467373ee1511626ee49a7c",
+    "generated_at_utc": "2026-03-26T21:29:43Z",
+    "count": 131
   },
   "series": {
     "10000": {
@@ -1081,7 +1081,7 @@
       "series_id": "curve-poems",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-26",
       "title": "curve poems",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3906,6 +3906,40 @@
       ],
       "works": [
         "01744"
+      ]
+    },
+    "thorns": {
+      "series_id": "thorns",
+      "layout": "series",
+      "status": "draft",
+      "title": "thorns",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2006,
+      "year_display": "2006",
+      "primary_work_id": "01762",
+      "project_folders": [
+        "thorns"
+      ],
+      "works": [
+        "01745",
+        "01746",
+        "01747",
+        "01748",
+        "01749",
+        "01750",
+        "01751",
+        "01752",
+        "01753",
+        "01754",
+        "01755",
+        "01756",
+        "01757",
+        "01758",
+        "01759",
+        "01760",
+        "01761",
+        "01762"
       ]
     },
     "tree": {
