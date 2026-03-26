@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-1425d9e6f4467373ee1511626ee49a7c",
-    "generated_at_utc": "2026-03-26T21:29:43Z",
-    "count": 131
+    "version": "blake2b-9160ab91385e5a247abb9c002bdbff19",
+    "generated_at_utc": "2026-03-26T21:58:16Z",
+    "count": 132
   },
   "series": {
     "10000": {
@@ -3911,7 +3911,8 @@
     "thorns": {
       "series_id": "thorns",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "thorns",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3940,6 +3941,30 @@
         "01760",
         "01761",
         "01762"
+      ]
+    },
+    "through-a-glass-clearly": {
+      "series_id": "through-a-glass-clearly",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-03-26",
+      "title": "through a glass clearly",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01768",
+      "project_folders": [
+        "through a glass clearly"
+      ],
+      "works": [
+        "01763",
+        "01764",
+        "01765",
+        "01766",
+        "01767",
+        "01768",
+        "01769"
       ]
     },
     "tree": {

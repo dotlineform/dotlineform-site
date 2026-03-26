@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-9b8d469404ee4c381dcda02e39dfb5b8",
+    "generated_at_utc": "2026-03-26T21:58:16Z",
+    "work_id": "01767",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01767",
+    "title": "s",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "through-a-glass-clearly"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 36.0,
+    "width_cm": 56.0,
+    "width_px": 6614,
+    "height_px": 4252
+  },
+  "sections": []
+}

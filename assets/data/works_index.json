@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-520f81eac2bc45497e7ce9fc82f85ca6",
-    "generated_at_utc": "2026-03-26T21:29:43Z",
-    "count": 1755
+    "version": "blake2b-2739665991e5eefe2c8aa1bc4c1a5e29",
+    "generated_at_utc": "2026-03-26T21:58:16Z",
+    "count": 1762
   },
   "works": {
     "00001": {
@@ -16282,6 +16282,69 @@
       "year_display": "2006",
       "series_ids": [
         "thorns"
+      ]
+    },
+    "01763": {
+      "work_id": "01763",
+      "title": "through a glass clearly (1)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01764": {
+      "work_id": "01764",
+      "title": "through a glass clearly (2)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01765": {
+      "work_id": "01765",
+      "title": "through a glass clearly (3)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01766": {
+      "work_id": "01766",
+      "title": "through a glass clearly (4)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01767": {
+      "work_id": "01767",
+      "title": "s",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01768": {
+      "work_id": "01768",
+      "title": "through a glass clearly (6)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
+      ]
+    },
+    "01769": {
+      "work_id": "01769",
+      "title": "through a glass clearly (7)",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "through-a-glass-clearly"
       ]
     }
   }

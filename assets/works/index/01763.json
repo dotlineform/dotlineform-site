@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-f93fda2b2b5a2dd2a8a68157e64d8559",
+    "generated_at_utc": "2026-03-26T21:58:16Z",
+    "work_id": "01763",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01763",
+    "title": "through a glass clearly (1)",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "through-a-glass-clearly"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 20.0,
+    "width_cm": 56.0,
+    "width_px": 6614,
+    "height_px": 2362
+  },
+  "sections": []
+}

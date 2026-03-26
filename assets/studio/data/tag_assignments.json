@@ -1,6 +1,6 @@
 {
   "tag_assignments_version": "tag_assignments_v1",
-  "updated_at_utc": "2026-03-26T21:29:42Z",
+  "updated_at_utc": "2026-03-26T21:56:31Z",
   "series": {
     "curve-poems": {
       "tags": [
@@ -715,6 +715,11 @@
       "tags": [],
       "works": {},
       "updated_at_utc": "2026-03-26T21:29:42Z"
+    },
+    "through-a-glass-clearly": {
+      "tags": [],
+      "works": {},
+      "updated_at_utc": "2026-03-26T21:56:31Z"
     }
   }
 }
