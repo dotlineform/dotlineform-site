@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-09c3631b9b96359c6946d41757bba322",
-    "generated_at_utc": "2026-03-25T22:04:21Z",
-    "count": 121
+    "version": "blake2b-6e1950d1af62ce1c699e4cc73ead26f6",
+    "generated_at_utc": "2026-03-26T13:55:09Z",
+    "count": 122
   },
   "series": {
     "10000": {
@@ -425,7 +425,8 @@
     "body-form": {
       "series_id": "body-form",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-25",
       "title": "body form",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -551,6 +552,43 @@
       ],
       "works": [
         "00389"
+      ]
+    },
+    "changed-photos": {
+      "series_id": "changed-photos",
+      "layout": "series",
+      "status": "draft",
+      "title": "changed photos",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2022-23",
+      "primary_work_id": "01634",
+      "project_folders": [
+        "changed photos"
+      ],
+      "works": [
+        "01634",
+        "01635",
+        "01636",
+        "01637",
+        "01638",
+        "01639",
+        "01640",
+        "01641",
+        "01642",
+        "01643",
+        "01644",
+        "01645",
+        "01646",
+        "01647",
+        "01648",
+        "01649",
+        "01650",
+        "01651",
+        "01652",
+        "01653",
+        "01654"
       ]
     },
     "closeness": {

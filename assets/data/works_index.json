@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-53febd4edb5cba35fc8f74c742098c9a",
-    "generated_at_utc": "2026-03-25T22:04:21Z",
-    "count": 1626
+    "version": "blake2b-9953f69501b2cb47495e9c7a3bee0fe4",
+    "generated_at_utc": "2026-03-26T13:55:09Z",
+    "count": 1647
   },
   "works": {
     "00001": {
@@ -15121,6 +15121,195 @@
       "year_display": "2008",
       "series_ids": [
         "body-form"
+      ]
+    },
+    "01634": {
+      "work_id": "01634",
+      "title": "changed photo 1",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01635": {
+      "work_id": "01635",
+      "title": "changed photo 2",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01636": {
+      "work_id": "01636",
+      "title": "changed photo 3",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01637": {
+      "work_id": "01637",
+      "title": "changed photo 4",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01638": {
+      "work_id": "01638",
+      "title": "changed photo 5",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01639": {
+      "work_id": "01639",
+      "title": "changed photo 6",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01640": {
+      "work_id": "01640",
+      "title": "changed photo 7",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01641": {
+      "work_id": "01641",
+      "title": "changed photo 8",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01642": {
+      "work_id": "01642",
+      "title": "changed photo 9",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01643": {
+      "work_id": "01643",
+      "title": "changed photo 10",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01644": {
+      "work_id": "01644",
+      "title": "changed photo 11",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01645": {
+      "work_id": "01645",
+      "title": "changed photo 12",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01646": {
+      "work_id": "01646",
+      "title": "changed photo 13",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01647": {
+      "work_id": "01647",
+      "title": "changed photo 14",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01648": {
+      "work_id": "01648",
+      "title": "changed photo 15",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01649": {
+      "work_id": "01649",
+      "title": "changed photo 16",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01650": {
+      "work_id": "01650",
+      "title": "changed photo 17",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01651": {
+      "work_id": "01651",
+      "title": "changed photo 18",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01652": {
+      "work_id": "01652",
+      "title": "changed photo 19",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01653": {
+      "work_id": "01653",
+      "title": "changed photo 20",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
+      ]
+    },
+    "01654": {
+      "work_id": "01654",
+      "title": "changed photo 21",
+      "year": 2023,
+      "year_display": "2022-23",
+      "series_ids": [
+        "changed-photos"
       ]
     }
   }

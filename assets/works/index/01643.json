@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-db02c33edd1b23bd59947f877f860b52",
+    "generated_at_utc": "2026-03-26T13:55:09Z",
+    "work_id": "01643",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01643",
+    "title": "changed photo 10",
+    "year": 2023,
+    "year_display": "2022-23",
+    "series_ids": [
+      "changed-photos"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 35.0,
+    "width_cm": 20.0,
+    "width_px": 2362,
+    "height_px": 4134
+  },
+  "sections": []
+}
