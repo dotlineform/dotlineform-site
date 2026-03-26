@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-fa75e54a6c8bdd76456509af3d0376f2",
-    "generated_at_utc": "2026-03-26T20:33:31Z",
+    "version": "blake2b-d142f72108445f70593213f8b67dc345",
+    "generated_at_utc": "2026-03-26T21:04:04Z",
     "count": 130
   },
   "series": {
@@ -3893,7 +3893,8 @@
     "tabula-rasa": {
       "series_id": "tabula-rasa",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "tabula rasa",
       "sort_fields": "work_id",
       "series_type": "primary",

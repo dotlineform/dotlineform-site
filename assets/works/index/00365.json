@@ -1,10 +1,10 @@
 {
   "header": {
     "schema": "work_record_v2",
-    "version": "blake2b-1db81b45cf414fb92e7643239b7a9749",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "version": "blake2b-746829e9d33d427463b5594aa1e8188a",
+    "generated_at_utc": "2026-03-26T21:04:04Z",
     "work_id": "00365",
-    "count": 0
+    "count": 4
   },
   "work": {
     "work_id": "00365",
@@ -22,5 +22,51 @@
     "width_px": 4960,
     "height_px": 3508
   },
-  "sections": []
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "00365",
+          "detail_id": "001",
+          "detail_uid": "00365-001",
+          "title": "the eye - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "00365",
+          "detail_id": "002",
+          "detail_uid": "00365-002",
+          "title": "the eye - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "00365",
+          "detail_id": "003",
+          "detail_uid": "00365-003",
+          "title": "the eye - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "00365",
+          "detail_id": "004",
+          "detail_uid": "00365-004",
+          "title": "the eye - detail 4",
+          "project_subfolder": "details",
+          "width_px": 3024,
+          "height_px": 3024,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
 }
