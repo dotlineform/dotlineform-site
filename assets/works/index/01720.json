@@ -1,0 +1,766 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-d6b4c3c5d96f367e7206fb123af9d640",
+    "generated_at_utc": "2026-03-26T18:41:04Z",
+    "work_id": "01720",
+    "count": 73
+  },
+  "work": {
+    "work_id": "01720",
+    "title": "spine symbols",
+    "year": 2008,
+    "year_display": "2008",
+    "series_ids": [
+      "spine-symbols"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "height_cm": 30.0,
+    "width_cm": 60.0,
+    "width_px": 7087,
+    "height_px": 3543
+  },
+  "sections": [
+    {
+      "project_subfolder": "symbols",
+      "details": [
+        {
+          "work_id": "01720",
+          "detail_id": "001",
+          "detail_uid": "01720-001",
+          "title": "bounce silly nosey messy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1554,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "002",
+          "detail_uid": "01720-002",
+          "title": "bounce silly",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1501,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "003",
+          "detail_uid": "01720-003",
+          "title": "bounce silly'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "004",
+          "detail_uid": "01720-004",
+          "title": "bounce",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "005",
+          "detail_uid": "01720-005",
+          "title": "chatterbox (lower)",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1377,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "006",
+          "detail_uid": "01720-006",
+          "title": "chatterbox (upper)",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1386,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "007",
+          "detail_uid": "01720-007",
+          "title": "chatterbox greedy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "008",
+          "detail_uid": "01720-008",
+          "title": "chatterbox greedy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "009",
+          "detail_uid": "01720-009",
+          "title": "chatterbox",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "010",
+          "detail_uid": "01720-010",
+          "title": "chatterbox'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "011",
+          "detail_uid": "01720-011",
+          "title": "clever funny wrong",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "012",
+          "detail_uid": "01720-012",
+          "title": "clever funny wrong'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "013",
+          "detail_uid": "01720-013",
+          "title": "daydream skinny forgetful",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "014",
+          "detail_uid": "01720-014",
+          "title": "daydream skinny",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "015",
+          "detail_uid": "01720-015",
+          "title": "daydream",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1454,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "016",
+          "detail_uid": "01720-016",
+          "title": "dizzy (clever) funny",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "017",
+          "detail_uid": "01720-017",
+          "title": "dizzy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "018",
+          "detail_uid": "01720-018",
+          "title": "forgetful",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "019",
+          "detail_uid": "01720-019",
+          "title": "funny (wrong rude) impossible",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "020",
+          "detail_uid": "01720-020",
+          "title": "funny",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "021",
+          "detail_uid": "01720-021",
+          "title": "funny'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "022",
+          "detail_uid": "01720-022",
+          "title": "fussy (lower)",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "023",
+          "detail_uid": "01720-023",
+          "title": "fussy (unknown)",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "024",
+          "detail_uid": "01720-024",
+          "title": "fussy (upper)",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "025",
+          "detail_uid": "01720-025",
+          "title": "fussy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1448,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "026",
+          "detail_uid": "01720-026",
+          "title": "fussy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "027",
+          "detail_uid": "01720-027",
+          "title": "grumpy bump",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "028",
+          "detail_uid": "01720-028",
+          "title": "grumpy half-bounce",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "029",
+          "detail_uid": "01720-029",
+          "title": "grumpy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "030",
+          "detail_uid": "01720-030",
+          "title": "grumpy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1507,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "031",
+          "detail_uid": "01720-031",
+          "title": "half-bounce silly nosey messy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "032",
+          "detail_uid": "01720-032",
+          "title": "happy snow",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "033",
+          "detail_uid": "01720-033",
+          "title": "happy snow'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "034",
+          "detail_uid": "01720-034",
+          "title": "impossible sneeze fussy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "035",
+          "detail_uid": "01720-035",
+          "title": "impossible sneeze fussy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "036",
+          "detail_uid": "01720-036",
+          "title": "impossible",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1507,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "037",
+          "detail_uid": "01720-037",
+          "title": "lazy forgetful",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "038",
+          "detail_uid": "01720-038",
+          "title": "lazy forgetful'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1383,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "039",
+          "detail_uid": "01720-039",
+          "title": "lazy rush (cheerful) slow",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "040",
+          "detail_uid": "01720-040",
+          "title": "lazy rush",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "041",
+          "detail_uid": "01720-041",
+          "title": "lazy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "042",
+          "detail_uid": "01720-042",
+          "title": "mean lazy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "043",
+          "detail_uid": "01720-043",
+          "title": "mean quiet busy mischief",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "044",
+          "detail_uid": "01720-044",
+          "title": "mean rush",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "045",
+          "detail_uid": "01720-045",
+          "title": "mean",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "046",
+          "detail_uid": "01720-046",
+          "title": "messy daydream",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "047",
+          "detail_uid": "01720-047",
+          "title": "messy small chatterbox",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1501,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "048",
+          "detail_uid": "01720-048",
+          "title": "muddle [1]",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "049",
+          "detail_uid": "01720-049",
+          "title": "muddle [2]",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1442,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "050",
+          "detail_uid": "01720-050",
+          "title": "muddle [3]",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "051",
+          "detail_uid": "01720-051",
+          "title": "muddle tickle",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "052",
+          "detail_uid": "01720-052",
+          "title": "muddle",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "053",
+          "detail_uid": "01720-053",
+          "title": "muddle'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "054",
+          "detail_uid": "01720-054",
+          "title": "noisy jelly mean [version]",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "055",
+          "detail_uid": "01720-055",
+          "title": "noisy jelly mean rush",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1383,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "056",
+          "detail_uid": "01720-056",
+          "title": "noisy jelly mean",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "057",
+          "detail_uid": "01720-057",
+          "title": "noisy jelly mean'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "058",
+          "detail_uid": "01720-058",
+          "title": "quiet",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "059",
+          "detail_uid": "01720-059",
+          "title": "quiet'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1451,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "060",
+          "detail_uid": "01720-060",
+          "title": "rush (cheerful) slow",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "061",
+          "detail_uid": "01720-061",
+          "title": "slow bump",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1507,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "062",
+          "detail_uid": "01720-062",
+          "title": "small chatterbox",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "063",
+          "detail_uid": "01720-063",
+          "title": "strong clumsy nonsense",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "064",
+          "detail_uid": "01720-064",
+          "title": "strong clumsy nonsense'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "065",
+          "detail_uid": "01720-065",
+          "title": "strong clumsy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1442,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "066",
+          "detail_uid": "01720-066",
+          "title": "strong clumsy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "067",
+          "detail_uid": "01720-067",
+          "title": "tickle quiet busy mischief",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "068",
+          "detail_uid": "01720-068",
+          "title": "worry topsy-turvy [1']",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1365,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "069",
+          "detail_uid": "01720-069",
+          "title": "worry topsy-turvy [1]",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1553,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "070",
+          "detail_uid": "01720-070",
+          "title": "worry topsy-turvy",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1556,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "071",
+          "detail_uid": "01720-071",
+          "title": "worry topsy-turvy'",
+          "project_subfolder": "symbols",
+          "width_px": 1600,
+          "height_px": 1510,
+          "layout": "work_details"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "source",
+      "details": [
+        {
+          "work_id": "01720",
+          "detail_id": "072",
+          "detail_uid": "01720-072",
+          "title": "spine names",
+          "project_subfolder": "source",
+          "width_px": 3000,
+          "height_px": 1637,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01720",
+          "detail_id": "073",
+          "detail_uid": "01720-073",
+          "title": "symbols decoded",
+          "project_subfolder": "source",
+          "width_px": 3000,
+          "height_px": 1687,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

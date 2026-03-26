@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-7691a45aa827c2724cbaad3b96dddb6a",
-    "generated_at_utc": "2026-03-26T16:17:51Z",
-    "count": 1712
+    "version": "blake2b-f576aa499ee851dda6a877135a2612f7",
+    "generated_at_utc": "2026-03-26T18:41:04Z",
+    "count": 1713
   },
   "works": {
     "00001": {
@@ -15895,6 +15895,15 @@
       "year_display": "2023-24",
       "series_ids": [
         "spider-webs"
+      ]
+    },
+    "01720": {
+      "work_id": "01720",
+      "title": "spine symbols",
+      "year": 2008,
+      "year_display": "2008",
+      "series_ids": [
+        "spine-symbols"
       ]
     }
   }

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-bd17e4a64b56466ac68e8a94d6590f4d",
-    "generated_at_utc": "2026-03-26T16:17:51Z",
-    "count": 124
+    "version": "blake2b-419736c44f59f446a1ce446f1b7129b2",
+    "generated_at_utc": "2026-03-26T18:41:03Z",
+    "count": 125
   },
   "series": {
     "10000": {
@@ -3660,7 +3660,8 @@
     "spider-webs": {
       "series_id": "spider-webs",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-26",
       "title": "spider webs",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -3734,6 +3735,23 @@
       ],
       "works": [
         "00402"
+      ]
+    },
+    "spine-symbols": {
+      "series_id": "spine-symbols",
+      "layout": "series",
+      "status": "draft",
+      "title": "spine symbols",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2008,
+      "year_display": "2008",
+      "primary_work_id": "01720",
+      "project_folders": [
+        "spine symbols"
+      ],
+      "works": [
+        "01720"
       ]
     },
     "string-theory": {
