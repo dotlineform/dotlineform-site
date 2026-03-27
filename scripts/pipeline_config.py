@@ -25,6 +25,9 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
             "works": "projects",
             "moments": "moments",
         },
+        "source_subdirs": {
+            "moments_images": "images",
+        },
         "media": {
             "work": {
                 "input_subdir": "works/make_srcset_images",
@@ -143,6 +146,10 @@ def source_works_root_subdir(config: Mapping[str, Any]) -> Path:
 
 def source_moments_root_subdir(config: Mapping[str, Any]) -> Path:
     return Path(str(config["paths"]["source_roots"]["moments"]))
+
+
+def source_moments_images_subdir(config: Mapping[str, Any]) -> Path:
+    return source_moments_root_subdir(config) / Path(str(config["paths"]["source_subdirs"]["moments_images"]))
 
 
 def join_base_and_subdir(base_dir: str, subdir: str | Path) -> str:

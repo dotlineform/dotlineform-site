@@ -5,7 +5,7 @@ Copy and rename draft media files from data/works.xlsx.
 Modes:
 - work:        projects/[project_folder]/[project_filename] -> works/make_srcset_images/[work_id][.ext]
 - work_details: projects/[work.project_folder]/[project_subfolder]/[project_filename] -> work_details/make_srcset_images/[work_id]-[detail_id][.ext]
-- moment:      moments/[moment_folder]/[moment_filename] -> moments/make_srcset_images/[moment_id][.ext]
+- moment:      moments/images/[moment_id].jpg -> moments/make_srcset_images/[moment_id][.ext]
 
 Use --ids-file to limit processing to selected IDs (one per line):
 - work: work_id
@@ -41,7 +41,7 @@ try:
         env_var_value,
         load_pipeline_config,
         media_mode_input_subdir,
-        source_moments_root_subdir,
+        source_moments_images_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -50,14 +50,14 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         env_var_value,
         load_pipeline_config,
         media_mode_input_subdir,
-        source_moments_root_subdir,
+        source_moments_images_subdir,
         source_works_root_subdir,
     )
 
 
 # Source roots:
 # - projects/ for works + work_details
-# - moments/ for moments
+# - moments/images/ for moments
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
@@ -259,7 +259,7 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
 
 def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write: bool, copied_ids: List[str]) -> tuple[int, int, int]:
     """Copy moment source images to moments/make_srcset_images."""
-    required = ["moment_id", "moment_folder", "moment_filename"]
+    required = ["moment_id"]
     missing = [c for c in required if c not in cols]
     if missing:
         raise SystemExit(f"Missing required columns in Moments sheet: {', '.join(missing)}")
@@ -272,15 +272,14 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
     for row_cells in ws.iter_rows(min_row=2):
         row = [cell.value for cell in row_cells]
         mid = moment_id(row[cols["moment_id"]])
-        folder = row[cols["moment_folder"]]
-        filename = row[cols["moment_filename"]]
-        if not (mid and folder and filename):
+        if not mid:
             continue
         if selected_ids is not None and mid not in selected_ids:
             continue
 
-        src = PROJECTS_BASE_DIR / source_moments_root_subdir(PIPELINE_CONFIG) / str(folder).strip() / str(filename).strip()
-        ext = Path(str(filename).strip()).suffix
+        filename = f"{mid}.jpg"
+        src = PROJECTS_BASE_DIR / source_moments_images_subdir(PIPELINE_CONFIG) / filename
+        ext = Path(filename).suffix
         dest = (dest_dir / f"{mid}{ext}") if keep_ext else (dest_dir / mid)
         total += 1
         if not src.exists():

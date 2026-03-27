@@ -117,6 +117,9 @@ bash scripts/make_srcset_images.sh \
   4
 ```
 
+Moment source discovery uses the configured moments images directory plus a fixed source filename of `<moment_id>.jpg`.
+If that source file is missing, the copy step skips it.
+
 ### 3) Generate Jekyll pages from workbook
 
 ```bash

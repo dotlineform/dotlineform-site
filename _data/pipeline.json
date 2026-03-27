@@ -11,6 +11,9 @@
       "works": "projects",
       "moments": "moments"
     },
+    "source_subdirs": {
+      "moments_images": "images"
+    },
     "media": {
       "work": {
         "input_subdir": "website/pipeline/works/make_srcset_images",

@@ -52,7 +52,7 @@ Common flags:
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details + work_files source lookup)
-- moments_root = [projects-base-dir]/moments (moment source image lookup)
+- moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
 
@@ -85,7 +85,7 @@ try:
         env_var_value,
         load_pipeline_config,
         media_work_files_subdir,
-        source_moments_root_subdir,
+        source_moments_images_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -94,7 +94,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         env_var_value,
         load_pipeline_config,
         media_work_files_subdir,
-        source_moments_root_subdir,
+        source_moments_images_subdir,
         source_works_root_subdir,
     )
 
@@ -2433,7 +2433,7 @@ def main() -> None:
     # ----------------------------
     # Required columns:
     # - moment_id, title, status, published_date, date, date_display,
-    #   moment_folder, moment_filename, width_px, height_px
+    #   width_px, height_px
     # Optional columns:
     # - moment_id / slug / id (preferred filename stem)
     # - date, date_display
@@ -2456,8 +2456,6 @@ def main() -> None:
             "published_date",
             "date",
             "date_display",
-            "moment_folder",
-            "moment_filename",
             "width_px",
             "height_px",
         ]
@@ -2471,13 +2469,10 @@ def main() -> None:
         date_display_col = "date_display"
         image_file_col = first_present_col(
             moments_hi,
-            ["image_file", "image_filename", "images_file", "images_filename", "hero_file", "file", "moment_filename"],
+            ["image_file", "image_filename", "images_file", "images_filename", "hero_file", "file"],
         )
         image_alt_col = first_present_col(moments_hi, ["image_alt", "alt"])
-        project_folder_col = first_present_col(moments_hi, ["moment_folder", "project_folder"])
-        project_subfolder_col = first_present_col(moments_hi, ["project_subfolder"])
-        project_filename_col = first_present_col(moments_hi, ["moment_filename", "project_filename"])
-        moment_work_id_col = first_present_col(moments_hi, ["work_id"])
+        project_filename_col = first_present_col(moments_hi, ["project_filename"])
 
         moments_published_date_idx = moments_hi.get("published_date")
         moments_width_px_idx = moments_hi.get("width_px")
@@ -2493,7 +2488,7 @@ def main() -> None:
                 moments_hi["height_px"] = moments_height_px_idx
 
         projects_base_dir = Path(args.projects_base_dir).expanduser()
-        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
+        moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
         def is_actionable_moment_status(status_value: str) -> bool:
             if status_value == "draft":
@@ -2558,34 +2553,18 @@ def main() -> None:
             width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
             height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
 
+            default_moment_filename = f"{moment_id}.jpg"
             project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
+            if project_filename is None:
+                project_filename = default_moment_filename
             image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
             image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
-            # Srcset derivatives are keyed by moment_id because copy_draft_media_files.py
-            # renames source images to <moment_id>.<ext> before derivative generation.
-            if image_file is None and project_filename is not None:
-                image_file = f"{moment_id}.webp"
-            if image_file is not None and image_alt is None:
-                image_alt = title or moment_id
 
             # Resolve source image for dimensions when possible.
-            project_folder = coerce_string(cell(mr, moments_hi, project_folder_col)) if project_folder_col else None
-            project_subfolder = coerce_string(cell(mr, moments_hi, project_subfolder_col)) if project_subfolder_col else None
-            if project_folder is None and moment_work_id_col is not None:
-                moment_work_id_raw = cell(mr, moments_hi, moment_work_id_col)
-                if not is_empty(moment_work_id_raw):
-                    project_folder = work_project_folder_by_id.get(slug_id(moment_work_id_raw))
-
             src_path: Optional[Path] = None
             source_filename = project_filename or image_file
-            if project_folder and source_filename:
-                src_path = moments_root / project_folder
-                if project_subfolder:
-                    src_path = src_path / project_subfolder
-                src_path = src_path / source_filename
-            elif project_subfolder and source_filename:
-                # Fallback for rows that store a path rooted at moments/.
-                src_path = moments_root / project_subfolder / source_filename
+            if source_filename:
+                src_path = moments_images_root / source_filename
 
             if src_path is not None:
                 src_w, src_h = read_image_dims_px(src_path)
@@ -2601,6 +2580,10 @@ def main() -> None:
                             moments_dimensions_updated += 1
 
             images_list: List[Dict[str, Any]] = []
+            if image_file is None and src_path is not None and src_path.exists():
+                image_file = default_moment_filename
+            if image_file is not None and image_alt is None:
+                image_alt = title or moment_id
             if image_file is not None:
                 images_list.append(
                     {
