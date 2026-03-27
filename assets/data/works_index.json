@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-72f8231a9fcaf654baccf830b0f82969",
-    "generated_at_utc": "2026-03-27T14:00:59Z",
-    "count": 1875
+    "version": "blake2b-3919f5b0c69058bbcbc3f57b1109b4fe",
+    "generated_at_utc": "2026-03-27T17:02:42Z",
+    "count": 1902
   },
   "works": {
     "00001": {
@@ -17362,6 +17362,249 @@
       "year_display": "2023",
       "series_ids": [
         "untitled-composites"
+      ]
+    },
+    "01883": {
+      "work_id": "01883",
+      "title": "untitled [destroyed]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01884": {
+      "work_id": "01884",
+      "title": "untitled [1]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01885": {
+      "work_id": "01885",
+      "title": "untitled [2]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01886": {
+      "work_id": "01886",
+      "title": "untitled [3]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01887": {
+      "work_id": "01887",
+      "title": "untitled [4]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01888": {
+      "work_id": "01888",
+      "title": "untitled [5]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01889": {
+      "work_id": "01889",
+      "title": "untitled [6]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01890": {
+      "work_id": "01890",
+      "title": "untitled [7]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01891": {
+      "work_id": "01891",
+      "title": "untitled [8]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01892": {
+      "work_id": "01892",
+      "title": "untitled [9]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01893": {
+      "work_id": "01893",
+      "title": "untitled [10]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01894": {
+      "work_id": "01894",
+      "title": "untitled [11]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01895": {
+      "work_id": "01895",
+      "title": "untitled [12]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01896": {
+      "work_id": "01896",
+      "title": "untitled [13]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01897": {
+      "work_id": "01897",
+      "title": "untitled [14]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01898": {
+      "work_id": "01898",
+      "title": "untitled [15]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01899": {
+      "work_id": "01899",
+      "title": "untitled [16]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01900": {
+      "work_id": "01900",
+      "title": "untitled [17]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01901": {
+      "work_id": "01901",
+      "title": "untitled [18]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01902": {
+      "work_id": "01902",
+      "title": "untitled [19]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01903": {
+      "work_id": "01903",
+      "title": "untitled [20]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01904": {
+      "work_id": "01904",
+      "title": "untitled [21]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01905": {
+      "work_id": "01905",
+      "title": "untitled [22]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01906": {
+      "work_id": "01906",
+      "title": "untitled [23]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01907": {
+      "work_id": "01907",
+      "title": "untitled [24]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01908": {
+      "work_id": "01908",
+      "title": "untitled [25]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
+      ]
+    },
+    "01909": {
+      "work_id": "01909",
+      "title": "untitled [26]",
+      "year": 2025,
+      "year_display": "2025",
+      "series_ids": [
+        "untitled-destroyed"
       ]
     }
   }

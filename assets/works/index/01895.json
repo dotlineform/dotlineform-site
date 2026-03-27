@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-f5a48159e3374ea36e4aa9bcf42257ec",
+    "generated_at_utc": "2026-03-27T17:02:42Z",
+    "work_id": "01895",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01895",
+    "title": "untitled [12]",
+    "year": 2025,
+    "year_display": "2025",
+    "series_ids": [
+      "untitled-destroyed"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}
