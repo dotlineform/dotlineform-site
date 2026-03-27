@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-b7b1841b74f8ebf30b190bfdceb24f44",
+    "generated_at_utc": "2026-03-27T14:00:59Z",
+    "work_id": "01879",
+    "count": 4
+  },
+  "work": {
+    "work_id": "01879",
+    "title": "untitled composite 5",
+    "year": 2023,
+    "year_display": "2023",
+    "series_ids": [
+      "untitled-composites"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 70.0,
+    "width_cm": 70.0,
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "sections": [
+    {
+      "project_subfolder": "details",
+      "details": [
+        {
+          "work_id": "01879",
+          "detail_id": "001",
+          "detail_uid": "01879-001",
+          "title": "untitled composite 5 - detail 1",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "002",
+          "detail_uid": "01879-002",
+          "title": "untitled composite 5 - detail 2",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "003",
+          "detail_uid": "01879-003",
+          "title": "untitled composite 5 - detail 3",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        },
+        {
+          "work_id": "01879",
+          "detail_id": "004",
+          "detail_uid": "01879-004",
+          "title": "untitled composite 5 - detail 4",
+          "project_subfolder": "details",
+          "width_px": 3000,
+          "height_px": 3000,
+          "layout": "work_details"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-12753595d24857a14412b6fbda022970",
-    "generated_at_utc": "2026-03-27T12:13:07Z",
-    "count": 1866
+    "version": "blake2b-72f8231a9fcaf654baccf830b0f82969",
+    "generated_at_utc": "2026-03-27T14:00:59Z",
+    "count": 1875
   },
   "works": {
     "00001": {
@@ -17281,6 +17281,87 @@
       "year_display": "2023",
       "series_ids": [
         "tulips"
+      ]
+    },
+    "01874": {
+      "work_id": "01874",
+      "title": "untitled composites - source",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01875": {
+      "work_id": "01875",
+      "title": "untitled composite 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01876": {
+      "work_id": "01876",
+      "title": "untitled composite 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01877": {
+      "work_id": "01877",
+      "title": "untitled composite 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01878": {
+      "work_id": "01878",
+      "title": "untitled composite 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01879": {
+      "work_id": "01879",
+      "title": "untitled composite 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01880": {
+      "work_id": "01880",
+      "title": "untitled composite 6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01881": {
+      "work_id": "01881",
+      "title": "untitled composites 1-3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
+      ]
+    },
+    "01882": {
+      "work_id": "01882",
+      "title": "untitled composites 4-6",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "untitled-composites"
       ]
     }
   }

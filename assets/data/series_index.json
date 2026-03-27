@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-4a669dca8636719c50f6741d83b2db0d",
-    "generated_at_utc": "2026-03-27T12:13:07Z",
-    "count": 134
+    "version": "blake2b-61301d7ae9c46c6f38594fd607f70ab9",
+    "generated_at_utc": "2026-03-27T14:00:58Z",
+    "count": 135
   },
   "series": {
     "10000": {
@@ -4106,7 +4106,8 @@
     "tulips": {
       "series_id": "tulips",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-27",
       "title": "tulips",
       "sort_fields": "work_id",
       "series_type": "primary",
@@ -4122,6 +4123,31 @@
         "01871",
         "01872",
         "01873"
+      ]
+    },
+    "untitled-composites": {
+      "series_id": "untitled-composites",
+      "layout": "series",
+      "status": "draft",
+      "title": "untitled composites",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01874",
+      "project_folders": [
+        "untitled composites"
+      ],
+      "works": [
+        "01874",
+        "01875",
+        "01876",
+        "01877",
+        "01878",
+        "01879",
+        "01880",
+        "01881",
+        "01882"
       ]
     },
     "wa": {
