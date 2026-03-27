@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-ed859a392e26fffb6b74604dc82f839d",
-    "generated_at_utc": "2026-03-27T18:42:21Z",
-    "count": 1930
+    "version": "blake2b-07e6f25de882c6d53613abe87369ab30",
+    "generated_at_utc": "2026-03-27T19:05:08Z",
+    "count": 1933
   },
   "works": {
     "00001": {
@@ -17857,6 +17857,33 @@
       "year_display": "2013",
       "series_ids": [
         "water"
+      ]
+    },
+    "01938": {
+      "work_id": "01938",
+      "title": "water",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "water-sea-pond"
+      ]
+    },
+    "01939": {
+      "work_id": "01939",
+      "title": "sea",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "water-sea-pond"
+      ]
+    },
+    "01940": {
+      "work_id": "01940",
+      "title": "pond",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "water-sea-pond"
       ]
     }
   }
