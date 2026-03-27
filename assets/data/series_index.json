@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-49b976dceea74e42023dcd1a21a144d9",
-    "generated_at_utc": "2026-03-27T09:54:25Z",
-    "count": 133
+    "version": "blake2b-4a669dca8636719c50f6741d83b2db0d",
+    "generated_at_utc": "2026-03-27T12:13:07Z",
+    "count": 134
   },
   "series": {
     "10000": {
@@ -3970,10 +3970,12 @@
     "train-moments": {
       "series_id": "train-moments",
       "layout": "series",
-      "status": "draft",
+      "status": "published",
+      "published_date": "2026-03-27",
       "title": "train moments",
       "sort_fields": "work_id",
       "series_type": "primary",
+      "year": 2019,
       "year_display": "2006-19",
       "primary_work_id": "01868",
       "project_folders": [
@@ -4099,6 +4101,27 @@
         "00546",
         "00547",
         "00548"
+      ]
+    },
+    "tulips": {
+      "series_id": "tulips",
+      "layout": "series",
+      "status": "draft",
+      "title": "tulips",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2023,
+      "year_display": "2023",
+      "primary_work_id": "01869",
+      "project_folders": [
+        "tulips"
+      ],
+      "works": [
+        "01869",
+        "01870",
+        "01871",
+        "01872",
+        "01873"
       ]
     },
     "wa": {

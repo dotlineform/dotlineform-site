@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v3",
-    "version": "blake2b-e468ec339722e5e174017cbf6930abca",
-    "generated_at_utc": "2026-03-27T09:54:25Z",
-    "count": 1861
+    "version": "blake2b-12753595d24857a14412b6fbda022970",
+    "generated_at_utc": "2026-03-27T12:13:07Z",
+    "count": 1866
   },
   "works": {
     "00001": {
@@ -17236,6 +17236,51 @@
       "year_display": "2019",
       "series_ids": [
         "train-moments"
+      ]
+    },
+    "01869": {
+      "work_id": "01869",
+      "title": "tulips 1",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "tulips"
+      ]
+    },
+    "01870": {
+      "work_id": "01870",
+      "title": "tulips 2",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "tulips"
+      ]
+    },
+    "01871": {
+      "work_id": "01871",
+      "title": "tulips 3",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "tulips"
+      ]
+    },
+    "01872": {
+      "work_id": "01872",
+      "title": "tulips 4",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "tulips"
+      ]
+    },
+    "01873": {
+      "work_id": "01873",
+      "title": "tulips 5",
+      "year": 2023,
+      "year_display": "2023",
+      "series_ids": [
+        "tulips"
       ]
     }
   }
