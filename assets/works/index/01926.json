@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-6345ab1a07b313c2abd562d7a1fcdaf3",
+    "generated_at_utc": "2026-03-27T18:42:21Z",
+    "work_id": "01926",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01926",
+    "title": "2013-03-02 - 14-34-57",
+    "year": 2013,
+    "year_display": "2013",
+    "series_ids": [
+      "water"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}
