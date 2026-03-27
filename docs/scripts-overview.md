@@ -147,6 +147,9 @@ Useful flags:
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
 - `--moments-prose-dir` (default `_includes/moments_prose`)
+  - generated include mirror for canonical moment prose files stored at `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
+  - on `--write`, the generator copies canonical prose into this include directory
+  - if a canonical prose file is missing, the generator warns and skips that moment
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
   - used for work primary images as well as work detail, work file, and moment source files

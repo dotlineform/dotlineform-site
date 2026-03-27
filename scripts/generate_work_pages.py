@@ -52,6 +52,7 @@ Common flags:
 
 Path variables used by the script:
 - projects_root = [projects-base-dir]/projects (work + work_details + work_files source lookup)
+- moments_root = [projects-base-dir]/moments (moment prose source lookup)
 - moments_images_root = [projects-base-dir]/moments/images (moment source image lookup)
 
 """
@@ -86,6 +87,7 @@ try:
         load_pipeline_config,
         media_work_files_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -95,6 +97,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         load_pipeline_config,
         media_work_files_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_root_subdir,
     )
 
@@ -687,7 +690,7 @@ def main() -> None:
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
-    ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for manual moment prose includes")
+    ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for generated moment prose includes")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
@@ -2488,6 +2491,7 @@ def main() -> None:
                 moments_hi["height_px"] = moments_height_px_idx
 
         projects_base_dir = Path(args.projects_base_dir).expanduser()
+        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
         moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
         def is_actionable_moment_status(status_value: str) -> bool:
@@ -2605,17 +2609,22 @@ def main() -> None:
             m_checksum = compute_work_checksum(mfm)
             mfm["checksum"] = m_checksum
 
+            source_prose_path = moments_root / f"{moment_id}.md"
             prose_path = moments_prose_dir / f"{moment_id}.md"
-            if not prose_path.exists():
-                placeholder = (
-                    f"<!-- moment prose: {title or moment_id} ({moment_id}) -->\n"
-                    "<!-- Replace this placeholder with the moment text. -->\n"
-                )
+            if not source_prose_path.exists():
+                print(f"{prefix_m}WARNING: missing source prose {source_prose_path}; skipping moment.")
+                moments_skipped += 1
+                continue
+
+            source_prose_content = source_prose_path.read_text(encoding="utf-8")
+            existing_prose_content = prose_path.read_text(encoding="utf-8") if prose_path.exists() else None
+            prose_needs_sync = existing_prose_content != source_prose_content
+            if prose_needs_sync:
                 if args.write:
-                    prose_path.write_text(placeholder, encoding="utf-8")
-                    print(f"{prefix_m}WRITE prose placeholder: {prose_path}")
+                    prose_path.write_text(source_prose_content, encoding="utf-8")
+                    print(f"{prefix_m}WRITE prose include: {prose_path}")
                 else:
-                    print(f"{prefix_m}DRY-RUN: would create prose placeholder {prose_path}")
+                    print(f"{prefix_m}DRY-RUN: would sync prose include {prose_path} from {source_prose_path}")
 
             m_content = build_front_matter(mfm) + "\n" + f"{{% include moments_prose/{moment_id}.md %}}\n"
             m_path = moments_out_dir / f"{moment_id}.md"
