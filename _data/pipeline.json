@@ -13,18 +13,18 @@
     },
     "media": {
       "work": {
-        "input_subdir": "works/make_srcset_images",
-        "output_subdir": "works/srcset_images"
+        "input_subdir": "website/pipeline/works/make_srcset_images",
+        "output_subdir": "website/pipeline/works/srcset_images"
       },
       "work_details": {
-        "input_subdir": "work_details/make_srcset_images",
-        "output_subdir": "work_details/srcset_images"
+        "input_subdir": "website/pipeline/work_details/make_srcset_images",
+        "output_subdir": "website/pipeline/work_details/srcset_images"
       },
       "moment": {
-        "input_subdir": "moments/make_srcset_images",
-        "output_subdir": "moments/srcset_images"
+        "input_subdir": "website/pipeline/moments/make_srcset_images",
+        "output_subdir": "website/pipeline/moments/srcset_images"
       },
-      "work_files_subdir": "works/files"
+      "work_files_subdir": "website/pipeline/works/files"
     }
   },
   "variants": {
