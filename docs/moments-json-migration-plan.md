@@ -44,6 +44,8 @@ This document defines the phased migration from the current include-based moment
 - The initial per-moment JSON payload should include rendered HTML only.
 - If moment JSON fails to load in JSON mode, the runtime page should show `problem loading content` rather than trying to fall back to stub prose.
 - No-JS prose fallback is not a current project goal for the moments migration.
+- Canonical moment source files should keep their existing `<pre class="moment-text">...</pre>` wrappers for the initial JSON migration.
+- Conversion of moment source files to pure markdown should happen only in a later phase, after the JSON pipeline and runtime path are stable.
 
 ## Target Architecture
 
@@ -376,6 +378,7 @@ After Phase 5 retirement:
 After the moments migration is complete and stable:
 
 - add a separate phase to move works prose out of `_includes/work_prose` and into per-work JSON
+- add a separate phase to convert moment source files from `<pre class="moment-text">...</pre>` wrappers to pure markdown
 - aim for the same conceptual model across works and moments:
   - lightweight page stubs
   - runtime JSON metadata
