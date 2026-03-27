@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-4b18b8c6648e3143da6a6c5860ac7eeb",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01845",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01845",
+    "title": "2018-03-18 11꞉04꞉03",
+    "year": 2018,
+    "year_display": "2018",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 22.5,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 2657
+  },
+  "sections": []
+}

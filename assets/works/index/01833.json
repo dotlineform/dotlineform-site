@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-7442f30569c96e2ab163bcf647e23205",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01833",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01833",
+    "title": "2016-10-07 13꞉06꞉31",
+    "year": 2016,
+    "year_display": "2016",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

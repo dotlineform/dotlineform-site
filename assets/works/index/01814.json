@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-c680388aea7139f069ff8156c7b1c73d",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01814",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01814",
+    "title": "2012-09-27 15꞉35꞉15",
+    "year": 2012,
+    "year_display": "2012",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 40.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 4724
+  },
+  "sections": []
+}

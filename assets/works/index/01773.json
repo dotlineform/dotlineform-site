@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-807099fdefce276114d18a14ef619b92",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01773",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01773",
+    "title": "2007-05-02 14꞉59꞉49",
+    "year": 2007,
+    "year_display": "2007",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}

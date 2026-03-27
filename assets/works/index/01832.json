@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-2442e45777c12ef6ff9a286f05e717cb",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01832",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01832",
+    "title": "2015-05-30 13꞉27꞉54",
+    "year": 2015,
+    "year_display": "2015",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}

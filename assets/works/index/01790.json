@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v2",
+    "version": "blake2b-050e1cfb19cacdf7e9a2fef2fde19e8d",
+    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "work_id": "01790",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01790",
+    "title": "2010-02-03 09꞉55꞉52",
+    "year": 2010,
+    "year_display": "2010",
+    "series_ids": [
+      "train-moments"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}
