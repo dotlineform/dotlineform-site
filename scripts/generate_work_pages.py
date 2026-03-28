@@ -92,6 +92,7 @@ try:
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
+        source_works_prose_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -102,6 +103,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         media_work_files_subdir,
         source_moments_images_subdir,
         source_moments_root_subdir,
+        source_works_prose_subdir,
         source_works_root_subdir,
     )
 
@@ -708,7 +710,7 @@ def main() -> None:
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
-    ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Folder for optional manual work prose includes")
+    ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Deprecated legacy work prose include folder (ignored; canonical work prose now loads from external source files)")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
@@ -826,13 +828,13 @@ def main() -> None:
     run_series_pages = artifact_enabled("series-pages")
     run_series_index_json = True
     run_work_details_pages = artifact_enabled("work-details-pages")
-    run_work_json = artifact_enabled("work-json")
+    run_work_json = artifact_enabled("work-json") or run_work_pages
     run_works_index_json = True
     run_moments_artifact = artifact_enabled("moments")
     run_moments_index_json = True
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
-    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact or run_moments_index_json
+    needs_projects_base = run_work_files or run_work_details_pages or run_work_json or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -937,9 +939,6 @@ def main() -> None:
     # - Use `_works` if you're using a Jekyll collection.
     out_dir = Path(args.output_dir).expanduser()
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    work_prose_dir = Path(args.work_prose_dir).expanduser()
-    work_prose_dir.mkdir(parents=True, exist_ok=True)
 
     series_out_dir = Path(args.series_output_dir).expanduser()
     series_out_dir.mkdir(parents=True, exist_ok=True)
@@ -1173,9 +1172,11 @@ def main() -> None:
                 series_sort_value = f"{idx:0{rank_width}d}-{wid}"
                 series_sort_by_series_id.setdefault(sid, {})[wid] = series_sort_value
 
-    # Pre-index project folder by work_id (for WorkDetails source image lookup).
+    # Pre-index project folder and prose filename by work_id.
     work_project_folder_by_id: Dict[str, str] = {}
     has_project_folder_col = "project_folder" in works_hi
+    if (run_work_pages or run_work_json) and not has_project_folder_col:
+        raise SystemExit("Works sheet missing required column for prose migration: project_folder")
     if has_project_folder_col:
         for wr in works_rows[1:]:
             wid_raw = cell(wr, works_hi, "work_id")
@@ -1183,6 +1184,38 @@ def main() -> None:
             if is_empty(wid_raw) or is_empty(pf_raw):
                 continue
             work_project_folder_by_id[slug_id(wid_raw)] = normalize_text(pf_raw)
+
+    work_prose_file_by_id: Dict[str, str] = {}
+    has_work_prose_file_col = "work_prose_file" in works_hi
+    if (run_work_pages or run_work_json) and not has_work_prose_file_col:
+        raise SystemExit("Works sheet missing required column for prose migration: work_prose_file")
+    if has_work_prose_file_col:
+        for wr in works_rows[1:]:
+            wid_raw = cell(wr, works_hi, "work_id")
+            prose_raw = cell(wr, works_hi, "work_prose_file")
+            if is_empty(wid_raw) or is_empty(prose_raw):
+                continue
+            work_prose_file_by_id[slug_id(wid_raw)] = Path(normalize_text(prose_raw)).name
+
+    works_prose_subdir = source_works_prose_subdir(PIPELINE_CONFIG)
+
+    def resolve_work_prose_source_path(wid: str) -> Optional[Path]:
+        project_folder = work_project_folder_by_id.get(wid)
+        prose_filename = work_prose_file_by_id.get(wid)
+        if not project_folder or not prose_filename:
+            return None
+        return projects_root / project_folder / works_prose_subdir / prose_filename
+
+    missing_work_prose_warned: set[str] = set()
+
+    def warn_missing_work_prose(wid: str, prose_path: Optional[Path]) -> None:
+        if wid in missing_work_prose_warned:
+            return
+        if prose_path is None:
+            print(f"[work {wid}] WARNING: missing prose source mapping; skipping work.")
+        else:
+            print(f"[work {wid}] WARNING: missing source prose {prose_path}; skipping work.")
+        missing_work_prose_warned.add(wid)
 
     work_file_entries_by_work_id: Dict[str, List[Dict[str, Any]]] = {}
     if len(work_files_rows) > 1:
@@ -1606,12 +1639,13 @@ def main() -> None:
                 "checksum": checksum,
             }
 
-            prose_path = work_prose_dir / f"{wid}.md"
-            work_body = ""
-            if prose_path.exists():
-                work_body = f"{{% include work_prose/{wid}.md %}}\n"
+            source_prose_path = resolve_work_prose_source_path(wid)
+            if source_prose_path is None or not source_prose_path.exists():
+                warn_missing_work_prose(wid, source_prose_path)
+                skipped += 1
+                continue
 
-            work_page_content = build_front_matter(work_page_fm) + "\n" + work_body
+            work_page_content = build_front_matter(work_page_fm) + "\n"
             out_path = out_dir / f"{wid}.md"
 
             def write_page(path: Path, label: str, page_content: str) -> bool:
@@ -2369,14 +2403,21 @@ def main() -> None:
                 wj_processed += 1
                 prefix_wj = f"[workjson {wj_processed}/{wj_total}] "
 
+                source_prose_path = resolve_work_prose_source_path(wid)
+                if source_prose_path is None or not source_prose_path.exists():
+                    warn_missing_work_prose(wid, source_prose_path)
+                    wj_skipped += 1
+                    continue
+
                 sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
-                payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections}))
+                content_html = render_markdown_with_jekyll(source_prose_path)
+                payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections, "content_html": content_html}))
 
                 payload = compact_json_object({
                     "header": {
-                        "schema": "work_record_v2",
+                        "schema": "work_record_v3",
                         "version": payload_version,
                         "generated_at_utc": generated_at_utc,
                         "work_id": wid,
@@ -2384,6 +2425,7 @@ def main() -> None:
                     },
                     "work": work_record,
                     "sections": sections,
+                    "content_html": content_html,
                 })
                 out_json_path = works_json_dir / f"{wid}.json"
                 exists = out_json_path.exists()

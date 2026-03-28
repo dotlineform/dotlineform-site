@@ -156,7 +156,7 @@ layout: default
   </section>
 
   <section class="content work__prose">
-    {{ content }}
+    <div id="workProseContent"></div>
   </section>
 
   <section
@@ -352,6 +352,16 @@ layout: default
       mediaLink.setAttribute('href', fullSrc);
     }
 
+    function renderProse(contentHtml) {
+      var prose = document.getElementById('workProseContent');
+      if (!prose) return;
+      if (typeof contentHtml === 'string' && contentHtml.trim()) {
+        prose.innerHTML = contentHtml;
+        return;
+      }
+      prose.innerHTML = '<p>problem loading content</p>';
+    }
+
     function applyMetadata(meta) {
       var record = meta || {};
       var currentWorkId = text(record.work_id) || workId;
@@ -429,8 +439,10 @@ layout: default
     window.__dlfGetWorkRecord(workId, baseurl)
       .then(function (payload) {
         var work = (payload && payload.work && typeof payload.work === 'object') ? payload.work : null;
+        var contentHtml = (payload && typeof payload.content_html === 'string') ? payload.content_html : null;
         if (!work) {
           applyMetadata(fallback);
+          renderProse(null);
           return;
         }
         var merged = {};
@@ -438,9 +450,11 @@ layout: default
         for (key in fallback) merged[key] = fallback[key];
         for (key in work) merged[key] = work[key];
         applyMetadata(merged);
+        renderProse(contentHtml);
       })
       .catch(function () {
         applyMetadata(fallback);
+        renderProse(null);
       });
   })();
 </script>

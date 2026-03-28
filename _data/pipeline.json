@@ -12,7 +12,8 @@
       "moments": "moments"
     },
     "source_subdirs": {
-      "moments_images": "images"
+      "moments_images": "images",
+      "prose": "site text"
     },
     "media": {
       "work": {

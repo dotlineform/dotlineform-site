@@ -33,7 +33,7 @@
 ## Safety Defaults
 
 - Prefer dry-run behavior for generators unless explicitly asked to write.
-- Do not overwrite prose includes in `_includes/work_prose` or `_includes/series_prose`, or canonical moment prose in `moments/*.md`, unless explicitly requested.
+- Do not overwrite canonical work prose in the external `projects/*/<prose_subdir>/*.md` tree, prose includes in `_includes/series_prose`, or canonical moment prose in `moments/*.md`, unless explicitly requested.
 - Do not delete generated or source files unless explicitly requested.
 
 ## Pipeline Conventions

@@ -157,9 +157,13 @@ Useful flags:
   - writes a lightweight moments index object keyed by `moment_id`
   - used by `/moments/` for title/date/thumb metadata
   - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
+- work prose source path:
+  - canonical markdown lives at `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<paths.source_subdirs.prose>/<work_prose_file>`
+  - default `paths.source_subdirs.prose` value is `site text`
+  - if `Works.work_prose_file` is empty or the resolved markdown file is missing, the pipeline warns and skips that work
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for work primary images as well as work detail, work file, and moment source files
+  - used for work primary images, canonical work prose source files, work detail and work file sources, and moment source files
   - when source files are found, `Works.width_px`/`height_px` and detail/moment dimension columns are refreshed on `--write`
 - `--media-base-dir`: base path used for staged media outputs
   - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
@@ -169,7 +173,8 @@ Useful flags:
 - `--only`: limit generation to selected artifacts
   - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
   - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
-  - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
+  - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`)
+    - selecting `work-pages` also rebuilds the per-work JSON payload because runtime prose now depends on it
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
@@ -193,17 +198,18 @@ Useful flags:
     - always rebuilt as a full index and not gated by `--only`
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
-  - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, and full `sections[].details[]`
+  - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, full `sections[].details[]`, and rendered `content_html`
     - `work.series_ids` preserves the full ordered membership list from the workbook
     - optional empty fields are omitted from JSON rather than written as `null`
     - work-page primary-series label/link is derived at runtime from `series_index.json`, using `work.series_ids[0]`
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
+    - renders canonical work prose from the external projects tree using the local Jekyll markdown stack
 
 Runtime canonical data flow:
 
 - `/series/` and `/series/<series_id>/` read `assets/data/series_index.json`.
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
-- `/works/<work_id>/` series nav/counter/link visibility read `assets/data/series_index.json`.
+- `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav/counter/link visibility also read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 - `/moments/` reads `assets/data/moments_index.json` for card metadata.
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
@@ -233,7 +239,7 @@ Behavior:
 - if a deleted work is referenced by a series `primary_work_id`, that field is set to `null`
 - intentionally leaves these untouched:
   - `assets/work_details/img/*`
-  - `_includes/work_prose/<work_id>.md`
+  - canonical work prose under `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<paths.source_subdirs.prose>/<work_prose_file>`
   - staged media under `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/<work_id>-*`
 
 Backups:
