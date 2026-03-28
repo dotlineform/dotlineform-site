@@ -27,6 +27,9 @@
   - `/Users/dlf/.rbenv/shims/ruby -v`
   - `/Users/dlf/.rbenv/shims/bundle -v`
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet`
+- If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
+- In that case, use a separate destination for one-off verification builds:
+  - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
 

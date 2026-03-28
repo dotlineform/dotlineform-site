@@ -59,6 +59,12 @@ Notes:
 - this runner does not enable `--livereload`
 - use a manual browser refresh after JS/template changes
 - Studio editing remains stable because tag writes do not force a browser reload
+- if `bin/dev-studio` or another `jekyll serve` process is already running, do not run a verification build against the default `_site/` destination at the same time
+- for a one-off verification build while the dev server is running, use a separate destination such as:
+
+```bash
+/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
+```
 
 ## Scope
 

@@ -95,6 +95,16 @@ Notes:
 - if you edit `_docs_src/` while the dev runner is already running, re-run `./scripts/build_docs_data.rb --write`
 - changing only the docs data does not require any separate asset pipeline
 
+Jekyll verification builds:
+
+- if `jekyll serve` or `bin/dev-studio` is already running, avoid building into the default `_site/` destination at the same time
+- concurrent writes to the same `_site/` tree can produce transient static-file copy failures even when the source asset is valid
+- for a one-off verification build while the dev server is active, use a separate destination:
+
+```bash
+/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
+```
+
 Local environment variables (required for media/generation scripts):
 
 ```bash
