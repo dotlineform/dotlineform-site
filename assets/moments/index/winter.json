@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-1da733e91b041adf3d1b62c6f312f5ac",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "winter"
+  },
+  "moment": {
+    "moment_id": "winter",
+    "title": "winter",
+    "date": "2018-05-16",
+    "images": [
+      {
+        "file": "winter.jpg",
+        "alt": "winter"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nbefore you know it\nyears will pass\n \nand all the daily decisions\nthat seem so important at the time\nwill be forgotten\n \nwe’ll see that ‘living in the present’\nwas like watching grains of salt\n \nas they melt and then crystallise\nonly to dissolve again\n \ncold has arrived\nmany winter months ahead\n \nthe sunlight is so beautiful even when grey\nit never stops, even in the darkest nights\n \nall the flowers and animals are prepared\nas is in their nature\n</pre>\n"
+}

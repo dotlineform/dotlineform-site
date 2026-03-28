@@ -1,0 +1,16 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-ac516e6a6f1d62fb6110daee8fff68b3",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "circle"
+  },
+  "moment": {
+    "moment_id": "circle",
+    "title": "circle",
+    "date": "2019-01-01",
+    "date_display": "c. 2019",
+    "images": []
+  },
+  "content_html": "<pre class=\"moment-text\">\nand when we sit in a circle\n \nthe space in the middle is where all our thoughts and feelings meet\n \nand we are comfortable with silence\n \nwe understand that silence\n \nis an inferno of thoughts and feelings\n \nsee the sparks\n \nwe can help them\n \nwith a deep caring and empathy\n</pre>\n"
+}

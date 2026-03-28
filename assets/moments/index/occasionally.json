@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-dca9805d105cd1f14772a3ee4703e4c1",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "occasionally"
+  },
+  "moment": {
+    "moment_id": "occasionally",
+    "title": "occasionally",
+    "date": "2019-07-07",
+    "images": [
+      {
+        "file": "occasionally.jpg",
+        "alt": "occasionally"
+      }
+    ],
+    "width_px": 2448,
+    "height_px": 2448
+  },
+  "content_html": "<pre class=\"moment-text\">\noccasionally I find myself\nthinking about loss\nit’s a strange feeling, preparing for moments that are inevitable\n \ni almost imagine the numbness\nit’s like hardening molten metal in a furnace\nmoments on the verge of collapse\n \nlife is so short\nbut would it be different if it was longer?\n \nif we were a piece of string\ncoiled up\n \nwould we see ourselves unfold?\ninto a straight line, with a beginning and an end?\n \nor are we really a knot\nnever to be untied\n \nalways blissfully unaware\nof how we started\n \nand where the end might be\n</pre>\n"
+}

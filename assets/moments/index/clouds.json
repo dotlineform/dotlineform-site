@@ -1,0 +1,16 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-a23ee3e4f6e2de2cb473303c9bfb221d",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "clouds"
+  },
+  "moment": {
+    "moment_id": "clouds",
+    "title": "clouds",
+    "date": "2019-01-01",
+    "date_display": "c. 2019?",
+    "images": []
+  },
+  "content_html": "<pre class=\"moment-text\">\nI realise that it’s just a photo of clouds\n \nand they are just tiny bits of dust and water particles\n \nbut they mean something to me\n \ni see shapes and forms\n \ni see our lives in these clouds\n \ni see loneliness and togetherness in them\n \neverything\n \nour hopes and wishes, our emotions\n \nall in these little clouds\n</pre>\n"
+}

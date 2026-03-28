@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-140b6e9e4781cab07f343aa9e724a796",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "we-make-ghosts"
+  },
+  "moment": {
+    "moment_id": "we-make-ghosts",
+    "title": "we make ghosts",
+    "date": "2014-01-01",
+    "date_display": "c. 2014",
+    "images": [
+      {
+        "file": "we-make-ghosts.jpg",
+        "alt": "we make ghosts"
+      }
+    ],
+    "width_px": 2448,
+    "height_px": 3264
+  },
+  "content_html": "<pre class=\"moment-text\">\nghosts pass through us all the time\nlike subatomic particles which only rarely hit one of our particles\n(from their perspective, we are only slightly less empty than the night air)\n \nas some stones crumble under the weight of the stones they support\neventually new stones appear to replace them\na wall of memories\n \na wall being built with every thought\neven dream thoughts\n \nin this space behind closed eyes\nI recall it all like I would remember taking a photograph\n \na memory of memories\nlayers, sediments, residues, fossils\nthe existence of life in thoughts\n \na door opens\n \nand then it ends\n \nthere are no more details, everything that is able to be unhidden has been released\n \nthe fog is thickening\nin the forest, everything goes back to sleep\n \nwhere do they dream?\n</pre>\n"
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-1275df404f96de7f0126333ba4ae85c7",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "peace-of-mind"
+  },
+  "moment": {
+    "moment_id": "peace-of-mind",
+    "title": "peace of mind",
+    "date": "2019-08-27",
+    "images": [
+      {
+        "file": "peace-of-mind.jpg",
+        "alt": "peace of mind"
+      }
+    ],
+    "width_px": 6047,
+    "height_px": 3024
+  },
+  "content_html": "<pre class=\"moment-text\">\nkeep me close to you honey\nlet me know what’s going on\ntell me things without me asking\n \nhold me caress me\nwrap yourself around me\nbreathe with me\njust tell me what you’re feeling\n \nwe all have our journeys\nsome are secret, hidden to all\n(perhaps even to ourselves)\n \nthe special moments are those we share\nand every moment is so important\nall are connected\n \nI’m feeling that I don’t want to chase shadows\nI feel alone but this feeling has been with me for a long time, almost forever\nI just want some peace of mind\n</pre>\n"
+}

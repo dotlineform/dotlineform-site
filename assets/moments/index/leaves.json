@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-ae796c8031b1202ddf87c209e66d2138",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "leaves"
+  },
+  "moment": {
+    "moment_id": "leaves",
+    "title": "leaves",
+    "date": "2019-04-22",
+    "images": [
+      {
+        "file": "leaves.jpg",
+        "alt": "leaves"
+      }
+    ],
+    "width_px": 4032,
+    "height_px": 3024
+  },
+  "content_html": "<pre class=\"moment-text\">\nleaves float on silky stems\nflowers float just above the ground\nlight infuses everything\n \nis love really like this?\ndoes it sometimes feel like nature\nlimitless and free\n \nor does it constrict\nby circumstance and rules\nour paths, like a twisting thread\n \nis it possible to unravel\nthe curls of our thoughts\nand what will happen if we do?\n \nwill i dissolve into wine\nand be reborn a grape\nsoaking up the sun?\n \nin a field somewhere\nin peace with all the creatures\nall the mice and the birds\n</pre>\n"
+}

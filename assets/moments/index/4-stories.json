@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-b292b916d453802995680f6e0f91d172",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "4-stories"
+  },
+  "moment": {
+    "moment_id": "4-stories",
+    "title": "4 stories",
+    "date": "2020-01-01",
+    "date_display": "c. 2020?",
+    "images": [
+      {
+        "file": "4-stories.jpg",
+        "alt": "4 stories"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nThere is a form\nit exists in a field of immeasurable emptiness\nwhich is its friend\nit has no idea of its size\nit could be the size of an atom\nit could be our size\nor the size of a galaxy\nit just knows that the emptiness extends forever\nand so it is in peace\n \nThere are 4 forms\nthey sense each other’s existence\nor extrapolate from each of their own equally vast mathematical theories\nbut they know that they will never meet\nthe distances are beyond comprehension\nand so they drift in this immeasurable emptiness\n \nThere are 3 forms\nthey ride the gentle currents near the bottom\nof this immeasurably deep ocean\nthey sense that there are others like them\nand this gives them comfort\nand brings them happy dreams\n \nThere are 2 forms\nthey may have been, a long time ago\na single idea\nbut they have no memory of that\neven by their own standards of measuring time\n(which are immeasurably more capable than our own)\nthe beginning of the universe was too long ago to comprehend\n \nBut they feel  \na feeling that there is something in the vast emptiness between them\nthat will heal them\n</pre>\n"
+}

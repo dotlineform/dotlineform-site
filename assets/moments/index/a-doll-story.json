@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-f97c05e1f4cc2238f5bc88c897e6c139",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-doll-story"
+  },
+  "moment": {
+    "moment_id": "a-doll-story",
+    "title": "a doll story",
+    "date": "2025-06-14",
+    "images": [
+      {
+        "file": "a-doll-story.jpg",
+        "alt": "a doll story"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\ndoll was created many years before she came into my care\nbut we don’t know why or by whom\n\nshe rested for many years amongst glass vessels\na bird wing on a shelf above\nand stones on a shelf below  \n  \nperhaps some of this is true\nwe would like to believe so  \n  \ndoll is now no more (nor less)\nthan photographs which document her last glancing acts\nand her destruction, along with the glass vessels she had unblinkingly watched over for so long  \n  \nno particle of falling dust escaped her gaze\nno ticking clock counted her time  \n  \n(as it was for the dolls that came before and the dolls that will come after)  \n  \ndoll lives and dies in a constant unbreakable cycle\nher alchemy has no beginning nor ending\nshe does not know when the end will come\nshe does not feel pain, grief, anxiety\nnor happiness, love, peace\n(she is an inanimate doll)  \n  \nif a hammer hadn’t broken her,\neventually she would have crumbled into dust,\nperhaps hundreds or thousands of years from now\n</pre>\n"
+}

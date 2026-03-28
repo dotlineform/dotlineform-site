@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-1b502a876157d6b43dbdec8dea931042",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-beautiful-route"
+  },
+  "moment": {
+    "moment_id": "a-beautiful-route",
+    "title": "a beautiful route",
+    "date": "2019-02-15",
+    "images": [
+      {
+        "file": "a-beautiful-route.jpg",
+        "alt": "a beautiful route"
+      }
+    ],
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "content_html": "<pre class=\"moment-text\">\nthis picture is before the heron\nbut he is here still\nbecause this is his home\n \nwhere is the heron going\nan arrow across the surface\nleaving no ripples\n \nhis wings are beating like sun beams\nin harmony with all around\ngliding through moments\n \ni’m walking along the river\nand my moments are like dust\nfalling through an hourglass\n \ni gaze in wonder at the heron\ni try to slow my thoughts so i can really see him\nbut he’s already passed by\n \nbeautiful moments\nwhere we feel connected\n</pre>\n"
+}

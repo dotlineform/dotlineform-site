@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-9f5486f69f40a45e449a5dbc3c480812",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-light-inside-a-flower"
+  },
+  "moment": {
+    "moment_id": "a-light-inside-a-flower",
+    "title": "a light inside a flower",
+    "date": "2019-03-25",
+    "images": [
+      {
+        "file": "a-light-inside-a-flower.jpg",
+        "alt": "a light inside a flower"
+      }
+    ],
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "content_html": "<pre class=\"moment-text\">\ndo the squirrels wonder why\n \nthe ducks like water?\n \ndo the birds think\n \nwhy we walk on the ground?\n \nthe flowers don’t question spring\n \nthey just have a deep need for sun\n \nso that they can fill themselves with colour\n \nso it should be with us, naturally\n \nall of us carry deep doubts and, sometimes, regrets\n \nalways questioning\n \nis this my true life?\n \nis this my true love?\n \nwe might go round in circles, for ever\n \nas if life is a simple roulette table\n \nperhaps it is,\n \nhundreds of millions of years have passed, after all\n \nsince we were souls inside single cells\n \nfloating in the deep sea, drifting with the currents\n \nand here we are now\n \nlife for us is short and fragile\n \nso full of wonder\n \nthere are deeper feelings than those that you once said were deep\n \n(but then you changed your mind about them anyway)\n \nand floating on the surface seems to me\n \nwould be wonderful\n \nwe might float to the surface together\n</pre>\n"
+}

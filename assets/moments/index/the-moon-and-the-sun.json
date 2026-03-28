@@ -1,0 +1,15 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-57c30f049c21e2c6f38600a84d05c914",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "the-moon-and-the-sun"
+  },
+  "moment": {
+    "moment_id": "the-moon-and-the-sun",
+    "title": "the moon and the sun",
+    "date": "2024-10-24",
+    "images": []
+  },
+  "content_html": "<pre class=\"moment-text\">\nwhat i was trying to say\n \nwas about doubt\n \ni only see clearly when the moon is out\n \nmy thoughts become clear in the night\n \nand everyone is sleeping\n \nall the people, all the birds, all the little animals\n \nmouse too, is sleeping\n \nin his litle bed of straw under the stairs\n \nsleep well, my heart is with you all\n \nyou are alive when the sun shines\n \nbut just know\n \ni only see the moon\n \nbecause the sun shines on it\n</pre>\n"
+}

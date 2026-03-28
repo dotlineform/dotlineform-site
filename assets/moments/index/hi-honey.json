@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-5d7b92de0012870e9c82e550b19e1a24",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "hi-honey"
+  },
+  "moment": {
+    "moment_id": "hi-honey",
+    "title": "hi honey",
+    "date": "2024-10-23",
+    "date_display": "c. 2024?",
+    "images": [
+      {
+        "file": "hi-honey.jpg",
+        "alt": "hi honey"
+      }
+    ],
+    "width_px": 4000,
+    "height_px": 2761
+  },
+  "content_html": "<pre class=\"moment-text\">\nHi honey\ni’m home\nhope all is well\n \ndoes being lonely\nmean that I’m alone?\n \nis this the right way?\ndoes anyone here\nknow how to read a map?\n \ni see meaning\nin the slightest things\ni have no idea what they mean\n \nthen I realise…\ni’m staring at random dots\n</pre>\n"
+}

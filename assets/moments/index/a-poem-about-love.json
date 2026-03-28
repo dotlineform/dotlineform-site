@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-3ac84e1c33ce8cfed58cc42275255a94",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-poem-about-love"
+  },
+  "moment": {
+    "moment_id": "a-poem-about-love",
+    "title": "a poem about love",
+    "date": "2018-01-01",
+    "date_display": "c. 2018?",
+    "images": [
+      {
+        "file": "a-poem-about-love.jpg",
+        "alt": "a poem about love"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nthis is going to be\n(when the words come to me)\na poem about love\n \nit will be a simple collage of words\nthat exist only to let other people\nsee that which makes us glow\n \nit is what we’re designed for\nto live and love\nsleep and dream\n \nif only everyone knew\nthat no matter how flawed we are\nall we need is to have moments\nlike i have with you\n \nwhere our eyes become transparent\nand our thoughts disappear\nlike mist in the morning sun\n \n~\n \nisto vai ser\n(quando as palavras comigo vierem ter)\num poema sobre amor\n \nvai ser uma simples colagem de palavras\nque existem apenas para que as outras pessoas vejam que o que nos faz resplandecer\n \né o que para o qual fomos designados\npara viver e amar\n \nse ao menos todos soubessem\nque não importa o quanto falíveis nós sejamos\ntudo o que nós precisamos\né de ter momentos\ntais como os que eu tenho contigo\nem que os nossos olhos se tornam transparentes\ne os nossos pensamentos desaparecem\ntal como névoa no sol da manhã\n</pre>\n"
+}

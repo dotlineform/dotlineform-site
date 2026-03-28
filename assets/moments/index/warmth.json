@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-bb1683c536c71960ec6b84065600f504",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "warmth"
+  },
+  "moment": {
+    "moment_id": "warmth",
+    "title": "warmth",
+    "date": "2018-11-25",
+    "images": [
+      {
+        "file": "warmth.jpg",
+        "alt": "warmth"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nher smile is a heart\nand everyone who knows her feels it\n \nwhen she is sleeping eyes closed\nand I can feel her warm breath\n \nher lips naturally relax into a smile\nthat makes me feel so at peace and in love\n \nand I feel her beautiful heart\nwith every embrace\n \nshe couldn’t possibly know\n(like the sun doesn’t know)\n \nhow it’s warmth keeps us alive\n</pre>\n"
+}

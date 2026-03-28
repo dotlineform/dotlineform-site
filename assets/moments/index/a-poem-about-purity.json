@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-8999d4a41e8352febd912dc8bc390d2d",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-poem-about-purity"
+  },
+  "moment": {
+    "moment_id": "a-poem-about-purity",
+    "title": "a poem about purity",
+    "date": "2017-12-20",
+    "images": [
+      {
+        "file": "a-poem-about-purity.jpg",
+        "alt": "a poem about purity"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\ni only write this poem\nbecause she asked me to\nand when she reads it\nshe is knowing the purity of her heart\n \ni only love her because\nthat is all i can do\nin the same way that an acorn\ncan only grow into a beautiful tree\n \ntoday i was asked about the true nature of kisses\nthose strange and wonderful moments\nand the answer didn’t come in words\nsimply a slow and tender kiss\n \n~\n \ndo i wonder where my path will lead?\ndo i wish so much to be with someone?\nwho can follow me and i follow her\ni haven’t even taken a small step, yet\n \nevery moment comes crashing down\nlike waves, like sand dunes\nlike petals floating in the calm breeze\nand still i miss them\n \nmy sculpture is not made of stone\nit’s purely caresses and warm kisses\nwhat is there really\nbetter than that to create?\n \n~\n \ni only wrote this poem\nbecause as my fingers move over the keyboard\nwords appear and disappear\nas if they are translucent and glowing\n \nWe can all find peace\nour dreams and sighs are a mystery\nthe source of our purity\na secret waiting to be unlocked\n \nthere are many things under the stars\nmore than can be imagined\nand they are all connected\nwith a truth that has no words\n</pre>\n"
+}

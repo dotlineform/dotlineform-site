@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-ed3c02a460b48f15bd6805e48f0e20d2",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-lemon-tart-poem"
+  },
+  "moment": {
+    "moment_id": "a-lemon-tart-poem",
+    "title": "a lemon tart poem",
+    "date": "2022-06-03",
+    "images": [
+      {
+        "file": "a-lemon-tart-poem.jpg",
+        "alt": "a lemon tart poem"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nlight falls down from above\nthe above that is known\n(and the above that will always be mysterious, mystical)\n \nit falls on grey water\nand may even reach the depths\nwhere creatures live\n \nwe sit for a long time here\nnot thinking just sitting\nfeeling love and comfort\n \njust being here, with the sounds of the birds and the water ripples\nwatching the light fall from unknowable to unknown\n \nour wine is almost going to sleep\nit’s time to go inside\nlet’s leave the sky and the sea to embrace\n \nour bellies full and happy\neverything in peace\n \nbut then something happens\n \nbeyond comprehension\nbeyond words\n</pre>\n"
+}

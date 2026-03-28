@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-e3a42b006db303c459bebf1448ee516f",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "sleepy-moments"
+  },
+  "moment": {
+    "moment_id": "sleepy-moments",
+    "title": "sleepy moments",
+    "date": "2019-04-02",
+    "images": [
+      {
+        "file": "sleepy-moments.jpg",
+        "alt": "sleepy moments"
+      }
+    ],
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "content_html": "<pre class=\"moment-text\">\nwarm breath in my ear\n \nyour whispers become part of me\n \nwhen you say forever\n \ndo you mean this moment\n \nhas escaped time?\n \nthe clocks stopped a long time ago\n \nthey are just gathering dust\n \nwhilst we embrace our moments\n \nand fall into sleep with them\n</pre>\n"
+}

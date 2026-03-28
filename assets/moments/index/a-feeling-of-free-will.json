@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-e25623bfbad82a8e75c455e23c74f2d4",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "a-feeling-of-free-will"
+  },
+  "moment": {
+    "moment_id": "a-feeling-of-free-will",
+    "title": "a feeling of free will",
+    "date": "2024-10-23",
+    "images": [
+      {
+        "file": "a-feeling-of-free-will.jpg",
+        "alt": "a feeling of free will"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 998
+  },
+  "content_html": "<pre class=\"moment-text\">\nan\nunrealisable\nfeeling\nof\nfree\nwill\nthat\nstretches\nfor\nhours\nand\nyears\nbefore\nbeing\ncrushed\nunder\nits\nown\nweight\nof\nexpectation\nwhich\nit\nhad\nfailed\nto\nproperly\nunderstand\nand\nso\nconsequently\nwas\nunprepared\nfor\nwhen\na\npreviously\nunknowable\ninfluence\nappeared\nas\nan\nuncertainty\nthat\ni\nfound\nimpossible\nto\nreconcile\nleading\nto\na\ncondition\nof\nexponentially\nincreasing\ndoubt\nthat\nultimately\nmade\nthe\nwhole\nconcept\nmeaningless\nresulting\nin\nan\nunresolvable\nfeeling\nof\nfree\nwill\nthat\nmay\npossibly\nlast\nforever\n</pre>\n"
+}

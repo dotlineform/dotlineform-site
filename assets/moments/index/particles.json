@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-9b2775961f47c07f6f36518572b16f40",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "particles"
+  },
+  "moment": {
+    "moment_id": "particles",
+    "title": "particles",
+    "date": "2013-01-01",
+    "date_display": "c. 2013",
+    "images": [
+      {
+        "file": "particles.jpg",
+        "alt": "particles"
+      }
+    ],
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "content_html": "<pre class=\"moment-text\">\nit is very quiet\na stillness that is only possible when all around are sleeping\n \nthe night allows lights to unhide themselves\nsome are close, others are very far away\n \nthere is just this, perhaps there is nothing more\nbeyond things that are visible\n \nand things that are hidden\n</pre>\n"
+}

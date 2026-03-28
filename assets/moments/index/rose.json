@@ -1,0 +1,15 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-ba54135d36c57997e2d6b5abc5493037",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "rose"
+  },
+  "moment": {
+    "moment_id": "rose",
+    "title": "rose",
+    "date": "2019-02-19",
+    "images": []
+  },
+  "content_html": "<pre class=\"moment-text\">\nalive\nbreathing\nit knows nothing\nonly water and sun\nand so much more…\nin its teardrop-glass home\ni see you wrapped in warmth\na soul of rose perfume\nlight flowing petals\nsilky kisses\njoyfully\nlove\n</pre>\n"
+}

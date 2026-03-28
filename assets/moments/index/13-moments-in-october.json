@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-0419e118105bc65bdacc0b0609ef3225",
+    "generated_at_utc": "2026-03-28T15:24:24Z",
+    "moment_id": "13-moments-in-october"
+  },
+  "moment": {
+    "moment_id": "13-moments-in-october",
+    "title": "13 moments in October",
+    "date": "2024-10-23",
+    "images": [
+      {
+        "file": "13-moments-in-october.jpg",
+        "alt": "13 moments in October"
+      }
+    ],
+    "width_px": 1430,
+    "height_px": 1430
+  },
+  "content_html": "<pre class=\"moment-text\">\nwe should be sleeping\nallow the winter to heal\nbut instead we see everything falling apart in clear sight\n \nthere is an internal swell\nwhen everything on the outside is turning cold\nshivers\n \nalways fighting doubt until the light goes out\n</pre>\n"
+}
