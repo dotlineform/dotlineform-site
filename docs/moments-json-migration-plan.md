@@ -20,12 +20,19 @@ This document defines the phased migration from the current include-based moment
 
 ## Status
 
-- Overall status: `phase 1, phase 2, and phase 4 completed; phase 3 and phase 5 not started`
+- Overall status: `completed`
 - Phase 1: `completed`
 - Phase 2: `completed`
-- Phase 3: `not started`
+- Phase 3: `completed`
 - Phase 4: `completed`
-- Phase 5: `not started`
+- Phase 5: `completed`
+
+This document is now a historical migration record. The active end-state is:
+
+- `_moments/<moment_id>.md` is a minimal stub with `moment_id`, `title`, `layout`, and `checksum`
+- `assets/moments/index/<moment_id>.json` is the canonical runtime source for moment metadata and rendered prose
+- the moment layout always renders from JSON at runtime and shows `problem loading content` on fetch failure
+- the generator uses a single `moments` artifact; there is no separate `moment-json` generation mode
 
 ## Working Decisions
 
@@ -263,7 +270,7 @@ Status: `completed`
 
 ## Phase 3: Convert Moment Pages To Stubs
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -298,6 +305,17 @@ Status: `not started`
 
 - If the stub removes too much too early, the fallback path becomes weak during rollout.
 - JSON mode will depend on runtime fetch success because the stub intentionally carries no prose content.
+
+### Done
+
+- 2026-03-28: Updated `generate_work_pages.py` so generated `_moments/<moment_id>.md` files are front-matter-only stubs.
+- 2026-03-28: Removed the `moments_prose/<moment_id>.md` include from generated moment page bodies.
+- 2026-03-28: Kept source-prose validation and temporary `_includes/moments_prose` mirroring in place pending Phase 5 retirement.
+
+### Verification
+
+- Dry-run and write-mode scoped generation for representative moments.
+- Diff review confirmed generated moment pages no longer contain prose includes or fallback body content.
 
 ## Phase 4: Switch Default To JSON Mode
 
@@ -346,7 +364,7 @@ Status: `completed`
 
 ## Phase 5: Retire Legacy Moment Prose Includes
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -359,6 +377,22 @@ Status: `not started`
 - `scripts/generate_work_pages.py` no longer mirrors prose into `_includes/moments_prose`.
 - `_layouts/moment.html` no longer contains the legacy content path.
 - Docs updated so JSON is the only documented runtime source.
+
+### Done
+
+- 2026-03-28: Removed moment prose mirroring from `generate_work_pages.py`.
+- 2026-03-28: Removed the legacy runtime branch and moment feature-flag usage from `_layouts/moment.html` and `assets/js/moment.js`.
+- 2026-03-28: Reduced generated `_moments/<moment_id>.md` stubs to `moment_id`, `title`, `layout`, and `checksum`.
+- 2026-03-28: Moved fallback date/image metadata out of stubs so JSON is the single canonical source for moment metadata beyond `title`.
+- 2026-03-28: Retired the separate `moment-json` `--only` mode; `moments` now generates both stubs and per-moment JSON together.
+
+### Verification
+
+- `python3 -m py_compile scripts/generate_work_pages.py`
+- `node --check assets/js/moment.js`
+- `bundle exec jekyll build --quiet`
+- scoped dry-run and write-mode generation for representative moments
+- diff review confirming `_moments/*.md` no longer duplicate date/image metadata
 - Legacy-only code paths removed.
 
 ### Likely Touch Points

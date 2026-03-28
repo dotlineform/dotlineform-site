@@ -5,7 +5,6 @@ layout: default
 {% assign media_base = site.media_base | default: "" %}
 {% assign media_image_moments = site.media_image_moments | default: "/moments/img" %}
 {% assign pipeline = site.data.pipeline %}
-{% assign moment_runtime_source = pipeline.features.moments_runtime_source | default: "legacy" %}
 {% assign primary_variants = pipeline.variants.primary %}
 {% assign compatibility_variants = pipeline.variants.compatibility %}
 {% assign primary_render_widths = compatibility_variants.render_widths | default: primary_variants.widths %}
@@ -21,12 +20,7 @@ layout: default
 {%- capture fallback_moment_json -%}
 {
   "moment_id": {{ moment_id | jsonify }},
-  "title": {{ page.title | jsonify }},
-  "date": {{ page.date | jsonify }},
-  "date_display": {{ page.date_display | jsonify }},
-  "images": {{ page.images | jsonify }},
-  "width_px": {{ page.width_px | jsonify }},
-  "height_px": {{ page.height_px | jsonify }}
+  "title": {{ page.title | jsonify }}
 }
 {%- endcapture -%}
 
@@ -35,7 +29,6 @@ layout: default
   id="momentPageRoot"
   data-baseurl="{{ site.baseurl | default: '' }}"
   data-moment-id="{{ moment_id | escape }}"
-  data-runtime-source="{{ moment_runtime_source | escape }}"
   data-img-base="{{ img_base_out | escape }}"
   data-primary-render-widths="{{ primary_render_widths | jsonify | escape }}"
   data-primary-display-width="{{ primary_display_width | escape }}"
@@ -46,64 +39,18 @@ layout: default
   <header class="page__header moment-header">
     <h1 class="page__title" id="momentTitleText">{{ page.title }}</h1>
 
-    <p class="page__meta muted small" id="momentDateText"{% if page.date_display == blank and page.date == blank %} hidden{% endif %}>
-      {% if page.date_display %}
-        {{ page.date_display }}
-      {% elsif page.date %}
-        {{ page.date | date: "%-d %b %Y" }}
-      {% endif %}
-    </p>
+    <p class="page__meta muted small" id="momentDateText" hidden></p>
   </header>
 
-  <!-- render the first image at the top of the page -->
-  {% assign hero = nil %}
-  {% if page.images and page.images.size > 0 %}
-    {% assign hero = page.images[0] %}
-  {% endif %}
-  <figure class="page__media moment-hero" id="momentHero"{% unless hero %} hidden{% endunless %}>
-    {% if hero %}
-    {% assign img_src = hero.file %}
-    {% unless img_src contains '://' %}
-      {% assign img_file = img_src | remove_first: '/' %}
-      {% assign img_stem = moment_id | default: img_file | split: '.' | first %}
-      {% assign img_src = img_base | append: img_stem | append: "-" | append: primary_suffix | append: "-" | append: primary_display_width | append: "." | append: asset_format %}
-      {% unless img_base contains '://' %}
-        {% assign img_src = img_src | relative_url %}
-      {% endunless %}
-      {%- capture moment_srcset -%}
-        {%- for width in primary_render_widths -%}
-          {%- assign moment_variant_src = img_base | append: img_stem | append: "-" | append: primary_suffix | append: "-" | append: width | append: "." | append: asset_format -%}
-          {%- unless img_base contains '://' -%}
-            {%- assign moment_variant_src = moment_variant_src | relative_url -%}
-          {%- endunless -%}
-          {{ moment_variant_src }} {{ width }}w{%- unless forloop.last -%}, {% endunless -%}
-        {%- endfor -%}
-      {%- endcapture -%}
-    {% endunless %}
-    {% else %}
-      {% assign img_src = "" %}
-      {% assign moment_srcset = "" %}
-    {% endif %}
-
-    <img class="page__mediaImg" id="momentHeroImg"{% if hero %} src="{{ img_src }}"{% endif %}
-         {% if hero and hero.file and hero.file contains '://' %}
-         {% else %}
-         srcset="{{ moment_srcset | strip }}"
-         sizes="(max-width: 800px) 100vw, 72ch"
-         {% endif %}
-         width="{{ page.width_px | default: hero.width_px | default: 1600 }}"
-         height="{{ page.height_px | default: hero.height_px | default: 1200 }}"
-         alt="{{ hero.alt | default: page.title | escape }}"
+  <figure class="page__media moment-hero" id="momentHero" hidden>
+    <img class="page__mediaImg" id="momentHeroImg"
+         width="1600"
+         height="1200"
+         alt="{{ page.title | escape }}"
          loading="eager" fetchpriority="high" decoding="async">
-    <figcaption id="momentHeroCaption"{% unless hero and hero.caption %} hidden{% endunless %}>
-      {% if hero and hero.caption %}{{ hero.caption }}{% endif %}
-    </figcaption>
+    <figcaption id="momentHeroCaption" hidden></figcaption>
   </figure>
 
-  <div class="content moment-body" id="momentBody">
-    {% if moment_runtime_source == "legacy" %}
-      {{ content }}
-    {% endif %}
-  </div>
+  <div class="content moment-body" id="momentBody"></div>
 </article>
 <script src="{{ '/assets/js/moment.js' | relative_url }}"></script>

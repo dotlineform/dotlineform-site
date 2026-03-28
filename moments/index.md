@@ -34,10 +34,7 @@ permalink: /moments/
   {
     "moment_id": {{ moment_id | jsonify }},
     "title": {{ moment.title | default: moment.slug | jsonify }},
-    "year": {{ year_number | jsonify }},
-    "year_display": {{ moment.date_display | default: year_text | jsonify }},
-    "url": {{ moment.url | relative_url | jsonify }},
-    "thumb_id": {% if moment.images and moment.images.size > 0 %}{{ moment_id | jsonify }}{% else %}null{% endif %}
+    "url": {{ moment.url | relative_url | jsonify }}
   }
   {%- assign first_moment = false -%}
 {%- endfor -%}
@@ -45,7 +42,7 @@ permalink: /moments/
 {%- endcapture -%}
 
 <h1 class="index__heading visually-hidden">moments</h1>
-<div id="momentsIndexRoot" data-moments-thumb-base="{{ moments_thumb_base_out | escape }}" data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}" data-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" hidden>
+<div id="momentsIndexRoot" data-baseurl="{{ site.baseurl | default: '' }}" data-moments-thumb-base="{{ moments_thumb_base_out | escape }}" data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}" data-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" hidden>
   <div class="seriesIndex__toolbar" aria-label="Moments view and sorting">
     <div class="seriesIndex__viewControls" role="group" aria-label="Moments view">
       <button
@@ -124,6 +121,7 @@ permalink: /moments/
     var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="moments-index-sort-btn"]'));
     if (!viewButtons.length || !sortButtons.length) return;
 
+    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
     var momentsThumbBase = String(root.getAttribute('data-moments-thumb-base') || '');
     var thumbSizes = [];
     try {
@@ -161,6 +159,46 @@ permalink: /moments/
       var mid = String(momentId || '').trim();
       if (!mid) return '';
       return String(momentsThumbBase || '') + mid + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
+    }
+
+    function fetchJson(url) {
+      return fetch(url, { cache: 'default' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.json();
+        });
+    }
+
+    function parseYearNumber(rawDate, displayText) {
+      var dateText = String(rawDate || '').trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateText)) return Number(dateText.slice(0, 4));
+      var display = String(displayText || '').trim();
+      var match = display.match(/(\d{4})/);
+      return match ? Number(match[1]) : null;
+    }
+
+    function hydrateMomentItem(item) {
+      var momentId = String((item && item.moment_id) || '').trim();
+      if (!momentId) return Promise.resolve(item);
+      return fetchJson(baseurl + '/assets/moments/index/' + encodeURIComponent(momentId) + '.json')
+        .then(function (payload) {
+          var moment = payload && payload.moment && typeof payload.moment === 'object' ? payload.moment : null;
+          if (!moment) return item;
+          var images = Array.isArray(moment.images) ? moment.images : [];
+          var dateDisplay = String(moment.date_display || '').trim();
+          var year = parseYearNumber(moment.date, dateDisplay);
+          return {
+            moment_id: momentId,
+            title: String(moment.title || item.title || momentId),
+            year: Number.isFinite(year) ? year : null,
+            year_display: dateDisplay || (Number.isFinite(year) ? String(year) : null),
+            url: item.url,
+            thumb_id: images.length ? momentId : null
+          };
+        })
+        .catch(function () {
+          return item;
+        });
     }
 
     function normalizeView(value) {
@@ -459,10 +497,18 @@ permalink: /moments/
       return;
     }
 
-    root.hidden = false;
-    empty.hidden = true;
-    updateSortUi();
-    updateViewUi();
-    renderCurrentView();
+    Promise.all(momentsItems.map(hydrateMomentItem))
+      .then(function (hydratedItems) {
+        momentsItems = hydratedItems;
+      })
+      .catch(function () {
+      })
+      .finally(function () {
+        root.hidden = false;
+        empty.hidden = true;
+        updateSortUi();
+        updateViewUi();
+        renderCurrentView();
+      });
   })();
 </script>

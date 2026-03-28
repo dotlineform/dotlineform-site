@@ -133,7 +133,7 @@ Common scoped runs:
 ./scripts/generate_work_pages.py --work-ids 00456 --write
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
 ./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
-./scripts/generate_work_pages.py --only moment-json --moment-ids blue-sky --write
+./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
 ```
 
 Useful flags:
@@ -147,18 +147,12 @@ Useful flags:
 - `--work-links-sheet` (default `WorkLinks`)
 - `--moments-sheet` (default `Moments`)
 - `--moments-output-dir` (default `_moments`)
-- `--moments-prose-dir` (default `_includes/moments_prose`)
-  - generated include mirror for canonical moment prose files stored at `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
-  - on `--write`, the generator copies canonical prose into this include directory
-  - if a canonical prose file is missing, the generator warns and skips that moment
 - `--moments-json-dir` (default `assets/moments/index`)
   - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
   - renders canonical moment prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md` using the local Jekyll markdown stack
-  - generated in parallel with legacy moment pages during the Phase 1 migration
-  - runtime page selection is controlled by `_data/pipeline.json` `features.moments_runtime_source`
-    - current default: `json`
-    - `legacy`: server-rendered moment prose path retained temporarily for rollback
-    - `json`: fetches per-moment JSON at runtime and shows `problem loading content` if fetch fails
+  - generated together with `_moments/<moment_id>.md` when `moments` is selected
+  - JSON is now the canonical source for moment date/image/prose content at runtime
+  - generated `_moments/<moment_id>.md` files are minimal stubs with `moment_id`, `title`, `layout`, and `checksum`
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
   - used for work primary images as well as work detail, work file, and moment source files
@@ -169,13 +163,15 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moment-json`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
-  - `moment-json`: writes `assets/moments/index/<moment_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `moment_id`), public `moment` metadata, and rendered `content_html`
+  - `moments`: writes both `_moments/<moment_id>.md` stubs and `assets/moments/index/<moment_id>.json`
+    - stub front matter keeps only `moment_id`, `title`, `layout`, and a checksum derived from canonical moment metadata
+    - JSON stores the canonical moment metadata (`title`, `date`, `date_display`, `images`, `width_px`, `height_px`) plus rendered `content_html`
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`

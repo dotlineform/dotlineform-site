@@ -2,9 +2,6 @@
   var root = document.getElementById('momentPageRoot');
   if (!root) return;
 
-  var runtimeSource = String(root.getAttribute('data-runtime-source') || 'legacy').trim().toLowerCase();
-  if (runtimeSource !== 'json') return;
-
   var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
   var momentId = String(root.getAttribute('data-moment-id') || '').trim();
   if (!momentId) return;
@@ -37,13 +34,6 @@
 
   function text(value) {
     return String(value == null ? '' : value).trim();
-  }
-
-  function escHtml(value) {
-    return String(value == null ? '' : value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
   }
 
   function parseDateValue(raw) {

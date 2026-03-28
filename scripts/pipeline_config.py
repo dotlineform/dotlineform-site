@@ -20,9 +20,6 @@ DEFAULT_PIPELINE_CONFIG: Dict[str, Any] = {
         "srcset_selected_ids_file": "MAKE_SRCSET_WORK_IDS_FILE",
         "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE",
     },
-    "features": {
-        "moments_runtime_source": "json",
-    },
     "paths": {
         "source_roots": {
             "works": "projects",
