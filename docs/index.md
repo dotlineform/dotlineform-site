@@ -1,6 +1,7 @@
 ---
 title: Docs
 permalink: /docs/
+section: studio-docs
 ---
 
 <section
@@ -11,9 +12,6 @@ permalink: /docs/
 >
   <aside class="docsViewer__sidebar" aria-label="Docs index">
     <div class="docsViewer__sidebarInner">
-      <p class="kicker docsViewer__kicker">Docs</p>
-      <h1 class="docsViewer__sidebarTitle">Document Index</h1>
-      <p class="docsViewer__sidebarNote muted small" id="docsViewerSidebarMeta">Loading index...</p>
       <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
     </div>
   </aside>

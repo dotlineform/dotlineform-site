@@ -3,7 +3,6 @@
   if (!root) return;
 
   var nav = document.getElementById("docsViewerNav");
-  var sidebarMeta = document.getElementById("docsViewerSidebarMeta");
   var status = document.getElementById("docsViewerStatus");
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
@@ -20,6 +19,7 @@
     childrenByParent: new Map(),
     payloadCache: new Map(),
     selectedDocId: "",
+    expandedDocIds: new Set(),
     requestId: 0
   };
 
@@ -93,14 +93,20 @@
     return trail;
   }
 
+  function expandTrail(docId) {
+    buildTrail(docId).forEach(function (doc) {
+      if ((state.childrenByParent.get(doc.doc_id) || []).length > 0) {
+        state.expandedDocIds.add(doc.doc_id);
+      }
+    });
+  }
+
   function renderSidebar() {
     nav.textContent = "";
     if (state.docs.length === 0) {
-      sidebarMeta.textContent = "No docs available.";
       return;
     }
 
-    sidebarMeta.textContent = state.docs.length + (state.docs.length === 1 ? " doc" : " docs");
     nav.appendChild(renderNavList(""));
   }
 
@@ -112,6 +118,27 @@
     docs.forEach(function (doc) {
       var item = document.createElement("li");
       item.className = "docsViewer__navItem";
+      var row = document.createElement("div");
+      row.className = "docsViewer__navRow";
+      var children = state.childrenByParent.get(doc.doc_id) || [];
+      var hasChildren = children.length > 0;
+
+      if (hasChildren) {
+        var toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "docsViewer__toggle";
+        toggle.dataset.toggleDocId = doc.doc_id;
+        toggle.setAttribute("aria-expanded", state.expandedDocIds.has(doc.doc_id) ? "true" : "false");
+        toggle.setAttribute("aria-label", state.expandedDocIds.has(doc.doc_id) ? "Collapse section" : "Expand section");
+        toggle.textContent = state.expandedDocIds.has(doc.doc_id) ? "▼" : "►";
+        row.appendChild(toggle);
+      } else {
+        var spacer = document.createElement("span");
+        spacer.className = "docsViewer__toggleSpacer";
+        spacer.setAttribute("aria-hidden", "true");
+        spacer.textContent = "";
+        row.appendChild(spacer);
+      }
 
       var link = document.createElement("a");
       link.className = "docsViewer__navLink";
@@ -122,10 +149,10 @@
       link.href = viewerUrl(doc.doc_id);
       link.dataset.docId = doc.doc_id;
       link.textContent = doc.title;
-      item.appendChild(link);
+      row.appendChild(link);
+      item.appendChild(row);
 
-      var children = state.childrenByParent.get(doc.doc_id) || [];
-      if (children.length > 0) {
+      if (hasChildren && state.expandedDocIds.has(doc.doc_id)) {
         item.appendChild(renderNavList(doc.doc_id));
       }
 
@@ -228,11 +255,13 @@
     setHistory(docId, hash, mode);
 
     if (state.payloadCache.has(docId)) {
+      expandTrail(docId);
       renderPayload(doc, state.payloadCache.get(docId), hash);
       return;
     }
 
     state.selectedDocId = docId;
+    expandTrail(docId);
     renderSidebar();
     renderMeta(doc);
     setStatus("Loading " + doc.title + "...", false);
@@ -277,6 +306,18 @@
 
   function bindLinkInterception() {
     root.addEventListener("click", function (event) {
+      var toggle = event.target.closest("[data-toggle-doc-id]");
+      if (toggle) {
+        var toggleDocId = toggle.dataset.toggleDocId;
+        if (state.expandedDocIds.has(toggleDocId)) {
+          state.expandedDocIds.delete(toggleDocId);
+        } else {
+          state.expandedDocIds.add(toggleDocId);
+        }
+        renderSidebar();
+        return;
+      }
+
       var anchor = event.target.closest("a[href]");
       if (!anchor) return;
 
@@ -314,6 +355,7 @@
       return;
     }
 
+    expandTrail(initialDocId);
     loadDoc(initialDocId, { historyMode: "replace", hash: getCurrentHash() });
   }
 
@@ -331,7 +373,6 @@
       })
       .catch(function (error) {
         setStatus(error.message || "Failed to load docs index.", true);
-        sidebarMeta.textContent = "Index unavailable";
         content.textContent = "";
       });
   }

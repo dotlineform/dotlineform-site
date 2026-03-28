@@ -343,21 +343,7 @@ th{ background: var(--panel-2); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--panel);
-  padding: var(--space-4);
-}
-
-.docsViewer__kicker{
-  margin: 0 0 var(--space-1);
-}
-
-.docsViewer__sidebarTitle{
-  margin: 0 0 var(--space-2);
-  font-size: var(--font-heading-2);
-  line-height: 1.2;
-}
-
-.docsViewer__sidebarNote{
-  margin: 0 0 var(--space-3);
+  padding: var(--space-3);
 }
 
 .docsViewer__nav{
@@ -377,6 +363,41 @@ th{ background: var(--panel-2); }
 
 .docsViewer__navItem{
   margin: 0 0 0.32rem;
+}
+
+.docsViewer__navRow{
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.docsViewer__toggle,
+.docsViewer__toggleSpacer{
+  width: 1.4rem;
+  min-width: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-small);
+  line-height: 1;
+}
+
+.docsViewer__toggle{
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.docsViewer__toggle:hover{
+  color: var(--link-hover);
+}
+
+.docsViewer__toggle:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
 }
 
 .docsViewer__navLink{

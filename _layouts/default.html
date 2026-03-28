@@ -41,7 +41,7 @@
         {% assign u_moments = u | slice: 0, 9 %}
         {% assign u_studio_docs = u | slice: 0, 13 %}
         {%- assign is_studio_context = false -%}
-        {%- if page.layout == 'studio' or u_studio_docs == '/docs/studio/' -%}
+        {%- if page.layout == 'studio' or page.section == 'studio-docs' or u_studio_docs == '/docs/studio/' or u == '/docs/' -%}
           {%- assign is_studio_context = true -%}
         {%- endif -%}
 
