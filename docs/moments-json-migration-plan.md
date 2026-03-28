@@ -20,8 +20,8 @@ This document defines the phased migration from the current include-based moment
 
 ## Status
 
-- Overall status: `planned`
-- Phase 1: `not started`
+- Overall status: `phase 1 implemented; later phases pending`
+- Phase 1: `completed`
 - Phase 2: `not started`
 - Phase 3: `not started`
 - Phase 4: `not started`
@@ -122,7 +122,7 @@ Behavior:
 
 ## Phase 1: Add JSON Generation In Parallel
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -162,6 +162,34 @@ Status: `not started`
 ### Main Risk
 
 - Markdown-to-HTML output may drift from the site if the renderer is not tightly aligned with Jekyll.
+
+### Done
+
+- 2026-03-28: Added tracked feature flag `features.moments_runtime_source` with default `legacy`.
+- 2026-03-28: Added Jekyll-backed markdown renderer helper at `scripts/render_markdown_with_jekyll.rb`.
+- 2026-03-28: Added `moment-json` as a separate `generate_work_pages.py --only` artifact.
+- 2026-03-28: Added `--moments-json-dir` with default `assets/moments/index`.
+- 2026-03-28: Added per-moment JSON generation at `assets/moments/index/<moment_id>.json`.
+- 2026-03-28: Kept the legacy moment page and `_includes/moments_prose` flow intact in parallel.
+- 2026-03-28: Updated scripts docs to describe the new JSON artifact and output path.
+
+### Verification
+
+- 2026-03-28: Ran Python syntax checks with the configured interpreter via `python3 -m py_compile` for:
+  - `scripts/pipeline_config.py`
+  - `scripts/generate_work_pages.py`
+- 2026-03-28: Ran Ruby syntax check for:
+  - `scripts/render_markdown_with_jekyll.rb`
+- 2026-03-28: Ran the renderer helper directly against `moments/blue-sky.md` and confirmed it emitted the expected HTML without Jekyll config chatter.
+- 2026-03-28: Ran dry-run moment JSON generation:
+  - `./scripts/generate_work_pages.py --only moment-json --moment-ids blue-sky`
+- 2026-03-28: Ran scoped write-mode verification to a temporary output directory:
+  - `./scripts/generate_work_pages.py --only moment-json --moment-ids blue-sky --force --moments-json-dir /tmp/... --write`
+- 2026-03-28: Confirmed the generated sample JSON included:
+  - `header.schema = moment_record_v1`
+  - deterministic `version`
+  - public `moment` metadata
+  - rendered `content_html`
 
 ## Phase 2: Add Dual-Path Runtime Rendering
 

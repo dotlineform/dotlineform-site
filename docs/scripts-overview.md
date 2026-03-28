@@ -133,6 +133,7 @@ Common scoped runs:
 ./scripts/generate_work_pages.py --work-ids 00456 --write
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
 ./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
+./scripts/generate_work_pages.py --only moment-json --moment-ids blue-sky --write
 ```
 
 Useful flags:
@@ -150,6 +151,10 @@ Useful flags:
   - generated include mirror for canonical moment prose files stored at `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
   - on `--write`, the generator copies canonical prose into this include directory
   - if a canonical prose file is missing, the generator warns and skips that moment
+- `--moments-json-dir` (default `assets/moments/index`)
+  - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
+  - renders canonical moment prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md` using the local Jekyll markdown stack
+  - generated in parallel with legacy moment pages during the Phase 1 migration
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
   - used for work primary images as well as work detail, work file, and moment source files
@@ -160,12 +165,13 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moment-json`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
+  - `moment-json`: writes `assets/moments/index/<moment_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `moment_id`), public `moment` metadata, and rendered `content_html`
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`

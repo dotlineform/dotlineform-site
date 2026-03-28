@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate Jekyll work/moment pages from an Excel workbook.
+Generate Jekyll work/moment pages and JSON artifacts from an Excel workbook.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
 file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
@@ -8,6 +8,7 @@ file per work (e.g. `_works/00286.md`) with YAML front matter populated from the
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
+Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -47,6 +48,7 @@ Common flags:
 - --moment-ids / --moment-ids-file: limit moments generation scope
 - --moments-sheet: worksheet name for moments (default: Moments)
 - --moments-output-dir / --moments-prose-dir: moment page/prose destinations
+- --moments-json-dir: moment JSON output destination
 - --projects-base-dir: base path used for dimension lookups and WorkFiles source lookup
 - --media-base-dir: base path used for staging work download files into works/files
 
@@ -583,6 +585,28 @@ def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     return s or None
 
 
+def render_markdown_with_jekyll(markdown_path: Path) -> str:
+    """Render a markdown file to HTML using the repo's local Jekyll stack."""
+    renderer_script = Path(__file__).resolve().with_name("render_markdown_with_jekyll.rb")
+    if not renderer_script.exists():
+        raise SystemExit(f"Markdown renderer helper not found: {renderer_script}")
+
+    bundle_path = shutil.which("bundle")
+    if bundle_path is None:
+        raise SystemExit("Bundler not found in PATH; ensure the local Jekyll toolchain is available before generating moment JSON.")
+
+    proc = subprocess.run(
+        [bundle_path, "exec", "ruby", str(renderer_script), str(markdown_path.resolve())],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout).strip()
+        raise SystemExit(f"Failed to render markdown with Jekyll: {markdown_path}\n{detail}")
+    return proc.stdout
+
+
 def parse_sips_pixel_dims(output: str) -> tuple[Optional[int], Optional[int]]:
     width = None
     height = None
@@ -691,6 +715,7 @@ def main() -> None:
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-prose-dir", default="_includes/moments_prose", help="Folder for generated moment prose includes")
+    ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
@@ -744,7 +769,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments."
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moment-json."
         ),
     )
     args = ap.parse_args()
@@ -767,6 +792,7 @@ def main() -> None:
         "work-json",
         "works-index-json",
         "moments",
+        "moment-json",
     }
     selected_artifacts: Optional[set[str]] = None
     if args.only:
@@ -800,9 +826,10 @@ def main() -> None:
     run_work_json = artifact_enabled("work-json")
     run_works_index_json = artifact_enabled("works-index-json")
     run_moments_artifact = artifact_enabled("moments")
+    run_moment_json_artifact = artifact_enabled("moment-json")
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
-    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
+    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact or run_moment_json_artifact
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -935,6 +962,8 @@ def main() -> None:
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_prose_dir = Path(args.moments_prose_dir).expanduser()
     moments_prose_dir.mkdir(parents=True, exist_ok=True)
+    moments_json_dir = Path(args.moments_json_dir).expanduser()
+    moments_json_dir.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
     media_base_dir = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) != "" else None
@@ -1311,6 +1340,12 @@ def main() -> None:
         public_record.pop("checksum", None)
         return compact_json_object(public_record)
 
+    def build_moment_json_record(moment_record: Dict[str, Any]) -> Dict[str, Any]:
+        public_record = dict(moment_record)
+        public_record.pop("layout", None)
+        public_record.pop("checksum", None)
+        return compact_json_object(public_record)
+
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         section_index: Dict[str, int] = {}
         sections: List[Dict[str, Any]] = []
@@ -1419,12 +1454,14 @@ def main() -> None:
     # If caller scopes by work/series and does not provide an explicit moments filter,
     # skip moments generation by default (unless moments was explicitly selected via --only).
     run_moments = run_moments_artifact
+    run_moment_json = run_moment_json_artifact
     if (
         selected_artifacts is None
         and (explicit_work_filter or selected_series_ids is not None)
         and not explicit_moment_filter
     ):
         run_moments = False
+        run_moment_json = False
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
@@ -2432,7 +2469,7 @@ def main() -> None:
         print("Works index JSON skipped: not selected by --only.")
 
     # ----------------------------
-    # Moment page generation (Moments)
+    # Moment page + JSON generation (Moments)
     # ----------------------------
     # Required columns:
     # - moment_id, title, status, published_date, date, date_display,
@@ -2444,13 +2481,13 @@ def main() -> None:
     # - image_alt
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
-    if not run_moments:
-        if selected_artifacts is not None and not run_moments_artifact:
-            print("Moment pages skipped: not selected by --only.")
+    if not run_moments and not run_moment_json:
+        if selected_artifacts is not None and not run_moments_artifact and not run_moment_json_artifact:
+            print("Moment pages/JSON skipped: not selected by --only.")
         else:
-            print("Moment pages skipped: scoped run without --moment-ids/--moment-ids-file.")
+            print("Moment pages/JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
     elif not moments_rows or len(moments_rows) < 2 or moments_ws is None:
-        print("No moment pages to generate (Moments sheet empty or missing).")
+        print("No moment artifacts to generate (Moments sheet empty or missing).")
     else:
         required_moments = [
             "moment_id",
@@ -2480,7 +2517,7 @@ def main() -> None:
         moments_published_date_idx = moments_hi.get("published_date")
         moments_width_px_idx = moments_hi.get("width_px")
         moments_height_px_idx = moments_hi.get("height_px")
-        if args.write:
+        if args.write and run_moments:
             if moments_width_px_idx is None:
                 moments_width_px_idx = moments_ws.max_column
                 moments_ws.cell(row=1, column=moments_width_px_idx + 1, value="width_px")
@@ -2501,7 +2538,11 @@ def main() -> None:
                 return True
             return False
 
-        moments_total = 0
+        def is_jsonable_moment_status(status_value: str) -> bool:
+            return status_value in {"draft", "published"}
+
+        moments_pages_total = 0
+        moments_json_total = 0
         for mr in moments_rows[1:]:
             mid_raw = cell(mr, moments_hi, "moment_id")
             if is_empty(mid_raw):
@@ -2510,33 +2551,45 @@ def main() -> None:
             if selected_moment_ids is not None and mid not in selected_moment_ids:
                 continue
             status = normalize_status(cell(mr, moments_hi, "status"))
-            if is_actionable_moment_status(status):
-                moments_total += 1
+            if run_moments and is_actionable_moment_status(status):
+                moments_pages_total += 1
+            if run_moment_json and is_jsonable_moment_status(status):
+                moments_json_total += 1
 
-        moments_written = 0
-        moments_skipped = 0
+        moments_pages_written = 0
+        moments_pages_skipped = 0
+        moments_json_written = 0
+        moments_json_skipped = 0
         moments_status_updated = 0
         moments_published_date_updated = 0
         moments_dimensions_updated = 0
         moments_published_date_missing_warned = False
-        moments_processed = 0
+        moment_json_generated_at_utc = utc_timestamp_now()
 
         for mr, mr_cells in zip(moments_rows[1:], moments_ws.iter_rows(min_row=2), strict=False):
             mid_raw = cell(mr, moments_hi, "moment_id")
             if is_empty(mid_raw):
-                moments_skipped += 1
+                if run_moments:
+                    moments_pages_skipped += 1
+                if run_moment_json:
+                    moments_json_skipped += 1
                 continue
             mid = normalize_text(mid_raw).lower()
             if selected_moment_ids is not None and mid not in selected_moment_ids:
-                moments_skipped += 1
+                if run_moments:
+                    moments_pages_skipped += 1
+                if run_moment_json:
+                    moments_json_skipped += 1
                 continue
             status = normalize_status(cell(mr, moments_hi, "status"))
-            if not is_actionable_moment_status(status):
-                moments_skipped += 1
+            page_actionable = run_moments and is_actionable_moment_status(status)
+            json_actionable = run_moment_json and is_jsonable_moment_status(status)
+            if not page_actionable and run_moments:
+                moments_pages_skipped += 1
+            if not json_actionable and run_moment_json:
+                moments_json_skipped += 1
+            if not page_actionable and not json_actionable:
                 continue
-
-            moments_processed += 1
-            prefix_m = f"[moments {moments_processed}/{moments_total}] "
 
             title = coerce_string(cell(mr, moments_hi, title_col)) if title_col else None
             moment_id_raw = coerce_string(cell(mr, moments_hi, moment_id_col)) if moment_id_col else None
@@ -2548,9 +2601,13 @@ def main() -> None:
                 raise SystemExit("Moments.moment_id is required")
 
             if not moment_id:
-                print(f"{prefix_m}SKIP: missing slug/id and title")
-                moments_skipped += 1
+                if page_actionable:
+                    moments_pages_skipped += 1
+                if json_actionable:
+                    moments_json_skipped += 1
                 continue
+
+            prefix_m = f"[moment {moment_id}] "
 
             date_value = parse_date(cell(mr, moments_hi, date_col)) if date_col else None
             date_display = coerce_string(cell(mr, moments_hi, date_display_col)) if date_display_col else None
@@ -2575,7 +2632,7 @@ def main() -> None:
                 if src_w is not None and src_h is not None:
                     width_px = src_w
                     height_px = src_h
-                    if args.write and moments_width_px_idx is not None and moments_height_px_idx is not None:
+                    if args.write and page_actionable and moments_width_px_idx is not None and moments_height_px_idx is not None:
                         prev_w = mr_cells[moments_width_px_idx].value if moments_width_px_idx < len(mr_cells) else None
                         prev_h = mr_cells[moments_height_px_idx].value if moments_height_px_idx < len(mr_cells) else None
                         if prev_w != src_w or prev_h != src_h:
@@ -2612,50 +2669,88 @@ def main() -> None:
             source_prose_path = moments_root / f"{moment_id}.md"
             prose_path = moments_prose_dir / f"{moment_id}.md"
             if not source_prose_path.exists():
-                print(f"{prefix_m}WARNING: missing source prose {source_prose_path}; skipping moment.")
-                moments_skipped += 1
+                outputs = []
+                if page_actionable:
+                    outputs.append("moment page")
+                if json_actionable:
+                    outputs.append("moment JSON")
+                print(f"{prefix_m}WARNING: missing source prose {source_prose_path}; skipping {' and '.join(outputs)}.")
+                if page_actionable:
+                    moments_pages_skipped += 1
+                if json_actionable:
+                    moments_json_skipped += 1
                 continue
 
             source_prose_content = source_prose_path.read_text(encoding="utf-8")
-            existing_prose_content = prose_path.read_text(encoding="utf-8") if prose_path.exists() else None
-            prose_needs_sync = existing_prose_content != source_prose_content
-            if prose_needs_sync:
-                if args.write:
-                    prose_path.write_text(source_prose_content, encoding="utf-8")
-                    print(f"{prefix_m}WRITE prose include: {prose_path}")
+            if page_actionable:
+                existing_prose_content = prose_path.read_text(encoding="utf-8") if prose_path.exists() else None
+                prose_needs_sync = existing_prose_content != source_prose_content
+                if prose_needs_sync:
+                    if args.write:
+                        prose_path.write_text(source_prose_content, encoding="utf-8")
+                        print(f"{prefix_m}WRITE prose include: {prose_path}")
+                    else:
+                        print(f"{prefix_m}DRY-RUN: would sync prose include {prose_path} from {source_prose_path}")
+
+                m_content = build_front_matter(mfm) + "\n" + f"{{% include moments_prose/{moment_id}.md %}}\n"
+                m_path = moments_out_dir / f"{moment_id}.md"
+                m_exists = m_path.exists()
+                existing_checksum = extract_existing_checksum(m_path) if m_exists else None
+
+                if (existing_checksum is not None) and (existing_checksum == m_checksum) and (not args.force):
+                    moments_pages_skipped += 1
                 else:
-                    print(f"{prefix_m}DRY-RUN: would sync prose include {prose_path} from {source_prose_path}")
+                    if args.write:
+                        m_path.write_text(m_content, encoding="utf-8")
+                        print(f"{prefix_m}WRITE: {m_path}")
+                        moments_pages_written += 1
 
-            m_content = build_front_matter(mfm) + "\n" + f"{{% include moments_prose/{moment_id}.md %}}\n"
-            m_path = moments_out_dir / f"{moment_id}.md"
-            m_exists = m_path.exists()
-            existing_checksum = extract_existing_checksum(m_path) if m_exists else None
+                        status_idx = moments_hi.get("status")
+                        if status_idx is not None:
+                            status_was = normalize_status(mr_cells[status_idx].value)
+                            if status_was != "published":
+                                mr_cells[status_idx].value = "published"
+                                moments_status_updated += 1
+                            if (status_was != "published") or args.force:
+                                if moments_published_date_idx is not None:
+                                    mr_cells[moments_published_date_idx].value = today
+                                    moments_published_date_updated += 1
+                                elif not moments_published_date_missing_warned:
+                                    print("Warning: Moments sheet missing published_date column; skipping date updates.")
+                                    moments_published_date_missing_warned = True
+                    else:
+                        print(f"{prefix_m}DRY-RUN: would write {m_path} (overwrite={m_exists})")
+                        moments_pages_written += 1
 
-            if (existing_checksum is not None) and (existing_checksum == m_checksum) and (not args.force):
-                moments_skipped += 1
-                continue
+            if json_actionable:
+                content_html = render_markdown_with_jekyll(source_prose_path)
+                moment_record = build_moment_json_record(mfm)
+                payload_version = compute_payload_version(compact_json_object({"moment": moment_record, "content_html": content_html}))
+                payload = compact_json_object({
+                    "header": {
+                        "schema": "moment_record_v1",
+                        "version": payload_version,
+                        "generated_at_utc": moment_json_generated_at_utc,
+                        "moment_id": moment_id,
+                    },
+                    "moment": moment_record,
+                    "content_html": content_html,
+                })
+                out_json_path = moments_json_dir / f"{moment_id}.json"
+                exists = out_json_path.exists()
+                existing_version = extract_existing_header_scalar(out_json_path, "version") if exists else None
+                payload_version = payload["header"]["version"]
 
-            if args.write:
-                m_path.write_text(m_content, encoding="utf-8")
-                print(f"{prefix_m}WRITE: {m_path}")
-                moments_written += 1
-
-                status_idx = moments_hi.get("status")
-                if status_idx is not None:
-                    status_was = normalize_status(mr_cells[status_idx].value)
-                    if status_was != "published":
-                        mr_cells[status_idx].value = "published"
-                        moments_status_updated += 1
-                    if (status_was != "published") or args.force:
-                        if moments_published_date_idx is not None:
-                            mr_cells[moments_published_date_idx].value = today
-                            moments_published_date_updated += 1
-                        elif not moments_published_date_missing_warned:
-                            print("Warning: Moments sheet missing published_date column; skipping date updates.")
-                            moments_published_date_missing_warned = True
-            else:
-                print(f"{prefix_m}DRY-RUN: would write {m_path} (overwrite={m_exists})")
-                moments_written += 1
+                if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+                    moments_json_skipped += 1
+                else:
+                    if args.write:
+                        out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                        print(f"{prefix_m}WRITE moment JSON: {out_json_path}")
+                        moments_json_written += 1
+                    else:
+                        print(f"{prefix_m}DRY-RUN: would write moment JSON {out_json_path} (overwrite={exists})")
+                        moments_json_written += 1
 
         if args.write and (moments_status_updated > 0 or moments_published_date_updated > 0 or moments_dimensions_updated > 0):
             wb.save(xlsx_path)
@@ -2666,9 +2761,14 @@ def main() -> None:
             if moments_dimensions_updated > 0:
                 print(f"Updated moment width_px/height_px for {moments_dimensions_updated} row(s).")
 
-        print(
-            f"Moment pages done. {'Would write' if not args.write else 'Wrote'}: {moments_written}. Skipped: {moments_skipped}."
-        )
+        if run_moments:
+            print(
+                f"Moment pages done. {'Would write' if not args.write else 'Wrote'}: {moments_pages_written}. Skipped: {moments_pages_skipped}."
+            )
+        if run_moment_json:
+            print(
+                f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
+            )
     log_event(
         "generate_complete",
         {
