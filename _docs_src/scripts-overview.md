@@ -63,6 +63,13 @@ Required front matter contract:
 - `sort_order`
   optional integer for stable ordering inside the index tree
 
+Internal doc links:
+
+- preferred public link format: `/docs/?doc=<doc_id>`
+- optional anchors should use the normal hash suffix: `/docs/?doc=<doc_id>#section-anchor`
+- this is the recommended authoring format because it does not depend on `_docs_src/` folder layout
+- the builder still rewrites legacy `/docs/.../` links and relative `.md` links, but treat that as compatibility behavior rather than the preferred convention
+
 Default command:
 
 ```bash
