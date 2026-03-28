@@ -163,7 +163,8 @@ Useful flags:
   - if `Works.work_prose_file` is empty or the resolved markdown file is missing, the pipeline warns and skips that work
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
-  - used for work primary images, canonical work prose source files, work detail and work file sources, and moment source files
+  - used for canonical work prose source files, work detail and work file sources, moment source files, and series prose source files
+  - work primary image dimension refresh only runs when `work-json` is selected directly or indirectly via `work-pages`
   - when source files are found, `Works.width_px`/`height_px` and detail/moment dimension columns are refreshed on `--write`
 - `--media-base-dir`: base path used for staged media outputs
   - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
@@ -208,6 +209,7 @@ Useful flags:
     - optional empty fields are omitted from JSON rather than written as `null`
     - always rebuilt as a full index and not gated by `--only`
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
+    - rebuilding this index alone does not probe work source images; it uses the current workbook metadata
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, full `sections[].details[]`, and rendered `content_html`
     - `work.series_ids` preserves the full ordered membership list from the workbook

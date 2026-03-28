@@ -1453,7 +1453,9 @@ def main() -> None:
     work_links_status_idx = work_links_hi.get("status")
     work_links_published_date_idx = work_links_hi.get("published_date")
     work_links_published_date_missing_warned = False
-    run_works_loop = run_work_pages or run_work_files or run_work_links or run_works_index_json
+    run_work_processing = run_work_pages or run_work_files or run_work_links
+    run_work_selection_scope = run_work_processing or run_work_json
+    run_work_dimension_refresh = run_work_json
 
     def is_actionable_status(status_value: str) -> bool:
         if status_value == "draft":
@@ -1512,7 +1514,7 @@ def main() -> None:
     # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
     # - otherwise skip work-page processing by default (backward compatible behavior)
     if selected_series_ids is not None and not explicit_work_filter:
-        if selected_artifacts is not None and run_works_loop:
+        if selected_artifacts is not None and run_work_selection_scope:
             selected_ids = set()
             for r in works_rows[1:]:
                 raw_work_id = cell(r, works_hi, "work_id")
@@ -1537,7 +1539,7 @@ def main() -> None:
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
-    if args.write and run_works_loop:
+    if args.write and run_work_dimension_refresh:
         if works_width_px_idx is None:
             works_width_px_idx = works_ws.max_column
             works_ws.cell(row=1, column=works_width_px_idx + 1, value="width_px")
@@ -1549,7 +1551,7 @@ def main() -> None:
 
     work_dimensions_updated = 0
     work_project_folder_missing_warned = False
-    if run_works_loop:
+    if run_work_dimension_refresh:
         for wr, wr_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
             raw_work_id = cell(wr, works_hi, "work_id")
             if is_empty(raw_work_id):
@@ -1609,7 +1611,7 @@ def main() -> None:
             canonical_work_record_by_id[wid] = record
 
     total = 0
-    if run_works_loop:
+    if run_work_processing:
         for r in works_rows[1:]:
             raw_work_id = cell(r, works_hi, "work_id")
             if is_empty(raw_work_id):
@@ -1629,7 +1631,7 @@ def main() -> None:
     today = dt.date.today()
 
     # Iterate each Works row and emit one Markdown file per work.
-    if run_works_loop:
+    if run_work_processing:
         for r, row_cells in zip(works_rows[1:], works_ws.iter_rows(min_row=2), strict=False):
             status = normalize_status(cell(r, works_hi, "status"))
             raw_work_id = cell(r, works_hi, "work_id")
@@ -1776,7 +1778,7 @@ def main() -> None:
                                     print(f"Warning: {args.work_links_sheet} sheet missing published_date column; skipping date updates.")
                                     work_links_published_date_missing_warned = True
 
-    if run_works_loop and args.write and (
+    if args.write and (
         status_updated > 0
         or work_dimensions_updated > 0
         or work_files_status_updated > 0
@@ -1799,7 +1801,7 @@ def main() -> None:
             print(f"Set {args.work_links_sheet} published_date for {work_links_published_date_updated} row(s).")
         if work_dimensions_updated > 0:
             print(f"Updated work width_px/height_px for {work_dimensions_updated} row(s).")
-    if run_works_loop:
+    if run_work_processing:
         print(
             f"\nDone. {'Would write' if not args.write else 'Wrote'}: "
             f"{written} works. Skipped: {skipped} works."
