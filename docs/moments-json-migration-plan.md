@@ -20,9 +20,9 @@ This document defines the phased migration from the current include-based moment
 
 ## Status
 
-- Overall status: `phase 1 implemented; later phases pending`
+- Overall status: `phase 1 and phase 2 implemented; JSON-mode manual verification pending`
 - Phase 1: `completed`
-- Phase 2: `not started`
+- Phase 2: `implemented; manual verification follow-up pending`
 - Phase 3: `not started`
 - Phase 4: `not started`
 - Phase 5: `not started`
@@ -193,7 +193,7 @@ Status: `completed`
 
 ## Phase 2: Add Dual-Path Runtime Rendering
 
-Status: `not started`
+Status: `implemented; manual verification follow-up pending`
 
 ### Needs
 
@@ -237,6 +237,32 @@ Status: `not started`
 ### Main Risk
 
 - Two rendering paths create temporary complexity and increase the chance of drift if both are edited inconsistently.
+
+### Done
+
+- 2026-03-28: Updated `_layouts/moment.html` to support both:
+  - `legacy` server-rendered prose
+  - `json` runtime prose loading behind `features.moments_runtime_source`
+- 2026-03-28: Added moment runtime loader at `assets/js/moment.js`.
+- 2026-03-28: Added runtime metadata hydration for:
+  - title
+  - date/date_display
+  - hero image
+  - body HTML
+- 2026-03-28: Added JSON-mode load-failure behavior that displays `problem loading content`.
+- 2026-03-28: Kept the tracked feature flag default as `legacy` so the new runtime path can be enabled intentionally during testing.
+
+### Verification
+
+- 2026-03-28: Ran JS syntax check for:
+  - `assets/js/moment.js`
+- 2026-03-28: Ran:
+  - `bundle exec jekyll build --quiet`
+- 2026-03-28: Confirmed the site still builds successfully with the default `legacy` runtime mode.
+- Manual follow-up still needed:
+  - switch `features.moments_runtime_source` to `json`
+  - inspect representative moment pages on desktop and mobile
+  - verify the `problem loading content` failure state in-browser
 
 ## Phase 3: Convert Moment Pages To Stubs
 
