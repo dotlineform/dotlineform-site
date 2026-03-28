@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-12e045241b4535c43a75399b281c0eb7",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "body-space",
+    "count": 9
+  },
+  "series": {
+    "series_id": "body-space",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "body space",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2007,
+    "year_display": "2007",
+    "project_folders": [
+      "body space"
+    ],
+    "works": [
+      "00783",
+      "00784",
+      "00785",
+      "00786",
+      "00787",
+      "00788",
+      "00789",
+      "00790",
+      "00791"
+    ],
+    "primary_work_id": "00783"
+  }
+}

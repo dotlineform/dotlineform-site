@@ -2,7 +2,6 @@
 series_id: "forest-memories-1-48"
 title: "forest memories 1-48"
 layout: "series"
-checksum: "e8985341548de97d82e03d6bea114045"
+checksum: "e2078cf591b76c0121a5c7e39fbc7598"
 ---
 
-{% include series_prose/forest-memories-1-48.md %}

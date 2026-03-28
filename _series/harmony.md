@@ -2,7 +2,6 @@
 series_id: "harmony"
 title: "harmony"
 layout: "series"
-checksum: "a37b966208e1578ff2ff9083fda9c37a"
+checksum: "9d5f0d1fcfd2ff8358a2934c26d0ecf8"
 ---
 
-{% include series_prose/harmony.md %}

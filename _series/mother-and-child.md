@@ -2,7 +2,6 @@
 series_id: "mother-and-child"
 title: "mother and child"
 layout: "series"
-checksum: "fbf17b0f497fb8d6b3ed73992b0c0d54"
+checksum: "4d1e6d95936b3ef32a3e9edd5921b454"
 ---
 
-{% include series_prose/mother-and-child.md %}

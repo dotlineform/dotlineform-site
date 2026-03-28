@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-34dc6fab46a0e0a0292db3aa1affb882",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "doll-faces",
+    "count": 8
+  },
+  "series": {
+    "series_id": "doll-faces",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "title": "doll faces",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2024,
+    "year_display": "2024",
+    "project_folders": [
+      "doll faces"
+    ],
+    "works": [
+      "00901",
+      "00902",
+      "00903",
+      "00904",
+      "00905",
+      "00906",
+      "00907",
+      "00908"
+    ],
+    "primary_work_id": "00901"
+  }
+}

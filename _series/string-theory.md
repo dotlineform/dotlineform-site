@@ -2,7 +2,6 @@
 series_id: "string-theory"
 title: "string theory"
 layout: "series"
-checksum: "15979da63532b8d93f6222a6ec48b3ea"
+checksum: "2b03d4bd421a42a731e1bc5cc740be07"
 ---
 
-{% include series_prose/string-theory.md %}

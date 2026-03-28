@@ -2,7 +2,6 @@
 series_id: "k-particles"
 title: "k particles"
 layout: "series"
-checksum: "659387b468983305b81677d70b23fab1"
+checksum: "373bd4651ca3bdb38f73382544f9d13e"
 ---
 
-{% include series_prose/k-particles.md %}

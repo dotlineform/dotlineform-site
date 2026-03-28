@@ -2,7 +2,6 @@
 series_id: "lipseyes"
 title: "lipseyes"
 layout: "series"
-checksum: "3113d342d98a01390458f367bdea6338"
+checksum: "a4ae84e90d54251f3ced718f7dc49dd5"
 ---
 
-{% include series_prose/lipseyes.md %}

@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-cdd0204aebf7ddf3ec427e84781c4d2b",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "room",
+    "count": 4
+  },
+  "series": {
+    "series_id": "room",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "room",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2007,
+    "year_display": "2007-08",
+    "project_folders": [
+      "room"
+    ],
+    "works": [
+      "01629",
+      "01630",
+      "01631",
+      "01632"
+    ],
+    "primary_work_id": "01629"
+  }
+}

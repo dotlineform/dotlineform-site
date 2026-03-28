@@ -2,7 +2,6 @@
 series_id: "nerve"
 title: "nerve"
 layout: "series"
-checksum: "5264816cb77e04c06a4da8e051b34090"
+checksum: "03c0619220eace0058bd73873d7ed71f"
 ---
 
-{% include series_prose/nerve.md %}

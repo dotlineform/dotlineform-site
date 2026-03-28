@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-bb23d05e37f5f77f00269baf80108d83",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "surface-history",
+    "count": 6
+  },
+  "series": {
+    "series_id": "surface-history",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "title": "surface history",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2018,
+    "year_display": "2017-18",
+    "project_folders": [
+      "surface history"
+    ],
+    "works": [
+      "01738",
+      "01739",
+      "01740",
+      "01741",
+      "01742",
+      "01743"
+    ],
+    "primary_work_id": "01739"
+  }
+}

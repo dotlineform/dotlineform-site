@@ -1,0 +1,36 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-a636fbcb4cab97b1aca04aae4724b5a7",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "particle-machine",
+    "count": 11
+  },
+  "series": {
+    "series_id": "particle-machine",
+    "status": "published",
+    "published_date": "2026-03-24",
+    "title": "particle machine",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2020,
+    "year_display": "2020",
+    "project_folders": [
+      "particle machine"
+    ],
+    "works": [
+      "01480",
+      "01481",
+      "01482",
+      "01483",
+      "01484",
+      "01485",
+      "01486",
+      "01487",
+      "01488",
+      "01489",
+      "01490"
+    ],
+    "primary_work_id": "01480"
+  }
+}

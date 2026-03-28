@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-0c357c155113ac696aaa25e1fd520142",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "interior-design",
+    "count": 3
+  },
+  "series": {
+    "series_id": "interior-design",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "title": "interior design",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2005,
+    "year_display": "2005",
+    "project_folders": [
+      "interior design"
+    ],
+    "works": [
+      "01391",
+      "01392",
+      "01393"
+    ],
+    "primary_work_id": "01393"
+  }
+}

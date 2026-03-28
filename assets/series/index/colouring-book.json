@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-4f7c321b22dacf47dc286acc15786e23",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "colouring-book",
+    "count": 9
+  },
+  "series": {
+    "series_id": "colouring-book",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "colouring book",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 1996,
+    "year_display": "1996",
+    "project_folders": [
+      "colouring book"
+    ],
+    "works": [
+      "00217",
+      "00218",
+      "00219",
+      "00220",
+      "00221",
+      "00222",
+      "00223",
+      "00224",
+      "00225"
+    ],
+    "primary_work_id": "00219"
+  }
+}

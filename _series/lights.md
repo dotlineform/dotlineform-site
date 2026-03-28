@@ -2,7 +2,6 @@
 series_id: "lights"
 title: "lights"
 layout: "series"
-checksum: "98a34ea6094534365577aa292d37c573"
+checksum: "260fb88014dc3a65a93f0386e5fb5a1c"
 ---
 
-{% include series_prose/lights.md %}

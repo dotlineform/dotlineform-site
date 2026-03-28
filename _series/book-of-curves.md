@@ -2,7 +2,6 @@
 series_id: "book-of-curves"
 title: "book of curves"
 layout: "series"
-checksum: "1e5ffa37c58130b65f492de2b9106956"
+checksum: "76020fab9a067ff56dc2f4fbed4870eb"
 ---
 
-{% include series_prose/book-of-curves.md %}

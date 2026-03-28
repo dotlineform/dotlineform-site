@@ -33,7 +33,7 @@
 ## Safety Defaults
 
 - Prefer dry-run behavior for generators unless explicitly asked to write.
-- Do not overwrite canonical work prose in the external `projects/*/<prose_subdir>/*.md` tree, prose includes in `_includes/series_prose`, or canonical moment prose in `moments/*.md`, unless explicitly requested.
+- Do not overwrite canonical work/series prose in the external `projects/*/<prose_subdir>/*.md` tree, or canonical moment prose in `moments/*.md`, unless explicitly requested.
 - Do not delete generated or source files unless explicitly requested.
 
 ## Pipeline Conventions
@@ -41,7 +41,8 @@
 - Treat `data/works.xlsx` as canonical source for generated collections.
 - Treat worksheets `Works`, `Series`, `WorkDetails`, and `Moments` as canonical.
 - Keep generated output deterministic (stable ordering, stable checksums, stable formatting).
-- `series-json` is an opt-in migration artifact; when used, canonical series prose is resolved via `Series.primary_work_id -> Works.project_folder -> <prose_subdir> -> Series.series_prose_file`.
+- Canonical series prose is resolved via `Series.primary_work_id -> Works.project_folder -> <prose_subdir> -> Series.series_prose_file`.
+- Keep `_series/*.md` minimal; richer series metadata and prose belong in generated JSON artifacts under `assets/series/index/`.
 
 ## Moments-Specific Rules
 

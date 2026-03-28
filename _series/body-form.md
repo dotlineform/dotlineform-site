@@ -2,7 +2,6 @@
 series_id: "body-form"
 title: "body form"
 layout: "series"
-checksum: "fd964a1777a64a77bd3cada89a7191fd"
+checksum: "858cb3df6997f908beb1a6736ffccb05"
 ---
 
-{% include series_prose/body-form.md %}

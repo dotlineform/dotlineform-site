@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-bb8186a5e2b292213d88a5be5ae6b81a",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "grid-theory",
+    "count": 4
+  },
+  "series": {
+    "series_id": "grid-theory",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "title": "grid theory",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2008,
+    "year_display": "2008",
+    "project_folders": [
+      "grid theory"
+    ],
+    "works": [
+      "01359",
+      "01360",
+      "01361",
+      "01362"
+    ],
+    "primary_work_id": "01359"
+  }
+}

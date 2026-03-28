@@ -1,0 +1,39 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-2e8c1677ee247130f19175095ca47b4c",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "concrete",
+    "count": 14
+  },
+  "series": {
+    "series_id": "concrete",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "concrete",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2012,
+    "year_display": "2012",
+    "project_folders": [
+      "concrete"
+    ],
+    "works": [
+      "00818",
+      "00819",
+      "00820",
+      "00821",
+      "00822",
+      "00823",
+      "00824",
+      "00825",
+      "00826",
+      "00827",
+      "00828",
+      "00829",
+      "00830",
+      "00831"
+    ],
+    "primary_work_id": "00830"
+  }
+}

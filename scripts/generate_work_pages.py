@@ -712,7 +712,6 @@ def main() -> None:
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-json-dir", default="assets/series/index", help="Output folder for generated per-series JSON files")
-    ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
@@ -773,7 +772,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-json,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json. "
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json. "
             "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
     )
@@ -792,7 +791,6 @@ def main() -> None:
         "work-files",
         "work-links",
         "series-pages",
-        "series-json",
         "series-index-json",
         "work-details-pages",
         "work-json",
@@ -827,7 +825,6 @@ def main() -> None:
     run_work_files = artifact_enabled("work-files")
     run_work_links = artifact_enabled("work-links")
     run_series_pages = artifact_enabled("series-pages")
-    run_series_json = artifact_enabled("series-json") if selected_artifacts is not None else False
     run_series_index_json = True
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json") or run_work_pages
@@ -836,7 +833,7 @@ def main() -> None:
     run_moments_index_json = True
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
-    needs_projects_base = run_work_files or run_work_details_pages or run_work_json or run_series_json or run_moments_artifact or run_moments_index_json
+    needs_projects_base = run_work_files or run_work_details_pages or run_work_json or run_series_pages or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -951,8 +948,6 @@ def main() -> None:
         studio_series_out_dir = Path("_studio_series").expanduser()
         studio_series_out_dir.mkdir(parents=True, exist_ok=True)
 
-    series_prose_dir = Path(args.series_prose_dir).expanduser()
-    series_prose_dir.mkdir(parents=True, exist_ok=True)
     tag_assignments_path = Path("assets/studio/data/tag_assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -1222,7 +1217,7 @@ def main() -> None:
         missing_work_prose_warned.add(wid)
 
     has_series_prose_file_col = "series_prose_file" in series_hi
-    if run_series_json and not has_series_prose_file_col:
+    if run_series_pages and not has_series_prose_file_col:
         raise SystemExit("Series sheet missing required column for prose migration: series_prose_file")
 
     def resolve_series_prose_source_path(series_id: str, sr: tuple, *, ordered_work_ids: Optional[List[str]] = None) -> Optional[Path]:
@@ -1653,48 +1648,48 @@ def main() -> None:
 
             processed += 1
             prefix = f"[{processed}/{total}] "
-            canonical_work_fm = build_canonical_work_record(wid)
-            if canonical_work_fm is None:
-                skipped += 1
-                continue
-            checksum = str(canonical_work_fm.get("checksum"))
-            # Canonical work metadata lives in JSON artifacts; keep _works lightweight.
-            work_page_fm: Dict[str, Any] = {
-                "work_id": wid,
-                "title": coerce_string(canonical_work_fm.get("title")),
-                "layout": "work",
-                "checksum": checksum,
-            }
-
-            source_prose_path = resolve_work_prose_source_path(wid)
-            if source_prose_path is None or not source_prose_path.exists():
-                warn_missing_work_prose(wid, source_prose_path)
-                skipped += 1
-                continue
-
-            work_page_content = build_front_matter(work_page_fm) + "\n"
-            out_path = out_dir / f"{wid}.md"
-
-            def write_page(path: Path, label: str, page_content: str) -> bool:
-                exists = path.exists()
-                existing_checksum = extract_existing_checksum(path) if exists else None
-                if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
-                    existing_content: Optional[str] = None
-                    try:
-                        existing_content = path.read_text(encoding="utf-8")
-                    except Exception:
-                        existing_content = None
-                    if existing_content == page_content:
-                        print(f"{prefix}SKIP ({label}; checksum+content match): {path}")
-                        return False
-                if args.write:
-                    path.write_text(page_content, encoding="utf-8")
-                    print(f"{prefix}WRITE ({label}): {path}")
-                else:
-                    print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
-                return True
-
             if run_work_pages:
+                canonical_work_fm = build_canonical_work_record(wid)
+                if canonical_work_fm is None:
+                    skipped += 1
+                    continue
+                checksum = str(canonical_work_fm.get("checksum"))
+                # Canonical work metadata lives in JSON artifacts; keep _works lightweight.
+                work_page_fm: Dict[str, Any] = {
+                    "work_id": wid,
+                    "title": coerce_string(canonical_work_fm.get("title")),
+                    "layout": "work",
+                    "checksum": checksum,
+                }
+
+                source_prose_path = resolve_work_prose_source_path(wid)
+                if source_prose_path is None or not source_prose_path.exists():
+                    warn_missing_work_prose(wid, source_prose_path)
+                    skipped += 1
+                    continue
+
+                work_page_content = build_front_matter(work_page_fm) + "\n"
+                out_path = out_dir / f"{wid}.md"
+
+                def write_page(path: Path, label: str, page_content: str) -> bool:
+                    exists = path.exists()
+                    existing_checksum = extract_existing_checksum(path) if exists else None
+                    if (existing_checksum is not None) and (existing_checksum == checksum) and (not args.force):
+                        existing_content: Optional[str] = None
+                        try:
+                            existing_content = path.read_text(encoding="utf-8")
+                        except Exception:
+                            existing_content = None
+                        if existing_content == page_content:
+                            print(f"{prefix}SKIP ({label}; checksum+content match): {path}")
+                            return False
+                    if args.write:
+                        path.write_text(page_content, encoding="utf-8")
+                        print(f"{prefix}WRITE ({label}): {path}")
+                    else:
+                        print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
+                    return True
+
                 if write_page(out_path, "work", work_page_content):
                     written += 1
                     if args.write:
@@ -1849,6 +1844,8 @@ def main() -> None:
 
         series_written = 0
         series_skipped = 0
+        series_json_written = 0
+        series_json_skipped = 0
         series_status_updated = 0
         series_published_date_updated = 0
         series_published_date_idx = series_hi.get("published_date")
@@ -1907,33 +1904,52 @@ def main() -> None:
                     # Fall back to numeric year rendered as text
                     year_display = str(year) if year is not None else None
 
-                # Canonical series metadata stays in series_index.json.
-                # Keep _series pages lightweight (routing + prose include + checksum).
                 series_work_ids_sorted = sorted(work_ids_by_series_all.get(series_id, []))
                 primary_work_id = require_series_primary_work_id(
                     series_id,
                     sr,
                     ordered_work_ids=series_work_ids_sorted,
                 )
-                series_front_matter_like: Dict[str, Any] = {
+                published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
+                series_record = compact_json_object({
                     "series_id": series_id,
+                    "layout": "series",
+                    "status": status,
+                    "published_date": published_date,
                     "title": series_title,
                     "sort_fields": ",".join(series_sort_fields_by_series_id.get(series_id, ["work_id"])),
                     "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
                     "year": year,
                     "year_display": year_display,
+                    "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+                    "project_folders": series_project_folders_by_id.get(series_id, []),
+                    "works": series_work_ids_sorted,
                     "primary_work_id": primary_work_id,
-                    "layout": "series",
-                }
+                })
+
+                public_series_record = build_series_json_record(series_record)
+                source_prose_path = resolve_series_prose_source_path(
+                    series_id,
+                    sr,
+                    ordered_work_ids=series_work_ids_sorted,
+                )
+                content_html: Optional[str] = None
+                if source_prose_path is not None:
+                    if source_prose_path.exists():
+                        content_html = render_markdown_with_jekyll(source_prose_path)
+                    else:
+                        print(f"[series {series_id}] WARNING: missing source prose {source_prose_path}; omitting prose content.")
+
+                payload_version = compute_payload_version(
+                    compact_json_object({"series": public_series_record, "content_html": content_html})
+                )
                 sfm: Dict[str, Any] = {
                     "series_id": series_id,
                     "title": series_title,
                     "layout": "series",
+                    "checksum": compute_work_checksum(series_record),
                 }
-                sfm["checksum"] = compute_work_checksum(series_front_matter_like)
-
-                body = f"{{% include series_prose/{series_id}.md %}}\n"
-                series_content = build_front_matter(sfm) + "\n" + body
+                series_content = build_front_matter(sfm) + "\n"
 
                 series_path = series_out_dir / f"{series_id}.md"
                 existing_text = None
@@ -1969,18 +1985,30 @@ def main() -> None:
                         print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
                         series_written += 1
 
-                # Ensure prose include exists (create placeholder if missing; never overwrite)
-                prose_path = series_prose_dir / f"{series_id}.md"
-                if not prose_path.exists():
-                    placeholder = (
-                        f"<!-- series prose: {series_title} ({series_id}) -->\n"
-                        "<!-- Replace this placeholder with the series' prose. -->\n"
-                    )
+                payload = compact_json_object({
+                    "header": {
+                        "schema": "series_record_v1",
+                        "version": payload_version,
+                        "generated_at_utc": utc_timestamp_now(),
+                        "series_id": series_id,
+                        "count": len(series_work_ids_sorted),
+                    },
+                    "series": public_series_record,
+                    "content_html": content_html,
+                })
+                out_json_path = series_json_dir / f"{series_id}.json"
+                out_exists = out_json_path.exists()
+                existing_payload_version = extract_existing_header_scalar(out_json_path, "version") if out_exists else None
+                if (existing_payload_version is not None) and (existing_payload_version == payload_version) and (not args.force):
+                    series_json_skipped += 1
+                else:
                     if args.write:
-                        prose_path.write_text(placeholder, encoding="utf-8")
-                        print(f"{prefix_s}WRITE prose placeholder: {prose_path}")
+                        out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                        print(f"[Series JSON {s_processed}/{s_total}] WRITE: {out_json_path}")
+                        series_json_written += 1
                     else:
-                        print(f"{prefix_s}DRY-RUN: would create prose placeholder {prose_path}")
+                        print(f"[Series JSON {s_processed}/{s_total}] DRY-RUN: would write {out_json_path} (overwrite={out_exists})")
+                        series_json_written += 1
 
                 if run_studio_series_pages:
                     if studio_series_out_dir is None:
@@ -2078,6 +2106,10 @@ def main() -> None:
             if series_published_date_updated > 0:
                 print(f"Set series published_date for {series_published_date_updated} row(s).")
         print(f"Series pages done. {'Would write' if not args.write else 'Wrote'}: {series_written}. Skipped: {series_skipped}.")
+        print(
+            f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: "
+            f"{series_json_written}. Skipped: {series_json_skipped}."
+        )
         if run_studio_series_pages:
             print(
                 f"Studio series pages done. {'Would write' if not args.write else 'Wrote'}: "
@@ -2182,74 +2214,6 @@ def main() -> None:
                 "Series index JSON done. Would write: 1. Skipped: 0. "
                 f"Path: {series_index_json_path} (overwrite={exists})"
             )
-
-    if run_series_json:
-        series_json_written = 0
-        series_json_skipped = 0
-        series_json_generated_at_utc = utc_timestamp_now()
-
-        for sr in series_rows[1:] if len(series_rows) > 1 else []:
-            sid_raw = cell(sr, series_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            series_id = require_slug_safe("series_id", sid_raw)
-            if series_page_selected_ids is not None and series_id not in series_page_selected_ids:
-                continue
-            series_record = series_payload.get(series_id)
-            if not isinstance(series_record, dict):
-                continue
-
-            ordered_work_ids = list(series_record.get("works", [])) if isinstance(series_record.get("works"), list) else []
-            source_prose_path = resolve_series_prose_source_path(
-                series_id,
-                sr,
-                ordered_work_ids=ordered_work_ids,
-            )
-            if source_prose_path is None or not source_prose_path.exists():
-                if source_prose_path is None:
-                    print(f"[series {series_id}] WARNING: missing prose source mapping; skipping series JSON.")
-                else:
-                    print(f"[series {series_id}] WARNING: missing source prose {source_prose_path}; skipping series JSON.")
-                series_json_skipped += 1
-                continue
-
-            content_html = render_markdown_with_jekyll(source_prose_path)
-            public_series_record = build_series_json_record(series_record)
-            payload_version = compute_payload_version(
-                compact_json_object({"series": public_series_record, "content_html": content_html})
-            )
-            payload = compact_json_object({
-                "header": {
-                    "schema": "series_record_v1",
-                    "version": payload_version,
-                    "generated_at_utc": series_json_generated_at_utc,
-                    "series_id": series_id,
-                    "count": len(ordered_work_ids),
-                },
-                "series": public_series_record,
-                "content_html": content_html,
-            })
-            out_json_path = series_json_dir / f"{series_id}.json"
-            out_exists = out_json_path.exists()
-            existing_payload_version = extract_existing_header_scalar(out_json_path, "version") if out_exists else None
-            if (existing_payload_version is not None) and (existing_payload_version == payload_version) and (not args.force):
-                series_json_skipped += 1
-                continue
-
-            prefix_series_json = f"[Series JSON {series_json_written + series_json_skipped + 1}] "
-            if args.write:
-                out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                print(f"{prefix_series_json}WRITE: {out_json_path}")
-                series_json_written += 1
-            else:
-                print(f"{prefix_series_json}DRY-RUN: would write {out_json_path} (overwrite={out_exists})")
-                series_json_written += 1
-
-        print(
-            f"Series JSON done. {'Would write' if not args.write else 'Wrote'}: {series_json_written}. Skipped: {series_json_skipped}."
-        )
-    elif selected_artifacts is not None:
-        print("Series JSON skipped: not selected by --only.")
 
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)

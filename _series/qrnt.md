@@ -2,7 +2,6 @@
 series_id: "qrnt"
 title: "quantum random number theory"
 layout: "series"
-checksum: "9664644dd741bf335ea77f8554921216"
+checksum: "3991ec266fd95c4cc5d8c6a88fbc0c25"
 ---
 
-{% include series_prose/qrnt.md %}

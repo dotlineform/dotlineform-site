@@ -2,7 +2,6 @@
 series_id: "k-crystals"
 title: "k crystals"
 layout: "series"
-checksum: "4a7317ace55c39a2abd3b78dc4ef9182"
+checksum: "77118b4b7ce53e56012bde5840999043"
 ---
 
-{% include series_prose/k-crystals.md %}

@@ -2,7 +2,6 @@
 series_id: "poa"
 title: "poa"
 layout: "series"
-checksum: "2d88f34144ca0cc76abc33647810c8e9"
+checksum: "0b28c3c359ff086e81a9212d9dba86f9"
 ---
 
-{% include series_prose/poa.md %}

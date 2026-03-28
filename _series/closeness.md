@@ -2,7 +2,6 @@
 series_id: "closeness"
 title: "closeness"
 layout: "series"
-checksum: "0d7728a55b5116b0c1c68d55c831d70e"
+checksum: "08029c96e112dda0e09d8d2e4eae1da0"
 ---
 
-{% include series_prose/closeness.md %}

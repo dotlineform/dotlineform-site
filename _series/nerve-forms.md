@@ -2,7 +2,6 @@
 series_id: "nerve-forms"
 title: "nerve forms"
 layout: "series"
-checksum: "22918637a72263b946daec52f56a0229"
+checksum: "88d071899d0ce4fe4e25ced0df98a9c0"
 ---
 
-{% include series_prose/nerve-forms.md %}

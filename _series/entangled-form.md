@@ -2,7 +2,6 @@
 series_id: "entangled-form"
 title: "entangled form"
 layout: "series"
-checksum: "2645f6c8fa02b8f1edea6c22f19f2121"
+checksum: "dbb589e6b4e7c97a15e802b2588ef9d1"
 ---
 
-{% include series_prose/entangled-form.md %}

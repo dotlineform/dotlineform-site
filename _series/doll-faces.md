@@ -2,7 +2,6 @@
 series_id: "doll-faces"
 title: "doll faces"
 layout: "series"
-checksum: "e0ac8b09b792feff2826e761fc413fc1"
+checksum: "0af12f4ce3cb9ce7a692944cfe9629b1"
 ---
 
-{% include series_prose/doll-faces.md %}

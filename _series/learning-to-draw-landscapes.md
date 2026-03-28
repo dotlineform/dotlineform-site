@@ -2,7 +2,6 @@
 series_id: "learning-to-draw-landscapes"
 title: "learning to draw landscapes"
 layout: "series"
-checksum: "34067b7cdc52716def48a4fb4454ae69"
+checksum: "fc9f0cf30f3a207b467870870ea1490c"
 ---
 
-{% include series_prose/learning-to-draw-landscapes.md %}

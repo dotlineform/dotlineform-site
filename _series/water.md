@@ -2,7 +2,6 @@
 series_id: "water"
 title: "water"
 layout: "series"
-checksum: "e7cd399407e44d27f64a98cacd1414cb"
+checksum: "9dc9e9322b1a07f5aebbf8d97e859102"
 ---
 
-{% include series_prose/water.md %}

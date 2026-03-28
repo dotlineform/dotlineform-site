@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-d8a88de917ad25349d931462f31687e3",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "3-symbols",
+    "count": 1
+  },
+  "series": {
+    "series_id": "3-symbols",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "title": "3 symbols",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2007,
+    "year_display": "2007",
+    "project_folders": [
+      "3 symbols"
+    ],
+    "works": [
+      "00638"
+    ],
+    "primary_work_id": "00638"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-b78d4061840f01d8f5dffc46b6f48a95",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "porto-santo",
+    "count": 13
+  },
+  "series": {
+    "series_id": "porto-santo",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "porto santo",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2025,
+    "year_display": "2025",
+    "project_folders": [
+      "porto santo"
+    ],
+    "works": [
+      "01583",
+      "01584",
+      "01585",
+      "01586",
+      "01587",
+      "01588",
+      "01589",
+      "01590",
+      "01591",
+      "01592",
+      "01593",
+      "01594",
+      "01595"
+    ],
+    "primary_work_id": "01593"
+  }
+}

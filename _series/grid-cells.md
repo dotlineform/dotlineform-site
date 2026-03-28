@@ -2,7 +2,6 @@
 series_id: "grid-cells"
 title: "grid cells"
 layout: "series"
-checksum: "956a711edf361e4f11aff8afc373c68a"
+checksum: "e15eebdac768977739fa2b7b887c18b2"
 ---
 
-{% include series_prose/grid-cells.md %}

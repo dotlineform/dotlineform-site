@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-74665b09d7978984bed53f29d20bdfe8",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "k-crystals",
+    "count": 8
+  },
+  "series": {
+    "series_id": "k-crystals",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "k crystals",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2009,
+    "year_display": "2009",
+    "project_folders": [
+      "k crystals"
+    ],
+    "works": [
+      "00621",
+      "00622",
+      "00623",
+      "00624",
+      "00625",
+      "00626",
+      "00627",
+      "00628"
+    ],
+    "primary_work_id": "00625"
+  }
+}

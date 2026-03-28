@@ -2,7 +2,6 @@
 series_id: "matter"
 title: "matter"
 layout: "series"
-checksum: "597250f8bfc32172e1f74d9cd441978a"
+checksum: "aae44806261fdfedaea958ae0be8a49e"
 ---
 
-{% include series_prose/matter.md %}

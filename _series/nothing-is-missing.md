@@ -2,7 +2,6 @@
 series_id: "nothing-is-missing"
 title: "nothing is missing"
 layout: "series"
-checksum: "ac67f3b112d5d98ea0d0a6a802fc857b"
+checksum: "64afb541b9307045551e2f18a03726b3"
 ---
 
-{% include series_prose/nothing-is-missing.md %}

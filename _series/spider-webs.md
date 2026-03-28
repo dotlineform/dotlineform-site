@@ -2,7 +2,6 @@
 series_id: "spider-webs"
 title: "spider webs"
 layout: "series"
-checksum: "9fe3ecd9b700d0db8e953fc8dfc2f84b"
+checksum: "7e2df5f564e5d31ea391d8a0461fbe92"
 ---
 
-{% include series_prose/spider-webs.md %}

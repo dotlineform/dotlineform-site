@@ -2,7 +2,6 @@
 series_id: "colouring-book"
 title: "colouring book"
 layout: "series"
-checksum: "067d9906beaf05a5ee22dd67cc34d003"
+checksum: "5d4da3e8993d8150c541ef998c595f4f"
 ---
 
-{% include series_prose/colouring-book.md %}

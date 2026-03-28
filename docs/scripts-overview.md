@@ -173,22 +173,22 @@ Useful flags:
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
   - `primary_work_project_folder` is derived from `Series.primary_work_id -> Works.project_folder`
-  - if `Series.series_prose_file` is empty or the resolved markdown file is missing, the pipeline warns and skips that series JSON file
-  - current status: opt-in migration artifact for parallel testing; legacy series pages still render prose from `_includes/series_prose`
+  - generated together with `_series/<series_id>.md` when `series-pages` is selected
+  - if `Series.series_prose_file` is empty, the JSON payload is still generated without `content_html`
+  - if `Series.series_prose_file` is populated but the resolved markdown file is missing, the pipeline warns and omits `content_html`
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
   - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-json`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
   - there is no separate `works-prose` artifact; use `work-json` for prose-only refreshes
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`)
     - selecting `work-pages` also rebuilds the per-work JSON payload because runtime prose now depends on it
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
-  - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
-  - `series-json`: writes `assets/series/index/<series_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `series_id`, `count`), full public `series`, and rendered `content_html`
-    - current status: opt-in migration artifact; not used by the live series page runtime yet
-    - series-driven: emits one file per selected series_id
-    - renders canonical series prose from the external projects tree using the local Jekyll markdown stack
+  - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) and `assets/series/index/<series_id>.json`
+    - per-series JSON stores full public `series` metadata plus rendered `content_html`
+    - renders canonical series prose from the external projects tree using the local Jekyll markdown stack when `Series.series_prose_file` is populated
+    - if `Series.series_prose_file` is blank, the series JSON is still written and the runtime prose section stays hidden
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
   - `moments`: writes both `_moments/<moment_id>.md` stubs and `assets/moments/index/<moment_id>.json`
     - stub front matter keeps only `moment_id`, `title`, `layout`, and a checksum derived from canonical moment metadata
@@ -221,6 +221,7 @@ Runtime canonical data flow:
 
 - `/series/` and `/series/<series_id>/` read `assets/data/series_index.json`.
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
+- `/series/<series_id>/` reads `assets/series/index/<series_id>.json` for series prose HTML.
 - `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav/counter/link visibility also read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 - `/moments/` reads `assets/data/moments_index.json` for card metadata.

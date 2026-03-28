@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-487df2d1e9085466c944c56cdcae1132",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "memory-loss-hope",
+    "count": 2
+  },
+  "series": {
+    "series_id": "memory-loss-hope",
+    "status": "published",
+    "published_date": "2026-03-24",
+    "title": "memory loss hope",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2010,
+    "year_display": "2010",
+    "project_folders": [
+      "memory loss hope"
+    ],
+    "works": [
+      "01441",
+      "01442"
+    ],
+    "primary_work_id": "01441"
+  }
+}

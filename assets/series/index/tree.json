@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-6096c221c5ac139f92b1ff027430a631",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "tree",
+    "count": 3
+  },
+  "series": {
+    "series_id": "tree",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "tree",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2024,
+    "year_display": "2024",
+    "project_folders": [
+      "tree"
+    ],
+    "works": [
+      "00546",
+      "00547",
+      "00548"
+    ],
+    "primary_work_id": "00546"
+  }
+}

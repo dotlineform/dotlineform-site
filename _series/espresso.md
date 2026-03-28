@@ -2,7 +2,6 @@
 series_id: "espresso"
 title: "espresso"
 layout: "series"
-checksum: "629a0351927540e79073a177f92bf4df"
+checksum: "71be779907c429a9000505a3555e1a23"
 ---
 
-{% include series_prose/espresso.md %}

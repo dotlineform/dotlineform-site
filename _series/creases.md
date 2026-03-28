@@ -2,7 +2,6 @@
 series_id: "creases"
 title: "creases"
 layout: "series"
-checksum: "e90ed0a2f1d8c5e60865192ac3239a28"
+checksum: "0bcd5140c2361b8098bfed66139691b6"
 ---
 
-{% include series_prose/creases.md %}

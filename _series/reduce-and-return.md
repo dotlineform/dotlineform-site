@@ -2,7 +2,6 @@
 series_id: "reduce-and-return"
 title: "reduce and return"
 layout: "series"
-checksum: "87a0da69288dc68e215e0fe3a06c2eee"
+checksum: "75d700d187de1619eabb0fb354a996a4"
 ---
 
-{% include series_prose/reduce-and-return.md %}

@@ -2,7 +2,6 @@
 series_id: "petri"
 title: "petri"
 layout: "series"
-checksum: "5e6d8c44a45df4a4b2f72d91112bd960"
+checksum: "74b80c6ad39f98c21d858c079cabfe3c"
 ---
 
-{% include series_prose/petri.md %}

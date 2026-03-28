@@ -2,7 +2,6 @@
 series_id: "state-of-mind"
 title: "state of mind"
 layout: "series"
-checksum: "95c0dc58ae030a7d18527150df89b18a"
+checksum: "0cb7fb275bf82ea5fed0bc02a66e0f83"
 ---
 
-{% include series_prose/state-of-mind.md %}

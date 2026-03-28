@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-0191be87b0b6cc110d77e5376bdfba22",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "intuition-2020",
+    "count": 1
+  },
+  "series": {
+    "series_id": "intuition-2020",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "intuition (2020)",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "notes": "put track listing in work_prose",
+    "project_folders": [
+      "intuition (2020)"
+    ],
+    "works": [
+      "00457"
+    ],
+    "primary_work_id": "00457"
+  }
+}

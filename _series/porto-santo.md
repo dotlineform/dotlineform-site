@@ -2,7 +2,6 @@
 series_id: "porto-santo"
 title: "porto santo"
 layout: "series"
-checksum: "9739e61fb398976abc7d025bc130204e"
+checksum: "d9d77a3ed20ed89df1ad41f7be5adc14"
 ---
 
-{% include series_prose/porto-santo.md %}

@@ -2,7 +2,6 @@
 series_id: "cube-structure"
 title: "cube structure"
 layout: "series"
-checksum: "314e1884ffc4d17564ecb8e982572d82"
+checksum: "5f185b498614ce37abcd4169ac4b4f4d"
 ---
 
-{% include series_prose/cube-structure.md %}

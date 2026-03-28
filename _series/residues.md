@@ -2,7 +2,6 @@
 series_id: "residues"
 title: "residues"
 layout: "series"
-checksum: "77cbf4ae8658b089c6df4671d6df652b"
+checksum: "6b4d42e3f45126caccac4d553f228b6e"
 ---
 
-{% include series_prose/residues.md %}

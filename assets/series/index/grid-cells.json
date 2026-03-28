@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-af47cf57fcfdf40a9141c3ffa655987f",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "grid-cells",
+    "count": 2
+  },
+  "series": {
+    "series_id": "grid-cells",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "title": "grid cells",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2013",
+    "project_folders": [
+      "grid cells"
+    ],
+    "works": [
+      "01363",
+      "01364"
+    ],
+    "primary_work_id": "01363"
+  }
+}

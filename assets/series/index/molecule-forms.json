@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-e7c9608134e99043826d11c6b5acd431",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "molecule-forms",
+    "count": 1
+  },
+  "series": {
+    "series_id": "molecule-forms",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "molecule forms",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2013",
+    "project_folders": [
+      "molecule forms"
+    ],
+    "works": [
+      "00459"
+    ],
+    "primary_work_id": "00459"
+  }
+}

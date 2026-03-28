@@ -2,7 +2,6 @@
 series_id: "for-david-lynch"
 title: "for David Lynch (2025)"
 layout: "series"
-checksum: "f91cc7af86d3ef1cf645213aa22ba80c"
+checksum: "bd87a7d6bc49066839ce8cbb984b2ca3"
 ---
 
-{% include series_prose/for-david-lynch.md %}

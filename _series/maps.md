@@ -2,7 +2,6 @@
 series_id: "maps"
 title: "maps"
 layout: "series"
-checksum: "5ede98bec0621cca1bd3b878598933ca"
+checksum: "19886e57590da07b4f32163dc7a3167c"
 ---
 
-{% include series_prose/maps.md %}

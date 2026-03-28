@@ -2,7 +2,6 @@
 series_id: "train-moments"
 title: "train moments"
 layout: "series"
-checksum: "af7a23088d0d5e5b9c30ddc7149cac46"
+checksum: "f23e4d371e96b644446ea066ef23ffad"
 ---
 
-{% include series_prose/train-moments.md %}

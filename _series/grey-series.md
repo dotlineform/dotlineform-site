@@ -2,7 +2,6 @@
 series_id: "grey-series"
 title: "grey series"
 layout: "series"
-checksum: "c1eee193f52bec81d268d03a88399fff"
+checksum: "01967a66cf54942b33a0b2f06d7c988b"
 ---
 
-{% include series_prose/grey-series.md %}

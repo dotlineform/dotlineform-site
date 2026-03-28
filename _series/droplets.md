@@ -2,7 +2,6 @@
 series_id: "droplets"
 title: "droplets"
 layout: "series"
-checksum: "8516d19863d1a2f60b8ecae6d3306cdc"
+checksum: "7094a5bf92f4466a245db15fbe3d8a88"
 ---
 
-{% include series_prose/droplets.md %}

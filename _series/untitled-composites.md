@@ -2,7 +2,6 @@
 series_id: "untitled-composites"
 title: "untitled composites"
 layout: "series"
-checksum: "b606406258f50728cf65bb37729d5d2f"
+checksum: "3882aa8e79f0c76e50f1fe4ed3b64ac7"
 ---
 
-{% include series_prose/untitled-composites.md %}

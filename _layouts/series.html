@@ -145,6 +145,24 @@ layout: default
           });
       }
 
+      function renderProse(contentHtml, showError) {
+        var proseSection = document.getElementById('seriesProseSection');
+        var prose = document.getElementById('seriesProseContent');
+        if (!prose) return;
+        if (typeof contentHtml === 'string' && contentHtml.trim()) {
+          if (proseSection) proseSection.hidden = false;
+          prose.innerHTML = contentHtml;
+          return;
+        }
+        if (showError) {
+          if (proseSection) proseSection.hidden = false;
+          prose.innerHTML = '<p>problem loading content</p>';
+          return;
+        }
+        if (proseSection) proseSection.hidden = true;
+        prose.innerHTML = '';
+      }
+
       function updateUrl(page) {
         var next = new URLSearchParams(window.location.search);
         if (page > 1) next.set('series_page', String(page));
@@ -282,13 +300,25 @@ layout: default
         .catch(function () {
           pager.hidden = true;
           grid.innerHTML = '';
-      });
+        });
+
+      fetchJson(baseurl + '/assets/series/index/' + encodeURIComponent(seriesId) + '.json')
+        .then(function (payload) {
+          if (payload && payload.series && typeof payload.series === 'object') {
+            updateHeaderFromSeries(payload.series);
+          }
+          var contentHtml = (payload && typeof payload.content_html === 'string') ? payload.content_html : null;
+          renderProse(contentHtml, false);
+        })
+        .catch(function () {
+          renderProse(null, true);
+        });
     })();
   </script>
 {%- endif -%}
 
-  <div class="content">
-    {{ content }}
+  <div class="content" id="seriesProseSection" hidden>
+    <div id="seriesProseContent"></div>
   </div>
 
   <nav class="page__nav">

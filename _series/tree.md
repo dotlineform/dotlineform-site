@@ -2,7 +2,6 @@
 series_id: "tree"
 title: "tree"
 layout: "series"
-checksum: "02896257618b9016c3a17773861a4f7c"
+checksum: "0bdae19690c505875eb8f402505accd9"
 ---
 
-{% include series_prose/tree.md %}

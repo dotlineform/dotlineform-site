@@ -2,7 +2,6 @@
 series_id: "folding-structure"
 title: "folding structure"
 layout: "series"
-checksum: "84533765355ba216bec38b0202ecc806"
+checksum: "8af7ffda0f3a1e204976bad71e3aa4e4"
 ---
 
-{% include series_prose/folding-structure.md %}

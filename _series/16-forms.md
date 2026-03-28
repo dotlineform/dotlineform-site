@@ -2,7 +2,6 @@
 series_id: "16-forms"
 title: "16 forms"
 layout: "series"
-checksum: "f3bddb4d941d80ca221d2099aaac8b4f"
+checksum: "568318d6fc7fafa4d69ae485b199904e"
 ---
 
-{% include series_prose/16-forms.md %}

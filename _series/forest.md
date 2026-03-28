@@ -2,7 +2,6 @@
 series_id: "forest"
 title: "forest"
 layout: "series"
-checksum: "7155b088fa31c566214562bd08c29d77"
+checksum: "d9a4edb4714a5847aef41f844896ff17"
 ---
 
-{% include series_prose/forest.md %}

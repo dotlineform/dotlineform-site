@@ -2,7 +2,6 @@
 series_id: "3-symbols"
 title: "3 symbols"
 layout: "series"
-checksum: "5ec84b8c87408f3bf572ba95af4af3d9"
+checksum: "5e8bf1cdfb453b1a27150f55a625c076"
 ---
 
-{% include series_prose/3-symbols.md %}

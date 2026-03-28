@@ -2,7 +2,6 @@
 series_id: "colours"
 title: "colours"
 layout: "series"
-checksum: "8ac5cb296cbc9e02243a85bd51c62f07"
+checksum: "1d20da36f04f543cb53fdc07bdf7ffcd"
 ---
 
-{% include series_prose/colours.md %}

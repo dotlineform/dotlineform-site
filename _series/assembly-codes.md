@@ -2,7 +2,6 @@
 series_id: "assembly-codes"
 title: "assembly codes"
 layout: "series"
-checksum: "595a60baad72a5bec168417e73730d8d"
+checksum: "c2b4a53d5c1fba88ce61af19e5b1ff99"
 ---
 
-{% include series_prose/assembly-codes.md %}

@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-ad3d81ef11181e37492d66c4f8b54593",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "closeness",
+    "count": 2
+  },
+  "series": {
+    "series_id": "closeness",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "closeness",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2017,
+    "year_display": "2017",
+    "project_folders": [
+      "closeness"
+    ],
+    "works": [
+      "00811",
+      "00812"
+    ],
+    "primary_work_id": "00811"
+  }
+}

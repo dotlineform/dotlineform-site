@@ -2,7 +2,6 @@
 series_id: "forests-2023"
 title: "forests (2023)"
 layout: "series"
-checksum: "a14b3796c2d107aaffa5e49d5dd878b9"
+checksum: "fc5913dc4f74163d7c618fb22ef1f53c"
 ---
 
-{% include series_prose/forests-2023.md %}

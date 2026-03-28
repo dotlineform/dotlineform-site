@@ -2,7 +2,6 @@
 series_id: "mm"
 title: "mm"
 layout: "series"
-checksum: "936835c51dff16356e0d952b738991e4"
+checksum: "2c6c21ef59e3bd5dc1bf071148277931"
 ---
 
-{% include series_prose/mm.md %}

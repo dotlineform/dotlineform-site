@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-de37e59d3df3d07862bf02c302856838",
+    "generated_at_utc": "2026-03-28T18:59:53Z",
+    "series_id": "base-series",
+    "count": 18
+  },
+  "series": {
+    "series_id": "base-series",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "base series",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2007,
+    "year_display": "2007",
+    "project_folders": [
+      "base series"
+    ],
+    "works": [
+      "00756",
+      "00757",
+      "00758",
+      "00759",
+      "00760",
+      "00761",
+      "00762",
+      "00763",
+      "00764",
+      "00765",
+      "00766",
+      "00767",
+      "00768",
+      "00769",
+      "00770",
+      "00771",
+      "00772",
+      "00773"
+    ],
+    "primary_work_id": "00756"
+  }
+}

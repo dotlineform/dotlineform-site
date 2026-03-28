@@ -2,7 +2,6 @@
 series_id: "dot"
 title: "dot"
 layout: "series"
-checksum: "9af61fb8c40d68bb3077618875da76b8"
+checksum: "6a843a2d682c8865b30b89ac8896ea24"
 ---
 
-{% include series_prose/dot.md %}

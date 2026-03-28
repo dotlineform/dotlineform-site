@@ -2,7 +2,6 @@
 series_id: "fluid-forms"
 title: "fluid forms"
 layout: "series"
-checksum: "7f43100b40f8e034ccd495922f67de66"
+checksum: "a56f08c6f9aaafcdc8fdea8155f79e9d"
 ---
 
-{% include series_prose/fluid-forms.md %}

@@ -2,7 +2,6 @@
 series_id: "plant-forms"
 title: "plant forms"
 layout: "series"
-checksum: "09aa84dfeebaab872a42fe9521268ec1"
+checksum: "5ac9c29c52522b5de87d1bb897ea0bb1"
 ---
 
-{% include series_prose/plant-forms.md %}

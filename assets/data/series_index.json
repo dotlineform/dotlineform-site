@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-338b890aa3a44ff781f499ef0704f943",
-    "generated_at_utc": "2026-03-28T18:03:17Z",
+    "version": "blake2b-46473a5499aecd2fdd7e04dbc80b9571",
+    "generated_at_utc": "2026-03-28T19:01:07Z",
     "count": 138
   },
   "series": {
@@ -2040,7 +2040,7 @@
       "series_id": "found-forms",
       "layout": "series",
       "status": "published",
-      "published_date": "2026-03-05",
+      "published_date": "2026-03-28",
       "title": "found forms",
       "sort_fields": "work_id",
       "series_type": "primary",

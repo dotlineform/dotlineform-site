@@ -2,7 +2,6 @@
 series_id: "interior-design"
 title: "interior design"
 layout: "series"
-checksum: "7436fd364c9c876fcded107f0058bb37"
+checksum: "87a2a02c8db87ec354ebb47757e9491f"
 ---
 
-{% include series_prose/interior-design.md %}

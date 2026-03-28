@@ -2,7 +2,6 @@
 series_id: "tulips"
 title: "tulips"
 layout: "series"
-checksum: "5043db68ce359c131dd038a704832dea"
+checksum: "6440952c0854b9c76e34b88b10eb9c6d"
 ---
 
-{% include series_prose/tulips.md %}

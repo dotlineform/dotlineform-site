@@ -2,7 +2,6 @@
 series_id: "found-forms"
 title: "found forms"
 layout: "series"
-checksum: "54b66f66c1f16d3fe341ffa630d90c84"
+checksum: "1fd2e178f6e22a088f082efc2ad1f604"
 ---
 
-{% include series_prose/found-forms.md %}

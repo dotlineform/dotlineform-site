@@ -2,7 +2,6 @@
 series_id: "water-sea-pond"
 title: "water sea pond"
 layout: "series"
-checksum: "f6d20a6bf4c868c9b460c1606db7d1ca"
+checksum: "76b4acd3a58704be48b10a4ce407b159"
 ---
 
-{% include series_prose/water-sea-pond.md %}

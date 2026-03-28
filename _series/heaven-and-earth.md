@@ -2,7 +2,6 @@
 series_id: "heaven-and-earth"
 title: "heaven and earth"
 layout: "series"
-checksum: "799e0e4472e2b0ba490d0613c9de0c0e"
+checksum: "cd4ecc7d1bdc1137032f16d2d0f3556e"
 ---
 
-{% include series_prose/heaven-and-earth.md %}

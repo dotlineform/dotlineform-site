@@ -2,7 +2,6 @@
 series_id: "field"
 title: "field"
 layout: "series"
-checksum: "194c406ea183f6c060a4c09b625fd7a1"
+checksum: "0a222d9e4dbe702794c4ea412abea08b"
 ---
 
-{% include series_prose/field.md %}

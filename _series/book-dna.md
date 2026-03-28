@@ -2,7 +2,6 @@
 series_id: "book-dna"
 title: "book dna"
 layout: "series"
-checksum: "643735bf4d4097985ef9a410ed106788"
+checksum: "deb07db5ecbf1a7f620da33ace178286"
 ---
 
-{% include series_prose/book-dna.md %}

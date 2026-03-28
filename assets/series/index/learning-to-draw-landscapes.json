@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-e60bcfe5dc8b3469f17230a87f9df3ac",
+    "generated_at_utc": "2026-03-28T18:59:54Z",
+    "series_id": "learning-to-draw-landscapes",
+    "count": 17
+  },
+  "series": {
+    "series_id": "learning-to-draw-landscapes",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "learning to draw landscapes",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2010,
+    "year_display": "c. 2010?, 2022",
+    "project_folders": [
+      "learning to draw landscapes"
+    ],
+    "works": [
+      "00114",
+      "00115",
+      "00116",
+      "00117",
+      "00118",
+      "00119",
+      "00120",
+      "00121",
+      "00122",
+      "00123",
+      "00124",
+      "00125",
+      "00126",
+      "00127",
+      "00128",
+      "00129",
+      "00519"
+    ],
+    "primary_work_id": "00127"
+  }
+}

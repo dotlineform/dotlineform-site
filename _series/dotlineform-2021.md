@@ -2,7 +2,6 @@
 series_id: "dotlineform-2021"
 title: "dotlineform (2021)"
 layout: "series"
-checksum: "d98e996f0f0ac4deeb2cfa0ac3cf6009"
+checksum: "9fd94e478e6cca6ba43daa91ae82fa71"
 ---
 
-{% include series_prose/dotlineform-2021.md %}

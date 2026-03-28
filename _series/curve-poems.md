@@ -2,7 +2,6 @@
 series_id: "curve-poems"
 title: "curve poems"
 layout: "series"
-checksum: "958d9686f655b7d75733632059328ee9"
+checksum: "a051736f3cddd6f9fd89ed22f6edb1e3"
 ---
 
-{% include series_prose/curve-poems.md %}

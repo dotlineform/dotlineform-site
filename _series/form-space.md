@@ -2,7 +2,6 @@
 series_id: "form-space"
 title: "form space"
 layout: "series"
-checksum: "066dbd995e5e241828d9cb8bf3e0068f"
+checksum: "ebe049fb0bd16be87dbaeee4a998e74e"
 ---
 
-{% include series_prose/form-space.md %}

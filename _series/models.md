@@ -2,7 +2,6 @@
 series_id: "models"
 title: "models"
 layout: "series"
-checksum: "798f648ef5781d87b01cb1f1d08ba186"
+checksum: "580e99c3c2400816cc03f1f5d4e24de4"
 ---
 
-{% include series_prose/models.md %}

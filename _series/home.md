@@ -2,7 +2,6 @@
 series_id: "home"
 title: "home"
 layout: "series"
-checksum: "58075a548e8ed3ccbbf08ed7d7fbd5b4"
+checksum: "674eb4e43f64e10752d65baa80f88e03"
 ---
 
-{% include series_prose/home.md %}

@@ -2,7 +2,6 @@
 series_id: "a-humid-home-full-of-light"
 title: "a humid home full of light"
 layout: "series"
-checksum: "8a2cf684653b830bc72d8a94fa105634"
+checksum: "5522ee59f33475bb45996e8368de3fcc"
 ---
 
-{% include series_prose/a-humid-home-full-of-light.md %}

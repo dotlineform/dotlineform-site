@@ -2,7 +2,6 @@
 series_id: "grid-theory"
 title: "grid theory"
 layout: "series"
-checksum: "e02943a62c21144d1325974c79417dd3"
+checksum: "889960569dfab0af3057f4f1250d24c9"
 ---
 
-{% include series_prose/grid-theory.md %}

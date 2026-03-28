@@ -2,7 +2,6 @@
 series_id: "tabula-rasa"
 title: "tabula rasa"
 layout: "series"
-checksum: "fab4ca9feae061008c49947b0b98c742"
+checksum: "29ef181da6d0b3f21701bf781fe8ec6e"
 ---
 
-{% include series_prose/tabula-rasa.md %}

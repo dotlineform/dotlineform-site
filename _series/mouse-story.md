@@ -2,7 +2,6 @@
 series_id: "mouse-story"
 title: "mouse story"
 layout: "series"
-checksum: "55a01154e84bd093748902f3b84c3288"
+checksum: "f85f5499a316a7c2b54742f37969b3c7"
 ---
 
-{% include series_prose/mouse-story.md %}

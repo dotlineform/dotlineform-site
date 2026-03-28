@@ -155,7 +155,7 @@ layout: default
     </div>
   </section>
 
-  <section class="content work__prose">
+  <section class="content work__prose" id="workProseSection">
     <div id="workProseContent"></div>
   </section>
 
@@ -352,14 +352,22 @@ layout: default
       mediaLink.setAttribute('href', fullSrc);
     }
 
-    function renderProse(contentHtml) {
+    function renderProse(contentHtml, showError) {
+      var proseSection = document.getElementById('workProseSection');
       var prose = document.getElementById('workProseContent');
       if (!prose) return;
       if (typeof contentHtml === 'string' && contentHtml.trim()) {
+        if (proseSection) proseSection.hidden = false;
         prose.innerHTML = contentHtml;
         return;
       }
-      prose.innerHTML = '<p>problem loading content</p>';
+      if (showError) {
+        if (proseSection) proseSection.hidden = false;
+        prose.innerHTML = '<p>problem loading content</p>';
+        return;
+      }
+      if (proseSection) proseSection.hidden = true;
+      prose.innerHTML = '';
     }
 
     function applyMetadata(meta) {
@@ -442,7 +450,7 @@ layout: default
         var contentHtml = (payload && typeof payload.content_html === 'string') ? payload.content_html : null;
         if (!work) {
           applyMetadata(fallback);
-          renderProse(null);
+          renderProse(null, true);
           return;
         }
         var merged = {};
@@ -450,11 +458,11 @@ layout: default
         for (key in fallback) merged[key] = fallback[key];
         for (key in work) merged[key] = work[key];
         applyMetadata(merged);
-        renderProse(contentHtml);
+        renderProse(contentHtml, false);
       })
       .catch(function () {
         applyMetadata(fallback);
-        renderProse(null);
+        renderProse(null, true);
       });
   })();
 </script>

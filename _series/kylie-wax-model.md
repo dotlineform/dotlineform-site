@@ -2,7 +2,6 @@
 series_id: "kylie-wax-model"
 title: "kylie wax model"
 layout: "series"
-checksum: "c8907cdf201ff4bf09582fbd535c0ca6"
+checksum: "f835de6daafb1a389a06aeab50d8d223"
 ---
 
-{% include series_prose/kylie-wax-model.md %}

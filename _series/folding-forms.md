@@ -2,7 +2,6 @@
 series_id: "folding-forms"
 title: "folding forms"
 layout: "series"
-checksum: "66b8ca898baee3894a48c0ae04a75d25"
+checksum: "a455becba4085640a2c730b1b5c23c6d"
 ---
 
-{% include series_prose/folding-forms.md %}

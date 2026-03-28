@@ -2,7 +2,6 @@
 series_id: "form-mobile"
 title: "form mobile"
 layout: "series"
-checksum: "299a94c3e37e6167e243e70fdd4df17b"
+checksum: "4295cc297fec8a7fa854b29814ae465d"
 ---
 
-{% include series_prose/form-mobile.md %}

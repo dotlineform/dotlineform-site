@@ -2,7 +2,6 @@
 series_id: "spine-symbols"
 title: "spine symbols"
 layout: "series"
-checksum: "16df071b5a491d837b97121a44ec5235"
+checksum: "f6de172fcc6994b95cb6958f8c9cf1e9"
 ---
 
-{% include series_prose/spine-symbols.md %}

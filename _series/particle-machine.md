@@ -2,7 +2,6 @@
 series_id: "particle-machine"
 title: "particle machine"
 layout: "series"
-checksum: "f43ee528c9dd25306992287b624f2429"
+checksum: "9ea287291b0d18dc8c8343ee3b97caff"
 ---
 
-{% include series_prose/particle-machine.md %}

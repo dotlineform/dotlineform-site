@@ -2,7 +2,6 @@
 series_id: "egg-prints"
 title: "egg prints"
 layout: "series"
-checksum: "6eab4de2a9c35e4144bcd5fd00de2804"
+checksum: "ba79346b8403753be4d83ec68ac9022c"
 ---
 
-{% include series_prose/egg-prints.md %}

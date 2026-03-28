@@ -2,7 +2,6 @@
 series_id: "kylie-structures"
 title: "kylie structures"
 layout: "series"
-checksum: "c65100e781794803d5a156a8552b1e90"
+checksum: "fae7fbb01bd4521e14a32638c4950487"
 ---
 
-{% include series_prose/kylie-structures.md %}

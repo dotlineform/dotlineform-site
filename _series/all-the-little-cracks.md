@@ -2,7 +2,6 @@
 series_id: "all-the-little-cracks"
 title: "all the little cracks"
 layout: "series"
-checksum: "4c3f7d98bd5688adec6ba5b1678f6965"
+checksum: "575f393ba77d95c1c3a4dd17679676f6"
 ---
 
-{% include series_prose/all-the-little-cracks.md %}

@@ -2,7 +2,6 @@
 series_id: "fog"
 title: "fog"
 layout: "series"
-checksum: "b70f8c8351bd05279860696157c033a1"
+checksum: "b5a3f7065ec9eba0aa844109efb4d691"
 ---
 
-{% include series_prose/fog.md %}

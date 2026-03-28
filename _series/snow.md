@@ -2,7 +2,6 @@
 series_id: "snow"
 title: "snow"
 layout: "series"
-checksum: "e43b423dba4f7a3530944d151be6b806"
+checksum: "7740c42c1e979e87b6645224b683b492"
 ---
 
-{% include series_prose/snow.md %}

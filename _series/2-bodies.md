@@ -2,7 +2,6 @@
 series_id: "2-bodies"
 title: "2 bodies"
 layout: "series"
-checksum: "aa55d4df71e7977e04456b85b1a64d92"
+checksum: "79f3fabca7a017e7d5c505cb8ef394af"
 ---
 
-{% include series_prose/2-bodies.md %}

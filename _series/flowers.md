@@ -2,7 +2,6 @@
 series_id: "flowers"
 title: "flowers"
 layout: "series"
-checksum: "4ef4d4063fdf4228fe2b886b159b4e42"
+checksum: "4b58a6d26a7c0df2af80936bb6f86cb1"
 ---
 
-{% include series_prose/flowers.md %}

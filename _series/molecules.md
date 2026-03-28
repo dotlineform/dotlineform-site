@@ -2,7 +2,6 @@
 series_id: "molecules"
 title: "molecules"
 layout: "series"
-checksum: "e75878ced66c6c9b2f85bc7d4fd60d49"
+checksum: "ec98f3f42d4253eb9580900ed223e8ea"
 ---
 
-{% include series_prose/molecules.md %}

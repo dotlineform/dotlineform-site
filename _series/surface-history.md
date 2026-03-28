@@ -2,7 +2,6 @@
 series_id: "surface-history"
 title: "surface history"
 layout: "series"
-checksum: "9bb548069e5dcdd59340f81a03179de3"
+checksum: "67bb9504737a8566d9fd3b34a12ced63"
 ---
 
-{% include series_prose/surface-history.md %}

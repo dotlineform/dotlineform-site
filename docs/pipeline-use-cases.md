@@ -556,7 +556,7 @@ Repo artifacts touched by the calls:
 Workbook/manual follow-up after run:
 
 - Manually delete stale `_series/<series_id>.md`.
-- Manually delete or archive `_includes/series_prose/<series_id>.md`.
+- Manually delete or archive the canonical external prose source file for the series, if one exists at `projects/<primary_work_project_folder>/<prose_subdir>/<series_prose_file>`.
 - Manually remove the series entry from `assets/studio/data/tag_assignments.json`.
 - Remove stale `SeriesSort` rows and any surviving workbook references to the deleted series.
 
