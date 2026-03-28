@@ -503,7 +503,7 @@ permalink: /moments/
         updateSortUi();
         updateViewUi();
         renderCurrentView();
-        empty.hidden = !momentsItems.length;
+        empty.hidden = !!momentsItems.length;
       });
   })();
 </script>
