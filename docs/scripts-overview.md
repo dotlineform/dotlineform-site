@@ -155,8 +155,9 @@ Useful flags:
   - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
   - renders canonical moment prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md` using the local Jekyll markdown stack
   - generated in parallel with legacy moment pages during the Phase 1 migration
-  - runtime page selection is controlled separately by `_data/pipeline.json` `features.moments_runtime_source`
-    - `legacy`: server-rendered moment prose path
+  - runtime page selection is controlled by `_data/pipeline.json` `features.moments_runtime_source`
+    - current default: `json`
+    - `legacy`: server-rendered moment prose path retained temporarily for rollback
     - `json`: fetches per-moment JSON at runtime and shows `problem loading content` if fetch fails
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`

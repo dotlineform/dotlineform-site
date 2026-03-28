@@ -20,11 +20,11 @@ This document defines the phased migration from the current include-based moment
 
 ## Status
 
-- Overall status: `phase 1 and phase 2 implemented; JSON-mode manual verification pending`
+- Overall status: `phase 1, phase 2, and phase 4 completed; phase 3 and phase 5 not started`
 - Phase 1: `completed`
-- Phase 2: `implemented; manual verification follow-up pending`
+- Phase 2: `completed`
 - Phase 3: `not started`
-- Phase 4: `not started`
+- Phase 4: `completed`
 - Phase 5: `not started`
 
 ## Working Decisions
@@ -165,7 +165,7 @@ Status: `completed`
 
 ### Done
 
-- 2026-03-28: Added tracked feature flag `features.moments_runtime_source` with default `legacy`.
+- 2026-03-28: Added tracked feature flag `features.moments_runtime_source` with initial default `legacy`.
 - 2026-03-28: Added Jekyll-backed markdown renderer helper at `scripts/render_markdown_with_jekyll.rb`.
 - 2026-03-28: Added `moment-json` as a separate `generate_work_pages.py --only` artifact.
 - 2026-03-28: Added `--moments-json-dir` with default `assets/moments/index`.
@@ -193,7 +193,7 @@ Status: `completed`
 
 ## Phase 2: Add Dual-Path Runtime Rendering
 
-Status: `implemented; manual verification follow-up pending`
+Status: `completed`
 
 ### Needs
 
@@ -258,11 +258,8 @@ Status: `implemented; manual verification follow-up pending`
   - `assets/js/moment.js`
 - 2026-03-28: Ran:
   - `bundle exec jekyll build --quiet`
-- 2026-03-28: Confirmed the site still builds successfully with the default `legacy` runtime mode.
-- Manual follow-up still needed:
-  - switch `features.moments_runtime_source` to `json`
-  - inspect representative moment pages on desktop and mobile
-  - verify the `problem loading content` failure state in-browser
+- 2026-03-28: Confirmed the site builds successfully with the runtime feature flag in place.
+- 2026-03-28: Manual JSON-mode checks succeeded for representative moment pages and the `problem loading content` failure state.
 
 ## Phase 3: Convert Moment Pages To Stubs
 
@@ -304,7 +301,7 @@ Status: `not started`
 
 ## Phase 4: Switch Default To JSON Mode
 
-Status: `not started`
+Status: `completed`
 
 ### Needs
 
@@ -334,6 +331,18 @@ Status: `not started`
 ### Main Risk
 
 - Runtime regressions become user-facing if the flag is switched before enough representative moments are checked.
+
+### Done
+
+- 2026-03-28: Switched `_data/pipeline.json` `features.moments_runtime_source` to `json`.
+- 2026-03-28: Updated `scripts/pipeline_config.py` fallback default to `json` to match the tracked config.
+- 2026-03-28: Updated docs to describe JSON mode as the active default while keeping `legacy` available for rollback.
+
+### Verification
+
+- 2026-03-28: Ran:
+  - `bundle exec jekyll build --quiet`
+- 2026-03-28: Manual checks succeeded on representative moment pages in JSON mode.
 
 ## Phase 5: Retire Legacy Moment Prose Includes
 
