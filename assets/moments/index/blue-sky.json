@@ -1,0 +1,23 @@
+{
+  "header": {
+    "schema": "moment_record_v1",
+    "version": "blake2b-6ded2c9a707c70e926a42c30e108eae4",
+    "generated_at_utc": "2026-03-28T14:59:27Z",
+    "moment_id": "blue-sky"
+  },
+  "moment": {
+    "moment_id": "blue-sky",
+    "title": "blue sky",
+    "date": "2012-01-01",
+    "date_display": "c. 2012?",
+    "images": [
+      {
+        "file": "blue-sky.jpg",
+        "alt": "blue sky"
+      }
+    ],
+    "width_px": 3264,
+    "height_px": 1628
+  },
+  "content_html": "<pre class=\"moment-text\">\nperhaps it is an alchemical truth\nthat the sky is always blue\nbut most of the time purity is hidden from us\n \nand then when we find the blue\nit is only gas molecules scattering the sun\nthe atmosphere thins to a layer\nbeyond which there is only emptiness\n \nwhich is not really empty\nno matter how far you look or travel\nthere is no emptiness to be found\n</pre>\n"
+}
