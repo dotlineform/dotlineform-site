@@ -41,6 +41,7 @@
 - Treat `data/works.xlsx` as canonical source for generated collections.
 - Treat worksheets `Works`, `Series`, `WorkDetails`, and `Moments` as canonical.
 - Keep generated output deterministic (stable ordering, stable checksums, stable formatting).
+- `series-json` is an opt-in migration artifact; when used, canonical series prose is resolved via `Series.primary_work_id -> Works.project_folder -> <prose_subdir> -> Series.series_prose_file`.
 
 ## Moments-Specific Rules
 

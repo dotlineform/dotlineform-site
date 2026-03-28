@@ -169,16 +169,26 @@ Useful flags:
   - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
   - `work-files` stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
+- `--series-json-dir` (default `assets/series/index`)
+  - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
+  - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
+  - `primary_work_project_folder` is derived from `Series.primary_work_id -> Works.project_folder`
+  - if `Series.series_prose_file` is empty or the resolved markdown file is missing, the pipeline warns and skips that series JSON file
+  - current status: opt-in migration artifact for parallel testing; legacy series pages still render prose from `_includes/series_prose`
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
   - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-json`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
   - there is no separate `works-prose` artifact; use `work-json` for prose-only refreshes
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`)
     - selecting `work-pages` also rebuilds the per-work JSON payload because runtime prose now depends on it
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
   - `series-pages`: writes `_series/<series_id>.md` as lightweight stubs (`series_id`, `title`, `layout`, `checksum`) plus prose include
+  - `series-json`: writes `assets/series/index/<series_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `series_id`, `count`), full public `series`, and rendered `content_html`
+    - current status: opt-in migration artifact; not used by the live series page runtime yet
+    - series-driven: emits one file per selected series_id
+    - renders canonical series prose from the external projects tree using the local Jekyll markdown stack
   - `work-details-pages`: writes `_work_details/<detail_uid>.md` as lightweight stubs (`work_id`, `detail_id`, `detail_uid`, `title`)
   - `moments`: writes both `_moments/<moment_id>.md` stubs and `assets/moments/index/<moment_id>.json`
     - stub front matter keeps only `moment_id`, `title`, `layout`, and a checksum derived from canonical moment metadata
