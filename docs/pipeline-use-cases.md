@@ -512,7 +512,7 @@ Workbook/manual follow-up after run:
 
 - Remove or archive the deleted work's rows from `WorkDetails`, `WorkFiles`, and `WorkLinks`.
 - Update the `Series` sheet manually if the deleted work was still referenced there.
-- Manually remove `_includes/work_prose/01234.md` if you do not want to keep it.
+- Manually remove or archive the deleted work's canonical prose file from the external projects prose folder if you do not want to keep it.
 - Manually remove stale staged media under `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/01234-*` and any stale detail media.
 
 Potential improvements:

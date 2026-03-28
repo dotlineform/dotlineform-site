@@ -18,7 +18,7 @@ Deletion scope:
 
 Intentionally left untouched:
 - assets/work_details/img/*
-- _includes/work_prose/<work_id>.md
+- canonical work prose under the external projects prose folder
 - staged media under $DOTLINEFORM_MEDIA_BASE_DIR/works/files/<work_id>-*
 """
 

@@ -475,7 +475,7 @@ After Phase 5 retirement:
 
 After the moments migration is complete and stable:
 
-- add a separate phase to move works prose out of `_includes/work_prose` and into per-work JSON
+- add a separate phase to move works prose out of the legacy repo include path and into per-work JSON
 - add a separate phase to convert moment source files from `<pre class="moment-text">...</pre>` wrappers to pure markdown
 - aim for the same conceptual model across works and moments:
   - lightweight page stubs

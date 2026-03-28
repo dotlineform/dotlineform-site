@@ -710,7 +710,6 @@ def main() -> None:
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
-    ap.add_argument("--work-prose-dir", default="_includes/work_prose", help="Deprecated legacy work prose include folder (ignored; canonical work prose now loads from external source files)")
     ap.add_argument("--series-output-dir", default="_series", help="Output folder for generated series pages")
     ap.add_argument("--series-prose-dir", default="_includes/series_prose", help="Folder for manual series prose includes")
     ap.add_argument("--series-index-json-path", default="assets/data/series_index.json", help="Output path for generated series index JSON")
@@ -2401,7 +2400,7 @@ def main() -> None:
 
             for wid in encountered_work_ids:
                 wj_processed += 1
-                prefix_wj = f"[workjson {wj_processed}/{wj_total}] "
+                prefix_wj = f"[Work JSON {wj_processed}/{wj_total}] "
 
                 source_prose_path = resolve_work_prose_source_path(wid)
                 if source_prose_path is None or not source_prose_path.exists():
@@ -2445,7 +2444,7 @@ def main() -> None:
                     wj_written += 1
 
             print(
-                f"Work detail JSON done. {'Would write' if not args.write else 'Wrote'}: {wj_written}. Skipped: {wj_skipped}."
+                f"Work JSON done. {'Would write' if not args.write else 'Wrote'}: {wj_written}. Skipped: {wj_skipped}."
             )
         else:
             print("Work detail JSON skipped: not selected by --only.")

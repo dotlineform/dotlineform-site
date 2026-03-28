@@ -173,6 +173,7 @@ Useful flags:
 - `--only`: limit generation to selected artifacts
   - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
   - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
+  - there is no separate `works-prose` artifact; use `work-json` for prose-only refreshes
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`)
     - selecting `work-pages` also rebuilds the per-work JSON payload because runtime prose now depends on it
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
@@ -204,6 +205,7 @@ Useful flags:
     - work-page primary-series label/link is derived at runtime from `series_index.json`, using `work.series_ids[0]`
     - work-driven: emits one file per selected work_id (uses `sections: []` when a work has no details)
     - renders canonical work prose from the external projects tree using the local Jekyll markdown stack
+    - this is the prose-only refresh path for works when `_works/*.md` stubs do not need to change
 
 Runtime canonical data flow:
 
