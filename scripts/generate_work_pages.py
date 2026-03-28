@@ -2572,6 +2572,7 @@ def main() -> None:
         moments_dimensions_updated = 0
         moments_published_date_missing_warned = False
         moment_json_generated_at_utc = utc_timestamp_now()
+        moments_processed = 0
 
         for mr, mr_cells in zip(moments_rows[1:], moments_ws.iter_rows(min_row=2), strict=False):
             mid_raw = cell(mr, moments_hi, "moment_id")
@@ -2609,7 +2610,9 @@ def main() -> None:
                     moments_json_skipped += 1
                 continue
 
+            moments_processed += 1
             prefix_m = f"[moment {moment_id}] "
+            print(f"[moment {moments_processed}/{moments_pages_total}] {moment_id}", flush=True)
 
             date_value = parse_date(cell(mr, moments_hi, date_col)) if date_col else None
             date_display = coerce_string(cell(mr, moments_hi, date_display_col)) if date_display_col else None
