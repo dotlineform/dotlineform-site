@@ -112,22 +112,6 @@ def build_moments_section() -> Dict[str, Any]:
     return {"key": "moments", "label": "Moments", "items": items}
 
 
-def build_themes_section() -> Dict[str, Any]:
-    items: List[Dict[str, Any]] = [
-        make_item("themes index", "/themes/", "themes/index.md", 0, "index"),
-        make_item("theme pages", "/themes/:id/", "_themes/*.md", 1, "theme"),
-    ]
-    return {"key": "themes", "label": "Themes", "items": items}
-
-
-def build_research_section() -> Dict[str, Any]:
-    items: List[Dict[str, Any]] = [
-        make_item("research index", "/research/", "research/index.md", 0, "index"),
-        make_item("research pages", "/research/:id/", "_research/*.md", 1, "research"),
-    ]
-    return {"key": "research", "label": "Research", "items": items}
-
-
 def build_core_section(root: Path) -> Dict[str, Any]:
     items: List[Dict[str, Any]] = []
     pages = [
@@ -170,8 +154,6 @@ def build_sections(root: Path) -> List[Dict[str, Any]]:
     return [
         build_works_section(root),
         build_moments_section(),
-        build_themes_section(),
-        build_research_section(),
         build_core_section(root),
     ]
 

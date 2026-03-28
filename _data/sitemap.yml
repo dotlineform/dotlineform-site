@@ -44,38 +44,6 @@ sections:
         depth: 1
         node_type: "moment"
   -
-    key: "themes"
-    label: "Themes"
-    items:
-      -
-        title: "themes index"
-        url: "/themes/"
-        source: "themes/index.md"
-        depth: 0
-        node_type: "index"
-      -
-        title: "theme pages"
-        url: "/themes/:id/"
-        source: "_themes/*.md"
-        depth: 1
-        node_type: "theme"
-  -
-    key: "research"
-    label: "Research"
-    items:
-      -
-        title: "research index"
-        url: "/research/"
-        source: "research/index.md"
-        depth: 0
-        node_type: "index"
-      -
-        title: "research pages"
-        url: "/research/:id/"
-        source: "_research/*.md"
-        depth: 1
-        node_type: "research"
-  -
     key: "core"
     label: "Core Pages"
     items:

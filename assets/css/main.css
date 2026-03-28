@@ -788,8 +788,6 @@ figure.diagram figcaption{
 /* Section-specific index column layouts */
 .works .index__item{ grid-template-columns: 6ch 1fr; }      /* work_id, title */
 .moments .index__item{ grid-template-columns: 12ch 1fr; }   /* date, title */
-.themes .index__item{ grid-template-columns: 12ch 1fr; }    /* date, title */
-.research .index__item{ grid-template-columns: 12ch 1fr; }  /* date, title */
 
 /* Single-column index rows (no date/prefix column) */
 .index__item--single{
@@ -1303,7 +1301,7 @@ pre.theme-text{
 
 /* Base components (shared across sections):
 Use “structure-first” naming and scope section-specific differences via the root page class
-(e.g. .work, .theme, .moment, .research-note).
+(e.g. .work, .moment).
 */
 
 .page{
@@ -1582,16 +1580,8 @@ Use “structure-first” naming and scope section-specific differences via the 
   /* works section wrapper */
 }
 
-.themes{
-  /* themes section wrapper */
-}
-
 .moments{
   /* moments section wrapper */
-}
-
-.research{
-  /* research section wrapper */
 }
 
 /* Note: section index pages use the shared `.index` / `.index__*` component classes. */

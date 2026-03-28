@@ -893,8 +893,6 @@ def check_links(
         ("works/index.md", "/works/"),
         ("series/index.md", "/series/"),
         ("moments/index.md", "/moments/"),
-        ("themes/index.md", "/themes/"),
-        ("research/index.md", "/research/"),
         ("palette.html", "/palette/"),
     ]
     for rel, default_url in static_candidates:

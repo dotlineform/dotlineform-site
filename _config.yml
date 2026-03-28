@@ -45,15 +45,9 @@ collections:
   studio_works:
     output: true
     permalink: /studio/studio-works/:name/
-  themes:
-    output: true
-    permalink: /themes/:name/
   moments:
     output: true
     permalink: /moments/:name/
-  research:
-    output: true
-    permalink: /research/:name/
 
 # Any document can set published: false in its front matter to hide it from site.<collection> output/build.
 # no default has been set, so all documents are published by default.
@@ -76,19 +70,9 @@ defaults:
       layout: series
   - scope:
       path: ""
-      type: themes
-    values:
-      layout: theme
-  - scope:
-      path: ""
       type: moments
     values:
       layout: moment
-  - scope:
-      path: ""
-      type: research
-    values:
-      layout: research-note
   
   # Apply default layout automatically to other pages
   - scope:

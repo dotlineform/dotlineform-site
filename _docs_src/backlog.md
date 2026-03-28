@@ -24,7 +24,7 @@ This file tracks deferred improvements and follow-up work.
 
 - Optional JSON content-integrity check:
   - recompute/verify JSON `version`/checksum fields in `assets/data/series_index.json`, `assets/data/works_index.json`, and `assets/works/index/*.json`.
-- Extend orphan checks to additional content domains (`_themes`, `_research`, optional media domains).
+- Extend orphan checks to additional optional media/content domains as needed.
 - Add automated tests for audit script behaviors (fixtures + expected findings).
 - If the UI review reveals stable new patterns, promote them into `docs/css-primitives.md` only after they exist in code.
 
