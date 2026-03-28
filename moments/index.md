@@ -25,12 +25,6 @@ permalink: /moments/
   {%- if moment.published == false -%}{%- continue -%}{%- endif -%}
   {%- unless first_moment -%},{%- endunless -%}
   {%- assign moment_id = moment.moment_id | default: moment.slug -%}
-  {%- assign year_number = nil -%}
-  {%- assign year_text = nil -%}
-  {%- if moment.date -%}
-    {%- assign year_number = moment.date | date: "%Y" | plus: 0 -%}
-    {%- assign year_text = moment.date | date: "%Y" -%}
-  {%- endif -%}
   {
     "moment_id": {{ moment_id | jsonify }},
     "title": {{ moment.title | default: moment.slug | jsonify }},
@@ -139,6 +133,7 @@ permalink: /moments/
     if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
     var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
+    var momentsIndexUrl = baseurl + '/assets/data/moments_index.json';
     var momentsItems = {{ moments_index_items | strip_newlines }};
     var viewStorageKey = 'dlf.momentsIndex.view';
     var sortStorageKey = 'dlf.momentsIndex.sort';
@@ -177,27 +172,24 @@ permalink: /moments/
       return match ? Number(match[1]) : null;
     }
 
-    function hydrateMomentItem(item) {
+    function mergeMomentIndexItem(item, indexMap) {
       var momentId = String((item && item.moment_id) || '').trim();
-      if (!momentId) return Promise.resolve(item);
-      return fetchJson(baseurl + '/assets/moments/index/' + encodeURIComponent(momentId) + '.json')
+      var row = indexMap && momentId ? indexMap[momentId] : null;
+      return {
+        moment_id: momentId,
+        title: String((row && row.title) || (item && item.title) || momentId),
+        date: String((row && row.date) || ''),
+        date_display: String((row && row.date_display) || ''),
+        url: item && item.url,
+        thumb_id: String((row && row.thumb_id) || '').trim() || null
+      };
+    }
+
+    function loadMomentsIndexMap() {
+      return fetchJson(momentsIndexUrl)
         .then(function (payload) {
-          var moment = payload && payload.moment && typeof payload.moment === 'object' ? payload.moment : null;
-          if (!moment) return item;
-          var images = Array.isArray(moment.images) ? moment.images : [];
-          var dateDisplay = String(moment.date_display || '').trim();
-          var year = parseYearNumber(moment.date, dateDisplay);
-          return {
-            moment_id: momentId,
-            title: String(moment.title || item.title || momentId),
-            year: Number.isFinite(year) ? year : null,
-            year_display: dateDisplay || (Number.isFinite(year) ? String(year) : null),
-            url: item.url,
-            thumb_id: images.length ? momentId : null
-          };
-        })
-        .catch(function () {
-          return item;
+          var moments = payload && payload.moments && typeof payload.moments === 'object' ? payload.moments : null;
+          return moments || {};
         });
     }
 
@@ -286,15 +278,14 @@ permalink: /moments/
     }
 
     function yearDisplayText(item) {
-      return String((item && (item.year_display != null ? item.year_display : item.year)) || '').trim();
+      var display = String((item && item.date_display) || '').trim();
+      if (display) return display;
+      var year = yearSortNumber(item);
+      return Number.isFinite(year) ? String(year) : '';
     }
 
     function yearSortNumber(item) {
-      var numericYear = Number(item && item.year);
-      if (Number.isFinite(numericYear)) return numericYear;
-      var match = yearDisplayText(item).match(/(\d{4})/);
-      if (match) return Number(match[1]);
-      return null;
+      return parseYearNumber(item && item.date, item && item.date_display);
     }
 
     function yearCompare(a, b) {
@@ -497,18 +488,22 @@ permalink: /moments/
       return;
     }
 
-    Promise.all(momentsItems.map(hydrateMomentItem))
-      .then(function (hydratedItems) {
-        momentsItems = hydratedItems;
+    loadMomentsIndexMap()
+      .then(function (indexMap) {
+        momentsItems = momentsItems.map(function (item) {
+          return mergeMomentIndexItem(item, indexMap);
+        });
       })
       .catch(function () {
+        momentsItems = [];
+        empty.textContent = 'problem loading content';
       })
       .finally(function () {
         root.hidden = false;
-        empty.hidden = true;
         updateSortUi();
         updateViewUi();
         renderCurrentView();
+        empty.hidden = !momentsItems.length;
       });
   })();
 </script>

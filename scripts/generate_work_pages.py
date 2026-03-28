@@ -9,6 +9,7 @@ Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
 Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
+Lightweight moments index JSON is written to assets/data/moments_index.json (object keyed by moment_id).
 
 - Works: base work metadata (1 row per work)
 - Series: series master data (1 row per series_id)
@@ -49,6 +50,7 @@ Common flags:
 - --moments-sheet: worksheet name for moments (default: Moments)
 - --moments-output-dir: moment page destination
 - --moments-json-dir: moment JSON output destination
+- --moments-index-json-path: moments index JSON output destination
 - --projects-base-dir: base path used for dimension lookups and WorkFiles source lookup
 - --media-base-dir: base path used for staging work download files into works/files
 
@@ -715,6 +717,7 @@ def main() -> None:
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
+    ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
     ap.add_argument(
         "--projects-base-dir",
         default=env_var_value(PIPELINE_CONFIG, "projects_base_dir"),
@@ -768,7 +771,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments."
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json."
         ),
     )
     args = ap.parse_args()
@@ -791,6 +794,7 @@ def main() -> None:
         "work-json",
         "works-index-json",
         "moments",
+        "moments-index-json",
     }
     selected_artifacts: Optional[set[str]] = None
     if args.only:
@@ -824,9 +828,10 @@ def main() -> None:
     run_work_json = artifact_enabled("work-json")
     run_works_index_json = artifact_enabled("works-index-json")
     run_moments_artifact = artifact_enabled("moments")
+    run_moments_index_json = artifact_enabled("moments-index-json")
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
-    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact
+    needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact or run_moments_index_json
     if needs_projects_base and normalize_text(args.projects_base_dir) == "":
         raise SystemExit(
             f"Missing projects base directory. Set {PROJECTS_BASE_DIR_ENV_NAME} "
@@ -959,6 +964,8 @@ def main() -> None:
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_json_dir = Path(args.moments_json_dir).expanduser()
     moments_json_dir.mkdir(parents=True, exist_ok=True)
+    moments_index_json_path = Path(args.moments_index_json_path).expanduser()
+    moments_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     projects_base_dir = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) != "" else Path(".")
     projects_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
     media_base_dir = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) != "" else None
@@ -1341,6 +1348,21 @@ def main() -> None:
         public_record.pop("checksum", None)
         return compact_json_object(public_record)
 
+    def build_moment_index_record(moment_record: Dict[str, Any]) -> Dict[str, Any]:
+        moment_id_value = coerce_string(moment_record.get("moment_id"))
+        title_value = coerce_string(moment_record.get("title"))
+        date_value = coerce_string(moment_record.get("date"))
+        date_display_value = coerce_string(moment_record.get("date_display"))
+        images_value = moment_record.get("images")
+        thumb_id_value = moment_id_value if isinstance(images_value, list) and len(images_value) > 0 else None
+        return compact_json_object({
+            "moment_id": moment_id_value,
+            "title": title_value,
+            "date": date_value,
+            "date_display": date_display_value,
+            "thumb_id": thumb_id_value,
+        })
+
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         section_index: Dict[str, int] = {}
         sections: List[Dict[str, Any]] = []
@@ -1455,6 +1477,7 @@ def main() -> None:
         and not explicit_moment_filter
     ):
         run_moments = False
+        run_moments_index_json = False
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
@@ -2474,8 +2497,8 @@ def main() -> None:
     # - image_alt
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
-    if not run_moments:
-        if selected_artifacts is not None and not run_moments_artifact:
+    if not run_moments and not run_moments_index_json:
+        if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
             print("Moment pages/JSON skipped: not selected by --only.")
         else:
             print("Moment pages/JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
@@ -2769,6 +2792,118 @@ def main() -> None:
             print(
                 f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
             )
+
+    if run_moments_index_json:
+        moments_payload: Dict[str, Dict[str, Any]] = {}
+        projects_base_dir = Path(args.projects_base_dir).expanduser()
+        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
+        moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+
+        for mr in moments_rows[1:]:
+            mid_raw = cell(mr, moments_hi, "moment_id")
+            if is_empty(mid_raw):
+                continue
+
+            status = normalize_status(cell(mr, moments_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+
+            moment_id_raw = coerce_string(cell(mr, moments_hi, "moment_id"))
+            if moment_id_raw is None:
+                continue
+            moment_id = moment_id_raw.strip().lower()
+            if not is_slug_safe(moment_id):
+                raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id_raw!r}")
+
+            title = coerce_string(cell(mr, moments_hi, "title")) or moment_id
+            date_value = parse_date(cell(mr, moments_hi, "date"))
+            date_display = coerce_string(cell(mr, moments_hi, "date_display"))
+            width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
+            height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
+
+            default_moment_filename = f"{moment_id}.jpg"
+            project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
+            if project_filename is None:
+                project_filename = default_moment_filename
+            image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
+            image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
+
+            src_path: Optional[Path] = None
+            source_filename = project_filename or image_file
+            if source_filename:
+                src_path = moments_images_root / source_filename
+
+            if src_path is not None:
+                src_w, src_h = read_image_dims_px(src_path)
+                if src_w is not None and src_h is not None:
+                    width_px = src_w
+                    height_px = src_h
+
+            images_list: List[Dict[str, Any]] = []
+            if image_file is None and src_path is not None and src_path.exists():
+                image_file = default_moment_filename
+            if image_file is not None and image_alt is None:
+                image_alt = title or moment_id
+            if image_file is not None:
+                images_list.append(
+                    {
+                        "file": image_file,
+                        "alt": image_alt,
+                    }
+                )
+
+            source_prose_path = moments_root / f"{moment_id}.md"
+            if not source_prose_path.exists():
+                print(f"[moment {moment_id}] WARNING: missing source prose {source_prose_path}; skipping moments index.")
+                continue
+
+            moment_record = {
+                "moment_id": moment_id,
+                "title": title,
+                "date": date_value,
+                "date_display": date_display,
+                "images": images_list,
+                "width_px": width_px,
+                "height_px": height_px,
+            }
+            moments_payload[moment_id] = build_moment_index_record(moment_record)
+
+        version_payload = compact_json_object({
+            "schema": "moments_index_v1",
+            "moments": moments_payload,
+        })
+        version = compute_payload_version(version_payload)
+        payload = compact_json_object({
+            "header": {
+                "schema": "moments_index_v1",
+                "version": version,
+                "generated_at_utc": utc_timestamp_now(),
+                "count": len(moments_payload),
+            },
+            "moments": moments_payload,
+        })
+        payload_version = payload["header"]["version"]
+        exists = moments_index_json_path.exists()
+        existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
+        if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+            print("Moments index JSON done. Wrote: 0. Skipped: 1.")
+        else:
+            if args.write:
+                moments_index_json_path.write_text(
+                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+                print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {moments_index_json_path}")
+            else:
+                print(
+                    "Moments index JSON done. Would write: 1. Skipped: 0. "
+                    f"Path: {moments_index_json_path} (overwrite={exists})"
+                )
+    else:
+        if selected_artifacts is not None:
+            print("Moments index JSON skipped: not selected by --only.")
+        else:
+            print("Moments index JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
     log_event(
         "generate_complete",
         {

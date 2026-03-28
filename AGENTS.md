@@ -33,7 +33,7 @@
 ## Safety Defaults
 
 - Prefer dry-run behavior for generators unless explicitly asked to write.
-- Do not overwrite prose includes in `_includes/work_prose`, `_includes/series_prose`, or `_includes/moments_prose` unless explicitly requested.
+- Do not overwrite prose includes in `_includes/work_prose` or `_includes/series_prose`, or canonical moment prose in `moments/*.md`, unless explicitly requested.
 - Do not delete generated or source files unless explicitly requested.
 
 ## Pipeline Conventions
@@ -45,7 +45,9 @@
 ## Moments-Specific Rules
 
 - Generate `_moments/*.md` from worksheet `Moments`.
-- Moment prose content lives in `_includes/moments_prose/<slug>.md`.
+- Canonical moment prose content lives in `moments/<slug>.md`.
+- Keep `_moments/*.md` minimal; richer moment metadata belongs in generated JSON artifacts.
+- `/moments/` should read aggregate moment metadata from `assets/data/moments_index.json`.
 - Moment layout should use srcset variants `800`, `1200`, `1600` only.
 - Do not add a `2400` variant for moments unless explicitly requested.
 

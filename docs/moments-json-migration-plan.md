@@ -31,6 +31,7 @@ This document is now a historical migration record. The active end-state is:
 
 - `_moments/<moment_id>.md` is a minimal stub with `moment_id`, `title`, `layout`, and `checksum`
 - `assets/moments/index/<moment_id>.json` is the canonical runtime source for moment metadata and rendered prose
+- `assets/data/moments_index.json` is the aggregate runtime source for `/moments/` card metadata
 - the moment layout always renders from JSON at runtime and shows `problem loading content` on fetch failure
 - the generator uses a single `moments` artifact; there is no separate `moment-json` generation mode
 

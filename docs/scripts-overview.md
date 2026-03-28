@@ -153,6 +153,10 @@ Useful flags:
   - generated together with `_moments/<moment_id>.md` when `moments` is selected
   - JSON is now the canonical source for moment date/image/prose content at runtime
   - generated `_moments/<moment_id>.md` files are minimal stubs with `moment_id`, `title`, `layout`, and `checksum`
+- `--moments-index-json-path` (default `assets/data/moments_index.json`)
+  - writes a lightweight moments index object keyed by `moment_id`
+  - used by `/moments/` for title/date/thumb metadata
+  - rebuilt as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
   - used for work primary images as well as work detail, work file, and moment source files
@@ -163,7 +167,7 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
   - `work-links`: updates `WorkLinks.status` / `published_date` for in-scope works on `--write`
@@ -172,6 +176,9 @@ Useful flags:
   - `moments`: writes both `_moments/<moment_id>.md` stubs and `assets/moments/index/<moment_id>.json`
     - stub front matter keeps only `moment_id`, `title`, `layout`, and a checksum derived from canonical moment metadata
     - JSON stores the canonical moment metadata (`title`, `date`, `date_display`, `images`, `width_px`, `height_px`) plus rendered `content_html`
+  - `moments-index-json`: writes `assets/data/moments_index.json` as a lightweight object keyed by `moment_id`
+    - each moment stores lightweight card metadata only (`title`, `date`, `date_display`, `thumb_id`)
+    - always rebuilt as a full index (not scoped by `--moment-ids`)
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
@@ -195,6 +202,8 @@ Runtime canonical data flow:
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
 - `/works/<work_id>/` series nav/counter/link visibility read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
+- `/moments/` reads `assets/data/moments_index.json` for card metadata.
+- `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
 
 ### 3a) Delete a single work from generated artifacts
 
