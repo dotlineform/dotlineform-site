@@ -48,6 +48,7 @@
 - Canonical moment prose content lives in `moments/<slug>.md`.
 - Keep `_moments/*.md` minimal; richer moment metadata belongs in generated JSON artifacts.
 - `/moments/` should read aggregate moment metadata from `assets/data/moments_index.json`.
+- `generate_work_pages.py` should always rebuild aggregate index JSON artifacts for series, works, and moments on every run, even when `--only` scopes page/file artifacts.
 - Moment layout should use srcset variants `800`, `1200`, `1600` only.
 - Do not add a `2400` variant for moments unless explicitly requested.
 

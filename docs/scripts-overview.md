@@ -156,7 +156,7 @@ Useful flags:
 - `--moments-index-json-path` (default `assets/data/moments_index.json`)
   - writes a lightweight moments index object keyed by `moment_id`
   - used by `/moments/` for title/date/thumb metadata
-  - rebuilt as a full index and not scoped by `--moment-ids`
+  - rebuilt on every pipeline run as a full index and not scoped by `--moment-ids`
 - `--projects-base-dir`: base path used for source-image dimension reads
   - default is taken from `DOTLINEFORM_PROJECTS_BASE_DIR`
   - used for work primary images as well as work detail, work file, and moment source files
@@ -167,6 +167,7 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
+  - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
   - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`) plus optional prose include
   - `work-files`: stages `WorkFiles` rows for in-scope works into `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/` and updates `WorkFiles.status` / `published_date` on `--write`
@@ -178,16 +179,18 @@ Useful flags:
     - JSON stores the canonical moment metadata (`title`, `date`, `date_display`, `images`, `width_px`, `height_px`) plus rendered `content_html`
   - `moments-index-json`: writes `assets/data/moments_index.json` as a lightweight object keyed by `moment_id`
     - each moment stores lightweight card metadata only (`title`, `date`, `date_display`, `thumb_id`)
-    - always rebuilt as a full index (not scoped by `--moment-ids`)
+    - always rebuilt as a full index (not scoped by `--moment-ids` and not gated by `--only`)
   - `series-index-json`: writes `assets/data/series_index.json` (full rebuild) with:
     - header: `schema`, deterministic content `version`, `generated_at_utc`, `count`
     - series map keyed by `series_id`
     - full series metadata used by generated series pages (`layout`, `status`, `published_date`, `title`, `sort_fields`, `series_type`, `year`, `year_display`, `primary_work_id`, `notes`, `project_folders`)
     - optional empty fields are omitted from JSON rather than written as `null`
     - ordered `works` (in canonical series sort order derived from `sort_fields`)
+    - always rebuilt as a full index and not gated by `--only`
   - `works-index-json`: writes `assets/data/works_index.json` as a lightweight object keyed by `work_id`
     - each work stores canonical `series_ids` only; series membership is derived from that ordered array
     - optional empty fields are omitted from JSON rather than written as `null`
+    - always rebuilt as a full index and not gated by `--only`
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - always rebuilt as a full index (not scoped by `--work-ids`)
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, and full `sections[].details[]`

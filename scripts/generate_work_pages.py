@@ -771,7 +771,8 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json."
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json. "
+            "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
     )
     args = ap.parse_args()
@@ -823,12 +824,12 @@ def main() -> None:
     run_work_files = artifact_enabled("work-files")
     run_work_links = artifact_enabled("work-links")
     run_series_pages = artifact_enabled("series-pages")
-    run_series_index_json = artifact_enabled("series-index-json")
+    run_series_index_json = True
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json")
-    run_works_index_json = artifact_enabled("works-index-json")
+    run_works_index_json = True
     run_moments_artifact = artifact_enabled("moments")
-    run_moments_index_json = artifact_enabled("moments-index-json")
+    run_moments_index_json = True
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
 
     needs_projects_base = run_work_files or run_work_details_pages or run_moments_artifact or run_moments_index_json
@@ -2024,105 +2025,102 @@ def main() -> None:
         else:
             print("Studio series pages retired: skipped.")
 
-    if run_series_index_json:
-        work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            status = normalize_status(cell(wr, works_hi, "status"))
-            if status not in {"draft", "published"}:
-                continue
-            wid = slug_id(wid_raw)
-            for sid in parse_work_series_ids(wr):
-                series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
-                work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
+    work_rows_by_series_for_index: Dict[str, List[tuple[str, str]]] = {}
+    for wr in works_rows[1:]:
+        wid_raw = cell(wr, works_hi, "work_id")
+        if is_empty(wid_raw):
+            continue
+        status = normalize_status(cell(wr, works_hi, "status"))
+        if status not in {"draft", "published"}:
+            continue
+        wid = slug_id(wid_raw)
+        for sid in parse_work_series_ids(wr):
+            series_sort = series_sort_by_series_id.get(sid, {}).get(wid, wid)
+            work_rows_by_series_for_index.setdefault(sid, []).append((series_sort, wid))
 
-        ordered_work_ids_by_series_for_index: Dict[str, List[str]] = {}
-        for sid, rows in work_rows_by_series_for_index.items():
-            rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
-            ordered_work_ids_by_series_for_index[sid] = [wid for _, wid in rows_sorted]
+    ordered_work_ids_by_series_for_index: Dict[str, List[str]] = {}
+    for sid, rows in work_rows_by_series_for_index.items():
+        rows_sorted = sorted(rows, key=lambda item: (item[0], item[1]))
+        ordered_work_ids_by_series_for_index[sid] = [wid for _, wid in rows_sorted]
 
-        series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
-        for sr in series_rows[1:] if len(series_rows) > 1 else []:
-            sid_raw = cell(sr, series_hi, "series_id")
-            if is_empty(sid_raw):
-                continue
-            sid = require_slug_safe("series_id", sid_raw)
-            status = normalize_status(cell(sr, series_hi, "status"))
-            if status not in {"draft", "published"}:
-                continue
+    series_payload_unsorted: Dict[str, Dict[str, Any]] = {}
+    for sr in series_rows[1:] if len(series_rows) > 1 else []:
+        sid_raw = cell(sr, series_hi, "series_id")
+        if is_empty(sid_raw):
+            continue
+        sid = require_slug_safe("series_id", sid_raw)
+        status = normalize_status(cell(sr, series_hi, "status"))
+        if status not in {"draft", "published"}:
+            continue
 
-            title_raw = cell(sr, series_hi, "title")
-            series_title = coerce_string(title_raw) or sid
-            year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
-            if "year_display" in series_hi:
-                year_display = coerce_string(cell(sr, series_hi, "year_display"))
-            else:
-                year_display = str(year) if year is not None else None
-            published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
-
-            ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
-            primary_work_id = require_series_primary_work_id(
-                sid,
-                sr,
-                ordered_work_ids=ordered_work_ids,
-            )
-
-            sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
-            series_payload_unsorted[sid] = compact_json_object({
-                "series_id": sid,
-                "layout": "series",
-                "status": status,
-                "published_date": published_date,
-                "title": series_title,
-                "sort_fields": sort_fields,
-                "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
-                "year": year,
-                "year_display": year_display,
-                "primary_work_id": primary_work_id,
-                "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
-                "project_folders": series_project_folders_by_id.get(sid, []),
-                "works": ordered_work_ids,
-            })
-
-        series_payload: Dict[str, Dict[str, Any]] = {
-            sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())
-        }
-
-        series_version_payload = compact_json_object({
-            "schema": "series_index_v2",
-            "series": series_payload,
-        })
-        series_version = compute_payload_version(series_version_payload)
-        series_index_payload = compact_json_object({
-            "header": {
-                "schema": "series_index_v2",
-                "version": series_version,
-                "generated_at_utc": utc_timestamp_now(),
-                "count": len(series_payload),
-            },
-            "series": series_payload,
-        })
-
-        exists = series_index_json_path.exists()
-        existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
-        if (existing_version is not None) and (existing_version == series_version) and (not args.force):
-            print("Series index JSON done. Wrote: 0. Skipped: 1.")
+        title_raw = cell(sr, series_hi, "title")
+        series_title = coerce_string(title_raw) or sid
+        year = coerce_int(cell(sr, series_hi, "year")) if "year" in series_hi else None
+        if "year_display" in series_hi:
+            year_display = coerce_string(cell(sr, series_hi, "year_display"))
         else:
-            if args.write:
-                series_index_json_path.write_text(
-                    json.dumps(series_index_payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {series_index_json_path}")
-            else:
-                print(
-                    "Series index JSON done. Would write: 1. Skipped: 0. "
-                    f"Path: {series_index_json_path} (overwrite={exists})"
-                )
+            year_display = str(year) if year is not None else None
+        published_date = parse_date(cell(sr, series_hi, "published_date")) if "published_date" in series_hi else None
+
+        ordered_work_ids = ordered_work_ids_by_series_for_index.get(sid, [])
+        primary_work_id = require_series_primary_work_id(
+            sid,
+            sr,
+            ordered_work_ids=ordered_work_ids,
+        )
+
+        sort_fields = ",".join(series_sort_fields_by_series_id.get(sid, ["work_id"]))
+        series_payload_unsorted[sid] = compact_json_object({
+            "series_id": sid,
+            "layout": "series",
+            "status": status,
+            "published_date": published_date,
+            "title": series_title,
+            "sort_fields": sort_fields,
+            "series_type": coerce_string(cell(sr, series_hi, "series_type")) if "series_type" in series_hi else None,
+            "year": year,
+            "year_display": year_display,
+            "primary_work_id": primary_work_id,
+            "notes": coerce_string(cell(sr, series_hi, "notes")) if "notes" in series_hi else None,
+            "project_folders": series_project_folders_by_id.get(sid, []),
+            "works": ordered_work_ids,
+        })
+
+    series_payload: Dict[str, Dict[str, Any]] = {
+        sid: series_payload_unsorted[sid] for sid in sorted(series_payload_unsorted.keys())
+    }
+
+    series_version_payload = compact_json_object({
+        "schema": "series_index_v2",
+        "series": series_payload,
+    })
+    series_version = compute_payload_version(series_version_payload)
+    series_index_payload = compact_json_object({
+        "header": {
+            "schema": "series_index_v2",
+            "version": series_version,
+            "generated_at_utc": utc_timestamp_now(),
+            "count": len(series_payload),
+        },
+        "series": series_payload,
+    })
+
+    exists = series_index_json_path.exists()
+    existing_version = extract_existing_header_scalar(series_index_json_path, "version") if exists else None
+    if (existing_version is not None) and (existing_version == series_version) and (not args.force):
+        print("Series index JSON done. Wrote: 0. Skipped: 1.")
     else:
-        print("Series index JSON skipped: not selected by --only.")
+        if args.write:
+            series_index_json_path.write_text(
+                json.dumps(series_index_payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {series_index_json_path}")
+        else:
+            print(
+                "Series index JSON done. Would write: 1. Skipped: 0. "
+                f"Path: {series_index_json_path} (overwrite={exists})"
+            )
 
     # ----------------------------
     # Work detail page generation + per-work detail JSON (WorkDetails)
@@ -2410,79 +2408,76 @@ def main() -> None:
         else:
             print("Work detail JSON skipped: not selected by --only.")
 
-    if run_works_index_json:
-        works_payload: Dict[str, Dict[str, Any]] = {}
-        for wr in works_rows[1:]:
-            wid_raw = cell(wr, works_hi, "work_id")
-            if is_empty(wid_raw):
-                continue
-            status = normalize_status(cell(wr, works_hi, "status"))
-            if status not in {"draft", "published"}:
+    works_payload: Dict[str, Dict[str, Any]] = {}
+    for wr in works_rows[1:]:
+        wid_raw = cell(wr, works_hi, "work_id")
+        if is_empty(wid_raw):
+            continue
+        status = normalize_status(cell(wr, works_hi, "status"))
+        if status not in {"draft", "published"}:
+            continue
+        wid = slug_id(wid_raw)
+        record = canonical_work_record_by_id.get(wid)
+        if record is None:
+            continue
+        works_payload[wid] = build_work_index_record(record)
+
+    detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
+    if work_details_rows and len(work_details_rows) > 1:
+        for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
+            wid_raw = cell(dr, work_details_hi, "work_id")
+            did_raw = cell(dr, work_details_hi, "detail_id")
+            if is_empty(wid_raw) or is_empty(did_raw):
                 continue
             wid = slug_id(wid_raw)
-            record = canonical_work_record_by_id.get(wid)
-            if record is None:
+            if wid not in works_payload:
                 continue
-            works_payload[wid] = build_work_index_record(record)
-
-        detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
-        if work_details_rows and len(work_details_rows) > 1:
-            for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
-                wid_raw = cell(dr, work_details_hi, "work_id")
-                did_raw = cell(dr, work_details_hi, "detail_id")
-                if is_empty(wid_raw) or is_empty(did_raw):
-                    continue
-                wid = slug_id(wid_raw)
-                if wid not in works_payload:
-                    continue
-                status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
-                if status not in {"draft", "published"}:
-                    continue
-                did = slug_id(did_raw, width=3)
-                detail_records_by_work.setdefault(wid, []).append(
-                    build_canonical_detail_record(
-                        wid=wid,
-                        did=did,
-                        title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
-                        project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                        width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                        height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
-                    )
+            status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
+            if status not in {"draft", "published"}:
+                continue
+            did = slug_id(did_raw, width=3)
+            detail_records_by_work.setdefault(wid, []).append(
+                build_canonical_detail_record(
+                    wid=wid,
+                    did=did,
+                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
+                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
+                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
                 )
+            )
 
-        version_payload = compact_json_object({
+    version_payload = compact_json_object({
+        "schema": "works_index_v3",
+        "works": works_payload,
+    })
+    version = compute_payload_version(version_payload)
+    payload = compact_json_object({
+        "header": {
             "schema": "works_index_v3",
-            "works": works_payload,
-        })
-        version = compute_payload_version(version_payload)
-        payload = compact_json_object({
-            "header": {
-                "schema": "works_index_v3",
-                "version": version,
-                "generated_at_utc": utc_timestamp_now(),
-                "count": len(works_payload),
-            },
-            "works": works_payload,
-        })
-        payload_version = payload["header"]["version"]
-        exists = works_index_json_path.exists()
-        existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
-        if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
-            print("Works index JSON done. Wrote: 0. Skipped: 1.")
-        else:
-            if args.write:
-                works_index_json_path.write_text(
-                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {works_index_json_path}")
-            else:
-                print(
-                    "Works index JSON done. Would write: 1. Skipped: 0. "
-                    f"Path: {works_index_json_path} (overwrite={exists})"
-                )
+            "version": version,
+            "generated_at_utc": utc_timestamp_now(),
+            "count": len(works_payload),
+        },
+        "works": works_payload,
+    })
+    payload_version = payload["header"]["version"]
+    exists = works_index_json_path.exists()
+    existing_version = extract_existing_header_scalar(works_index_json_path, "version") if exists else None
+    if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+        print("Works index JSON done. Wrote: 0. Skipped: 1.")
     else:
-        print("Works index JSON skipped: not selected by --only.")
+        if args.write:
+            works_index_json_path.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {works_index_json_path}")
+        else:
+            print(
+                "Works index JSON done. Would write: 1. Skipped: 0. "
+                f"Path: {works_index_json_path} (overwrite={exists})"
+            )
 
     # ----------------------------
     # Moment page + JSON generation (Moments)
@@ -2793,117 +2788,111 @@ def main() -> None:
                 f"Moment JSON done. {'Would write' if not args.write else 'Wrote'}: {moments_json_written}. Skipped: {moments_json_skipped}."
             )
 
-    if run_moments_index_json:
-        moments_payload: Dict[str, Dict[str, Any]] = {}
-        projects_base_dir = Path(args.projects_base_dir).expanduser()
-        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
-        moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+    moments_payload: Dict[str, Dict[str, Any]] = {}
+    projects_base_dir = Path(args.projects_base_dir).expanduser()
+    moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
+    moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
-        for mr in moments_rows[1:]:
-            mid_raw = cell(mr, moments_hi, "moment_id")
-            if is_empty(mid_raw):
-                continue
+    for mr in moments_rows[1:]:
+        mid_raw = cell(mr, moments_hi, "moment_id")
+        if is_empty(mid_raw):
+            continue
 
-            status = normalize_status(cell(mr, moments_hi, "status"))
-            if status not in {"draft", "published"}:
-                continue
+        status = normalize_status(cell(mr, moments_hi, "status"))
+        if status not in {"draft", "published"}:
+            continue
 
-            moment_id_raw = coerce_string(cell(mr, moments_hi, "moment_id"))
-            if moment_id_raw is None:
-                continue
-            moment_id = moment_id_raw.strip().lower()
-            if not is_slug_safe(moment_id):
-                raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id_raw!r}")
+        moment_id_raw = coerce_string(cell(mr, moments_hi, "moment_id"))
+        if moment_id_raw is None:
+            continue
+        moment_id = moment_id_raw.strip().lower()
+        if not is_slug_safe(moment_id):
+            raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id_raw!r}")
 
-            title = coerce_string(cell(mr, moments_hi, "title")) or moment_id
-            date_value = parse_date(cell(mr, moments_hi, "date"))
-            date_display = coerce_string(cell(mr, moments_hi, "date_display"))
-            width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
-            height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
+        title = coerce_string(cell(mr, moments_hi, "title")) or moment_id
+        date_value = parse_date(cell(mr, moments_hi, "date"))
+        date_display = coerce_string(cell(mr, moments_hi, "date_display"))
+        width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
+        height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
 
-            default_moment_filename = f"{moment_id}.jpg"
-            project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
-            if project_filename is None:
-                project_filename = default_moment_filename
-            image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
-            image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
+        default_moment_filename = f"{moment_id}.jpg"
+        project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
+        if project_filename is None:
+            project_filename = default_moment_filename
+        image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
+        image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
 
-            src_path: Optional[Path] = None
-            source_filename = project_filename or image_file
-            if source_filename:
-                src_path = moments_images_root / source_filename
+        src_path: Optional[Path] = None
+        source_filename = project_filename or image_file
+        if source_filename:
+            src_path = moments_images_root / source_filename
 
-            if src_path is not None:
-                src_w, src_h = read_image_dims_px(src_path)
-                if src_w is not None and src_h is not None:
-                    width_px = src_w
-                    height_px = src_h
+        if src_path is not None:
+            src_w, src_h = read_image_dims_px(src_path)
+            if src_w is not None and src_h is not None:
+                width_px = src_w
+                height_px = src_h
 
-            images_list: List[Dict[str, Any]] = []
-            if image_file is None and src_path is not None and src_path.exists():
-                image_file = default_moment_filename
-            if image_file is not None and image_alt is None:
-                image_alt = title or moment_id
-            if image_file is not None:
-                images_list.append(
-                    {
-                        "file": image_file,
-                        "alt": image_alt,
-                    }
-                )
+        images_list: List[Dict[str, Any]] = []
+        if image_file is None and src_path is not None and src_path.exists():
+            image_file = default_moment_filename
+        if image_file is not None and image_alt is None:
+            image_alt = title or moment_id
+        if image_file is not None:
+            images_list.append(
+                {
+                    "file": image_file,
+                    "alt": image_alt,
+                }
+            )
 
-            source_prose_path = moments_root / f"{moment_id}.md"
-            if not source_prose_path.exists():
-                print(f"[moment {moment_id}] WARNING: missing source prose {source_prose_path}; skipping moments index.")
-                continue
+        source_prose_path = moments_root / f"{moment_id}.md"
+        if not source_prose_path.exists():
+            print(f"[moment {moment_id}] WARNING: missing source prose {source_prose_path}; skipping moments index.")
+            continue
 
-            moment_record = {
-                "moment_id": moment_id,
-                "title": title,
-                "date": date_value,
-                "date_display": date_display,
-                "images": images_list,
-                "width_px": width_px,
-                "height_px": height_px,
-            }
-            moments_payload[moment_id] = build_moment_index_record(moment_record)
+        moment_record = {
+            "moment_id": moment_id,
+            "title": title,
+            "date": date_value,
+            "date_display": date_display,
+            "images": images_list,
+            "width_px": width_px,
+            "height_px": height_px,
+        }
+        moments_payload[moment_id] = build_moment_index_record(moment_record)
 
-        version_payload = compact_json_object({
+    version_payload = compact_json_object({
+        "schema": "moments_index_v1",
+        "moments": moments_payload,
+    })
+    version = compute_payload_version(version_payload)
+    payload = compact_json_object({
+        "header": {
             "schema": "moments_index_v1",
-            "moments": moments_payload,
-        })
-        version = compute_payload_version(version_payload)
-        payload = compact_json_object({
-            "header": {
-                "schema": "moments_index_v1",
-                "version": version,
-                "generated_at_utc": utc_timestamp_now(),
-                "count": len(moments_payload),
-            },
-            "moments": moments_payload,
-        })
-        payload_version = payload["header"]["version"]
-        exists = moments_index_json_path.exists()
-        existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
-        if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
-            print("Moments index JSON done. Wrote: 0. Skipped: 1.")
-        else:
-            if args.write:
-                moments_index_json_path.write_text(
-                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {moments_index_json_path}")
-            else:
-                print(
-                    "Moments index JSON done. Would write: 1. Skipped: 0. "
-                    f"Path: {moments_index_json_path} (overwrite={exists})"
-                )
+            "version": version,
+            "generated_at_utc": utc_timestamp_now(),
+            "count": len(moments_payload),
+        },
+        "moments": moments_payload,
+    })
+    payload_version = payload["header"]["version"]
+    exists = moments_index_json_path.exists()
+    existing_version = extract_existing_header_scalar(moments_index_json_path, "version") if exists else None
+    if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
+        print("Moments index JSON done. Wrote: 0. Skipped: 1.")
     else:
-        if selected_artifacts is not None:
-            print("Moments index JSON skipped: not selected by --only.")
+        if args.write:
+            moments_index_json_path.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {moments_index_json_path}")
         else:
-            print("Moments index JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
+            print(
+                "Moments index JSON done. Would write: 1. Skipped: 0. "
+                f"Path: {moments_index_json_path} (overwrite={exists})"
+            )
     log_event(
         "generate_complete",
         {
