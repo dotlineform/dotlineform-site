@@ -2,7 +2,7 @@
 layout: studio
 title: Tag Aliases
 permalink: /studio/tag-aliases/
-studio_page_doc: /docs/studio/pages/tag-aliases/
+studio_page_doc: /docs/?doc=tag-aliases
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">

@@ -102,10 +102,10 @@
 
 ## Studio UI Guidance
 
-- `docs/studio/ui-framework.md` defines the site-wide UI interaction defaults and the Studio shared UI contracts.
-- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use the Studio-specific sections of `docs/studio/ui-framework.md` as the basis.
-- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, or DOM hook conventions, use the site-wide sections of `docs/studio/ui-framework.md` as the basis.
-- If site-wide UI defaults or Studio UI definitions, scope, or shared naming boundaries change, update `docs/studio/ui-framework.md` in the same change.
+- `_docs_src/studio/ui-framework.md` defines the site-wide UI interaction defaults and the Studio shared UI contracts.
+- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use the Studio-specific sections of `_docs_src/studio/ui-framework.md` as the basis.
+- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, or DOM hook conventions, use the site-wide sections of `_docs_src/studio/ui-framework.md` as the basis.
+- If site-wide UI defaults or Studio UI definitions, scope, or shared naming boundaries change, update `_docs_src/studio/ui-framework.md` in the same change.
 - Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
@@ -123,6 +123,6 @@
 
 ## Studio Documentation
 
-- `docs/studio/*.md` are the central product/behavior docs for Studio features.
-- Keep existing script docs (`docs/scripts-overview.md`) in place and updated for command/runtime usage.
+- `_docs_src/studio/*.md` are the central product/behavior docs for Studio features.
+- Keep existing script docs (`_docs_src/scripts-overview.md`) in place and updated for command/runtime usage.
 - When Studio features are implemented or changed, update Studio docs and relevant scripts docs in the same change.

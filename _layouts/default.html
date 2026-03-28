@@ -62,12 +62,12 @@
           {%- if u == '/studio/series-tag-editor/' or u == '/studio/series-tags/' -%}
             {%- assign is_series_tags_active = true -%}
           {%- endif -%}
-          {%- if u == '/docs/studio/studio/' -%}{%- assign is_studio_docs_index = true -%}{%- endif -%}
-          {%- if u_studio_docs == '/docs/studio/' -%}{%- assign is_studio_docs_active = true -%}{%- endif -%}
+          {%- if u == '/docs/' -%}{%- assign is_studio_docs_index = true -%}{%- endif -%}
+          {%- if u == '/docs/' -%}{%- assign is_studio_docs_active = true -%}{%- endif -%}
 
           {% include nav_item.html label="studio" href='/studio/' class_name='nav-item' is_current=is_studio_index is_active=is_studio_active %}
           {% include nav_item.html label="series tags" href='/studio/series-tags/' class_name='nav-item' is_current=is_series_tags_index is_active=is_series_tags_active %}
-          {% include nav_item.html label="docs" href='/docs/studio/studio/' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
+          {% include nav_item.html label="docs" href='/docs/?doc=studio' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
         {% else %}
           {%- assign is_series_index = false -%}
           {%- assign is_series_active = false -%}

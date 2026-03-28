@@ -2,7 +2,7 @@
 layout: studio
 title: Tag Groups
 permalink: /studio/tag-groups/
-studio_page_doc: /docs/studio/pages/tag-groups/
+studio_page_doc: /docs/?doc=tag-groups
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">

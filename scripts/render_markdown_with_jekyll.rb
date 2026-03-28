@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "pathname"
-require "jekyll"
+require_relative "jekyll_markdown_renderer"
 
 if ARGV.length != 1
   warn "Usage: render_markdown_with_jekyll.rb <markdown-path>"
@@ -15,20 +14,4 @@ unless source_path.file?
   exit 1
 end
 
-repo_root = Pathname(__dir__).parent.realpath
-Jekyll.logger.log_level = :error
-
-site = Jekyll::Site.new(
-  Jekyll.configuration(
-    "source" => repo_root.to_s,
-    "destination" => repo_root.join("_site").to_s,
-    "quiet" => true
-  )
-)
-converter = site.find_converter_instance(Jekyll::Converters::Markdown)
-if converter.nil?
-  warn "Could not initialize Jekyll markdown converter"
-  exit 1
-end
-
-print converter.convert(source_path.read)
+print JekyllMarkdownRenderer.render_file(source_path)

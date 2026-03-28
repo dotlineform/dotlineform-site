@@ -1191,7 +1191,7 @@ def main() -> None:
     ap.add_argument("--work-ids", default="", help="Comma-separated work_ids/ranges scope (e.g. 66-74,38-40)")
     ap.add_argument("--strict", action="store_true", help="Exit non-zero when errors are found")
     ap.add_argument("--json-out", default="", help="Optional path to write JSON report")
-    ap.add_argument("--md-out", default="docs/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
+    ap.add_argument("--md-out", default="_docs_src/audit-latest.md", help="Path to write Markdown report (overwrites on each run)")
     ap.add_argument("--max-samples", type=int, default=20, help="Max sample findings per check")
     ap.add_argument("--orphans-media", action="store_true", help="Include orphan media-file scan in the orphans check")
     args = ap.parse_args()
@@ -1342,7 +1342,7 @@ def main() -> None:
         "work_ids": "",
         "strict": False,
         "json_out": "",
-        "md_out": "docs/audit-latest.md",
+        "md_out": "_docs_src/audit-latest.md",
         "max_samples": 20,
         "orphans_media": False,
     }

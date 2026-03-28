@@ -1,0 +1,302 @@
+{
+  "generated_at": "2026-03-28T21:47:03Z",
+  "docs": [
+    {
+      "doc_id": "studio",
+      "title": "Studio",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": 10,
+      "source_path": "studio/studio.md",
+      "legacy_url": "/docs/studio/studio/",
+      "viewer_url": "/docs/?doc=studio",
+      "content_url": "/assets/data/docs/by-id/studio.json"
+    },
+    {
+      "doc_id": "ui-framework",
+      "title": "UI Framework",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 10,
+      "source_path": "studio/ui-framework.md",
+      "legacy_url": "/docs/studio/ui-framework/",
+      "viewer_url": "/docs/?doc=ui-framework",
+      "content_url": "/assets/data/docs/by-id/ui-framework.json"
+    },
+    {
+      "doc_id": "scripts-overview",
+      "title": "Scripts Overview",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": 20,
+      "source_path": "scripts-overview.md",
+      "legacy_url": "/docs/scripts-overview/",
+      "viewer_url": "/docs/?doc=scripts-overview",
+      "content_url": "/assets/data/docs/by-id/scripts-overview.json"
+    },
+    {
+      "doc_id": "studio-works",
+      "title": "Studio Works",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 20,
+      "source_path": "studio/pages/studio-works.md",
+      "legacy_url": "/docs/studio/pages/studio-works/",
+      "viewer_url": "/docs/?doc=studio-works",
+      "content_url": "/assets/data/docs/by-id/studio-works.json"
+    },
+    {
+      "doc_id": "local-setup",
+      "title": "Local Setup",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": 30,
+      "source_path": "local-setup.md",
+      "legacy_url": "/docs/local-setup/",
+      "viewer_url": "/docs/?doc=local-setup",
+      "content_url": "/assets/data/docs/by-id/local-setup.json"
+    },
+    {
+      "doc_id": "series-tags",
+      "title": "Series Tags",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 30,
+      "source_path": "studio/pages/series-tags.md",
+      "legacy_url": "/docs/studio/pages/series-tags/",
+      "viewer_url": "/docs/?doc=series-tags",
+      "content_url": "/assets/data/docs/by-id/series-tags.json"
+    },
+    {
+      "doc_id": "tag-editor",
+      "title": "Tag Editor",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 40,
+      "source_path": "studio/pages/tag-editor.md",
+      "legacy_url": "/docs/studio/pages/tag-editor/",
+      "viewer_url": "/docs/?doc=tag-editor",
+      "content_url": "/assets/data/docs/by-id/tag-editor.json"
+    },
+    {
+      "doc_id": "tag-registry",
+      "title": "Tag Registry",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 50,
+      "source_path": "studio/pages/tag-registry.md",
+      "legacy_url": "/docs/studio/pages/tag-registry/",
+      "viewer_url": "/docs/?doc=tag-registry",
+      "content_url": "/assets/data/docs/by-id/tag-registry.json"
+    },
+    {
+      "doc_id": "tag-aliases",
+      "title": "Tag Aliases",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 60,
+      "source_path": "studio/pages/tag-aliases.md",
+      "legacy_url": "/docs/studio/pages/tag-aliases/",
+      "viewer_url": "/docs/?doc=tag-aliases",
+      "content_url": "/assets/data/docs/by-id/tag-aliases.json"
+    },
+    {
+      "doc_id": "tag-groups",
+      "title": "Tag Groups",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 70,
+      "source_path": "studio/pages/tag-groups.md",
+      "legacy_url": "/docs/studio/pages/tag-groups/",
+      "viewer_url": "/docs/?doc=tag-groups",
+      "content_url": "/assets/data/docs/by-id/tag-groups.json"
+    },
+    {
+      "doc_id": "regression-checklist",
+      "title": "Studio Regression Checklist",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 80,
+      "source_path": "studio/regression-checklist.md",
+      "legacy_url": "/docs/studio/regression-checklist/",
+      "viewer_url": "/docs/?doc=regression-checklist",
+      "content_url": "/assets/data/docs/by-id/regression-checklist.json"
+    },
+    {
+      "doc_id": "plan",
+      "title": "Plan",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 90,
+      "source_path": "studio/plan.md",
+      "legacy_url": "/docs/studio/plan/",
+      "viewer_url": "/docs/?doc=plan",
+      "content_url": "/assets/data/docs/by-id/plan.json"
+    },
+    {
+      "doc_id": "css-refactor",
+      "title": "CSS Refactor",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 100,
+      "source_path": "studio/css refactor.md",
+      "legacy_url": "/docs/studio/css refactor/",
+      "viewer_url": "/docs/?doc=css-refactor",
+      "content_url": "/assets/data/docs/by-id/css-refactor.json"
+    },
+    {
+      "doc_id": "audit-latest",
+      "title": "Audit Report",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "audit-latest.md",
+      "legacy_url": "/docs/audit-latest/",
+      "viewer_url": "/docs/?doc=audit-latest",
+      "content_url": "/assets/data/docs/by-id/audit-latest.json"
+    },
+    {
+      "doc_id": "backlog",
+      "title": "Backlog",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "backlog.md",
+      "legacy_url": "/docs/backlog/",
+      "viewer_url": "/docs/?doc=backlog",
+      "content_url": "/assets/data/docs/by-id/backlog.json"
+    },
+    {
+      "doc_id": "css-audit-latest",
+      "title": "CSS Audit Latest",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "css-audit-latest.md",
+      "legacy_url": "/docs/css-audit-latest/",
+      "viewer_url": "/docs/?doc=css-audit-latest",
+      "content_url": "/assets/data/docs/by-id/css-audit-latest.json"
+    },
+    {
+      "doc_id": "css-audit-spec",
+      "title": "CSS Audit Spec (v1)",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "css-audit-spec.md",
+      "legacy_url": "/docs/css-audit-spec/",
+      "viewer_url": "/docs/?doc=css-audit-spec",
+      "content_url": "/assets/data/docs/by-id/css-audit-spec.json"
+    },
+    {
+      "doc_id": "css-primitives",
+      "title": "CSS Primitives",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "css-primitives.md",
+      "legacy_url": "/docs/css-primitives/",
+      "viewer_url": "/docs/?doc=css-primitives",
+      "content_url": "/assets/data/docs/by-id/css-primitives.json"
+    },
+    {
+      "doc_id": "data-flow",
+      "title": "Data Flow",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "data-flow.md",
+      "legacy_url": "/docs/data-flow/",
+      "viewer_url": "/docs/?doc=data-flow",
+      "content_url": "/assets/data/docs/by-id/data-flow.json"
+    },
+    {
+      "doc_id": "moments-json-migration-plan",
+      "title": "Moments JSON Migration Plan",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "moments-json-migration-plan.md",
+      "legacy_url": "/docs/moments-json-migration-plan/",
+      "viewer_url": "/docs/?doc=moments-json-migration-plan",
+      "content_url": "/assets/data/docs/by-id/moments-json-migration-plan.json"
+    },
+    {
+      "doc_id": "my-notes",
+      "title": "My Notes",
+      "last_updated": "2026-03-28",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "my-notes.md",
+      "legacy_url": "/docs/my-notes/",
+      "viewer_url": "/docs/?doc=my-notes",
+      "content_url": "/assets/data/docs/by-id/my-notes.json"
+    },
+    {
+      "doc_id": "offline-tag-assignments-implementation-breakdown",
+      "title": "Offline Tag Assignments Implementation Breakdown",
+      "last_updated": "2026-03-28",
+      "parent_id": "plan",
+      "sort_order": null,
+      "source_path": "studio/planning/offline-tag-assignments-implementation-breakdown.md",
+      "legacy_url": "/docs/studio/planning/offline-tag-assignments-implementation-breakdown/",
+      "viewer_url": "/docs/?doc=offline-tag-assignments-implementation-breakdown",
+      "content_url": "/assets/data/docs/by-id/offline-tag-assignments-implementation-breakdown.json"
+    },
+    {
+      "doc_id": "offline-tag-assignments-product-spec",
+      "title": "Offline Tag Assignments Product Spec",
+      "last_updated": "2026-03-28",
+      "parent_id": "plan",
+      "sort_order": null,
+      "source_path": "studio/planning/offline-tag-assignments-product-spec.md",
+      "legacy_url": "/docs/studio/planning/offline-tag-assignments-product-spec/",
+      "viewer_url": "/docs/?doc=offline-tag-assignments-product-spec",
+      "content_url": "/assets/data/docs/by-id/offline-tag-assignments-product-spec.json"
+    },
+    {
+      "doc_id": "pipeline-config-refactor-plan",
+      "title": "Pipeline Config Refactor Plan",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "pipeline-config-refactor-plan.md",
+      "legacy_url": "/docs/pipeline-config-refactor-plan/",
+      "viewer_url": "/docs/?doc=pipeline-config-refactor-plan",
+      "content_url": "/assets/data/docs/by-id/pipeline-config-refactor-plan.json"
+    },
+    {
+      "doc_id": "pipeline-use-cases",
+      "title": "Pipeline Use Cases",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "pipeline-use-cases.md",
+      "legacy_url": "/docs/pipeline-use-cases/",
+      "viewer_url": "/docs/?doc=pipeline-use-cases",
+      "content_url": "/assets/data/docs/by-id/pipeline-use-cases.json"
+    },
+    {
+      "doc_id": "site-shell-runtime",
+      "title": "Site Shell Runtime",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "site-shell-runtime.md",
+      "legacy_url": "/docs/site-shell-runtime/",
+      "viewer_url": "/docs/?doc=site-shell-runtime",
+      "content_url": "/assets/data/docs/by-id/site-shell-runtime.json"
+    },
+    {
+      "doc_id": "sorting-architecture",
+      "title": "Sorting Architecture",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "sorting-architecture.md",
+      "legacy_url": "/docs/sorting-architecture/",
+      "viewer_url": "/docs/?doc=sorting-architecture",
+      "content_url": "/assets/data/docs/by-id/sorting-architecture.json"
+    }
+  ]
+}

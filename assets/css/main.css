@@ -326,6 +326,139 @@ th{ background: var(--panel-2); }
   margin: 0 0 0.45rem;
 }
 
+.docsViewer{
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.docsViewer__sidebar{
+  min-width: 0;
+}
+
+.docsViewer__sidebarInner{
+  position: sticky;
+  top: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: var(--space-4);
+}
+
+.docsViewer__kicker{
+  margin: 0 0 var(--space-1);
+}
+
+.docsViewer__sidebarTitle{
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-heading-2);
+  line-height: 1.2;
+}
+
+.docsViewer__sidebarNote{
+  margin: 0 0 var(--space-3);
+}
+
+.docsViewer__nav{
+  min-width: 0;
+}
+
+.docsViewer__navList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.docsViewer__navList--child{
+  margin-top: 0.3rem;
+  padding-left: 0.95rem;
+}
+
+.docsViewer__navItem{
+  margin: 0 0 0.32rem;
+}
+
+.docsViewer__navLink{
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: var(--text);
+  text-decoration: none;
+  line-height: var(--line-snug);
+}
+
+.docsViewer__navLink:visited{
+  color: var(--text);
+}
+
+.docsViewer__navLink:hover{
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.docsViewer__navLink:focus-visible{
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.docsViewer__navLink.is-active{
+  background: var(--panel-2);
+  border-color: var(--border);
+}
+
+.docsViewer__main{
+  min-width: 0;
+}
+
+.docsViewer__status{
+  margin: 0 0 var(--space-2);
+}
+
+.docsViewer__status.is-error{
+  color: var(--link-hover);
+}
+
+.docsViewer__meta{
+  max-width: var(--content-measure);
+  margin: 0 0 var(--space-4);
+}
+
+.docsViewer__path,
+.docsViewer__updated{
+  margin: 0;
+}
+
+.docsViewer__path{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: baseline;
+}
+
+.docsViewer__pathSep{
+  color: var(--muted);
+}
+
+.docsViewer__content{
+  min-width: 0;
+}
+
+.docsViewer__content > :first-child{
+  margin-top: 0;
+}
+
+@media (max-width: 820px){
+  .docsViewer{
+    grid-template-columns: 1fr;
+  }
+
+  .docsViewer__sidebarInner{
+    position: static;
+  }
+}
+
 /* 5.	Site chrome: header, footer, navigation */
 
 .site-header{
