@@ -244,6 +244,7 @@
   function loadDoc(docId, options) {
     var mode = options && options.historyMode ? options.historyMode : "push";
     var hash = options && options.hash ? options.hash : "";
+    var shouldExpandTrail = !options || options.expandTrail !== false;
     var doc = state.docsById.get(docId);
     if (!doc) {
       setStatus("Document not found.", true);
@@ -255,13 +256,17 @@
     setHistory(docId, hash, mode);
 
     if (state.payloadCache.has(docId)) {
-      expandTrail(docId);
+      if (shouldExpandTrail) {
+        expandTrail(docId);
+      }
       renderPayload(doc, state.payloadCache.get(docId), hash);
       return;
     }
 
     state.selectedDocId = docId;
-    expandTrail(docId);
+    if (shouldExpandTrail) {
+      expandTrail(docId);
+    }
     renderSidebar();
     renderMeta(doc);
     setStatus("Loading " + doc.title + "...", false);
@@ -355,8 +360,11 @@
       return;
     }
 
-    expandTrail(initialDocId);
-    loadDoc(initialDocId, { historyMode: "replace", hash: getCurrentHash() });
+    loadDoc(initialDocId, {
+      historyMode: "replace",
+      hash: getCurrentHash(),
+      expandTrail: Boolean(state.docsById.get(initialDocId).parent_id)
+    });
   }
 
   function loadIndex() {
