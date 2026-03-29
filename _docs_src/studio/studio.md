@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: Studio
-last_updated: 2026-03-28
+last_updated: 2026-03-29
 parent_id: ""
 sort_order: 10
 ---
@@ -13,6 +13,7 @@ This document is the central reference for the Studio pages, which are designed 
 Related references:
 
 - **[UI Framework](/docs/studio/ui-framework/)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
+- **[Studio Search V1](search-v1.md)** for the Studio-first search contract and rollout path
 
 Page documents:
 
@@ -63,7 +64,7 @@ Notes:
 - for a one-off verification build while the dev server is running, use a separate destination such as:
 
 ```bash
-/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
+bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 ```
 
 ## Scope
