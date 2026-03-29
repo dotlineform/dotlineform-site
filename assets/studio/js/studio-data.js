@@ -36,6 +36,10 @@ export async function loadSiteWorksIndexJson(config, options) {
   return fetchJson(getSiteDataPath(config, "works_index"), options);
 }
 
+export async function loadSiteSearchIndexJson(config, options) {
+  return fetchJson(getSiteDataPath(config, "search_index"), options);
+}
+
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const allowedGroups = sanitizeGroupSet(studioGroups);

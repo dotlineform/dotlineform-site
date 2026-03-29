@@ -109,7 +109,7 @@ Jekyll verification builds:
 - for a one-off verification build while the dev server is active, use a separate destination:
 
 ```bash
-/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
+bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 ```
 
 Local environment variables (required for media/generation scripts):
@@ -232,6 +232,7 @@ Common scoped runs:
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
 ./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
 ./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
+./scripts/generate_work_pages.py --only search-index-json --write
 ```
 
 Useful flags:
@@ -268,6 +269,10 @@ Useful flags:
   - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
   - `work-files` stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
+- `--search-index-json-path` (default `assets/data/search_index.json`)
+  - writes a flat search artifact spanning works, series, and moments
+  - used first by `/studio/search/`
+  - rebuilt on every pipeline run as a full index and not scoped by `--work-ids`, `--series-ids`, or `--moment-ids`
 - `--series-json-dir` (default `assets/series/index`)
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
@@ -277,8 +282,8 @@ Useful flags:
   - if `Series.series_prose_file` is populated but the resolved markdown file is missing, the pipeline warns and omits `content_html`
 - `--works-index-json-path` (default `assets/data/works_index.json`)
 - `--only`: limit generation to selected artifacts
-  - aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run, regardless of `--only`
-  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `moments`, `moments-index-json`
+  - aggregate index JSON artifacts for `series`, `works`, `search`, and `moments` are always rebuilt on every run, regardless of `--only`
+  - allowed: `work-pages`, `work-files`, `work-links`, `series-pages`, `series-index-json`, `work-details-pages`, `work-json`, `works-index-json`, `search-index-json`, `moments`, `moments-index-json`
   - there is no separate `works-prose` artifact; use `work-json` for prose-only refreshes
   - `work-pages`: writes `_works/<work_id>.md` as lightweight stubs (`work_id`, `title`, `layout`, `checksum`)
     - selecting `work-pages` also rebuilds the per-work JSON payload because runtime prose now depends on it
@@ -309,6 +314,12 @@ Useful flags:
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - rebuilding this index alone does not probe work source images; it uses the current workbook metadata
     - always rebuilt as a full index (not scoped by `--work-ids`)
+  - `search-index-json`: writes `assets/data/search_index.json` as a flat array of search entries
+    - entries span `work`, `series`, and `moment`
+    - each entry includes canonical `id`, title, route href, compact display metadata, and build-time normalized `search_terms` / `search_text`
+    - work entries also include compact metadata such as `series_titles`, `medium_type`, and `storage`
+    - tag-derived fields are carried for future ranking/filter expansion, but sparse tag coverage means they are not yet the primary ranking signal
+    - always rebuilt as a full index and not gated by `--only`
   - `work-json`: writes `assets/works/index/<work_id>.json` with `header` (`schema`, deterministic content `version`, `generated_at_utc`, `work_id`, `count`), full `work`, full `sections[].details[]`, and rendered `content_html`
     - `work.series_ids` preserves the full ordered membership list from the workbook
     - optional empty fields are omitted from JSON rather than written as `null`
@@ -326,6 +337,7 @@ Runtime canonical data flow:
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 - `/moments/` reads `assets/data/moments_index.json` for card metadata.
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
+- `/studio/search/` reads `assets/data/search_index.json`.
 
 ### 3a) Delete a single work from generated artifacts
 

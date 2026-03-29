@@ -326,6 +326,133 @@ th{ background: var(--panel-2); }
   margin: 0 0 0.45rem;
 }
 
+.studioSearch{
+  display: grid;
+  gap: var(--space-4);
+}
+
+.studioSearch__controls{
+  display: grid;
+  gap: 10px;
+}
+
+.studioSearch__input{
+  width: 100%;
+  padding: 0.72rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+
+.studioSearch__input:focus{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.studioSearch__filters{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.studioSearch__filterBtn{
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 0.32rem 0.7rem;
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+  cursor: pointer;
+}
+
+.studioSearch__filterBtn[data-state="active"]{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+}
+
+.studioSearch__filterBtn:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.studioSearch__status{
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.studioSearch__status[data-state="error"]{
+  color: var(--text);
+}
+
+.studioSearch__results{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.studioSearch__item{
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.studioSearch__item:first-child{
+  border-top: 0;
+  padding-top: 0;
+}
+
+.studioSearch__itemHead{
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.studioSearch__kind{
+  color: var(--muted);
+  font-size: var(--font-caption);
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.studioSearch__title{
+  color: var(--link);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.studioSearch__title:visited{
+  color: var(--link-visited);
+}
+
+.studioSearch__title:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.studioSearch__title:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.studioSearch__id,
+.studioSearch__meta{
+  margin: 0.18rem 0 0;
+  color: var(--muted);
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
 .docsViewer{
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);

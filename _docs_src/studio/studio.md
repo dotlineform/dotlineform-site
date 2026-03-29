@@ -94,6 +94,9 @@ bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
+- Search page:
+  - `studio/search/index.md`
+  - `assets/studio/js/studio-search.js`
 - Studio works page:
   - `studio/studio-works/index.md`
   - `assets/studio/js/studio-works.js`
@@ -103,6 +106,7 @@ bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 - Tag write service: `scripts/studio/tag_write_server.py`
 - Data contracts:
   - `assets/studio/data/studio_config.json`
+  - `assets/data/search_index.json`
   - `assets/studio/data/tag_registry.json`
   - `assets/studio/data/tag_aliases.json`
   - `assets/studio/data/tag_assignments.json`
@@ -128,7 +132,9 @@ Current config scope:
 - `paths.data.site`
   - `series_index`
   - `works_index`
+  - `search_index`
 - `paths.routes`
+  - `search`
   - `series_tag_editor`
   - `tag_groups`
   - additional Studio/site route bases reserved for future wiring
@@ -157,6 +163,10 @@ Current config scope:
 - `ui_text.series_tags`
   - table headings
   - filter/empty/error text
+- `ui_text.search`
+  - input label and placeholder
+  - kind-filter labels
+  - loading/empty/result-count text
 - `ui_text.tag_groups`
   - empty/error text
   - long-description fallback copy

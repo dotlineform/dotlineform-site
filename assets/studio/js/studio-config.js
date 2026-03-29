@@ -4,6 +4,7 @@ const DEFAULT_STUDIO_CONFIG = {
   paths: {
     routes: {
       studio_home: "/studio/",
+      search: "/studio/search/",
       series_tags: "/studio/series-tags/",
       series_tag_editor: "/studio/series-tag-editor/",
       tag_registry: "/studio/tag-registry/",
@@ -22,7 +23,8 @@ const DEFAULT_STUDIO_CONFIG = {
       },
       site: {
         series_index: "/assets/data/series_index.json",
-        works_index: "/assets/data/works_index.json"
+        works_index: "/assets/data/works_index.json",
+        search_index: "/assets/data/search_index.json"
       }
     }
   },
@@ -143,6 +145,24 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     studio_works: {
       copy_series_button: "copy series"
+    },
+    search: {
+      load_failed_error: "Failed to load search data.",
+      search_input_aria_label: "Search works, series, and moments",
+      search_placeholder: "search works, series, moments",
+      filter_all: "all",
+      filter_work: "works",
+      filter_series: "series",
+      filter_moment: "moments",
+      loading: "loading search index…",
+      prompt: "Enter a search query.",
+      no_results: "No results.",
+      results_count: "{count} results",
+      results_count_one: "1 result",
+      result_meta_separator: " • ",
+      result_kind_work: "work",
+      result_kind_series: "series",
+      result_kind_moment: "moment"
     }
   }
 };
