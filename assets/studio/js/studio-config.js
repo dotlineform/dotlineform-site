@@ -159,6 +159,8 @@ const DEFAULT_STUDIO_CONFIG = {
       no_results: "No results.",
       results_count: "{count} results",
       results_count_one: "1 result",
+      results_count_visible: "Showing {visible} of {count} results",
+      load_more: "more",
       result_meta_separator: " • ",
       result_kind_work: "work",
       result_kind_series: "series",

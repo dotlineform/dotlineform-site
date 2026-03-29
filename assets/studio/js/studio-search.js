@@ -6,7 +6,7 @@ import {
   loadSiteSearchIndexJson
 } from "./studio-data.js";
 
-const MAX_RESULTS = 50;
+const RESULTS_BATCH_SIZE = 50;
 const SEARCH_DEBOUNCE_MS = 140;
 
 if (document.readyState === "loading") {
@@ -23,7 +23,8 @@ async function initStudioSearchPage() {
   const filters = document.getElementById("studioSearchFilters");
   const status = document.getElementById("studioSearchStatus");
   const results = document.getElementById("studioSearchResults");
-  if (!input || !filters || !status || !results) return;
+  const more = document.getElementById("studioSearchMore");
+  if (!input || !filters || !status || !results || !more) return;
 
   let config = null;
   try {
@@ -41,10 +42,12 @@ async function initStudioSearchPage() {
       filters,
       status,
       results,
+      more,
       entries,
       filterKind: "all",
       queryText: "",
-      debounceId: null
+      debounceId: null,
+      visibleCount: RESULTS_BATCH_SIZE
     };
     wireEvents(state);
     renderFilters(state);
@@ -63,6 +66,7 @@ function wireEvents(state) {
     const button = event.target.closest("button[data-kind]");
     if (!button) return;
     state.filterKind = String(button.getAttribute("data-kind") || "all");
+    resetVisibleCount(state);
     renderFilters(state);
     renderResults(state);
   });
@@ -74,6 +78,7 @@ function wireEvents(state) {
     state.debounceId = window.setTimeout(() => {
       state.debounceId = null;
       state.queryText = String(state.input.value || "");
+      resetVisibleCount(state);
       renderResults(state);
     }, SEARCH_DEBOUNCE_MS);
   });
@@ -85,6 +90,14 @@ function wireEvents(state) {
       state.debounceId = null;
     }
     state.queryText = String(state.input.value || "");
+    resetVisibleCount(state);
+    renderResults(state);
+  });
+
+  state.more.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-role='more']");
+    if (!button) return;
+    state.visibleCount += RESULTS_BATCH_SIZE;
     renderResults(state);
   });
 }
@@ -152,6 +165,7 @@ function renderResults(state) {
     state.status.dataset.state = "";
     state.status.textContent = searchText(state.config, "prompt", "Enter a search query.");
     state.results.innerHTML = "";
+    state.more.innerHTML = "";
     return;
   }
 
@@ -170,19 +184,28 @@ function renderResults(state) {
     return a.entry.id.localeCompare(b.entry.id, undefined, { sensitivity: "base", numeric: true });
   });
 
-  const visible = matches.slice(0, MAX_RESULTS);
+  const visible = matches.slice(0, state.visibleCount);
   if (!visible.length) {
     state.status.dataset.state = "";
     state.status.textContent = searchText(state.config, "no_results", "No results.");
     state.results.innerHTML = "";
+    state.more.innerHTML = "";
     return;
   }
 
   state.status.dataset.state = "";
-  state.status.textContent = visible.length === 1
+  state.status.textContent = matches.length === 1
     ? searchText(state.config, "results_count_one", "1 result")
-    : searchText(state.config, "results_count", "{count} results", { count: String(visible.length) });
+    : matches.length > visible.length
+      ? searchText(state.config, "results_count_visible", "Showing {visible} of {count} results", {
+        visible: String(visible.length),
+        count: String(matches.length)
+      })
+      : searchText(state.config, "results_count", "{count} results", { count: String(matches.length) });
   state.results.innerHTML = visible.map(({ entry }) => renderEntry(state, entry)).join("");
+  state.more.innerHTML = matches.length > visible.length
+    ? `<button type="button" class="studioSearch__moreBtn" data-role="more">${escapeHtml(searchText(state.config, "load_more", "more"))}</button>`
+    : "";
 }
 
 function scoreEntry(entry, query) {
@@ -232,6 +255,10 @@ function renderEntry(state, entry) {
       ${metaText ? `<p class="studioSearch__meta">${escapeHtml(metaText)}</p>` : ""}
     </li>
   `;
+}
+
+function resetVisibleCount(state) {
+  state.visibleCount = RESULTS_BATCH_SIZE;
 }
 
 function withBaseUrl(baseurl, href) {

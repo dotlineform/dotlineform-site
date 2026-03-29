@@ -166,7 +166,7 @@ Current config scope:
 - `ui_text.search`
   - input label and placeholder
   - kind-filter labels
-  - loading/empty/result-count text
+  - loading/empty/result-count/load-more text
 - `ui_text.tag_groups`
   - empty/error text
   - long-description fallback copy
