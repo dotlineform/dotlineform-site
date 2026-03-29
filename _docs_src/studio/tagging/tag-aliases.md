@@ -2,7 +2,7 @@
 doc_id: tag-aliases
 title: Tag Aliases
 last_updated: 2026-03-28
-parent_id: studio
+parent_id: tagging
 sort_order: 60
 ---
 
