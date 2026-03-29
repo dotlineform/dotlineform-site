@@ -2,8 +2,8 @@
 doc_id: studio-search-v1
 title: Studio Search V1
 last_updated: 2026-03-29
-parent_id: studio
-sort_order: 30
+parent_id: search
+sort_order: 10
 ---
 
 # Studio Search V1
@@ -78,6 +78,15 @@ Proposed initial page responsibilities:
 
 The Studio page should load `search_index.json` on page load or on first interaction. Either is acceptable for v1 because the route is dedicated to search.
 
+Recommended interaction model:
+
+- load the base artifact once
+- keep it in memory for the page session
+- run search after a short debounce while typing
+- allow `Enter` to trigger an immediate search if needed
+
+Typing should feel responsive, but search should not perform a network fetch on each keypress.
+
 ## Main-Site Rollout Path
 
 When the Studio search behavior is stable, the same runtime can move to the main site in two stages:
@@ -103,6 +112,13 @@ Reason:
 - future prose search should not force unrelated pages to download larger generic indexes
 
 The search artifact should be generated at build time from canonical source data in the same pipeline that already builds site indexes.
+
+Search generation should remain a self-contained pipeline concern:
+
+- it reads canonical source data and existing generated metadata
+- it writes a search-specific artifact
+- it does not change canonical ownership of `works.xlsx`
+- it does not make search the source of truth for non-search pages
 
 ## Search Artifact Contract
 
@@ -273,6 +289,12 @@ Acceptable future shapes:
 - `assets/data/search_index.works-prose.json`
 - multiple smaller shards by content type
 
+Principle:
+
+- a shard is a separate search payload for a specific slice of search data
+- the browser loads only the shards needed for the current search mode
+- base search remains fast because large prose payloads stay out of the default first load
+
 When prose search arrives, the search flow should remain:
 
 1. search base index immediately
@@ -305,6 +327,15 @@ Examples:
 
 This classification prevents the base search artifact from becoming an undifferentiated dump of site metadata.
 
+The classification rules should be enforced in generator code and verification checks, not only described in docs.
+
+Recommended enforcement:
+
+- keep one explicit field registry in code
+- mark each search field with its allowed roles
+- reject `lazy_enrichment` fields in the base artifact
+- report payload size and included fields in verification output
+
 ## Generator Guidance
 
 The search artifact should be generated in the existing content pipeline, alongside the current site indexes.
@@ -317,6 +348,20 @@ Generator expectations:
 - one common entry shape across works, series, and moments
 
 The generator should own search normalization rules so the runtime stays small and predictable.
+
+## Ranking Assessment
+
+Ranking effectiveness should be assessed with a small curated benchmark, not only by ad hoc manual impressions.
+
+Recommended approach:
+
+- maintain a fixed set of representative queries
+- define expected top results for each query
+- track top-1 and top-5 hit rates
+- include exact-id, exact-title, prefix, multiple-token, metadata, and ambiguous queries
+- expose optional Studio debug output showing score tier and matched fields
+
+This gives a concrete way to tune ranking rules without introducing external analytics or black-box heuristics.
 
 ## Benefits
 

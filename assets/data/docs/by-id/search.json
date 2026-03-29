@@ -1,0 +1,11 @@
+{
+  "doc_id": "search",
+  "title": "Search",
+  "last_updated": "2026-03-29",
+  "parent_id": "studio",
+  "sort_order": 30,
+  "source_path": "studio/search.md",
+  "legacy_url": "/docs/studio/search/",
+  "viewer_url": "/docs/?doc=search",
+  "content_html": "<h1 id=\"search\">Search</h1>\n\n<p>This section holds the Studio-first search planning and implementation docs.</p>\n\n<p>Current documents:</p>\n\n<ul>\n  <li><strong><a href=\"/docs/?doc=studio-search-v1\">Studio Search V1</a></strong></li>\n  <li><strong><a href=\"/docs/?doc=studio-search-v1-implementation-plan\">Search V1 Implementation Plan</a></strong></li>\n</ul>\n\n<p>Current direction:</p>\n\n<ul>\n  <li>search starts as a Studio page</li>\n  <li>search owns its own generated artifact rather than reusing browse indexes directly</li>\n  <li>full-text growth should be handled with optional secondary payloads rather than inflating the base payload</li>\n</ul>\n\n<p>Planned future split:</p>\n\n<ul>\n  <li>contract and data-shape docs</li>\n  <li>field classification docs</li>\n  <li>ranking and benchmark docs</li>\n  <li>implementation and verification docs</li>\n</ul>\n"
+}

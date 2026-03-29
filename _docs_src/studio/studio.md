@@ -13,7 +13,7 @@ This document is the central reference for the Studio pages, which are designed 
 Related references:
 
 - **[UI Framework](/docs/studio/ui-framework/)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
-- **[Studio Search V1](search-v1.md)** for the Studio-first search contract and rollout path
+- **[Search](search.md)** for the Studio-first search section, contract docs, and implementation planning
 
 Page documents:
 
