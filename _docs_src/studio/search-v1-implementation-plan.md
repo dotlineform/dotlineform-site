@@ -27,6 +27,7 @@ This plan does not cover:
 - prose shard implementation
 - main-site top-nav rollout
 - external search services or plugins
+- tag-aware ranking in production before tag coverage is strong enough
 
 ## Phase 1: Search Artifact Generator
 
@@ -237,13 +238,54 @@ Hooks to preserve:
 
 - support for optional prose shards
 - support for additional filters such as `medium_type`
+- support for assigned-tag search fields sourced from `tag_registry.json` and `tag_assignments.json`
 - support for a public-site search surface using the same runtime and artifact
 
 Explicitly deferred:
 
 - `search_index_prose.json`
 - result snippets from prose
+- tag-aware ranking rollout before tag coverage is strong enough
 - main-site top-nav search
+
+## Phase 7: Tag-Aware Search Expansion
+
+Goal:
+
+- add tags as a meaningful ranking and filter signal once the data quality is sufficient
+
+Targets:
+
+- search generator field registry
+- tag-derived search fields in `assets/data/search_index.json`
+- Studio search filters and ranking benchmark fixtures
+
+Inputs:
+
+- `assets/studio/data/tag_registry.json`
+- `assets/studio/data/tag_assignments.json`
+
+Output:
+
+- normalized tag ids and tag labels available to search
+- optional tag filters in the Studio page
+- ranking tiers that place strong tag matches above weak generic contains matches
+
+Gate before rollout:
+
+- tag coverage is broad enough across the catalogue to improve results consistently
+- benchmark fixtures include representative tag queries
+- manual review confirms that sparse tags are not distorting relevance
+
+Benefits:
+
+- search can surface conceptually related works beyond title-only matching
+- the existing tagging model becomes useful in public discovery as well as Studio management
+
+Key risks:
+
+- sparse or inconsistent tags can produce misleading ranking
+- tag labels and aliases may need additional normalization rules before they are search-ready
 
 ## Recommended First Implementation Batch
 

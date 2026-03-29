@@ -210,8 +210,21 @@ V1 should also reserve space for structured metadata fields that are likely to m
 - `medium_type`
 - `storage`
 - `series_type`
+- assigned tags
 
 These do not all need to be visible in the UI on day one, but the search contract should treat them as first-class optional fields rather than ad hoc later additions.
+
+Tag data is a specifically important future signal.
+
+Current constraint:
+
+- tag coverage is still sparse
+
+Future direction:
+
+- use `tag_registry.json` and `tag_assignments.json` as the source for normalized tag search fields
+- treat tags as both a ranking signal and a filter surface when coverage is strong enough
+- keep tag-derived search fields optional until the underlying tagging data is reliable enough to improve results consistently
 
 ## Ranking Rules
 
@@ -227,6 +240,12 @@ Recommended priority order:
 6. title token match
 7. associated metadata match such as series title or medium type
 8. broad `search_text` contains match
+
+Future ranking expansion:
+
+- once tag coverage is strong enough, assigned-tag matches should rank above broad generic `search_text` contains matches
+- exact or prefix tag matches should be treated as stronger than weak metadata-only contains matches
+- tag-aware ranking should only be enabled when sparse tagging no longer creates uneven result quality
 
 Tie-break rules:
 
@@ -318,6 +337,10 @@ Examples:
   - filter field
   - ranking field
   - optional display field
+- assigned tags
+  - filter field
+  - ranking field
+  - optional display field
 - `storage`
   - filter field
   - optional display field
@@ -334,6 +357,7 @@ Recommended enforcement:
 - keep one explicit field registry in code
 - mark each search field with its allowed roles
 - reject `lazy_enrichment` fields in the base artifact
+- keep tag-derived fields behind an explicit enable/disable decision until coverage is sufficient
 - report payload size and included fields in verification output
 
 ## Generator Guidance
@@ -358,7 +382,7 @@ Recommended approach:
 - maintain a fixed set of representative queries
 - define expected top results for each query
 - track top-1 and top-5 hit rates
-- include exact-id, exact-title, prefix, multiple-token, metadata, and ambiguous queries
+- include exact-id, exact-title, prefix, multiple-token, metadata, future tag, and ambiguous queries
 - expose optional Studio debug output showing score tier and matched fields
 
 This gives a concrete way to tune ranking rules without introducing external analytics or black-box heuristics.
