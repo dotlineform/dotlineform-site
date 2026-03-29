@@ -45,12 +45,20 @@ Generated outputs:
 What the builder does:
 
 - reads Markdown source docs from `_docs_src/`
-- reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, and optional `sort_order`
+- reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - rewrites doc-to-doc links onto the single viewer route
 - writes one index payload plus one per-doc payload
 
-Required front matter contract:
+Publishing rules:
+
+- every `.md` file under `_docs_src/` is published by default
+- add front matter with `published: false` to keep a Markdown file in `_docs_src/` without publishing it to `/docs/`
+- if front matter is omitted, the builder falls back to:
+  - `doc_id`: filename stem
+  - `title`: first Markdown `#` heading, or a humanized filename
+
+Common front matter fields:
 
 - `doc_id`
   stable ID used by `/docs/?doc=<doc_id>`
@@ -62,6 +70,8 @@ Required front matter contract:
   empty string for a top-level doc
 - `sort_order`
   optional integer for stable ordering inside the index tree
+- `published`
+  optional boolean; set `false` to exclude the file from published docs output
 
 Internal doc links:
 

@@ -4,8 +4,8 @@
   "last_updated": "2026-03-29",
   "parent_id": "search",
   "sort_order": 30,
-  "source_path": "search/archive.md",
-  "legacy_url": "/docs/search/archive/",
+  "source_path": "search/search-archive.md",
+  "legacy_url": "/docs/search/search-archive/",
   "viewer_url": "/docs/?doc=search-archive",
   "content_html": "<h1 id=\"search-archive\">Search Archive</h1>\n\n<p>This section is an archive of old Studio-first search planning and implementation docs.</p>\n"
 }
