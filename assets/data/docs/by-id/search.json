@@ -7,5 +7,5 @@
   "source_path": "search/search.md",
   "legacy_url": "/docs/search/search/",
   "viewer_url": "/docs/?doc=search",
-  "content_html": "<h1 id=\"search\">Search</h1>\n\n<p>This section holds the search planning and implementation docs.</p>\n\n<p><a href=\"/studio/search/\">Search</a> is currently in development and hosted in Studio.</p>\n"
+  "content_html": "<h1 id=\"search\">Search</h1>\n\n<p>This section holds the search planning and implementation docs.</p>\n\n<p><a href=\"/studio/search/\" target=\"_blank\">Search</a> is currently in development and hosted in Studio.</p>\n"
 }

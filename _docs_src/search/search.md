@@ -10,4 +10,4 @@ sort_order: 30
 
 This section holds the search planning and implementation docs.
 
-[Search](/studio/search/) is currently in development and hosted in Studio.
+[Search](/studio/search/){:target="_blank"} is currently in development and hosted in Studio.
