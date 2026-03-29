@@ -8,6 +8,29 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-29] Added a concrete staged implementation note for search config extraction
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a focused implementation note that turns the search config architecture direction into a concrete phase sequence, beginning with runtime UI policy extraction and deferring ranking and field policy to later stages.
+
+**Reason:**  
+The architecture doc defined the boundary, but the next implementation step still needed a concrete shape in code terms so the config change can be reviewed and executed without ambiguity.
+
+**Effect:**  
+Search config work now has a documented first cut, a proposed `search_policy.json` shape, and a clearer roadmap for later phases such as ranking bands, field participation, and shared runtime/build policy.
+
+**Affected files/docs:**  
+- [Search Config Architecture](/docs/?doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+- [Search](/docs/?doc=search)
+
+**Notes:**  
+This remains a documentation-level implementation plan; the config layer itself is not yet implemented.
+
 ## [2026-03-29] Normalized published search-doc references to docs-viewer links
 
 **Status:** implemented

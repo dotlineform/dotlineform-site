@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-29T21:25:38Z",
+  "generated_at": "2026-03-29T21:31:59Z",
   "docs": [
     {
       "doc_id": "search-archive",
@@ -429,6 +429,17 @@
       "legacy_url": "/docs/search/search-config-architecture/",
       "viewer_url": "/docs/?doc=search-config-architecture",
       "content_url": "/assets/data/docs/by-id/search-config-architecture.json"
+    },
+    {
+      "doc_id": "search-config-implementation-note",
+      "title": "Search Config Implementation Note",
+      "last_updated": "2026-03-29",
+      "parent_id": "search",
+      "sort_order": 101,
+      "source_path": "search/search-config-implementation-note.md",
+      "legacy_url": "/docs/search/search-config-implementation-note/",
+      "viewer_url": "/docs/?doc=search-config-implementation-note",
+      "content_url": "/assets/data/docs/by-id/search-config-implementation-note.json"
     },
     {
       "doc_id": "css-audit-spec",

@@ -23,5 +23,6 @@ This section describes the search planning and implementation.
 - [Normalisation Rules](/docs/?doc=search-normalisation-rules) - describes token preparation, deduplication, hyphen/space handling, and similar preprocessing rules.
 - [Validation Checklist](/docs/?doc=search-validation-checklist) - should be short and operational rather than explanatory
 - [Config Architecture](/docs/?doc=search-config-architecture) - this file explains the architecture choice; the registry and ranking docs should define the actual rules.
+- [Config Implementation Note](/docs/?doc=search-config-implementation-note) - sketches the concrete first config extraction and the later phases after that.
 - [Change Log Guidance](/docs/?doc=search-change-log-guidance)
 - [Change Log](/docs/?doc=search-change-log)

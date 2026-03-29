@@ -20,6 +20,7 @@ This document does not define the detailed rules themselves. Those belong in:
 - [Search Ranking Model](/docs/?doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
 - [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
+- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
 
 ## Current state
 
@@ -121,6 +122,8 @@ Reason for this location:
 - it keeps search policy separate from generic Studio shell config
 
 This file should become the machine-readable search-policy surface.
+
+The concrete first-step shape and later extraction phases are outlined in [Search Config Implementation Note](/docs/?doc=search-config-implementation-note).
 
 ### 3. Keep docs as the normative review surface
 
