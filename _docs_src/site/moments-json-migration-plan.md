@@ -1,3 +1,11 @@
+---
+doc_id: moments-json
+title: Moments JSON Migration Plan
+last_updated: 2026-03-29
+parent_id: site
+sort_order: 10
+---
+
 # Moments JSON Migration Plan
 
 This document defines the phased migration from the current include-based moments pipeline to a JSON-driven runtime flow aligned with the existing work page architecture.

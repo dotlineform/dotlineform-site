@@ -1,3 +1,10 @@
+---
+doc_id: css-audit-spec
+title: CSS Audit Spec (v1)
+last_updated: 2026-03-28
+parent_id: site
+---
+
 # CSS Audit Spec (v1)
 
 ## Goal

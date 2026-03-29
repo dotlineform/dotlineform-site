@@ -1,3 +1,11 @@
+---
+doc_id: pipeline-config
+title: Pipeline Config Refactor Plan
+last_updated: 2026-03-29
+parent_id: site
+sort_order: 10
+---
+
 # Pipeline Config Refactor Plan
 
 This document tracks the phased refactor to move pipeline policy out of scattered script/template defaults and into one shared configuration model.

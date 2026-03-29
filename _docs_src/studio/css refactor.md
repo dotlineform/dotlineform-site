@@ -2,7 +2,7 @@
 doc_id: css-refactor
 title: CSS Refactor
 last_updated: 2026-03-28
-parent_id: studio
+parent_id: studio-archive
 sort_order: 100
 ---
 

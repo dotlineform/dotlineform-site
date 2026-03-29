@@ -2,7 +2,7 @@
 doc_id: regression-checklist
 title: Studio Regression Checklist
 last_updated: 2026-03-28
-parent_id: studio
+parent_id: studio-archive
 sort_order: 80
 ---
 

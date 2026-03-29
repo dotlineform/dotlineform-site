@@ -12,21 +12,20 @@ This document is the central reference for the Studio pages, which are designed 
 
 Related references:
 
-- **[UI Framework](/docs/studio/ui-framework/)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
-- **[Search](search.md)** for the Studio-first search section, contract docs, and implementation planning
+- **[UI Framework](/docs/?doc=ui-framework)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
 
 Page documents:
 
-- **[Tag Registry](/docs/studio/pages/tag-registry/)**
-- **[Series Tags](/docs/studio/pages/series-tags/)**
-- **[Series Tag Editor](/docs/studio/pages/tag-editor/)**
+- **[Tag Registry](/docs/?doc=tag-registry/)**
+- **[Series Tags](/docs/?doc=series-tags/)**
+- **[Series Tag Editor](/docs/?doc=tag-editor/)**
 
 Current status:
 
 - Studio modularity refactor is structurally complete for the current build
 - modal framework migration is structurally complete for the current build
 - non-modal shared UI cleanup is structurally complete across the editor, registry, aliases, and lighter Studio pages
-- remaining work is manual browser verification using `docs/studio/regression-checklist.md`
+- remaining work is manual browser verification using `/docs/?doc=regression-checklist.md`
 
 ## Local Development
 

@@ -1,3 +1,11 @@
+---
+doc_id: site-shell-runtime
+title: Site Shell Runtime
+last_updated: 2026-03-28
+parent_id: site
+sort_order: 20
+---
+
 # Site Shell Runtime
 
 This document records site-level layout/runtime decisions for the shared shell around page content.

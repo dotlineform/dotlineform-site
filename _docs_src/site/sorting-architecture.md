@@ -1,3 +1,11 @@
+---
+doc_id: sorting-architecture
+title: Sorting Architecture
+last_updated: 2026-03-29
+parent_id: site
+sort_order: 10
+---
+
 # Sorting Architecture
 
 This document defines canonical sorting behavior across generated artifacts and runtime pages.

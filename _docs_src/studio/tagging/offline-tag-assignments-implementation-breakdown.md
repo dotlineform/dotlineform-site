@@ -2,7 +2,7 @@
 doc_id: offline-tag-assignments-implementation-breakdown
 title: Offline Tag Assignments Implementation Breakdown
 last_updated: 2026-03-28
-parent_id: plan
+parent_id: tagging
 ---
 
 # Offline Tag Assignments Implementation Breakdown

@@ -1,6 +1,6 @@
 ---
-doc_id: plan
-title: Plan
+doc_id: studio-plan
+title: Implementation Plan
 last_updated: 2026-03-28
 parent_id: studio
 sort_order: 90
@@ -8,7 +8,7 @@ sort_order: 90
 
 **Phase 1 Task List**
 
-No edits yet. This is the concrete implementation plan for the first pass.
+This is the concrete implementation plan for the first pass.
 
 **Phase 1: Shared data and transport extraction**
 Goal: remove duplicated fetch/parse/endpoint logic without changing UI behavior.
@@ -192,7 +192,3 @@ Start with:
 1. `studio-data.js`
 2. `studio-transport.js`
 3. rewiring `tag-groups.js`, `tag-studio-index.js`, and `series-tags.js`
-
-That is the safest first slice.
-
-If you want to proceed, I can start Phase 1 and I’ll first outline exactly which files I’ll add/change before making edits.

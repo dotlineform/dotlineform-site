@@ -1,5 +1,9 @@
 ---
-permalink: /docs/pipeline-use-cases/
+doc_id: pipeline-use-cases
+title: Pipeline Use Cases
+last_updated: 2026-03-29
+parent_id: site
+sort_order: 10
 ---
 
 # Pipeline Use Cases

@@ -2,7 +2,7 @@
 doc_id: offline-tag-assignments-product-spec
 title: Offline Tag Assignments Product Spec
 last_updated: 2026-03-28
-parent_id: plan
+parent_id: tagging
 ---
 
 # Offline Tag Assignments Product Spec
