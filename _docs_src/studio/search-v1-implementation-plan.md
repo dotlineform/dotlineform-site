@@ -2,7 +2,7 @@
 doc_id: studio-search-v1-implementation-plan
 title: Search V1 Implementation Plan
 last_updated: 2026-03-29
-parent_id: search
+parent_id: search-archive
 sort_order: 20
 ---
 
