@@ -101,14 +101,14 @@ Status: `completed`
 - `scripts/run_draft_pipeline.py`
 - `scripts/copy_draft_media_files.py`
 - `scripts/generate_work_pages.py`
-- `docs/scripts-overview.md`
+- [Scripts Overview](/docs/?doc=scripts-overview)
 
 ### Done
 
 - 2026-03-20: Added tracked shared policy file at `_data/pipeline.json`.
 - 2026-03-20: Added shared Python loader at `scripts/pipeline_config.py`.
 - 2026-03-20: Updated `scripts/run_draft_pipeline.py`, `scripts/copy_draft_media_files.py`, and `scripts/generate_work_pages.py` to read env var names and path defaults from shared config.
-- 2026-03-20: Updated `docs/scripts-overview.md` and `README.md` to document the new config source of truth.
+- 2026-03-20: Updated [Scripts Overview](/docs/?doc=scripts-overview) and `README.md` to document the new config source of truth.
 - 2026-03-20: Sanitized this plan doc to use repo-relative references only.
 
 ### Verification
@@ -155,7 +155,7 @@ Reason:
 - `scripts/make_srcset_images.sh`
 - New Python srcset builder module/script
 - `scripts/run_draft_pipeline.py`
-- `docs/scripts-overview.md`
+- [Scripts Overview](/docs/?doc=scripts-overview)
 
 ### Done
 
@@ -262,7 +262,7 @@ Status: `completed`
 ### Likely Touch Points
 
 - `scripts/audit_site_consistency.py`
-- `docs/scripts-overview.md`
+- [Scripts Overview](/docs/?doc=scripts-overview)
 - `README.md`
 - `AGENTS.md` if workflow expectations change
 

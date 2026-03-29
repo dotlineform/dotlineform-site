@@ -1,290 +1,354 @@
 ---
-doc-id: search-ranking-model
+doc_id: search-ranking-model
 title: Search Ranking Model
-last-updated: 2026-03-29
-parent-id: search
-sort-order: 40
+last_updated: 2026-03-29
+parent_id: search
+sort_order: 40
 ---
 
 # Search Ranking Model
 
 ## Purpose
 
-This document defines how matching search records are prioritised and ordered.
+This document defines how matching search records are prioritised and ordered in the current v1 search implementation.
 
-Its purpose is to make the relevance model of the site search subsystem explicit and reviewable. It should explain which kinds of matches are treated as stronger or weaker, how field importance affects ranking, and how broad recall fields relate to more precise fields such as title or ID.
+Its purpose is to make the relevance model explicit and reviewable without turning this document into a code walk-through.
 
-This document is about ranking policy. It is not a code walkthrough and it is not a schema document.
+This is a ranking-policy document. It is not the schema, normalization, or UI document.
 
 ## Scope
 
-This document applies to the ranking stage of client-side search.
+This document applies to the ranking stage of the current client-side search runtime.
 
-It should cover:
+It covers:
 
-- how matching records are prioritised
-- how field importance affects score or ordering
-- how different match types compare with one another
-- how ties are resolved
-- how fallback fields are treated
-- how multi-field matches influence relevance
-
-This document should define ranking intent clearly enough that the implemented behaviour can be checked against it.
+- the candidate gate before scoring
+- the current match-precedence bands
+- tie-breaking
+- how derived fields are treated
+- the main current limitations of the v1 model
 
 ## Relationship to other documents
 
-This document should be read alongside:
-
-- `search-index-schema.md`, which defines the available search fields
-- `search-field-registry.md`, which defines which fields are searchable and their importance class
-- `search-normalisation-rules.md`, which defines how values are transformed before matching
-- `search-ui-behaviour.md`, which defines how ranked results are displayed
-- `search-validation-checklist.md`, which defines how ranking behaviour should be tested
+- [Search Index Schema](/docs/?doc=search-index-schema) defines the available fields
+- [Search Field Registry](/docs/?doc=search-field-registry) defines each field’s search role
+- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules) defines how values are normalized before matching
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour) defines how ranked results are presented
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines how ranking behaviour should be checked
 
 ## Ranking principles
 
-The ranking model should follow these principles:
+The current ranking model follows these principles.
 
 ### Predictable
-Results should feel stable and understandable rather than arbitrary.
+
+The runtime uses explicit numeric score tiers and deterministic ordering.
 
 ### Known-item friendly
-When a user searches for a title, ID, or canonical series name, the intended item should rank highly.
+
+Exact id and exact title matches are given the highest precedence.
 
 ### Structured-first
-Matches in strong structured fields should outrank matches in broad derived or fallback fields.
+
+Direct matches in high-value fields outrank broad fallback matches.
 
 ### Recall without dominance
-Broad support fields should help retrieve relevant items, but should not overpower more precise fields.
 
-### Reviewable
-Ranking rules should be describable in plain language without requiring inspection of the implementation code.
+`search_text` broad-match recall exists, but it is intentionally the weakest scoring band.
+
+### Lightweight
+
+The model stays simple enough to run in plain browser JavaScript over the in-memory index.
 
 ## Ranking stages
 
-The ranking model can be described as a sequence of stages.
+The current runtime can be described in four stages.
 
-### 1. Candidate retrieval
-The engine determines which records match the query at all.
+### 1. Query normalization
 
-This document does not define candidate retrieval in detail, but ranking policy assumes that only matching candidates reach the ranking stage.
+The input query is normalized into a lowercased space-normalized form and split into tokens.
 
-### 2. Field-aware relevance assessment
-The engine identifies which fields matched and what kind of match occurred.
+This document does not define the normalization rules in detail; those belong in [Search Normalisation Rules](/docs/?doc=search-normalisation-rules).
 
-Examples:
-- exact title match
-- title prefix match
-- token match in title
-- exact ID match
-- series title match
-- medium match
-- year match
-- fallback match in derived search text
+### 2. Candidate gate
 
-### 3. Score or precedence assignment
-The engine gives stronger priority to higher-value field matches and weaker priority to lower-value or fallback matches.
+Before an entry can be scored at all, every query token must match somewhere in the record.
+
+Current gate rule:
+
+- for every query token
+  - either some `search_terms` token must equal it or start with it
+  - or `search_text` must contain it
+
+If any token fails that test, the record is discarded before ranking.
+
+This is important because v1 ranking is not evaluating all records and then giving weak scores to almost-matches. It first enforces an all-tokens-present rule, then applies score tiers.
+
+### 3. Score-band assignment
+
+Each surviving candidate is assigned the first matching score tier from a descending precedence list.
+
+The tiers are mutually exclusive in practice because the runtime returns on the first satisfied condition.
 
 ### 4. Tie-breaking
-If two results are otherwise similar, tie-breaking rules determine which appears first.
+
+When two records have the same numeric score, the runtime sorts by:
+
+1. title, ascending, locale-aware, case-insensitive, numeric-aware
+2. id, ascending, locale-aware, case-insensitive, numeric-aware
+
+There is no content-type preference in the current tie-breaker.
 
 ## Ranking dimensions
 
-Ranking should consider at least the following dimensions.
+The current model ranks by a combination of:
 
 ### Field importance
-Matches in stronger fields should outrank matches in weaker fields.
 
-Typical precedence:
-- title-like fields
-- ID-like fields
-- canonical series labels
-- tag labels
-- medium or descriptive metadata
-- year or broad low-information fields
-- derived fallback fields
+The model distinguishes between:
 
-Codex should replace this generic list with the actual implemented or intended precedence.
+- exact identity fields
+- exact or prefix title-style matches
+- derived token support
+- structured metadata matches
+- fallback broad-match text
 
 ### Match type strength
-Not all matches within a field are equally strong.
 
-Typical precedence:
+Stronger match types outrank weaker ones:
+
 - exact
-- exact phrase
-- phrase
+- exact derived token
 - prefix
-- token
-- substring
-- fallback broad-text hit
+- title-token match
+- metadata contains
+- broad fallback contains
 
-Codex should document the actual match modes used by the implementation.
+### Candidate completeness
 
-### Multi-field reinforcement
-A record that matches the query across more than one meaningful field may deserve a higher rank than a record that matches only weakly in one place.
-
-Example:
-A work that matches both title and series title may deserve stronger ranking than one that matches only in broad search text.
+The all-tokens-present gate means a result must cover the whole query in some combination of fields before ranking strength matters.
 
 ### Generic versus specific terms
-Matches on generic or very common tokens should usually be weaker than matches on distinctive tokens.
 
-If the current implementation does not account for this yet, that should be stated explicitly.
+The current implementation does not explicitly model token rarity, genericness, or inverse frequency. It treats all normalized tokens equally within the same rule band.
 
 ## Ranking table
 
-This section should define the intended precedence of major match categories.
+Current score bands in descending order:
 
-The table below is a template and should be replaced or completed by Codex based on the current implementation.
-
-| Rank band | Match example | Relative strength | Notes |
+| Score band | Match condition | Relative strength | Notes |
 |---|---|---|---|
-| 1 | Exact title match | strongest | Typical best known-item result |
-| 2 | Title prefix match | very high | Strong partial known-item lookup |
-| 3 | Exact ID match | very high | Important for catalogue-style retrieval |
-| 4 | Series title match | high | Useful for grouped discovery |
-| 5 | Tag label match | medium | Useful for thematic discovery |
-| 6 | Medium type match | medium | Useful but usually weaker than title |
-| 7 | Year match | low | Often broad and ambiguous |
-| 8 | Derived search text match | lowest | Recall support only |
+| `900` | exact `id` match | strongest | highest-confidence known-item lookup |
+| `860` | exact `title` match | very strong | exact human-readable known-item lookup |
+| `780` | exact `search_terms` match | strong | exact derived token match |
+| `720` | `title` prefix match | strong | partial known-item lookup |
+| `690` | `id` prefix match | strong | partial id lookup |
+| `620` | all query tokens match `title` tokens exactly or by prefix | medium-strong | title-token-oriented retrieval |
+| `480` | any `series_titles` value contains the query | medium | contextual series discovery |
+| `460` | `medium_type` contains the query | medium | structured metadata discovery |
+| `440` | `storage` contains the query | low-medium | narrower metadata lookup |
+| `420` | `series_type` contains the query | low-medium | narrower metadata lookup |
+| `320` | `search_text` contains the query | weakest | fallback broad recall only |
 
-This table does not need to include implementation-specific numbers if the model is not score-based in a numeric sense. Relative precedence is the important part.
+The model is numeric, but the exact numbers are only meaningful as stable precedence bands, not as a continuous relevance scale.
 
 ## Field-level ranking notes
 
-This section should define how important individual fields contribute to ranking.
+### `id`
 
-Suggested pattern:
+Ranking role:
+One of the two strongest fields in the system.
 
-### title
-Expected ranking role:
-One of the strongest fields in the system.
+Strong matches:
 
-Typical strong matches:
-- exact phrase
-- prefix
-- token match on distinctive title terms
+- exact id
+- id prefix
 
 Notes:
-Title matches should usually outrank metadata-only matches.
+Exact id outranks exact title in the current implementation.
 
-### id
-Expected ranking role:
-Strong known-item retrieval field.
+### `title`
 
-Typical strong matches:
-- exact ID
-- prefix ID, if supported
+Ranking role:
+Primary human-readable retrieval field.
 
-Notes:
-Numeric or code-like matches may need careful handling to avoid broad accidental hits.
+Strong matches:
 
-### series-titles
-Expected ranking role:
-High-value contextual field, especially for grouped discovery.
+- exact title
+- title prefix
+- title-token coverage
 
 Notes:
-Should usually outrank broad descriptive or fallback fields.
+Title matching is highly favored, but exact title is still below exact id in the current v1 order.
 
-### search-text
-Expected ranking role:
+### `search_terms`
+
+Ranking role:
+Primary derived support field.
+
+Strong matches:
+
+- exact term match
+- token gate support through equals-or-prefix checks
+
+Notes:
+`search_terms` is not just fallback. It is central to candidate retrieval and provides an explicit high-tier exact match band.
+
+### `series_titles`
+
+Ranking role:
+Main structured contextual discovery field.
+
+Strong matches:
+
+- query substring within any related series title
+
+Notes:
+This is currently the highest-ranking metadata field.
+
+### `medium_type`
+
+Ranking role:
+Useful structured discovery field for works.
+
+Strong matches:
+
+- query substring within `medium_type`
+
+Notes:
+Weaker than title and series-title matches, stronger than broad fallback.
+
+### `storage`
+
+Ranking role:
+Narrow structured metadata field.
+
+Strong matches:
+
+- query substring within `storage`
+
+Notes:
+Active in ranking, but not currently surfaced in result display.
+
+### `series_type`
+
+Ranking role:
+Narrow structured metadata field for series.
+
+Strong matches:
+
+- query substring within `series_type`
+
+Notes:
+Weaker than `series_titles` and `medium_type`.
+
+### `search_text`
+
+Ranking role:
 Low-priority fallback field.
 
-Notes:
-Useful for recall, but should not outrank structured field matches.
+Strong matches:
 
-Codex should extend this pattern for the actual current field set.
+- broad substring contains
+
+Notes:
+`search_text` should help recall, but it should not outrank structured-field matches.
 
 ## Tie-breaking policy
 
-This section should define what happens when two records receive similar relevance.
+Current tie-breaking is simple and explicit.
 
-Possible tie-breakers include:
-- stronger content type priority
-- shorter or cleaner title match
-- fewer indirections between query and result
-- stable source order
-- recency or year, if intentionally used
-- deterministic alphabetical fallback
+If two entries have the same score:
 
-Codex should document the actual current tie-breaking behaviour, even if it is simple.
+1. compare `title`
+2. if titles are equal, compare `id`
 
-If tie-breaking is currently just source order or array order, that should be stated explicitly.
+Current tie-breaking does not use:
+
+- content type priority
+- recency
+- year
+- metadata richness
+- source order
+
+This means ambiguous results within the same score band are effectively alphabetical by title, then id.
 
 ## Duplicate-term and repeated-match policy
 
-This section should clarify whether repeated occurrences of a term within a record increase ranking strength.
+Current v1 behaviour does not count repeated occurrences as stronger evidence.
 
-Examples of questions to answer:
-- does the same term appearing twice in `search-text` increase score?
-- are duplicated derived terms intentional or accidental?
-- does the system count occurrences or only field-level presence?
-- should repeated matches in fallback fields remain weaker than a single strong title match?
+Important current properties:
 
-This section is important because duplicated index content can distort ranking if occurrence count affects score.
+- `build_search_tokens()` deduplicates tokens at generation time
+- the runtime checks presence and precedence, not occurrence counts
+- repeated appearance of a term in `search_text` does not create additive scoring
+- a single strong exact or prefix field match still outranks repeated broad fallback presence
+
+This keeps v1 reasonably stable even when the derived fields include overlapping terms.
 
 ## Derived field ranking policy
 
-Derived fields often flatten multiple values together and can be useful for recall, but they usually reduce precision.
+Current derived fields used in ranking:
 
-This section should define:
+- `search_terms`
+- `search_text`
 
-- which derived fields contribute to ranking
-- whether they are used only as fallback
-- whether they carry lower weight than structured fields
-- whether field provenance is lost in a way that affects ranking precision
+Current policy:
 
-Examples:
-- `search-terms` may be used for broad token recall
-- `search-text` may support substring or fallback matches
-- both may need lower precedence than structured fields such as `title` or `series-titles`
+- `search_terms` is a primary derived retrieval field
+- `search_text` is fallback only
+- both are weaker, in general, than exact identity or title-style matches
+- derived fields intentionally trade field provenance for a simpler runtime
+
+Current consequence:
+
+- the runtime can be simple and fast
+- but it cannot always explain exactly which source field caused a lower-tier derived match
+
+That loss of provenance is acceptable in v1, but may become a limitation if the ranking model becomes more granular later.
 
 ## Content-type priority
 
-If the site search includes multiple content types, this section should define whether type affects ranking.
+The current search index mixes works, series, and moments in a single ranked result set.
 
-Examples:
-- whether works and series are mixed into a single result order
-- whether one content type is preferred for ambiguous matches
-- whether grouped display affects perceived ranking but not raw score
-- whether exact title match in a note should outrank weak metadata match in a work
+Current policy:
 
-Codex should document the current behaviour if multiple content types are included.
+- content type does not have an intrinsic score bonus or penalty
+- a work, series, or moment can outrank another kind purely on match strength
+- the only content-type-specific control currently exposed is the explicit kind filter in the UI
+
+This keeps the raw ranking model content-type-neutral.
 
 ## Current implementation summary
 
-This section should briefly summarise how ranking currently works in practice.
+Current ranking behaviour in practice:
 
-Examples of useful statements:
-- whether ranking is currently field-aware or mostly flat
-- whether the engine uses numeric scoring or ordered precedence rules
-- whether broad search fields currently dominate too much
-- whether duplicate terms may influence results unintentionally
-- whether tie-breaking is explicit or implicit
-
-This section should be factual and concise.
+- ranking is field-aware and uses explicit numeric precedence bands
+- candidate retrieval requires every query token to appear somewhere in the record
+- exact id and exact title matches are strongly favored
+- metadata fields contribute meaningfully, but below title-style matching
+- `search_text` is a broad fallback field and the weakest active score band
+- tie-breaking is explicit and alphabetical, not source-order-based
+- duplicate term frequency does not currently amplify ranking
 
 ## Known limitations or open ranking questions
 
-This section should capture unresolved ranking issues only.
+Current ranking questions for later work:
 
-Examples:
-- whether title-related terms are overweighted due to duplication
-- whether year matches are too strong or too weak
-- whether derived fields should be demoted further
-- whether exact ID matches should outrank title prefix matches
-- whether ranking should later become more field-aware
-- whether multi-field bonuses should be introduced or adjusted
+- whether exact title should outrank exact id, or the current id-first order should remain
+- whether `search_terms` exact-match band is too generous because it can contain multiple kinds of derived values
+- whether metadata `contains` matching should become more field-specific or phrase-aware
+- whether tag-aware ranking should sit above or below current metadata bands once tag coverage improves
+- whether multi-field reinforcement bonuses should be introduced instead of using only the first satisfied band
+- whether the content-type-neutral model remains right when search moves into the main site shell
 
 ## Out of scope for this document
 
-This document should not define:
+This document does not define:
 
-- the full index schema
-- low-level normalisation code
-- UI markup
-- build pipeline steps
-- keyboard interaction behaviour
+- full index schema
+- detailed normalization rules
+- result rendering markup
+- build-pipeline steps
+- UI event timing
 - validation procedure details
-
-Those belong in other search documents.

@@ -10,157 +10,408 @@ sort_order: 100
 
 ## Purpose
 
-This document defines which parts of the site search system are treated as configurable policy and which parts remain implementation code.
+This document defines which parts of the search system should become machine-readable configuration and which parts should remain implementation code.
 
-The aim is to make the search subsystem easier to review, refine, and maintain. Search behaviour should not depend unnecessarily on values or rules buried inside JavaScript when those rules are likely to be discussed and adjusted as part of ongoing design work.
+It is an architecture and decision document. It exists to make future search-policy extraction deliberate rather than ad hoc.
 
-This document sits above the individual search config files and explains why they exist, what they control, and what they do not control. It explains the architecture choice; the registry and ranking docs should define the actual rules.
+This document does not define the detailed rules themselves. Those belong in:
+
+- [Search Field Registry](/docs/?doc=search-field-registry)
+- [Search Ranking Model](/docs/?doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
+
+## Current state
+
+Current v1 search has three different policy surfaces:
+
+- **documentation**
+  - field policy, ranking policy, normalization policy, and UI behaviour are now documented explicitly
+- **runtime config already in use**
+  - `assets/studio/data/studio_config.json`
+  - current search use is limited to paths/routes and UI text strings
+- **implementation code**
+  - `assets/studio/js/studio-search.js`
+  - `scripts/generate_work_pages.py`
+
+Current practical split:
+
+- configurable now:
+  - search route
+  - search data path
+  - search UI copy
+- not yet configurable:
+  - field participation rules
+  - ranking bands
+  - runtime behaviour values such as debounce and batch size
+  - build-time field inclusion policy
+
+This means search is documented well enough to review, but not yet externalized enough to adjust core policy without touching code.
+
+## Why review this now
+
+This is worth addressing early because search is already past the “one experimental file” stage.
+
+Current facts:
+
+- search has its own artifact
+- search has its own Studio surface
+- search now has a dedicated document set
+- future expansion will add more fields, more ranking pressure, and likely prose shards
+
+If config boundaries are not set early, the system is likely to drift into:
+
+- duplicated rules across docs and code
+- accidental policy hidden in JavaScript or Python constants
+- harder future changes when field weighting and filters become more important
+
+The goal is not to externalize everything immediately. The goal is to decide what should become config before the search surface grows further.
 
 ## Principle
 
-The search system is divided into two layers:
+Search should be divided into three layers:
 
-- **Policy**: rules and settings that define what should be searchable, how important different fields are, and how the search interface should behave.
-- **Mechanism**: the implementation code that performs tokenisation, matching, scoring execution, index loading, and result rendering.
+- **Docs**
+  - human review surface
+  - explains what the rules are and why
+- **Config**
+  - machine-readable policy surface
+  - only for stable knobs and structured policy decisions
+- **Code**
+  - mechanism
+  - normalization functions, candidate evaluation, rendering, fetch logic, and other algorithmic behaviour
 
-Policy should be externalised where practical. Mechanism should remain in code.
+Policy should move into config only when both of these are true:
 
-## Externalised policy layers
+1. the rule is likely to be discussed or tuned repeatedly
+2. representing it as data is clearer than burying it in implementation code
 
-The following layers should be defined outside the core search engine code.
+## Recommended architecture
 
-### 1. Field registry
+### 1. Keep `studio_config.json` narrow
 
-This layer defines which fields participate in search and how each field should be treated.
+`assets/studio/data/studio_config.json` should remain the Studio shell config.
 
-Examples:
-- whether a field is searchable
-- whether a field is filterable
-- whether a field is displayed in results
-- whether a field is treated as high, medium, or low importance
-- whether a field supports phrase matching, token matching, or exact matching
-- whether a field is tokenised or treated as a whole value
+It is already a good fit for:
 
-This layer expresses search design intent, not matching implementation.
+- routes
+- data paths
+- UI copy
+- page-level Studio defaults
 
-### 2. Ranking policy
+It should not become the container for the full search policy model.
 
-This layer defines the relative importance of matches across fields and match types.
+Reason:
 
-Examples:
-- title match outranks medium match
-- exact phrase outranks token match
-- series title match outranks year match
-- multiple matched fields may receive a bonus
-- generic fallback text should carry the lowest weight
+- it already serves multiple Studio features
+- a large search policy tree would make it harder to review and maintain
+- search will likely need policy shared across generator and runtime, not just Studio page text
 
-This layer should express ranking priorities clearly and explicitly so they can be reviewed without reading scoring code.
+### 2. Introduce a dedicated search policy config
 
-### 3. Runtime UI behaviour
+Recommended new file:
 
-This layer defines how the search interface behaves in the browser.
+- `assets/studio/data/search_policy.json`
 
-Examples:
-- minimum query length
+Reason for this location:
+
+- it is already in a public JSON area used by the Studio runtime
+- it can be read by browser code directly
+- it can also be read by Python at build time
+- it keeps search policy separate from generic Studio shell config
+
+This file should become the machine-readable search-policy surface.
+
+### 3. Keep docs as the normative review surface
+
+The config file should not replace the docs.
+
+Recommended relationship:
+
+- docs explain the intended behaviour
+- config expresses the subset of that behaviour that code consumes directly
+- code implements the mechanisms that apply the config
+
+This avoids the trap of trying to make JSON itself the only human-readable explanation.
+
+## What should be configurable
+
+The first externalized search-policy surface should cover only stable, reviewable rules.
+
+### A. Runtime UI behaviour
+
+Good candidates for config:
+
 - debounce interval
-- maximum number of results
-- whether results are grouped by content type
-- content-type display order
-- empty-state message
-- whether scoped search is enabled
+- initial results batch size
+- batch increment size
+- available kind filters and their display order
+- whether Enter forces immediate search
+- whether live search on input is enabled
+- minimum query length, if introduced
 
-This layer controls user-facing behaviour rather than search relevance logic.
+These are stable product decisions and are straightforward to express as data.
 
-## Non-externalised layers
+### B. Field participation policy
 
-The following parts of the search system should remain in implementation code.
+Good candidates for config:
+
+- whether a field is active in ranking
+- whether a field is display-only
+- whether a field is filterable now or reserved for later
+- field importance class
+- allowed match modes by field
+
+This should be the machine-readable counterpart to [Search Field Registry](/docs/?doc=search-field-registry), but only once the implementation is ready to consume it.
+
+### C. Ranking band policy
+
+Good candidates for config:
+
+- ordered precedence bands
+- which field and match mode each band represents
+- tie-break order
+
+Example of the kind of rule that belongs here:
+
+- exact `id` match outranks exact `title` match
+- `series_titles` contains outranks `search_text` fallback
+
+The matching engine should still perform the comparisons; config should define the order of precedence.
+
+### D. Future filter definitions
+
+Not required for current v1, but worth reserving conceptually:
+
+- filter ids
+- supported fields
+- display labels
+- value source mode such as static or derived
+
+## What should stay in code
+
+The following should remain implementation code for now.
 
 ### Matching engine
-The code that normalises queries, tokenises input, compares query terms against indexed data, and computes result scores.
 
-### Tokenisation and normalisation implementation
-The underlying functions that apply normalisation rules, split text into tokens, and perform exact, prefix, or token-level comparisons.
+Examples:
+
+- all-query-tokens-present gate
+- exact/prefix/contains comparison logic
+- candidate iteration and sorting execution
+
+### Normalization functions
+
+Examples:
+
+- `normalize_search_text(...)`
+- browser-side `normalize(...)`
+- token splitting and deduplication implementation
+
+These rules may be documented and partly parameterized later, but the underlying algorithm should remain code.
 
 ### Index loading and caching
-The code that fetches the search index, stores it in memory, and manages lazy loading or partition loading.
 
-### DOM rendering and interaction
-The code that renders result items, handles keyboard navigation, focus states, click selection, and any other DOM-specific behaviour.
+Examples:
 
-### Performance optimisations
-Implementation details such as precomputed lookups, cached normalised values, or future inverted-index structures.
+- fetch behaviour
+- in-memory storage
+- fallback to default Studio config values
 
-## Build-time vs runtime policy
+### DOM rendering
 
-Search policy exists in two different phases and should be kept conceptually separate.
+Examples:
+
+- result row markup
+- focus handling
+- button event wiring
+
+### Performance optimizations
+
+Examples:
+
+- precomputed normalized values
+- future shard loading strategy
+- future inverted index structures
+
+## Build-time vs runtime config
+
+Search policy has two different consumers and they should not be conflated.
 
 ### Build-time policy
-Build-time policy determines how source content is transformed into the search index.
 
-Examples:
-- which source fields are included in the index
-- whether slug values are expanded into spaced values
-- whether aliases are added
-- whether duplicate terms are removed
-- whether derived search terms are emitted
+Used by:
 
-Build-time policy affects index generation.
+- `scripts/generate_work_pages.py`
+
+Good build-time config candidates:
+
+- field inclusion in `search_terms`
+- whether specific structured fields are emitted
+- future shard layout
+- payload budget targets
 
 ### Runtime policy
-Runtime policy determines how the browser uses the generated index.
 
-Examples:
-- which indexed fields are searched first
-- how fields are weighted
-- how many results are shown
-- when searching begins
-- how results are grouped and displayed
+Used by:
 
-Runtime policy affects browser behaviour only.
+- `assets/studio/js/studio-search.js`
 
-## Why this architecture is used
+Good runtime config candidates:
 
-This split is intended to improve the following:
+- ranking precedence bands
+- filter options
+- debounce and batching behaviour
+- result-display toggles
 
-### Reviewability
-Search rules can be inspected directly in small, focused files rather than inferred from implementation code.
+### Shared policy
 
-### Maintainability
-Common adjustments such as field weighting or UI limits can be changed without editing core matching logic.
+Some policy will eventually need to be shared across both build time and runtime.
 
-### Clarity
-The distinction between search design decisions and technical implementation becomes explicit.
+Best examples:
 
-### Stability
-The matching engine can evolve internally without repeatedly changing the higher-level search policy surface.
+- field registry
+- field activation status
+- match-mode allowance by field
 
-### Collaboration
-Policy documents and config files can be reviewed independently of JavaScript implementation details.
+That is the strongest argument for introducing a dedicated search policy file sooner rather than later.
 
-## Limits of externalisation
+## Proposed initial config shape
 
-Not all search behaviour should be moved into config.
+Illustrative target shape only:
 
-Over-externalisation can make the system harder to understand if low-level implementation details are represented indirectly through many configuration options. Config should be used for stable, reviewable policy decisions, not for every internal algorithmic choice.
+```json
+{
+  "search_policy_version": "search_policy_v1",
+  "ui": {
+    "debounce_ms": 140,
+    "results_batch_size": 50,
+    "enable_live_search": true,
+    "enable_enter_submit": true,
+    "kind_filters": ["all", "work", "series", "moment"]
+  },
+  "fields": {
+    "id": {
+      "active": true,
+      "importance": "high",
+      "match_modes": ["exact", "prefix"]
+    },
+    "title": {
+      "active": true,
+      "importance": "high",
+      "match_modes": ["exact", "prefix", "token"]
+    },
+    "tag_labels": {
+      "active": false,
+      "reserved_for": ["future_ranking", "future_filtering"]
+    }
+  },
+  "ranking": {
+    "bands": [
+      { "score": 900, "field": "id", "match": "exact" },
+      { "score": 860, "field": "title", "match": "exact" }
+    ],
+    "tie_break": ["title", "id"]
+  }
+}
+```
 
-The goal is not to eliminate code decisions. The goal is to expose the search rules that are likely to be discussed, tuned, and reviewed over time.
+This is intentionally modest. It is not trying to externalize every implementation detail.
+
+## Recommended implementation order
+
+Recommended order of adoption:
+
+### Step 1. Externalize runtime UI behaviour
+
+Move these first:
+
+- debounce
+- results batch size
+- filter list/order
+
+Reason:
+
+- low risk
+- easy to verify
+- no schema or generator coupling
+
+### Step 2. Externalize ranking band definitions
+
+Move next:
+
+- score bands
+- tie-break order
+
+Reason:
+
+- ranking is already explicitly documented
+- this creates a strong review surface without forcing a redesign of the matching engine
+
+### Step 3. Externalize field activation registry
+
+Move after ranking config is stable:
+
+- which fields are active in ranking
+- which are display-only
+- which are future filter candidates
+
+Reason:
+
+- this is where shared build-time/runtime policy starts to matter
+- it should be implemented once the team is comfortable that the field registry is stable enough to become machine-readable
+
+### Step 4. Consider build-time policy extraction
+
+Later, if needed:
+
+- field inclusion in derived token generation
+- future shard policy
+- payload budget thresholds
+
+This is a later step because it touches generator behaviour and has more structural impact.
+
+## Why not externalize everything now
+
+Immediate full externalization would likely be the wrong move.
+
+Risks:
+
+- duplicated logic between config and implementation
+- overly abstract JSON that is harder to review than code
+- unstable policy surface before the first few tuning rounds are complete
+
+The right move is a staged extraction of the most stable and high-value policy knobs first.
 
 ## Change rules
 
-The following update rules apply:
+Apply these update rules:
 
-- If a new searchable field is added, update the field registry documentation and config.
-- If ranking priorities change, update the ranking model documentation and config.
-- If search UI behaviour changes, update the UI behaviour documentation and runtime config.
-- If tokenisation or matching algorithms change, update implementation documentation and code, not policy config unless the policy surface itself changes.
-- If index generation rules change, update the build pipeline documentation and any build-time config.
+- if a new stable UI behaviour knob is introduced, consider whether it belongs in search policy config
+- if ranking precedence changes, update both the ranking doc and the machine-readable ranking config once that layer exists
+- if a field becomes active or inactive in search, update the field registry doc and the field policy config once that layer exists
+- if normalization logic changes but remains algorithmic, update docs and code, not necessarily config
+- if build-time field inclusion changes materially, update the build-pipeline doc and build-time config once that layer exists
 
-## Initial target config surface
+## Current implementation summary
 
-The initial externalised config surface should cover:
+Current status:
 
-- searchable field registry
-- ranking weights / ranking policy
-- runtime UI behaviour
+- there is no dedicated search policy config file yet
+- `studio_config.json` currently carries only routes, data paths, and UI text for search
+- ranking, field participation, and runtime behaviour still live in code
+- the docs set now provides the human review surface needed to support the next extraction step
 
-Other areas can remain in code until there is a clear need to expose them.
+This means the architecture work is timely: search is documented enough to externalize stable policy, but not yet so large that the extraction becomes messy.
+
+## Recommended decision
+
+Recommended next structural move:
+
+- create a dedicated `search_policy.json`
+- keep `studio_config.json` limited to Studio shell concerns
+- externalize runtime UI behaviour first
+- then externalize ranking bands
+- treat field activation as the next shared build/runtime policy layer
+
+That is the cleanest path toward a configurable search system without over-engineering v1.

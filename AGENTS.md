@@ -127,5 +127,12 @@
 ## Studio Documentation
 
 - `_docs_src/studio/*.md` are the central product/behavior docs for Studio features.
+- `_docs_src/search/*.md` are the central product/behavior docs for search.
+- `_docs_src/site/*.md` plus `_docs_src/site-change-log.md` are the central architecture/history docs for the broader non-search site.
+- When a published doc references another published doc, use the docs-viewer link form `/docs/?doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
+- Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Keep existing script docs (`_docs_src/scripts-overview.md`) in place and updated for command/runtime usage.
 - When Studio features are implemented or changed, update Studio docs and relevant scripts docs in the same change.
+- When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant `_docs_src/search/*.md` docs in the same change.
+- For meaningful search changes, update `_docs_src/search/search-change-log.md` in the same change set as part of normal close-out.
+- When non-search site, Studio, or shared pipeline behaviour changes materially, update the relevant `_docs_src/site/*.md` docs and `_docs_src/site-change-log.md` in the same change set as part of normal close-out.

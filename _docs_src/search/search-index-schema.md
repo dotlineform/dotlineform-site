@@ -10,226 +10,430 @@ sort_order: 20
 
 ## Purpose
 
-This document defines the structure of the generated search index used by the site search subsystem.
+This document defines the current data contract for the generated search index used by site search.
 
-Its purpose is to describe the schema of the index records clearly and explicitly so that the data contract is reviewable without reading the index builder code or the browser search logic.
+It describes the actual serialized shape of `assets/data/search_index.json`, the meaning of each field, and the difference between structured fields and derived search-support fields.
 
-This document should define what fields exist in the search index, what each field means, how each field is used, and whether each field is intended for display, retrieval, filtering, or internal support.
-
-This is a schema document. It should not contain scoring rules, UI behaviour, or implementation walkthroughs.
+This is a schema document. It does not define ranking, UI behaviour, or detailed build flow.
 
 ## Scope
 
-This document applies to the generated search index file or files used by client-side search.
+This document applies to the current base search artifact:
 
-It should cover:
+- `assets/data/search_index.json`
 
-- the top-level structure of the index
-- the schema for each indexed record
-- the meaning and intended use of each field
-- any required versus optional fields
-- any known content-type-specific variations in record shape
+It covers:
 
-If the search system later uses multiple index files or partitions, this document should either describe the shared schema or clearly identify where schemas diverge.
+- the top-level payload shape
+- the per-record schema
+- required versus optional serialized fields
+- cross-kind conventions shared by works, series, and moments
+
+It does not attempt to define future prose shards or other later index partitions.
 
 ## Top-level index structure
 
-This section should describe the overall shape of the generated index.
+The current top level is an object with two keys:
 
-Examples of possible top-level shapes include:
+- `header`
+- `entries`
 
-- an array of records
-- an object containing metadata plus a records array
-- an object containing multiple grouped record arrays by content type
+`header` contains index-level metadata.
 
-Codex should replace this placeholder text with the actual current top-level structure of the implemented search index.
+`entries` is a single flat array shared by all indexed content types. Works, series, and moments are not stored in separate top-level collections.
 
-This section should state:
+Current header shape:
 
-- whether the top level is an array or object
-- whether index-level metadata is present
-- whether records from multiple content types share a single collection
-- whether any version or generation metadata is included
+```json
+{
+  "header": {
+    "schema": "search_index_v1",
+    "version": "blake2b-…",
+    "generated_at_utc": "2026-03-29T13:31:21Z",
+    "count": 2127
+  },
+  "entries": []
+}
+```
+
+Header fields:
+
+- `schema`
+  schema identifier for the payload format
+- `version`
+  content-derived version hash for change detection
+- `generated_at_utc`
+  UTC generation timestamp
+- `count`
+  number of serialized entries in `entries`
 
 ## Record model
 
-Each search record represents one searchable content item.
+Each search record represents one searchable item:
 
-A record should contain enough information for the browser to:
+- one work
+- one series
+- one moment
+
+Every record carries enough data for the browser to:
 
 - identify the item
-- link to the item
-- display a basic result
-- match the item against user queries
-- optionally filter or group the result
+- link to it
+- render a compact result row
+- evaluate matches against the current search model
 
-The search record should remain compact. It is not intended to duplicate the full content model of the source page.
+The record model is intentionally compact. It does not duplicate full page content.
 
 ## Core record fields
 
-This section should list the fields that all indexed records are expected to contain.
+The current serialized schema uses these fields.
 
-The table below is a template and should be completed with the actual current schema.
-
-| Field name | Type | Required | Purpose | Notes |
+| Field name | Type | Required in serialized output | Purpose | Notes |
 |---|---|---:|---|---|
-| kind | string | yes | Identifies the content type of the indexed item | Examples: work, series, theme |
-| id | string | yes | Canonical identifier for the item | Should remain stable across builds |
-| title | string | yes | Primary display title and high-value search field | Usually the main label shown in results |
-| href | string | yes | Relative or absolute link to the item | Used by the search UI to navigate |
-| ... | ... | ... | ... | ... |
-
-Codex should replace or complete this table based on the current implemented schema.
+| `kind` | string | yes | identifies the content type | current values: `work`, `series`, `moment` |
+| `id` | string | yes | canonical stable identifier | always serialized as a string |
+| `title` | string | yes | primary display title and major search field | human-facing label |
+| `href` | string | yes | site-relative destination path | current values are relative site paths |
+| `year` | integer | no | year-based date value | used for works or series where available |
+| `date` | string | no | canonical date string | currently used for moments |
+| `display_meta` | string | no | compact display metadata | used in result rows and token generation |
+| `series_ids` | array of strings | yes | associated series ids | empty array when none |
+| `series_titles` | array of strings | yes | associated series titles | empty array when none |
+| `medium_type` | string | no | structured work metadata | currently appears on works when populated |
+| `storage` | string | no | structured work metadata | currently optional and often absent |
+| `series_type` | string | no | structured series metadata | currently appears on series when populated |
+| `tag_ids` | array of strings | yes | canonical assigned tag ids | empty array when none |
+| `tag_labels` | array of strings | yes | display labels for assigned tags | empty array when none |
+| `search_terms` | array of strings | yes | normalized token bundle used by runtime matching | derived at build time |
+| `search_text` | string | yes | flattened broad-match string | derived at build time |
 
 ## Field definitions
 
-This section should define each field individually.
+### `kind`
 
-Each definition should include:
-
-- field name
-- type
-- whether it is required or optional
-- semantic meaning
-- whether it is display-oriented, search-oriented, filter-oriented, or mixed
-- any known constraints or formatting rules
-
-Suggested format:
-
-### kind
 Type: string  
 Required: yes  
 Purpose: identifies the indexed content type.  
-Usage: used for result grouping, filtering, and type-aware rendering.  
-Notes: values should come from a controlled set.
+Usage: filtering, type-aware rendering, and stable grouping semantics.  
+Notes: current values are a controlled set: `work`, `series`, `moment`.
 
-### id
+### `id`
+
 Type: string  
 Required: yes  
-Purpose: provides the canonical stable identifier for the indexed item.  
-Usage: used for direct lookup, internal result identity, and possible ID search.  
-Notes: should not be derived from transient display text.
+Purpose: canonical stable identifier for the indexed item.  
+Usage: direct lookup, identity, sorting, and display.  
+Notes: ids remain strings even when numerically shaped, such as `00533`.
 
-### title
+### `title`
+
 Type: string  
 Required: yes  
-Purpose: primary human-readable title of the indexed item.  
-Usage: display field and high-priority retrieval field.  
-Notes: usually the most important ranking field.
+Purpose: primary human-readable title.  
+Usage: result display and major retrieval field.  
+Notes: the generator falls back to the item id if a title is missing.
 
-Codex should continue this pattern for every field in the current schema.
+### `href`
+
+Type: string  
+Required: yes  
+Purpose: target route for result navigation.  
+Usage: result rendering.  
+Notes: current values are relative site paths such as `/works/00533/`.
+
+### `year`
+
+Type: integer  
+Required: no  
+Purpose: canonical year value for year-based records.  
+Usage: display support and token generation.  
+Notes: serialized only when available; currently common on works and series.
+
+### `date`
+
+Type: string  
+Required: no  
+Purpose: canonical date value for date-based records.  
+Usage: display support and token generation.  
+Notes: currently used on moments.
+
+### `display_meta`
+
+Type: string  
+Required: no  
+Purpose: compact human-readable metadata summary for the result row.  
+Usage: display and token generation.  
+Notes: examples include year display strings and moment date display strings.
+
+### `series_ids`
+
+Type: array of strings  
+Required: yes  
+Purpose: canonical series relationships attached to the item.  
+Usage: structured metadata and search support.  
+Notes: works may contain related series ids; other kinds currently serialize `[]`.
+
+### `series_titles`
+
+Type: array of strings  
+Required: yes  
+Purpose: display-facing series relationships attached to the item.  
+Usage: result display and search support.  
+Notes: works may contain related series titles; other kinds currently serialize `[]`.
+
+### `medium_type`
+
+Type: string  
+Required: no  
+Purpose: structured work medium metadata.  
+Usage: search support and result metadata display for works.  
+Notes: omitted when empty.
+
+### `storage`
+
+Type: string  
+Required: no  
+Purpose: structured work storage metadata.  
+Usage: reserved search support field.  
+Notes: present in the logical schema, but may be absent from many or most current records.
+
+### `series_type`
+
+Type: string  
+Required: no  
+Purpose: structured series classification metadata.  
+Usage: search support and result metadata display for series.  
+Notes: omitted when empty.
+
+### `tag_ids`
+
+Type: array of strings  
+Required: yes  
+Purpose: canonical assigned tag ids.  
+Usage: structured future-facing search metadata.  
+Notes: currently populated from tag assignments; often empty because tag coverage is still sparse.
+
+### `tag_labels`
+
+Type: array of strings  
+Required: yes  
+Purpose: human-readable labels for assigned tags.  
+Usage: future-facing search and review support.  
+Notes: currently not used by the v1 ranking code, but present in the serialized schema.
+
+### `search_terms`
+
+Type: array of strings  
+Required: yes  
+Purpose: build-time-derived set of normalized discrete search tokens.  
+Usage: exact-term and prefix-oriented runtime checks.  
+Notes: may include canonical ids, titles, split title tokens, display metadata tokens, year/date text, related series terms, and structured metadata values when present.
+
+### `search_text`
+
+Type: string  
+Required: yes  
+Purpose: flattened broad-match text field derived from `search_terms`.  
+Usage: fallback contains matching in the runtime.  
+Notes: generated by joining `search_terms` with spaces.
 
 ## Display fields vs search fields
 
-This section should distinguish between fields intended primarily for display and fields intended primarily for search.
+Fields used primarily for display:
 
-Examples of display-oriented fields:
-- title
-- display_meta
-- href
-- thumbnail or preview fields, if present
+- `title`
+- `href`
+- `display_meta`
+- `series_titles`
 
-Examples of search-oriented fields:
-- search_terms
-- search_text
-- normalised field variants
-- derived token arrays
+Fields used primarily for search support:
 
-Some fields may serve both purposes.
+- `search_terms`
+- `search_text`
 
-Codex should describe the actual split used by the current implementation.
+Fields used for both structured meaning and search support:
+
+- `id`
+- `year`
+- `date`
+- `series_ids`
+- `medium_type`
+- `storage`
+- `series_type`
+- `tag_ids`
+- `tag_labels`
 
 ## Structured fields vs derived fields
 
-This section should distinguish between:
+Structured fields carried from source-like data:
 
-- structured source-like fields carried into the index
-- derived search support fields produced during index generation
+- `kind`
+- `id`
+- `title`
+- `href`
+- `year`
+- `date`
+- `display_meta`
+- `series_ids`
+- `series_titles`
+- `medium_type`
+- `storage`
+- `series_type`
+- `tag_ids`
+- `tag_labels`
 
-Examples of structured fields:
-- year
-- series_ids
-- series_titles
-- medium_type
-- tag_ids
-- tag_labels
+Derived fields generated specifically for search:
 
-Examples of derived fields:
-- search_terms
-- search_text
-- normalised variants
-- flattened arrays or token bundles
+- `search_terms`
+- `search_text`
 
-This distinction matters because structured fields are usually easier to review semantically, while derived fields are often implementation-oriented.
+This distinction matters because structured fields reflect semantic source data, while derived fields exist to make client-side matching simpler and faster.
 
 ## Optional and content-specific fields
 
-Not all record types may require exactly the same fields.
+Current serialization rules:
 
-This section should describe:
+- fields with meaningful empty-list semantics are serialized as empty arrays:
+  - `series_ids`
+  - `series_titles`
+  - `tag_ids`
+  - `tag_labels`
+- optional scalar fields are omitted when empty rather than serialized as `null`
+- `year` and `date` are not both expected on every record
+- `medium_type` and `storage` are work-oriented
+- `series_type` is series-oriented
 
-- which fields are always present
-- which fields may be empty arrays or null values
-- which fields appear only for certain content types
-- whether missing values are omitted, set to null, or set to empty collections
+Current kind differences:
 
-Codex should document the current implementation clearly and consistently.
+- works commonly have `year`, `display_meta`, `series_ids`, `series_titles`, and sometimes `medium_type`
+- series commonly have `year`, `display_meta`, and sometimes `series_type`
+- moments commonly have `date` and `display_meta`
 
 ## Field constraints and conventions
 
-This section should document any important formatting or consistency rules that apply to index fields.
+Important current conventions:
 
-Examples:
-- IDs must be strings even when numerically shaped
-- years may be numeric or string values; the actual implementation should be stated explicitly
-- arrays should contain canonical values, display values, or both
-- empty relationships should use empty arrays rather than omitted keys, if that is the chosen convention
-- links should be relative site paths unless otherwise stated
+- ids are always strings
+- links are site-relative paths
+- array-valued relationship and tag fields serialize as arrays, not omitted scalars
+- optional scalar fields are omitted when empty by the current generator
+- `search_terms` values are already normalized at build time
+- `search_text` is derived from `search_terms`, not authored independently
 
-This section should focus on data contract rules, not ranking behaviour.
+The runtime may create additional normalized in-memory variants, but those are not part of the serialized schema.
 
-## Example record
+## Example records
 
-This section should provide one or more real or representative example records from the current implementation.
+Representative work record:
 
-At minimum it should include:
-- one work record
-- one non-work record if the schema differs meaningfully by content type
+```json
+{
+  "kind": "work",
+  "id": "00533",
+  "title": "2 bodies monoprint",
+  "href": "/works/00533/",
+  "year": 2025,
+  "display_meta": "2025",
+  "series_ids": ["2-bodies"],
+  "series_titles": ["2 bodies"],
+  "medium_type": "drawing",
+  "tag_ids": [],
+  "tag_labels": [],
+  "search_terms": [
+    "00533",
+    "2 bodies monoprint",
+    "2",
+    "bodies",
+    "monoprint",
+    "2025",
+    "2-bodies",
+    "2 bodies",
+    "drawing"
+  ],
+  "search_text": "00533 2 bodies monoprint 2 bodies monoprint 2025 2-bodies 2 bodies drawing"
+}
+```
 
-Examples should be short enough to inspect comfortably but complete enough to show the actual field shape.
+Representative series record:
+
+```json
+{
+  "kind": "series",
+  "id": "2-bodies",
+  "title": "2 bodies",
+  "href": "/series/2-bodies/",
+  "year": 2025,
+  "display_meta": "2025",
+  "series_ids": [],
+  "series_titles": [],
+  "series_type": "primary",
+  "tag_ids": [],
+  "tag_labels": [],
+  "search_terms": [
+    "2-bodies",
+    "2",
+    "bodies",
+    "2 bodies",
+    "2025",
+    "primary"
+  ],
+  "search_text": "2-bodies 2 bodies 2 bodies 2025 primary"
+}
+```
+
+Representative moment record:
+
+```json
+{
+  "kind": "moment",
+  "id": "4-stories",
+  "title": "4 stories",
+  "href": "/moments/4-stories/",
+  "date": "2020-01-01",
+  "display_meta": "c. 2020?",
+  "series_ids": [],
+  "series_titles": [],
+  "tag_ids": [],
+  "tag_labels": [],
+  "search_terms": [
+    "4-stories",
+    "4",
+    "stories",
+    "4 stories",
+    "c. 2020?",
+    "c",
+    "2020",
+    "2020-01-01",
+    "01"
+  ],
+  "search_text": "4-stories 4 stories 4 stories c. 2020? c 2020 2020-01-01 01"
+}
+```
 
 ## Schema design notes
 
-This section should briefly explain why the current schema is shaped the way it is.
+The current schema is shaped this way for pragmatic reasons:
 
-Examples of useful notes:
-- why both canonical IDs and display labels are included
-- why both structured fields and flattened search fields exist
-- why some fields are duplicated in derived form
-- why the index is intentionally compact rather than content-complete
-
-These notes should be brief and architectural, not a build-pipeline narrative.
+- ids, titles, and hrefs are present so the browser can render useful results without secondary fetches
+- compact structured metadata is included so search can grow beyond exact title lookup
+- `search_terms` and `search_text` are precomputed so the browser does not need to reconstruct token bundles from heterogeneous fields on every search
+- the index stays compact by excluding full content bodies and other large page data
 
 ## Known limitations or open schema questions
 
-This section should capture unresolved schema questions only.
+Current schema-level follow-up questions:
 
-Examples:
-- whether certain derived fields are too redundant
-- whether field provenance should be preserved more explicitly
-- whether future filters require additional structured fields
-- whether empty optional fields should remain explicit or be omitted
-
-Only schema-level questions belong here.
+- whether `search_text` should continue to duplicate `search_terms` so directly, or evolve into a more selective broad-match field
+- whether future filtering requires additional explicit structured fields beyond the current optional set
+- whether tag-derived fields should eventually be expanded beyond `tag_ids` and `tag_labels`
+- how future prose shards should share or diverge from the base record model
 
 ## Out of scope for this document
 
-This document should not define:
+This document does not define:
 
-- how queries are normalised
-- how records are scored
-- how results are rendered
+- query normalization rules
+- scoring and ranking
+- result rendering behaviour
 - keyboard or interaction behaviour
-- build process steps in detail
-
-Those belong in other search documents.
+- detailed build steps

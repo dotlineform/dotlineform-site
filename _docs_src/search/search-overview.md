@@ -1,150 +1,160 @@
 ---
-doc-id: search-overview
+doc_id: search-overview
 title: Search Overview
-last-updated: 2026-03-29
-parent-id: search
-sort-order: 10
+last_updated: 2026-03-29
+parent_id: search
+sort_order: 10
 ---
 
 # Search Overview
 
 ## Purpose
 
-This document provides a concise overview of the site search subsystem.
+This document gives a high-level overview of the current site search subsystem.
 
-It is intended to explain, at a high level, what the search function is for, what kinds of content it covers, how it is structured, and which supporting documents define its detailed behaviour.
-
-This is not the place for field-by-field schema definitions, scoring rules, or implementation walkthroughs. Those belong in the dedicated search documents referenced below.
+It explains what search currently covers, how the main parts fit together, and which companion documents define the detailed behaviour. It is intentionally broader than the schema, ranking, or UI documents.
 
 ## Search goals
 
-The search subsystem exists to help users locate site content quickly and predictably without relying on external dependencies or plugins.
+The search subsystem exists to help users locate site content quickly and predictably without external plugins or hosted services.
 
-The current search design aims to support:
+Current goals:
 
-- direct lookup of known items, such as a work title, work ID, or series name
-- broader discovery through related terms such as medium, tag labels, or associated metadata
-- consistent behaviour across content types included in the search index
-- a maintainable architecture in which search policy can be reviewed separately from implementation code
-
-The search system should remain lightweight, understandable, and compatible with the site’s existing static-site architecture.
+- support direct lookup of known items such as work ids, titles, series ids, series titles, and moment titles
+- support broader discovery through compact metadata such as series relationships and selected structured fields
+- keep the runtime understandable and deterministic
+- keep the payload small enough for responsive client-side use
+- separate search policy from the source indexes used by other pages
 
 ## Current scope
 
-At a high level, the search subsystem operates by generating a search index during the site build process and loading that index in the browser for client-side querying.
+The current implementation is a Studio-first search surface at `/studio/search/`.
 
-The current implementation is based on:
+It is based on:
 
-- a generated search index file
-- client-side JavaScript search logic
-- no third-party search libraries, plugins, or hosted search services
+- a dedicated build-time-generated search artifact: `assets/data/search_index.json`
+- an in-house client-side search runtime in `assets/studio/js/studio-search.js`
+- no third-party search libraries, plugins, or external search services
 
-The search index contains compact records derived from site content and metadata. The browser loads this index and uses it to return matching results in response to user queries.
+The browser loads the base search index once for the page session and searches it in memory.
 
 ## Content covered by search
 
-This section should list which site content types are currently included in search.
-
-Initial examples may include:
+Current indexed content types:
 
 - works
 - series
-- themes
-- notes
-- other page types, if applicable
+- moments
 
-Codex should replace this placeholder list with the actual current scope of the implementation.
+Current content intentionally excluded from v1 search:
 
-If some content types exist on the site but are intentionally excluded from search, that should also be stated here.
+- long-form prose or full-text body content
+- docs content
+- Studio/admin pages
+- notes or other non-canonical site sections not represented in the search index
+
+The current search model is built around one record per searchable item in those three content types.
 
 ## Search architecture summary
 
-The search subsystem is divided into a small number of distinct parts.
+The current subsystem has five main parts.
 
 ### 1. Source content
-Structured site content and metadata act as the input to the search index build step.
+
+Canonical site data for works, series, moments, and available tag metadata acts as the source input.
 
 ### 2. Search index generation
-A build-time process transforms source content into a compact search index suitable for browser use.
+
+`scripts/generate_work_pages.py` builds a dedicated `search_index.json` artifact at build time. Search owns this artifact separately from `works_index.json`, `series_index.json`, and `moments_index.json`.
 
 ### 3. Search policy
-Configurable policy determines which fields are searchable, how strongly different fields are weighted, and how the search UI behaves.
+
+Search policy currently exists in a combination of:
+
+- generated field preparation in the build script
+- deterministic ranking tiers in the client runtime
+- Studio UI text and route config in `assets/studio/data/studio_config.json`
+
+This policy is documented separately so it can later move out of implementation code more cleanly.
 
 ### 4. Search engine
-Client-side JavaScript loads the search index, processes the user query, applies matching and ranking logic, and returns ordered results.
+
+The client runtime loads the search index, normalizes the loaded values into runtime-friendly fields, evaluates query matches, assigns score tiers, sorts matches, and returns an ordered result set.
 
 ### 5. Search UI
-The browser interface captures input, invokes the search engine, and renders the resulting matches.
 
-This document only describes these parts at a high level. Detailed definitions belong in the dedicated supporting documents.
+The Studio page captures the query, exposes a kind filter, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
 
 ## Design principles
 
-The search subsystem should follow these principles:
+The current implementation follows these principles.
 
 ### Lightweight
-Search should work without external plugins or dependencies.
+
+The base search experience should remain fast without external infrastructure and without loading prose-heavy payloads by default.
 
 ### Structured
-The system should distinguish clearly between search data, search policy, and implementation code.
+
+Search has its own artifact and its own documentation set rather than piggybacking indefinitely on generic site indexes.
 
 ### Reviewable
-Important search behaviour should be understandable from focused documentation and config files, not only from JavaScript.
+
+Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow.
 
 ### Incremental
-The architecture should support refinement over time without requiring a full redesign when ranking, indexing, or UI behaviour changes.
+
+The base artifact is designed to grow with additional structured fields such as `medium_type` or tags before later expansion into larger prose search shards.
 
 ### Static-site compatible
-The system should fit the existing Jekyll or build-pipeline workflow rather than depending on a dynamic backend.
+
+Search remains part of the existing static build pipeline and browser runtime. It does not depend on a dynamic backend.
 
 ## Out of scope for this document
 
-This document should not contain:
+This document does not define:
 
-- full field definitions for search index records
-- detailed normalisation rules
-- scoring formulas or ranking weights
-- UI event handling details
-- code-level implementation notes
-- validation test cases
+- the full `search_index.json` field schema
+- normalization rules or token-preparation logic
+- ranking tiers or scoring details
+- UI event timing and pagination details
+- validation procedure
+- future config extraction architecture
 
-Those details belong in the dedicated documents listed below.
+Those belong in the dedicated companion documents.
 
 ## Related documents
 
-The search subsystem is documented in the following companion files:
+- [Search Index Schema](/docs/?doc=search-index-schema)
+- [Search Field Registry](/docs/?doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
+- [Search Ranking Model](/docs/?doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+- [Search Change Log Guidance](/docs/?doc=search-change-log-guidance)
+- [Search Change Log](/docs/?doc=search-change-log)
+- [Search Archive](/docs/?doc=search-archive)
 
-- `search-config-architecture.md`
-- `search-index-schema.md`
-- `search-field-registry.md`
-- `search-normalisation-rules.md`
-- `search-ranking-model.md`
-- `search-ui-behaviour.md`
-- `search-build-pipeline.md`
-- `search-validation-checklist.md`
+[Search Config Architecture](/docs/?doc=search-config-architecture) is reserved for a later phase and should not be treated as current implementation documentation yet.
 
 ## Current status
 
-This document should describe the current implemented version of the search subsystem at a high level.
+Current implementation status:
 
-Codex should update this section with a short factual summary of the current state, for example:
+- v1 is implemented as a Studio page at `/studio/search/`
+- the search index is generated at build time into `assets/data/search_index.json`
+- indexed content types are works, series, and moments
+- ranking is field-aware and deterministic rather than flat
+- the UI currently supports one text query plus a kind filter: `all`, `works`, `series`, `moments`
+- results are rendered client-side in ranked order, with additional batches revealed via `more`
 
-- which version is currently implemented
-- which content types are currently indexed
-- whether the index is generated at build time
-- whether ranking is field-aware or flat
-- whether scoped search or filters are present yet
-
-This section should remain brief and descriptive.
+This is a production-like v1 implementation, but still a Studio-first surface rather than a main-site navigation feature.
 
 ## Open questions
 
-This section can be used to note high-level unresolved decisions that affect the overall search subsystem.
+High-level follow-up questions for the next phase:
 
-Examples:
-- whether additional content types should be indexed
-- whether search should remain global only or later support scoped modes
-- whether field weighting should become more granular
-- whether the current index format is sufficient for future filtering needs
-
-Only major architectural or scope questions should be listed here. Lower-level issues belong in the more specific search documents.
+- when tag coverage becomes strong enough, how should tags enter ranking and filtering
+- when prose content expands substantially, how should prose search be added without inflating the base payload
+- which additional structured fields should be promoted from schema presence to first-class ranking or filter signals
+- when the Studio implementation is stable enough to move into the main site shell

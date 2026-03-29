@@ -16,16 +16,16 @@ Related references:
 
 Page documents:
 
-- **[Tag Registry](/docs/?doc=tag-registry/)**
-- **[Series Tags](/docs/?doc=series-tags/)**
-- **[Series Tag Editor](/docs/?doc=tag-editor/)**
+- **[Tag Registry](/docs/?doc=tag-registry)**
+- **[Series Tags](/docs/?doc=series-tags)**
+- **[Series Tag Editor](/docs/?doc=tag-editor)**
 
 Current status:
 
 - Studio modularity refactor is structurally complete for the current build
 - modal framework migration is structurally complete for the current build
 - non-modal shared UI cleanup is structurally complete across the editor, registry, aliases, and lighter Studio pages
-- remaining work is manual browser verification using `/docs/?doc=regression-checklist.md`
+- remaining work is manual browser verification using [Studio Regression Checklist](/docs/?doc=regression-checklist)
 
 ## Local Development
 
@@ -578,7 +578,7 @@ When studio tag behavior changes, update this document in the same change:
 - Data contract expectations
 - Operational workflow (manual patch vs local server)
 
-Keep `docs/scripts-overview.md` updated as well for command-level usage and script flags.
+Keep [Scripts Overview](/docs/?doc=scripts-overview) updated as well for command-level usage and script flags.
 
 ## Tag Registry Page
 

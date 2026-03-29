@@ -1,252 +1,311 @@
 ---
-doc-id: search-change-log-guidance
+doc_id: search-change-log-guidance
 title: Search Change Log Guidance
-last-updated: 2026-03-29
-parent-id: search
-sort-order: 2
+last_updated: 2026-03-29
+parent_id: search
+sort_order: 2
 ---
 
-# Search Change Log
+# Search Change Log Guidance
 
 ## Purpose
 
-This document records meaningful changes to the site search subsystem over time.
+This document defines how the search change log should be maintained.
 
-Its purpose is to provide a concise, structured history of changes to search architecture, schema, field policy, normalisation, ranking, UI behaviour, and build pipeline behaviour so that the evolution of the system can be reviewed without relying on memory or scattered implementation notes.
+The search change log is intended to be the short historical record of meaningful search changes across:
 
-This is not a diary and not a full technical narrative. Each entry should be brief, factual, and traceable to the relevant search documents.
+- implementation
+- schema
+- field policy
+- normalization
+- ranking
+- UI behaviour
+- build pipeline
+- validation
+- architecture
 
-- keep search-change-log.md as one file;
-- make entries concise and uniform;
-- when an entry grows beyond, say, a short structured block, move the long reasoning into a dedicated note and link it from the log.
+It should help future review of search development without forcing someone to reconstruct intent from raw git history alone.
+
+## Why this matters in this repo
+
+In the current working model, search implementation and most search documentation updates are being written by Codex.
+
+That makes a disciplined change log more important, not less.
+
+Reason:
+
+- Codex can implement multiple related changes in one session
+- docs can be updated alongside code quickly
+- without a disciplined log, it becomes harder later to answer:
+  - what changed
+  - why it changed
+  - whether the change was implemented or only planned
+  - which files and documents should be read together
+
+The change log should therefore become part of the normal search close-out process.
 
 ## Scope
 
-This log should capture changes that affect one or more of the following:
+Add a search change-log entry when a change materially affects one or more of:
 
 - search index schema
-- search field registry
-- normalisation rules
-- ranking model
+- field participation
+- normalization rules
+- ranking behaviour
 - UI behaviour
-- build pipeline
+- build pipeline or artifact generation
 - indexed content scope
 - search config architecture
-- validation process
+- validation or regression process
 
-This log should not be used for trivial wording fixes, formatting changes, or routine code cleanup unless those changes affect search behaviour, search data, or search maintainability in a meaningful way.
+Do not add an entry for:
+
+- formatting-only edits
+- typo fixes
+- generic cleanup with no search effect
+- doc wording changes that do not alter search design, behaviour, or maintainability in a meaningful way
 
 ## Relationship to other documents
 
-This document should be read alongside:
+Use the change log alongside:
 
-- `search-overview.md`
-- `search-policy-externalisation.md`
-- `search-index-schema.md`
-- `search-field-registry.md`
-- `search-normalisation-rules.md`
-- `search-ranking-model.md`
-- `search-ui-behaviour.md`
-- `search-build-pipeline.md`
-- `search-validation-checklist.md`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Index Schema](/docs/?doc=search-index-schema)
+- [Search Field Registry](/docs/?doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
+- [Search Ranking Model](/docs/?doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+- [Search Config Architecture](/docs/?doc=search-config-architecture)
+
+The change log records the fact of change. The other search docs define the resulting system.
+
+## Repo-specific maintenance rules
+
+These rules should be treated as the standard for this repo and environment.
+
+### 1. Write the entry in the same change set
+
+If a search change is meaningful enough to alter behaviour, structure, or maintenance burden, update [Search Change Log](/docs/?doc=search-change-log) in the same change set.
+
+Do not leave the log as a later cleanup task.
+
+### 2. Codex writes the entry at close-out
+
+Because Codex is currently the main author of search changes, Codex should draft the change-log entry during close-out.
+
+The entry should reflect:
+
+- the implemented change
+- the reason for the change
+- the practical effect
+- the main affected docs/files
+
+This should happen before or alongside the final code-close summary, not after the fact from memory.
+
+### 3. Newest first
+
+Entries should be ordered newest first.
+
+This matches how the log will most often be read during active development.
+
+### 4. One entry per logical search change
+
+Prefer one entry per meaningful search change set.
+
+Examples:
+
+- good:
+  - one entry for “implemented Studio search v1”
+  - one entry for “introduced batched result expansion”
+- bad:
+  - separate entries for a JS file, a CSS file, and a doc file that all belong to the same functional change
+
+### 5. Use absolute dates
+
+Always use `YYYY-MM-DD`.
+
+Do not use “today”, “yesterday”, or session-relative language.
+
+### 6. Status must reflect repo reality
+
+Use:
+
+- `implemented` only when the behaviour or structure is actually in the repo
+- `proposed` only when the log is recording an agreed design direction that is not yet implemented
+- `revised` when an existing implemented behaviour is materially changed
+- `reverted` when a previous implemented change is backed out
+
+Do not mark something `implemented` just because it has been discussed.
+
+### 7. Record effect, not just activity
+
+An entry should explain the effect on search, not merely that files were edited.
+
+Bad:
+
+- “Updated search docs”
+
+Good:
+
+- “Split the search documentation into focused documents so schema, ranking, normalization, UI behaviour, and pipeline rules can be reviewed independently”
+
+### 8. Affected files/docs should be selective
+
+List the most important files and documents only.
+
+Do not turn the log into a raw dump of every touched file.
+
+Focus on:
+
+- key implementation files
+- key config files
+- key documents that must now be read differently
 
 ## Logging principles
 
-The change log should follow these principles:
-
 ### Concise
-Each entry should summarise the change clearly without becoming a design essay.
+
+Each entry should be short enough to scan quickly.
 
 ### Factual
-Entries should describe what changed, not speculate beyond the change itself.
+
+Describe what changed and why. Do not pad entries with generic narrative.
 
 ### Traceable
-Each entry should point to the affected search documents or config files.
+
+Make it easy to identify the implementation or documentation surface affected.
 
 ### Behaviour-focused
-Entries should explain the effect of the change on search data, search behaviour, or search maintainability.
 
-### Selective
-Only meaningful changes should be logged.
+Explain the effect on search behaviour, search data, or maintainability.
+
+### Durable
+
+Write entries so they remain useful months later, when the specific session context is gone.
 
 ## When to add an entry
 
 Add a change-log entry when:
 
-- a search field is added, removed, renamed, or reclassified
-- a ranking rule or weight changes
-- a normalisation rule changes
-- the search UI trigger or result behaviour changes
-- the search index build source or output structure changes
-- a new content type is added to or removed from indexing
-- a config layer is externalised or refactored
-- a validation rule or regression test set changes materially
-- a bug fix changes actual search behaviour
-
-Do not add an entry for:
-- typo fixes in documentation
-- purely internal refactors with no behavioural or structural effect
-- formatting-only changes
-- comments added to code with no change in behaviour
+- a field is added, removed, renamed, activated, deactivated, or reclassified
+- ranking precedence changes
+- normalization rules change
+- the search UI trigger, state model, or result presentation changes
+- search index generation or source inputs change
+- a new content type is indexed or excluded
+- search config boundaries or policy externalization changes
+- validation procedure changes materially
+- a bug fix changes actual user-visible search behaviour
 
 ## Entry format
 
-Each entry should use the following structure.
+Use this exact structure:
 
-### [YYYY-MM-DD] Short change title
+## [YYYY-MM-DD] Short change title
 
 **Status:** proposed | implemented | revised | reverted
 
 **Area:** schema | field registry | normalisation | ranking | UI | build pipeline | validation | architecture
 
 **Summary:**  
-A short statement of what changed.
+Short statement of what changed.
 
 **Reason:**  
 Why the change was made.
 
 **Effect:**  
-What effect the change has on search behaviour, search data, or maintenance.
+What practical effect the change has on search behaviour, data, or maintainability.
 
 **Affected files/docs:**  
-List the main docs, config files, or implementation areas affected.
+- `path`
+- `path`
 
 **Notes:**  
-Optional brief notes on follow-up work, migration implications, or unresolved consequences.
+Optional short follow-up note, migration note, or unresolved consequence.
 
 ## Interpretation of status values
 
-proposed: The change has been agreed conceptually or drafted but is not yet fully implemented.
+### proposed
 
-implemented: The change is now present in the current search system.
+Use when the change is documented and agreed directionally but not implemented yet.
 
-revised: An earlier change has been materially adjusted without being fully removed.
+### implemented
 
-reverted: A previously implemented change has been rolled back.
+Use when the change is present in the repo and reflected in the current system.
 
+### revised
+
+Use when a previously implemented behaviour is materially changed but not removed entirely.
+
+### reverted
+
+Use when a previous implemented change is rolled back.
 
 ## Interpretation of area values
 
-schema: Changes to the structure of search index records or top-level index output.
+### schema
 
-field registry: Changes to which fields are searchable, filterable, displayed, or weighted by class.
+Changes to the search index structure or serialized contract.
 
-normalisation: Changes to how source values or queries are transformed before matching.
+### field registry
 
-ranking: Changes to match precedence, field weighting, tie-breaking, or fallback behaviour.
+Changes to which fields are active, displayed, filterable, or reserved.
 
-UI: Changes to search input behaviour, result display, keyboard interaction, or scoped modes.
+### normalisation
 
-build pipeline: Changes to source inputs, record construction, output paths, or validation during generation.
+Changes to index-time or query-time transformation rules.
 
-validation: Changes to regression queries, checklist coverage, or search QA rules.
+### ranking
 
-architecture: Changes to the overall design boundary, such as externalising config or restructuring responsibilities.
+Changes to precedence bands, tie-breaking, or fallback behaviour.
 
+### UI
 
-## Change log maintenance rules
+Changes to the search page or result interaction model.
 
-- Keep entries ordered newest first unless the repo uses a different standard consistently.
-- Prefer one meaningful entry per logical change rather than many tiny entries.
-- If a change affects multiple search documents, record it once with a clear affected-files list.
-- If a proposed change is later implemented, either update the status or add a second implemented entry, depending on the project’s preferred logging style.
-- If a change is reverted, add a new entry rather than silently editing history.
+### build pipeline
 
+Changes to inputs, generation flow, output artifact behaviour, or build-time validation.
 
-## Out of scope for this document
+### validation
 
-This document should not contain:
+Changes to regression queries, QA rules, or checklist process.
 
-- full rule definitions
-- code snippets unless strictly necessary
-- full implementation explanations
-- unresolved brainstorming not tied to an actual proposed or implemented change
+### architecture
 
-Those belong in the main search design documents.
+Changes to the structural boundary between docs, config, and code.
 
-## Recommended entry style
+## What should stay out of the log
 
-Entries should answer five questions quickly:
+Do not put these in the change log:
 
-What changed?
-Why was it changed?
-What is the practical effect?
-Which documents or files now need to be read differently?
-Is there any follow-up implication?
+- full design rationale essays
+- implementation walkthroughs
+- long code excerpts
+- unresolved brainstorming with no associated change
+- copyediting history
 
-Avoid long prose. The supporting documents should hold the detailed rules; the change log should record the fact and significance of the change.
+Those belong in the focused search docs.
 
+## Recommended style for Codex-authored entries
 
-## Initial entries
+Because Codex is currently authoring most search work, entries should follow these style rules:
 
-Codex should populate the first real entries based on the current search v1 implementation and the documentation split that introduced the current search doc set.
+- write in plain factual prose
+- avoid self-reference such as “I changed”
+- avoid process narration such as “after reviewing”
+- prefer behaviour and effect over implementation trivia
+- mention docs and code together when both changed as part of one logical search change
 
-Likely initial entries may include:
+## Initial guidance for close / commit process
 
-- creation of the search documentation set
-- adoption of config/policy externalisation for selected search layers
-- implementation of v1 client-side search index and runtime search
-- any major schema decisions already present in the generated index
-- any known ranking or duplication issues identified during review
+For any meaningful search change, Codex should do this before final close-out:
 
+1. update the relevant focused search docs
+2. add or revise the search change-log entry
+3. rebuild docs payloads
+4. include the search-log update in the final summary
 
-
-# Example entries
-
-## [2026-03-29] Created search documentation set
-
-Status: proposed
-
-Area: architecture
-
-#### Summary:
-Split the search documentation into focused documents covering overview, schema, field registry, normalisation, ranking, UI behaviour, build pipeline, validation, and change history.
-
-#### Reason:
-The previous single-document approach was too difficult to review and maintain as search design became more detailed.
-
-#### Effect:
-Search design can now be reviewed one concern at a time, and implementation can be compared against smaller, more targeted documents.
-
-#### Affected files/docs:
-
-- search-overview.md
-- search-policy-externalisation.md
-- search-index-schema.md
-- search-field-registry.md
-- search-normalisation-rules.md
-- search-ranking-model.md
-- search-ui-behaviour.md
-- search-build-pipeline.md
-- search-validation-checklist.md
-- search-change-log.md
-
-#### Notes:
-
-Codex should populate each document from the implemented v1 search behaviour.
-
-
-## [2026-03-29] Defined policy externalisation boundary for search
-
-Status: proposed
-
-Area: architecture
-
-#### Summary:
-Defined field registry, ranking policy, and runtime UI behaviour as the initial policy layers to be externalised from implementation code.
-
-#### Reason:
-These parts of the search system are likely to be reviewed and adjusted repeatedly and are easier to maintain when separated from core engine code.
-
-#### Effect:
-Search policy becomes easier to inspect and refine without reading search-engine internals.
-
-#### Affected files/docs:
-
-- search-config-architecture.md
-- search-field-registry.md
-- search-ranking-model.md
-- search-ui-behaviour.md
-
-#### Notes:
-Tokenisation, matching implementation, rendering, and cache/loading logic remain in code for now.
+This should become the standard search close / commit flow in this repo.

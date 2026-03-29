@@ -1,324 +1,368 @@
 ---
-doc-id: search-ui-behaviour
+doc_id: search-ui-behaviour
 title: Search UI Behaviour
-last-updated: 2026-03-29
-parent-id: search
-sort-order: 60
+last_updated: 2026-03-29
+parent_id: search
+sort_order: 60
 ---
 
 # Search UI Behaviour
 
 ## Purpose
 
-This document defines how the site search interface behaves from the user’s point of view.
+This document defines how the current search interface behaves from the user’s point of view.
 
-Its purpose is to make the runtime behaviour of the search UI explicit and reviewable. It should describe when search is invoked, how results are presented, how the interface responds to user input, and what interaction rules apply.
+It describes when search becomes active, how results are shown, what controls exist, and what the user can currently do by keyboard and pointer.
 
-This document is about user-facing search behaviour. It is not a ranking document, not a schema document, and not a code walkthrough.
+This is a UI-behaviour document. It is not the ranking, schema, or build-pipeline document.
 
 ## Scope
 
-This document applies to the browser-side search interface and its interaction model.
+This document applies to the current Studio search page at `/studio/search/`.
 
-It should cover:
+It covers:
 
-- where and how the search UI is invoked
-- when the search index is loaded
-- minimum query length and search trigger behaviour
-- result limits and grouping
-- empty, loading, and no-query states
-- keyboard behaviour
-- pointer and click behaviour
-- scoped search, if supported
-- how search results are displayed and cleared
-
-This document should define interaction and presentation behaviour, not search engine internals.
+- the current entry point
+- search activation and loading behaviour
+- visible UI states
+- result presentation
+- keyboard and pointer interaction
+- current filter behaviour
+- responsive and accessibility observations relevant to v1
 
 ## Relationship to other documents
 
-This document should be read alongside:
-
-- `search-overview.md`, which describes the search subsystem at a high level
-- `search-index-schema.md`, which defines the data available to the UI
-- `search-field-registry.md`, which defines which fields contribute to search and display
-- `search-ranking-model.md`, which defines how results are prioritised
-- `search-validation-checklist.md`, which defines how UI behaviour should be tested
+- [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
+- [Search Index Schema](/docs/?doc=search-index-schema) defines the data available to the UI
+- [Search Field Registry](/docs/?doc=search-field-registry) defines which fields contribute to search and display
+- [Search Ranking Model](/docs/?doc=search-ranking-model) defines result ordering
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines what UI behaviour should be checked
 
 ## UI behaviour principles
 
-The search UI should follow these principles:
+The current UI follows these principles.
 
 ### Immediate
-The interface should respond quickly and clearly to user input.
+
+Search runs in memory and updates quickly after typing.
 
 ### Predictable
-Users should be able to understand when search is active, what results mean, and how to navigate them.
+
+The page always presents one visible query field, one visible kind filter, and one inline results area.
 
 ### Lightweight
-The UI should remain simple and dependency-free.
 
-### Accessible
-Search interactions should work by keyboard as well as pointer input.
+The current UI is plain browser UI with no external widget library or autocomplete framework.
 
-### Consistent
-The same search patterns should behave similarly across different parts of the site unless a scoped mode intentionally changes them.
+### Keyboard-usable
+
+The input, filters, result links, and `more` control are all reachable by keyboard, even though richer list-navigation patterns are not yet implemented.
+
+### Simple first
+
+The v1 Studio surface favors explicit behaviour over more advanced overlay or autosuggest patterns.
 
 ## Search entry points
 
-This section should define where the user can access search.
+Current entry point:
 
-Examples:
-- global site header search input
-- dedicated search page
-- section-specific search input
-- scoped search within a series or content group
+- dedicated Studio page: `/studio/search/`
 
-Codex should replace this section with the actual current implementation and any planned but not yet implemented entry points should be clearly marked.
+Current status:
 
-Questions to answer:
-- Is search global, local, or both?
-- Is there one search input or multiple?
-- Is the search UI persistent, expandable, or page-specific?
+- search is global across the indexed content types in the current index
+- there is one search input on this page
+- the UI is page-specific rather than persistent in the main site shell
+
+Not yet implemented:
+
+- main site header search
+- overlay or dropdown search
+- scoped contextual search by current page context
 
 ## Search activation behaviour
 
-This section should define when a search query is actually executed.
-
-Questions to answer:
-- Does search begin immediately on input?
-- Is there a minimum query length?
-- Is there a debounce delay?
-- Is Enter required or optional?
-- Are results updated on every keystroke after the threshold is reached?
-
-Suggested subsections:
+The current page supports live in-memory search plus explicit Enter submission.
 
 ### Minimum query length
-State whether search requires a minimum number of characters before results appear.
+
+Current behaviour:
+
+- there is no minimum query length threshold beyond “query must not be empty”
+- an empty normalized query shows the no-query prompt state instead of results
 
 ### Debounce behaviour
-State whether the interface waits briefly before running the search after input changes.
+
+Current behaviour:
+
+- typing triggers a debounce of `140ms`
+- when the debounce completes, the current query is searched and results are re-rendered
 
 ### Immediate versus submitted search
-State whether results update live or only after an explicit submit action.
 
-Codex should describe the actual current behaviour.
+Current behaviour:
+
+- results update live as the user types
+- pressing Enter is optional
+- Enter forces an immediate search by cancelling any pending debounce and rendering results at once
+
+This means v1 supports both live search and explicit confirmation, but does not require submit-only search.
 
 ## Search index loading behaviour
 
-This section should define how and when the browser loads the search index.
+Current behaviour:
 
-Questions to answer:
-- Is the index loaded at page load?
-- Is it loaded only when the user focuses the search input?
-- Is it cached in memory after first load?
-- Is there a visible loading state while the index is being fetched?
+- the page loads the search index during page initialization
+- the root remains hidden until the initial search config and search index load attempt completes
+- while the page is loading, the status message is set to `loading search index…`
+- after the index is loaded, it stays in memory for the page session
 
-This section should describe the UI-facing behaviour rather than fetch implementation details.
+If loading fails:
+
+- the page still becomes visible
+- the status area shows the configured load-failure message
+- no separate retry UI is currently shown
+
+The current implementation is eager-load on page entry, not lazy-load on focus.
 
 ## Result display behaviour
 
-This section should define how results are presented once matches are available.
-
-Questions to answer:
-- Are results shown in a dropdown, panel, overlay, or inline section?
-- Are all content types mixed together or grouped?
-- Is there a cap on the number of results shown?
-- Are results displayed as simple links, cards, or richer previews?
-- Are secondary fields such as year, kind, or series shown?
-
-Suggested subsections:
-
 ### Result container
-Describe where results appear in relation to the search input.
+
+Results appear inline on the page, below the search input and kind filters.
+
+There is no dropdown, overlay, or floating panel in v1.
 
 ### Result count
-Describe how many results are displayed and whether there is a hard cap.
+
+The status line above the results serves as the result-count area.
+
+Current behaviours:
+
+- `Enter a search query.` when there is no active query
+- `No results.` when the query returns nothing
+- `1 result` for one match
+- `{count} results` when all current matches are visible
+- `Showing {visible} of {count} results` when the visible list is capped and more remain
 
 ### Result grouping
-Describe whether results are grouped by content type such as works, series, or notes.
+
+Results are not visually grouped into separate sections by kind.
+
+Instead:
+
+- all matching records are shown in one mixed ranked list
+- each result includes a small kind label
+- the explicit kind filter can restrict the list to one kind
+
+### Result limits
+
+Current behaviour:
+
+- the page renders the first `50` results initially
+- if more matches exist, a `more` control appears beneath the list
+- activating `more` reveals the next batch of `50`
+
+This is incremental list expansion, not paged navigation.
 
 ### Result metadata
-Describe which secondary information appears in each result.
+
+Each result currently displays:
+
+- kind label
+- title as the main link
+- id on a separate line
+- optional metadata line
+
+The metadata line may include:
+
+- `display_meta`
+- `medium_type` for works
+- `series_titles` for works
+- `series_type` for series
 
 ### Result ordering
-State that results are presented in ranked order as defined by the ranking model.
 
-Codex should document the actual current UI shape.
+Results are displayed in the ranked order defined by [Search Ranking Model](/docs/?doc=search-ranking-model).
 
 ## No-query, loading, and empty states
 
-This section should define what the user sees when there is no active search or no results.
-
-Suggested subsections:
-
 ### No-query state
-What is shown before the user types enough to trigger search.
 
-Examples:
-- nothing
-- placeholder text only
-- recent suggestions
-- instructional hint
+Current behaviour:
+
+- the input and controls remain visible
+- the status line shows `Enter a search query.`
+- the results list is empty
+- the `more` control is hidden
 
 ### Loading state
-What is shown while the search index is loading or while search cannot yet run.
 
-Examples:
-- spinner
-- loading message
-- nothing visible
+Current behaviour:
+
+- before the initial load completes, the page status indicates loading
+- the page root remains hidden until initialization completes
+
+This means the user does not interact with a partially initialized visible search shell.
 
 ### Empty results state
-What is shown when a valid query returns no results.
 
-Examples:
-- “No results found”
-- guidance to broaden the query
-- suggestion to check spelling
+Current behaviour:
 
-Codex should describe the current behaviour exactly.
+- the status line shows `No results.`
+- the results list is cleared
+- the `more` control is hidden
+
+There are currently no spelling hints, suggestions, or alternate-query prompts.
 
 ## Keyboard interaction
 
-This section should define how keyboard users interact with the search UI.
-
-Questions to answer:
-- Can results be navigated with arrow keys?
-- Does Enter open the selected result?
-- Does Escape close or clear the result list?
-- Does Tab move focus naturally through the UI?
-- Is there a highlighted active result?
-
-Suggested subsections:
+Current keyboard behaviour is basic but functional.
 
 ### Arrow navigation
-Describe whether users can move through results with Up and Down keys.
+
+Current behaviour:
+
+- there is no custom arrow-key navigation through results
+- arrow keys are not used to maintain an active highlighted result
 
 ### Enter behaviour
-Describe whether Enter selects the active result, submits the raw query, or both.
+
+Current behaviour:
+
+- Enter in the input triggers an immediate search using the current query
+- Enter does not activate a selected result because there is no active-result model
 
 ### Escape behaviour
-Describe whether Escape clears the query, closes results, or removes focus.
+
+Current behaviour:
+
+- no custom Escape behaviour is currently implemented
+- Escape does not clear the query or close a result panel because there is no panel state
 
 ### Focus management
-Describe how focus moves into and out of the result list.
 
-If keyboard support is not yet fully implemented, this section should state the current status clearly.
+Current behaviour:
+
+- focus moves naturally through the page using normal browser tab order
+- the input is focused automatically after successful page initialization
+- result links and the `more` button are standard focusable elements
+
+The current UI does not yet implement roving focus, active-result selection, or managed focus transfer into the results list.
 
 ## Pointer and click interaction
 
-This section should define how pointer users interact with the search UI.
+Current pointer behaviour:
 
-Questions to answer:
-- Does clicking a result navigate immediately?
-- Does clicking outside the search area close the result list?
-- Does clicking the input reopen prior results?
-- Does the UI support touch interaction in the same way as pointer interaction?
+- clicking a kind filter button applies that filter immediately
+- clicking a result link navigates directly to the target page
+- clicking `more` reveals the next batch of results
 
-This document should describe intended user behaviour rather than DOM event details.
+Not currently implemented:
+
+- outside-click dismissal
+- reopening a dismissed result panel
+- pointer-specific behaviour distinct from the inline page model
+
+Because the current UI is inline rather than overlay-based, there is no open/close panel state to manage.
 
 ## Query persistence and clearing
 
-This section should define what happens to the query and results over time.
+Current behaviour:
 
-Questions to answer:
-- Does the query remain visible after navigating away and back?
-- Does the result list close after selection?
-- Is there an explicit clear button?
-- Does clearing the query immediately hide results?
-- Does blur hide results?
+- there is no explicit clear button
+- clearing the input back to an empty query returns the page to the no-query state
+- the current query is held only in the current page session state
+- there is no URL persistence of the current search query
+- the page does not currently restore the last query after navigation away and back
 
-Codex should document the actual current behaviour and any known inconsistencies.
+There is also no blur-driven result dismissal because results are rendered inline on the page.
 
 ## Scoped search behaviour
 
-If scoped search exists or is planned, this section should define it.
+Current implemented scope control:
 
-Examples:
-- search only within the current series
-- search only within works
-- search only within a studio or admin tool context
+- kind filter only: `all`, `works`, `series`, `moments`
 
-Questions to answer:
-- How is the scope indicated to the user?
-- Can users switch scope manually?
-- Does the same ranking model apply inside a scope?
-- Is scope inferred from page context?
+Current non-features:
 
-If scoped search is not currently implemented, this section should state that explicitly.
+- no page-context scope
+- no “search within current series”
+- no saved or inferred scope from the page URL
+
+The kind filter is explicit and visible, and it applies immediately when clicked.
 
 ## Content-type display policy
 
-This section should define how different result kinds appear in the UI.
+Current content-type presentation:
 
-Examples:
-- whether works and series use different labels or badges
-- whether some types show thumbnails and others remain text-only
-- whether type grouping affects visual presentation
-- whether hidden or excluded types are suppressed at UI level
+- works, series, and moments share one visual result-row pattern
+- each row includes a kind label so the user can distinguish record type quickly
+- works may show `medium_type` and related series titles in metadata
+- series may show `series_type` in metadata
+- moments currently use the same basic row structure without a special richer preview
 
-This section is about result presentation by type, not ranking rules.
+There are no thumbnails, excerpts, or per-kind custom card layouts in v1.
 
 ## Mobile and responsive behaviour
 
-This section should define how the search UI behaves on smaller screens.
+Current responsive behaviour is simple rather than mode-switched.
 
-Questions to answer:
-- Does the result container resize or reposition?
-- Is the interface still keyboard-accessible where applicable?
-- Are result counts reduced on mobile?
-- Does the search UI become full-width, modal, or otherwise change layout?
+Current properties:
 
-Codex should document the current behaviour if responsive treatment already exists.
+- the page uses a stacked inline layout
+- filters wrap onto multiple lines as needed
+- the search input remains full-width within the page layout
+- the results list remains inline rather than switching to modal or overlay presentation
+
+There is no separate mobile-only search mode in v1.
 
 ## Accessibility notes
 
-This section should capture UI-level accessibility expectations.
+Current accessible behaviours:
 
-Examples:
-- focus visibility
-- keyboard operability
-- clear labels or placeholder guidance
-- semantic roles, if relevant
-- screen-reader-friendly result updates, if implemented
+- the search input has a visually hidden label and configured `aria-label`
+- focus-visible states exist for filter buttons, result links, and the `more` button
+- result links are standard anchors
+- keyboard users can reach all current interactive controls through normal tab navigation
 
-This should remain behavioural rather than implementation-heavy.
+Current gaps:
+
+- no arrow-key result navigation
+- no active-result announcement model
+- no dedicated live-region treatment for result-count updates
+
+Those gaps are acceptable for v1 but should remain visible as future improvement areas.
 
 ## Current implementation summary
 
-This section should briefly summarise how the current search UI behaves in practice.
+Current UI behaviour in practice:
 
-Examples:
-- where the input lives
-- whether results update live
-- whether the index loads eagerly or lazily
-- whether grouping is present
-- whether keyboard navigation is complete or partial
-- whether scoped search exists yet
-
-This section should be concise and factual.
+- search lives on one dedicated Studio page
+- the index loads eagerly when the page initializes
+- results update live after a short debounce, and Enter can force immediate search
+- results appear inline below the controls
+- one explicit kind filter is available
+- results are shown in batches of `50` with a `more` control
+- keyboard support is basic tab-and-activate behaviour rather than full result-list navigation
 
 ## Known limitations or open UI questions
 
-This section should capture unresolved UI-behaviour questions only.
+Current UI questions for later phases:
 
-Examples:
-- whether search should open in a dedicated results page rather than a dropdown
-- whether keyboard navigation needs improvement
-- whether loading state should be more explicit
-- whether scope switching should be added
-- whether mobile presentation needs refinement
-- whether result metadata is too sparse or too noisy
+- whether the main site should use a dedicated search page, a nav overlay, or both
+- whether a minimum query length should be introduced
+- whether result-list keyboard navigation should be added
+- whether the loading and error states need richer treatment
+- whether result metadata is exactly the right amount for public search
+- whether query state should persist in the URL
 
 ## Out of scope for this document
 
-This document should not define:
+This document does not define:
 
 - the search index schema
-- how matching works internally
+- internal matching logic
 - scoring formulas
-- build pipeline steps
-- low-level fetch or cache implementation details
-
-Those belong in other search documents.
+- build-pipeline steps
+- low-level fetch implementation details

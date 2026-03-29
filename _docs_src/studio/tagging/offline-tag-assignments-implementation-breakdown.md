@@ -93,7 +93,7 @@ Primary files:
 
 - `assets/studio/js/tag-studio.js`
 - `assets/studio/css/studio.css`
-- `docs/studio/ui-framework.md`
+- [UI Framework](/docs/?doc=ui-framework)
 
 Responsibilities:
 
@@ -184,11 +184,11 @@ This batch depends on the server contract from Batch 5.
 
 Docs to update:
 
-- `docs/studio/pages/tag-editor.md`
-- `docs/studio/pages/series-tags.md`
-- `docs/studio/studio.md`
-- `docs/studio/ui-framework.md`
-- `docs/scripts-overview.md`
+- [Tag Editor](/docs/?doc=tag-editor)
+- [Series Tags](/docs/?doc=series-tags)
+- [Studio](/docs/?doc=studio)
+- [UI Framework](/docs/?doc=ui-framework)
+- [Scripts Overview](/docs/?doc=scripts-overview)
 
 Verification focus:
 

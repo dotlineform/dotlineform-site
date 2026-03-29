@@ -16,7 +16,7 @@ Use this command prefix for all script commands:
 
 All commands below assume you are in `dotlineform-site/`.
 
-For the centralized local install/setup guide, see [`docs/local-setup.md`](local-setup.md).
+For the centralized local install/setup guide, see [Local Setup](/docs/?doc=local-setup).
 
 Docs viewer data:
 
@@ -139,13 +139,12 @@ Pipeline policy config:
 
 Sorting behavior and consistency contract:
 
-- `_docs_src/sorting-architecture.md`
+- [Sorting Architecture](/docs/?doc=sorting-architecture)
 
 Deferred improvements and follow-up items:
 
-- `_docs_src/backlog.md`
-- `_docs_src/css-audit-spec.md`
-- `_docs_src/css-audit-latest.md`
+- [CSS Audit Spec](/docs/?doc=css-audit-spec)
+- [CSS Audit Latest](/docs/?doc=css-audit-latest)
 
 ## Main Pipeline
 

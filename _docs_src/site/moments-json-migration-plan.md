@@ -159,7 +159,7 @@ Status: `completed`
 - `scripts/generate_work_pages.py`
 - new markdown-render helper script
 - `_data/pipeline.json`
-- `docs/scripts-overview.md`
+- [Scripts Overview](/docs/?doc=scripts-overview)
 
 ### Verification
 
@@ -408,7 +408,7 @@ Status: `completed`
 
 - `scripts/generate_work_pages.py`
 - `_layouts/moment.html`
-- `docs/scripts-overview.md`
+- [Scripts Overview](/docs/?doc=scripts-overview)
 - `AGENTS.md` only if workflow expectations materially change
 
 ### Verification
