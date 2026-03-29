@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-29T17:29:51Z",
+  "generated_at": "2026-03-29T17:32:28Z",
   "docs": [
     {
       "doc_id": "css-primitives",
@@ -288,28 +288,6 @@
       "content_url": "/assets/data/docs/by-id/css-refactor.json"
     },
     {
-      "doc_id": "backlog",
-      "title": "Backlog",
-      "last_updated": "",
-      "parent_id": "",
-      "sort_order": null,
-      "source_path": "backlog.md",
-      "legacy_url": "/docs/backlog/",
-      "viewer_url": "/docs/?doc=backlog",
-      "content_url": "/assets/data/docs/by-id/backlog.json"
-    },
-    {
-      "doc_id": "css-audit-latest",
-      "title": "CSS Audit Latest",
-      "last_updated": "",
-      "parent_id": "",
-      "sort_order": null,
-      "source_path": "css-audit-latest.md",
-      "legacy_url": "/docs/css-audit-latest/",
-      "viewer_url": "/docs/?doc=css-audit-latest",
-      "content_url": "/assets/data/docs/by-id/css-audit-latest.json"
-    },
-    {
       "doc_id": "css-audit-spec",
       "title": "CSS Audit Spec (v1)",
       "last_updated": "2026-03-28",
@@ -324,7 +302,7 @@
       "doc_id": "data-flow",
       "title": "Data Flow",
       "last_updated": "2026-03-28",
-      "parent_id": "",
+      "parent_id": "site",
       "sort_order": null,
       "source_path": "site/data-flow.md",
       "legacy_url": "/docs/site/data-flow/",
