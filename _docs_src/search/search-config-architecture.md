@@ -164,16 +164,3 @@ The initial externalised config surface should cover:
 - runtime UI behaviour
 
 Other areas can remain in code until there is a clear need to expose them.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_ui_behaviour.md`
-- `search_build_pipeline.md`
-- `search_validation_checklist.md`

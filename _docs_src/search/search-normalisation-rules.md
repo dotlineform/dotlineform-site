@@ -1,9 +1,9 @@
 ---
-doc_id: search-normalisation-rules
+doc-id: search-normalisation-rules
 title: Search Normalisation Rules
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 50
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 50
 ---
 
 # Search Normalisation Rules
@@ -39,11 +39,11 @@ It should cover:
 
 This document should be read alongside:
 
-- `search_index_schema.md`, which defines the indexed fields
-- `search_field_registry.md`, which defines which fields participate in search
-- `search_ranking_model.md`, which defines how normalised matches are prioritised
-- `search_build_pipeline.md`, which defines where index-time normalisation occurs
-- `search_validation_checklist.md`, which defines how normalisation behaviour should be tested
+- `search-index-schema.md`, which defines the indexed fields
+- `search-field-registry.md`, which defines which fields participate in search
+- `search-ranking-model.md`, which defines how normalised matches are prioritised
+- `search-build-pipeline.md`, which defines where index-time normalisation occurs
+- `search-validation-checklist.md`, which defines how normalisation behaviour should be tested
 
 ## Normalisation principles
 
@@ -178,7 +178,7 @@ Suggested format:
 Describe how source-like fields such as title, year, series titles, medium type, and tag labels are normalised or preserved.
 
 ### Derived fields
-Describe how derived fields such as `search_terms` and `search_text` are built from structured fields.
+Describe how derived fields such as `search-terms` and `search-text` are built from structured fields.
 
 ### Duplicate handling
 Describe whether repeated values are preserved intentionally or removed during index generation.
@@ -210,21 +210,21 @@ Questions:
 - Are title tokens deduplicated?
 - Are number suffixes such as `11` preserved?
 
-### series_ids
+### series-ids
 Series slugs may need expansion from hyphenated to spaced form.
 
 Questions:
 - Is `grey-series` stored as both `grey-series` and `grey series`?
 - Are slug fragments also tokenised separately?
 
-### medium_type
+### medium-type
 Medium labels may be retained as both full phrases and separate tokens.
 
 Questions:
 - Is `digital print` stored as both phrase and tokens?
 - Are generic words like `print` preserved even if common?
 
-### tag_labels / tag_ids
+### tag-labels / tag-ids
 Tags may require alias-aware handling.
 
 Questions:
@@ -256,8 +256,8 @@ This section is important because equivalence decisions strongly affect user exp
 This section should define whether repeated terms are removed during index generation and whether repeated query tokens matter.
 
 Questions to answer:
-- Are duplicate terms removed from `search_terms`?
-- Is `search_text` built from deduplicated inputs or raw concatenation?
+- Are duplicate terms removed from `search-terms`?
+- Is `search-text` built from deduplicated inputs or raw concatenation?
 - Does duplicate presence in a derived field affect matching or ranking?
 - Are duplicate structured values preserved if they come from different sources?
 
@@ -340,15 +340,3 @@ This document should not define:
 - code-level implementation walkthroughs
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_ranking_model.md`
-- `search_build_pipeline.md`
-- `search_validation_checklist.md`

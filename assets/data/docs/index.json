@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-29T19:43:59Z",
+  "generated_at": "2026-03-29T19:55:04Z",
   "docs": [
     {
       "doc_id": "search-archive",
@@ -11,17 +11,6 @@
       "legacy_url": "/docs/search/search-archive/",
       "viewer_url": "/docs/?doc=search-archive",
       "content_url": "/assets/data/docs/by-id/search-archive.json"
-    },
-    {
-      "doc_id": "search-change-log-guidance",
-      "title": "Search Change Log Guidance",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 2,
-      "source_path": "search/search-change-log-guidance.md",
-      "legacy_url": "/docs/search/search-change-log-guidance/",
-      "viewer_url": "/docs/?doc=search-change-log-guidance",
-      "content_url": "/assets/data/docs/by-id/search-change-log-guidance.json"
     },
     {
       "doc_id": "search-change-log",
@@ -77,17 +66,6 @@
       "legacy_url": "/docs/site/pipeline-use-cases/",
       "viewer_url": "/docs/?doc=pipeline-use-cases",
       "content_url": "/assets/data/docs/by-id/pipeline-use-cases.json"
-    },
-    {
-      "doc_id": "search-overview",
-      "title": "Search Overview",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 10,
-      "source_path": "search/search-overview.md",
-      "legacy_url": "/docs/search/search-overview/",
-      "viewer_url": "/docs/?doc=search-overview",
-      "content_url": "/assets/data/docs/by-id/search-overview.json"
     },
     {
       "doc_id": "site",
@@ -233,17 +211,6 @@
       "content_url": "/assets/data/docs/by-id/search.json"
     },
     {
-      "doc_id": "search-field-registry",
-      "title": "Search Field Registry",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 30,
-      "source_path": "search/search-field-registry.md",
-      "legacy_url": "/docs/search/search-field-registry/",
-      "viewer_url": "/docs/?doc=search-field-registry",
-      "content_url": "/assets/data/docs/by-id/search-field-registry.json"
-    },
-    {
       "doc_id": "series-tags",
       "title": "Series Tags",
       "last_updated": "2026-03-28",
@@ -266,17 +233,6 @@
       "content_url": "/assets/data/docs/by-id/tagging.json"
     },
     {
-      "doc_id": "search-ranking-model",
-      "title": "Search Ranking Model",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 40,
-      "source_path": "search/search-ranking-model.md",
-      "legacy_url": "/docs/search/search-ranking-model/",
-      "viewer_url": "/docs/?doc=search-ranking-model",
-      "content_url": "/assets/data/docs/by-id/search-ranking-model.json"
-    },
-    {
       "doc_id": "tag-editor",
       "title": "Tag Editor",
       "last_updated": "2026-03-28",
@@ -286,17 +242,6 @@
       "legacy_url": "/docs/studio/tagging/tag-editor/",
       "viewer_url": "/docs/?doc=tag-editor",
       "content_url": "/assets/data/docs/by-id/tag-editor.json"
-    },
-    {
-      "doc_id": "search-normalisation-rules",
-      "title": "Search Normalisation Rules",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 50,
-      "source_path": "search/search-normalisation-rules.md",
-      "legacy_url": "/docs/search/search-normalisation-rules/",
-      "viewer_url": "/docs/?doc=search-normalisation-rules",
-      "content_url": "/assets/data/docs/by-id/search-normalisation-rules.json"
     },
     {
       "doc_id": "tag-registry",
@@ -310,17 +255,6 @@
       "content_url": "/assets/data/docs/by-id/tag-registry.json"
     },
     {
-      "doc_id": "search-ui-behaviour",
-      "title": "Search UI Behaviour",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 60,
-      "source_path": "search/search-ui-behaviour.md",
-      "legacy_url": "/docs/search/search-ui-behaviour/",
-      "viewer_url": "/docs/?doc=search-ui-behaviour",
-      "content_url": "/assets/data/docs/by-id/search-ui-behaviour.json"
-    },
-    {
       "doc_id": "tag-aliases",
       "title": "Tag Aliases",
       "last_updated": "2026-03-28",
@@ -330,17 +264,6 @@
       "legacy_url": "/docs/studio/tagging/tag-aliases/",
       "viewer_url": "/docs/?doc=tag-aliases",
       "content_url": "/assets/data/docs/by-id/tag-aliases.json"
-    },
-    {
-      "doc_id": "search-build-pipeline",
-      "title": "Search Build Pipeline",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 70,
-      "source_path": "search/search-build-pipeline.md",
-      "legacy_url": "/docs/search/search-build-pipeline/",
-      "viewer_url": "/docs/?doc=search-build-pipeline",
-      "content_url": "/assets/data/docs/by-id/search-build-pipeline.json"
     },
     {
       "doc_id": "tag-groups",
@@ -451,6 +374,83 @@
       "legacy_url": "/docs/studio/tagging/offline-tag-assignments-product-spec/",
       "viewer_url": "/docs/?doc=offline-tag-assignments-product-spec",
       "content_url": "/assets/data/docs/by-id/offline-tag-assignments-product-spec.json"
+    },
+    {
+      "doc_id": "search-build-pipeline",
+      "title": "Search Build Pipeline",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-build-pipeline.md",
+      "legacy_url": "/docs/search/search-build-pipeline/",
+      "viewer_url": "/docs/?doc=search-build-pipeline",
+      "content_url": "/assets/data/docs/by-id/search-build-pipeline.json"
+    },
+    {
+      "doc_id": "search-change-log-guidance",
+      "title": "Search Change Log Guidance",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-change-log-guidance.md",
+      "legacy_url": "/docs/search/search-change-log-guidance/",
+      "viewer_url": "/docs/?doc=search-change-log-guidance",
+      "content_url": "/assets/data/docs/by-id/search-change-log-guidance.json"
+    },
+    {
+      "doc_id": "search-field-registry",
+      "title": "Search Field Registry",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-field-registry.md",
+      "legacy_url": "/docs/search/search-field-registry/",
+      "viewer_url": "/docs/?doc=search-field-registry",
+      "content_url": "/assets/data/docs/by-id/search-field-registry.json"
+    },
+    {
+      "doc_id": "search-normalisation-rules",
+      "title": "Search Normalisation Rules",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-normalisation-rules.md",
+      "legacy_url": "/docs/search/search-normalisation-rules/",
+      "viewer_url": "/docs/?doc=search-normalisation-rules",
+      "content_url": "/assets/data/docs/by-id/search-normalisation-rules.json"
+    },
+    {
+      "doc_id": "search-overview",
+      "title": "Search Overview",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-overview.md",
+      "legacy_url": "/docs/search/search-overview/",
+      "viewer_url": "/docs/?doc=search-overview",
+      "content_url": "/assets/data/docs/by-id/search-overview.json"
+    },
+    {
+      "doc_id": "search-ranking-model",
+      "title": "Search Ranking Model",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-ranking-model.md",
+      "legacy_url": "/docs/search/search-ranking-model/",
+      "viewer_url": "/docs/?doc=search-ranking-model",
+      "content_url": "/assets/data/docs/by-id/search-ranking-model.json"
+    },
+    {
+      "doc_id": "search-ui-behaviour",
+      "title": "Search UI Behaviour",
+      "last_updated": "",
+      "parent_id": "",
+      "sort_order": null,
+      "source_path": "search/search-ui-behaviour.md",
+      "legacy_url": "/docs/search/search-ui-behaviour/",
+      "viewer_url": "/docs/?doc=search-ui-behaviour",
+      "content_url": "/assets/data/docs/by-id/search-ui-behaviour.json"
     }
   ]
 }

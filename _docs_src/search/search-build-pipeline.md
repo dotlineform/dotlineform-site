@@ -1,9 +1,9 @@
 ---
-doc_id: search-build-pipeline
+doc-id: search-build-pipeline
 title: Search Build Pipeline
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 70
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 70
 ---
 
 # Search Build Pipeline
@@ -37,11 +37,11 @@ This document should describe the build process in architectural terms rather th
 
 This document should be read alongside:
 
-- `search_overview.md`, which describes the search subsystem at a high level
-- `search_index_schema.md`, which defines the output structure of the generated index
-- `search_field_registry.md`, which defines how indexed fields participate in search
-- `search_normalisation_rules.md`, which defines how values are transformed during indexing
-- `search_validation_checklist.md`, which defines how the generated index and search behaviour should be checked
+- `search-overview.md`, which describes the search subsystem at a high level
+- `search-index-schema.md`, which defines the output structure of the generated index
+- `search-field-registry.md`, which defines how indexed fields participate in search
+- `search-normalisation-rules.md`, which defines how values are transformed during indexing
+- `search-validation-checklist.md`, which defines how the generated index and search behaviour should be checked
 
 ## Build pipeline principles
 
@@ -180,7 +180,7 @@ Examples:
 - deduplication
 - alias expansion, if applicable
 
-This section should summarise how the pipeline uses the rules described in `search_normalisation_rules.md`.
+This section should summarise how the pipeline uses the rules described in `search-normalisation-rules.md`.
 
 Questions to answer:
 - At what stage are derived fields built?
@@ -299,15 +299,3 @@ This document should not define:
 - line-by-line implementation detail
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_validation_checklist.md`

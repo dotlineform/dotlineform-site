@@ -1,9 +1,9 @@
 ---
-doc_id: search-field-registry
+doc-id: search-field-registry
 title: Search Field Registry
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 30
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 30
 ---
 
 # Search Field Registry
@@ -35,11 +35,11 @@ This document should describe field policy, not low-level matching implementatio
 
 This document should be read as the policy companion to the schema document.
 
-- `search_index_schema.md` defines what fields exist and what they mean
-- `search_field_registry.md` defines how those fields behave in search
-- `search_ranking_model.md` defines how field matches are prioritised
-- `search_normalisation_rules.md` defines how field values are transformed for retrieval
-- `search_ui_behaviour.md` defines how search results are presented to the user
+- `search-index-schema.md` defines what fields exist and what they mean
+- `search-field-registry.md` defines how those fields behave in search
+- `search-ranking-model.md` defines how field matches are prioritised
+- `search-normalisation-rules.md` defines how field values are transformed for retrieval
+- `search-ui-behaviour.md` defines how search results are presented to the user
 
 ## Field registry principles
 
@@ -90,9 +90,9 @@ Fields directly representing meaningful source content or metadata.
 Examples:
 - title
 - year
-- medium_type
-- series_titles
-- tag_labels
+- medium-type
+- series-titles
+- tag-labels
 
 ### Structural
 Fields used to define the record or content type rather than to carry descriptive search content.
@@ -106,8 +106,8 @@ Examples:
 Fields generated during index build to support retrieval.
 
 Examples:
-- search_terms
-- search_text
+- search-terms
+- search-text
 - flattened token arrays
 - normalised composite fields
 
@@ -183,13 +183,13 @@ This section should define which fields are suitable for structured filtering ra
 Examples of fields that may be filterable:
 - kind
 - year
-- series_ids
-- tag_ids
-- medium_type
+- series-ids
+- tag-ids
+- medium-type
 
 Examples of fields that are usually not filterable:
 - title
-- search_text
+- search-text
 - free-form descriptive text
 
 If filters are not yet implemented, this section should still identify which fields are intended to support future filtering.
@@ -200,7 +200,7 @@ This section should define which fields are intended to appear in search results
 
 Examples:
 - title as the primary result label
-- display_meta as secondary text
+- display-meta as secondary text
 - kind as a badge or grouping label
 - preview image as optional visual support
 - matching tags or snippets as optional supporting context
@@ -226,7 +226,7 @@ Typical examples:
 Fields useful for discovery and contextual relevance, but usually weaker than title-like fields.
 
 Typical examples:
-- medium_type
+- medium-type
 - secondary metadata
 - associated series titles
 - selected labels
@@ -266,7 +266,7 @@ Examples:
 - `id` may support exact and prefix matching
 - `title` may support exact phrase, prefix, and token matching
 - `year` may support exact matching only
-- `search_text` may support token or substring matching as fallback only
+- `search-text` may support token or substring matching as fallback only
 
 This document should describe policy, not algorithmic details.
 
@@ -283,8 +283,8 @@ This section should state:
 - whether they preserve or lose field provenance
 
 Examples:
-- `search_terms` may provide flattened token access
-- `search_text` may provide broad fallback matching
+- `search-terms` may provide flattened token access
+- `search-text` may provide broad fallback matching
 - derived fields may be useful for v1 simplicity but may also reduce ranking precision
 
 Codex should document the actual current approach.
@@ -323,15 +323,3 @@ This document should not contain:
 - build-script implementation notes
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_ui_behaviour.md`
-- `search_build_pipeline.md`

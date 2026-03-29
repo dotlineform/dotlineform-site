@@ -233,14 +233,3 @@ This document should not define:
 - build process steps in detail
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_build_pipeline.md`

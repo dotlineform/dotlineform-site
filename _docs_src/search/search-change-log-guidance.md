@@ -1,9 +1,9 @@
 ---
-doc_id: search-change-log-guidance
+doc-id: search-change-log-guidance
 title: Search Change Log Guidance
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 2
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 2
 ---
 
 # Search Change Log
@@ -16,7 +16,7 @@ Its purpose is to provide a concise, structured history of changes to search arc
 
 This is not a diary and not a full technical narrative. Each entry should be brief, factual, and traceable to the relevant search documents.
 
-- keep search_change_log.md as one file;
+- keep search-change-log.md as one file;
 - make entries concise and uniform;
 - when an entry grows beyond, say, a short structured block, move the long reasoning into a dedicated note and link it from the log.
 
@@ -40,15 +40,15 @@ This log should not be used for trivial wording fixes, formatting changes, or ro
 
 This document should be read alongside:
 
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_ui_behaviour.md`
-- `search_build_pipeline.md`
-- `search_validation_checklist.md`
+- `search-overview.md`
+- `search-policy-externalisation.md`
+- `search-index-schema.md`
+- `search-field-registry.md`
+- `search-normalisation-rules.md`
+- `search-ranking-model.md`
+- `search-ui-behaviour.md`
+- `search-build-pipeline.md`
+- `search-validation-checklist.md`
 
 ## Logging principles
 
@@ -210,16 +210,16 @@ Search design can now be reviewed one concern at a time, and implementation can 
 
 #### Affected files/docs:
 
-- search_overview.md
-- search_policy_externalisation.md
-- search_index_schema.md
-- search_field_registry.md
-- search_normalisation_rules.md
-- search_ranking_model.md
-- search_ui_behaviour.md
-- search_build_pipeline.md
-- search_validation_checklist.md
-- search_change_log.md
+- search-overview.md
+- search-policy-externalisation.md
+- search-index-schema.md
+- search-field-registry.md
+- search-normalisation-rules.md
+- search-ranking-model.md
+- search-ui-behaviour.md
+- search-build-pipeline.md
+- search-validation-checklist.md
+- search-change-log.md
 
 #### Notes:
 
@@ -243,10 +243,10 @@ Search policy becomes easier to inspect and refine without reading search-engine
 
 #### Affected files/docs:
 
-- search_policy_externalisation.md
-- search_field_registry.md
-- search_ranking_model.md
-- search_ui_behaviour.md
+- search-config-architecture.md
+- search-field-registry.md
+- search-ranking-model.md
+- search-ui-behaviour.md
 
 #### Notes:
 Tokenisation, matching implementation, rendering, and cache/loading logic remain in code for now.

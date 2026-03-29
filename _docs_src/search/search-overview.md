@@ -1,9 +1,9 @@
 ---
-doc_id: search-overview
+doc-id: search-overview
 title: Search Overview
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 10
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 10
 ---
 
 # Search Overview
@@ -114,14 +114,14 @@ Those details belong in the dedicated documents listed below.
 
 The search subsystem is documented in the following companion files:
 
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ranking_model.md`
-- `search_ui_behaviour.md`
-- `search_build_pipeline.md`
-- `search_validation_checklist.md`
+- `search-config-architecture.md`
+- `search-index-schema.md`
+- `search-field-registry.md`
+- `search-normalisation-rules.md`
+- `search-ranking-model.md`
+- `search-ui-behaviour.md`
+- `search-build-pipeline.md`
+- `search-validation-checklist.md`
 
 ## Current status
 

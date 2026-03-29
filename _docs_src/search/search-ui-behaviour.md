@@ -1,9 +1,9 @@
 ---
-doc_id: search-ui-behaviour
+doc-id: search-ui-behaviour
 title: Search UI Behaviour
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 60
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 60
 ---
 
 # Search UI Behaviour
@@ -38,11 +38,11 @@ This document should define interaction and presentation behaviour, not search e
 
 This document should be read alongside:
 
-- `search_overview.md`, which describes the search subsystem at a high level
-- `search_index_schema.md`, which defines the data available to the UI
-- `search_field_registry.md`, which defines which fields contribute to search and display
-- `search_ranking_model.md`, which defines how results are prioritised
-- `search_validation_checklist.md`, which defines how UI behaviour should be tested
+- `search-overview.md`, which describes the search subsystem at a high level
+- `search-index-schema.md`, which defines the data available to the UI
+- `search-field-registry.md`, which defines which fields contribute to search and display
+- `search-ranking-model.md`, which defines how results are prioritised
+- `search-validation-checklist.md`, which defines how UI behaviour should be tested
 
 ## UI behaviour principles
 
@@ -322,15 +322,3 @@ This document should not define:
 - low-level fetch or cache implementation details
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_ranking_model.md`
-- `search_build_pipeline.md`
-- `search_validation_checklist.md`

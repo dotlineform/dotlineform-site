@@ -1,9 +1,9 @@
 ---
-doc_id: search-ranking-model
+doc-id: search-ranking-model
 title: Search Ranking Model
-last_updated: 2026-03-29
-parent_id: search
-sort_order: 40
+last-updated: 2026-03-29
+parent-id: search
+sort-order: 40
 ---
 
 # Search Ranking Model
@@ -35,11 +35,11 @@ This document should define ranking intent clearly enough that the implemented b
 
 This document should be read alongside:
 
-- `search_index_schema.md`, which defines the available search fields
-- `search_field_registry.md`, which defines which fields are searchable and their importance class
-- `search_normalisation_rules.md`, which defines how values are transformed before matching
-- `search_ui_behaviour.md`, which defines how ranked results are displayed
-- `search_validation_checklist.md`, which defines how ranking behaviour should be tested
+- `search-index-schema.md`, which defines the available search fields
+- `search-field-registry.md`, which defines which fields are searchable and their importance class
+- `search-normalisation-rules.md`, which defines how values are transformed before matching
+- `search-ui-behaviour.md`, which defines how ranked results are displayed
+- `search-validation-checklist.md`, which defines how ranking behaviour should be tested
 
 ## Ranking principles
 
@@ -179,14 +179,14 @@ Typical strong matches:
 Notes:
 Numeric or code-like matches may need careful handling to avoid broad accidental hits.
 
-### series_titles
+### series-titles
 Expected ranking role:
 High-value contextual field, especially for grouped discovery.
 
 Notes:
 Should usually outrank broad descriptive or fallback fields.
 
-### search_text
+### search-text
 Expected ranking role:
 Low-priority fallback field.
 
@@ -216,7 +216,7 @@ If tie-breaking is currently just source order or array order, that should be st
 This section should clarify whether repeated occurrences of a term within a record increase ranking strength.
 
 Examples of questions to answer:
-- does the same term appearing twice in `search_text` increase score?
+- does the same term appearing twice in `search-text` increase score?
 - are duplicated derived terms intentional or accidental?
 - does the system count occurrences or only field-level presence?
 - should repeated matches in fallback fields remain weaker than a single strong title match?
@@ -235,9 +235,9 @@ This section should define:
 - whether field provenance is lost in a way that affects ranking precision
 
 Examples:
-- `search_terms` may be used for broad token recall
-- `search_text` may support substring or fallback matches
-- both may need lower precedence than structured fields such as `title` or `series_titles`
+- `search-terms` may be used for broad token recall
+- `search-text` may support substring or fallback matches
+- both may need lower precedence than structured fields such as `title` or `series-titles`
 
 ## Content-type priority
 
@@ -288,15 +288,3 @@ This document should not define:
 - validation procedure details
 
 Those belong in other search documents.
-
-## Related documents
-
-This document should be read alongside:
-
-- `search_overview.md`
-- `search_policy_externalisation.md`
-- `search_index_schema.md`
-- `search_field_registry.md`
-- `search_normalisation_rules.md`
-- `search_ui_behaviour.md`
-- `search_validation_checklist.md`
