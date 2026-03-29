@@ -1170,6 +1170,11 @@ def render_markdown_report(report: Dict[str, Any], flag_rows: List[Dict[str, str
     return "\n".join(lines).rstrip() + "\n"
 
 
+def prepend_unpublished_front_matter(markdown: str) -> str:
+    body = markdown.lstrip("\n")
+    return f"---\npublished: false\n---\n\n{body}"
+
+
 def main() -> None:
     t0 = time.time()
     ap = argparse.ArgumentParser()
@@ -1368,7 +1373,10 @@ def main() -> None:
 
     md_out = Path(args.md_out).expanduser()
     md_out.parent.mkdir(parents=True, exist_ok=True)
-    md_out.write_text(render_markdown_report(report, flag_rows), encoding="utf-8")
+    markdown_report = render_markdown_report(report, flag_rows)
+    if md_out.name == "audit-latest.md":
+        markdown_report = prepend_unpublished_front_matter(markdown_report)
+    md_out.write_text(markdown_report, encoding="utf-8")
     print(f"Wrote Markdown report: {md_out}")
 
     if args.strict and total_errors > 0:

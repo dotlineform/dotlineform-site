@@ -61,10 +61,12 @@ class DocsDataBuilder
   end
 
   def load_docs
-    Dir.glob(@source_dir.join("**/*.md").to_s).sort.map do |file_path|
+    Dir.glob(@source_dir.join("**/*.md").to_s).sort.filter_map do |file_path|
       path = Pathname(file_path)
       relative_path = path.relative_path_from(@source_dir).to_s
       front_matter, body_markdown = parse_source(path)
+      next if unpublished_doc?(front_matter)
+
       stem = path.basename(".md").to_s
       doc_id = (front_matter["doc_id"] || stem).to_s
       title = (front_matter["title"] || extract_title(body_markdown) || humanize(stem)).to_s
@@ -95,6 +97,15 @@ class DocsDataBuilder
     front_matter = YAML.safe_load(match[1], permitted_classes: [Date, Time], aliases: false) || {}
     body = raw.sub(FRONT_MATTER_PATTERN, "")
     [front_matter, body]
+  end
+
+  def unpublished_doc?(front_matter)
+    return false unless front_matter.key?("published")
+
+    value = front_matter["published"]
+    return !value if value == true || value == false
+
+    %w[false 0 no off].include?(value.to_s.strip.downcase)
   end
 
   def extract_title(markdown)
