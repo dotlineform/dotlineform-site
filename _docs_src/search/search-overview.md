@@ -1,7 +1,7 @@
 ---
 doc_id: search-overview
 title: Search Overview
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 10
 ---
@@ -83,7 +83,7 @@ The client runtime loads the search index, normalizes the loaded values into run
 
 ### 5. Search UI
 
-The Studio page captures the query, exposes a kind filter, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
+The Studio page captures the query, requires an explicit `scope` URL context, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
 
 ## Design principles
 
@@ -142,10 +142,11 @@ Those belong in the dedicated companion documents.
 Current implementation status:
 
 - v1 is implemented as a Studio page at `/studio/search/`
+- the current usable Studio route is `/studio/search/?scope=catalogue`
 - the search index is generated at build time into `assets/data/search_index.json`
 - indexed content types are works, series, and moments
 - ranking is field-aware and deterministic rather than flat
-- the UI currently supports one text query plus a kind filter: `all`, `works`, `series`, `moments`
+- the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
 This is a production-like v1 implementation, but still a Studio-first surface rather than a main-site navigation feature.

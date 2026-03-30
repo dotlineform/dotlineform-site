@@ -22,7 +22,6 @@ studio_page_doc: /docs/?doc=studio-search-v1
       autocomplete="off"
       spellcheck="false"
     >
-    <div class="studioSearch__filters" id="studioSearchFilters" aria-label="Search result filter"></div>
   </div>
 
   <p class="studioSearch__status" id="studioSearchStatus">loading search index…</p>

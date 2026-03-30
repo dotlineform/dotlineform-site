@@ -20,26 +20,31 @@ async function initStudioSearchPage() {
   if (!root) return;
 
   const input = document.getElementById("studioSearchInput");
-  const filters = document.getElementById("studioSearchFilters");
   const status = document.getElementById("studioSearchStatus");
   const results = document.getElementById("studioSearchResults");
   const more = document.getElementById("studioSearchMore");
-  if (!input || !filters || !status || !results || !more) return;
+  if (!input || !status || !results || !more) return;
 
   let config = null;
   try {
     config = await loadStudioConfig();
-    input.setAttribute("aria-label", searchText(config, "search_input_aria_label", "Search works, series, and moments"));
-    input.setAttribute("placeholder", searchText(config, "search_placeholder", "search works, series, moments"));
     status.textContent = searchText(config, "loading", "loading search index…");
+
+    const scope = resolveScope();
+    if (!scope) {
+      showMissingScopeState({ root, input, status, results, more, config });
+      return;
+    }
+
+    applyScopeText({ input, config, scope });
 
     const payload = await loadSiteSearchIndexJson(config);
     const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
     const state = {
       config,
+      scope,
       baseurl: String(root.dataset.baseurl || ""),
       input,
-      filters,
       status,
       results,
       more,
@@ -50,7 +55,6 @@ async function initStudioSearchPage() {
       visibleCount: RESULTS_BATCH_SIZE
     };
     wireEvents(state);
-    renderFilters(state);
     renderResults(state);
     root.hidden = false;
     input.focus();
@@ -62,15 +66,6 @@ async function initStudioSearchPage() {
 }
 
 function wireEvents(state) {
-  state.filters.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-kind]");
-    if (!button) return;
-    state.filterKind = String(button.getAttribute("data-kind") || "all");
-    resetVisibleCount(state);
-    renderFilters(state);
-    renderResults(state);
-  });
-
   state.input.addEventListener("input", () => {
     if (state.debounceId != null) {
       window.clearTimeout(state.debounceId);
@@ -138,23 +133,6 @@ function normalizeEntries(entries) {
       };
     })
     .filter((entry) => entry.kind && entry.id && entry.title && entry.href);
-}
-
-function renderFilters(state) {
-  const kinds = [
-    { id: "all", label: searchText(state.config, "filter_all", "all") },
-    { id: "work", label: searchText(state.config, "filter_work", "works") },
-    { id: "series", label: searchText(state.config, "filter_series", "series") },
-    { id: "moment", label: searchText(state.config, "filter_moment", "moments") }
-  ];
-  state.filters.innerHTML = kinds.map((kind) => `
-    <button
-      type="button"
-      class="studioSearch__filterBtn"
-      data-kind="${escapeHtml(kind.id)}"
-      data-state="${state.filterKind === kind.id ? "active" : ""}"
-    >${escapeHtml(kind.label)}</button>
-  `).join("");
 }
 
 function renderResults(state) {
@@ -274,6 +252,34 @@ function kindLabel(config, kind) {
   if (kind === "series") return searchText(config, "result_kind_series", "series");
   if (kind === "moment") return searchText(config, "result_kind_moment", "moment");
   return kind;
+}
+
+function resolveScope() {
+  const params = new URLSearchParams(window.location.search);
+  const scope = String(params.get("scope") || "").trim().toLowerCase();
+  return scope === "catalogue" ? scope : "";
+}
+
+function applyScopeText({ input, config, scope }) {
+  if (scope === "catalogue") {
+    input.disabled = false;
+    input.setAttribute("aria-label", searchText(config, "search_input_aria_label_catalogue", "Search works, series, and moments"));
+    input.setAttribute("placeholder", searchText(config, "search_placeholder_catalogue", "search works, series, moments"));
+    return;
+  }
+
+  input.disabled = true;
+  input.removeAttribute("placeholder");
+  input.setAttribute("aria-label", searchText(config, "search_input_aria_label_unavailable", "Search unavailable"));
+}
+
+function showMissingScopeState({ root, input, status, results, more, config }) {
+  applyScopeText({ input, config, scope: "" });
+  status.textContent = searchText(config, "missing_scope_error", "Search is unavailable without a valid search scope.");
+  status.dataset.state = "error";
+  results.innerHTML = "";
+  more.innerHTML = "";
+  root.hidden = false;
 }
 
 function searchText(config, key, fallback, tokens) {

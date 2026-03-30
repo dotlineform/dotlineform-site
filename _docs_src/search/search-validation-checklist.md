@@ -1,7 +1,7 @@
 ---
 doc_id: search-validation-checklist
 title: Search Validation Checklist
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 80
 ---
@@ -71,12 +71,11 @@ Suggested current examples:
 
 ## D. UI checks
 
-- [ ] Open `/studio/search/`
+- [ ] Open `/studio/search/?scope=catalogue`
 - [ ] Confirm the page loads and the input is visible
 - [ ] Confirm the loading state clears and the page becomes usable
 - [ ] Confirm live search updates after typing
 - [ ] Confirm Enter triggers immediate search
-- [ ] Confirm the kind filter buttons work: `all`, `works`, `series`, `moments`
 - [ ] Confirm the result count text matches the visible result set
 - [ ] Confirm results render inline below the controls
 - [ ] Confirm result rows show kind, title link, id, and metadata where expected
@@ -84,12 +83,14 @@ Suggested current examples:
 - [ ] Confirm a no-results query returns the empty state
 - [ ] Confirm a large result set shows the `more` control
 - [ ] Confirm `more` reveals the next batch without resetting the query
+- [ ] Open `/studio/search/` without `scope`
+- [ ] Confirm the input is disabled and the page shows the missing-scope message
 
 ## E. Keyboard and accessibility checks
 
 - [ ] Confirm the input receives focus on page load
 - [ ] Confirm the page can be used without a pointer
-- [ ] Confirm filter buttons, result links, and `more` are reachable by Tab
+- [ ] Confirm the input, result links, and `more` are reachable by Tab when `scope=catalogue`
 - [ ] Confirm focus-visible styling is present on interactive controls
 - [ ] Confirm there is no broken keyboard behaviour from unsupported features such as arrow-key navigation or Escape handling
 

@@ -1,7 +1,7 @@
 ---
 doc_id: search-ui-behaviour
 title: Search UI Behaviour
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 60
 ---
@@ -33,6 +33,7 @@ It covers:
 ## Relationship to other documents
 
 - [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract) defines the intended future public `/search/` route and scope-led entry model
 - [Search Index Schema](/docs/?doc=search-index-schema) defines the data available to the UI
 - [Search Field Registry](/docs/?doc=search-field-registry) defines which fields contribute to search and display
 - [Search Ranking Model](/docs/?doc=search-ranking-model) defines result ordering
@@ -48,7 +49,7 @@ Search runs in memory and updates quickly after typing.
 
 ### Predictable
 
-The page always presents one visible query field, one visible kind filter, and one inline results area.
+The page always presents one visible query field and one inline results area when a valid scope is present.
 
 ### Lightweight
 
@@ -56,7 +57,7 @@ The current UI is plain browser UI with no external widget library or autocomple
 
 ### Keyboard-usable
 
-The input, filters, result links, and `more` control are all reachable by keyboard, even though richer list-navigation patterns are not yet implemented.
+The input, result links, and `more` control are all reachable by keyboard, even though richer list-navigation patterns are not yet implemented.
 
 ### Simple first
 
@@ -66,7 +67,7 @@ The v1 Studio surface favors explicit behaviour over more advanced overlay or au
 
 Current entry point:
 
-- dedicated Studio page: `/studio/search/`
+- dedicated Studio page: `/studio/search/?scope=catalogue`
 
 Current status:
 
@@ -78,7 +79,7 @@ Not yet implemented:
 
 - main site header search
 - overlay or dropdown search
-- scoped contextual search by current page context
+- public page-owned search entry points from the main site shell
 
 ## Search activation behaviour
 
@@ -113,9 +114,21 @@ This means v1 supports both live search and explicit confirmation, but does not 
 Current behaviour:
 
 - the page loads the search index during page initialization
+- the page expects a valid `scope` URL parameter before it becomes usable
 - the root remains hidden until the initial search config and search index load attempt completes
 - while the page is loading, the status message is set to `loading search index…`
 - after the index is loaded, it stays in memory for the page session
+
+Current valid scope:
+
+- `catalogue`
+
+If the page loads without a valid scope:
+
+- the page still becomes visible
+- the input is disabled
+- the status area shows a missing-scope message
+- results and `more` are cleared
 
 If loading fails:
 
@@ -129,7 +142,7 @@ The current implementation is eager-load on page entry, not lazy-load on focus.
 
 ### Result container
 
-Results appear inline on the page, below the search input and kind filters.
+Results appear inline on the page, below the search input.
 
 There is no dropdown, overlay, or floating panel in v1.
 
@@ -153,7 +166,7 @@ Instead:
 
 - all matching records are shown in one mixed ranked list
 - each result includes a small kind label
-- the explicit kind filter can restrict the list to one kind
+- there is no visible UI control to restrict the list to one kind
 
 ### Result limits
 
@@ -191,7 +204,7 @@ Results are displayed in the ranked order defined by [Search Ranking Model](/doc
 
 Current behaviour:
 
-- the input and controls remain visible
+- the input remains visible
 - the status line shows `Enter a search query.`
 - the results list is empty
 - the `more` control is hidden
@@ -254,7 +267,6 @@ The current UI does not yet implement roving focus, active-result selection, or 
 
 Current pointer behaviour:
 
-- clicking a kind filter button applies that filter immediately
 - clicking a result link navigates directly to the target page
 - clicking `more` reveals the next batch of results
 
@@ -282,15 +294,15 @@ There is also no blur-driven result dismissal because results are rendered inlin
 
 Current implemented scope control:
 
-- kind filter only: `all`, `works`, `series`, `moments`
+- URL scope only: `scope=catalogue`
 
 Current non-features:
 
-- no page-context scope
+- no visible per-kind filter buttons
 - no “search within current series”
-- no saved or inferred scope from the page URL
+- no hidden fallback scope when the URL context is missing
 
-The kind filter is explicit and visible, and it applies immediately when clicked.
+The current Studio page is usable only when a valid scope is supplied in the URL.
 
 ## Content-type display policy
 
@@ -311,7 +323,6 @@ Current responsive behaviour is simple rather than mode-switched.
 Current properties:
 
 - the page uses a stacked inline layout
-- filters wrap onto multiple lines as needed
 - the search input remains full-width within the page layout
 - the results list remains inline rather than switching to modal or overlay presentation
 
@@ -322,7 +333,7 @@ There is no separate mobile-only search mode in v1.
 Current accessible behaviours:
 
 - the search input has a visually hidden label and configured `aria-label`
-- focus-visible states exist for filter buttons, result links, and the `more` button
+- focus-visible states exist for result links and the `more` button
 - result links are standard anchors
 - keyboard users can reach all current interactive controls through normal tab navigation
 
@@ -339,10 +350,11 @@ Those gaps are acceptable for v1 but should remain visible as future improvement
 Current UI behaviour in practice:
 
 - search lives on one dedicated Studio page
+- the page currently expects `scope=catalogue`
 - the index loads eagerly when the page initializes
 - results update live after a short debounce, and Enter can force immediate search
 - results appear inline below the controls
-- one explicit kind filter is available
+- there is no visible kind filter
 - results are shown in batches of `50` with a `more` control
 - keyboard support is basic tab-and-activate behaviour rather than full result-list navigation
 

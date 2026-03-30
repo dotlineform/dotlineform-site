@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T11:22:25Z",
+  "generated_at": "2026-03-30T14:39:44Z",
   "docs": [
     {
       "doc_id": "search-archive",
@@ -26,7 +26,7 @@
     {
       "doc_id": "search-change-log",
       "title": "Search Change Log",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "search",
       "sort_order": 3,
       "source_path": "search/search-change-log.md",
@@ -92,7 +92,7 @@
     {
       "doc_id": "search-overview",
       "title": "Search Overview",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "search",
       "sort_order": 10,
       "source_path": "search/search-overview.md",
@@ -169,7 +169,7 @@
     {
       "doc_id": "scripts-overview",
       "title": "Scripts Overview",
-      "last_updated": "2026-03-28",
+      "last_updated": "2026-03-30",
       "parent_id": "site",
       "sort_order": 20,
       "source_path": "site/scripts-overview.md",
@@ -213,7 +213,7 @@
     {
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "",
       "sort_order": 20,
       "source_path": "site-change-log.md",
@@ -224,7 +224,7 @@
     {
       "doc_id": "site-shell-runtime",
       "title": "Site Shell Runtime",
-      "last_updated": "2026-03-28",
+      "last_updated": "2026-03-30",
       "parent_id": "site",
       "sort_order": 20,
       "source_path": "site/site-shell-runtime.md",
@@ -268,7 +268,7 @@
     {
       "doc_id": "search",
       "title": "Search",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "",
       "sort_order": 30,
       "source_path": "search/search.md",
@@ -354,9 +354,20 @@
       "content_url": "/assets/data/docs/by-id/tag-registry.json"
     },
     {
+      "doc_id": "search-public-ui-contract",
+      "title": "Search Public UI Contract",
+      "last_updated": "2026-03-30",
+      "parent_id": "search",
+      "sort_order": 55,
+      "source_path": "search/search-public-ui-contract.md",
+      "legacy_url": "/docs/search/search-public-ui-contract/",
+      "viewer_url": "/docs/?doc=search-public-ui-contract",
+      "content_url": "/assets/data/docs/by-id/search-public-ui-contract.json"
+    },
+    {
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "search",
       "sort_order": 60,
       "source_path": "search/search-ui-behaviour.md",
@@ -400,7 +411,7 @@
     {
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-30",
       "parent_id": "search",
       "sort_order": 80,
       "source_path": "search/search-validation-checklist.md",
@@ -510,7 +521,7 @@
     {
       "doc_id": "data-flow",
       "title": "Data Flow",
-      "last_updated": "2026-03-28",
+      "last_updated": "2026-03-30",
       "parent_id": "site",
       "sort_order": null,
       "source_path": "site/data-flow.md",

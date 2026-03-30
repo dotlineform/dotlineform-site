@@ -1,7 +1,7 @@
 ---
 doc_id: search
 title: Search
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: ""
 sort_order: 30
 ---
@@ -15,6 +15,7 @@ This section describes the search planning and implementation.
 ## Documents
 
 - [Overview](/docs/?doc=search-overview) - a concise overview of the site search subsystem.
+- [Public UI Contract](/docs/?doc=search-public-ui-contract) - defines the intended public `/search/` route, `scope`/`q` URL contract, and scope-led entry-point model.
 - [Index Schema](/docs/?doc=search-index-schema) - describes the current search_index.json shape.
 - [Field Registry](/docs/?doc=search-field-registry) - separates “field exists in schema” from “field participates in search and how.”
 - [Ranking Model](/docs/?doc=search-ranking-model) - explain current relevance behaviour separately from schema and field policy.

@@ -1,12 +1,61 @@
 ---
 doc_id: search-change-log
 title: Search Change Log
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 3
 ---
 
 # Search Change Log
+
+## [2026-03-30] Removed visible kind filters from the Studio search page and required scope context
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Updated the current Studio search page so it always searches across all indexed catalogue kinds, no longer exposes the `all` / `works` / `series` / `moments` filter buttons, and requires a valid `scope` URL parameter before the page becomes usable.
+
+**Reason:**  
+The search UI needs to align with the newer scope-led public-search direction before the route moves out of Studio. Exposing per-kind buttons no longer matches that direction, while a required URL scope makes the page behavior closer to the future public contract.
+
+**Effect:**  
+`/studio/search/?scope=catalogue` is now the valid Studio route, the visible filter row is gone, catalogue search remains internally mixed across works, series, and moments, and loading the page without a valid scope now shows a missing-context message instead of an ambiguous fallback search UI.
+
+**Affected files/docs:**  
+- `studio/search/index.md`
+- `assets/studio/js/studio-search.js`
+- `assets/studio/data/studio_config.json`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+
+**Notes:**  
+This change intentionally does not remove the underlying internal support for per-kind filtering from the search runtime; it only removes that granularity from the current UI.
+
+## [2026-03-30] Defined the public search route and scope-led UI contract
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a dedicated public-search contract doc that defines `/search/` as the shared public route, uses `scope` plus `q` as the URL contract, and establishes scope-owned page CTAs as the preferred public entry model.
+
+**Reason:**  
+Search is about to grow beyond the current Studio-first catalogue scope. The public route and UI model needed to be clarified before a larger modular refactor adds domain-specific search artifacts and policy/config.
+
+**Effect:**  
+The search docs now explicitly prefer a scope-led public model such as `/search/?scope=catalogue&q=...`, reserve future scope names such as `studio` and `library`, and avoid an ambiguous top-level public nav item called `search` as the default interaction pattern.
+
+**Affected files/docs:**  
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+- [Search](/docs/?doc=search)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+
+**Notes:**  
+This is a documentation-level contract decision. The public `/search/` route and the modular domain search architecture are not implemented yet.
 
 ## [2026-03-29] Added a concrete staged implementation note for search config extraction
 
