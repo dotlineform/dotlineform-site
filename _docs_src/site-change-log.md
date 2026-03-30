@@ -8,6 +8,29 @@ sort_order: 20
 
 # Site Change Log
 
+## [2026-03-30] Documented when the shared docs viewer runtime should and should not fork
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a dedicated site-architecture note describing the current boundary between scope-specific docs route shells and the shared docs viewer runtime, including concrete examples of changes that should remain shell-level and the kinds of divergence that would justify a runtime fork later.
+
+**Reason:**  
+The docs system now serves both Studio and library scopes through one viewer runtime. The repo needed an explicit guardrail so future scope-specific changes can be evaluated against a stable “do not fork unless the product model changes” rule.
+
+**Effect:**  
+There is now a stable reference for deciding whether a new docs requirement belongs in route-shell composition, scope-owned data, a small shared option, or a true runtime split.
+
+**Affected files/docs:**  
+- [Docs Viewer Runtime Boundary](/docs/?doc=docs-viewer-runtime-boundary)
+- [Site](/docs/?doc=site)
+- [Docs Viewer Builder](/docs/?doc=scripts-docs-builder)
+
+**Notes:**  
+The current recommendation remains to keep one docs viewer runtime and allow route-level shells to diverge as needed.
+
 ## [2026-03-30] Split the scripts reference into a high-level overview and child docs
 
 **Status:** implemented

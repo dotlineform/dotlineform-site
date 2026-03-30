@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T19:01:38Z",
+  "generated_at": "2026-03-30T19:22:29Z",
   "docs": [
     {
       "scope": "studio",
@@ -312,6 +312,18 @@
       "legacy_url": "/docs/site/scripts-copy-draft-media/",
       "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer-runtime-boundary",
+      "title": "Docs Viewer Runtime Boundary",
+      "last_updated": "2026-03-30",
+      "parent_id": "site",
+      "sort_order": 30,
+      "source_path": "site/docs-viewer-runtime-boundary.md",
+      "legacy_url": "/docs/site/docs-viewer-runtime-boundary/",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
     },
     {
       "scope": "studio",
