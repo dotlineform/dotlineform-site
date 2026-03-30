@@ -432,8 +432,7 @@
       "result_meta_separator": " • ",
       "result_kind_work": "work",
       "result_kind_series": "series",
-      "result_kind_moment": "moment",
-      "result_kind_doc": "doc"
+      "result_kind_moment": "moment"
     },
     "tag_groups": {
       "load_failed_error": "Failed to load group descriptions from /assets/studio/data/tag_groups.json.",

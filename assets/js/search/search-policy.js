@@ -19,22 +19,6 @@ const DEFAULT_SEARCH_POLICY = {
       back_route_key: "series_page_base",
       input_aria_label: "Search works, series, and moments",
       input_placeholder: "search works, series, moments"
-    },
-    library: {
-      enabled: false,
-      scope_label: "library",
-      back_label: "← library",
-      back_route_key: "library_page",
-      input_aria_label: "Search library",
-      input_placeholder: "search library"
-    },
-    studio: {
-      enabled: false,
-      scope_label: "studio",
-      back_label: "← studio",
-      back_route_key: "studio_home",
-      input_aria_label: "Search Studio docs",
-      input_placeholder: "search studio docs"
     }
   },
   messages: {

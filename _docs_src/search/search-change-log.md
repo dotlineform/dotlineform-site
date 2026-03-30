@@ -8,6 +8,33 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Removed dormant docs-domain branches from the dedicated `/search/` implementation
+
+**Status:** implemented
+
+**Area:** cleanup
+
+**Summary:**  
+Removed doc-specific labels, scoring branches, and disabled docs-domain scope entries from the dedicated `/search/` runtime and policy so the standalone search page now reflects its actual catalogue-only role.
+
+**Reason:**  
+After Studio and Library search both moved inline into the docs viewer, the dedicated search page no longer needed to carry dormant docs-domain behavior or future-scope fallback entries.
+
+**Effect:**  
+`/search/` now has a simpler catalogue-only runtime contract, the shared search policy only defines the live dedicated-page scope, and stale docs-domain branches no longer need to be reasoned about when changing the standalone search page.
+
+**Affected files/docs:**  
+- `assets/js/search/search-page.js`
+- `assets/js/search/search-policy.js`
+- `assets/data/search/policy.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+
+**Notes:**  
+This does not remove the broader scope vocabulary from the architecture docs. It only removes dormant docs-domain behavior from the dedicated search-page implementation.
+
 ## [2026-03-30] Added inline Library docs search and extended the docs-scope search builder
 
 **Status:** implemented

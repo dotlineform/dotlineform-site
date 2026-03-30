@@ -38,8 +38,9 @@ It is based on:
 
 - a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
 - a dedicated search-owned Studio search artifact: `assets/data/search/studio/index.json`
+- a dedicated search-owned Library search artifact: `assets/data/search/library/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
-- a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio docs search
+- a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
 - an initial search-owned builder entrypoint for future non-catalogue scopes at `scripts/build_search_data.rb`
 
@@ -153,6 +154,7 @@ Current implementation status:
 
 - v1 is implemented as a public page at `/search/`
 - the current dedicated public route is `/search/?scope=catalogue`
+- the dedicated `/search/` runtime and policy are now trimmed to catalogue-only behavior
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
 - a search-owned Studio builder emits `assets/data/search/studio/index.json` from published Studio docs outputs
 - a search-owned Library builder emits `assets/data/search/library/index.json` from published Library docs outputs

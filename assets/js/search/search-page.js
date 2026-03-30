@@ -236,9 +236,6 @@ function scoreEntry(entry, query) {
   const queryTokens = query.split(" ").filter(Boolean);
   if (!queryTokens.length) return null;
   if (!matchesAllTokens(entry, queryTokens)) return null;
-  if (entry.kind === "doc") {
-    return scoreStudioDocEntry(entry, query, queryTokens);
-  }
 
   if (entry.idNorm === query) return 900;
   if (entry.titleNorm === query) return 860;
@@ -250,18 +247,6 @@ function scoreEntry(entry, query) {
   if (entry.mediumTypeNorm && entry.mediumTypeNorm.includes(query)) return 460;
   if (entry.storageNorm && entry.storageNorm.includes(query)) return 440;
   if (entry.seriesTypeNorm && entry.seriesTypeNorm.includes(query)) return 420;
-  if (entry.searchText.includes(query)) return 320;
-  return null;
-}
-
-function scoreStudioDocEntry(entry, query, queryTokens) {
-  if (entry.idNorm === query) return 900;
-  if (entry.titleNorm === query) return 860;
-  if (entry.searchTerms.includes(query)) return 780;
-  if (entry.titleNorm.startsWith(query)) return 720;
-  if (entry.idNorm.startsWith(query)) return 690;
-  if (queryTokens.every((token) => entry.titleTokens.some((candidate) => candidate === token || candidate.startsWith(token)))) return 620;
-  if (entry.parentTitleNorm && entry.parentTitleNorm.includes(query)) return 460;
   if (entry.searchText.includes(query)) return 320;
   return null;
 }
@@ -312,7 +297,6 @@ function kindLabel(config, kind) {
   if (kind === "work") return searchText(config, "result_kind_work", "work");
   if (kind === "series") return searchText(config, "result_kind_series", "series");
   if (kind === "moment") return searchText(config, "result_kind_moment", "moment");
-  if (kind === "doc") return searchText(config, "result_kind_doc", "doc");
   return kind;
 }
 

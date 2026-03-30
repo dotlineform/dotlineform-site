@@ -124,8 +124,7 @@ Current behaviour:
 Current scope policy:
 
 - `catalogue` is enabled
-- `studio` is disabled on the dedicated search page because Studio docs search is now inline on `/docs/`
-- `library` exists as a reserved scope but is currently disabled
+- no docs-domain scopes are configured on the dedicated search page
 
 If the page loads without a valid scope:
 
@@ -133,15 +132,6 @@ If the page loads without a valid scope:
 - the scope-owned back link is hidden
 - the input is disabled
 - the status area shows a missing-scope message
-- results and `more` are cleared
-
-If the page loads with a known but currently disabled scope:
-
-- the page still becomes visible
-- the scope-owned back link is shown
-- the scope label is shown
-- the input is disabled
-- the status area shows an unsupported-scope message
 - results and `more` are cleared
 
 If loading fails:
