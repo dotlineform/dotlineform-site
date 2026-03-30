@@ -31,4 +31,4 @@ section: series
   <div class="studioSearch__more" id="studioSearchMore"></div>
 </div>
 
-<script type="module" src="{{ '/assets/studio/js/studio-search.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/search/search-page.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

@@ -115,6 +115,7 @@ This means v1 supports both live search and explicit confirmation, but does not 
 Current behaviour:
 
 - the page loads the search index during page initialization
+- the page appends a lightweight build-version query to the search module, shared config/data modules, and search JSON fetches to reduce stale-cache breakage after local JS or data changes
 - the page expects a valid `scope` URL parameter before it becomes usable
 - the root remains hidden until the initial search config and search index load attempt completes
 - while the page is loading, the status message is set to `loading search index…`

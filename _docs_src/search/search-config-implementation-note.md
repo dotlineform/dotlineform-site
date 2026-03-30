@@ -1,7 +1,7 @@
 ---
 doc_id: search-config-implementation-note
 title: Search Config Implementation Note
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 101
 ---
@@ -36,7 +36,7 @@ Current search configuration is split like this:
   - route path
   - search data path
   - search UI text
-- `assets/studio/js/studio-search.js`
+- `assets/js/search/search-page.js`
   - debounce timing
   - results batch size
   - filter list and order
@@ -87,7 +87,7 @@ This is the right first cut because it removes the clearest hardcoded search pol
 
 Create:
 
-- `assets/studio/data/search_policy.json`
+- `assets/data/search/policy.json`
 
 Recommended initial payload:
 
@@ -132,7 +132,7 @@ Recommended addition:
   "paths": {
     "data": {
       "studio": {
-        "search_policy": "/assets/studio/data/search_policy.json"
+        "search_policy": "/assets/data/search/policy.json"
       }
     }
   }
@@ -147,7 +147,7 @@ Do not grow `assets/studio/js/studio-config.js` into the full owner of search po
 
 Instead, add one search-specific loader module:
 
-- `assets/studio/js/studio-search-policy.js`
+- `assets/js/search/search-policy.js`
 
 Recommended responsibilities:
 
@@ -197,9 +197,9 @@ export function getSearchRuntimePolicy(policy) { /* ... */ }
 export function getSearchFilterKinds(policy) { /* ... */ }
 ```
 
-The helpers should return already-sanitized values so `studio-search.js` can stay simple.
+The helpers should return already-sanitized values so `search-page.js` can stay simple.
 
-## Recommended `studio-search.js` changes
+## Recommended `search-page.js` changes
 
 Phase 1 should be a mechanical refactor of the current runtime.
 
@@ -261,7 +261,7 @@ Recommended behavior:
 
 Codex-run checks:
 
-- `node --check assets/studio/js/studio-search.js`
+- `node --check assets/js/search/search-page.js`
 - `node --check assets/studio/js/studio-search-policy.js`
 - `./scripts/build_docs_data.rb --write` if docs change
 - `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
@@ -342,7 +342,7 @@ At that point, split policy by responsibility if needed:
 
 Possible later split:
 
-- `assets/studio/data/search_policy.json`
+- `assets/data/search/policy.json`
   - runtime-facing and shared policy
 - `_data/search_build_policy.json`
   or another generator-owned location

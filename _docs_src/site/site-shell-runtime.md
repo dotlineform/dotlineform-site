@@ -57,6 +57,24 @@ Reason:
 
 This split is for maintainability and code organization. It is not primarily a Jekyll build-time optimization.
 
+## Shared Asset Versioning
+
+The shared default-layout CSS and shell JS currently append a lightweight build-version query token derived from `site.time`.
+
+Current versioned shell assets:
+
+- `assets/css/main.css`
+- `assets/js/site-nav.js`
+- `assets/js/theme-toggle.js`
+
+Reason:
+
+- reduces stale-cache breakage after local JS or CSS changes
+- keeps cache-busting simple without introducing a separate fingerprinting pipeline
+- aligns the public shell with the search page’s build-version asset loading
+
+This is intentionally a minimal static-site mechanism, not a content-hash asset pipeline.
+
 ## Navigation Rendering
 
 Primary nav items in `_layouts/default.html` are rendered through `_includes/nav_item.html`.

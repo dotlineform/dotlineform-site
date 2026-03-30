@@ -792,7 +792,7 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
-    ap.add_argument("--search-index-json-path", default="assets/data/search_index.json", help="Output path for generated search index JSON")
+    ap.add_argument("--search-index-json-path", default="assets/data/search/catalogue/index.json", help="Output path for generated catalogue search index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")

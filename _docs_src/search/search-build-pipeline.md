@@ -1,7 +1,7 @@
 ---
 doc_id: search-build-pipeline
 title: Search Build Pipeline
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 70
 ---
@@ -20,7 +20,7 @@ This is a build-time document. It is not the ranking or UI document.
 
 This document applies to the current process that generates:
 
-- `assets/data/search_index.json`
+- `assets/data/search/catalogue/index.json`
 
 It covers:
 
@@ -74,7 +74,7 @@ The current build path is:
 4. if search generation is enabled, derive search records from those in-memory payloads plus tag metadata
 5. sort and assemble the flat search entry list
 6. compute a version hash and header metadata
-7. write `assets/data/search_index.json` if the content version changed or `--force` is used
+7. write `assets/data/search/catalogue/index.json` if the content version changed or `--force` is used
 
 Search generation is therefore not a completely separate script today. It is a dedicated artifact stage inside the broader content generator.
 
@@ -241,7 +241,7 @@ Tag ids and tag labels are currently serialized structurally, but they are not p
 
 Current output:
 
-- one file: `assets/data/search_index.json`
+- one file: `assets/data/search/catalogue/index.json`
 
 Current top-level structure:
 
@@ -322,7 +322,7 @@ Current future-scaling direction:
 
 - keep the base artifact focused on compact metadata
 - add future structured fields carefully
-- use later partitioning or shards for prose-heavy search rather than bloating `search_index.json`
+- use later partitioning or shards for prose-heavy search rather than bloating the `catalogue/index.json` payload
 
 ## Current implementation summary
 
@@ -332,7 +332,7 @@ Current build behaviour in practice:
 - search reads workbook-derived content plus tag registry and tag assignment data
 - records are assembled for works, series, and moments
 - normalization and token derivation happen at build time
-- the output is one flat generated artifact at `assets/data/search_index.json`
+- the output is one flat generated artifact at `assets/data/search/catalogue/index.json`
 - write-skipping uses a content-derived version hash rather than file timestamps alone
 - validation is currently light and pragmatic rather than strict
 

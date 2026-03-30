@@ -36,7 +36,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Run `python scripts/generate_work_pages.py --only search-index-json`
 - [ ] Confirm the dry run completes without error
 - [ ] Run `python scripts/generate_work_pages.py --only search-index-json --write`
-- [ ] Confirm `assets/data/search_index.json` is updated or correctly skipped by version check
+- [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
 - [ ] Confirm the header contains `schema`, `version`, `generated_at_utc`, and `count`
 - [ ] Confirm the entry count is plausible for current works, series, and moments coverage

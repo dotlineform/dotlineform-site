@@ -1,7 +1,4 @@
-import {
-  getSiteDataPath,
-  getStudioDataPath
-} from "./studio-config.js";
+let studioConfigModulePromise = null;
 
 export async function fetchJson(url, options = {}) {
   const cache = String(options.cache || "default");
@@ -13,31 +10,38 @@ export async function fetchJson(url, options = {}) {
 }
 
 export async function loadStudioRegistryJson(config, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, "tag_registry"), options);
 }
 
 export async function loadStudioAliasesJson(config, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, "tag_aliases"), options);
 }
 
 export async function loadStudioAssignmentsJson(config, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, "tag_assignments"), { cache: "no-store", ...(options || {}) });
 }
 
 export async function loadStudioGroupsJson(config, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
   return fetchJson(getStudioDataPath(config, "tag_groups"), options);
 }
 
 export async function loadSiteSeriesIndexJson(config, options) {
+  const { getSiteDataPath } = await loadStudioConfigModule();
   return fetchJson(getSiteDataPath(config, "series_index"), options);
 }
 
 export async function loadSiteWorksIndexJson(config, options) {
+  const { getSiteDataPath } = await loadStudioConfigModule();
   return fetchJson(getSiteDataPath(config, "works_index"), options);
 }
 
-export async function loadSiteSearchIndexJson(config, options) {
-  return fetchJson(getSiteDataPath(config, "search_index"), options);
+export async function loadSearchIndexJson(config, scope, options) {
+  const { getSearchScopeDataPath } = await loadStudioConfigModule();
+  return fetchJson(getSearchScopeDataPath(config, scope, "index"), options);
 }
 
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {
@@ -160,4 +164,33 @@ function sanitizeGroupSet(studioGroups) {
     ? studioGroups.map((group) => normalizeStudioValue(group)).filter(Boolean)
     : [];
   return groups.length ? new Set(groups) : null;
+}
+
+async function loadStudioConfigModule() {
+  if (!studioConfigModulePromise) {
+    const url = new URL("./studio-config.js", import.meta.url);
+    const assetVersion = readAssetVersion(import.meta.url);
+    if (assetVersion) {
+      url.searchParams.set("v", assetVersion);
+    }
+    studioConfigModulePromise = import(url.href);
+  }
+  return studioConfigModulePromise;
+}
+
+function readAssetVersion(importUrl = "") {
+  try {
+    const importVersion = new URL(importUrl).searchParams.get("v");
+    if (importVersion) return importVersion;
+  } catch (_error) {
+    // Ignore malformed import URLs and continue to DOM-based lookup.
+  }
+
+  if (typeof document !== "undefined") {
+    const meta = document.querySelector('meta[name="dlf-asset-version"]');
+    const value = meta ? String(meta.getAttribute("content") || "").trim() : "";
+    if (value) return value;
+  }
+
+  return "";
 }

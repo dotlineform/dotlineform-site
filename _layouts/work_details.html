@@ -114,7 +114,7 @@ layout: default
   </nav>
 </article>
 
-<script src="{{ '/assets/js/swipe-nav.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/swipe-nav.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   (function () {
     var root = document.getElementById('detailPageRoot');
@@ -376,4 +376,4 @@ layout: default
     });
   })();
 </script>
-<script src="{{ '/assets/js/work.js' | relative_url }}"></script>
+<script src="{{ '/assets/js/work.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

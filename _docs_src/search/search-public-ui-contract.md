@@ -18,7 +18,7 @@ This is a contract-and-behaviour document. It does not define ranking rules, ind
 
 ## Why this document exists now
 
-Search now has a public route at `/search/` and is still built around one flat search surface backed by `assets/data/search_index.json`.
+Search now has a public route at `/search/` and is still built around one current scope-backed search surface, with `catalogue` backed by `assets/data/search/catalogue/index.json`.
 
 That implementation is sufficient for the current indexed content, but the route/state contract still needs to stay explicit as:
 

@@ -8,6 +8,63 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Added build-version cache busting to the public search runtime and data fetches
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a lightweight build-version query token to the public search module URL, the search page’s shared module imports, and the config/data fetch URLs used by the current `catalogue` scope.
+
+**Reason:**  
+The recent public-route and module-path changes exposed stale browser-cache failures during local review. Search needed a small cache-busting mechanism before further scope expansion.
+
+**Effect:**  
+`/search/?scope=catalogue` now reloads the renamed search runtime and its scope-owned JSON data more reliably after rebuilds, without introducing a separate asset fingerprint pipeline.
+
+**Affected files/docs:**  
+- `search/index.md`
+- `assets/js/search/search-page.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/studio-data.js`
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+
+**Notes:**  
+This is a pragmatic build-version layer for the current static-site workflow. It does not change search ranking, scope rules, or index schema.
+
+## [2026-03-30] Renamed the public search module and moved the catalogue search index into a scoped data path
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Renamed the public search runtime module from the Studio-owned `assets/studio/js/studio-search.js` path to `assets/js/search/search-page.js`, and moved the current catalogue search artifact from `assets/data/search_index.json` to `assets/data/search/catalogue/index.json`.
+
+**Reason:**  
+The public search runtime is no longer a Studio page concern, and the search data contract needs to scale from one catalogue index to multiple scope-owned artifacts such as `catalogue`, `library`, and `studio`.
+
+**Effect:**  
+The search page now loads a top-level public search module, the current `catalogue` scope reads from a scope-owned JSON path, the config structure now supports search data paths by scope, and the generator default output path for the catalogue search artifact matches that new structure.
+
+**Affected files/docs:**  
+- `assets/js/search/search-page.js`
+- `assets/studio/js/studio-data.js`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/data/studio_config.json`
+- `assets/data/search/catalogue/index.json`
+- `scripts/generate_work_pages.py`
+- `search/index.md`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Index Schema](/docs/?doc=search-index-schema)
+- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
+- [Search Config Architecture](/docs/?doc=search-config-architecture)
+
+**Notes:**  
+This change introduces the scoped search-data convention now, before additional scopes are implemented. The current runtime still only accepts `scope=catalogue`.
+
 ## [2026-03-30] Replaced the public search heading with a scope-driven back link
 
 **Status:** implemented

@@ -24,8 +24,20 @@ const DEFAULT_STUDIO_CONFIG = {
       },
       site: {
         series_index: "/assets/data/series_index.json",
-        works_index: "/assets/data/works_index.json",
-        search_index: "/assets/data/search_index.json"
+        works_index: "/assets/data/works_index.json"
+      },
+      search: {
+        scopes: {
+          catalogue: {
+            index: "/assets/data/search/catalogue/index.json"
+          },
+          library: {
+            index: "/assets/data/search/library/index.json"
+          },
+          studio: {
+            index: "/assets/data/search/studio/index.json"
+          }
+        }
       }
     }
   },
@@ -170,7 +182,6 @@ const DEFAULT_STUDIO_CONFIG = {
   }
 };
 
-const CONFIG_URL = new URL("../data/studio_config.json", import.meta.url);
 const SITE_BASE_PATH = deriveSiteBasePath(import.meta.url);
 let studioConfigPromise = null;
 
@@ -180,7 +191,7 @@ export {
 
 export async function loadStudioConfig() {
   if (!studioConfigPromise) {
-    studioConfigPromise = fetch(CONFIG_URL, { cache: "default" })
+    studioConfigPromise = fetch(buildAssetUrl(new URL("../data/studio_config.json", import.meta.url).href), { cache: "default" })
       .then((response) => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         return response.json();
@@ -206,12 +217,29 @@ export function getStudioCoverageGroups(config) {
 
 export function getStudioDataPath(config, key) {
   const path = pathValue(config, ["paths", "data", "studio", key]);
-  return resolveSitePath(typeof path === "string" ? path : "");
+  return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
 export function getSiteDataPath(config, key) {
   const path = pathValue(config, ["paths", "data", "site", key]);
-  return resolveSitePath(typeof path === "string" ? path : "");
+  return resolveSiteAssetPath(typeof path === "string" ? path : "");
+}
+
+export function getSearchScopeDataPath(config, scope, key = "index") {
+  const normalizedScope = normalize(scope);
+  const path = pathValue(config, ["paths", "data", "search", "scopes", normalizedScope, key]);
+  if (typeof path === "string" && path.trim()) {
+    return resolveSiteAssetPath(path);
+  }
+
+  if (normalizedScope === "catalogue") {
+    const legacyPath = pathValue(config, ["paths", "data", "site", "search_index"]);
+    if (typeof legacyPath === "string" && legacyPath.trim()) {
+      return resolveSiteAssetPath(legacyPath);
+    }
+  }
+
+  return "";
 }
 
 export function getStudioRoute(config, key) {
@@ -340,6 +368,39 @@ function resolveSitePath(path) {
   if (/^[a-z]+:\/\//i.test(path)) return path;
   const cleanPath = `/${String(path).replace(/^\/+/, "")}`;
   return `${SITE_BASE_PATH}${cleanPath}`.replace(/\/{2,}/g, "/");
+}
+
+function resolveSiteAssetPath(path) {
+  return buildAssetUrl(resolveSitePath(path));
+}
+
+function buildAssetUrl(path) {
+  const resolvedPath = String(path || "");
+  if (!resolvedPath) return "";
+
+  const assetVersion = readAssetVersion(import.meta.url);
+  if (!assetVersion) return resolvedPath;
+
+  const [base, hash = ""] = resolvedPath.split("#", 2);
+  const separator = base.includes("?") ? "&" : "?";
+  return `${base}${separator}v=${encodeURIComponent(assetVersion)}${hash ? `#${hash}` : ""}`;
+}
+
+function readAssetVersion(importUrl = "") {
+  try {
+    const importVersion = new URL(importUrl).searchParams.get("v");
+    if (importVersion) return importVersion;
+  } catch (_error) {
+    // Ignore malformed import URLs and continue to DOM-based lookup.
+  }
+
+  if (typeof document !== "undefined") {
+    const meta = document.querySelector('meta[name="dlf-asset-version"]');
+    const value = meta ? String(meta.getAttribute("content") || "").trim() : "";
+    if (value) return value;
+  }
+
+  return "";
 }
 
 function pathValue(obj, keys) {

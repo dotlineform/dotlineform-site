@@ -1,21 +1,17 @@
-import {
-  getStudioText,
-  loadStudioConfig
-} from "./studio-config.js";
-import {
-  loadSiteSearchIndexJson
-} from "./studio-data.js";
-
 const RESULTS_BATCH_SIZE = 50;
 const SEARCH_DEBOUNCE_MS = 140;
+let getStudioTextFn = (_config, _key, fallback = "") => fallback;
+let loadStudioConfigFn = null;
+let loadSearchIndexJsonFn = null;
+let searchDepsPromise = null;
 
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initStudioSearchPage);
+  document.addEventListener("DOMContentLoaded", initSearchPage);
 } else {
-  initStudioSearchPage();
+  initSearchPage();
 }
 
-async function initStudioSearchPage() {
+async function initSearchPage() {
   const root = document.getElementById("studioSearchRoot");
   if (!root) return;
 
@@ -29,7 +25,8 @@ async function initStudioSearchPage() {
 
   let config = null;
   try {
-    config = await loadStudioConfig();
+    await loadSearchDeps();
+    config = await loadStudioConfigFn();
     status.textContent = searchText(config, "loading", "loading search index…");
 
     const scope = resolveScope();
@@ -40,7 +37,7 @@ async function initStudioSearchPage() {
 
     applyScopeText({ backLink, scopeLabel, input, config, scope });
 
-    const payload = await loadSiteSearchIndexJson(config);
+    const payload = await loadSearchIndexJsonFn(config, scope);
     const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
     const state = {
       config,
@@ -65,6 +62,21 @@ async function initStudioSearchPage() {
     status.textContent = searchText(config, "load_failed_error", "Failed to load search data.");
     status.dataset.state = "error";
   }
+}
+
+async function loadSearchDeps() {
+  if (!searchDepsPromise) {
+    const assetVersion = readAssetVersion(import.meta.url);
+    searchDepsPromise = Promise.all([
+      import(withAssetVersion("../../studio/js/studio-config.js", assetVersion)),
+      import(withAssetVersion("../../studio/js/studio-data.js", assetVersion))
+    ]).then(([configModule, dataModule]) => {
+      getStudioTextFn = configModule.getStudioText;
+      loadStudioConfigFn = configModule.loadStudioConfig;
+      loadSearchIndexJsonFn = dataModule.loadSearchIndexJson;
+    });
+  }
+  return searchDepsPromise;
 }
 
 function wireEvents(state) {
@@ -337,7 +349,32 @@ function routePath(config, key, fallback) {
 }
 
 function searchText(config, key, fallback, tokens) {
-  return getStudioText(config, `search.${key}`, fallback, tokens);
+  return getStudioTextFn(config, `search.${key}`, fallback, tokens);
+}
+
+function withAssetVersion(path, assetVersion) {
+  const url = new URL(path, import.meta.url);
+  if (assetVersion) {
+    url.searchParams.set("v", assetVersion);
+  }
+  return url.href;
+}
+
+function readAssetVersion(importUrl = "") {
+  try {
+    const importVersion = new URL(importUrl).searchParams.get("v");
+    if (importVersion) return importVersion;
+  } catch (_error) {
+    // Ignore malformed import URLs and continue to DOM-based lookup.
+  }
+
+  if (typeof document !== "undefined") {
+    const meta = document.querySelector('meta[name="dlf-asset-version"]');
+    const value = meta ? String(meta.getAttribute("content") || "").trim() : "";
+    if (value) return value;
+  }
+
+  return "";
 }
 
 function normalize(value) {

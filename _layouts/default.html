@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  {%- assign asset_version = site.time | date: "%s" -%}
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title and page.title != site.title %}{{ page.title }} | {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
@@ -8,6 +9,7 @@
   {% if page.description %}
   <meta name="description" content="{{ page.description | escape }}">
   {% endif %}
+  <meta name="dlf-asset-version" content="{{ asset_version }}">
 
   <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ '/favicon-32x32.png' | relative_url }}">
@@ -27,7 +29,7 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ asset_version }}">
 </head>
 <body class="{{ page.section | default: page.collection | default: 'page' }}">
   <header class="site-header">
@@ -101,7 +103,7 @@
     </div>
   </footer>
 
-  <script src="{{ '/assets/js/site-nav.js' | relative_url }}"></script>
-  <script src="{{ '/assets/js/theme-toggle.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/site-nav.js' | relative_url }}?v={{ asset_version }}"></script>
+  <script src="{{ '/assets/js/theme-toggle.js' | relative_url }}?v={{ asset_version }}"></script>
 </body>
 </html>

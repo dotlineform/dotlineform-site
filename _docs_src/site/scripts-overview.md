@@ -278,7 +278,7 @@ Useful flags:
   - default is taken from `DOTLINEFORM_MEDIA_BASE_DIR`
   - `work-files` stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` (default `assets/data/series_index.json`)
-- `--search-index-json-path` (default `assets/data/search_index.json`)
+- `--search-index-json-path` (default `assets/data/search/catalogue/index.json`)
   - writes a flat search artifact spanning works, series, and moments
   - used first by `/search/?scope=catalogue`
   - rebuilt on every pipeline run as a full index and not scoped by `--work-ids`, `--series-ids`, or `--moment-ids`
@@ -323,7 +323,7 @@ Useful flags:
     - runtime thumb paths are derived from `work_id`, so no media/thumb payload is persisted here
     - rebuilding this index alone does not probe work source images; it uses the current workbook metadata
     - always rebuilt as a full index (not scoped by `--work-ids`)
-  - `search-index-json`: writes `assets/data/search_index.json` as a flat array of search entries
+  - `search-index-json`: writes `assets/data/search/catalogue/index.json` as a flat array of catalogue search entries
     - entries span `work`, `series`, and `moment`
     - each entry includes canonical `id`, title, route href, compact display metadata, and build-time normalized `search_terms` / `search_text`
     - work entries also include compact metadata such as `series_titles`, `medium_type`, and `storage`
@@ -346,7 +346,7 @@ Runtime canonical data flow:
 - `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav/counter/link visibility also read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
-- `/search/` reads `assets/data/search_index.json`.
+- `/search/` reads `assets/data/search/catalogue/index.json`.
 
 ### 3a) Delete a single work from generated artifacts
 

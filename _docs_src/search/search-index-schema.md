@@ -1,7 +1,7 @@
 ---
 doc_id: search-index-schema
 title: Search Index Schema
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 20
 ---
@@ -12,7 +12,7 @@ sort_order: 20
 
 This document defines the current data contract for the generated search index used by site search.
 
-It describes the actual serialized shape of `assets/data/search_index.json`, the meaning of each field, and the difference between structured fields and derived search-support fields.
+It describes the actual serialized shape of `assets/data/search/catalogue/index.json`, the meaning of each field, and the difference between structured fields and derived search-support fields.
 
 This is a schema document. It does not define ranking, UI behaviour, or detailed build flow.
 
@@ -20,7 +20,7 @@ This is a schema document. It does not define ranking, UI behaviour, or detailed
 
 This document applies to the current base search artifact:
 
-- `assets/data/search_index.json`
+- `assets/data/search/catalogue/index.json`
 
 It covers:
 

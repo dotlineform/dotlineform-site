@@ -1,7 +1,7 @@
 ---
 doc_id: search-config-architecture
 title: Search Config Architecture
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 100
 ---
@@ -32,14 +32,14 @@ Current v1 search has three different policy surfaces:
   - `assets/studio/data/studio_config.json`
   - current search use is limited to paths/routes and UI text strings
 - **implementation code**
-  - `assets/studio/js/studio-search.js`
+  - `assets/js/search/search-page.js`
   - `scripts/generate_work_pages.py`
 
 Current practical split:
 
 - configurable now:
   - search route
-  - search data path
+  - search data paths by scope
   - search UI copy
 - not yet configurable:
   - field participation rules
@@ -56,7 +56,7 @@ This is worth addressing early because search is already past the “one experim
 Current facts:
 
 - search has its own artifact
-- search has its own Studio surface
+- search has its own public surface
 - search now has a dedicated document set
 - future expansion will add more fields, more ranking pressure, and likely prose shards
 
@@ -112,11 +112,11 @@ Reason:
 
 Recommended new file:
 
-- `assets/studio/data/search_policy.json`
+- `assets/data/search/policy.json`
 
 Reason for this location:
 
-- it is already in a public JSON area used by the Studio runtime
+- it is already in a public JSON area used by the public search runtime
 - it can be read by browser code directly
 - it can also be read by Python at build time
 - it keeps search policy separate from generic Studio shell config
@@ -258,7 +258,7 @@ Good build-time config candidates:
 
 Used by:
 
-- `assets/studio/js/studio-search.js`
+- `assets/js/search/search-page.js`
 
 Good runtime config candidates:
 

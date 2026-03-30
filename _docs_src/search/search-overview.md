@@ -32,8 +32,8 @@ The current implementation is a public search surface at `/search/`.
 
 It is based on:
 
-- a dedicated build-time-generated search artifact: `assets/data/search_index.json`
-- an in-house client-side search runtime in `assets/studio/js/studio-search.js`
+- a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
+- an in-house client-side search runtime in `assets/js/search/search-page.js`
 - no third-party search libraries, plugins, or external search services
 
 The browser loads the base search index once for the page session and searches it in memory.
@@ -65,7 +65,7 @@ Canonical site data for works, series, moments, and available tag metadata acts 
 
 ### 2. Search index generation
 
-`scripts/generate_work_pages.py` builds a dedicated `search_index.json` artifact at build time. Search owns this artifact separately from `works_index.json`, `series_index.json`, and `moments_index.json`.
+`scripts/generate_work_pages.py` builds a dedicated catalogue search artifact at build time. Search owns this artifact separately from `works_index.json`, `series_index.json`, and `moments_index.json`.
 
 ### 3. Search policy
 
@@ -113,7 +113,7 @@ Search remains part of the existing static build pipeline and browser runtime. I
 
 This document does not define:
 
-- the full `search_index.json` field schema
+- the full catalogue search index field schema
 - normalization rules or token-preparation logic
 - ranking tiers or scoring details
 - UI event timing and pagination details
@@ -143,7 +143,7 @@ Current implementation status:
 
 - v1 is implemented as a public page at `/search/`
 - the current usable public route is `/search/?scope=catalogue`
-- the search index is generated at build time into `assets/data/search_index.json`
+- the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
 - indexed content types are works, series, and moments
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons

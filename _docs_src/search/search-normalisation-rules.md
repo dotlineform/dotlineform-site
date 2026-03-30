@@ -1,7 +1,7 @@
 ---
 doc_id: search-normalisation-rules
 title: Search Normalisation Rules
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: search
 sort_order: 50
 ---
@@ -21,7 +21,7 @@ This is a normalization-policy document. It is not the schema, ranking, or UI do
 This document applies to two related processes:
 
 - index-time normalization in `scripts/generate_work_pages.py`
-- query-time normalization in `assets/studio/js/studio-search.js`
+- query-time normalization in `assets/js/search/search-page.js`
 
 It covers:
 

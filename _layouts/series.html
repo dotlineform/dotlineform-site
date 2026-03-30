@@ -52,7 +52,7 @@ layout: default
     </nav>
   </div>
 
-  <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/swipe-nav.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   <script>
     (function () {
       var grid = document.getElementById('seriesGrid');

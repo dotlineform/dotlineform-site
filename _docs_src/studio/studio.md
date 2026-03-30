@@ -102,7 +102,7 @@ bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 - Tag write service: `scripts/studio/tag_write_server.py`
 - Data contracts:
   - `assets/studio/data/studio_config.json`
-  - `assets/data/search_index.json`
+  - `assets/data/search/catalogue/index.json`
   - `assets/studio/data/tag_registry.json`
   - `assets/studio/data/tag_aliases.json`
   - `assets/studio/data/tag_assignments.json`
@@ -128,7 +128,10 @@ Current config scope:
 - `paths.data.site`
   - `series_index`
   - `works_index`
-  - `search_index`
+- `paths.data.search.scopes`
+  - `catalogue.index`
+  - reserved `library.index`
+  - reserved `studio.index`
 - `paths.routes`
   - `search`
   - `series_tag_editor`

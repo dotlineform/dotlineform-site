@@ -8,6 +8,35 @@ sort_order: 20
 
 # Site Change Log
 
+## [2026-03-30] Added lightweight build-version cache busting to shared shell assets
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a lightweight build-version query token to shared shell CSS and JS asset URLs, using the current build timestamp rather than a separate fingerprint pipeline.
+
+**Reason:**  
+Local review was vulnerable to stale browser caches after JS/CSS renames or runtime changes, especially while the public search surface was moving and being renamed.
+
+**Effect:**  
+Shared shell assets now reload more reliably after a rebuild, the default layout publishes the current asset version in page metadata, and the search runtime can align its own module/data cache busting with that same build token.
+
+**Affected files/docs:**  
+- `_layouts/default.html`
+- `_layouts/work.html`
+- `_layouts/work_details.html`
+- `_layouts/series.html`
+- `_layouts/moment.html`
+- `search/index.md`
+- `assets/js/search/search-page.js`
+- `assets/studio/js/studio-config.js`
+- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+
+**Notes:**  
+This is a pragmatic cache-busting layer for the current static setup. It is not a full hashed-asset pipeline.
+
 ## [2026-03-30] Merged moments browsing into the works catalogue
 
 **Status:** implemented

@@ -24,8 +24,20 @@
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
-        "works_index": "/assets/data/works_index.json",
-        "search_index": "/assets/data/search_index.json"
+        "works_index": "/assets/data/works_index.json"
+      },
+      "search": {
+        "scopes": {
+          "catalogue": {
+            "index": "/assets/data/search/catalogue/index.json"
+          },
+          "library": {
+            "index": "/assets/data/search/library/index.json"
+          },
+          "studio": {
+            "index": "/assets/data/search/studio/index.json"
+          }
+        }
       }
     }
   },
