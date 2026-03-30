@@ -1,8 +1,11 @@
-const RESULTS_BATCH_SIZE = 50;
-const SEARCH_DEBOUNCE_MS = 140;
 let getStudioTextFn = (_config, _key, fallback = "") => fallback;
+let getSearchPolicyPathFn = () => "";
 let loadStudioConfigFn = null;
 let loadSearchIndexJsonFn = null;
+let loadSearchPolicyFn = null;
+let getSearchRuntimePolicyFn = null;
+let getSearchScopePolicyFn = null;
+let getSearchMessageFn = null;
 let searchDepsPromise = null;
 
 if (document.readyState === "loading") {
@@ -24,24 +27,41 @@ async function initSearchPage() {
   if (!input || !status || !results || !more) return;
 
   let config = null;
+  let policy = null;
+
   try {
     await loadSearchDeps();
     config = await loadStudioConfigFn();
     status.textContent = searchText(config, "loading", "loading search index…");
+    policy = await loadSearchPolicyFn(getSearchPolicyPathFn(config));
 
     const scope = resolveScope();
     if (!scope) {
-      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, config });
+      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy });
       return;
     }
 
-    applyScopeText({ backLink, scopeLabel, input, config, scope });
+    const scopePolicy = getSearchScopePolicyFn(policy, scope);
+    if (!scopePolicy) {
+      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy });
+      return;
+    }
+
+    const runtimePolicy = getSearchRuntimePolicyFn(policy);
+    applyScopeText({ backLink, scopeLabel, input, config, scopePolicy, inputEnabled: scopePolicy.enabled });
+
+    if (!scopePolicy.enabled) {
+      showUnsupportedScopeState({ root, status, results, more, policy });
+      return;
+    }
 
     const payload = await loadSearchIndexJsonFn(config, scope);
     const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
     const state = {
       config,
       scope,
+      scopePolicy,
+      runtimePolicy,
       baseurl: String(root.dataset.baseurl || ""),
       input,
       status,
@@ -51,7 +71,7 @@ async function initSearchPage() {
       filterKind: "all",
       queryText: "",
       debounceId: null,
-      visibleCount: RESULTS_BATCH_SIZE
+      visibleCount: runtimePolicy.initialBatchSize
     };
     wireEvents(state);
     renderResults(state);
@@ -69,11 +89,17 @@ async function loadSearchDeps() {
     const assetVersion = readAssetVersion(import.meta.url);
     searchDepsPromise = Promise.all([
       import(withAssetVersion("../../studio/js/studio-config.js", assetVersion)),
-      import(withAssetVersion("../../studio/js/studio-data.js", assetVersion))
-    ]).then(([configModule, dataModule]) => {
+      import(withAssetVersion("../../studio/js/studio-data.js", assetVersion)),
+      import(withAssetVersion("./search-policy.js", assetVersion))
+    ]).then(([configModule, dataModule, policyModule]) => {
       getStudioTextFn = configModule.getStudioText;
+      getSearchPolicyPathFn = configModule.getSearchPolicyPath;
       loadStudioConfigFn = configModule.loadStudioConfig;
       loadSearchIndexJsonFn = dataModule.loadSearchIndexJson;
+      loadSearchPolicyFn = policyModule.loadSearchPolicy;
+      getSearchRuntimePolicyFn = policyModule.getSearchRuntimePolicy;
+      getSearchScopePolicyFn = policyModule.getSearchScopePolicy;
+      getSearchMessageFn = policyModule.getSearchMessage;
     });
   }
   return searchDepsPromise;
@@ -81,19 +107,21 @@ async function loadSearchDeps() {
 
 function wireEvents(state) {
   state.input.addEventListener("input", () => {
+    state.queryText = String(state.input.value || "");
+    if (!state.runtimePolicy.liveSearch) return;
+
     if (state.debounceId != null) {
       window.clearTimeout(state.debounceId);
     }
     state.debounceId = window.setTimeout(() => {
       state.debounceId = null;
-      state.queryText = String(state.input.value || "");
       resetVisibleCount(state);
       renderResults(state);
-    }, SEARCH_DEBOUNCE_MS);
+    }, state.runtimePolicy.debounceMs);
   });
 
   state.input.addEventListener("keydown", (event) => {
-    if (event.key !== "Enter") return;
+    if (event.key !== "Enter" || !state.runtimePolicy.enterRunsSearch) return;
     if (state.debounceId != null) {
       window.clearTimeout(state.debounceId);
       state.debounceId = null;
@@ -106,7 +134,7 @@ function wireEvents(state) {
   state.more.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-role='more']");
     if (!button) return;
-    state.visibleCount += RESULTS_BATCH_SIZE;
+    state.visibleCount += state.runtimePolicy.batchIncrementSize;
     renderResults(state);
   });
 }
@@ -153,7 +181,7 @@ function renderResults(state) {
   const query = normalize(String(state.queryText || state.input.value || ""));
   state.queryText = query;
 
-  if (!query) {
+  if (!query || query.length < state.runtimePolicy.minQueryLength) {
     state.status.dataset.state = "";
     state.status.textContent = searchText(state.config, "prompt", "Enter a search query.");
     state.results.innerHTML = "";
@@ -250,7 +278,7 @@ function renderEntry(state, entry) {
 }
 
 function resetVisibleCount(state) {
-  state.visibleCount = RESULTS_BATCH_SIZE;
+  state.visibleCount = state.runtimePolicy.initialBatchSize;
 }
 
 function withBaseUrl(baseurl, href) {
@@ -270,17 +298,15 @@ function kindLabel(config, kind) {
 
 function resolveScope() {
   const params = new URLSearchParams(window.location.search);
-  const scope = String(params.get("scope") || "").trim().toLowerCase();
-  return scope === "catalogue" ? scope : "";
+  return normalize(String(params.get("scope") || ""));
 }
 
-function applyScopeText({ backLink, scopeLabel, input, config, scope }) {
-  const scopeMeta = resolveScopeMeta(config, scope);
+function applyScopeText({ backLink, scopeLabel, input, config, scopePolicy, inputEnabled }) {
   if (backLink) {
-    if (scopeMeta) {
+    if (scopePolicy && scopePolicy.backLabel && scopePolicy.backRouteKey) {
       backLink.hidden = false;
-      backLink.textContent = scopeMeta.backLabel;
-      backLink.setAttribute("href", withBaseUrl("", scopeMeta.backHref));
+      backLink.textContent = scopePolicy.backLabel;
+      backLink.setAttribute("href", routePath(config, scopePolicy.backRouteKey, "/"));
       backLink.removeAttribute("aria-disabled");
       backLink.tabIndex = 0;
     } else {
@@ -292,52 +318,39 @@ function applyScopeText({ backLink, scopeLabel, input, config, scope }) {
   }
 
   if (scopeLabel) {
-    scopeLabel.textContent = scope === "catalogue"
-      ? searchText(config, "scope_catalogue_label", "catalogue")
-      : searchText(config, "scope_unavailable_label", "scope unavailable");
+    scopeLabel.textContent = scopePolicy ? scopePolicy.scopeLabel : "scope unavailable";
   }
 
-  if (scope === "catalogue") {
-    input.disabled = false;
-    input.setAttribute("aria-label", searchText(config, "search_input_aria_label_catalogue", "Search works, series, and moments"));
-    input.setAttribute("placeholder", searchText(config, "search_placeholder_catalogue", "search works, series, moments"));
+  input.disabled = !inputEnabled;
+  if (scopePolicy) {
+    input.setAttribute("aria-label", scopePolicy.inputAriaLabel);
+    if (inputEnabled && scopePolicy.inputPlaceholder) {
+      input.setAttribute("placeholder", scopePolicy.inputPlaceholder);
+    } else {
+      input.removeAttribute("placeholder");
+    }
     return;
   }
 
-  input.disabled = true;
   input.removeAttribute("placeholder");
-  input.setAttribute("aria-label", searchText(config, "search_input_aria_label_unavailable", "Search unavailable"));
+  input.setAttribute("aria-label", "Search unavailable");
 }
 
-function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, config }) {
-  applyScopeText({ backLink, scopeLabel, input, config, scope: "" });
-  status.textContent = searchText(config, "missing_scope_error", "Search is unavailable without a valid search scope.");
+function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy }) {
+  applyScopeText({ backLink, scopeLabel, input, config: null, scopePolicy: null, inputEnabled: false });
+  status.textContent = searchMessage(policy, "missing_scope_error", "Search is unavailable without a valid search scope.");
   status.dataset.state = "error";
   results.innerHTML = "";
   more.innerHTML = "";
   root.hidden = false;
 }
 
-function resolveScopeMeta(config, scope) {
-  if (scope === "catalogue") {
-    return {
-      backLabel: searchText(config, "back_link_catalogue_label", "← works"),
-      backHref: routePath(config, "series_page_base", "/series/")
-    };
-  }
-  if (scope === "library") {
-    return {
-      backLabel: searchText(config, "back_link_library_label", "← library"),
-      backHref: routePath(config, "library_page", "/library/")
-    };
-  }
-  if (scope === "studio") {
-    return {
-      backLabel: searchText(config, "back_link_studio_label", "← studio"),
-      backHref: routePath(config, "studio_home", "/studio/")
-    };
-  }
-  return null;
+function showUnsupportedScopeState({ root, status, results, more, policy }) {
+  status.textContent = searchMessage(policy, "unsupported_scope_error", "Search is not yet available for this scope.");
+  status.dataset.state = "error";
+  results.innerHTML = "";
+  more.innerHTML = "";
+  root.hidden = false;
 }
 
 function routePath(config, key, fallback) {
@@ -350,6 +363,10 @@ function routePath(config, key, fallback) {
 
 function searchText(config, key, fallback, tokens) {
   return getStudioTextFn(config, `search.${key}`, fallback, tokens);
+}
+
+function searchMessage(policy, key, fallback) {
+  return getSearchMessageFn ? getSearchMessageFn(policy, key, fallback) : fallback;
 }
 
 function withAssetVersion(path, assetVersion) {

@@ -33,46 +33,50 @@ Related docs:
 Current search configuration is split like this:
 
 - `assets/studio/data/studio_config.json`
-  - route path
-  - search data path
-  - search UI text
+  - route paths
+  - scope-owned search index paths
+  - search policy path
 - `assets/js/search/search-page.js`
-  - debounce timing
-  - results batch size
-  - filter list and order
-  - live-search behaviour
-  - Enter-to-search behaviour
+  - policy consumption
   - ranking logic
+- `assets/js/search/search-policy.js`
+  - default runtime shell policy
+  - policy loading and sanitization
+  - scope-policy lookup
 - `scripts/generate_work_pages.py`
-  - build-time search entry generation and normalization
+  - build-time catalogue search entry generation and normalization
 
-This means the obvious runtime search-policy knobs are still embedded in JavaScript.
+This means the search route contract is already scope-led and the public runtime shell now reads scope-aware UI behavior from a dedicated policy artifact.
 
-## First implementation step
+## Phase 1 status
 
-The first step should externalize runtime search UI policy only.
+Phase 1 is now implemented.
 
-That means:
+It does this:
 
-- move stable runtime knobs into a dedicated JSON file
-- keep ranking bands in code
-- keep field participation rules in code/docs
-- keep build-time generator policy out of this first phase
+- moves stable runtime shell knobs into a dedicated JSON file
+- moves scope-owned UI copy and enablement into that same file
+- keeps ranking bands in code
+- keeps field participation rules in code/docs
+- keeps build-time generator policy out of this phase
 
-This is the right first cut because it removes the clearest hardcoded search policy without forcing a premature config model for ranking or indexing.
+This was the right first cut because it makes the `/search/` shell properly scope-native before `scope=studio` is implemented, without forcing a premature config model for ranking or indexing.
 
 ## Phase 1 scope
 
 ### In scope
 
-- live-search enabled/disabled
-- Enter runs search enabled/disabled
+- live-search enabled or disabled
+- Enter-runs-search enabled or disabled
 - minimum query length
 - debounce timing
 - initial results batch size
 - load-more batch increment size
-- enabled kind filters
-- filter display order
+- scope enablement
+- scope label
+- scope-owned back-link label and route-key mapping
+- scope-owned input aria label and placeholder
+- missing-scope and unsupported-scope messages
 
 ### Out of scope
 
@@ -82,6 +86,7 @@ This is the right first cut because it removes the clearest hardcoded search pol
 - build-time inclusion policy
 - shard definitions
 - prose search policy
+- result-kind filters, because the public UI no longer exposes them
 
 ## Proposed file shape
 
@@ -89,12 +94,12 @@ Create:
 
 - `assets/data/search/policy.json`
 
-Recommended initial payload:
+Implemented payload shape:
 
 ```json
 {
   "search_policy_version": "search_policy_v1",
-  "updated_at_utc": "2026-03-29T00:00:00Z",
+  "updated_at_utc": "2026-03-30T00:00:00Z",
   "runtime": {
     "live_search": true,
     "enter_runs_search": true,
@@ -105,43 +110,60 @@ Recommended initial payload:
       "batch_increment_size": 50
     }
   },
-  "filters": {
-    "kind_order": ["all", "work", "series", "moment"],
-    "enabled": {
-      "all": true,
-      "work": true,
-      "series": true,
-      "moment": true
+  "scopes": {
+    "catalogue": {
+      "enabled": true,
+      "scope_label": "catalogue",
+      "back_label": "← works",
+      "back_route_key": "series_page_base",
+      "input_aria_label": "Search works, series, and moments",
+      "input_placeholder": "search works, series, moments"
+    },
+    "studio": {
+      "enabled": false,
+      "scope_label": "studio",
+      "back_label": "← studio",
+      "back_route_key": "studio_home",
+      "input_aria_label": "Search Studio docs",
+      "input_placeholder": "search studio docs"
+    },
+    "library": {
+      "enabled": false,
+      "scope_label": "library",
+      "back_label": "← library",
+      "back_route_key": "library_page",
+      "input_aria_label": "Search library",
+      "input_placeholder": "search library"
     }
+  },
+  "messages": {
+    "missing_scope_error": "Search is unavailable without a valid search scope.",
+    "unsupported_scope_error": "Search is not yet available for this scope."
   }
 }
 ```
 
-## How the runtime should find it
+## Runtime lookup
 
 Keep `studio_config.json` narrow, but let it continue to own Studio data paths.
 
-Add one path in:
-
-- `assets/studio/data/studio_config.json`
-
-Recommended addition:
+Implemented path in `assets/studio/data/studio_config.json`:
 
 ```json
 {
   "paths": {
     "data": {
-      "studio": {
-        "search_policy": "/assets/data/search/policy.json"
+      "search": {
+        "policy": "/assets/data/search/policy.json"
       }
     }
   }
 }
 ```
 
-This keeps the generic Studio shell config small while still giving the search page a normal config-based lookup path.
+This keeps the shared shell config small while still giving the search page a normal config-based lookup path.
 
-## Proposed code ownership
+## Code ownership
 
 Do not grow `assets/studio/js/studio-config.js` into the full owner of search policy.
 
@@ -163,7 +185,7 @@ Recommended non-responsibilities:
 - DOM rendering
 - search result scoring
 
-## Recommended runtime module shape
+## Runtime module shape
 
 Suggested module outline:
 
@@ -181,94 +203,82 @@ const DEFAULT_SEARCH_POLICY = {
       batch_increment_size: 50
     }
   },
-  filters: {
-    kind_order: ["all", "work", "series", "moment"],
-    enabled: {
-      all: true,
-      work: true,
-      series: true,
-      moment: true
-    }
-  }
+  scopes: { /* ... */ },
+  messages: { /* ... */ }
 };
 
-export async function loadSearchPolicy(studioConfig) { /* ... */ }
+export async function loadSearchPolicy(policyUrl) { /* ... */ }
 export function getSearchRuntimePolicy(policy) { /* ... */ }
-export function getSearchFilterKinds(policy) { /* ... */ }
+export function getSearchScopePolicy(policy, scope) { /* ... */ }
 ```
 
 The helpers should return already-sanitized values so `search-page.js` can stay simple.
 
-## Recommended `search-page.js` changes
-
-Phase 1 should be a mechanical refactor of the current runtime.
-
-### Replace hardcoded constants
-
-Remove direct ownership of:
-
-- `RESULTS_BATCH_SIZE`
-- `SEARCH_DEBOUNCE_MS`
-
-### Load policy after Studio config
+## `search-page.js` after phase 1
 
 Current flow:
 
 1. load Studio config
-2. load search index
-3. initialize page state
-
-Recommended flow:
-
-1. load Studio config
 2. load search policy
-3. load search index
-4. initialize page state
+3. resolve scope from the URL
+4. validate the scope against policy
+5. load the scope-owned index only when the scope is known and enabled
+6. initialize page state
 
-### Derive page state from policy
+Current state includes:
 
-State should include:
-
-- `policy`
+- `runtimePolicy`
+- `scopePolicy`
 - `visibleCount` from `runtime.results.initial_batch_size`
-- active filter list from `filters.kind_order` and `filters.enabled`
 
-### Gate input behavior from policy
-
-Recommended behavior mapping:
+Current behavior mapping:
 
 - if `runtime.live_search` is `true`, input events run debounced search
 - if `runtime.live_search` is `false`, input events do not trigger search
 - if `runtime.enter_runs_search` is `true`, Enter runs immediate search
 - if `runtime.enter_runs_search` is `false`, Enter does nothing special
 
-### Enforce minimum query length
+## Minimum query length
 
-Recommended v1 behavior:
+Current behavior:
 
 - if normalized query length is below `min_query_length`, show the standard prompt state and do not search
 
 That keeps the runtime rule simple and visible.
 
-### Use policy-driven batching
+## Policy-driven batching
 
-Recommended behavior:
+Current behavior:
 
 - initial render count from `initial_batch_size`
 - each `more` click increments by `batch_increment_size`
+
+## Scope validation before data load
+
+Current behavior:
+
+- if no `scope` query is present, show the missing-scope state
+- if the `scope` is unknown to policy, show the missing-scope state
+- if the `scope` is known but `enabled: false`, show the unsupported-scope state
+- only fetch a scope-owned index when the scope is both known and enabled
+
+This prevents `scope=studio` from becoming a special case in code before the Studio search artifact exists.
 
 ## Validation for phase 1
 
 Codex-run checks:
 
 - `node --check assets/js/search/search-page.js`
-- `node --check assets/studio/js/studio-search-policy.js`
+- `node --check assets/js/search/search-policy.js`
 - `./scripts/build_docs_data.rb --write` if docs change
 - `bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
 
 Manual checks:
 
 - `/search/?scope=catalogue` still loads correctly
+- `/search/?scope=studio` shows a clear unsupported-scope state without trying to load a Studio index
+- `/search/?scope=library` shows a clear unsupported-scope state without trying to load a library index
+- `/search/` still shows a clear missing-scope state
 - typing still gives live results with the configured debounce
 - Enter still triggers immediate search when enabled
 - `more` still reveals the next result batch
@@ -376,6 +386,6 @@ These should come only when the relevant feature is real enough to justify a mac
 
 ## Recommendation
 
-Implement phase 1 now.
+Keep phase 1 stable while `scope=studio` is introduced.
 
-Do not implement phases 2 to 5 until phase 1 is in use and stable enough to show which policy surfaces actually need to be tuned as data.
+Do not implement phases 2 to 5 until the first non-catalogue scope is live enough to show which policy surfaces actually need to be tuned as data.

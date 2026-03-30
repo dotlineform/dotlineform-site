@@ -27,7 +27,7 @@ It covers:
 - visible UI states
 - result presentation
 - keyboard and pointer interaction
-- current filter behaviour
+- current scope handling
 - responsive and accessibility observations relevant to v1
 
 ## Relationship to other documents
@@ -90,14 +90,14 @@ The current page supports live in-memory search plus explicit Enter submission.
 
 Current behaviour:
 
-- there is no minimum query length threshold beyond “query must not be empty”
+- the current minimum normalized query length is policy-driven and currently set to `1`
 - an empty normalized query shows the no-query prompt state instead of results
 
 ### Debounce behaviour
 
 Current behaviour:
 
-- typing triggers a debounce of `140ms`
+- typing triggers a policy-driven debounce which is currently `140ms`
 - when the debounce completes, the current query is searched and results are re-rendered
 
 ### Immediate versus submitted search
@@ -121,9 +121,11 @@ Current behaviour:
 - while the page is loading, the status message is set to `loading search index…`
 - after the index is loaded, it stays in memory for the page session
 
-Current valid scope:
+Current scope policy:
 
-- `catalogue`
+- `catalogue` is enabled
+- `studio` exists as a reserved scope but is currently disabled
+- `library` exists as a reserved scope but is currently disabled
 
 If the page loads without a valid scope:
 
@@ -131,6 +133,15 @@ If the page loads without a valid scope:
 - the scope-owned back link is hidden
 - the input is disabled
 - the status area shows a missing-scope message
+- results and `more` are cleared
+
+If the page loads with a known but currently disabled scope:
+
+- the page still becomes visible
+- the scope-owned back link is shown
+- the scope label is shown
+- the input is disabled
+- the status area shows an unsupported-scope message
 - results and `more` are cleared
 
 If loading fails:
@@ -175,9 +186,9 @@ Instead:
 
 Current behaviour:
 
-- the page renders the first `50` results initially
+- the page renders the first policy-defined batch of results, currently `50`
 - if more matches exist, a `more` control appears beneath the list
-- activating `more` reveals the next batch of `50`
+- activating `more` reveals the next policy-defined batch, currently `50`
 
 This is incremental list expansion, not paged navigation.
 

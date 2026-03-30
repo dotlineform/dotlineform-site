@@ -1,0 +1,44 @@
+{
+  "search_policy_version": "search_policy_v1",
+  "updated_at_utc": "2026-03-30T00:00:00Z",
+  "runtime": {
+    "live_search": true,
+    "enter_runs_search": true,
+    "min_query_length": 1,
+    "debounce_ms": 140,
+    "results": {
+      "initial_batch_size": 50,
+      "batch_increment_size": 50
+    }
+  },
+  "scopes": {
+    "catalogue": {
+      "enabled": true,
+      "scope_label": "catalogue",
+      "back_label": "← works",
+      "back_route_key": "series_page_base",
+      "input_aria_label": "Search works, series, and moments",
+      "input_placeholder": "search works, series, moments"
+    },
+    "library": {
+      "enabled": false,
+      "scope_label": "library",
+      "back_label": "← library",
+      "back_route_key": "library_page",
+      "input_aria_label": "Search library",
+      "input_placeholder": "search library"
+    },
+    "studio": {
+      "enabled": false,
+      "scope_label": "studio",
+      "back_label": "← studio",
+      "back_route_key": "studio_home",
+      "input_aria_label": "Search Studio docs",
+      "input_placeholder": "search studio docs"
+    }
+  },
+  "messages": {
+    "missing_scope_error": "Search is unavailable without a valid search scope.",
+    "unsupported_scope_error": "Search is not yet available for this scope."
+  }
+}

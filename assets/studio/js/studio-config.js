@@ -27,6 +27,7 @@ const DEFAULT_STUDIO_CONFIG = {
         works_index: "/assets/data/works_index.json"
       },
       search: {
+        policy: "/assets/data/search/policy.json",
         scopes: {
           catalogue: {
             index: "/assets/data/search/catalogue/index.json"
@@ -161,12 +162,6 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     search: {
       load_failed_error: "Failed to load search data.",
-      search_input_aria_label: "Search works, series, and moments",
-      search_placeholder: "search works, series, moments",
-      filter_all: "all",
-      filter_work: "works",
-      filter_series: "series",
-      filter_moment: "moments",
       loading: "loading search index…",
       prompt: "Enter a search query.",
       no_results: "No results.",
@@ -240,6 +235,11 @@ export function getSearchScopeDataPath(config, scope, key = "index") {
   }
 
   return "";
+}
+
+export function getSearchPolicyPath(config) {
+  const path = pathValue(config, ["paths", "data", "search", "policy"]);
+  return resolveSiteAssetPath(typeof path === "string" ? path : "");
 }
 
 export function getStudioRoute(config, key) {

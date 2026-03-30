@@ -8,6 +8,33 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Added a scope-aware runtime policy layer for the public search shell
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added a dedicated runtime search-policy artifact, pointed shared config at it, and refactored the public search page to validate `scope` against policy before loading any scope-owned index.
+
+**Reason:**  
+The public search route already uses explicit `scope`, but the runtime still hardcoded `catalogue` and several shell-level behavior values. That needed to be corrected before `scope=studio` is added so the shared `/search/` page becomes properly scope-native first.
+
+**Effect:**  
+`/search/?scope=catalogue` still works as before, but the shell now reads debounce, batching, scope labels, back-link routing, and scope enablement from `assets/data/search/policy.json`. `studio` and `library` now resolve to explicit unsupported-scope states instead of falling through to a broken fetch, and missing-scope behavior is now part of the same policy-led shell contract.
+
+**Affected files/docs:**  
+- `assets/data/search/policy.json`
+- `assets/js/search/search-policy.js`
+- `assets/js/search/search-page.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+
+**Notes:**  
+This phase does not add a Studio search index yet. Ranking logic and build-time entry generation remain in code.
+
 ## [2026-03-30] Added build-version cache busting to the public search runtime and data fetches
 
 **Status:** implemented

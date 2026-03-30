@@ -27,6 +27,7 @@
         "works_index": "/assets/data/works_index.json"
       },
       "search": {
+        "policy": "/assets/data/search/policy.json",
         "scopes": {
           "catalogue": {
             "index": "/assets/data/search/catalogue/index.json"
@@ -420,15 +421,6 @@
     },
     "search": {
       "load_failed_error": "Failed to load search data.",
-      "back_link_catalogue_label": "← works",
-      "back_link_library_label": "← library",
-      "back_link_studio_label": "← studio",
-      "scope_catalogue_label": "catalogue",
-      "scope_unavailable_label": "scope unavailable",
-      "search_input_aria_label_catalogue": "Search works, series, and moments",
-      "search_placeholder_catalogue": "search works, series, moments",
-      "search_input_aria_label_unavailable": "Search unavailable",
-      "missing_scope_error": "Search is unavailable without a valid search scope.",
       "loading": "loading search index…",
       "prompt": "Enter a search query.",
       "no_results": "No results.",
