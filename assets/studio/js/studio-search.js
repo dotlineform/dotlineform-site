@@ -19,6 +19,7 @@ async function initStudioSearchPage() {
   const root = document.getElementById("studioSearchRoot");
   if (!root) return;
 
+  const backLink = document.getElementById("studioSearchBackLink");
   const scopeLabel = document.getElementById("studioSearchScope");
   const input = document.getElementById("studioSearchInput");
   const status = document.getElementById("studioSearchStatus");
@@ -33,11 +34,11 @@ async function initStudioSearchPage() {
 
     const scope = resolveScope();
     if (!scope) {
-      showMissingScopeState({ root, scopeLabel, input, status, results, more, config });
+      showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, config });
       return;
     }
 
-    applyScopeText({ scopeLabel, input, config, scope });
+    applyScopeText({ backLink, scopeLabel, input, config, scope });
 
     const payload = await loadSiteSearchIndexJson(config);
     const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
@@ -261,7 +262,23 @@ function resolveScope() {
   return scope === "catalogue" ? scope : "";
 }
 
-function applyScopeText({ scopeLabel, input, config, scope }) {
+function applyScopeText({ backLink, scopeLabel, input, config, scope }) {
+  const scopeMeta = resolveScopeMeta(config, scope);
+  if (backLink) {
+    if (scopeMeta) {
+      backLink.hidden = false;
+      backLink.textContent = scopeMeta.backLabel;
+      backLink.setAttribute("href", withBaseUrl("", scopeMeta.backHref));
+      backLink.removeAttribute("aria-disabled");
+      backLink.tabIndex = 0;
+    } else {
+      backLink.hidden = true;
+      backLink.removeAttribute("href");
+      backLink.setAttribute("aria-disabled", "true");
+      backLink.tabIndex = -1;
+    }
+  }
+
   if (scopeLabel) {
     scopeLabel.textContent = scope === "catalogue"
       ? searchText(config, "scope_catalogue_label", "catalogue")
@@ -280,13 +297,43 @@ function applyScopeText({ scopeLabel, input, config, scope }) {
   input.setAttribute("aria-label", searchText(config, "search_input_aria_label_unavailable", "Search unavailable"));
 }
 
-function showMissingScopeState({ root, scopeLabel, input, status, results, more, config }) {
-  applyScopeText({ scopeLabel, input, config, scope: "" });
+function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, config }) {
+  applyScopeText({ backLink, scopeLabel, input, config, scope: "" });
   status.textContent = searchText(config, "missing_scope_error", "Search is unavailable without a valid search scope.");
   status.dataset.state = "error";
   results.innerHTML = "";
   more.innerHTML = "";
   root.hidden = false;
+}
+
+function resolveScopeMeta(config, scope) {
+  if (scope === "catalogue") {
+    return {
+      backLabel: searchText(config, "back_link_catalogue_label", "← works"),
+      backHref: routePath(config, "series_page_base", "/series/")
+    };
+  }
+  if (scope === "library") {
+    return {
+      backLabel: searchText(config, "back_link_library_label", "← library"),
+      backHref: routePath(config, "library_page", "/library/")
+    };
+  }
+  if (scope === "studio") {
+    return {
+      backLabel: searchText(config, "back_link_studio_label", "← studio"),
+      backHref: routePath(config, "studio_home", "/studio/")
+    };
+  }
+  return null;
+}
+
+function routePath(config, key, fallback) {
+  const routes = config && config.paths && config.paths.routes && typeof config.paths.routes === "object"
+    ? config.paths.routes
+    : null;
+  const value = routes && typeof routes[key] === "string" ? routes[key].trim() : "";
+  return value || fallback;
 }
 
 function searchText(config, key, fallback, tokens) {

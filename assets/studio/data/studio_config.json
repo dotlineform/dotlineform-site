@@ -11,6 +11,7 @@
       "tag_aliases": "/studio/tag-aliases/",
       "tag_groups": "/studio/tag-groups/",
       "series_page_base": "/series/",
+      "library_page": "/library/",
       "works_page_base": "/works/",
       "site_map": "/site_map/"
     },
@@ -407,6 +408,9 @@
     },
     "search": {
       "load_failed_error": "Failed to load search data.",
+      "back_link_catalogue_label": "← works",
+      "back_link_library_label": "← library",
+      "back_link_studio_label": "← studio",
       "scope_catalogue_label": "catalogue",
       "scope_unavailable_label": "scope unavailable",
       "search_input_aria_label_catalogue": "Search works, series, and moments",

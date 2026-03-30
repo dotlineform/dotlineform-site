@@ -340,10 +340,27 @@ th{ background: var(--panel-2); }
   gap: 0.75rem;
 }
 
-.studioSearch__heading{
+.studioSearch__backLink{
   margin: 0;
-  font-size: inherit;
-  font-weight: 400;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.studioSearch__backLink:hover{
+  color: var(--link-hover);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.studioSearch__backLink:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.studioSearch__backLink[hidden]{
+  display: none;
 }
 
 .studioSearch__scope{

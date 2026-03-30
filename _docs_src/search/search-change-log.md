@@ -8,6 +8,32 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Replaced the public search heading with a scope-driven back link
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Replaced the static `search` heading on the public search page with a scope-resolved back link. The current `catalogue` scope now renders `← works` and returns to `/series/`.
+
+**Reason:**  
+The public search page should make it easy to return to the page that owns the active search scope, rather than showing a generic heading with no clear return path.
+
+**Effect:**  
+The search header now resolves its left-side link from scope context, the current `catalogue` scope returns to `/series/`, future scopes can map to their own owning pages, and the link is hidden when the page loads without valid scope context.
+
+**Affected files/docs:**  
+- `search/index.md`
+- `assets/css/main.css`
+- `assets/studio/js/studio-search.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+
+**Notes:**  
+This is a header-navigation change only. It does not change search indexing, ranking, or scope validation rules.
+
 ## [2026-03-30] Moved catalogue search to the public `/search/` page and removed the Studio route
 
 **Status:** implemented

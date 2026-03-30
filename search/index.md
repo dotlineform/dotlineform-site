@@ -12,7 +12,7 @@ section: series
   hidden
 >
   <div class="studioSearch__header">
-    <h1 class="studioSearch__heading">search</h1>
+    <a class="studioSearch__backLink" id="studioSearchBackLink" href="{{ '/series/' | relative_url }}">← works</a>
     <p class="studioSearch__scope" id="studioSearchScope">catalogue</p>
   </div>
   <label class="visually-hidden" for="studioSearchInput">search</label>

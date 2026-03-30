@@ -73,6 +73,7 @@ Current status:
 
 - search is global across the indexed content types in the current index
 - there is one search input on this page
+- the header includes a scope-owned back link to the calling browse page when the scope is valid
 - the UI is page-specific rather than persistent in the main site shell
 
 Not yet implemented:
@@ -126,6 +127,7 @@ Current valid scope:
 If the page loads without a valid scope:
 
 - the page still becomes visible
+- the scope-owned back link is hidden
 - the input is disabled
 - the status area shows a missing-scope message
 - results and `more` are cleared
@@ -323,6 +325,7 @@ Current responsive behaviour is simple rather than mode-switched.
 Current properties:
 
 - the page uses a stacked inline layout
+- the header keeps the back link on the left and the scope label on the right
 - the search input remains full-width within the page layout
 - the results list remains inline rather than switching to modal or overlay presentation
 
@@ -350,6 +353,7 @@ Those gaps are acceptable for v1 but should remain visible as future improvement
 Current UI behaviour in practice:
 
 - search lives on one dedicated public page
+- the header back link is scope-driven and currently resolves `catalogue` to `← works`
 - the page currently expects `scope=catalogue`
 - the index loads eagerly when the page initializes
 - results update live after a short debounce, and Enter can force immediate search

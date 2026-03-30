@@ -11,6 +11,7 @@ const DEFAULT_STUDIO_CONFIG = {
       tag_aliases: "/studio/tag-aliases/",
       tag_groups: "/studio/tag-groups/",
       series_page_base: "/series/",
+      library_page: "/library/",
       works_page_base: "/works/",
       site_map: "/site_map/"
     },
