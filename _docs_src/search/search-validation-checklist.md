@@ -71,7 +71,7 @@ Suggested current examples:
 
 ## D. UI checks
 
-- [ ] Open `/studio/search/?scope=catalogue`
+- [ ] Open `/search/?scope=catalogue`
 - [ ] Confirm the page loads and the input is visible
 - [ ] Confirm the loading state clears and the page becomes usable
 - [ ] Confirm live search updates after typing
@@ -83,7 +83,7 @@ Suggested current examples:
 - [ ] Confirm a no-results query returns the empty state
 - [ ] Confirm a large result set shows the `more` control
 - [ ] Confirm `more` reveals the next batch without resetting the query
-- [ ] Open `/studio/search/` without `scope`
+- [ ] Open `/search/` without `scope`
 - [ ] Confirm the input is disabled and the page shows the missing-scope message
 
 ## E. Keyboard and accessibility checks

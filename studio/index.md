@@ -5,7 +5,6 @@ permalink: /studio/
 ---
 
 - [studio works]({{ '/studio/studio-works/' | relative_url }})
-- [search]({{ '/studio/search/' | relative_url }})
 - [series tags]({{ '/studio/series-tags/' | relative_url }})
 
 - [tag registry]({{ '/studio/tag-registry/' | relative_url }})

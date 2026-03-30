@@ -8,6 +8,38 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Moved catalogue search to the public `/search/` page and removed the Studio route
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Moved the current catalogue search page from `/studio/search/` to the public `/search/` route, removed the Studio page entirely, and added a catalogue search entry point to the `/series/` toolbar.
+
+**Reason:**  
+The agreed search contract now uses one public top-level search route with explicit scope context. Search needed to move out of Studio before later scope expansion so the public UI, route vocabulary, and entry-point model all align.
+
+**Effect:**  
+`/search/?scope=catalogue` is now the current public route, `/studio/search/` no longer exists, the `/series/` toolbar now includes a search CTA for the catalogue scope, and the public search page shows explicit scope context while continuing to use the same in-memory catalogue search runtime.
+
+**Affected files/docs:**  
+- `search/index.md`
+- `studio/search/index.md`
+- `series/index.md`
+- `assets/css/main.css`
+- `assets/studio/js/studio-search.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search](/docs/?doc=search)
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+
+**Notes:**  
+The runtime is still the same shared search module and still only supports the `catalogue` scope. This change is route and entry-point migration, not the later modular multi-domain refactor.
+
 ## [2026-03-30] Removed visible kind filters from the Studio search page and required scope context
 
 **Status:** implemented

@@ -1,11 +1,9 @@
 ---
-layout: studio
+layout: default
 title: Search
-permalink: /studio/search/
-section: search
-studio_page_doc: /docs/?doc=studio-search-v1
+permalink: /search/
+section: series
 ---
-<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 <div
   class="studioSearch"
@@ -13,10 +11,14 @@ studio_page_doc: /docs/?doc=studio-search-v1
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
   hidden
 >
+  <div class="studioSearch__header">
+    <h1 class="studioSearch__heading">search</h1>
+    <p class="studioSearch__scope" id="studioSearchScope">catalogue</p>
+  </div>
   <label class="visually-hidden" for="studioSearchInput">search</label>
   <div class="studioSearch__controls">
     <input
-      class="studioSearch__input tagStudio__input tagStudioFilters__searchInput"
+      class="studioSearch__input"
       id="studioSearchInput"
       type="search"
       autocomplete="off"

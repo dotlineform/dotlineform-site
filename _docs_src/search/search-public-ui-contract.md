@@ -10,7 +10,7 @@ sort_order: 55
 
 ## Purpose
 
-This document defines the intended public-site search entry model and URL contract that should guide the next phase of search work.
+This document defines the public-site search entry model and URL contract that should guide continued search work.
 
 It exists to settle the scalable UI direction before the larger modular search refactor expands search across additional content domains.
 
@@ -18,11 +18,10 @@ This is a contract-and-behaviour document. It does not define ranking rules, ind
 
 ## Why this document exists now
 
-Search currently lives at `/studio/search/` and is built around one flat search surface backed by `assets/data/search_index.json`.
+Search now has a public route at `/search/` and is still built around one flat search surface backed by `assets/data/search_index.json`.
 
-That implementation is sufficient for the current indexed content, but it does not yet define how search should enter the public site shell once:
+That implementation is sufficient for the current indexed content, but the route/state contract still needs to stay explicit as:
 
-- search becomes a public feature rather than a Studio-only tool
 - additional content domains such as Studio or library are added
 - each domain starts to own its own search JSON and search policy/config
 
@@ -223,16 +222,16 @@ This is the main reason to define the contract now.
 - if the initial scope names are chosen badly, later public URLs become harder to keep consistent
 - if future requirements demand a genuinely global whole-site search, the scope-led model will need an additional documented rule rather than assuming all search is domain-local
 
-## Recommended next implementation step
+## Current implementation status
 
-Before the modular search refactor:
+The first public rollout is now in place:
 
-1. create a public `/search/` page
-2. keep the first public scope limited to `catalogue`
-3. add a CTA from `/series/` to `/search/?scope=catalogue`
-4. make the scope explicit in the page heading and empty-state/status copy
+1. the public search page exists at `/search/`
+2. the current public scope is `catalogue`
+3. `/series/` provides the catalogue search CTA
+4. the page UI names the active scope
 
-After that, the modular search work can introduce domain-specific search artifacts and policy/config layers behind the same public route contract.
+The next phase can now focus on modular domain-specific search artifacts and policy/config behind the same public route contract.
 
 ## Out of scope for this document
 

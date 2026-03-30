@@ -18,7 +18,7 @@ This is a UI-behaviour document. It is not the ranking, schema, or build-pipelin
 
 ## Scope
 
-This document applies to the current Studio search page at `/studio/search/`.
+This document applies to the current public search page at `/search/`.
 
 It covers:
 
@@ -33,7 +33,7 @@ It covers:
 ## Relationship to other documents
 
 - [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract) defines the intended future public `/search/` route and scope-led entry model
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract) defines the public `/search/` route and scope-led entry model
 - [Search Index Schema](/docs/?doc=search-index-schema) defines the data available to the UI
 - [Search Field Registry](/docs/?doc=search-field-registry) defines which fields contribute to search and display
 - [Search Ranking Model](/docs/?doc=search-ranking-model) defines result ordering
@@ -61,13 +61,13 @@ The input, result links, and `more` control are all reachable by keyboard, even 
 
 ### Simple first
 
-The v1 Studio surface favors explicit behaviour over more advanced overlay or autosuggest patterns.
+The v1 public surface favors explicit behaviour over more advanced overlay or autosuggest patterns.
 
 ## Search entry points
 
 Current entry point:
 
-- dedicated Studio page: `/studio/search/?scope=catalogue`
+- dedicated public page: `/search/?scope=catalogue`
 
 Current status:
 
@@ -79,7 +79,7 @@ Not yet implemented:
 
 - main site header search
 - overlay or dropdown search
-- public page-owned search entry points from the main site shell
+- additional public scope entry points beyond catalogue
 
 ## Search activation behaviour
 
@@ -302,7 +302,7 @@ Current non-features:
 - no “search within current series”
 - no hidden fallback scope when the URL context is missing
 
-The current Studio page is usable only when a valid scope is supplied in the URL.
+The current public page is usable only when a valid scope is supplied in the URL.
 
 ## Content-type display policy
 
@@ -349,7 +349,7 @@ Those gaps are acceptable for v1 but should remain visible as future improvement
 
 Current UI behaviour in practice:
 
-- search lives on one dedicated Studio page
+- search lives on one dedicated public page
 - the page currently expects `scope=catalogue`
 - the index loads eagerly when the page initializes
 - results update live after a short debounce, and Enter can force immediate search

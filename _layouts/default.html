@@ -75,7 +75,7 @@
           {%- assign is_library_active = false -%}
           {%- if u == '/series/' -%}{%- assign is_works_index = true -%}{%- endif -%}
           {%- if u == '/library/' -%}{%- assign is_library_index = true -%}{%- endif -%}
-          {%- if page.collection == 'series' or page.collection == 'moments' or u_series == '/series/' or u_moments == '/moments/' -%}
+          {%- if page.collection == 'series' or page.collection == 'moments' or page.section == 'series' or u_series == '/series/' or u_moments == '/moments/' -%}
             {%- assign is_works_active = true -%}
           {%- endif -%}
           {%- if u == '/library/' or page.section == 'library' -%}

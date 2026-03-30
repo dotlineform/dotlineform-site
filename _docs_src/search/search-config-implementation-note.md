@@ -268,11 +268,11 @@ Codex-run checks:
 
 Manual checks:
 
-- `/studio/search/` still loads correctly
+- `/search/?scope=catalogue` still loads correctly
 - typing still gives live results with the configured debounce
 - Enter still triggers immediate search when enabled
 - `more` still reveals the next result batch
-- filter buttons still render in the configured order
+- the page still shows explicit catalogue scope context
 
 ## Phase 2: Ranking band config
 

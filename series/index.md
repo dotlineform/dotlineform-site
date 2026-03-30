@@ -53,83 +53,98 @@ permalink: /series/
   hidden
 >
   <div class="seriesIndex__toolbar" aria-label="Works and moments view and sorting">
-    <div class="seriesIndex__viewControls" role="group" aria-label="View">
-      <button
-        class="theme-toggle seriesIndex__viewBtn"
-        type="button"
-        data-role="catalog-index-view-btn"
-        data-view="list"
-        aria-label="Show list view"
-        aria-pressed="true"
-      >
-        <svg class="seriesIndex__viewIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>
-          <rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>
-          <rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>
-          <path d="M10 6.25H20"></path>
-          <path d="M10 12H20"></path>
-          <path d="M10 17.75H20"></path>
-        </svg>
-        <span class="sr-only">list</span>
-      </button>
-      <button
-        class="theme-toggle seriesIndex__viewBtn"
-        type="button"
-        data-role="catalog-index-view-btn"
-        data-view="grid"
-        aria-label="Show grid view"
-        aria-pressed="false"
-      >
-        <svg class="seriesIndex__viewIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-          <rect x="4" y="4" width="6.25" height="6.25" rx="1.5"></rect>
-          <rect x="13.75" y="4" width="6.25" height="6.25" rx="1.5"></rect>
-          <rect x="4" y="13.75" width="6.25" height="6.25" rx="1.5"></rect>
-          <rect x="13.75" y="13.75" width="6.25" height="6.25" rx="1.5"></rect>
-        </svg>
-        <span class="sr-only">grid</span>
-      </button>
+    <div class="seriesIndex__toolbarPrimary">
+      <div class="seriesIndex__viewControls" role="group" aria-label="View">
+        <button
+          class="theme-toggle seriesIndex__viewBtn"
+          type="button"
+          data-role="catalog-index-view-btn"
+          data-view="list"
+          aria-label="Show list view"
+          aria-pressed="true"
+        >
+          <svg class="seriesIndex__viewIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="4" y="5" width="2.5" height="2.5" rx="1"></rect>
+            <rect x="4" y="10.75" width="2.5" height="2.5" rx="1"></rect>
+            <rect x="4" y="16.5" width="2.5" height="2.5" rx="1"></rect>
+            <path d="M10 6.25H20"></path>
+            <path d="M10 12H20"></path>
+            <path d="M10 17.75H20"></path>
+          </svg>
+          <span class="sr-only">list</span>
+        </button>
+        <button
+          class="theme-toggle seriesIndex__viewBtn"
+          type="button"
+          data-role="catalog-index-view-btn"
+          data-view="grid"
+          aria-label="Show grid view"
+          aria-pressed="false"
+        >
+          <svg class="seriesIndex__viewIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <rect x="4" y="4" width="6.25" height="6.25" rx="1.5"></rect>
+            <rect x="13.75" y="4" width="6.25" height="6.25" rx="1.5"></rect>
+            <rect x="4" y="13.75" width="6.25" height="6.25" rx="1.5"></rect>
+            <rect x="13.75" y="13.75" width="6.25" height="6.25" rx="1.5"></rect>
+          </svg>
+          <span class="sr-only">grid</span>
+        </button>
+      </div>
+      <div class="seriesIndex__sortControls" role="group" aria-label="Sort">
+        <button
+          class="theme-toggle seriesIndex__sortBtn"
+          type="button"
+          data-role="catalog-index-sort-btn"
+          data-sort-key="year"
+          aria-pressed="true"
+        >
+          <span class="seriesIndex__sortText">year</span>
+          <span class="seriesIndex__sortArrow" aria-hidden="true">↓</span>
+        </button>
+        <button
+          class="theme-toggle seriesIndex__sortBtn"
+          type="button"
+          data-role="catalog-index-sort-btn"
+          data-sort-key="title"
+          aria-pressed="false"
+        >
+          <span class="seriesIndex__sortText">title</span>
+          <span class="seriesIndex__sortArrow" aria-hidden="true">↑</span>
+        </button>
+      </div>
     </div>
-    <div class="seriesIndex__sortControls" role="group" aria-label="Sort">
-      <button
-        class="theme-toggle seriesIndex__sortBtn"
-        type="button"
-        data-role="catalog-index-sort-btn"
-        data-sort-key="year"
-        aria-pressed="true"
+    <div class="seriesIndex__toolbarSecondary">
+      <div class="seriesIndex__modeControls" role="group" aria-label="Browse works or moments">
+        <button
+          class="theme-toggle seriesIndex__modeBtn"
+          type="button"
+          data-role="catalog-index-mode-btn"
+          data-mode="works"
+          aria-pressed="true"
+        >
+          <span class="seriesIndex__modeText">works</span>
+        </button>
+        <button
+          class="theme-toggle seriesIndex__modeBtn"
+          type="button"
+          data-role="catalog-index-mode-btn"
+          data-mode="moments"
+          aria-pressed="false"
+        >
+          <span class="seriesIndex__modeText">moments</span>
+        </button>
+      </div>
+      <a
+        class="theme-toggle seriesIndex__searchBtn"
+        href="{{ '/search/?scope=catalogue' | relative_url }}"
+        aria-label="Search the catalogue"
       >
-        <span class="seriesIndex__sortText">year</span>
-        <span class="seriesIndex__sortArrow" aria-hidden="true">↓</span>
-      </button>
-      <button
-        class="theme-toggle seriesIndex__sortBtn"
-        type="button"
-        data-role="catalog-index-sort-btn"
-        data-sort-key="title"
-        aria-pressed="false"
-      >
-        <span class="seriesIndex__sortText">title</span>
-        <span class="seriesIndex__sortArrow" aria-hidden="true">↑</span>
-      </button>
-    </div>
-    <div class="seriesIndex__modeControls" role="group" aria-label="Browse works or moments">
-      <button
-        class="theme-toggle seriesIndex__modeBtn"
-        type="button"
-        data-role="catalog-index-mode-btn"
-        data-mode="works"
-        aria-pressed="true"
-      >
-        <span class="seriesIndex__modeText">works</span>
-      </button>
-      <button
-        class="theme-toggle seriesIndex__modeBtn"
-        type="button"
-        data-role="catalog-index-mode-btn"
-        data-mode="moments"
-        aria-pressed="false"
-      >
-        <span class="seriesIndex__modeText">moments</span>
-      </button>
+        <svg class="seriesIndex__searchIcon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="6.5"></circle>
+          <path d="M16 16L20 20"></path>
+        </svg>
+        <span class="sr-only">search</span>
+      </a>
     </div>
   </div>
   <div class="index seriesIndex__list" id="seriesIndexList" aria-live="polite"></div>

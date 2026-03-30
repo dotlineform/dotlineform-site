@@ -28,7 +28,7 @@ Current goals:
 
 ## Current scope
 
-The current implementation is a Studio-first search surface at `/studio/search/`.
+The current implementation is a public search surface at `/search/`.
 
 It is based on:
 
@@ -73,7 +73,7 @@ Search policy currently exists in a combination of:
 
 - generated field preparation in the build script
 - deterministic ranking tiers in the client runtime
-- Studio UI text and route config in `assets/studio/data/studio_config.json`
+- shared search UI text and route config in `assets/studio/data/studio_config.json`
 
 This policy is documented separately so it can later move out of implementation code more cleanly.
 
@@ -83,7 +83,7 @@ The client runtime loads the search index, normalizes the loaded values into run
 
 ### 5. Search UI
 
-The Studio page captures the query, requires an explicit `scope` URL context, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
+The public search page captures the query, requires an explicit `scope` URL context, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
 
 ## Design principles
 
@@ -141,15 +141,15 @@ Those belong in the dedicated companion documents.
 
 Current implementation status:
 
-- v1 is implemented as a Studio page at `/studio/search/`
-- the current usable Studio route is `/studio/search/?scope=catalogue`
+- v1 is implemented as a public page at `/search/`
+- the current usable public route is `/search/?scope=catalogue`
 - the search index is generated at build time into `assets/data/search_index.json`
 - indexed content types are works, series, and moments
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
-This is a production-like v1 implementation, but still a Studio-first surface rather than a main-site navigation feature.
+This is a production-like v1 implementation with a public catalogue entry point, but it is still a single-scope surface rather than the later modular multi-domain search architecture.
 
 ## Open questions
 
@@ -158,4 +158,4 @@ High-level follow-up questions for the next phase:
 - when tag coverage becomes strong enough, how should tags enter ranking and filtering
 - when prose content expands substantially, how should prose search be added without inflating the base payload
 - which additional structured fields should be promoted from schema presence to first-class ranking or filter signals
-- when the Studio implementation is stable enough to move into the main site shell
+- how the later `studio` and `library` scopes should plug into the same public route contract

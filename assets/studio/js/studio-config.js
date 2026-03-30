@@ -4,7 +4,7 @@ const DEFAULT_STUDIO_CONFIG = {
   paths: {
     routes: {
       studio_home: "/studio/",
-      search: "/studio/search/",
+      search: "/search/",
       series_tags: "/studio/series-tags/",
       series_tag_editor: "/studio/series-tag-editor/",
       tag_registry: "/studio/tag-registry/",

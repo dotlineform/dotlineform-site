@@ -280,7 +280,7 @@ Useful flags:
 - `--series-index-json-path` (default `assets/data/series_index.json`)
 - `--search-index-json-path` (default `assets/data/search_index.json`)
   - writes a flat search artifact spanning works, series, and moments
-  - used first by `/studio/search/`
+  - used first by `/search/?scope=catalogue`
   - rebuilt on every pipeline run as a full index and not scoped by `--work-ids`, `--series-ids`, or `--moment-ids`
 - `--series-json-dir` (default `assets/series/index`)
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
@@ -346,7 +346,7 @@ Runtime canonical data flow:
 - `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav/counter/link visibility also read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
-- `/studio/search/` reads `assets/data/search_index.json`.
+- `/search/` reads `assets/data/search_index.json`.
 
 ### 3a) Delete a single work from generated artifacts
 

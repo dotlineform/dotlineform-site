@@ -4,7 +4,7 @@
   "paths": {
     "routes": {
       "studio_home": "/studio/",
-      "search": "/studio/search/",
+      "search": "/search/",
       "series_tags": "/studio/series-tags/",
       "series_tag_editor": "/studio/series-tag-editor/",
       "tag_registry": "/studio/tag-registry/",
@@ -407,6 +407,8 @@
     },
     "search": {
       "load_failed_error": "Failed to load search data.",
+      "scope_catalogue_label": "catalogue",
+      "scope_unavailable_label": "scope unavailable",
       "search_input_aria_label_catalogue": "Search works, series, and moments",
       "search_placeholder_catalogue": "search works, series, moments",
       "search_input_aria_label_unavailable": "Search unavailable",

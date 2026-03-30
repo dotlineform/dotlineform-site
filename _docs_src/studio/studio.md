@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: Studio
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: ""
 sort_order: 10
 ---
@@ -93,9 +93,6 @@ bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build
 - Series assignments overview page:
   - `studio/series-tags/index.md`
   - `assets/studio/js/series-tags.js`
-- Search page:
-  - `studio/search/index.md`
-  - `assets/studio/js/studio-search.js`
 - Studio works page:
   - `studio/studio-works/index.md`
   - `assets/studio/js/studio-works.js`
@@ -163,8 +160,7 @@ Current config scope:
   - table headings
   - filter/empty/error text
 - `ui_text.search`
-  - input label and placeholder
-  - kind-filter labels
+  - scope label, input label, and placeholder
   - loading/empty/result-count/load-more text
 - `ui_text.tag_groups`
   - empty/error text

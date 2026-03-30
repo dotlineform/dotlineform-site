@@ -19,6 +19,7 @@ async function initStudioSearchPage() {
   const root = document.getElementById("studioSearchRoot");
   if (!root) return;
 
+  const scopeLabel = document.getElementById("studioSearchScope");
   const input = document.getElementById("studioSearchInput");
   const status = document.getElementById("studioSearchStatus");
   const results = document.getElementById("studioSearchResults");
@@ -32,11 +33,11 @@ async function initStudioSearchPage() {
 
     const scope = resolveScope();
     if (!scope) {
-      showMissingScopeState({ root, input, status, results, more, config });
+      showMissingScopeState({ root, scopeLabel, input, status, results, more, config });
       return;
     }
 
-    applyScopeText({ input, config, scope });
+    applyScopeText({ scopeLabel, input, config, scope });
 
     const payload = await loadSiteSearchIndexJson(config);
     const entries = normalizeEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
@@ -260,7 +261,13 @@ function resolveScope() {
   return scope === "catalogue" ? scope : "";
 }
 
-function applyScopeText({ input, config, scope }) {
+function applyScopeText({ scopeLabel, input, config, scope }) {
+  if (scopeLabel) {
+    scopeLabel.textContent = scope === "catalogue"
+      ? searchText(config, "scope_catalogue_label", "catalogue")
+      : searchText(config, "scope_unavailable_label", "scope unavailable");
+  }
+
   if (scope === "catalogue") {
     input.disabled = false;
     input.setAttribute("aria-label", searchText(config, "search_input_aria_label_catalogue", "Search works, series, and moments"));
@@ -273,8 +280,8 @@ function applyScopeText({ input, config, scope }) {
   input.setAttribute("aria-label", searchText(config, "search_input_aria_label_unavailable", "Search unavailable"));
 }
 
-function showMissingScopeState({ root, input, status, results, more, config }) {
-  applyScopeText({ input, config, scope: "" });
+function showMissingScopeState({ root, scopeLabel, input, status, results, more, config }) {
+  applyScopeText({ scopeLabel, input, config, scope: "" });
   status.textContent = searchText(config, "missing_scope_error", "Search is unavailable without a valid search scope.");
   status.dataset.state = "error";
   results.innerHTML = "";
