@@ -1,4 +1,5 @@
 {
+  "scope": "studio",
   "doc_id": "multiple-content-domains",
   "title": "Multiple Content Domains",
   "last_updated": "2026-03-29",
@@ -6,6 +7,7 @@
   "sort_order": 100,
   "source_path": "domains/multiple-content-domains.md",
   "legacy_url": "/docs/domains/multiple-content-domains/",
-  "viewer_url": "/docs/?doc=multiple-content-domains",
-  "content_html": "\n"
+  "viewer_url": "/docs/?scope=studio&doc=multiple-content-domains",
+  "content_html": "\n",
+  "content_url": "/assets/data/docs/by-id/multiple-content-domains.json"
 }

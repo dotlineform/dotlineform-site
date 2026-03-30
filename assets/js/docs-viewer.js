@@ -9,8 +9,11 @@
   var updatedEl = document.getElementById("docsViewerUpdated");
   var content = document.getElementById("docsViewerContent");
 
-  var indexUrl = root.dataset.indexUrl;
+  var indexUrl = appendAssetVersion(root.dataset.indexUrl);
   var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
+  var viewerScope = String(root.dataset.viewerScope || "").trim();
+  var includeScopeParam = root.dataset.includeScopeParam === "true";
+  var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
 
   var state = {
@@ -52,6 +55,9 @@
 
   function viewerUrl(docId, hash) {
     var url = new URL(viewerBaseUrl, window.location.origin);
+    if (includeScopeParam && viewerScope) {
+      url.searchParams.set("scope", viewerScope);
+    }
     url.searchParams.set("doc", docId);
     url.hash = hash || "";
     return url.pathname + url.search + url.hash;
@@ -276,7 +282,7 @@
     state.requestId = requestId;
 
     window
-      .fetch(doc.content_url, { headers: { Accept: "application/json" } })
+      .fetch(appendAssetVersion(doc.content_url), { headers: { Accept: "application/json" } })
       .then(function (response) {
         if (!response.ok) {
           throw new Error("Failed to load " + doc.content_url + " (" + response.status + ")");
@@ -351,6 +357,9 @@
     }
 
     var initialDocId = getCurrentDocId();
+    if (!state.docsById.has(initialDocId) && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
+      initialDocId = defaultRouteDocId;
+    }
     if (!state.docsById.has(initialDocId)) {
       initialDocId = defaultDocId();
     }
@@ -399,4 +408,21 @@
 
   bindLinkInterception();
   loadIndex();
+
+  function appendAssetVersion(url) {
+    var cleanUrl = String(url || "");
+    if (!cleanUrl) return "";
+
+    var assetVersion = readAssetVersion();
+    if (!assetVersion) return cleanUrl;
+
+    var separator = cleanUrl.indexOf("?") >= 0 ? "&" : "?";
+    return cleanUrl + separator + "v=" + encodeURIComponent(assetVersion);
+  }
+
+  function readAssetVersion() {
+    var meta = document.querySelector('meta[name="dlf-asset-version"]');
+    if (!meta) return "";
+    return String(meta.getAttribute("content") || "").trim();
+  }
 })();

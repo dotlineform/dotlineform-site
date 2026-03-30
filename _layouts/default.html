@@ -69,7 +69,7 @@
 
           {% include nav_item.html label="studio" href='/studio/' class_name='nav-item' is_current=is_studio_index is_active=is_studio_active %}
           {% include nav_item.html label="series tags" href='/studio/series-tags/' class_name='nav-item' is_current=is_series_tags_index is_active=is_series_tags_active %}
-          {% include nav_item.html label="docs" href='/docs/?doc=studio' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
+          {% include nav_item.html label="docs" href='/docs/?scope=studio&doc=studio' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
         {% else %}
           {%- assign is_works_index = false -%}
           {%- assign is_works_active = false -%}

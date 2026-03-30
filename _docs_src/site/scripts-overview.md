@@ -24,7 +24,7 @@ Docs viewer data:
 ./scripts/build_docs_data.rb --write
 ```
 
-Use this after doc-source edits in `_docs_src/`.
+Use this after doc-source edits in `_docs_src/` or `_docs_library_src/`.
 `bin/dev-studio` also runs it once before starting Jekyll.
 
 ### Docs Viewer Data
@@ -32,28 +32,36 @@ Use this after doc-source edits in `_docs_src/`.
 Source location:
 
 - `_docs_src/`
+- `_docs_library_src/`
 
 Published viewer route:
 
-- `/docs/`
+- Studio docs: `/docs/`
+- Library docs: `/library/`
 
 Generated outputs:
 
-- `assets/data/docs/index.json`
-- `assets/data/docs/by-id/<doc_id>.json`
+- `assets/data/docs/scopes/studio/index.json`
+- `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+- `assets/data/docs/scopes/library/index.json`
+- `assets/data/docs/scopes/library/by-id/<doc_id>.json`
+- compatibility mirror for current Studio docs:
+  - `assets/data/docs/index.json`
+  - `assets/data/docs/by-id/<doc_id>.json`
 
 What the builder does:
 
-- reads Markdown source docs from `_docs_src/`
-- reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
-- renders each Markdown body to HTML using the local Jekyll Markdown stack
-- rewrites doc-to-doc links onto the single viewer route
-- writes one index payload plus one per-doc payload
+ - reads Markdown source docs from each configured scope source root
+ - reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
+ - renders each Markdown body to HTML using the local Jekyll Markdown stack
+ - rewrites doc-to-doc links onto the scope-owned viewer route
+ - writes one index payload plus one per-doc payload for each configured scope
 
 Publishing rules:
 
 - every `.md` file under `_docs_src/` is published by default
-- add front matter with `published: false` to keep a Markdown file in `_docs_src/` without publishing it to `/docs/`
+- every `.md` file under `_docs_library_src/` is published by default
+- add front matter with `published: false` to keep a Markdown file in either source root without publishing it
 - if front matter is omitted, the builder falls back to:
   - `doc_id`: filename stem
   - `title`: first Markdown `#` heading, or a humanized filename
@@ -61,7 +69,7 @@ Publishing rules:
 Common front matter fields:
 
 - `doc_id`
-  stable ID used by `/docs/?doc=<doc_id>`
+  stable ID used by the scope-owned viewer route
 - `title`
   label used in the viewer index and page title
 - `last_updated`
@@ -75,10 +83,10 @@ Common front matter fields:
 
 Internal doc links:
 
-- preferred public link format: `/docs/?doc=<doc_id>`
-- optional anchors should use the normal hash suffix: `/docs/?doc=<doc_id>#section-anchor`
-- this is the recommended authoring format because it does not depend on `_docs_src/` folder layout
-- the builder still rewrites legacy `/docs/.../` links and relative `.md` links, but treat that as compatibility behavior rather than the preferred convention
+- preferred Studio public link format: `/docs/?scope=studio&doc=<doc_id>`
+- preferred Library public link format: `/library/?doc=<doc_id>`
+- optional anchors should use the normal hash suffix on the scope-owned route
+- the builder still rewrites legacy `/docs/.../`, legacy `/docs/?doc=...`, and relative `.md` links as compatibility behavior
 
 Default command:
 
@@ -94,22 +102,22 @@ Dry run:
 
 Flags:
 
+- `--scope NAME`
+  limit the build to a named docs scope
+  current values: `studio`, `library`
 - `--source PATH`
-  docs source directory
-  default: `_docs_src`
+  override docs source directory for a single selected scope
 - `--output PATH`
-  output directory for generated JSON payloads
-  default: `assets/data/docs`
+  override output directory for generated JSON payloads for a single selected scope
 - `--viewer-base-url URL`
-  viewer route base used when generating `viewer_url` values and rewritten internal doc links
-  default: `/docs/`
+  override viewer route base used when generating `viewer_url` values and rewritten internal doc links for a single selected scope
 - `--write`
   persist generated files; if omitted, the script prints a dry-run summary only
 
 Notes:
 
 - `bin/dev-studio` runs this builder once before starting Jekyll
-- if you edit `_docs_src/` while the dev runner is already running, re-run `./scripts/build_docs_data.rb --write`
+- if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs_data.rb --write`
 - changing only the docs data does not require any separate asset pipeline
 
 Jekyll verification builds:

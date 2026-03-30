@@ -1,0 +1,28 @@
+<section
+  class="docsViewer"
+  id="docsViewerRoot"
+  data-index-url="{{ include.index_url }}"
+  data-viewer-base-url="{{ include.viewer_base_url }}"
+  data-viewer-scope="{{ include.viewer_scope | default: '' }}"
+  data-include-scope-param="{{ include.include_scope_param | default: false }}"
+  data-default-doc-id="{{ include.default_doc_id | default: '' }}"
+>
+  <aside class="docsViewer__sidebar" aria-label="Docs index">
+    <div class="docsViewer__sidebarInner">
+      <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
+    </div>
+  </aside>
+
+  <article class="docsViewer__main" aria-live="polite">
+    <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
+    <div class="docsViewer__meta" id="docsViewerMeta" hidden>
+      <p class="docsViewer__path small" id="docsViewerPath"></p>
+      <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
+    </div>
+    <div class="docsViewer__content content" id="docsViewerContent">
+      <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
+    </div>
+  </article>
+</section>
+
+<script src="{{ '/assets/js/docs-viewer.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

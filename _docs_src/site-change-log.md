@@ -8,6 +8,34 @@ sort_order: 20
 
 # Site Change Log
 
+## [2026-03-30] Made the docs library scope-aware and added a separate library docs route
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Refactored the docs viewer data/build contract to support separate `studio` and `library` docs scopes, kept `/docs/` as the Studio docs route, and converted `/library/` from a stub page into a library-scoped docs viewer.
+
+**Reason:**  
+The existing docs system implicitly belonged to the Studio domain even though the code and data layout were still flat. Additional docs domains needed scope-owned routes and artifacts before library content could grow cleanly.
+
+**Effect:**  
+Studio docs now build into a scope-owned output tree under `assets/data/docs/scopes/studio/` while keeping a compatibility mirror under `assets/data/docs/`, library docs have their own source root and scoped output tree, `/docs/?scope=studio&doc=...` is now the explicit Studio docs contract, and `/library/` now hosts the library docs viewer.
+
+**Affected files/docs:**  
+- `scripts/build_docs_data.rb`
+- `assets/js/docs-viewer.js`
+- `docs/index.md`
+- `library/index.md`
+- `_includes/docs_viewer_shell.html`
+- `_docs_library_src/library.md`
+- `_layouts/default.html`
+- [Scripts Overview](/docs/?doc=scripts-overview)
+
+**Notes:**  
+The current `/docs/?doc=...` form remains supported as Studio compatibility while older links are phased onto the explicit scoped route.
+
 ## [2026-03-30] Added lightweight build-version cache busting to shared shell assets
 
 **Status:** implemented
