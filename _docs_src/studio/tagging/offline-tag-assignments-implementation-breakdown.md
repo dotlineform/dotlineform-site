@@ -188,7 +188,7 @@ Docs to update:
 - [Series Tags](/docs/?doc=series-tags)
 - [Studio](/docs/?doc=studio)
 - [UI Framework](/docs/?doc=ui-framework)
-- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Tag Write Server](/docs/?doc=scripts-tag-write-server)
 
 Verification focus:
 

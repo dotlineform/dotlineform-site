@@ -1,0 +1,13 @@
+{
+  "scope": "studio",
+  "doc_id": "scripts-fix-missing-title-sort",
+  "title": "Legacy Title Sort Fix",
+  "last_updated": "2026-03-30",
+  "parent_id": "scripts-overview",
+  "sort_order": 100,
+  "source_path": "site/scripts-fix-missing-title-sort.md",
+  "legacy_url": "/docs/site/scripts-fix-missing-title-sort/",
+  "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
+  "content_html": "<h1 id=\"legacy-title-sort-fix\">Legacy Title Sort Fix</h1>\n\n<p>Script:</p>\n\n<div class=\"language-bash highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>./scripts/fix_missing_title_sort.py\n</code></pre></div></div>\n\n<p>Generated site JSON no longer persists <code class=\"language-plaintext highlighter-rouge\">title_sort</code>.\nThis helper remains only for older or hand-authored <code class=\"language-plaintext highlighter-rouge\">_works</code> front matter that still uses that field.</p>\n\n<p>Dry-run:</p>\n\n<div class=\"language-bash highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>./scripts/fix_missing_title_sort.py\n</code></pre></div></div>\n\n<p>Write changes:</p>\n\n<div class=\"language-bash highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>./scripts/fix_missing_title_sort.py <span class=\"nt\">--write</span>\n</code></pre></div></div>\n\n<p>Scope to selected IDs or ranges:</p>\n\n<div class=\"language-bash highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>./scripts/fix_missing_title_sort.py <span class=\"se\">\\</span>\n  <span class=\"nt\">--work-ids</span> 66-74,38,40 <span class=\"se\">\\</span>\n  <span class=\"nt\">--write</span>\n</code></pre></div></div>\n\n<h2 id=\"related-references\">Related References</h2>\n\n<ul>\n  <li><a href=\"/docs/?scope=studio&doc=scripts-overview\">Scripts Overview</a></li>\n  <li><a href=\"/docs/?scope=studio&doc=scripts-generate-work-pages\">Generate Work Pages</a></li>\n</ul>\n",
+  "content_url": "/assets/data/docs/by-id/scripts-fix-missing-title-sort.json"
+}

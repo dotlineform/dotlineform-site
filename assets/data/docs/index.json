@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T16:19:04Z",
+  "generated_at": "2026-03-30T16:54:54Z",
   "docs": [
     {
       "scope": "studio",
@@ -48,6 +48,18 @@
       "legacy_url": "/docs/site/css-primitives/",
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
       "content_url": "/assets/data/docs/by-id/css-primitives.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-docs-builder",
+      "title": "Docs Viewer Builder",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 10,
+      "source_path": "site/scripts-docs-builder.md",
+      "legacy_url": "/docs/site/scripts-docs-builder/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
+      "content_url": "/assets/data/docs/by-id/scripts-docs-builder.json"
     },
     {
       "scope": "studio",
@@ -183,6 +195,18 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-main-pipeline",
+      "title": "Main Draft Pipeline",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 20,
+      "source_path": "site/scripts-main-pipeline.md",
+      "legacy_url": "/docs/site/scripts-main-pipeline/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
+      "content_url": "/assets/data/docs/by-id/scripts-main-pipeline.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-overview",
       "title": "Scripts Overview",
       "last_updated": "2026-03-30",
@@ -279,6 +303,18 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-copy-draft-media",
+      "title": "Copy Draft Media",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 30,
+      "source_path": "site/scripts-copy-draft-media.md",
+      "legacy_url": "/docs/site/scripts-copy-draft-media/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
+      "content_url": "/assets/data/docs/by-id/scripts-copy-draft-media.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "local-setup",
       "title": "Local Setup",
       "last_updated": "2026-03-28",
@@ -351,6 +387,18 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-srcset-builder",
+      "title": "Srcset Builder",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 40,
+      "source_path": "site/scripts-srcset-builder.md",
+      "legacy_url": "/docs/site/scripts-srcset-builder/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
+      "content_url": "/assets/data/docs/by-id/scripts-srcset-builder.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "tag-editor",
       "title": "Tag Editor",
       "last_updated": "2026-03-28",
@@ -360,6 +408,18 @@
       "legacy_url": "/docs/studio/tagging/tag-editor/",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/assets/data/docs/by-id/tag-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-generate-work-pages",
+      "title": "Generate Work Pages",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 50,
+      "source_path": "site/scripts-generate-work-pages.md",
+      "legacy_url": "/docs/site/scripts-generate-work-pages/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
+      "content_url": "/assets/data/docs/by-id/scripts-generate-work-pages.json"
     },
     {
       "scope": "studio",
@@ -396,6 +456,18 @@
       "legacy_url": "/docs/search/search-public-ui-contract/",
       "viewer_url": "/docs/?scope=studio&doc=search-public-ui-contract",
       "content_url": "/assets/data/docs/by-id/search-public-ui-contract.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-delete-work",
+      "title": "Delete Work",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 60,
+      "source_path": "site/scripts-delete-work.md",
+      "legacy_url": "/docs/site/scripts-delete-work/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-delete-work",
+      "content_url": "/assets/data/docs/by-id/scripts-delete-work.json"
     },
     {
       "scope": "studio",
@@ -447,6 +519,30 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-tag-write-server",
+      "title": "Tag Write Server",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 70,
+      "source_path": "site/scripts-tag-write-server.md",
+      "legacy_url": "/docs/site/scripts-tag-write-server/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
+      "content_url": "/assets/data/docs/by-id/scripts-tag-write-server.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-css-token-audit",
+      "title": "CSS Token Audit",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 80,
+      "source_path": "site/scripts-css-token-audit.md",
+      "legacy_url": "/docs/site/scripts-css-token-audit/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
+      "content_url": "/assets/data/docs/by-id/scripts-css-token-audit.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-validation-checklist",
       "title": "Search Validation Checklist",
       "last_updated": "2026-03-30",
@@ -495,6 +591,18 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-audit-site-consistency",
+      "title": "Site Consistency Audit",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 90,
+      "source_path": "site/scripts-audit-site-consistency.md",
+      "legacy_url": "/docs/site/scripts-audit-site-consistency/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
+      "content_url": "/assets/data/docs/by-id/scripts-audit-site-consistency.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "css-refactor",
       "title": "CSS Refactor",
       "last_updated": "2026-03-28",
@@ -504,6 +612,18 @@
       "legacy_url": "/docs/studio/css refactor/",
       "viewer_url": "/docs/?scope=studio&doc=css-refactor",
       "content_url": "/assets/data/docs/by-id/css-refactor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-fix-missing-title-sort",
+      "title": "Legacy Title Sort Fix",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 100,
+      "source_path": "site/scripts-fix-missing-title-sort.md",
+      "legacy_url": "/docs/site/scripts-fix-missing-title-sort/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
+      "content_url": "/assets/data/docs/by-id/scripts-fix-missing-title-sort.json"
     },
     {
       "scope": "studio",

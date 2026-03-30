@@ -8,6 +8,54 @@ sort_order: 20
 
 # Site Change Log
 
+## [2026-03-30] Split the scripts reference into a high-level overview and child docs
+
+**Status:** implemented
+
+**Area:** documentation
+
+**Summary:**  
+Reduced [Scripts Overview](/docs/?doc=scripts-overview) to a short navigation page and moved command-level script usage into dedicated child documents.
+
+**Reason:**  
+The single overview page had accumulated too much detailed operational content to remain useful as a quick architectural entry point.
+
+**Effect:**  
+The scripts docs are now easier to scan at the top level, while script-specific flags, outputs, and workflow notes have stable dedicated docs such as [Docs Viewer Builder](/docs/?doc=scripts-docs-builder), [Generate Work Pages](/docs/?doc=scripts-generate-work-pages), and [Tag Write Server](/docs/?doc=scripts-tag-write-server).
+
+**Affected files/docs:**  
+- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Docs Viewer Builder](/docs/?doc=scripts-docs-builder)
+- [Main Draft Pipeline](/docs/?doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
+- [Tag Write Server](/docs/?doc=scripts-tag-write-server)
+- `AGENTS.md`
+
+**Notes:**  
+Script-specific documentation should now be added to the relevant `scripts-*.md` child doc rather than expanding the overview again.
+
+## [2026-03-30] Added config-backed docs media tokens for remote images
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Extended the docs-data builder so docs bodies can use `[[media:...]]` tokens that resolve against `_config.yml` `media_base` before Markdown rendering.
+
+**Reason:**  
+Library docs need to support remotely hosted full-size images without hardcoding the full media origin in every document and without storing full-size docs images in the repo.
+
+**Effect:**  
+Docs can now stay as ordinary `.md` source files while embedding raw HTML and config-backed remote media URLs, keeping the repo aligned with the “repo holds text and thumbnails, R2 holds full media” principle.
+
+**Affected files/docs:**  
+- `scripts/build_docs_data.rb`
+- [Scripts Overview](/docs/?doc=scripts-overview)
+
+**Notes:**  
+This change does not add native `.html` source ingestion. The intended authoring model remains `.md` files with YAML front matter, optionally containing raw HTML bodies.
+
 ## [2026-03-30] Made the docs library scope-aware and added a separate library docs route
 
 **Status:** implemented

@@ -88,7 +88,7 @@ My recommendation for the immediate next step:
 
 If you want, I can take the next practical step and do the audit pass first: extract the current raw `font-size` and color values from both CSS files and turn that into a cleanup plan.
 
-I added a repeatable audit script at `scripts/css_token_audit.py`, generated the current snapshot in [CSS Audit Latest](/docs/?doc=css-audit-latest), and documented it in [Scripts Overview](/docs/?doc=scripts-overview). Verification was just the script run: `python3 scripts/css_token_audit.py`.
+I added a repeatable audit script at `scripts/css_token_audit.py`, generated the current snapshot in [CSS Audit Latest](/docs/?doc=css-audit-latest), and documented it in [CSS Token Audit](/docs/?doc=scripts-css-token-audit). Verification was just the script run: `python3 scripts/css_token_audit.py`.
 
 What the audit says is useful:
 - `main.css` has a typography drift problem more than a color problem. The biggest hotspot is `12px` used 12 times, plus smaller clusters at `13px`, `0.88rem`, `0.9rem`, `0.95rem`, and one `16px` lede.

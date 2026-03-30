@@ -39,6 +39,7 @@ DocRecord = Struct.new(
 
 class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
+  MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
 
   def initialize(scope_id:, source_dir:, output_dir:, viewer_base_url:, include_scope_param: false, compat_output_dir: nil)
     @scope_id = scope_id.to_s
@@ -51,6 +52,7 @@ class DocsDataBuilder
     @repo_root = Pathname(__dir__).parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
     @compat_output_url_base = @compat_output_dir ? output_url_base_for(@compat_output_dir) : nil
+    @site_config = load_site_config
   end
 
   def run(write:)
@@ -213,7 +215,7 @@ class DocsDataBuilder
       legacy_url: doc.legacy_url,
       viewer_url: doc.viewer_url,
       content_html: rewrite_doc_links(
-        JekyllMarkdownRenderer.render_string(doc.body_markdown),
+        JekyllMarkdownRenderer.render_string(resolve_media_tokens(doc.body_markdown)),
         current_doc: doc,
         docs: docs
       )
@@ -342,6 +344,36 @@ class DocsDataBuilder
   def output_url_base_for(output_dir)
     relative_path = output_dir.relative_path_from(@repo_root).to_s
     "/#{relative_path}"
+  end
+
+  def load_site_config
+    config_path = @repo_root.join("_config.yml")
+    return {} unless config_path.exist?
+
+    YAML.safe_load(config_path.read, permitted_classes: [Date, Time], aliases: false) || {}
+  end
+
+  def resolve_media_tokens(markdown)
+    return markdown unless markdown.include?("[[media:")
+
+    markdown.gsub(MEDIA_TOKEN_PATTERN) do
+      resolve_media_url(Regexp.last_match(1))
+    end
+  end
+
+  def resolve_media_url(raw_path)
+    relative_path = raw_path.to_s.strip
+    return "" if relative_path.empty?
+
+    if relative_path.match?(/\A[a-z][a-z0-9+\-.]*:\/\//i)
+      return relative_path
+    end
+
+    media_base = @site_config.fetch("media_base", "").to_s.strip
+    clean_path = relative_path.sub(%r{\A/+}, "")
+    return "/#{clean_path}" if media_base.empty?
+
+    "#{media_base.sub(%r{/+\z}, '')}/#{clean_path}"
   end
 end
 

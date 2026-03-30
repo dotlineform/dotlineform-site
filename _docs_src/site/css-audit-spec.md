@@ -124,7 +124,7 @@ Map to:
 2. Implement deterministic checks first.
 3. Add heuristic checks with confidence tags.
 4. Add Markdown/JSON reporting.
-5. Document usage in [Scripts Overview](/docs/?doc=scripts-overview).
+5. Document usage in [CSS Token Audit](/docs/?doc=scripts-css-token-audit).
 6. Add follow-up tasks in `docs/backlog.md`.
 
 ## Acceptance Criteria (v1)
