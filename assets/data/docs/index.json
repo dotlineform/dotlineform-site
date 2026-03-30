@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-29T21:31:59Z",
+  "generated_at": "2026-03-30T10:50:28Z",
   "docs": [
     {
       "doc_id": "search-archive",
@@ -88,6 +88,28 @@
       "legacy_url": "/docs/search/search-overview/",
       "viewer_url": "/docs/?doc=search-overview",
       "content_url": "/assets/data/docs/by-id/search-overview.json"
+    },
+    {
+      "doc_id": "search-result-shaping-json",
+      "title": "Search Result Shaping draft JSON",
+      "last_updated": "2026-03-30",
+      "parent_id": "search-result-shaping",
+      "sort_order": 10,
+      "source_path": "search/search-result-shaping-json.md",
+      "legacy_url": "/docs/search/search-result-shaping-json/",
+      "viewer_url": "/docs/?doc=search-result-shaping-json",
+      "content_url": "/assets/data/docs/by-id/search-result-shaping-json.json"
+    },
+    {
+      "doc_id": "search-result-shaping-json-slimmer",
+      "title": "Search Result Shaping draft slimmer JSON",
+      "last_updated": "2026-03-30",
+      "parent_id": "search-result-shaping",
+      "sort_order": 10,
+      "source_path": "search/search-result-shaping-slimmer-json.md",
+      "legacy_url": "/docs/search/search-result-shaping-slimmer-json/",
+      "viewer_url": "/docs/?doc=search-result-shaping-json-slimmer",
+      "content_url": "/assets/data/docs/by-id/search-result-shaping-json-slimmer.json"
     },
     {
       "doc_id": "site",
@@ -440,6 +462,17 @@
       "legacy_url": "/docs/search/search-config-implementation-note/",
       "viewer_url": "/docs/?doc=search-config-implementation-note",
       "content_url": "/assets/data/docs/by-id/search-config-implementation-note.json"
+    },
+    {
+      "doc_id": "search-result-shaping",
+      "title": "Search Result Shaping",
+      "last_updated": "2026-03-30",
+      "parent_id": "search",
+      "sort_order": 200,
+      "source_path": "search/search-result-shaping.md",
+      "legacy_url": "/docs/search/search-result-shaping/",
+      "viewer_url": "/docs/?doc=search-result-shaping",
+      "content_url": "/assets/data/docs/by-id/search-result-shaping.json"
     },
     {
       "doc_id": "css-audit-spec",
