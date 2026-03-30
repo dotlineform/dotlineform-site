@@ -8,6 +8,9 @@
   var pathEl = document.getElementById("docsViewerPath");
   var updatedEl = document.getElementById("docsViewerUpdated");
   var content = document.getElementById("docsViewerContent");
+  var searchInput = document.getElementById("docsViewerSearchInput");
+  var results = document.getElementById("docsViewerResults");
+  var more = document.getElementById("docsViewerMore");
 
   var indexUrl = appendAssetVersion(root.dataset.indexUrl);
   var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
@@ -15,6 +18,10 @@
   var includeScopeParam = root.dataset.includeScopeParam === "true";
   var defaultRouteDocId = String(root.dataset.defaultDocId || "").trim();
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
+  var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
+  var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
+  var SEARCH_BATCH_SIZE = 50;
+  var SEARCH_DEBOUNCE_MS = 140;
 
   var state = {
     docs: [],
@@ -23,7 +30,14 @@
     payloadCache: new Map(),
     selectedDocId: "",
     expandedDocIds: new Set(),
-    requestId: 0
+    requestId: 0,
+    searchEntries: [],
+    searchLoaded: false,
+    searchRequestPromise: null,
+    searchQuery: "",
+    searchVisibleCount: SEARCH_BATCH_SIZE,
+    searchDebounceId: null,
+    searchRouteActive: false
   };
 
   function sortKey(doc) {
@@ -53,12 +67,23 @@
     return window.location.hash ? window.location.hash.slice(1) : "";
   }
 
-  function viewerUrl(docId, hash) {
+  function getCurrentQuery() {
+    return (new URLSearchParams(window.location.search).get("q") || "").trim();
+  }
+
+  function hasActiveQuery(query) {
+    return Boolean(normalize(typeof query === "string" ? query : state.searchQuery));
+  }
+
+  function viewerUrl(docId, hash, query) {
     var url = new URL(viewerBaseUrl, window.location.origin);
     if (includeScopeParam && viewerScope) {
       url.searchParams.set("scope", viewerScope);
     }
     url.searchParams.set("doc", docId);
+    if (typeof query === "string" && query.trim()) {
+      url.searchParams.set("q", query.trim());
+    }
     url.hash = hash || "";
     return url.pathname + url.search + url.hash;
   }
@@ -222,9 +247,33 @@
     target.scrollIntoView({ block: "start", behavior: "auto" });
   }
 
+  function hideDocPane() {
+    meta.hidden = true;
+    content.hidden = true;
+  }
+
+  function showDocPane() {
+    content.hidden = false;
+    results.hidden = true;
+    more.hidden = true;
+    more.innerHTML = "";
+  }
+
+  function showSearchPane() {
+    hideDocPane();
+    results.hidden = false;
+  }
+
   function renderPayload(doc, payload, hash) {
     state.selectedDocId = doc.doc_id;
     renderSidebar();
+
+    if (hasActiveQuery()) {
+      renderSearchMode();
+      return;
+    }
+
+    showDocPane();
     renderMeta(doc);
     content.innerHTML = payload.content_html || "";
     document.title = doc.title + " | dotlineform";
@@ -235,16 +284,23 @@
     });
   }
 
-  function setHistory(docId, hash, mode) {
+  function setHistory(docId, hash, query, mode) {
     if (mode === "none") return;
 
-    var nextUrl = viewerUrl(docId, hash);
+    var nextUrl = viewerUrl(docId, hash, query);
+    var nextState = { docId: docId, hash: hash || "", q: query || "" };
     if (mode === "replace") {
-      window.history.replaceState({ docId: docId, hash: hash || "" }, "", nextUrl);
+      window.history.replaceState(nextState, "", nextUrl);
       return;
     }
 
-    window.history.pushState({ docId: docId, hash: hash || "" }, "", nextUrl);
+    window.history.pushState(nextState, "", nextUrl);
+  }
+
+  function cancelSearchDebounce() {
+    if (state.searchDebounceId == null) return;
+    window.clearTimeout(state.searchDebounceId);
+    state.searchDebounceId = null;
   }
 
   function loadDoc(docId, options) {
@@ -254,18 +310,11 @@
     var doc = state.docsById.get(docId);
     if (!doc) {
       setStatus("Document not found.", true);
-      meta.hidden = true;
+      hideDocPane();
       content.textContent = "";
-      return;
-    }
-
-    setHistory(docId, hash, mode);
-
-    if (state.payloadCache.has(docId)) {
-      if (shouldExpandTrail) {
-        expandTrail(docId);
-      }
-      renderPayload(doc, state.payloadCache.get(docId), hash);
+      results.innerHTML = "";
+      more.innerHTML = "";
+      more.hidden = true;
       return;
     }
 
@@ -273,7 +322,16 @@
     if (shouldExpandTrail) {
       expandTrail(docId);
     }
+
+    setHistory(docId, hash, "", mode);
+
+    if (state.payloadCache.has(docId)) {
+      renderPayload(doc, state.payloadCache.get(docId), hash);
+      return;
+    }
+
     renderSidebar();
+    showDocPane();
     renderMeta(doc);
     setStatus("Loading " + doc.title + "...", false);
     content.textContent = "";
@@ -336,8 +394,69 @@
       if (!route) return;
 
       event.preventDefault();
+      cancelSearchDebounce();
+      state.searchQuery = "";
+      state.searchVisibleCount = SEARCH_BATCH_SIZE;
+      if (searchInput) {
+        searchInput.value = "";
+      }
       loadDoc(route.docId, { historyMode: "push", hash: route.hash });
     });
+
+    if (searchEnabled) {
+      more.addEventListener("click", function (event) {
+        var button = event.target.closest("button[data-role='more']");
+        if (!button) return;
+        state.searchVisibleCount += SEARCH_BATCH_SIZE;
+        renderSearchMode();
+      });
+
+      searchInput.addEventListener("input", function () {
+        var nextQuery = String(searchInput.value || "").trim();
+        var nextModeActive = Boolean(normalize(nextQuery));
+        var previousModeActive = state.searchRouteActive;
+        var activeDocId = state.selectedDocId || resolveDocId().docId || "";
+
+        cancelSearchDebounce();
+        state.searchQuery = nextQuery;
+        state.searchVisibleCount = SEARCH_BATCH_SIZE;
+
+        if (!activeDocId) {
+          return;
+        }
+
+        if (!nextModeActive) {
+          state.searchRouteActive = false;
+          setHistory(activeDocId, "", "", previousModeActive ? "replace" : "none");
+          applyCurrentRoute({ historyMode: "none", hash: "" });
+          return;
+        }
+
+        state.searchRouteActive = true;
+        setHistory(activeDocId, "", nextQuery, previousModeActive ? "replace" : "push");
+        renderSearchPendingState();
+        state.searchDebounceId = window.setTimeout(function () {
+          state.searchDebounceId = null;
+          applyCurrentRoute({ historyMode: "none", hash: "" });
+        }, SEARCH_DEBOUNCE_MS);
+      });
+    }
+  }
+
+  function resolveDocId() {
+    var requestedDocId = getCurrentDocId();
+    var resolvedDocId = requestedDocId;
+    if (!state.docsById.has(resolvedDocId) && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
+      resolvedDocId = defaultRouteDocId;
+    }
+    if (!state.docsById.has(resolvedDocId)) {
+      resolvedDocId = defaultDocId();
+    }
+    return {
+      requestedDocId: requestedDocId,
+      docId: resolvedDocId,
+      corrected: resolvedDocId !== requestedDocId
+    };
   }
 
   function initializeIndex(payload) {
@@ -356,23 +475,41 @@
       return;
     }
 
-    var initialDocId = getCurrentDocId();
-    if (!state.docsById.has(initialDocId) && defaultRouteDocId && state.docsById.has(defaultRouteDocId)) {
-      initialDocId = defaultRouteDocId;
-    }
-    if (!state.docsById.has(initialDocId)) {
-      initialDocId = defaultDocId();
-    }
+    applyCurrentRoute({ historyMode: "replace", hash: getCurrentHash() });
+  }
 
-    if (!initialDocId) {
+  function applyCurrentRoute(options) {
+    var route = resolveDocId();
+    var docId = route.docId;
+    if (!docId) {
       setStatus("No docs available.", true);
       return;
     }
 
-    loadDoc(initialDocId, {
-      historyMode: "replace",
-      hash: getCurrentHash(),
-      expandTrail: Boolean(state.docsById.get(initialDocId).parent_id)
+    var query = getCurrentQuery();
+    state.searchQuery = query;
+    state.searchRouteActive = hasActiveQuery(query);
+    state.selectedDocId = docId;
+    if (searchInput) {
+      searchInput.value = query;
+    }
+
+    expandTrail(docId);
+    renderSidebar();
+
+    if (route.corrected) {
+      setHistory(docId, "", query, "replace");
+    }
+
+    if (state.searchRouteActive) {
+      renderSearchMode();
+      return;
+    }
+
+    loadDoc(docId, {
+      historyMode: options && options.historyMode ? options.historyMode : "push",
+      hash: options && options.hash ? options.hash : getCurrentHash(),
+      expandTrail: Boolean(state.docsById.get(docId).parent_id)
     });
   }
 
@@ -390,20 +527,216 @@
       })
       .catch(function (error) {
         setStatus(error.message || "Failed to load docs index.", true);
+        hideDocPane();
         content.textContent = "";
       });
   }
 
+  function loadSearchEntries() {
+    if (!searchEnabled) {
+      return Promise.reject(new Error("Search unavailable."));
+    }
+    if (state.searchLoaded) {
+      return Promise.resolve(state.searchEntries);
+    }
+    if (state.searchRequestPromise) {
+      return state.searchRequestPromise;
+    }
+
+    state.searchRequestPromise = window
+      .fetch(searchIndexUrl, { headers: { Accept: "application/json" } })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Failed to load search data (" + response.status + ")");
+        }
+        return response.json();
+      })
+      .then(function (payload) {
+        state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
+        state.searchLoaded = true;
+        return state.searchEntries;
+      })
+      .catch(function (error) {
+        state.searchLoaded = false;
+        throw error;
+      })
+      .finally(function () {
+        state.searchRequestPromise = null;
+      });
+
+    return state.searchRequestPromise;
+  }
+
+  function normalizeSearchEntries(entries) {
+    return entries
+      .filter(function (entry) {
+        return entry && typeof entry === "object";
+      })
+      .map(function (entry) {
+        var kind = normalize(String(entry.kind || ""));
+        var id = String(entry.id || "").trim();
+        var title = String(entry.title || "").trim();
+        var href = String(entry.href || "").trim();
+        var displayMeta = String(entry.display_meta || "").trim();
+        var parentTitle = String(entry.parent_title || "").trim();
+        var searchTerms = Array.isArray(entry.search_terms)
+          ? entry.search_terms.map(function (item) { return normalize(String(item || "")); }).filter(Boolean)
+          : [];
+        return {
+          kind: kind,
+          id: id,
+          title: title,
+          href: href,
+          displayMeta: displayMeta,
+          parentTitle: parentTitle,
+          searchTerms: searchTerms,
+          searchText: normalize(String(entry.search_text || "")),
+          titleNorm: normalize(title),
+          idNorm: normalize(id),
+          titleTokens: normalize(title).split(" ").filter(Boolean),
+          parentTitleNorm: normalize(parentTitle)
+        };
+      })
+      .filter(function (entry) {
+        return entry.kind === "doc" && entry.id && entry.title;
+      });
+  }
+
+  function scoreSearchEntry(entry, query, queryTokens) {
+    if (entry.idNorm === query) return 900;
+    if (entry.titleNorm === query) return 860;
+    if (entry.searchTerms.indexOf(query) >= 0) return 780;
+    if (entry.titleNorm.indexOf(query) === 0) return 720;
+    if (entry.idNorm.indexOf(query) === 0) return 690;
+    if (queryTokens.every(function (token) {
+      return entry.titleTokens.some(function (candidate) {
+        return candidate === token || candidate.indexOf(token) === 0;
+      });
+    })) return 620;
+    if (entry.parentTitleNorm && entry.parentTitleNorm.indexOf(query) >= 0) return 460;
+    if (entry.searchText.indexOf(query) >= 0) return 320;
+    return null;
+  }
+
+  function matchesAllTokens(entry, queryTokens) {
+    return queryTokens.every(function (token) {
+      if (entry.searchTerms.some(function (candidate) { return candidate === token || candidate.indexOf(token) === 0; })) {
+        return true;
+      }
+      return entry.searchText.indexOf(token) >= 0;
+    });
+  }
+
+  function collectSearchMatches(query) {
+    var queryTokens = query.split(" ").filter(Boolean);
+    if (!queryTokens.length) return [];
+
+    var matches = [];
+    state.searchEntries.forEach(function (entry) {
+      if (!matchesAllTokens(entry, queryTokens)) return;
+      var score = scoreSearchEntry(entry, query, queryTokens);
+      if (score == null) return;
+      matches.push({ entry: entry, score: score });
+    });
+
+    matches.sort(function (left, right) {
+      if (left.score !== right.score) return right.score - left.score;
+      var titleCmp = left.entry.title.localeCompare(right.entry.title, undefined, { sensitivity: "base", numeric: true });
+      if (titleCmp !== 0) return titleCmp;
+      return left.entry.id.localeCompare(right.entry.id, undefined, { sensitivity: "base", numeric: true });
+    });
+
+    return matches;
+  }
+
+  function renderSearchEntry(entry) {
+    var metaText = entry.displayMeta || entry.parentTitle || "";
+    return (
+      '<li class="docsViewer__resultItem">' +
+        '<a class="docsViewer__resultTitle" href="' + escapeHtml(viewerUrl(entry.id, "", "")) + '">' + escapeHtml(entry.title) + '</a>' +
+        '<p class="docsViewer__resultId">' + escapeHtml(entry.id) + '</p>' +
+        (metaText ? '<p class="docsViewer__resultMeta">' + escapeHtml(metaText) + '</p>' : '') +
+      '</li>'
+    );
+  }
+
+  function renderSearchPendingState() {
+    if (!searchEnabled || !hasActiveQuery()) return;
+    showSearchPane();
+    setStatus(state.searchLoaded ? "Searching..." : "Loading search index...", false);
+    results.innerHTML = "";
+    more.innerHTML = "";
+    more.hidden = true;
+    document.title = "Search | dotlineform";
+  }
+
+  function renderSearchMode() {
+    if (!searchEnabled) {
+      setStatus("Search unavailable.", true);
+      hideDocPane();
+      results.hidden = true;
+      more.hidden = true;
+      return;
+    }
+
+    var query = normalize(state.searchQuery);
+    if (!query) {
+      return;
+    }
+
+    showSearchPane();
+    document.title = "Search | dotlineform";
+
+    if (!state.searchLoaded) {
+      renderSearchPendingState();
+      loadSearchEntries()
+        .then(function () {
+          if (hasActiveQuery()) {
+            renderSearchMode();
+          }
+        })
+        .catch(function (error) {
+          if (!hasActiveQuery()) return;
+          setStatus(error.message || "Failed to load search data.", true);
+          results.innerHTML = "";
+          more.innerHTML = "";
+          more.hidden = true;
+        });
+      return;
+    }
+
+    var matches = collectSearchMatches(query);
+    if (!matches.length) {
+      setStatus("No results.", false);
+      results.innerHTML = "";
+      more.innerHTML = "";
+      more.hidden = true;
+      return;
+    }
+
+    var visible = matches.slice(0, state.searchVisibleCount);
+    setStatus(matches.length === 1
+      ? "1 result"
+      : matches.length > visible.length
+        ? "Showing " + visible.length + " of " + matches.length + " results"
+        : matches.length + " results",
+    false);
+    results.innerHTML = visible.map(function (match) {
+      return renderSearchEntry(match.entry);
+    }).join("");
+    if (matches.length > visible.length) {
+      more.hidden = false;
+      more.innerHTML = '<button type="button" class="docsViewer__moreBtn" data-role="more">more</button>';
+    } else {
+      more.hidden = true;
+      more.innerHTML = "";
+    }
+  }
+
   window.addEventListener("popstate", function () {
     if (state.docs.length === 0) return;
-
-    var docId = getCurrentDocId();
-    if (!state.docsById.has(docId)) {
-      docId = defaultDocId();
-    }
-    if (!docId) return;
-
-    loadDoc(docId, { historyMode: "none", hash: getCurrentHash() });
+    cancelSearchDebounce();
+    applyCurrentRoute({ historyMode: "none", hash: getCurrentHash() });
   });
 
   bindLinkInterception();
@@ -424,5 +757,22 @@
     var meta = document.querySelector('meta[name="dlf-asset-version"]');
     if (!meta) return "";
     return String(meta.getAttribute("content") || "").trim();
+  }
+
+  function normalize(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 })();

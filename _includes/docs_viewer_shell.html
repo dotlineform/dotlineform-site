@@ -6,6 +6,7 @@
   data-viewer-scope="{{ include.viewer_scope | default: '' }}"
   data-include-scope-param="{{ include.include_scope_param | default: false }}"
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
+  data-search-index-url="{{ include.search_index_url | default: '' }}"
 >
   <aside class="docsViewer__sidebar" aria-label="Docs index">
     <div class="docsViewer__sidebarInner">
@@ -15,19 +16,21 @@
 
   <article class="docsViewer__main" aria-live="polite">
     <div class="docsViewer__mainHeader">
-      <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
-      {%- if include.search_href -%}
-      <a
-        class="theme-toggle docsViewer__searchBtn"
-        href="{{ include.search_href }}"
-        aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
-      >
-        <svg class="docsViewer__searchIcon" viewBox="0 0 16 16" aria-hidden="true">
-          <circle cx="7" cy="7" r="4.2"></circle>
-          <path d="M10.3 10.3 14 14"></path>
-        </svg>
-      </a>
+      {%- if include.search_index_url -%}
+      <div class="docsViewer__search">
+        <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
+        <input
+          class="docsViewer__searchInput"
+          id="docsViewerSearchInput"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="{{ include.search_placeholder | default: 'search docs' }}"
+          aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
+        >
+      </div>
       {%- endif -%}
+      <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
     </div>
     <div class="docsViewer__meta" id="docsViewerMeta" hidden>
       <p class="docsViewer__path small" id="docsViewerPath"></p>
@@ -36,6 +39,8 @@
     <div class="docsViewer__content content" id="docsViewerContent">
       <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>
     </div>
+    <ol class="docsViewer__results" id="docsViewerResults" hidden></ol>
+    <div class="docsViewer__more" id="docsViewerMore" hidden></div>
   </article>
 </section>
 

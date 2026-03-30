@@ -62,6 +62,23 @@
 - After changing Python scripts, run a syntax check with the configured interpreter.
 - After generator changes, run a dry-run and summarize what would be written.
 - After layout/template changes, verify behavior on desktop and mobile.
+- For a Codex-run browser smoke test on this machine, prefer local Playwright Chromium via the Miniconda Python environment:
+  - Playwright CLI: `/Users/dlf/miniconda3/bin/playwright`
+  - Python entrypoint: `/Users/dlf/miniconda3/bin/python -m playwright`
+  - example one-off smoke test:
+    - `/Users/dlf/miniconda3/bin/python - <<'PY'`
+    - `from pathlib import Path`
+    - `from playwright.sync_api import sync_playwright`
+    - `url = Path('/tmp/dlf-jekyll-build/docs/index.html').resolve().as_uri()`
+    - `with sync_playwright() as p:`
+    - `    browser = p.chromium.launch(headless=True)`
+    - `    page = browser.new_page()`
+    - `    page.goto(url, wait_until='domcontentloaded')`
+    - `    print(page.title())`
+    - `    browser.close()`
+    - `PY`
+  - installed browsers currently live under `~/Library/Caches/ms-playwright/`
+- Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - Always define targeted verification for both:
   - Codex-run checks
   - manual checks

@@ -28,17 +28,21 @@ Current goals:
 
 ## Current scope
 
-The current implementation is a public search surface at `/search/`.
+The current implementation has two public search surfaces:
+
+- a dedicated catalogue search page at `/search/`
+- an inline Studio docs search experience on `/docs/`
 
 It is based on:
 
 - a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
 - a dedicated search-owned Studio search artifact: `assets/data/search/studio/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
+- a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio docs search
 - no third-party search libraries, plugins, or external search services
 - an initial search-owned builder entrypoint for future non-catalogue scopes at `scripts/build_search_data.rb`
 
-The browser loads the base search index once for the page session and searches it in memory.
+The browser loads scope-owned search data into memory per surface as needed.
 
 ## Content covered by search
 
@@ -85,7 +89,7 @@ The client runtime loads the search index, normalizes the loaded values into run
 
 ### 5. Search UI
 
-The public search page captures the query, requires an explicit `scope` URL context, renders result counts and result rows, and reveals additional result batches with a `more` control when needed.
+Catalogue search uses the dedicated `/search/` page, while Studio docs search is handled inline in the docs viewer by replacing the right content pane with results when `q` is present in the docs URL.
 
 ## Design principles
 
@@ -146,16 +150,16 @@ Those belong in the dedicated companion documents.
 Current implementation status:
 
 - v1 is implemented as a public page at `/search/`
-- the current usable public routes are `/search/?scope=catalogue` and `/search/?scope=studio`
+- the current dedicated public route is `/search/?scope=catalogue`
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
 - a search-owned Studio builder emits `assets/data/search/studio/index.json` from published Studio docs outputs
 - indexed content types are works, series, moments, and Studio docs
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
-- Studio docs search is entered from `/docs/`
+- Studio docs search is inline on `/docs/`
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
-This is a production-like v1 implementation with a public catalogue entry point, but it is still a single-scope surface rather than the later modular multi-domain search architecture.
+This is a production-like implementation with a dedicated catalogue search page and an inline Studio docs search surface, but it is still early in the wider multi-domain search architecture.
 
 ## Open questions
 

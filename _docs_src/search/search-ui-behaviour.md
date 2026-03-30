@@ -18,7 +18,7 @@ This is a UI-behaviour document. It is not the ranking, schema, or build-pipelin
 
 ## Scope
 
-This document applies to the current public search page at `/search/`.
+This document applies to the current dedicated public search page at `/search/`.
 
 It covers:
 
@@ -68,7 +68,6 @@ The v1 public surface favors explicit behaviour over more advanced overlay or au
 Current entry point:
 
 - dedicated public page: `/search/?scope=catalogue`
-- Studio docs CTA on `/docs/` linking to `/search/?scope=studio`
 
 Current status:
 
@@ -125,7 +124,7 @@ Current behaviour:
 Current scope policy:
 
 - `catalogue` is enabled
-- `studio` is enabled
+- `studio` is disabled on the dedicated search page because Studio docs search is now inline on `/docs/`
 - `library` exists as a reserved scope but is currently disabled
 
 If the page loads without a valid scope:
@@ -309,7 +308,7 @@ There is also no blur-driven result dismissal because results are rendered inlin
 
 Current implemented scope control:
 
-- URL scope only: `scope=catalogue` and `scope=studio`
+- URL scope only: `scope=catalogue`
 
 Current non-features:
 

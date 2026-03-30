@@ -18,7 +18,7 @@ This is a contract-and-behaviour document. It does not define ranking rules, ind
 
 ## Why this document exists now
 
-Search now has a public route at `/search/` and is still built around one current scope-backed search surface, with `catalogue` backed by `assets/data/search/catalogue/index.json`.
+Search now has a public route at `/search/`, with `catalogue` backed by `assets/data/search/catalogue/index.json`, and an inline Studio docs search surface on `/docs/`.
 
 That implementation is sufficient for the current indexed content, but the route/state contract still needs to stay explicit as:
 
@@ -31,9 +31,9 @@ The public UI contract needs to be clarified before those structural changes hap
 
 Public search should use:
 
-- one dedicated top-level route: `/search/`
 - explicit scope passed in the URL
 - search call-to-action entry points placed on the page that owns the search scope
+- the page anatomy that best fits the content domain, whether that is a dedicated route or inline viewer search
 
 Public search should not initially use:
 
@@ -49,7 +49,7 @@ The public search page route should be:
 
 - `/search/`
 
-This route should become the shared public search shell for all supported public search scopes.
+This route is the dedicated public search shell for catalogue search and remains available for any future scope that genuinely benefits from a standalone search page.
 
 ### Query parameter contract
 
@@ -58,12 +58,10 @@ Recommended URL contract:
 - `scope=<domain>`
 - `q=<query>`
 
-Examples:
+Examples for dedicated route search:
 
 - `/search/?scope=catalogue`
 - `/search/?scope=catalogue&q=forest`
-- `/search/?scope=studio&q=tags`
-- `/search/?scope=library&q=glass`
 
 ### Why `scope` and `q`
 
@@ -133,9 +131,9 @@ The search call to action should live on the page that matches the search scope.
 
 Examples:
 
-- the catalogue search CTA should live on `/series/`
-- a Studio search CTA should live on a Studio-owned shell page
-- a library search CTA should live on `/library/`
+- the catalogue search CTA should live on `/series/` and open `/search/?scope=catalogue`
+- Studio docs search should live inline on `/docs/`
+- a future library docs search can live inline on `/library/`
 
 Reason:
 
@@ -155,7 +153,7 @@ Reason:
 
 This rule does not forbid a future site-wide search affordance forever. It means the default public search model should be scope-led rather than globally ambiguous.
 
-## Search-page UI responsibilities
+## Dedicated search-page UI responsibilities
 
 The `/search/` page should:
 
@@ -224,15 +222,15 @@ This is the main reason to define the contract now.
 
 ## Current implementation status
 
-The first public rollout is now in place:
+The current public rollout is now split by page anatomy:
 
-1. the public search page exists at `/search/`
-2. the live public scopes are `catalogue` and `studio`
+1. the dedicated public search page exists at `/search/`
+2. the live dedicated-route scope is `catalogue`
 3. `/series/` provides the catalogue search CTA
-4. `/docs/` provides the Studio search CTA
-5. the page UI names the active scope
+4. Studio docs search lives inline on `/docs/`
+5. future scopes can still use `/search/` if a standalone page is the better fit
 
-The next phase can now focus on modular domain-specific search artifacts and policy/config behind the same public route contract.
+The next phase can now focus on domain-specific search surfaces and artifacts behind the same scope vocabulary.
 
 ## Out of scope for this document
 

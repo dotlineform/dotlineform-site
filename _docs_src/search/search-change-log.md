@@ -8,6 +8,35 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Moved Studio docs search inline into `/docs/` and returned `/search/` to catalogue-only
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Removed the `/docs/` link-out to `/search/?scope=studio`, added always-visible inline search inside the docs viewer, and disabled `studio` on the dedicated `/search/` page so catalogue search and docs-domain search now use different UI surfaces.
+
+**Reason:**  
+For Studio docs, inline search is a better fit than a separate page because the sidebar remains active and the search results can replace only the right content pane without losing context. The dedicated `/search/` page remains the right fit for the catalogue.
+
+**Effect:**  
+`/docs/` now owns Studio docs search directly, `assets/js/docs-viewer.js` lazily loads `assets/data/search/studio/index.json` when `q` is present, and `/search/` is once again the dedicated catalogue search surface.
+
+**Affected files/docs:**  
+- `_includes/docs_viewer_shell.html`
+- `docs/index.md`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- `assets/data/search/policy.json`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Docs Viewer Runtime Boundary](/docs/?doc=docs-viewer-runtime-boundary)
+
+**Notes:**  
+This change intentionally removes the transitional dual-UI state for Studio search. The dedicated `/search/` page now documents and serves the catalogue scope only.
+
 ## [2026-03-30] Enabled public `scope=studio` search and added the Studio docs search entry point
 
 **Status:** implemented

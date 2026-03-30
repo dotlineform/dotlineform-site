@@ -29,7 +29,7 @@
       "input_placeholder": "search library"
     },
     "studio": {
-      "enabled": true,
+      "enabled": false,
       "scope_label": "studio",
       "back_label": "← docs",
       "back_route_key": "docs_page",

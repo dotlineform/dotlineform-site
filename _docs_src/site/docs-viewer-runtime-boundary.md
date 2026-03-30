@@ -44,7 +44,7 @@ Current scope-owned data:
 
 These are normal route-shell differences and should not force a runtime fork.
 
-- scope-specific CTA buttons such as search
+- scope-specific inline search controls or other shell actions
 - different viewer data index URLs
 - different base routes and default docs
 - surrounding page context and navigation state
