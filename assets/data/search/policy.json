@@ -29,10 +29,10 @@
       "input_placeholder": "search library"
     },
     "studio": {
-      "enabled": false,
+      "enabled": true,
       "scope_label": "studio",
-      "back_label": "← studio",
-      "back_route_key": "studio_home",
+      "back_label": "← docs",
+      "back_route_key": "docs_page",
       "input_aria_label": "Search Studio docs",
       "input_placeholder": "search studio docs"
     }

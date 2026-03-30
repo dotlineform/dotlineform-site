@@ -2,7 +2,7 @@
 layout: default
 title: Search
 permalink: /search/
-section: series
+section: search
 ---
 
 <div

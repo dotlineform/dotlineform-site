@@ -33,6 +33,7 @@ The current implementation is a public search surface at `/search/`.
 It is based on:
 
 - a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
+- a dedicated search-owned Studio search artifact: `assets/data/search/studio/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - no third-party search libraries, plugins, or external search services
 - an initial search-owned builder entrypoint for future non-catalogue scopes at `scripts/build_search_data.rb`
@@ -46,12 +47,12 @@ Current indexed content types:
 - works
 - series
 - moments
+- Studio docs
 
 Current content intentionally excluded from v1 search:
 
 - long-form prose or full-text body content
-- docs content
-- Studio/admin pages
+- Studio/admin tools and non-doc pages
 - notes or other non-canonical site sections not represented in the search index
 
 The current search model is built around one record per searchable item in those three content types.
@@ -145,12 +146,13 @@ Those belong in the dedicated companion documents.
 Current implementation status:
 
 - v1 is implemented as a public page at `/search/`
-- the current usable public route is `/search/?scope=catalogue`
+- the current usable public routes are `/search/?scope=catalogue` and `/search/?scope=studio`
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
-- a search-owned Studio builder now exists and can emit `assets/data/search/studio/index.json`, but public `scope=studio` search is not enabled yet
-- indexed content types are works, series, and moments
+- a search-owned Studio builder emits `assets/data/search/studio/index.json` from published Studio docs outputs
+- indexed content types are works, series, moments, and Studio docs
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
+- Studio docs search is entered from `/docs/`
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
 This is a production-like v1 implementation with a public catalogue entry point, but it is still a single-scope surface rather than the later modular multi-domain search architecture.

@@ -68,6 +68,7 @@ The v1 public surface favors explicit behaviour over more advanced overlay or au
 Current entry point:
 
 - dedicated public page: `/search/?scope=catalogue`
+- Studio docs CTA on `/docs/` linking to `/search/?scope=studio`
 
 Current status:
 
@@ -80,7 +81,7 @@ Not yet implemented:
 
 - main site header search
 - overlay or dropdown search
-- additional public scope entry points beyond catalogue
+- public library search entry points
 
 ## Search activation behaviour
 
@@ -124,7 +125,7 @@ Current behaviour:
 Current scope policy:
 
 - `catalogue` is enabled
-- `studio` exists as a reserved scope but is currently disabled
+- `studio` is enabled
 - `library` exists as a reserved scope but is currently disabled
 
 If the page loads without a valid scope:
@@ -308,7 +309,7 @@ There is also no blur-driven result dismissal because results are rendered inlin
 
 Current implemented scope control:
 
-- URL scope only: `scope=catalogue`
+- URL scope only: `scope=catalogue` and `scope=studio`
 
 Current non-features:
 

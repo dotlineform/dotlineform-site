@@ -11,6 +11,7 @@ const DEFAULT_STUDIO_CONFIG = {
       tag_aliases: "/studio/tag-aliases/",
       tag_groups: "/studio/tag-groups/",
       series_page_base: "/series/",
+      docs_page: "/docs/",
       library_page: "/library/",
       works_page_base: "/works/",
       site_map: "/site_map/"
@@ -172,7 +173,8 @@ const DEFAULT_STUDIO_CONFIG = {
       result_meta_separator: " • ",
       result_kind_work: "work",
       result_kind_series: "series",
-      result_kind_moment: "moment"
+      result_kind_moment: "moment",
+      result_kind_doc: "doc"
     }
   }
 };

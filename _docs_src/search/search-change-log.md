@@ -8,6 +8,36 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Enabled public `scope=studio` search and added the Studio docs search entry point
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Enabled the `studio` search scope in policy, added a search icon CTA to `/docs/`, and extended the shared search runtime so Studio docs records render and rank correctly in the public search shell.
+
+**Reason:**  
+The first Studio search artifact already existed, so the next step was to expose it through the same scope-led `/search/` route model already used by `catalogue`.
+
+**Effect:**  
+`/search/?scope=studio` now loads a live Studio docs search index, the docs page provides the scope-owned CTA, and the search page returns to `/docs/` via the scope-driven back link.
+
+**Affected files/docs:**  
+- `_includes/docs_viewer_shell.html`
+- `docs/index.md`
+- `assets/data/search/policy.json`
+- `assets/js/search/search-page.js`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+
+**Notes:**  
+This change enables Studio docs search only. It does not add `library` search or change the long-term search-pipeline ownership model.
+
 ## [2026-03-30] Added the first search-owned builder entrypoint and generated the Studio search artifact
 
 **Status:** implemented

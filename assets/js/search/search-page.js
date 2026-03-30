@@ -36,6 +36,7 @@ async function initSearchPage() {
     policy = await loadSearchPolicyFn(getSearchPolicyPathFn(config));
 
     const scope = resolveScope();
+    applyNavScopeState(scope);
     if (!scope) {
       showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy });
       return;
@@ -148,6 +149,7 @@ function normalizeEntries(entries) {
       const title = String(entry.title || "").trim();
       const href = String(entry.href || "").trim();
       const displayMeta = String(entry.display_meta || "").trim();
+      const parentTitle = String(entry.parent_title || "").trim();
       const seriesTitles = Array.isArray(entry.series_titles) ? entry.series_titles.map((item) => String(item || "").trim()).filter(Boolean) : [];
       const searchTerms = Array.isArray(entry.search_terms) ? entry.search_terms.map((item) => normalize(String(item || ""))).filter(Boolean) : [];
       return {
@@ -156,6 +158,7 @@ function normalizeEntries(entries) {
         title,
         href,
         displayMeta,
+        parentTitle,
         year: Number.isFinite(Number(entry.year)) ? Number(entry.year) : null,
         date: String(entry.date || "").trim(),
         seriesTitles,
@@ -168,6 +171,7 @@ function normalizeEntries(entries) {
         titleNorm: normalize(title),
         idNorm: normalize(id),
         titleTokens: normalize(title).split(" ").filter(Boolean),
+        parentTitleNorm: normalize(parentTitle),
         seriesTitleNorms: seriesTitles.map(normalize).filter(Boolean),
         mediumTypeNorm: normalize(String(entry.medium_type || "")),
         storageNorm: normalize(String(entry.storage || "")),
@@ -232,6 +236,9 @@ function scoreEntry(entry, query) {
   const queryTokens = query.split(" ").filter(Boolean);
   if (!queryTokens.length) return null;
   if (!matchesAllTokens(entry, queryTokens)) return null;
+  if (entry.kind === "doc") {
+    return scoreStudioDocEntry(entry, query, queryTokens);
+  }
 
   if (entry.idNorm === query) return 900;
   if (entry.titleNorm === query) return 860;
@@ -243,6 +250,18 @@ function scoreEntry(entry, query) {
   if (entry.mediumTypeNorm && entry.mediumTypeNorm.includes(query)) return 460;
   if (entry.storageNorm && entry.storageNorm.includes(query)) return 440;
   if (entry.seriesTypeNorm && entry.seriesTypeNorm.includes(query)) return 420;
+  if (entry.searchText.includes(query)) return 320;
+  return null;
+}
+
+function scoreStudioDocEntry(entry, query, queryTokens) {
+  if (entry.idNorm === query) return 900;
+  if (entry.titleNorm === query) return 860;
+  if (entry.searchTerms.includes(query)) return 780;
+  if (entry.titleNorm.startsWith(query)) return 720;
+  if (entry.idNorm.startsWith(query)) return 690;
+  if (queryTokens.every((token) => entry.titleTokens.some((candidate) => candidate === token || candidate.startsWith(token)))) return 620;
+  if (entry.parentTitleNorm && entry.parentTitleNorm.includes(query)) return 460;
   if (entry.searchText.includes(query)) return 320;
   return null;
 }
@@ -293,6 +312,7 @@ function kindLabel(config, kind) {
   if (kind === "work") return searchText(config, "result_kind_work", "work");
   if (kind === "series") return searchText(config, "result_kind_series", "series");
   if (kind === "moment") return searchText(config, "result_kind_moment", "moment");
+  if (kind === "doc") return searchText(config, "result_kind_doc", "doc");
   return kind;
 }
 
@@ -334,6 +354,32 @@ function applyScopeText({ backLink, scopeLabel, input, config, scopePolicy, inpu
 
   input.removeAttribute("placeholder");
   input.setAttribute("aria-label", "Search unavailable");
+}
+
+function applyNavScopeState(scope) {
+  const navItems = Array.from(document.querySelectorAll(".site-nav .nav-item"));
+  if (!navItems.length) return;
+
+  for (const item of navItems) {
+    item.classList.remove("is-active");
+    if (item.tagName === "A") {
+      item.removeAttribute("aria-current");
+    }
+  }
+
+  let activeHref = "";
+  if (scope === "catalogue") activeHref = "/series/";
+  if (scope === "library") activeHref = "/library/";
+  if (!activeHref) return;
+
+  const activeItem = navItems.find((item) => {
+    if (item.tagName !== "A") return false;
+    return item.getAttribute("href") === activeHref;
+  });
+  if (!activeItem) return;
+
+  activeItem.classList.add("is-active");
+  activeItem.setAttribute("aria-current", "page");
 }
 
 function showMissingScopeState({ root, backLink, scopeLabel, input, status, results, more, policy }) {

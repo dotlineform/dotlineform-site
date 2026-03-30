@@ -606,12 +606,46 @@ th{ background: var(--panel-2); }
   min-width: 0;
 }
 
-.docsViewer__status{
+.docsViewer__mainHeader{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
   margin: 0 0 var(--space-2);
+}
+
+.docsViewer__status{
+  margin: 0;
 }
 
 .docsViewer__status.is-error{
   color: var(--link-hover);
+}
+
+.docsViewer__searchBtn.theme-toggle{
+  margin-left: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.575rem;
+  height: 1.575rem;
+  padding: 0;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.docsViewer__searchBtn:focus-visible{
+  text-decoration: none;
+}
+
+.docsViewer__searchIcon{
+  width: 0.92rem;
+  height: 0.92rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .docsViewer__meta{

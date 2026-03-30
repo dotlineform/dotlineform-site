@@ -227,9 +227,10 @@ This is the main reason to define the contract now.
 The first public rollout is now in place:
 
 1. the public search page exists at `/search/`
-2. the current public scope is `catalogue`
+2. the live public scopes are `catalogue` and `studio`
 3. `/series/` provides the catalogue search CTA
-4. the page UI names the active scope
+4. `/docs/` provides the Studio search CTA
+5. the page UI names the active scope
 
 The next phase can now focus on modular domain-specific search artifacts and policy/config behind the same public route contract.
 

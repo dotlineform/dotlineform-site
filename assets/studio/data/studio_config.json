@@ -11,6 +11,7 @@
       "tag_aliases": "/studio/tag-aliases/",
       "tag_groups": "/studio/tag-groups/",
       "series_page_base": "/series/",
+      "docs_page": "/docs/",
       "library_page": "/library/",
       "works_page_base": "/works/",
       "site_map": "/site_map/"
@@ -431,7 +432,8 @@
       "result_meta_separator": " • ",
       "result_kind_work": "work",
       "result_kind_series": "series",
-      "result_kind_moment": "moment"
+      "result_kind_moment": "moment",
+      "result_kind_doc": "doc"
     },
     "tag_groups": {
       "load_failed_error": "Failed to load group descriptions from /assets/studio/data/tag_groups.json.",

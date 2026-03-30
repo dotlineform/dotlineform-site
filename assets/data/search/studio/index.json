@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "sha256-f672116539b2630566329b7762d8649332075fc05ff27643dc56b21cecce0a25",
-    "generated_at_utc": "2026-03-30T18:09:12Z",
-    "count": 62
+    "version": "sha256-d8897d43ab7ec3f8263d9bc2230ff401b50406f872ee6d95dd5ddc63c533a7f9",
+    "generated_at_utc": "2026-03-30T19:01:38Z",
+    "count": 63
   },
   "entries": [
     {
@@ -755,6 +755,31 @@
         "28"
       ],
       "search_text": "tag-editor tag editor tag editor tagging 2026-03-28 2026 03 28"
+    },
+    {
+      "id": "scripts-build-search-data",
+      "kind": "doc",
+      "title": "Build Search Data",
+      "href": "/docs/?scope=studio&doc=scripts-build-search-data",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "parent_title": "Scripts Overview",
+      "display_meta": "2026-03-30 • Scripts Overview",
+      "search_terms": [
+        "scripts-build-search-data",
+        "scripts",
+        "build",
+        "search",
+        "data",
+        "build search data",
+        "scripts overview",
+        "overview",
+        "2026-03-30",
+        "2026",
+        "03",
+        "30"
+      ],
+      "search_text": "scripts-build-search-data scripts build search data build search data scripts overview overview 2026-03-30 2026 03 30"
     },
     {
       "id": "scripts-generate-work-pages",
