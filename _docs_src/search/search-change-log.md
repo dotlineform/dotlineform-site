@@ -8,6 +8,32 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Documented the target search-pipeline ownership model and the proposed Studio v1 record shape
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Added one doc describing the intended end-state where search owns its own pipeline and consumes canonical outputs from content systems, plus a second doc defining the proposed normalized record shape for `scope=studio` and how that first Studio rollout fits into the wider plan.
+
+**Reason:**  
+The next search scope will likely have a different upstream schema and different ranking needs from `catalogue`. The repo needed an explicit architectural guardrail so Studio search can ship pragmatically without making the generator or docs builder the conceptual owner of search.
+
+**Effect:**  
+Search now has a documented ownership boundary for the full subsystem and a concrete proposal for how Studio v1 should read canonical docs outputs through a search-owned adapter while still fitting the shared `/search/` shell.
+
+**Affected files/docs:**  
+- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
+- [Search](/docs/?doc=search)
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Config Architecture](/docs/?doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+
+**Notes:**  
+This is a documentation decision only. It does not yet implement Studio search indexing or a standalone search build script.
+
 ## [2026-03-30] Added a scope-aware runtime policy layer for the public search shell
 
 **Status:** implemented

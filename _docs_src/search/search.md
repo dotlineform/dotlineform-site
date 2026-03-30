@@ -25,5 +25,7 @@ This section describes the search planning and implementation.
 - [Validation Checklist](/docs/?doc=search-validation-checklist) - should be short and operational rather than explanatory
 - [Config Architecture](/docs/?doc=search-config-architecture) - this file explains the architecture choice; the registry and ranking docs should define the actual rules.
 - [Config Implementation Note](/docs/?doc=search-config-implementation-note) - sketches the concrete first config extraction and the later phases after that.
+- [Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture) - sketches the long-term ownership boundary where search owns its own pipeline and consumes canonical outputs from other systems.
+- [Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape) - defines the proposed `scope=studio` record shape and explains how Studio v1 fits the wider plan.
 - [Change Log Guidance](/docs/?doc=search-change-log-guidance)
 - [Change Log](/docs/?doc=search-change-log)

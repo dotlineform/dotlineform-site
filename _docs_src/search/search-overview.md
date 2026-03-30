@@ -131,6 +131,8 @@ Those belong in the dedicated companion documents.
 - [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
 - [Search Build Pipeline](/docs/?doc=search-build-pipeline)
 - [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
 - [Search Change Log Guidance](/docs/?doc=search-change-log-guidance)
 - [Search Change Log](/docs/?doc=search-change-log)
 - [Search Archive](/docs/?doc=search-archive)
@@ -159,3 +161,4 @@ High-level follow-up questions for the next phase:
 - when prose content expands substantially, how should prose search be added without inflating the base payload
 - which additional structured fields should be promoted from schema presence to first-class ranking or filter signals
 - how the later `studio` and `library` scopes should plug into the same public route contract
+- when the second search scope is live, what abstractions truly want to be shared across scope adapters and what should remain scope-specific

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T17:35:05Z",
+  "generated_at": "2026-03-30T17:55:55Z",
   "docs": [
     {
       "scope": "studio",
@@ -660,6 +660,30 @@
       "legacy_url": "/docs/search/search-config-implementation-note/",
       "viewer_url": "/docs/?scope=studio&doc=search-config-implementation-note",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-config-implementation-note.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-pipeline-target-architecture",
+      "title": "Search Pipeline Target Architecture",
+      "last_updated": "2026-03-30",
+      "parent_id": "search",
+      "sort_order": 102,
+      "source_path": "search/search-pipeline-target-architecture.md",
+      "legacy_url": "/docs/search/search-pipeline-target-architecture/",
+      "viewer_url": "/docs/?scope=studio&doc=search-pipeline-target-architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-pipeline-target-architecture.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-studio-v1-index-shape",
+      "title": "Search Studio V1 Index Shape",
+      "last_updated": "2026-03-30",
+      "parent_id": "search",
+      "sort_order": 103,
+      "source_path": "search/search-studio-v1-index-shape.md",
+      "legacy_url": "/docs/search/search-studio-v1-index-shape/",
+      "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-studio-v1-index-shape.json"
     },
     {
       "scope": "studio",

@@ -21,6 +21,8 @@ This document does not define the detailed rules themselves. Those belong in:
 - [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
 - [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
 - [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
 
 ## Current state
 
