@@ -1,7 +1,7 @@
 ---
 doc_id: site-shell-runtime
 title: Site Shell Runtime
-last_updated: 2026-03-28
+last_updated: 2026-03-30
 parent_id: site
 sort_order: 20
 ---
@@ -72,6 +72,12 @@ Reason:
 - removes repeated Liquid branches from the default layout
 - keeps current/active/default behavior consistent across top-level nav contexts
 - makes future nav changes lower-risk because the rendering contract lives in one include
+
+Current browsing-nav rule:
+
+- the public top-level browsing nav exposes only `works`
+- moment detail routes under `/moments/<moment_id>/` are treated as part of the `works` browsing section for active-nav state
+- there is no separate top-level `moments` nav item or `/moments/` landing-page UI
 
 ## Maintenance Rule
 

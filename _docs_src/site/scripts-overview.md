@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-overview
 title: Scripts Overview
-last_updated: 2026-03-28
+last_updated: 2026-03-30
 parent_id: site
 sort_order: 20
 ---
@@ -339,12 +339,12 @@ Useful flags:
 
 Runtime canonical data flow:
 
-- `/series/` and `/series/<series_id>/` read `assets/data/series_index.json`.
+- `/series/` reads `assets/data/series_index.json` and `assets/data/moments_index.json` for the merged works/moments catalogue.
+- `/series/<series_id>/` reads `assets/data/series_index.json`.
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata.
 - `/series/<series_id>/` reads `assets/series/index/<series_id>.json` for series prose HTML.
 - `/works/<work_id>/` reads `assets/works/index/<work_id>.json` for metadata, prose HTML, and detail sections; series nav/counter/link visibility also read `assets/data/series_index.json`.
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`.
-- `/moments/` reads `assets/data/moments_index.json` for card metadata.
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`.
 - `/studio/search/` reads `assets/data/search_index.json`.
 

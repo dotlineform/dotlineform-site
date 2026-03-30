@@ -69,32 +69,14 @@
           {% include nav_item.html label="series tags" href='/studio/series-tags/' class_name='nav-item' is_current=is_series_tags_index is_active=is_series_tags_active %}
           {% include nav_item.html label="docs" href='/docs/?doc=studio' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
         {% else %}
-          {%- assign is_series_index = false -%}
-          {%- assign is_series_active = false -%}
-          {%- if u == '/series/' -%}{%- assign is_series_index = true -%}{%- endif -%}
-          {%- if page.collection == 'series' or u_series == '/series/' -%}{%- assign is_series_active = true -%}{%- endif -%}
-
-          {%- assign is_moments_index = false -%}
-          {%- assign is_moments_active = false -%}
-          {%- if u == '/moments/' -%}{%- assign is_moments_index = true -%}{%- endif -%}
-          {%- if page.collection == 'moments' or u_moments == '/moments/' -%}{%- assign is_moments_active = true -%}{%- endif -%}
-
-          {% include nav_item.html label="works" href='/series/' class_name='nav-item nav-item--overflow' is_current=is_series_index is_active=is_series_active %}
-          {% include nav_item.html label="moments" href='/moments/' class_name='nav-item nav-item--overflow' is_current=is_moments_index is_active=is_moments_active %}
-
-          {%- assign more_active = false -%}
-          {%- if is_series_active or is_series_index or is_moments_active or is_moments_index -%}
-            {%- assign more_active = true -%}
+          {%- assign is_works_index = false -%}
+          {%- assign is_works_active = false -%}
+          {%- if u == '/series/' -%}{%- assign is_works_index = true -%}{%- endif -%}
+          {%- if page.collection == 'series' or page.collection == 'moments' or u_series == '/series/' or u_moments == '/moments/' -%}
+            {%- assign is_works_active = true -%}
           {%- endif -%}
-          <div class="nav-more" data-nav-more>
-            <button class="nav-item nav-more__summary{% if more_active %} is-active{% endif %}" type="button" aria-haspopup="menu" aria-expanded="false" aria-label="More">
-              &#9776;
-            </button>
-            <div class="nav-more__panel" role="menu" hidden>
-              {% include nav_item.html label="works" href='/series/' class_name='nav-more__item' is_current=is_series_index is_active=is_series_active %}
-              {% include nav_item.html label="moments" href='/moments/' class_name='nav-more__item' is_current=is_moments_index is_active=is_moments_active %}
-            </div>
-          </div>
+
+          {% include nav_item.html label="works" href='/series/' class_name='nav-item' is_current=is_works_index is_active=is_works_active %}
         {% endif %}
 
       </nav>

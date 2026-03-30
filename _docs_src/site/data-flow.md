@@ -1,7 +1,7 @@
 ---
 doc_id: data-flow
 title: Data Flow
-last_updated: 2026-03-28
+last_updated: 2026-03-30
 parent_id: site
 ---
 
@@ -9,7 +9,7 @@ parent_id: site
 
 This document describes the runtime JSON data flow for the main browsing path:
 
-1. `series index`
+1. `catalogue index`
 2. `series page`
 3. `work page`
 4. `detail page`
@@ -21,32 +21,35 @@ It focuses on which JSON files are used by the frontend at each step and what da
 Current generated JSON files involved in this flow:
 
 - `assets/data/series_index.json`
+- `assets/data/moments_index.json`
 - `assets/data/works_index.json`
 - `assets/works/index/<work_id>.json`
 
 Current direction:
 
 - keep `series_index.json`
+- keep `moments_index.json`
 - keep `works_index.json`
 - keep per-work JSON in `assets/works/index/<work_id>.json`
 - remove the obsolete global work-details index
 
-## 1. Series Index
+## 1. Catalogue Index
 
 User-facing step:
 
 - `/series/`
-- lists all series
+- lists all series or all moments, depending on the active toggle
 
 Current JSON used:
 
 - `assets/data/series_index.json`
+- `assets/data/moments_index.json`
 
 Template:
 
 - `series/index.md`
 
-What this JSON provides:
+What `series_index.json` provides:
 
 - full list of series IDs
 - series title
@@ -55,9 +58,18 @@ What this JSON provides:
 - canonical `primary_work_id` for each series
 - sort metadata and other series-level fields
 
-Why it is used:
+What `moments_index.json` provides:
 
-- the series index is fundamentally a global series listing, so a single global series JSON is the correct source
+- lightweight moment metadata keyed by `moment_id`
+- moment title
+- moment date / date display
+- canonical `thumb_id` for each moment card
+
+Why both are used:
+
+- the merged catalogue uses `series_index.json` for works mode
+- the merged catalogue uses `moments_index.json` for moments mode
+- moment card routes still come from the built `site.moments` collection URLs embedded in the page template
 
 Replacement for the removed global work-details index:
 
@@ -211,6 +223,7 @@ The implemented data flow is now:
 
 1. `/series/`
    - uses `assets/data/series_index.json`
+   - uses `assets/data/moments_index.json`
 
 2. `/series/<series_id>/`
    - uses `assets/data/series_index.json`

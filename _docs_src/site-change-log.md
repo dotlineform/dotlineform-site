@@ -1,12 +1,40 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-03-29
+last_updated: 2026-03-30
 parent_id: ""
 sort_order: 20
 ---
 
 # Site Change Log
+
+## [2026-03-30] Merged moments browsing into the works catalogue
+
+**Status:** implemented
+
+**Area:** works
+
+**Summary:**  
+Merged the public moments index UI into the `/series/` works catalogue so one catalogue page now switches between `works` and `moments` with shared view, sort, and pagination controls.
+
+**Reason:**  
+The separate moments index duplicated the same catalogue interaction pattern and made the top-level browsing navigation more fragmented than it needed to be.
+
+**Effect:**  
+The public top nav now exposes only `works`, `/series/` owns the combined catalogue UI, individual moment pages keep their existing `/moments/<moment_id>/` URLs, and the standalone `/moments/` landing page is no longer published.
+
+**Affected files/docs:**  
+- `series/index.md`
+- `moments/index.md`
+- `_layouts/default.html`
+- `assets/css/main.css`
+- `assets/studio/data/studio_config.json`
+- [Data Flow](/docs/?doc=data-flow)
+- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+
+**Notes:**  
+The main regression risk is state handling when switching between works and moments modes on the merged catalogue page.
 
 ## [2026-03-29] Normalized published site and Studio doc references to docs-viewer links
 

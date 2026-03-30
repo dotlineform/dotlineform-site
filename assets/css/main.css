@@ -777,20 +777,23 @@ th{ background: var(--panel-2); }
   max-width: var(--content-measure);
   margin: 0 auto var(--space-3);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.375rem;
 }
 
 .seriesIndex__viewControls,
-.seriesIndex__sortControls{
+.seriesIndex__sortControls,
+.seriesIndex__modeControls{
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
 }
 
-.seriesIndex__toolbarSpacer{
-  flex: 0 0 1.575rem;
-  width: 1.575rem;
+.seriesIndex__modeControls{
+  margin-left: auto;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .seriesIndex__viewBtn.theme-toggle{
@@ -805,18 +808,21 @@ th{ background: var(--panel-2); }
 }
 
 .seriesIndex__viewBtn[aria-pressed="true"],
-.seriesIndex__sortBtn[aria-pressed="true"]{
+.seriesIndex__sortBtn[aria-pressed="true"],
+.seriesIndex__modeBtn[aria-pressed="true"]{
   background: var(--panel-2);
   border-color: var(--border-strong);
 }
 
 .seriesIndex__viewBtn:focus-visible,
-.seriesIndex__sortBtn:focus-visible{
+.seriesIndex__sortBtn:focus-visible,
+.seriesIndex__modeBtn:focus-visible{
   outline: 2px solid var(--border-strong);
   outline-offset: 2px;
 }
 
-.seriesIndex__sortBtn.theme-toggle{
+.seriesIndex__sortBtn.theme-toggle,
+.seriesIndex__modeBtn.theme-toggle{
   margin-left: 0;
   display: inline-flex;
   align-items: center;
@@ -831,11 +837,23 @@ th{ background: var(--panel-2); }
   line-height: 1;
 }
 
+.seriesIndex__modeText{
+  display: inline-block;
+  line-height: 1;
+}
+
 .seriesIndex__sortArrow{
   display: inline-block;
   min-width: 0.65rem;
   text-align: center;
   line-height: 1;
+}
+
+@media (max-width: 640px){
+  .seriesIndex__modeControls{
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 .seriesIndex__viewIcon{

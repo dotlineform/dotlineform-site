@@ -8,24 +8,56 @@ permalink: /series/
 <h1 class="index__heading visually-hidden">works</h1>
 {% assign thumb_base = site.thumb_base | default: "" %}
 {% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
+{% assign thumb_moments = site.thumb_moments | default: "/assets/moments/img" %}
 {% assign pipeline = site.data.pipeline %}
 {% assign thumb_variants = pipeline.variants.thumb %}
 {% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
 {% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
 {% assign asset_format = pipeline.encoding.format | default: "webp" %}
 {% assign thumb_works_base = thumb_base | append: thumb_works | append: "/" %}
+{% assign thumb_moments_base = thumb_base | append: thumb_moments | append: "/" %}
 {%- assign thumb_works_base_out = thumb_works_base -%}
+{%- assign thumb_moments_base_out = thumb_moments_base -%}
 {%- unless thumb_works_base contains '://' -%}
   {%- assign thumb_works_base_out = thumb_works_base | relative_url -%}
 {%- endunless -%}
+{%- unless thumb_moments_base contains '://' -%}
+  {%- assign thumb_moments_base_out = thumb_moments_base | relative_url -%}
+{%- endunless -%}
 
-<div id="seriesIndexRoot" data-thumb-works-base="{{ thumb_works_base_out | escape }}" data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}" data-thumb-suffix="{{ thumb_suffix | escape }}" data-asset-format="{{ asset_format | escape }}" hidden>
-  <div class="seriesIndex__toolbar" aria-label="Series view and sorting">
-    <div class="seriesIndex__viewControls" role="group" aria-label="Series view">
+{%- capture moments_index_items -%}
+[
+{%- assign first_moment = true -%}
+{%- for moment in site.moments -%}
+  {%- if moment.published == false -%}{%- continue -%}{%- endif -%}
+  {%- unless first_moment -%},{%- endunless -%}
+  {%- assign moment_id = moment.moment_id | default: moment.slug -%}
+  {
+    "moment_id": {{ moment_id | jsonify }},
+    "title": {{ moment.title | default: moment.slug | jsonify }},
+    "url": {{ moment.url | relative_url | jsonify }}
+  }
+  {%- assign first_moment = false -%}
+{%- endfor -%}
+]
+{%- endcapture -%}
+
+<div
+  id="seriesIndexRoot"
+  data-baseurl="{{ site.baseurl | default: '' }}"
+  data-thumb-works-base="{{ thumb_works_base_out | escape }}"
+  data-thumb-moments-base="{{ thumb_moments_base_out | escape }}"
+  data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}"
+  data-thumb-suffix="{{ thumb_suffix | escape }}"
+  data-asset-format="{{ asset_format | escape }}"
+  hidden
+>
+  <div class="seriesIndex__toolbar" aria-label="Works and moments view and sorting">
+    <div class="seriesIndex__viewControls" role="group" aria-label="View">
       <button
         class="theme-toggle seriesIndex__viewBtn"
         type="button"
-        data-role="series-index-view-btn"
+        data-role="catalog-index-view-btn"
         data-view="list"
         aria-label="Show list view"
         aria-pressed="true"
@@ -43,7 +75,7 @@ permalink: /series/
       <button
         class="theme-toggle seriesIndex__viewBtn"
         type="button"
-        data-role="series-index-view-btn"
+        data-role="catalog-index-view-btn"
         data-view="grid"
         aria-label="Show grid view"
         aria-pressed="false"
@@ -57,12 +89,11 @@ permalink: /series/
         <span class="sr-only">grid</span>
       </button>
     </div>
-    <span class="seriesIndex__toolbarSpacer" aria-hidden="true"></span>
-    <div class="seriesIndex__sortControls" role="group" aria-label="Sort series">
+    <div class="seriesIndex__sortControls" role="group" aria-label="Sort">
       <button
         class="theme-toggle seriesIndex__sortBtn"
         type="button"
-        data-role="series-index-sort-btn"
+        data-role="catalog-index-sort-btn"
         data-sort-key="year"
         aria-pressed="true"
       >
@@ -72,7 +103,7 @@ permalink: /series/
       <button
         class="theme-toggle seriesIndex__sortBtn"
         type="button"
-        data-role="series-index-sort-btn"
+        data-role="catalog-index-sort-btn"
         data-sort-key="title"
         aria-pressed="false"
       >
@@ -80,16 +111,36 @@ permalink: /series/
         <span class="seriesIndex__sortArrow" aria-hidden="true">↑</span>
       </button>
     </div>
+    <div class="seriesIndex__modeControls" role="group" aria-label="Browse works or moments">
+      <button
+        class="theme-toggle seriesIndex__modeBtn"
+        type="button"
+        data-role="catalog-index-mode-btn"
+        data-mode="works"
+        aria-pressed="true"
+      >
+        <span class="seriesIndex__modeText">works</span>
+      </button>
+      <button
+        class="theme-toggle seriesIndex__modeBtn"
+        type="button"
+        data-role="catalog-index-mode-btn"
+        data-mode="moments"
+        aria-pressed="false"
+      >
+        <span class="seriesIndex__modeText">moments</span>
+      </button>
+    </div>
   </div>
   <div class="index seriesIndex__list" id="seriesIndexList" aria-live="polite"></div>
   <div class="seriesGrid seriesIndex__grid" id="seriesIndexThumbGrid" aria-live="polite" hidden></div>
-  <nav class="gridPager seriesIndex__pager" id="seriesIndexPager" aria-label="series index pagination" hidden>
+  <nav class="gridPager seriesIndex__pager" id="seriesIndexPager" aria-label="catalog index pagination" hidden>
     <span class="gridPager__status" id="seriesIndexPagerStatus"></span>
     <button class="gridPager__btn" type="button" id="seriesIndexPrev" aria-label="Previous page">←</button>
     <button class="gridPager__btn" type="button" id="seriesIndexNext" aria-label="Next page">→</button>
   </nav>
 </div>
-<p id="seriesIndexEmpty" hidden>no series yet</p>
+<p id="seriesIndexEmpty" hidden>no works yet</p>
 
 <script>
   (function () {
@@ -103,12 +154,14 @@ permalink: /series/
     var empty = document.getElementById('seriesIndexEmpty');
     if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
 
-    var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="series-index-view-btn"]'));
-    var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="series-index-sort-btn"]'));
-    if (!viewButtons.length || !sortButtons.length) return;
+    var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-view-btn"]'));
+    var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-sort-btn"]'));
+    var modeButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-mode-btn"]'));
+    if (!viewButtons.length || !sortButtons.length || !modeButtons.length) return;
 
-    var baseurl = {{ site.baseurl | default: '' | jsonify }};
-    var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '');
+    var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+    var thumbWorksBase = String(root.getAttribute('data-thumb-works-base') || '').trim();
+    var thumbMomentsBase = String(root.getAttribute('data-thumb-moments-base') || '').trim();
     var thumbSizes = [];
     try {
       thumbSizes = JSON.parse(root.getAttribute('data-thumb-sizes') || '[]');
@@ -125,17 +178,35 @@ permalink: /series/
     if (thumbSrcsetSizes.length < 2) thumbSrcsetSizes = [primaryThumbSize, primaryThumbSize];
     var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
-    var dataUrl = baseurl + '/assets/data/series_index.json';
+    var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
+    var momentsIndexUrl = baseurl + '/assets/data/moments_index.json';
     var configUrl = baseurl + '/assets/studio/data/studio_config.json';
-    var viewStorageKey = 'dlf.seriesIndex.view';
-    var sortStorageKey = 'dlf.seriesIndex.sort';
-    var pageStorageKey = 'dlf.seriesIndex.page';
+    var momentsItems = {{ moments_index_items | strip_newlines }};
     var pageSize = 80;
+    var modeStorageKey = 'dlf.catalogIndex.mode';
     var defaultSort = {
       key: 'year',
       directions: {
         year: 'desc',
         title: 'asc'
+      }
+    };
+    var storageKeys = {
+      works: {
+        view: 'dlf.catalogIndex.works.view',
+        sort: 'dlf.catalogIndex.works.sort',
+        page: 'dlf.catalogIndex.works.page',
+        legacyView: 'dlf.seriesIndex.view',
+        legacySort: 'dlf.seriesIndex.sort',
+        legacyPage: 'dlf.seriesIndex.page'
+      },
+      moments: {
+        view: 'dlf.catalogIndex.moments.view',
+        sort: 'dlf.catalogIndex.moments.sort',
+        page: 'dlf.catalogIndex.moments.page',
+        legacyView: 'dlf.momentsIndex.view',
+        legacySort: 'dlf.momentsIndex.sort',
+        legacyPage: ''
       }
     };
     var uiTextDefaults = {
@@ -144,49 +215,80 @@ permalink: /series/
       sort_direction_asc: '↑',
       sort_direction_desc: '↓',
       pager_prev_label: 'Previous page',
-      pager_next_label: 'Next page'
+      pager_next_label: 'Next page',
+      mode_works_label: 'works',
+      mode_moments_label: 'moments',
+      empty_works: 'no works yet',
+      empty_moments: 'no moments yet'
     };
-    var currentView = readStoredView();
-    var currentSort = readStoredSort();
-    var currentPage = readStoredPage();
+    var currentMode = readStoredMode();
+    var modeState = {
+      works: {
+        view: readStoredView('works'),
+        sort: readStoredSort('works'),
+        page: readStoredPage('works')
+      },
+      moments: {
+        view: readStoredView('moments'),
+        sort: readStoredSort('moments'),
+        page: readStoredPage('moments')
+      }
+    };
     var uiText = copyUiText(uiTextDefaults);
-    var seriesItems = [];
+    var catalogueItems = {
+      works: [],
+      moments: []
+    };
     var titleCollator = (window.Intl && typeof window.Intl.Collator === 'function')
       ? new window.Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
       : null;
 
-    function thumbUrl(workId, size) {
-      var wid = String(workId || '').trim();
-      if (!wid) return '';
-      return String(thumbWorksBase || '') + wid + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
+    function normalizeMode(value) {
+      return String(value || '').trim().toLowerCase() === 'moments' ? 'moments' : 'works';
+    }
+
+    function readStoredMode() {
+      try {
+        return normalizeMode(window.localStorage.getItem(modeStorageKey));
+      } catch (err) {
+        return 'works';
+      }
+    }
+
+    function persistMode(mode) {
+      try {
+        window.localStorage.setItem(modeStorageKey, normalizeMode(mode));
+      } catch (err) {
+      }
+    }
+
+    function readStoredItem(primaryKey, legacyKey) {
+      try {
+        var primaryValue = window.localStorage.getItem(primaryKey);
+        if (primaryValue != null && String(primaryValue).trim() !== '') return primaryValue;
+        if (!legacyKey) return null;
+        var legacyValue = window.localStorage.getItem(legacyKey);
+        return legacyValue != null && String(legacyValue).trim() !== '' ? legacyValue : null;
+      } catch (err) {
+        return null;
+      }
     }
 
     function normalizeView(value) {
       return String(value || '').trim().toLowerCase() === 'list' ? 'list' : 'grid';
     }
 
-    function readStoredView() {
-      try {
-        return normalizeView(window.localStorage.getItem(viewStorageKey));
-      } catch (err) {
-        return 'grid';
-      }
+    function readStoredView(mode) {
+      var keys = storageKeys[normalizeMode(mode)];
+      return normalizeView(readStoredItem(keys.view, keys.legacyView));
     }
 
-    function persistView(view) {
+    function persistView(mode, view) {
+      var keys = storageKeys[normalizeMode(mode)];
       try {
-        window.localStorage.setItem(viewStorageKey, normalizeView(view));
+        window.localStorage.setItem(keys.view, normalizeView(view));
       } catch (err) {
-        // Ignore storage failures; the page still works with in-memory state.
       }
-    }
-
-    function fetchJson(url) {
-      return fetch(url, { cache: 'default' })
-        .then(function (r) {
-          if (!r.ok) throw new Error('HTTP ' + r.status);
-          return r.json();
-        });
     }
 
     function normalizeDirection(value, fallback) {
@@ -210,19 +312,22 @@ permalink: /series/
       };
     }
 
-    function readStoredSort() {
+    function readStoredSort(mode) {
+      var keys = storageKeys[normalizeMode(mode)];
+      var raw = readStoredItem(keys.sort, keys.legacySort);
+      if (raw == null) return sanitizeSortState(defaultSort);
       try {
-        return sanitizeSortState(JSON.parse(window.localStorage.getItem(sortStorageKey) || 'null'));
+        return sanitizeSortState(JSON.parse(raw));
       } catch (err) {
         return sanitizeSortState(defaultSort);
       }
     }
 
-    function persistSort(sortState) {
+    function persistSort(mode, sortState) {
+      var keys = storageKeys[normalizeMode(mode)];
       try {
-        window.localStorage.setItem(sortStorageKey, JSON.stringify(sanitizeSortState(sortState)));
+        window.localStorage.setItem(keys.sort, JSON.stringify(sanitizeSortState(sortState)));
       } catch (err) {
-        // Ignore storage failures; the page still works with in-memory state.
       }
     }
 
@@ -232,19 +337,16 @@ permalink: /series/
       return Math.floor(page);
     }
 
-    function readStoredPage() {
-      try {
-        return normalizePage(window.localStorage.getItem(pageStorageKey));
-      } catch (err) {
-        return 1;
-      }
+    function readStoredPage(mode) {
+      var keys = storageKeys[normalizeMode(mode)];
+      return normalizePage(readStoredItem(keys.page, keys.legacyPage));
     }
 
-    function persistPage(page) {
+    function persistPage(mode, page) {
+      var keys = storageKeys[normalizeMode(mode)];
       try {
-        window.localStorage.setItem(pageStorageKey, String(normalizePage(page)));
+        window.localStorage.setItem(keys.page, String(normalizePage(page)));
       } catch (err) {
-        // Ignore storage failures; the page still works with in-memory state.
       }
     }
 
@@ -255,13 +357,25 @@ permalink: /series/
         sort_direction_asc: String((source && source.sort_direction_asc) || uiTextDefaults.sort_direction_asc),
         sort_direction_desc: String((source && source.sort_direction_desc) || uiTextDefaults.sort_direction_desc),
         pager_prev_label: String((source && source.pager_prev_label) || uiTextDefaults.pager_prev_label),
-        pager_next_label: String((source && source.pager_next_label) || uiTextDefaults.pager_next_label)
+        pager_next_label: String((source && source.pager_next_label) || uiTextDefaults.pager_next_label),
+        mode_works_label: String((source && source.mode_works_label) || uiTextDefaults.mode_works_label),
+        mode_moments_label: String((source && source.mode_moments_label) || uiTextDefaults.mode_moments_label),
+        empty_works: String((source && source.empty_works) || uiTextDefaults.empty_works),
+        empty_moments: String((source && source.empty_moments) || uiTextDefaults.empty_moments)
       };
     }
 
     function readUiText(configPayload) {
       var text = configPayload && configPayload.ui_text && configPayload.ui_text.site_series_index;
       return copyUiText(text);
+    }
+
+    function fetchJson(url) {
+      return fetch(url, { cache: 'default' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.json();
+        });
     }
 
     function compareText(a, b) {
@@ -273,10 +387,6 @@ permalink: /series/
       return 0;
     }
 
-    function compareSeriesId(a, b) {
-      return compareText(a && a.series_id, b && b.series_id);
-    }
-
     function numericAwareSortKey(value) {
       return String(value == null ? '' : value).trim().replace(/\d+/g, function (m) {
         return m.padStart(3, '0');
@@ -284,25 +394,21 @@ permalink: /series/
     }
 
     function titleValue(item) {
-      return numericAwareSortKey(item && (item.title || item.series_id));
+      return numericAwareSortKey(item && (item.title || item.id));
     }
 
     function titleCompare(a, b) {
       var cmp = compareText(titleValue(a), titleValue(b));
       if (cmp !== 0) return cmp;
-      return compareSeriesId(a, b);
-    }
-
-    function yearDisplayText(item) {
-      return String((item && (item.year_display != null ? item.year_display : item.year)) || '').trim();
+      return compareText(a && a.id, b && b.id);
     }
 
     function yearSortNumber(item) {
-      var numericYear = Number(item && item.year);
-      if (Number.isFinite(numericYear)) return numericYear;
-      var match = yearDisplayText(item).match(/(\d{4})/);
-      if (match) return Number(match[1]);
-      return null;
+      return Number.isFinite(item && item.year_sort) ? item.year_sort : null;
+    }
+
+    function yearDisplayText(item) {
+      return String((item && item.year_display) || '').trim();
     }
 
     function yearCompare(a, b) {
@@ -318,7 +424,7 @@ permalink: /series/
       return titleCompare(a, b);
     }
 
-    function compareSeries(a, b, sortState) {
+    function compareCatalogueItems(a, b, sortState) {
       var activeKey = normalizeSortKey(sortState && sortState.key);
       var direction = sanitizeSortState(sortState).directions[activeKey];
       var primary = activeKey === 'title' ? titleCompare(a, b) : yearCompare(a, b);
@@ -331,45 +437,45 @@ permalink: /series/
         var titleFallback = titleCompare(a, b);
         if (titleFallback !== 0) return titleFallback;
       }
-      return compareSeriesId(a, b);
+      return compareText(a && a.id, b && b.id);
     }
 
     function getSortedItems(items, sortState) {
       return items.slice().sort(function (a, b) {
-        return compareSeries(a, b, sortState);
+        return compareCatalogueItems(a, b, sortState);
       });
     }
 
-    function cardHref(s) {
-      var sid = String((s && s.series_id) || '').trim();
-      var works = Array.isArray(s && s.works) ? s.works : [];
-      if (works.length === 1) {
-        return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/';
-      }
-      return baseurl + '/series/' + encodeURIComponent(sid) + '/';
+    function thumbBaseFor(item) {
+      return item && item.kind === 'moments' ? thumbMomentsBase : thumbWorksBase;
     }
 
-    function cardThumbData(s) {
-      var thumbId = String((s && s.primary_work_id) || '').trim();
+    function thumbUrl(item, size) {
+      var thumbId = String(item && item.thumb_id || '').trim();
+      if (!thumbId) return '';
+      return thumbBaseFor(item) + thumbId + '-' + thumbSuffix + '-' + size + '.' + assetFormat;
+    }
+
+    function itemThumbData(item) {
+      var thumbPrimary = thumbUrl(item, String(primaryThumbSize));
       return {
-        thumb_primary: thumbUrl(thumbId, String(primaryThumbSize)),
-        thumb_srcset: thumbSrcsetSizes.map(function (size) {
-          return thumbUrl(thumbId, String(size)) + ' ' + size + 'w';
-        }).join(', '),
-        thumb_id: thumbId
+        thumb_primary: thumbPrimary,
+        thumb_srcset: thumbPrimary ? thumbSrcsetSizes.map(function (size) {
+          return thumbUrl(item, String(size)) + ' ' + size + 'w';
+        }).join(', ') : ''
       };
     }
 
-    function renderSeriesCard(s) {
-      var href = cardHref(s);
-      var thumbData = cardThumbData(s);
+    function renderCatalogueCard(item) {
+      var href = String((item && item.href) || '').trim();
+      var thumbData = itemThumbData(item);
       var thumb = thumbData.thumb_primary;
-      var title = String((s && s.title) || (s && s.series_id) || '');
-      var yearTxt = String((s && (s.year_display != null ? s.year_display : s.year)) || '');
+      var title = String((item && item.title) || (item && item.id) || '');
+      var yearTxt = yearDisplayText(item);
 
-      var a = document.createElement('a');
-      a.className = 'seriesIndexItem';
-      a.href = href;
+      var link = document.createElement('a');
+      link.className = 'seriesIndexItem';
+      link.href = href;
 
       if (thumb) {
         var img = document.createElement('img');
@@ -378,38 +484,43 @@ permalink: /series/
         img.alt = title;
         img.loading = 'lazy';
         img.decoding = 'async';
-        a.appendChild(img);
+        link.appendChild(img);
+      } else {
+        var placeholder = document.createElement('span');
+        placeholder.className = 'seriesIndexItem__img';
+        placeholder.setAttribute('aria-hidden', 'true');
+        link.appendChild(placeholder);
       }
 
       var meta = document.createElement('div');
       meta.className = 'seriesIndexItem__meta';
 
-      var t = document.createElement('div');
-      t.className = 'seriesIndexItem__title';
-      t.textContent = title;
-      meta.appendChild(t);
+      var titleEl = document.createElement('div');
+      titleEl.className = 'seriesIndexItem__title';
+      titleEl.textContent = title;
+      meta.appendChild(titleEl);
 
-      var y = document.createElement('div');
-      y.className = 'seriesIndexItem__year';
-      y.textContent = yearTxt;
-      meta.appendChild(y);
+      var yearEl = document.createElement('div');
+      yearEl.className = 'seriesIndexItem__year';
+      yearEl.textContent = yearTxt;
+      meta.appendChild(yearEl);
 
-      a.appendChild(meta);
-      return a;
+      link.appendChild(meta);
+      return link;
     }
 
-    function renderSeriesGridItem(s) {
-      var href = cardHref(s);
-      var thumbData = cardThumbData(s);
+    function renderCatalogueGridItem(item) {
+      var href = String((item && item.href) || '').trim();
+      var thumbData = itemThumbData(item);
       var thumbPrimary = String(thumbData.thumb_primary || '');
       var thumbSrcset = String(thumbData.thumb_srcset || '');
-      var title = String((s && s.title) || (s && s.series_id) || '');
+      var title = String((item && item.title) || (item && item.id) || '');
 
-      var a = document.createElement('a');
-      a.className = 'seriesGrid__item';
-      a.href = href;
-      a.setAttribute('aria-label', title);
-      a.title = title;
+      var link = document.createElement('a');
+      link.className = 'seriesGrid__item';
+      link.href = href;
+      link.setAttribute('aria-label', title);
+      link.title = title;
 
       if (thumbPrimary) {
         var img = document.createElement('img');
@@ -422,17 +533,114 @@ permalink: /series/
         img.loading = 'lazy';
         img.decoding = 'async';
         img.alt = title;
-        a.appendChild(img);
+        link.appendChild(img);
       }
 
-      return a;
+      return link;
+    }
+
+    function parseYearNumber(rawDate, displayText) {
+      var dateText = String(rawDate || '').trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateText)) return Number(dateText.slice(0, 4));
+      var display = String(displayText || '').trim();
+      var match = display.match(/(\d{4})/);
+      return match ? Number(match[1]) : null;
+    }
+
+    function cardHref(seriesItem) {
+      var sid = String((seriesItem && seriesItem.series_id) || '').trim();
+      var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
+      if (works.length === 1) {
+        return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/';
+      }
+      return baseurl + '/series/' + encodeURIComponent(sid) + '/';
+    }
+
+    function buildSeriesItem(seriesItem) {
+      var sid = String((seriesItem && seriesItem.series_id) || '').trim();
+      if (!sid) return null;
+      var yearDisplay = String((seriesItem && (seriesItem.year_display != null ? seriesItem.year_display : seriesItem.year)) || '').trim();
+      var numericYear = Number(seriesItem && seriesItem.year);
+      return {
+        kind: 'works',
+        id: sid,
+        title: String((seriesItem && seriesItem.title) || sid),
+        href: cardHref(seriesItem),
+        year_display: yearDisplay,
+        year_sort: Number.isFinite(numericYear) ? numericYear : parseYearNumber('', yearDisplay),
+        thumb_id: String((seriesItem && seriesItem.primary_work_id) || '').trim()
+      };
+    }
+
+    function mergeMomentIndexItem(item, indexMap) {
+      var momentId = String((item && item.moment_id) || '').trim();
+      var row = indexMap && momentId ? indexMap[momentId] : null;
+      return {
+        moment_id: momentId,
+        title: String((row && row.title) || (item && item.title) || momentId),
+        date: String((row && row.date) || ''),
+        date_display: String((row && row.date_display) || ''),
+        url: String((item && item.url) || ''),
+        thumb_id: String((row && row.thumb_id) || '').trim()
+      };
+    }
+
+    function buildMomentItem(momentItem) {
+      var momentId = String((momentItem && momentItem.moment_id) || '').trim();
+      if (!momentId) return null;
+      var yearDisplay = String((momentItem && momentItem.date_display) || '').trim();
+      if (!yearDisplay) {
+        var fallbackYear = parseYearNumber(momentItem && momentItem.date, momentItem && momentItem.date_display);
+        yearDisplay = Number.isFinite(fallbackYear) ? String(fallbackYear) : '';
+      }
+      return {
+        kind: 'moments',
+        id: momentId,
+        title: String((momentItem && momentItem.title) || momentId),
+        href: String((momentItem && momentItem.url) || ''),
+        year_display: yearDisplay,
+        year_sort: parseYearNumber(momentItem && momentItem.date, momentItem && momentItem.date_display),
+        thumb_id: String((momentItem && momentItem.thumb_id) || '').trim()
+      };
+    }
+
+    function loadMomentsIndexMap() {
+      return fetchJson(momentsIndexUrl)
+        .then(function (payload) {
+          var moments = payload && payload.moments && typeof payload.moments === 'object' ? payload.moments : null;
+          return moments || {};
+        });
+    }
+
+    function currentItems() {
+      return Array.isArray(catalogueItems[currentMode]) ? catalogueItems[currentMode] : [];
+    }
+
+    function currentState() {
+      return modeState[currentMode];
+    }
+
+    function updateModeUi() {
+      modeButtons.forEach(function (button) {
+        var mode = normalizeMode(button.getAttribute('data-mode'));
+        var label = mode === 'moments' ? uiText.mode_moments_label : uiText.mode_works_label;
+        var active = mode === currentMode;
+        var hasItems = Array.isArray(catalogueItems[mode]) && catalogueItems[mode].length > 0;
+        var labelEl = button.querySelector('.seriesIndex__modeText');
+
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+        button.setAttribute('aria-label', 'Show ' + label);
+        button.disabled = !hasItems;
+        if (labelEl) labelEl.textContent = label;
+      });
     }
 
     function updateSortUi() {
+      var sortState = currentState().sort;
       sortButtons.forEach(function (button) {
         var key = normalizeSortKey(button.getAttribute('data-sort-key'));
-        var direction = currentSort.directions[key];
-        var isActive = key === currentSort.key;
+        var direction = sortState.directions[key];
+        var isActive = key === sortState.key;
         var labelEl = button.querySelector('.seriesIndex__sortText');
         var arrowEl = button.querySelector('.seriesIndex__sortArrow');
         var buttonLabel = key === 'title' ? uiText.sort_title_label : uiText.sort_year_label;
@@ -449,129 +657,166 @@ permalink: /series/
     }
 
     function updateViewUi() {
-      var showingGrid = currentView === 'grid';
-      list.hidden = showingGrid;
-      thumbGrid.hidden = !showingGrid;
+      var showingGrid = currentState().view === 'grid';
+      var hasItems = currentItems().length > 0;
+      list.hidden = !hasItems || showingGrid;
+      thumbGrid.hidden = !hasItems || !showingGrid;
       pager.classList.toggle('seriesIndex__pager--list', !showingGrid);
+      empty.textContent = currentMode === 'moments' ? uiText.empty_moments : uiText.empty_works;
+      empty.hidden = hasItems;
       viewButtons.forEach(function (button) {
         var buttonView = String(button.getAttribute('data-view') || '').trim().toLowerCase();
-        var active = buttonView === currentView;
+        var active = buttonView === currentState().view;
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
     }
 
     function updatePagerUi(pageCount) {
+      var state = currentState();
       var safePageCount = Math.max(1, Number(pageCount) || 1);
-      currentPage = Math.min(normalizePage(currentPage), safePageCount);
-      pagerStatus.textContent = String(currentPage) + '/' + String(safePageCount);
-      pager.hidden = safePageCount < 2;
+      state.page = Math.min(normalizePage(state.page), safePageCount);
+      pagerStatus.textContent = String(state.page) + '/' + String(safePageCount);
+      pager.hidden = safePageCount < 2 || currentItems().length < 1;
       prevBtn.disabled = safePageCount < 2;
       nextBtn.disabled = safePageCount < 2;
       prevBtn.setAttribute('aria-label', uiText.pager_prev_label);
       nextBtn.setAttribute('aria-label', uiText.pager_next_label);
-      persistPage(currentPage);
+      persistPage(currentMode, state.page);
     }
 
     function renderCurrentView() {
-      var sortedItems = getSortedItems(seriesItems, currentSort);
+      var items = currentItems();
+      var state = currentState();
+      var sortedItems = getSortedItems(items, state.sort);
       var pageCount = Math.max(1, Math.ceil(sortedItems.length / pageSize));
-      currentPage = Math.min(normalizePage(currentPage), pageCount);
-      var start = (currentPage - 1) * pageSize;
+      state.page = Math.min(normalizePage(state.page), pageCount);
+      var start = (state.page - 1) * pageSize;
       var end = Math.min(start + pageSize, sortedItems.length);
       var pageItems = sortedItems.slice(start, end);
       list.innerHTML = '';
       thumbGrid.innerHTML = '';
       pager.hidden = true;
-      if (!sortedItems.length) return;
+
+      if (!sortedItems.length) {
+        updatePagerUi(1);
+        updateViewUi();
+        return;
+      }
 
       var frag = document.createDocumentFragment();
       var i;
 
-      if (currentView === 'grid') {
+      if (state.view === 'grid') {
         for (i = 0; i < pageItems.length; i += 1) {
-          frag.appendChild(renderSeriesGridItem(pageItems[i]));
+          frag.appendChild(renderCatalogueGridItem(pageItems[i]));
         }
         thumbGrid.appendChild(frag);
       } else {
         for (i = 0; i < pageItems.length; i += 1) {
-          frag.appendChild(renderSeriesCard(pageItems[i]));
+          frag.appendChild(renderCatalogueCard(pageItems[i]));
         }
         list.appendChild(frag);
       }
 
       updatePagerUi(pageCount);
+      updateViewUi();
     }
 
     viewButtons.forEach(function (button) {
       button.addEventListener('click', function () {
         var nextView = normalizeView(button.getAttribute('data-view'));
-        if (nextView === currentView) return;
-        currentView = nextView;
+        if (nextView === currentState().view) return;
+        currentState().view = nextView;
+        persistView(currentMode, nextView);
         renderCurrentView();
-        updateViewUi();
-        persistView(currentView);
       });
     });
 
     sortButtons.forEach(function (button) {
       button.addEventListener('click', function () {
         var nextKey = normalizeSortKey(button.getAttribute('data-sort-key'));
-        if (currentSort.key === nextKey) {
-          currentSort.directions[nextKey] = currentSort.directions[nextKey] === 'desc' ? 'asc' : 'desc';
+        if (currentState().sort.key === nextKey) {
+          currentState().sort.directions[nextKey] = currentState().sort.directions[nextKey] === 'desc' ? 'asc' : 'desc';
         } else {
-          currentSort.key = nextKey;
+          currentState().sort.key = nextKey;
         }
-        currentSort = sanitizeSortState(currentSort);
-        renderCurrentView();
+        currentState().sort = sanitizeSortState(currentState().sort);
+        persistSort(currentMode, currentState().sort);
         updateSortUi();
-        persistSort(currentSort);
-      })
+        renderCurrentView();
+      });
+    });
+
+    modeButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        var nextMode = normalizeMode(button.getAttribute('data-mode'));
+        if (nextMode === currentMode || !catalogueItems[nextMode].length) return;
+        currentMode = nextMode;
+        persistMode(currentMode);
+        updateModeUi();
+        updateSortUi();
+        renderCurrentView();
+      });
     });
 
     prevBtn.addEventListener('click', function () {
-      var pageCount = Math.max(1, Math.ceil(seriesItems.length / pageSize));
+      var pageCount = Math.max(1, Math.ceil(currentItems().length / pageSize));
       if (pageCount < 2) return;
-      currentPage = (currentPage - 1 + pageCount - 1) % pageCount + 1;
+      currentState().page = (currentState().page - 1 + pageCount - 1) % pageCount + 1;
       renderCurrentView();
-      updateViewUi();
     });
 
     nextBtn.addEventListener('click', function () {
-      var pageCount = Math.max(1, Math.ceil(seriesItems.length / pageSize));
+      var pageCount = Math.max(1, Math.ceil(currentItems().length / pageSize));
       if (pageCount < 2) return;
-      currentPage = (currentPage % pageCount) + 1;
+      currentState().page = (currentState().page % pageCount) + 1;
       renderCurrentView();
-      updateViewUi();
     });
 
     Promise.all([
-      fetchJson(dataUrl),
+      fetchJson(seriesIndexUrl),
+      loadMomentsIndexMap(),
       fetchJson(configUrl).catch(function () { return null; })
     ])
       .then(function (results) {
-        var payload = results[0];
-        var configPayload = results[1];
-        var seriesMap = (payload && payload.series && typeof payload.series === 'object') ? payload.series : {};
-        uiText = readUiText(configPayload);
-        seriesItems = Object.keys(seriesMap).map(function (sid) { return seriesMap[sid]; }).filter(Boolean);
+        var seriesPayload = results[0];
+        var momentsIndexMap = results[1];
+        var configPayload = results[2];
+        var seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === 'object'
+          ? seriesPayload.series
+          : {};
 
-        if (!seriesItems.length) {
-          root.hidden = true;
+        uiText = readUiText(configPayload);
+        catalogueItems.works = Object.keys(seriesMap).map(function (sid) {
+          return buildSeriesItem(seriesMap[sid]);
+        }).filter(Boolean);
+        catalogueItems.moments = Array.isArray(momentsItems) ? momentsItems.map(function (item) {
+          return buildMomentItem(mergeMomentIndexItem(item, momentsIndexMap));
+        }).filter(Boolean) : [];
+
+        if (!catalogueItems.works.length && !catalogueItems.moments.length) {
+          empty.textContent = uiText.empty_works;
           empty.hidden = false;
+          root.hidden = true;
           return;
         }
 
-        empty.hidden = true;
+        if (!catalogueItems[currentMode].length) {
+          currentMode = catalogueItems.works.length ? 'works' : 'moments';
+          persistMode(currentMode);
+        }
+
         root.hidden = false;
-        renderCurrentView();
+        updateModeUi();
         updateSortUi();
-        updateViewUi();
+        renderCurrentView();
       })
       .catch(function () {
         list.innerHTML = '';
         thumbGrid.innerHTML = '';
-        root.hidden = true;
+        empty.textContent = 'problem loading content';
         empty.hidden = false;
+        root.hidden = true;
       });
   })();
 </script>
