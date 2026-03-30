@@ -9,8 +9,18 @@ require "pathname"
 require "time"
 
 DEFAULT_SCOPE = "studio"
-DEFAULT_DOCS_INDEX_PATH = "assets/data/docs/scopes/studio/index.json"
-DEFAULT_OUTPUT_PATH = "assets/data/search/studio/index.json"
+SCOPE_DEFAULTS = {
+  "studio" => {
+    source_index_path: "assets/data/docs/scopes/studio/index.json",
+    output_path: "assets/data/search/studio/index.json",
+    schema: "search_index_studio_v1"
+  },
+  "library" => {
+    source_index_path: "assets/data/docs/scopes/library/index.json",
+    output_path: "assets/data/search/library/index.json",
+    schema: "search_index_library_v1"
+  }
+}.freeze
 
 SearchDocRecord = Struct.new(
   :doc_id,
@@ -25,8 +35,12 @@ class SearchDataBuilder
   def initialize(scope:, source_index_path:, output_path:)
     @scope = normalize(scope)
     @repo_root = Pathname(__dir__).parent.realpath
-    @source_index_path = @repo_root.join(source_index_path).expand_path
-    @output_path = @repo_root.join(output_path).expand_path
+    defaults = SCOPE_DEFAULTS.fetch(@scope, {})
+    resolved_source_index_path = source_index_path || defaults[:source_index_path]
+    resolved_output_path = output_path || defaults[:output_path]
+    @schema = defaults[:schema] || "search_index_#{@scope}_v1"
+    @source_index_path = @repo_root.join(resolved_source_index_path).expand_path
+    @output_path = @repo_root.join(resolved_output_path).expand_path
   end
 
   def run(write:)
@@ -50,9 +64,9 @@ class SearchDataBuilder
   private
 
   def validate_scope!
-    return if @scope == "studio"
+    return if SCOPE_DEFAULTS.key?(@scope)
 
-    raise SystemExit, "Unsupported scope: #{@scope}. Current builder scope: studio"
+    raise SystemExit, "Unsupported scope: #{@scope}. Current builder scopes: #{SCOPE_DEFAULTS.keys.join(', ')}"
   end
 
   def load_docs_index
@@ -115,7 +129,7 @@ class SearchDataBuilder
 
     {
       "header" => {
-        "schema" => "search_index_studio_v1",
+        "schema" => @schema,
         "scope" => @scope,
         "version" => version,
         "generated_at_utc" => Time.now.utc.iso8601,
@@ -170,15 +184,15 @@ end
 
 options = {
   scope: DEFAULT_SCOPE,
-  source_index_path: DEFAULT_DOCS_INDEX_PATH,
-  output_path: DEFAULT_OUTPUT_PATH,
+  source_index_path: nil,
+  output_path: nil,
   write: false
 }
 
 OptionParser.new do |parser|
   parser.banner = "Usage: ./scripts/build_search_data.rb [options]"
 
-  parser.on("--scope NAME", "Search scope to build (current: studio)") do |value|
+  parser.on("--scope NAME", "Search scope to build (current values: #{SCOPE_DEFAULTS.keys.join(', ')})") do |value|
     options[:scope] = value
   end
 

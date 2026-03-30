@@ -1,0 +1,27 @@
+{
+  "header": {
+    "schema": "search_index_library_v1",
+    "scope": "library",
+    "version": "sha256-16c1f979e718dab2b3fcc6f2b89071bfcd35ef3dced53de4880439fb672512a6",
+    "generated_at_utc": "2026-03-30T20:46:47Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "library",
+      "kind": "doc",
+      "title": "Library",
+      "href": "/library/?doc=library",
+      "last_updated": "2026-03-30",
+      "display_meta": "2026-03-30",
+      "search_terms": [
+        "library",
+        "2026-03-30",
+        "2026",
+        "03",
+        "30"
+      ],
+      "search_text": "library 2026-03-30 2026 03 30"
+    }
+  ]
+}

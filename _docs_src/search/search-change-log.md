@@ -8,6 +8,33 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Added inline Library docs search and extended the docs-scope search builder
+
+**Status:** implemented
+
+**Area:** UI
+
+**Summary:**  
+Added a library search artifact, wired `/library/` into the shared inline docs-viewer search flow, and extended the search-owned docs builder so both docs scopes now generate their own search indexes.
+
+**Reason:**  
+Once Studio docs search moved inline, leaving Library on a different pattern would have left the docs viewer/search architecture inconsistent across the two docs-domain scopes.
+
+**Effect:**  
+`/library/` now exposes the same inline search pattern as `/docs/`, `scripts/build_search_data.rb` supports both `studio` and `library`, and the dedicated `/search/` page remains catalogue-only.
+
+**Affected files/docs:**  
+- `library/index.md`
+- `scripts/build_search_data.rb`
+- `assets/data/search/library/index.json`
+- [Build Search Data](/docs/?doc=scripts-build-search-data)
+- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
+- [Search Overview](/docs/?doc=search-overview)
+- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+
+**Notes:**  
+This change is mainly architectural cleanup for consistency. With one Library doc, the immediate user-facing value is low, but it keeps the docs-domain search pattern aligned before Library grows.
+
 ## [2026-03-30] Moved Studio docs search inline into `/docs/` and returned `/search/` to catalogue-only
 
 **Status:** implemented

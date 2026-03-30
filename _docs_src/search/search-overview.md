@@ -32,6 +32,7 @@ The current implementation has two public search surfaces:
 
 - a dedicated catalogue search page at `/search/`
 - an inline Studio docs search experience on `/docs/`
+- an inline Library docs search experience on `/library/`
 
 It is based on:
 
@@ -52,6 +53,7 @@ Current indexed content types:
 - series
 - moments
 - Studio docs
+- Library docs
 
 Current content intentionally excluded from v1 search:
 
@@ -153,10 +155,12 @@ Current implementation status:
 - the current dedicated public route is `/search/?scope=catalogue`
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
 - a search-owned Studio builder emits `assets/data/search/studio/index.json` from published Studio docs outputs
-- indexed content types are works, series, moments, and Studio docs
+- a search-owned Library builder emits `assets/data/search/library/index.json` from published Library docs outputs
+- indexed content types are works, series, moments, Studio docs, and Library docs
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons
 - Studio docs search is inline on `/docs/`
+- Library docs search is inline on `/library/`
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
 This is a production-like implementation with a dedicated catalogue search page and an inline Studio docs search surface, but it is still early in the wider multi-domain search architecture.

@@ -35,9 +35,11 @@ It covers:
 Transitional note:
 
 - a search-owned builder entrypoint now exists at `scripts/build_search_data.rb`
-- its current implemented scope is `studio`
-- it reads canonical docs outputs and writes `assets/data/search/studio/index.json`
-- public `scope=studio` search is not enabled yet, so this document still treats catalogue as the current live search build
+- its current implemented scopes are `studio` and `library`
+- it reads canonical docs outputs and writes:
+  - `assets/data/search/studio/index.json`
+  - `assets/data/search/library/index.json`
+- both docs-domain scopes now use inline docs-viewer search rather than the dedicated `/search/` page, so this document still treats catalogue as the current live dedicated search-page build
 
 ## Relationship to other documents
 
@@ -91,13 +93,17 @@ The first search-owned pipeline step now exists separately from the catalogue ge
 
 ```bash
 ./scripts/build_search_data.rb --scope studio --write
+./scripts/build_search_data.rb --scope library --write
 ```
 
 Current role:
 
 - reads `assets/data/docs/scopes/studio/index.json`
+- reads `assets/data/docs/scopes/library/index.json`
 - emits `assets/data/search/studio/index.json`
+- emits `assets/data/search/library/index.json`
 - constructs one search record per published Studio doc
+- constructs one search record per published Library doc
 
 Current non-goals:
 

@@ -17,7 +17,7 @@ Script:
 Current purpose:
 
 - search-owned build entrypoint for non-catalogue scopes
-- current implemented scope: `studio`
+- current implemented scopes: `studio`, `library`
 
 Default command:
 
@@ -35,10 +35,19 @@ Default command:
 - generated output:
   - `assets/data/search/studio/index.json`
 
+Library scope:
+
+- scope:
+  - `library`
+- canonical source index:
+  - `assets/data/docs/scopes/library/index.json`
+- generated output:
+  - `assets/data/search/library/index.json`
+
 ## Current flags
 
 - `--scope NAME`
-  - current supported value: `studio`
+  - current supported values: `studio`, `library`
 - `--source-index PATH`
   - override the canonical source index JSON path
 - `--output PATH`
@@ -49,6 +58,7 @@ Default command:
 ## Current behavior
 
 - reads the published Studio docs index
+- reads the published Library docs index when `--scope library` is used
 - emits one search record per published doc
 - keeps record shape compatible with the shared `/search/` runtime
 - does not index section-level records

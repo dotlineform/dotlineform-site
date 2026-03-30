@@ -133,7 +133,7 @@ Examples:
 
 - the catalogue search CTA should live on `/series/` and open `/search/?scope=catalogue`
 - Studio docs search should live inline on `/docs/`
-- a future library docs search can live inline on `/library/`
+- Library docs search should live inline on `/library/`
 
 Reason:
 
@@ -228,7 +228,8 @@ The current public rollout is now split by page anatomy:
 2. the live dedicated-route scope is `catalogue`
 3. `/series/` provides the catalogue search CTA
 4. Studio docs search lives inline on `/docs/`
-5. future scopes can still use `/search/` if a standalone page is the better fit
+5. Library docs search lives inline on `/library/`
+6. future scopes can still use `/search/` if a standalone page is the better fit
 
 The next phase can now focus on domain-specific search surfaces and artifacts behind the same scope vocabulary.
 
