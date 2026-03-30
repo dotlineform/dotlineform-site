@@ -32,6 +32,13 @@ It covers:
 - current validation and change-detection behaviour
 - pipeline integration
 
+Transitional note:
+
+- a search-owned builder entrypoint now exists at `scripts/build_search_data.rb`
+- its current implemented scope is `studio`
+- it reads canonical docs outputs and writes `assets/data/search/studio/index.json`
+- public `scope=studio` search is not enabled yet, so this document still treats catalogue as the current live search build
+
 ## Relationship to other documents
 
 - [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
@@ -77,6 +84,29 @@ The current build path is:
 7. write `assets/data/search/catalogue/index.json` if the content version changed or `--force` is used
 
 Search generation is therefore not a completely separate script today. It is a dedicated artifact stage inside the broader content generator.
+
+## Transitional Studio builder
+
+The first search-owned pipeline step now exists separately from the catalogue generator:
+
+```bash
+./scripts/build_search_data.rb --scope studio --write
+```
+
+Current role:
+
+- reads `assets/data/docs/scopes/studio/index.json`
+- emits `assets/data/search/studio/index.json`
+- constructs one search record per published Studio doc
+
+Current non-goals:
+
+- no raw-Markdown parsing
+- no summary generation
+- no body-prose indexing
+- no section-level records
+
+This is an intentional transition step toward the end-state described in [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture).
 
 ## Source inputs
 

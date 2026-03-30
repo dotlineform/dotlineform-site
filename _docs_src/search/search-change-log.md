@@ -8,6 +8,32 @@ sort_order: 3
 
 # Search Change Log
 
+## [2026-03-30] Added the first search-owned builder entrypoint and generated the Studio search artifact
+
+**Status:** implemented
+
+**Area:** build
+
+**Summary:**  
+Added a new search-owned Ruby builder entrypoint for non-catalogue scopes and used it to emit the first `studio` search artifact from published Studio docs outputs.
+
+**Reason:**  
+Studio search needed a concrete first implementation step that moves search ownership toward a dedicated pipeline without forcing a full refactor of either the catalogue generator or the docs builder first.
+
+**Effect:**  
+The repo now has `scripts/build_search_data.rb` as a search-owned build entrypoint, `assets/data/search/studio/index.json` can be generated from `assets/data/docs/scopes/studio/index.json`, and the Studio v1 record shape plus locked rollout decisions are now explicitly documented. Public `scope=studio` search remains disabled for now.
+
+**Affected files/docs:**  
+- `scripts/build_search_data.rb`
+- `assets/data/search/studio/index.json`
+- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
+- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
+- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Build Search Data](/docs/?doc=scripts-build-search-data)
+
+**Notes:**  
+This is a first search-owned build step, not the full standalone end-state pipeline yet.
+
 ## [2026-03-30] Documented the target search-pipeline ownership model and the proposed Studio v1 record shape
 
 **Status:** implemented

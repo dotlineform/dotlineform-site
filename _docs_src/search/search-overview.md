@@ -35,6 +35,7 @@ It is based on:
 - a dedicated build-time-generated catalogue search artifact: `assets/data/search/catalogue/index.json`
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - no third-party search libraries, plugins, or external search services
+- an initial search-owned builder entrypoint for future non-catalogue scopes at `scripts/build_search_data.rb`
 
 The browser loads the base search index once for the page session and searches it in memory.
 
@@ -146,6 +147,7 @@ Current implementation status:
 - v1 is implemented as a public page at `/search/`
 - the current usable public route is `/search/?scope=catalogue`
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
+- a search-owned Studio builder now exists and can emit `assets/data/search/studio/index.json`, but public `scope=studio` search is not enabled yet
 - indexed content types are works, series, and moments
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons

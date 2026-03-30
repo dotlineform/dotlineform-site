@@ -49,6 +49,8 @@ Command-level usage, flags, output paths, and operational notes now live in the 
   Stage source media for works, work details, and moments from workbook-driven IDs.
 - [Srcset Builder](/docs/?doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
+- [Build Search Data](/docs/?doc=scripts-build-search-data)
+  Build search-owned artifacts for non-catalogue scopes; current implemented scope is `studio`.
 - [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, aggregate indexes, and the catalogue search artifact.
 - [Delete Work](/docs/?doc=scripts-delete-work)

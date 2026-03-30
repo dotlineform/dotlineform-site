@@ -28,6 +28,19 @@ Studio v1 should not:
 - require the catalogue indexing pipeline to absorb docs-specific schema
 - force a full cross-scope generic indexing framework before there is enough evidence for one
 
+## Locked v1 decisions
+
+The following decisions are now treated as fixed for the first Studio implementation:
+
+- one search-owned builder entrypoint in Ruby
+- upstream source is the published Studio docs outputs, not raw Markdown
+- one search record per published doc
+- no section-level records
+- no summary or snippet field in v1
+- `display_meta` stays compact and is based on date plus optional parent context
+- Studio ranking is scope-specific and simple rather than shared with catalogue
+- the public `/search/` shell and scope-aware runtime policy remain shared
+
 ## Upstream source for v1
 
 The canonical upstream source for Studio v1 search should be:
@@ -36,7 +49,7 @@ The canonical upstream source for Studio v1 search should be:
 
 That means Studio search can read from the docs system’s canonical published data rather than re-parsing raw Markdown as a first step.
 
-Recommended v1 source material:
+Locked v1 source material:
 
 - `assets/data/docs/scopes/studio/index.json`
 - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
@@ -87,9 +100,12 @@ Recommended first output:
 
 ```json
 {
-  "scope": "studio",
-  "schema": "search_index_studio_v1",
-  "generated_at_utc": "2026-03-30T00:00:00Z",
+  "header": {
+    "schema": "search_index_studio_v1",
+    "scope": "studio",
+    "generated_at_utc": "2026-03-30T00:00:00Z",
+    "count": 1
+  },
   "entries": [
     {
       "id": "search-config-architecture",
@@ -109,7 +125,7 @@ Recommended first output:
 }
 ```
 
-This is intentionally simpler than the catalogue schema.
+This is intentionally simpler than the catalogue schema, but it still retains the shared top-level `header` plus `entries` shape used by the public runtime today.
 
 ## What v1 intentionally omits
 
@@ -148,7 +164,7 @@ Studio v1 should be implemented as:
 
 - a search-owned adapter over docs outputs
 
-Recommended interpretation:
+Locked v1 interpretation:
 
 - the docs builder still publishes canonical docs JSON
 - a search-owned build step reads those docs outputs
@@ -183,7 +199,7 @@ This is exactly the kind of staged implementation the target architecture is mea
 ## Suggested implementation order
 
 1. keep the current scope-aware public shell and policy layer as-is
-2. add a search-owned Studio index builder that reads canonical docs outputs
+2. add a search-owned Studio index builder in Ruby that reads canonical docs outputs
 3. emit `assets/data/search/studio/index.json`
 4. enable `studio` in `assets/data/search/policy.json`
 5. add a Studio-owned CTA to `/search/?scope=studio`

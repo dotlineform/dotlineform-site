@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T17:55:55Z",
+  "generated_at": "2026-03-30T18:09:23Z",
   "docs": [
     {
       "scope": "studio",
@@ -408,6 +408,18 @@
       "legacy_url": "/docs/studio/tagging/tag-editor/",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/assets/data/docs/by-id/tag-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-build-search-data",
+      "title": "Build Search Data",
+      "last_updated": "2026-03-30",
+      "parent_id": "scripts-overview",
+      "sort_order": 45,
+      "source_path": "site/scripts-build-search-data.md",
+      "legacy_url": "/docs/site/scripts-build-search-data/",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-build-search-data",
+      "content_url": "/assets/data/docs/by-id/scripts-build-search-data.json"
     },
     {
       "scope": "studio",
