@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T10:50:28Z",
+  "generated_at": "2026-03-30T11:22:25Z",
   "docs": [
     {
       "doc_id": "search-archive",
@@ -57,6 +57,17 @@
       "content_url": "/assets/data/docs/by-id/moments-json.json"
     },
     {
+      "doc_id": "multiple-content-domains-brief",
+      "title": "Multiple Content Domains - Brief",
+      "last_updated": "2026-03-29",
+      "parent_id": "multiple-content-domains",
+      "sort_order": 10,
+      "source_path": "domains/multiple-content-domains-brief.md",
+      "legacy_url": "/docs/domains/multiple-content-domains-brief/",
+      "viewer_url": "/docs/?doc=multiple-content-domains-brief",
+      "content_url": "/assets/data/docs/by-id/multiple-content-domains-brief.json"
+    },
+    {
       "doc_id": "pipeline-config",
       "title": "Pipeline Config Refactor Plan",
       "last_updated": "2026-03-29",
@@ -99,17 +110,6 @@
       "legacy_url": "/docs/search/search-result-shaping-json/",
       "viewer_url": "/docs/?doc=search-result-shaping-json",
       "content_url": "/assets/data/docs/by-id/search-result-shaping-json.json"
-    },
-    {
-      "doc_id": "search-result-shaping-json-slimmer",
-      "title": "Search Result Shaping draft slimmer JSON",
-      "last_updated": "2026-03-30",
-      "parent_id": "search-result-shaping",
-      "sort_order": 10,
-      "source_path": "search/search-result-shaping-slimmer-json.md",
-      "legacy_url": "/docs/search/search-result-shaping-slimmer-json/",
-      "viewer_url": "/docs/?doc=search-result-shaping-json-slimmer",
-      "content_url": "/assets/data/docs/by-id/search-result-shaping-json-slimmer.json"
     },
     {
       "doc_id": "site",
@@ -187,6 +187,17 @@
       "legacy_url": "/docs/search/search-index-schema/",
       "viewer_url": "/docs/?doc=search-index-schema",
       "content_url": "/assets/data/docs/by-id/search-index-schema.json"
+    },
+    {
+      "doc_id": "search-result-shaping-json-slimmer",
+      "title": "Search Result Shaping draft slimmer JSON",
+      "last_updated": "2026-03-30",
+      "parent_id": "search-result-shaping",
+      "sort_order": 20,
+      "source_path": "search/search-result-shaping-slimmer-json.md",
+      "legacy_url": "/docs/search/search-result-shaping-slimmer-json/",
+      "viewer_url": "/docs/?doc=search-result-shaping-json-slimmer",
+      "content_url": "/assets/data/docs/by-id/search-result-shaping-json-slimmer.json"
     },
     {
       "doc_id": "studio-search-v1-implementation-plan",
@@ -440,6 +451,17 @@
       "legacy_url": "/docs/studio/css refactor/",
       "viewer_url": "/docs/?doc=css-refactor",
       "content_url": "/assets/data/docs/by-id/css-refactor.json"
+    },
+    {
+      "doc_id": "multiple-content-domains",
+      "title": "Multiple Content Domains",
+      "last_updated": "2026-03-29",
+      "parent_id": "",
+      "sort_order": 100,
+      "source_path": "domains/multiple-content-domains.md",
+      "legacy_url": "/docs/domains/multiple-content-domains/",
+      "viewer_url": "/docs/?doc=multiple-content-domains",
+      "content_url": "/assets/data/docs/by-id/multiple-content-domains.json"
     },
     {
       "doc_id": "search-config-architecture",
