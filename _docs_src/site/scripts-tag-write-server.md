@@ -130,7 +130,7 @@ Tag Aliases behavior:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Studio](/docs/?doc=studio)
-- [Series Tags](/docs/?doc=series-tags)
-- [Tag Editor](/docs/?doc=tag-editor)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Series Tags](/docs/?scope=studio&doc=series-tags)
+- [Tag Editor](/docs/?scope=studio&doc=tag-editor)

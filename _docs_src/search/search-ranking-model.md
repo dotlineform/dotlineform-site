@@ -30,11 +30,11 @@ It covers:
 
 ## Relationship to other documents
 
-- [Search Index Schema](/docs/?doc=search-index-schema) defines the available fields
-- [Search Field Registry](/docs/?doc=search-field-registry) defines each field’s search role
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules) defines how values are normalized before matching
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour) defines how ranked results are presented
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines how ranking behaviour should be checked
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the available fields
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines each field’s search role
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) defines how values are normalized before matching
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) defines how ranked results are presented
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines how ranking behaviour should be checked
 
 ## Ranking principles
 
@@ -68,7 +68,7 @@ The current runtime can be described in four stages.
 
 The input query is normalized into a lowercased space-normalized form and split into tokens.
 
-This document does not define the normalization rules in detail; those belong in [Search Normalisation Rules](/docs/?doc=search-normalisation-rules).
+This document does not define the normalization rules in detail; those belong in [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules).
 
 ### 2. Candidate gate
 

@@ -18,7 +18,6 @@ ScopeConfig = Struct.new(
   :output,
   :viewer_base_url,
   :include_scope_param,
-  :compat_output,
   keyword_init: true
 )
 
@@ -30,7 +29,6 @@ DocRecord = Struct.new(
   :parent_id,
   :sort_order,
   :source_path,
-  :legacy_url,
   :viewer_url,
   :content_url,
   :body_markdown,
@@ -41,17 +39,15 @@ class DocsDataBuilder
   FRONT_MATTER_PATTERN = /\A---\s*\n(.*?)\n---\s*\n?/m.freeze
   MEDIA_TOKEN_PATTERN = /\[\[media:(.+?)\]\]/.freeze
 
-  def initialize(scope_id:, source_dir:, output_dir:, viewer_base_url:, include_scope_param: false, compat_output_dir: nil)
+  def initialize(scope_id:, source_dir:, output_dir:, viewer_base_url:, include_scope_param: false)
     @scope_id = scope_id.to_s
     @source_dir = Pathname(source_dir).expand_path
     @output_dir = Pathname(output_dir).expand_path
     @items_dir = @output_dir.join("by-id")
     @viewer_base_url = normalize_viewer_base_url(viewer_base_url)
     @include_scope_param = include_scope_param
-    @compat_output_dir = compat_output_dir ? Pathname(compat_output_dir).expand_path : nil
     @repo_root = Pathname(__dir__).parent.realpath
     @output_url_base = output_url_base_for(@output_dir)
-    @compat_output_url_base = @compat_output_dir ? output_url_base_for(@compat_output_dir) : nil
     @site_config = load_site_config
   end
 
@@ -111,7 +107,6 @@ class DocsDataBuilder
         parent_id: parent_id,
         sort_order: sort_order,
         source_path: relative_path,
-        legacy_url: legacy_url_for(relative_path),
         viewer_url: viewer_url_for(doc_id),
         content_url: content_url_for(doc_id),
         body_markdown: body_markdown
@@ -159,11 +154,6 @@ class DocsDataBuilder
     raise "Invalid sort_order #{value.inspect}; expected an integer"
   end
 
-  def legacy_url_for(relative_path)
-    base = @scope_id == "studio" ? "/docs/" : "#{@viewer_base_url}docs/"
-    "#{base}#{relative_path.sub(/\.md\z/, "/")}"
-  end
-
   def viewer_url_for(doc_id, anchor = nil)
     query_pairs = []
     query_pairs << "scope=#{CGI.escape(@scope_id)}" if @include_scope_param && !@scope_id.empty?
@@ -197,7 +187,6 @@ class DocsDataBuilder
       parent_id: doc.parent_id,
       sort_order: doc.sort_order,
       source_path: doc.source_path,
-      legacy_url: doc.legacy_url,
       viewer_url: doc.viewer_url,
       content_url: doc.content_url
     }
@@ -212,7 +201,6 @@ class DocsDataBuilder
       parent_id: doc.parent_id,
       sort_order: doc.sort_order,
       source_path: doc.source_path,
-      legacy_url: doc.legacy_url,
       viewer_url: doc.viewer_url,
       content_html: rewrite_doc_links(
         JekyllMarkdownRenderer.render_string(resolve_media_tokens(doc.body_markdown)),
@@ -223,7 +211,6 @@ class DocsDataBuilder
   end
 
   def rewrite_doc_links(html, current_doc:, docs:)
-    docs_by_legacy = docs.to_h { |doc| [doc.legacy_url, doc] }
     docs_by_id = docs.to_h { |doc| [doc.doc_id, doc] }
     docs_by_source = docs.to_h { |doc| [doc.source_path, doc] }
     docs_by_repo_path = docs.to_h do |doc|
@@ -236,7 +223,6 @@ class DocsDataBuilder
       rewritten = rewrite_href(
         href,
         current_doc: current_doc,
-        docs_by_legacy: docs_by_legacy,
         docs_by_id: docs_by_id,
         docs_by_source: docs_by_source,
         docs_by_repo_path: docs_by_repo_path
@@ -245,7 +231,7 @@ class DocsDataBuilder
     end
   end
 
-  def rewrite_href(href, current_doc:, docs_by_legacy:, docs_by_id:, docs_by_source:, docs_by_repo_path:)
+  def rewrite_href(href, current_doc:, docs_by_id:, docs_by_source:, docs_by_repo_path:)
     return href if href.empty? || href.start_with?("#", "mailto:")
     return href if href.match?(/\A[a-z][a-z0-9+\-.]*:/i)
 
@@ -263,11 +249,6 @@ class DocsDataBuilder
     viewer_doc_id = query_values.fetch("doc", []).first.to_s
     if !viewer_doc_id.empty? && viewer_path_match?(path_part)
       target_doc = docs_by_id[viewer_doc_id]
-      return target_doc ? viewer_url_for(target_doc.doc_id, anchor) : href
-    end
-
-    if path_part.start_with?("/docs/")
-      target_doc = docs_by_legacy[path_part]
       return target_doc ? viewer_url_for(target_doc.doc_id, anchor) : href
     end
 
@@ -299,17 +280,6 @@ class DocsDataBuilder
 
   def write_outputs(index_payload, item_payloads)
     write_payload_set(@output_dir, @items_dir, index_payload, item_payloads)
-    if @compat_output_dir
-      compat_item_payloads = item_payloads.transform_values do |payload|
-        payload.merge(content_url: "#{@compat_output_url_base}/by-id/#{CGI.escape(payload.fetch(:doc_id).to_s)}.json")
-      end
-      compat_index_payload = index_payload.merge(
-        docs: index_payload.fetch(:docs).map do |doc|
-          doc.merge(content_url: "#{@compat_output_url_base}/by-id/#{CGI.escape(doc.fetch(:doc_id).to_s)}.json")
-        end
-      )
-      write_payload_set(@compat_output_dir, @compat_output_dir.join("by-id"), compat_index_payload, compat_item_payloads, label: "Compatibility mirror")
-    end
   end
 
   def dry_run_summary(index_payload, item_payloads)
@@ -319,10 +289,6 @@ class DocsDataBuilder
     puts "  docs: #{index_payload.fetch(:docs).length}"
     puts "  would write: #{@output_dir.join('index.json')}"
     puts "  would write: #{item_payloads.length} files under #{@items_dir}"
-    if @compat_output_dir
-      puts "  would mirror: #{@compat_output_dir.join('index.json')}"
-      puts "  would mirror: #{item_payloads.length} files under #{@compat_output_dir.join('by-id')}"
-    end
   end
 
   def write_payload_set(output_dir, items_dir, index_payload, item_payloads, label: nil)
@@ -415,16 +381,14 @@ scope_configs = [
     source: "_docs_src",
     output: "assets/data/docs/scopes/studio",
     viewer_base_url: "/docs/",
-    include_scope_param: true,
-    compat_output: "assets/data/docs"
+    include_scope_param: true
   ),
   ScopeConfig.new(
     scope_id: "library",
     source: "_docs_library_src",
     output: "assets/data/docs/scopes/library",
     viewer_base_url: "/library/",
-    include_scope_param: false,
-    compat_output: nil
+    include_scope_param: false
   )
 ]
 
@@ -444,8 +408,7 @@ selected_scopes.each do |config|
     source_dir: options[:source] || config.source,
     output_dir: options[:output] || config.output,
     viewer_base_url: options[:viewer_base_url] || config.viewer_base_url,
-    include_scope_param: config.include_scope_param,
-    compat_output_dir: config.compat_output
+    include_scope_param: config.include_scope_param
   )
   builder.run(write: options[:write])
 end

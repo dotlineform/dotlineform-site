@@ -38,11 +38,11 @@ It does not define precise scoring tiers or normalization algorithms.
 
 ## Relationship to other documents
 
-- [Search Index Schema](/docs/?doc=search-index-schema) defines what fields exist and what they mean
-- [Search Field Registry](/docs/?doc=search-field-registry) defines how those fields behave in search
-- [Search Ranking Model](/docs/?doc=search-ranking-model) defines how field matches are prioritised
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules) defines how field values are transformed for retrieval
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour) defines how search results are presented
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines what fields exist and what they mean
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines how those fields behave in search
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) defines how field matches are prioritised
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) defines how field values are transformed for retrieval
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) defines how search results are presented
 
 ## Field registry principles
 

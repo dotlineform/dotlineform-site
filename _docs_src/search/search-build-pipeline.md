@@ -43,11 +43,11 @@ Transitional note:
 
 ## Relationship to other documents
 
-- [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
-- [Search Index Schema](/docs/?doc=search-index-schema) defines the output structure
-- [Search Field Registry](/docs/?doc=search-field-registry) defines how fields participate in search
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules) defines normalization rules in detail
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines operational verification steps
+- [Search Overview](/docs/?scope=studio&doc=search-overview) describes the subsystem at a high level
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the output structure
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines how fields participate in search
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) defines normalization rules in detail
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines operational verification steps
 
 ## Build pipeline principles
 
@@ -112,7 +112,7 @@ Current non-goals:
 - no body-prose indexing
 - no section-level records
 
-This is an intentional transition step toward the end-state described in [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture).
+This is an intentional transition step toward the end-state described in [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture).
 
 ## Source inputs
 

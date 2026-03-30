@@ -23,12 +23,12 @@ This is an implementation note, not the long-term policy source itself.
 
 Related docs:
 
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 ## Current implementation boundary
 
@@ -340,7 +340,7 @@ Recommended shape:
 }
 ```
 
-This should align directly with [Search Field Registry](/docs/?doc=search-field-registry), but only once the runtime is ready to consume it safely.
+This should align directly with [Search Field Registry](/docs/?scope=studio&doc=search-field-registry), but only once the runtime is ready to consume it safely.
 
 ## Phase 4: Shared runtime/build policy boundary
 

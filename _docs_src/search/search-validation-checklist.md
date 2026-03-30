@@ -96,12 +96,12 @@ Suggested current examples:
 
 ## F. Documentation alignment checks
 
-- [ ] [Search Index Schema](/docs/?doc=search-index-schema) still matches the generated index
-- [ ] [Search Field Registry](/docs/?doc=search-field-registry) still matches active field usage
-- [ ] [Search Normalisation Rules](/docs/?doc=search-normalisation-rules) still matches current generator and runtime behaviour
-- [ ] [Search Ranking Model](/docs/?doc=search-ranking-model) still matches the score-band logic
-- [ ] [Search UI Behaviour](/docs/?doc=search-ui-behaviour) still matches current runtime behaviour
-- [ ] [Search Build Pipeline](/docs/?doc=search-build-pipeline) still matches how the artifact is generated
+- [ ] [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) still matches the generated index
+- [ ] [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) still matches active field usage
+- [ ] [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) still matches current generator and runtime behaviour
+- [ ] [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) still matches the score-band logic
+- [ ] [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) still matches current runtime behaviour
+- [ ] [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) still matches how the artifact is generated
 
 ## Current known validation gaps
 

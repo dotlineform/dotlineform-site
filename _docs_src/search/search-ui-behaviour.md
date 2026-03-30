@@ -32,12 +32,12 @@ It covers:
 
 ## Relationship to other documents
 
-- [Search Overview](/docs/?doc=search-overview) describes the subsystem at a high level
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract) defines the public `/search/` route and scope-led entry model
-- [Search Index Schema](/docs/?doc=search-index-schema) defines the data available to the UI
-- [Search Field Registry](/docs/?doc=search-field-registry) defines which fields contribute to search and display
-- [Search Ranking Model](/docs/?doc=search-ranking-model) defines result ordering
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines what UI behaviour should be checked
+- [Search Overview](/docs/?scope=studio&doc=search-overview) describes the subsystem at a high level
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract) defines the public `/search/` route and scope-led entry model
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the data available to the UI
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines which fields contribute to search and display
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) defines result ordering
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines what UI behaviour should be checked
 
 ## UI behaviour principles
 
@@ -200,7 +200,7 @@ The metadata line may include:
 
 ### Result ordering
 
-Results are displayed in the ranked order defined by [Search Ranking Model](/docs/?doc=search-ranking-model).
+Results are displayed in the ranked order defined by [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model).
 
 ## No-query, loading, and empty states
 

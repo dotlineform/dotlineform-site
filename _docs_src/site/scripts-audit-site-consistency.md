@@ -99,5 +99,5 @@ Warning policy:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Pipeline Use Cases](/docs/?doc=pipeline-use-cases)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

@@ -159,7 +159,7 @@ Status: `completed`
 - `scripts/generate_work_pages.py`
 - new markdown-render helper script
 - `_data/pipeline.json`
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 
 ### Verification
 
@@ -408,7 +408,7 @@ Status: `completed`
 
 - `scripts/generate_work_pages.py`
 - `_layouts/moment.html`
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - `AGENTS.md` only if workflow expectations materially change
 
 ### Verification

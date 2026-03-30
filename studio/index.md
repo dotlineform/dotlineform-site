@@ -13,5 +13,5 @@ permalink: /studio/
 
 ## Documentation
 
-- [studio]({{ '/docs/?doc=studio' | relative_url }})
-- [scripts overview]({{ '/docs/?doc=scripts-overview' | relative_url }})
+- [studio]({{ '/docs/?scope=studio&doc=studio' | relative_url }})
+- [scripts overview]({{ '/docs/?scope=studio&doc=scripts-overview' | relative_url }})

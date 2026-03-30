@@ -93,7 +93,7 @@ Primary files:
 
 - `assets/studio/js/tag-studio.js`
 - `assets/studio/css/studio.css`
-- [UI Framework](/docs/?doc=ui-framework)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
 
 Responsibilities:
 
@@ -184,11 +184,11 @@ This batch depends on the server contract from Batch 5.
 
 Docs to update:
 
-- [Tag Editor](/docs/?doc=tag-editor)
-- [Series Tags](/docs/?doc=series-tags)
-- [Studio](/docs/?doc=studio)
-- [UI Framework](/docs/?doc=ui-framework)
-- [Tag Write Server](/docs/?doc=scripts-tag-write-server)
+- [Tag Editor](/docs/?scope=studio&doc=tag-editor)
+- [Series Tags](/docs/?scope=studio&doc=series-tags)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
 
 Verification focus:
 

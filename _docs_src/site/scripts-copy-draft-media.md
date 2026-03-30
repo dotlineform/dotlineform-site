@@ -32,6 +32,6 @@ Unified script with mode flags:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Main Draft Pipeline](/docs/?doc=scripts-main-pipeline)
-- [Srcset Builder](/docs/?doc=scripts-srcset-builder)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)

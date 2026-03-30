@@ -68,8 +68,8 @@ Retention policy:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Copy Draft Media](/docs/?doc=scripts-copy-draft-media)
-- [Srcset Builder](/docs/?doc=scripts-srcset-builder)
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
-- [Pipeline Use Cases](/docs/?doc=pipeline-use-cases)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
+- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

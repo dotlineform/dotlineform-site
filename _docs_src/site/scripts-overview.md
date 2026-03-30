@@ -16,7 +16,7 @@ Use this command prefix for all script commands:
 
 All commands below assume you are in `dotlineform-site/`.
 
-For local environment/bootstrap steps, see [Local Setup](/docs/?doc=local-setup).
+For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
 
 ## Purpose
 
@@ -41,32 +41,32 @@ Command-level usage, flags, output paths, and operational notes now live in the 
 
 ## Script References
 
-- [Docs Viewer Builder](/docs/?doc=scripts-docs-builder)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   Build scope-owned docs JSON for Studio and Library docs.
-- [Main Draft Pipeline](/docs/?doc=scripts-main-pipeline)
+- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
   Run the copy -> srcset -> generation pipeline from one entrypoint.
-- [Copy Draft Media](/docs/?doc=scripts-copy-draft-media)
+- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
   Stage source media for works, work details, and moments from workbook-driven IDs.
-- [Srcset Builder](/docs/?doc=scripts-srcset-builder)
+- [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
-- [Build Search Data](/docs/?doc=scripts-build-search-data)
+- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
   Build search-owned artifacts for non-catalogue scopes; current implemented scope is `studio`.
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, aggregate indexes, and the catalogue search artifact.
-- [Delete Work](/docs/?doc=scripts-delete-work)
+- [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
   Remove one work from generated artifacts when workbook status is `delete`.
-- [Tag Write Server](/docs/?doc=scripts-tag-write-server)
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
   Run the local Studio tag-save/import service with explicit write allowlists.
-- [CSS Token Audit](/docs/?doc=scripts-css-token-audit)
+- [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
   Audit typography and color literals across CSS files.
-- [Site Consistency Audit](/docs/?doc=scripts-audit-site-consistency)
+- [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)
   Run read-only structural and contract checks across generated pages, JSON, and media.
-- [Legacy Title Sort Fix](/docs/?doc=scripts-fix-missing-title-sort)
+- [Legacy Title Sort Fix](/docs/?scope=studio&doc=scripts-fix-missing-title-sort)
   Backfill legacy `_works` front matter that still depends on numeric `title_sort`.
 
 ## Related References
 
-- [Pipeline Use Cases](/docs/?doc=pipeline-use-cases)
-- [Sorting Architecture](/docs/?doc=sorting-architecture)
-- [CSS Audit Spec](/docs/?doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?doc=css-audit-latest)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
+- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
+- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)

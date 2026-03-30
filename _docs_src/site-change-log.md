@@ -8,6 +8,28 @@ sort_order: 20
 
 # Site Change Log
 
+## [2026-03-30] Removed the docs compatibility mirror and legacy Studio doc-link fallback
+
+**Status:** implemented
+
+**Area:** architecture
+
+**Summary:**  
+Removed the flat Studio docs compatibility output and retired the old legacy-link fallback from the docs builder so the published docs data contract is now scope-owned only.
+
+**Reason:**  
+The repo now uses explicit scope-owned viewer routes and scoped docs JSON outputs. Keeping the old mirror and legacy path rewrite added dormant complexity without protecting any core site functionality.
+
+**Effect:**  
+The docs builder now writes only `assets/data/docs/scopes/studio/` and `assets/data/docs/scopes/library/`, legacy `/docs/.../` path rewriting is gone, Studio source-doc links now use `/docs/?scope=studio&doc=...`, and the shared docs viewer normalizes incoming Studio viewer URLs onto the scoped route.
+
+**Affected files/docs:**  
+- `scripts/build_docs_data.rb`
+- `assets/js/docs-viewer.js`
+- `AGENTS.md`
+- `studio/index.md`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+
 ## [2026-03-30] Documented when the shared docs viewer runtime should and should not fork
 
 **Status:** implemented
@@ -24,9 +46,9 @@ The docs system now serves both Studio and library scopes through one viewer run
 There is now a stable reference for deciding whether a new docs requirement belongs in route-shell composition, scope-owned data, a small shared option, or a true runtime split.
 
 **Affected files/docs:**  
-- [Docs Viewer Runtime Boundary](/docs/?doc=docs-viewer-runtime-boundary)
-- [Site](/docs/?doc=site)
-- [Docs Viewer Builder](/docs/?doc=scripts-docs-builder)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Site](/docs/?scope=studio&doc=site)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 
 **Notes:**  
 The current recommendation remains to keep one docs viewer runtime and allow route-level shells to diverge as needed.
@@ -38,20 +60,20 @@ The current recommendation remains to keep one docs viewer runtime and allow rou
 **Area:** documentation
 
 **Summary:**  
-Reduced [Scripts Overview](/docs/?doc=scripts-overview) to a short navigation page and moved command-level script usage into dedicated child documents.
+Reduced [Scripts Overview](/docs/?scope=studio&doc=scripts-overview) to a short navigation page and moved command-level script usage into dedicated child documents.
 
 **Reason:**  
 The single overview page had accumulated too much detailed operational content to remain useful as a quick architectural entry point.
 
 **Effect:**  
-The scripts docs are now easier to scan at the top level, while script-specific flags, outputs, and workflow notes have stable dedicated docs such as [Docs Viewer Builder](/docs/?doc=scripts-docs-builder), [Generate Work Pages](/docs/?doc=scripts-generate-work-pages), and [Tag Write Server](/docs/?doc=scripts-tag-write-server).
+The scripts docs are now easier to scan at the top level, while script-specific flags, outputs, and workflow notes have stable dedicated docs such as [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages), and [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server).
 
 **Affected files/docs:**  
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Docs Viewer Builder](/docs/?doc=scripts-docs-builder)
-- [Main Draft Pipeline](/docs/?doc=scripts-main-pipeline)
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
-- [Tag Write Server](/docs/?doc=scripts-tag-write-server)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
 - `AGENTS.md`
 
 **Notes:**  
@@ -74,7 +96,7 @@ Docs can now stay as ordinary `.md` source files while embedding raw HTML and co
 
 **Affected files/docs:**  
 - `scripts/build_docs_data.rb`
-- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
 
 **Notes:**  
 This change does not add native `.html` source ingestion. The intended authoring model remains `.md` files with YAML front matter, optionally containing raw HTML bodies.
@@ -92,7 +114,7 @@ Refactored the docs viewer data/build contract to support separate `studio` and 
 The existing docs system implicitly belonged to the Studio domain even though the code and data layout were still flat. Additional docs domains needed scope-owned routes and artifacts before library content could grow cleanly.
 
 **Effect:**  
-Studio docs now build into a scope-owned output tree under `assets/data/docs/scopes/studio/` while keeping a compatibility mirror under `assets/data/docs/`, library docs have their own source root and scoped output tree, `/docs/?scope=studio&doc=...` is now the explicit Studio docs contract, and `/library/` now hosts the library docs viewer.
+Studio docs now build into a scope-owned output tree under `assets/data/docs/scopes/studio/`, library docs have their own source root and scoped output tree, `/docs/?scope=studio&doc=...` is now the explicit Studio docs contract, and `/library/` now hosts the library docs viewer.
 
 **Affected files/docs:**  
 - `scripts/build_docs_data.rb`
@@ -102,10 +124,7 @@ Studio docs now build into a scope-owned output tree under `assets/data/docs/sco
 - `_includes/docs_viewer_shell.html`
 - `_docs_library_src/library.md`
 - `_layouts/default.html`
-- [Scripts Overview](/docs/?doc=scripts-overview)
-
-**Notes:**  
-The current `/docs/?doc=...` form remains supported as Studio compatibility while older links are phased onto the explicit scoped route.
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
 
 ## [2026-03-30] Added lightweight build-version cache busting to shared shell assets
 
@@ -131,7 +150,7 @@ Shared shell assets now reload more reliably after a rebuild, the default layout
 - `search/index.md`
 - `assets/js/search/search-page.js`
 - `assets/studio/js/studio-config.js`
-- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 
 **Notes:**  
 This is a pragmatic cache-busting layer for the current static setup. It is not a full hashed-asset pipeline.
@@ -157,9 +176,9 @@ The public top nav now exposes only `works`, `/series/` owns the combined catalo
 - `_layouts/default.html`
 - `assets/css/main.css`
 - `assets/studio/data/studio_config.json`
-- [Data Flow](/docs/?doc=data-flow)
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+- [Data Flow](/docs/?scope=studio&doc=data-flow)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 
 **Notes:**  
 The main regression risk is state handling when switching between works and moments modes on the merged catalogue page.
@@ -171,7 +190,7 @@ The main regression risk is state handling when switching between works and mome
 **Area:** architecture
 
 **Summary:**  
-Updated published site and Studio docs so references to other published docs now use `/docs/?doc=...` links instead of raw filenames or legacy doc URLs.
+Updated published site and Studio docs so references to other published docs now use `/docs/?scope=studio&doc=...` links instead of raw filenames or legacy doc URLs.
 
 **Reason:**  
 The docs set is increasingly used through the in-site viewer. Linking published docs through the viewer makes cross-document navigation consistent and keeps repo file references reserved for actual source files and unpublished notes.
@@ -180,13 +199,13 @@ The docs set is increasingly used through the in-site viewer. Linking published 
 Published docs now read more cleanly as a connected documentation system, while literal output paths, unpublished docs, and non-doc repo files remain explicit where needed.
 
 **Affected files/docs:**  
-- [Site Change Log Guidance](/docs/?doc=site-change-log-guidance)
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [UI Framework](/docs/?doc=ui-framework)
-- [CSS Audit Spec](/docs/?doc=css-audit-spec)
-- [Studio](/docs/?doc=studio)
-- [Tag Editor](/docs/?doc=tag-editor)
-- [Series Tags](/docs/?doc=series-tags)
+- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Tag Editor](/docs/?scope=studio&doc=tag-editor)
+- [Series Tags](/docs/?scope=studio&doc=series-tags)
 
 **Notes:**  
 This change updates documentation navigation only; it does not change site runtime or pipeline behaviour.
@@ -198,7 +217,7 @@ This change updates documentation navigation only; it does not change site runti
 **Area:** architecture
 
 **Summary:**  
-Added a dedicated [Site Change Log](/docs/?doc=site-change-log) plus supporting guidance so meaningful non-search site and Studio changes now have a focused historical record separate from search.
+Added a dedicated [Site Change Log](/docs/?scope=studio&doc=site-change-log) plus supporting guidance so meaningful non-search site and Studio changes now have a focused historical record separate from search.
 
 **Reason:**  
 Search has become complex enough to justify its own subsystem log. The rest of the site still needs a concise historical record, but should not be mixed into the search log.
@@ -207,8 +226,8 @@ Search has become complex enough to justify its own subsystem log. The rest of t
 Future review of non-search development can now happen without reconstructing history from scattered commits or overloading the search change log.
 
 **Affected files/docs:**  
-- [Site Change Log](/docs/?doc=site-change-log)
-- [Site Change Log Guidance](/docs/?doc=site-change-log-guidance)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)
 - `AGENTS.md`
 
 **Notes:**  
@@ -234,7 +253,7 @@ Work detail runtime became simpler and closer to the canonical per-work data flo
 - `_layouts/work.html`
 - `scripts/generate_work_pages.py`
 - `scripts/audit_site_consistency.py`
-- [Data Flow](/docs/?doc=data-flow)
+- [Data Flow](/docs/?scope=studio&doc=data-flow)
 
 **Notes:**  
 This was part of the wider JSON-first site architecture shift.
@@ -246,7 +265,7 @@ This was part of the wider JSON-first site architecture shift.
 **Area:** architecture
 
 **Summary:**  
-Confirmed that search history should live in [Search Change Log](/docs/?doc=search-change-log) rather than the broader site log.
+Confirmed that search history should live in [Search Change Log](/docs/?scope=studio&doc=search-change-log) rather than the broader site log.
 
 **Reason:**  
 Search now has its own artifact, UI surface, policy surface, and document set, so combining it with wider site history would make both logs less useful.
@@ -255,9 +274,9 @@ Search now has its own artifact, UI surface, policy surface, and document set, s
 The site log remains focused on the wider site and non-search Studio development, while search history is reviewed through its own dedicated log.
 
 **Affected files/docs:**  
-- [Search Change Log](/docs/?doc=search-change-log)
-- [Site Change Log](/docs/?doc=site-change-log)
-- [Site Change Log Guidance](/docs/?doc=site-change-log-guidance)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log)
+- [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)
 
 **Notes:**  
 For changes that materially affect both areas, add short entries to both logs.
@@ -282,8 +301,8 @@ The site now relies more heavily on generated JSON contracts and index artifacts
 - `assets/data/works_index.json`
 - `assets/data/series_index.json`
 - `assets/data/moments_index.json`
-- [Data Flow](/docs/?doc=data-flow)
-- [Scripts Overview](/docs/?doc=scripts-overview)
+- [Data Flow](/docs/?scope=studio&doc=data-flow)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
 
 **Notes:**  
 This entry summarizes the broader architectural shift rather than one single commit.

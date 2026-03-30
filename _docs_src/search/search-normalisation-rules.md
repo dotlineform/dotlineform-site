@@ -36,11 +36,11 @@ It covers:
 
 ## Relationship to other documents
 
-- [Search Index Schema](/docs/?doc=search-index-schema) defines the indexed fields
-- [Search Field Registry](/docs/?doc=search-field-registry) defines which fields participate in search
-- [Search Ranking Model](/docs/?doc=search-ranking-model) defines how normalized matches are prioritized
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline) defines where index-time normalization occurs
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist) defines how normalization behaviour should be checked
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the indexed fields
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines which fields participate in search
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) defines how normalized matches are prioritized
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) defines where index-time normalization occurs
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines how normalization behaviour should be checked
 
 ## Normalisation principles
 

@@ -12,20 +12,20 @@ This document is the central reference for the Studio pages, which are designed 
 
 Related references:
 
-- **[UI Framework](/docs/?doc=ui-framework)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
+- **[UI Framework](/docs/?scope=studio&doc=ui-framework)** for site-wide interaction defaults and Studio-specific UI primitives and naming rules
 
 Page documents:
 
-- **[Tag Registry](/docs/?doc=tag-registry)**
-- **[Series Tags](/docs/?doc=series-tags)**
-- **[Series Tag Editor](/docs/?doc=tag-editor)**
+- **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
+- **[Series Tags](/docs/?scope=studio&doc=series-tags)**
+- **[Series Tag Editor](/docs/?scope=studio&doc=tag-editor)**
 
 Current status:
 
 - Studio modularity refactor is structurally complete for the current build
 - modal framework migration is structurally complete for the current build
 - non-modal shared UI cleanup is structurally complete across the editor, registry, aliases, and lighter Studio pages
-- remaining work is manual browser verification using [Studio Regression Checklist](/docs/?doc=regression-checklist)
+- remaining work is manual browser verification using [Studio Regression Checklist](/docs/?scope=studio&doc=regression-checklist)
 
 ## Local Development
 
@@ -577,7 +577,7 @@ When studio tag behavior changes, update this document in the same change:
 - Data contract expectations
 - Operational workflow (manual patch vs local server)
 
-Keep [Scripts Overview](/docs/?doc=scripts-overview) updated as well for command-level usage and script flags.
+Keep [Scripts Overview](/docs/?scope=studio&doc=scripts-overview) updated as well for command-level usage and script flags.
 
 ## Tag Registry Page
 

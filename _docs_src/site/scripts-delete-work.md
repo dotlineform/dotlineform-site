@@ -43,6 +43,6 @@ Intentionally left untouched:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
-- [Pipeline Use Cases](/docs/?doc=pipeline-use-cases)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

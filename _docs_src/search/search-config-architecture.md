@@ -16,13 +16,13 @@ It is an architecture and decision document. It exists to make future search-pol
 
 This document does not define the detailed rules themselves. Those belong in:
 
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
-- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
+- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 
 ## Current state
 
@@ -125,7 +125,7 @@ Reason for this location:
 
 This file should become the machine-readable search-policy surface.
 
-The concrete first-step shape and later extraction phases are outlined in [Search Config Implementation Note](/docs/?doc=search-config-implementation-note).
+The concrete first-step shape and later extraction phases are outlined in [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note).
 
 ### 3. Keep docs as the normative review surface
 
@@ -167,7 +167,7 @@ Good candidates for config:
 - field importance class
 - allowed match modes by field
 
-This should be the machine-readable counterpart to [Search Field Registry](/docs/?doc=search-field-registry), but only once the implementation is ready to consume it.
+This should be the machine-readable counterpart to [Search Field Registry](/docs/?scope=studio&doc=search-field-registry), but only once the implementation is ready to consume it.
 
 ### C. Ranking band policy
 

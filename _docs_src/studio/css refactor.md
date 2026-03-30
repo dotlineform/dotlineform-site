@@ -88,7 +88,7 @@ My recommendation for the immediate next step:
 
 If you want, I can take the next practical step and do the audit pass first: extract the current raw `font-size` and color values from both CSS files and turn that into a cleanup plan.
 
-I added a repeatable audit script at `scripts/css_token_audit.py`, generated the current snapshot in [CSS Audit Latest](/docs/?doc=css-audit-latest), and documented it in [CSS Token Audit](/docs/?doc=scripts-css-token-audit). Verification was just the script run: `python3 scripts/css_token_audit.py`.
+I added a repeatable audit script at `scripts/css_token_audit.py`, generated the current snapshot in [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest), and documented it in [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit). Verification was just the script run: `python3 scripts/css_token_audit.py`.
 
 What the audit says is useful:
 - `main.css` has a typography drift problem more than a color problem. The biggest hotspot is `12px` used 12 times, plus smaller clusters at `13px`, `0.88rem`, `0.9rem`, `0.95rem`, and one `16px` lede.
@@ -99,6 +99,6 @@ So the first real cleanup pass should be typography only, not lists or colors ye
 1. Finalize a shared text scale and decide whether `13px` survives or gets eliminated.
 2. Add a small Studio typography alias layer so `0.78/0.82/0.83/0.86/0.88/0.9` collapse into a controlled set.
 3. Replace repeated literals in `main.css` and `studio.css` with those tokens, without redesigning components yet.
-4. Re-run [CSS Audit Latest](/docs/?doc=css-audit-latest) and only then start the color pass.
+4. Re-run [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest) and only then start the color pass.
 
 If you want, I can take that next pass now and do the typography-token consolidation only.

@@ -29,8 +29,8 @@ After Studio and Library search both moved inline into the docs viewer, the dedi
 - `assets/data/search/policy.json`
 - `assets/studio/js/studio-config.js`
 - `assets/studio/data/studio_config.json`
-- [Search Overview](/docs/?doc=search-overview)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 This does not remove the broader scope vocabulary from the architecture docs. It only removes dormant docs-domain behavior from the dedicated search-page implementation.
@@ -54,10 +54,10 @@ Once Studio docs search moved inline, leaving Library on a different pattern wou
 - `library/index.md`
 - `scripts/build_search_data.rb`
 - `assets/data/search/library/index.json`
-- [Build Search Data](/docs/?doc=scripts-build-search-data)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
+- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
 
 **Notes:**  
 This change is mainly architectural cleanup for consistency. With one Library doc, the immediate user-facing value is low, but it keeps the docs-domain search pattern aligned before Library grows.
@@ -83,10 +83,10 @@ For Studio docs, inline search is a better fit than a separate page because the 
 - `assets/js/docs-viewer.js`
 - `assets/css/main.css`
 - `assets/data/search/policy.json`
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Docs Viewer Runtime Boundary](/docs/?doc=docs-viewer-runtime-boundary)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 
 **Notes:**  
 This change intentionally removes the transitional dual-UI state for Studio search. The dedicated `/search/` page now documents and serves the catalogue scope only.
@@ -114,9 +114,9 @@ The first Studio search artifact already existed, so the next step was to expose
 - `assets/css/main.css`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 This change enables Studio docs search only. It does not add `library` search or change the long-term search-pipeline ownership model.
@@ -139,10 +139,10 @@ The repo now has `scripts/build_search_data.rb` as a search-owned build entrypoi
 **Affected files/docs:**  
 - `scripts/build_search_data.rb`
 - `assets/data/search/studio/index.json`
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Build Search Data](/docs/?doc=scripts-build-search-data)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
 
 **Notes:**  
 This is a first search-owned build step, not the full standalone end-state pipeline yet.
@@ -163,12 +163,12 @@ The next search scope will likely have a different upstream schema and different
 Search now has a documented ownership boundary for the full subsystem and a concrete proposal for how Studio v1 should read canonical docs outputs through a search-owned adapter while still fitting the shared `/search/` shell.
 
 **Affected files/docs:**  
-- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
-- [Search](/docs/?doc=search)
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
 
 **Notes:**  
 This is a documentation decision only. It does not yet implement Studio search indexing or a standalone search build script.
@@ -194,8 +194,8 @@ The public search route already uses explicit `scope`, but the runtime still har
 - `assets/js/search/search-page.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 This phase does not add a Studio search index yet. Ranking logic and build-time entry generation remain in code.
@@ -220,8 +220,8 @@ The recent public-route and module-path changes exposed stale browser-cache fail
 - `assets/js/search/search-page.js`
 - `assets/studio/js/studio-config.js`
 - `assets/studio/js/studio-data.js`
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 
 **Notes:**  
 This is a pragmatic build-version layer for the current static-site workflow. It does not change search ranking, scope rules, or index schema.
@@ -249,10 +249,10 @@ The search page now loads a top-level public search module, the current `catalog
 - `assets/data/search/catalogue/index.json`
 - `scripts/generate_work_pages.py`
 - `search/index.md`
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Index Schema](/docs/?doc=search-index-schema)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
 
 **Notes:**  
 This change introduces the scoped search-data convention now, before additional scopes are implemented. The current runtime still only accepts `scope=catalogue`.
@@ -278,7 +278,7 @@ The search header now resolves its left-side link from scope context, the curren
 - `assets/studio/js/studio-search.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 This is a header-navigation change only. It does not change search indexing, ranking, or scope validation rules.
@@ -306,11 +306,11 @@ The agreed search contract now uses one public top-level search route with expli
 - `assets/studio/js/studio-search.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- [Search](/docs/?doc=search)
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+- [Search](/docs/?scope=studio&doc=search)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
 
 **Notes:**  
 The runtime is still the same shared search module and still only supports the `catalogue` scope. This change is route and entry-point migration, not the later modular multi-domain refactor.
@@ -334,9 +334,9 @@ The search UI needs to align with the newer scope-led public-search direction be
 - `studio/search/index.md`
 - `assets/studio/js/studio-search.js`
 - `assets/studio/data/studio_config.json`
-- [Search Overview](/docs/?doc=search-overview)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
 
 **Notes:**  
 This change intentionally does not remove the underlying internal support for per-kind filtering from the search runtime; it only removes that granularity from the current UI.
@@ -357,9 +357,9 @@ Search is about to grow beyond the current Studio-first catalogue scope. The pub
 The search docs now explicitly prefer a scope-led public model such as `/search/?scope=catalogue&q=...`, reserve future scope names such as `studio` and `library`, and avoid an ambiguous top-level public nav item called `search` as the default interaction pattern.
 
 **Affected files/docs:**  
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search](/docs/?doc=search)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search](/docs/?scope=studio&doc=search)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 This is a documentation-level contract decision. The public `/search/` route and the modular domain search architecture are not implemented yet.
@@ -380,9 +380,9 @@ The architecture doc defined the boundary, but the next implementation step stil
 Search config work now has a documented first cut, a proposed `search_policy.json` shape, and a clearer roadmap for later phases such as ranking bands, field participation, and shared runtime/build policy.
 
 **Affected files/docs:**  
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
-- [Search](/docs/?doc=search)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
+- [Search](/docs/?scope=studio&doc=search)
 
 **Notes:**  
 This remains a documentation-level implementation plan; the config layer itself is not yet implemented.
@@ -394,7 +394,7 @@ This remains a documentation-level implementation plan; the config layer itself 
 **Area:** architecture
 
 **Summary:**  
-Converted published-doc references across the search document set to use `/docs/?doc=...` links instead of raw filenames or legacy doc paths.
+Converted published-doc references across the search document set to use `/docs/?scope=studio&doc=...` links instead of raw filenames or legacy doc paths.
 
 **Reason:**  
 Search docs are now intended to be read through the docs viewer as a linked system. Raw filenames were inconsistent with that review flow and made navigation less direct.
@@ -403,15 +403,15 @@ Search docs are now intended to be read through the docs viewer as a linked syst
 Readers can now move between published search docs through stable viewer links, while non-doc file paths and unpublished docs remain explicit as plain repo references.
 
 **Affected files/docs:**  
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Change Log Guidance](/docs/?doc=search-change-log-guidance)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 
 **Notes:**  
 This is a documentation-navigation change only; it does not alter search behaviour or schema.
@@ -432,16 +432,16 @@ The search system had moved beyond a single planning note. Review and future cha
 Search can now be reviewed one concern at a time, and future implementation changes have a clearer documentation surface to update alongside code.
 
 **Affected files/docs:**  
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Index Schema](/docs/?doc=search-index-schema)
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Change Log Guidance](/docs/?doc=search-change-log-guidance)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 
 **Notes:**  
 This documentation split is now part of the review surface for future search work and should be maintained alongside implementation changes.
@@ -462,7 +462,7 @@ Search already has its own artifact, UI surface, and review docs. Config boundar
 Provides a clear basis for the next structural implementation step without prematurely externalizing all search logic.
 
 **Affected files/docs:**  
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 
@@ -489,7 +489,7 @@ Large result sets remain performant and readable, and the user can inspect more 
 - `studio/search/index.md`
 - `assets/css/main.css`
 - `assets/studio/data/studio_config.json`
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
 The initial implementation had a runtime bug from an obsolete constant; that was fixed immediately in the same development phase and the current behaviour is the corrected batched model.
@@ -516,9 +516,9 @@ The site now has a working Studio-first search surface with deterministic rankin
 - `studio/search/index.md`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-data.js`
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search Index Schema](/docs/?doc=search-index-schema)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
 
 **Notes:**  
 This implementation keeps search as a dedicated artifact stage inside the existing generator rather than introducing a separate search builder.

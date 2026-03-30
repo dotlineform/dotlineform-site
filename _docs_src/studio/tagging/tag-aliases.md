@@ -314,7 +314,7 @@ The page controller owns:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [UI Framework](/docs/?doc=ui-framework):
+This page follows the Studio-specific shared UI boundary documented in [UI Framework](/docs/?scope=studio&doc=ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors

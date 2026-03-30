@@ -69,15 +69,15 @@ Do not add an entry for:
 
 Use the change log alongside:
 
-- [Search Overview](/docs/?doc=search-overview)
-- [Search Index Schema](/docs/?doc=search-index-schema)
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
 
 The change log records the fact of change. The other search docs define the resulting system.
 
@@ -87,7 +87,7 @@ These rules should be treated as the standard for this repo and environment.
 
 ### 1. Write the entry in the same change set
 
-If a search change is meaningful enough to alter behaviour, structure, or maintenance burden, update [Search Change Log](/docs/?doc=search-change-log) in the same change set.
+If a search change is meaningful enough to alter behaviour, structure, or maintenance burden, update [Search Change Log](/docs/?scope=studio&doc=search-change-log) in the same change set.
 
 Do not leave the log as a later cleanup task.
 

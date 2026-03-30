@@ -71,6 +71,11 @@
     return (new URLSearchParams(window.location.search).get("q") || "").trim();
   }
 
+  function hasCanonicalScopeInUrl() {
+    if (!includeScopeParam || !viewerScope) return true;
+    return new URLSearchParams(window.location.search).get("scope") === viewerScope;
+  }
+
   function hasActiveQuery(query) {
     return Boolean(normalize(typeof query === "string" ? query : state.searchQuery));
   }
@@ -497,7 +502,7 @@
     expandTrail(docId);
     renderSidebar();
 
-    if (route.corrected) {
+    if (route.corrected || !hasCanonicalScopeInUrl()) {
       setHistory(docId, "", query, "replace");
     }
 

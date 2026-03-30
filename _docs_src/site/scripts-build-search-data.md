@@ -64,10 +64,10 @@ Library scope:
 - does not index section-level records
 - does not index doc body prose or summaries
 
-This is the first search-owned builder step toward the longer-term search pipeline documented in [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture).
+This is the first search-owned builder step toward the longer-term search pipeline documented in [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture).
 
 ## Related references
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)

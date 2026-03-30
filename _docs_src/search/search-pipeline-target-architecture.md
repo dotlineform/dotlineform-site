@@ -214,7 +214,7 @@ The right balance is to keep the end-state explicit while still shipping scope w
 
 ## Related documents
 
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)

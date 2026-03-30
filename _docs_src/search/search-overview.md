@@ -133,20 +133,20 @@ Those belong in the dedicated companion documents.
 
 ## Related documents
 
-- [Search Index Schema](/docs/?doc=search-index-schema)
-- [Search Field Registry](/docs/?doc=search-field-registry)
-- [Search Normalisation Rules](/docs/?doc=search-normalisation-rules)
-- [Search Ranking Model](/docs/?doc=search-ranking-model)
-- [Search UI Behaviour](/docs/?doc=search-ui-behaviour)
-- [Search Build Pipeline](/docs/?doc=search-build-pipeline)
-- [Search Validation Checklist](/docs/?doc=search-validation-checklist)
-- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?doc=search-studio-v1-index-shape)
-- [Search Change Log Guidance](/docs/?doc=search-change-log-guidance)
-- [Search Change Log](/docs/?doc=search-change-log)
-- [Search Archive](/docs/?doc=search-archive)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
+- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+- [Search Archive](/docs/?scope=studio&doc=search-archive)
 
-[Search Config Architecture](/docs/?doc=search-config-architecture) is reserved for a later phase and should not be treated as current implementation documentation yet.
+[Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture) is reserved for a later phase and should not be treated as current implementation documentation yet.
 
 ## Current status
 

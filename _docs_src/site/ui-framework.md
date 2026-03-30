@@ -19,7 +19,7 @@ The goal is consistency without introducing a heavy component system. Pages shou
 
 Related site-wide contract:
 
-- [CSS Primitives](/docs/?doc=css-primitives)
+- [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
 
 ## Scope
 
@@ -446,7 +446,7 @@ Studio should continue to use these modal types rather than adding new one-off d
 - shared modal state now uses `data-state` rather than page-specific `.is-*` presentation classes
 - shared non-modal primitives cover toolbar, filters, list shell, and modal form internals
 - lighter Studio pages such as `series-tags`, `tag-groups`, and `studio-works` follow the same role/state contract where applicable
-- remaining work is manual browser verification using [Studio Regression Checklist](/docs/?doc=regression-checklist), not more framework design
+- remaining work is manual browser verification using [Studio Regression Checklist](/docs/?scope=studio&doc=regression-checklist), not more framework design
 
 ### Aliases Integration Notes
 

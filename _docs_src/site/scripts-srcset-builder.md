@@ -43,6 +43,6 @@ If that source file is missing, the copy step skips it.
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Main Draft Pipeline](/docs/?doc=scripts-main-pipeline)
-- [Copy Draft Media](/docs/?doc=scripts-copy-draft-media)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)

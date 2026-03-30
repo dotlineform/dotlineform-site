@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T20:56:54Z",
+  "generated_at": "2026-03-30T21:17:36Z",
   "docs": [
     {
       "scope": "library",
@@ -9,7 +9,6 @@
       "parent_id": "",
       "sort_order": 10,
       "source_path": "library.md",
-      "legacy_url": "/library/docs/library/",
       "viewer_url": "/library/?doc=library",
       "content_url": "/assets/data/docs/scopes/library/by-id/library.json"
     }

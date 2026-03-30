@@ -27,8 +27,8 @@ Search has its own dedicated change log and should remain separate.
 
 This repo now has two different levels of change history need:
 
-- [Search Change Log](/docs/?doc=search-change-log) for the search subsystem
-- [Site Change Log](/docs/?doc=site-change-log) for the rest of the site and non-search Studio evolution
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log) for the search subsystem
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log) for the rest of the site and non-search Studio evolution
 
 That split is useful because search is already a distinct subsystem, while the rest of the site is more stable but still changes in meaningful ways.
 
@@ -61,25 +61,25 @@ Do not add an entry for:
 
 Use the site change log alongside:
 
-- [Site](/docs/?doc=site)
-- [Data Flow](/docs/?doc=data-flow)
-- [Site Shell Runtime](/docs/?doc=site-shell-runtime)
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Local Setup](/docs/?doc=local-setup)
-- [UI Framework](/docs/?doc=ui-framework)
+- [Site](/docs/?scope=studio&doc=site)
+- [Data Flow](/docs/?scope=studio&doc=data-flow)
+- [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Local Setup](/docs/?scope=studio&doc=local-setup)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - relevant Studio docs for non-search features
 
 Search-specific history belongs in:
 
-- [Search Change Log](/docs/?doc=search-change-log)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
 
 ## Repo-specific maintenance rules
 
 ### 1. Keep search and non-search history separate
 
-If a change is search-specific, log it in [Search Change Log](/docs/?doc=search-change-log).
+If a change is search-specific, log it in [Search Change Log](/docs/?scope=studio&doc=search-change-log).
 
-If a change affects the broader site or non-search Studio features, log it in [Site Change Log](/docs/?doc=site-change-log).
+If a change affects the broader site or non-search Studio features, log it in [Site Change Log](/docs/?scope=studio&doc=site-change-log).
 
 If a change materially affects both, add short entries to both logs.
 

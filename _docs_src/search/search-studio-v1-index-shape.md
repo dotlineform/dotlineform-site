@@ -223,7 +223,7 @@ Those risks are acceptable for a v1 as long as the build boundary stays search-o
 
 ## Related documents
 
-- [Search Pipeline Target Architecture](/docs/?doc=search-pipeline-target-architecture)
-- [Search Public UI Contract](/docs/?doc=search-public-ui-contract)
-- [Search Config Architecture](/docs/?doc=search-config-architecture)
-- [Search Config Implementation Note](/docs/?doc=search-config-implementation-note)
+- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
+- [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
+- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
+- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)

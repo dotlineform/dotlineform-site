@@ -27,6 +27,6 @@ Script:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [CSS Audit Spec](/docs/?doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?doc=css-audit-latest)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
+- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)

@@ -39,5 +39,5 @@ Scope to selected IDs or ranges:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Generate Work Pages](/docs/?doc=scripts-generate-work-pages)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)

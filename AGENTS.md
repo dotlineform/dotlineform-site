@@ -146,7 +146,7 @@
 - `_docs_src/studio/*.md` are the central product/behavior docs for Studio features.
 - `_docs_src/search/*.md` are the central product/behavior docs for search.
 - `_docs_src/site/*.md` plus `_docs_src/site-change-log.md` are the central architecture/history docs for the broader non-search site.
-- When a published doc references another published doc, use the docs-viewer link form `/docs/?doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
+- When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
 - Keep `_docs_src/site/scripts-overview.md` as the high-level entry point for repo scripts.
 - Keep `_docs_src/site/scripts-*.md` as the canonical script-specific references for command usage, flags, outputs, and operational notes.

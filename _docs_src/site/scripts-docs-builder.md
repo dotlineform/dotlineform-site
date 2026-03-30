@@ -32,9 +32,6 @@ Generated outputs:
 - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
 - `assets/data/docs/scopes/library/index.json`
 - `assets/data/docs/scopes/library/by-id/<doc_id>.json`
-- compatibility mirror for current Studio docs:
-  - `assets/data/docs/index.json`
-  - `assets/data/docs/by-id/<doc_id>.json`
 
 ## What The Builder Does
 
@@ -78,7 +75,8 @@ Internal doc links:
 - preferred Studio public link format: `/docs/?scope=studio&doc=<doc_id>`
 - preferred Library public link format: `/library/?doc=<doc_id>`
 - optional anchors should use the normal hash suffix on the scope-owned route
-- the builder still rewrites legacy `/docs/.../`, legacy `/docs/?doc=...`, and relative `.md` links as compatibility behavior
+- the builder rewrites scope-owned viewer links and relative `.md` links onto the current scope-owned viewer route
+- the builder no longer rewrites legacy `/docs/.../` path links
 
 Docs media tokens:
 
@@ -150,8 +148,8 @@ Pipeline policy config:
 
 ## Related References
 
-- [Scripts Overview](/docs/?doc=scripts-overview)
-- [Docs Viewer Runtime Boundary](/docs/?doc=docs-viewer-runtime-boundary)
-- [Sorting Architecture](/docs/?doc=sorting-architecture)
-- [CSS Audit Spec](/docs/?doc=css-audit-spec)
-- [CSS Audit Latest](/docs/?doc=css-audit-latest)
+- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
+- [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
+- [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
+- [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)
