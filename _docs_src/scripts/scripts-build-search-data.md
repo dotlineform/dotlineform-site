@@ -11,7 +11,7 @@ sort_order: 45
 Script:
 
 ```bash
-ruby ./scripts/build_search_data.rb
+./scripts/build_search_data.rb
 ```
 
 Current purpose:
@@ -22,13 +22,13 @@ Current purpose:
 Default command:
 
 ```bash
-ruby ./scripts/build_search_data.rb --write
+./scripts/build_search_data.rb --write
 ```
 
 Dry-run:
 
 ```bash
-ruby ./scripts/build_search_data.rb
+./scripts/build_search_data.rb
 ```
 
 ## Current Defaults

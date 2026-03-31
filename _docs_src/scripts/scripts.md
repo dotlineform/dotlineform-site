@@ -31,8 +31,10 @@ The current script surface falls into three groups:
 
 - run project commands from `dotlineform-site/`
 - use project-local script paths
-  - some entrypoints are executable directly, such as `./scripts/build_docs_data.rb`
-  - some are currently invoked through `python3 ./scripts/...` or `ruby ./scripts/...`
+  - the two Ruby docs builders are executable directly:
+    - `./scripts/build_docs_data.rb`
+    - `./scripts/build_search_data.rb`
+  - most Python entrypoints are currently invoked through `python3 ./scripts/...`
 - docs-data rebuild command:
 
 ```bash

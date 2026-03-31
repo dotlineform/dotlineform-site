@@ -1,7 +1,7 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: ""
 sort_order: 110
 ---
@@ -47,7 +47,7 @@ There is now a stable reference for deciding whether a new docs requirement belo
 
 **Affected files/docs:**  
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
-- [Site](/docs/?scope=studio&doc=site)
+- [Architecture](/docs/?scope=studio&doc=architecture)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 
 **Notes:**  
@@ -60,7 +60,7 @@ The current recommendation remains to keep one docs viewer runtime and allow rou
 **Area:** documentation
 
 **Summary:**  
-Reduced [Scripts Overview](/docs/?scope=studio&doc=scripts-overview) to a short navigation page and moved command-level script usage into dedicated child documents.
+Reduced the old scripts overview into the current [Scripts](/docs/?scope=studio&doc=scripts) navigation page and moved command-level script usage into dedicated child documents.
 
 **Reason:**  
 The single overview page had accumulated too much detailed operational content to remain useful as a quick architectural entry point.
@@ -69,7 +69,7 @@ The single overview page had accumulated too much detailed operational content t
 The scripts docs are now easier to scan at the top level, while script-specific flags, outputs, and workflow notes have stable dedicated docs such as [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder), [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages), and [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server).
 
 **Affected files/docs:**  
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
@@ -96,7 +96,7 @@ Docs can now stay as ordinary `.md` source files while embedding raw HTML and co
 
 **Affected files/docs:**  
 - `scripts/build_docs_data.rb`
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 
 **Notes:**  
 This change does not add native `.html` source ingestion. The intended authoring model remains `.md` files with YAML front matter, optionally containing raw HTML bodies.
@@ -124,7 +124,7 @@ Studio docs now build into a scope-owned output tree under `assets/data/docs/sco
 - `_includes/docs_viewer_shell.html`
 - `_docs_library_src/library.md`
 - `_layouts/default.html`
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 
 ## [2026-03-30] Added lightweight build-version cache busting to shared shell assets
 
@@ -177,7 +177,7 @@ The public top nav now exposes only `works`, `/series/` owns the combined catalo
 - `assets/css/main.css`
 - `assets/studio/data/studio_config.json`
 - [Data Flow](/docs/?scope=studio&doc=data-flow)
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
 
 **Notes:**  
@@ -200,7 +200,7 @@ Published docs now read more cleanly as a connected documentation system, while 
 
 **Affected files/docs:**  
 - [Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
 - [Studio](/docs/?scope=studio&doc=studio)
@@ -302,7 +302,7 @@ The site now relies more heavily on generated JSON contracts and index artifacts
 - `assets/data/series_index.json`
 - `assets/data/moments_index.json`
 - [Data Flow](/docs/?scope=studio&doc=data-flow)
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 
 **Notes:**  
 This entry summarizes the broader architectural shift rather than one single commit.

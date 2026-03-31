@@ -26,7 +26,7 @@ This file tracks deferred improvements and follow-up work.
 - Decide whether any artifact family now documented in `data-models` needs a deeper child doc later, especially if:
   - catalogue per-record payloads gain more nested structure
   - docs-scope payloads gain more fields than the current scope docs can explain cleanly
-- Clean up remaining published-doc references that still point to removed `doc=site` targets.
+- If archived docs are ever republished, clean up remaining `_archive/` references that still point to removed `doc=site` or `scripts-overview` targets.
 - Start a UI review pass that logs:
   - style variations that should be consolidated
   - UI inconsistencies that justify controlled redesign

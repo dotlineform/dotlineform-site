@@ -1,7 +1,7 @@
 ---
 doc_id: search-change-log
 title: Search Change Log
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 1010
 ---
@@ -141,7 +141,7 @@ The repo now has `scripts/build_search_data.rb` as a search-owned build entrypoi
 - `assets/data/search/studio/index.json`
 - [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
 
 **Notes:**  

@@ -1,7 +1,7 @@
 ---
 doc_id: site-change-log-guidance
 title: Site Change Log Guidance
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: ""
 sort_order: 100
 ---
@@ -61,10 +61,10 @@ Do not add an entry for:
 
 Use the site change log alongside:
 
-- [Site](/docs/?scope=studio&doc=site)
+- [Site Docs](/docs/?scope=studio&doc=site-docs)
 - [Data Flow](/docs/?scope=studio&doc=data-flow)
 - [Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - relevant Studio docs for non-search features
