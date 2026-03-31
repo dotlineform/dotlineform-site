@@ -96,7 +96,13 @@ MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
 SRCSET_SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_ids_file")
 SRCSET_SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
-BUILD_STATE_SCHEMA = "build_catalogue_state_v1"
+BUILD_STATE_SCHEMA = "build_catalogue_state"
+LEGACY_BUILD_STATE_SCHEMAS = {"build_catalogue_state_v1"}
+BUILD_STATE_PLANNER_VERSION = 2
+BUILD_STATE_MIGRATION_NOTE = (
+    "planner_version 2 adds explicit planner metadata. Legacy state files are "
+    "accepted and normalized in memory, then rewritten on the next successful write run."
+)
 DEFAULT_BUILD_STATE_PATH = Path("var/build_catalogue_state.json")
 
 
@@ -678,6 +684,8 @@ def build_workbook_state(
 
     return {
         "schema": BUILD_STATE_SCHEMA,
+        "planner_version": BUILD_STATE_PLANNER_VERSION,
+        "migration_note": BUILD_STATE_MIGRATION_NOTE,
         "updated_at_utc": utc_timestamp_now(),
         "inputs": {
             "works": works,
@@ -704,12 +712,27 @@ def load_build_state(path: Path) -> Dict[str, Any] | None:
         return None
     if not isinstance(payload, dict):
         return None
-    if payload.get("schema") != BUILD_STATE_SCHEMA:
+    schema = payload.get("schema")
+    if schema != BUILD_STATE_SCHEMA and schema not in LEGACY_BUILD_STATE_SCHEMAS:
         return None
     inputs = payload.get("inputs")
     if not isinstance(inputs, dict):
         return None
-    return payload
+    planner_version = payload.get("planner_version")
+    legacy_state_loaded = schema != BUILD_STATE_SCHEMA or planner_version != BUILD_STATE_PLANNER_VERSION
+    normalized = {
+        "schema": BUILD_STATE_SCHEMA,
+        "planner_version": BUILD_STATE_PLANNER_VERSION,
+        "migration_note": BUILD_STATE_MIGRATION_NOTE,
+        "updated_at_utc": payload.get("updated_at_utc") if isinstance(payload.get("updated_at_utc"), str) else utc_timestamp_now(),
+        "inputs": inputs,
+        "_migration": {
+            "legacy_state_loaded": legacy_state_loaded,
+            "source_schema": schema,
+            "source_planner_version": planner_version,
+        },
+    }
+    return normalized
 
 
 def write_build_state(path: Path, state: Dict[str, Any]) -> None:
@@ -963,6 +986,7 @@ def main() -> int:
 
     previous_state = None if args.full else load_build_state(state_path)
     previous_inputs = previous_state.get("inputs", {}) if previous_state else {}
+    previous_state_migration = previous_state.get("_migration", {}) if previous_state else {}
     previous_media_inputs = previous_inputs.get("media", {}) if isinstance(previous_inputs.get("media"), dict) else {}
     current_state = build_workbook_state(
         xlsx_path,
@@ -970,6 +994,7 @@ def main() -> int:
         previous_media=previous_media_inputs,
     )
     bootstrap_state = previous_state is None
+    legacy_state_loaded = bool(previous_state_migration.get("legacy_state_loaded"))
     current_inputs = current_state["inputs"]
 
     current_works = current_inputs["works"]
@@ -1158,6 +1183,17 @@ def main() -> int:
             print(f"Planner mode: bootstrap (no prior state at {DEFAULT_BUILD_STATE_PATH}).")
         else:
             print(f"Planner state: {DEFAULT_BUILD_STATE_PATH}")
+            print(f"Planner version: {BUILD_STATE_PLANNER_VERSION}")
+            if legacy_state_loaded:
+                source_schema = previous_state_migration.get("source_schema") or "unknown"
+                source_planner_version = previous_state_migration.get("source_planner_version")
+                if source_planner_version is None:
+                    print(f"- loaded legacy planner state ({source_schema}); it will be rewritten with planner_version {BUILD_STATE_PLANNER_VERSION} on the next successful write run")
+                else:
+                    print(
+                        f"- loaded legacy planner state ({source_schema}, planner_version {source_planner_version}); "
+                        f"it will be rewritten with planner_version {BUILD_STATE_PLANNER_VERSION} on the next successful write run"
+                    )
         print(f"Selected modes: {', '.join(sorted(selected_modes))}")
         print("Workbook changes:")
         print(f"- works: {len(changed_work_row_ids)} changed/new, {len(work_diff['removed'])} removed")
@@ -1474,6 +1510,7 @@ def main() -> int:
                     results={
                         "planner_state_updated": True,
                         "media_tracking_initialized": True,
+                        "planner_state_migrated": legacy_state_loaded,
                     },
                 ),
             )

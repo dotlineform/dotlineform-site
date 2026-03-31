@@ -21,7 +21,7 @@ Run everything:
 ./scripts/build_catalogue.py
 ```
 
-Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates media tracking, the next write run treats current source media as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
+Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media tracking, the next write run treats current source media as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
 ## Useful Flags
 
@@ -93,6 +93,11 @@ Primary target artifacts:
 ## Planner Notes
 
 - The saved planner state is orchestration data, not canonical site data.
+- `var/build_catalogue_state.json` now includes top-level planner metadata:
+  - `schema`
+  - `planner_version`
+  - `migration_note`
+- Older planner state files are still accepted if their inputs are compatible. The script normalizes them in memory and rewrites them on the next successful write run.
 - The planner currently tracks workbook-backed rows and grouped workbook sections:
   - `Works`
   - `Series`

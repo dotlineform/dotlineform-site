@@ -1,12 +1,34 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: ""
 sort_order: 110
 ---
 
 # Site Change Log
+
+## [2026-04-01] Added explicit planner version metadata to build_catalogue state
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`build_catalogue.py` now writes `var/build_catalogue_state.json` with explicit top-level planner metadata so planner-state evolution is easier to reason about.
+
+**Reason:**  
+The planner state had already become important enough to deserve a clearer contract. Explicit versioning and a migration note make future planner changes easier to document and safer to evolve without turning state resets into the default workflow.
+
+**Effect:**  
+Planner state now includes `schema`, `planner_version`, and `migration_note`. Older compatible state files are still accepted, normalized in memory, and rewritten on the next successful write run.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+
+**Notes:**  
+This does not change canonical site data. It only makes the local planner-state contract more explicit.
 
 ## [2026-04-01] Added a curator-facing Studio build activity feed
 
