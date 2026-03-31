@@ -112,8 +112,6 @@ Current non-goals:
 - no body-prose indexing
 - no section-level records
 
-This is an intentional transition step toward the end-state described in [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture).
-
 ## Source inputs
 
 The current search build draws from multiple source layers.
@@ -342,8 +340,6 @@ What is not yet implemented as a dedicated search validation layer:
 - classification-rule enforcement
 - benchmark-style relevance validation during generation
 
-Those follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
-
 ## Performance and size considerations
 
 Current pipeline decisions that keep the base artifact lightweight:
@@ -365,10 +361,6 @@ Current build behaviour in practice:
 - the output is one flat generated artifact at `assets/data/search/catalogue/index.json`
 - write-skipping uses a content-derived version hash rather than file timestamps alone
 - validation is currently light and pragmatic rather than strict
-
-## Further Refinement
-
-Pipeline follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

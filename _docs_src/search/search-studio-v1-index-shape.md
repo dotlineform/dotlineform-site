@@ -51,20 +51,19 @@ Current top-level example:
     "generated_at_utc": "2026-03-30T00:00:00Z",
     "count": 1
   },
-  "entries": [
+    "entries": [
     {
-      "id": "search-config-architecture",
+      "id": "search-overview",
       "kind": "doc",
-      "title": "Search Config Architecture",
-      "href": "/docs/?scope=studio&doc=search-config-architecture",
+      "title": "Search Overview",
+      "href": "/docs/?scope=studio&doc=search-overview",
       "display_meta": "2026-03-30",
       "search_terms": [
-        "search-config-architecture",
+        "search-overview",
         "search",
-        "config",
-        "architecture"
+        "overview"
       ],
-      "search_text": "search config architecture 2026 03 30"
+      "search_text": "search overview 2026 03 30"
     }
   ]
 }
@@ -128,7 +127,5 @@ The Studio and Library artifacts are currently consumed by the shared Docs Viewe
 ## Related documents
 
 - [Data Models](/docs/?scope=studio&doc=data-models)
-- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
 - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps)

@@ -2,8 +2,9 @@
 doc_id: search-config-implementation-note
 title: Search Config Implementation Note
 last_updated: 2026-03-30
-parent_id: search
+parent_id: ""
 sort_order: 101
+published: false
 ---
 
 # Search Config Implementation Note

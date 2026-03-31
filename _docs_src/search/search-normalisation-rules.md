@@ -390,10 +390,6 @@ Current normalization behaviour in practice:
 - ids, years, and date fragments remain searchable as strings
 - no alias, synonym, or fuzzy layer is currently present
 
-## Further Refinement
-
-Normalization follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
-
 ## Out of scope for this document
 
 This document does not define:

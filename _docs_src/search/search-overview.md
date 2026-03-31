@@ -117,11 +117,11 @@ Search has its own artifact and its own documentation set rather than piggybacki
 
 ### Reviewable
 
-Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow. Deferred work is collated separately in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
+Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow.
 
 ### Incremental
 
-The base artifact is designed to grow with additional structured fields such as `medium_type` or tags before later expansion into larger prose search shards.
+The base artifact stays compact and structured rather than trying to index prose-heavy payloads by default.
 
 ### Static-site compatible
 
@@ -136,7 +136,6 @@ This document does not define:
 - ranking tiers or scoring details
 - UI event timing and pagination details
 - validation procedure
-- later config extraction architecture
 
 Those belong in the dedicated companion documents.
 
@@ -150,14 +149,10 @@ Those belong in the dedicated companion documents.
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
-- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps)
 - [Config](/docs/?scope=studio&doc=config)
 - [Data Models](/docs/?scope=studio&doc=data-models)
-- [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
 - [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 - [Search Change Log](/docs/?scope=studio&doc=search-change-log)
-
-[Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture) and [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture) are future-direction docs rather than current implementation specs.
 
 ## Current status
 
@@ -175,5 +170,3 @@ Current implementation status:
 - Studio docs search is inline on `/docs/`
 - Library docs search is inline on `/library/`
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
-
-This is a live multi-scope implementation with one dedicated catalogue route and two inline docs-domain surfaces. Follow-up work is collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).

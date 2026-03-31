@@ -33,8 +33,6 @@ Use it as the default entry point for `/docs/`.
 
 ## Supporting Docs
 
-- **[Site Next Steps](/docs/?scope=studio&doc=site-next-steps)**
-  cross-section follow-up work that should not be buried in implementation docs.
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)**
   meaningful non-search site and Studio history.
 - **[Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)**

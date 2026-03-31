@@ -348,7 +348,7 @@ Current gaps:
 - no active-result announcement model
 - no dedicated live-region treatment for result-count updates
 
-Those gaps are acceptable in the current implementation. Further refinement areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
+Those gaps are acceptable in the current implementation.
 
 ## Current implementation summary
 
@@ -363,10 +363,6 @@ Current UI behaviour in practice:
 - there is no visible kind filter
 - results are shown in batches of `50` with a `more` control
 - keyboard support is basic tab-and-activate behaviour rather than full result-list navigation
-
-## Further Refinement
-
-UI follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

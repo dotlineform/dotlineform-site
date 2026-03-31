@@ -8,7 +8,7 @@ sort_order: 50
 
 # Search
 
-This section describes the current search implementation plus the main documented follow-up areas.
+This section describes the current search implementation.
 
 Current live search scopes:
 
@@ -28,14 +28,6 @@ Current live search scopes:
 - [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape) - describes the current search artifact shape for the Studio and Library docs scopes.
 - [Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) - describes token preparation, deduplication, hyphen/space handling, and similar preprocessing rules.
 - [Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) - operational checks for catalogue and docs-domain search surfaces.
-
-## Next Steps And Future Direction
-
-- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps) - the main follow-up list for search refinement work.
-- [Config Architecture](/docs/?scope=studio&doc=search-config-architecture) - detailed architecture notes for later policy/config extraction.
-- [Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note) - staged implementation notes for later config extraction work.
-- [Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture) - long-term ownership boundary for a fuller search-owned pipeline.
-- [Search Result Shaping](/docs/?scope=studio&doc=search-result-shaping) - future shaping and diversification policy beyond the current flat ranked list.
 
 ## Maintenance
 

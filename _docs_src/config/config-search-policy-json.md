@@ -57,4 +57,4 @@ Current non-users of this file:
 
 Those docs-domain searches use the shared Docs Viewer runtime instead of the dedicated `/search/` shell.
 
-For the wider search subsystem, see **[Search Overview](/docs/?scope=studio&doc=search-overview)** and **[Search Next Steps](/docs/?scope=studio&doc=search-next-steps)**.
+For the wider search subsystem, see **[Search Overview](/docs/?scope=studio&doc=search-overview)**.

@@ -61,7 +61,7 @@ Within the Studio source root, top-level parent docs currently group documentati
 - `search`
 - `studio`
 
-There are also a few standalone top-level docs such as change logs, next-steps docs, and unpublished working notes.
+There are also a few standalone top-level docs such as change logs and unpublished working notes under `_docs_src/_dev/`.
 
 Archive and draft material is kept separately under:
 

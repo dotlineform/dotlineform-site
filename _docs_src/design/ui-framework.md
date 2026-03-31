@@ -80,7 +80,7 @@ For any image viewer, detail viewer, or paginated grid:
 
 ### Swipe navigation default
 
-Horizontal swipe is the default progressive enhancement for future:
+Horizontal swipe is the default progressive enhancement for:
 
 - image viewers with existing previous/next navigation
 - paginated thumbnail grids with existing previous/next pagination controls
@@ -101,7 +101,7 @@ Benefits:
 
 - keeps navigation behavior consistent across input modes
 - avoids duplicated URL/state logic
-- reduces accidental regressions when navigation behavior changes later
+- reduces accidental regressions when navigation behavior changes
 
 Risks to watch:
 

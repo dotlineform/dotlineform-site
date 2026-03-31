@@ -1,7 +1,7 @@
 ---
 doc_id: search-change-log-guidance
 title: Search Change Log Guidance
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 1000
 ---
@@ -77,7 +77,6 @@ Use the change log alongside:
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
-- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
 
 The change log records the fact of change. The other search docs define the resulting system.
 

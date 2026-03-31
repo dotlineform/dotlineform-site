@@ -82,7 +82,7 @@ These outputs are the docs-domain search indexes consumed by the shared Docs Vie
 - does not index section-level records
 - does not index doc body prose or summaries
 
-This is the first search-owned builder step toward the longer-term search pipeline documented in [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture).
+This is the current search-owned builder step for docs-domain scopes.
 
 ## Related References
 

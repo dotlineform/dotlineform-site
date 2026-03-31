@@ -2,8 +2,9 @@
 doc_id: search-config-architecture
 title: Search Config Architecture
 last_updated: 2026-03-30
-parent_id: search
+parent_id: ""
 sort_order: 100
+published: false
 ---
 
 # Search Config Architecture

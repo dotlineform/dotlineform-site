@@ -305,7 +305,7 @@ Current consequence:
 - the runtime can be simple and fast
 - but it cannot always explain exactly which source field caused a lower-tier derived match
 
-That loss of provenance is acceptable in v1, but may become a limitation if the ranking model becomes more granular later.
+That loss of provenance is an accepted constraint of the current runtime.
 
 ## Content-type priority
 
@@ -330,10 +330,6 @@ Current ranking behaviour in practice:
 - `search_text` is a broad fallback field and the weakest active score band
 - tie-breaking is explicit and alphabetical, not source-order-based
 - duplicate term frequency does not currently amplify ranking
-
-## Further Refinement
-
-Ranking follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

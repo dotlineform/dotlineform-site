@@ -2,8 +2,9 @@
 doc_id: search-result-shaping-json
 title: Search Result Shaping draft JSON
 last_updated: 2026-03-30
-parent_id: search-result-shaping
+parent_id: ""
 sort_order: 10
+published: false
 ---
 
 ## Draft JSON

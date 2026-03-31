@@ -2,8 +2,9 @@
 doc_id: search-result-shaping-json-slimmer
 title: Search Result Shaping draft slimmer JSON
 last_updated: 2026-03-30
-parent_id: search-result-shaping
+parent_id: ""
 sort_order: 20
+published: false
 ---
 
 ## Slimmer JSON

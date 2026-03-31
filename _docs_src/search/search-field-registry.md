@@ -16,7 +16,7 @@ It is not a raw schema definition. Its job is to answer questions such as:
 
 - which fields are actively searched in v1
 - which fields are displayed but not searched
-- which fields are present for future filtering or ranking work
+- which fields are serialized but inactive in the current search model
 - which fields exist mainly as derived search support
 
 This is the main review surface for field-level search policy.
@@ -29,10 +29,10 @@ It covers:
 
 - search participation
 - result-display role
-- filter suitability
+- current filter suitability
 - current importance class
 - current match modes
-- future-reserved fields that exist in the schema but are not yet active in search policy
+- inactive fields that exist in the schema but are not yet active in search policy
 
 It does not define precise scoring tiers or normalization algorithms.
 
@@ -67,13 +67,13 @@ The registry should separate:
 - fields present in the serialized schema
 - fields currently used by v1 search matching
 - fields currently used only for display
-- fields reserved for future ranking or filtering
+- fields stored but inactive in current ranking or filtering
 
 ## Registry table
 
 Current field-policy registry:
 
-| Field name | Searchable in v1 | Filterable now | Filterable later | Displayed in results | Importance | Match modes in v1 | Field class | Notes |
+| Field name | Searchable in v1 | Filterable now | Stored for filtering | Displayed in results | Importance | Match modes in v1 | Field class | Notes |
 |---|---|---:|---:|---:|---|---|---|---|
 | `kind` | no | yes | yes | yes | none | none | structural | current UI filter field and kind badge |
 | `id` | yes | no | optional | yes | high | exact, prefix | structural | strong known-item lookup field |
@@ -87,8 +87,8 @@ Current field-policy registry:
 | `medium_type` | yes | no | yes | yes | medium | contains | structured | explicit mid-tier ranking field for works |
 | `storage` | yes | no | yes | no | low-medium | contains | structured | searched in v1, not displayed in current UI |
 | `series_type` | yes | no | yes | yes | low-medium | contains | structured | searched in v1 and displayed for series |
-| `tag_ids` | no | no | yes | no | none in v1 | none | structured | stored for future structured filtering |
-| `tag_labels` | no | no | yes | no | none in v1 | none | structured | stored for future ranking and possibly filter UI |
+| `tag_ids` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current filtering |
+| `tag_labels` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current ranking and filtering |
 | `search_terms` | yes | no | no | no | high support | exact, prefix | derived | primary derived retrieval field |
 | `search_text` | yes | no | no | no | low fallback | substring | derived | broad fallback field only |
 
@@ -254,7 +254,7 @@ Purpose:
 Carries canonical series relationships for records, mainly works.
 
 Notes:
-Useful for future structured filtering and currently contributes to derived recall.
+Useful for structured filtering if that capability is enabled later and currently contributes to derived recall.
 
 ### `series_titles`
 Searchable in v1: yes  
@@ -324,7 +324,7 @@ Purpose:
 Carries canonical assigned tag ids.
 
 Notes:
-This is a future-facing field. It is not currently used by ranking or UI filters.
+This field is present in the current artifact but is not currently used by ranking or UI filters.
 
 ### `tag_labels`
 Searchable in v1: no  
@@ -338,7 +338,7 @@ Purpose:
 Carries display labels for assigned tags.
 
 Notes:
-This field exists to support future tag-aware search behaviour once tag coverage is good enough.
+This field exists in the current artifact so tag-aware search can be enabled later without reshaping the base record.
 
 ### `search_terms`
 Searchable in v1: yes  
@@ -403,7 +403,7 @@ Current implemented filter surface:
 
 - `kind`
 
-Current fields that are good candidates for future structured filters:
+Current fields that could support structured filters if that capability is enabled:
 
 - `kind`
 - `year`
@@ -568,7 +568,6 @@ Current answers in v1:
 
 ## Further Refinement
 
-Field-policy follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

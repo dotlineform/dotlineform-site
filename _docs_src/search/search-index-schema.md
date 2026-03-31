@@ -29,7 +29,7 @@ It covers:
 - required versus optional serialized fields
 - cross-kind conventions shared by works, series, and moments
 
-It does not attempt to define future prose shards or other later index partitions.
+It does not define any additional search payloads beyond the current base artifact.
 
 For the wider role of this artifact inside the catalogue model, use [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
 
@@ -303,7 +303,6 @@ The current schema is shaped this way for pragmatic reasons:
 
 ## Further Refinement
 
-Schema follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

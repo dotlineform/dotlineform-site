@@ -26,10 +26,10 @@ Search now has:
 
 The route/state contract still needs to stay explicit because:
 
-- additional content domains such as Studio or library are added
-- each domain starts to own its own search JSON and search policy/config
+- multiple search surfaces already coexist across the site
+- each live surface owns its own search artifact and route model
 
-The public UI contract needs to be clarified before those structural changes happen, so the later refactor grows against one stable interaction model.
+The public UI contract therefore needs to stay explicit in the current implementation.
 
 ## Core decision
 
@@ -53,7 +53,7 @@ The public search page route should be:
 
 - `/search/`
 
-This route is the dedicated public search shell for catalogue search and remains available for any future scope that genuinely benefits from a standalone search page.
+This route is the dedicated public search shell for catalogue search.
 
 ### Query parameter contract
 
@@ -153,8 +153,6 @@ Reason:
 - the public site is moving toward multiple content domains, not one undifferentiated body of content
 - scope-specific entry points are clearer and scale better
 
-This rule does not forbid a future site-wide search affordance forever. It means the default public search model should be scope-led rather than globally ambiguous.
-
 ## Dedicated search-page UI responsibilities
 
 The `/search/` page should:
@@ -198,33 +196,6 @@ Current docs-domain scopes:
 
 Those scopes currently use inline docs-viewer search rather than the dedicated `/search/` page.
 
-## Relationship to future modular search architecture
-
-This contract is intentionally compatible with the planned modular search refactor.
-
-Expected future direction:
-
-- each content domain can own its own search JSON artifact
-- each content domain can own its own search config/policy
-- the shared search engine can remain common across domains
-- the public route and scope contract do not need to change when that refactor happens
-
-This is the main reason to define the contract now.
-
-## Benefits
-
-- makes public search scope explicit to the user
-- scales cleanly from one current domain to multiple future domains
-- keeps one reusable public search shell instead of one-off search pages
-- avoids ambiguous top-level navigation language
-- aligns entry points with the page/domain the user is already browsing
-
-## Main risks
-
-- if scope is carried only in the URL and not reflected clearly in the UI, user understanding will still be weak
-- if the initial scope names are chosen badly, later public URLs become harder to keep consistent
-- if future requirements demand a genuinely global whole-site search, the scope-led model will need an additional documented rule rather than assuming all search is domain-local
-
 ## Current implementation status
 
 The current public rollout is now split by page anatomy:
@@ -234,9 +205,6 @@ The current public rollout is now split by page anatomy:
 3. `/series/` provides the catalogue search CTA
 4. Studio docs search lives inline on `/docs/`
 5. Library docs search lives inline on `/library/`
-6. future scopes can still use `/search/` if a standalone page is the better fit
-
-Further refinement areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 
@@ -245,5 +213,4 @@ This document does not define:
 - the internal search engine API
 - the exact modular JSON/config file structure
 - ranking rules for any domain
-- search-result row layout details for each future domain
-- whether a future whole-site aggregate scope should exist
+- search-result row layout details beyond the current dedicated-route shell
