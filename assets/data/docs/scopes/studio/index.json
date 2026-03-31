@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T15:57:10Z",
+  "generated_at": "2026-03-31T17:08:47Z",
   "docs": [
     {
       "scope": "studio",
@@ -88,17 +88,6 @@
       "source_path": "scripts/pipeline-use-cases.md",
       "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-result-shaping-json",
-      "title": "Search Result Shaping draft JSON",
-      "last_updated": "2026-03-30",
-      "parent_id": "search-result-shaping",
-      "sort_order": 10,
-      "source_path": "search/search-result-shaping-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-result-shaping-json",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-result-shaping-json.json"
     },
     {
       "scope": "studio",
@@ -198,17 +187,6 @@
       "source_path": "search/search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-result-shaping-json-slimmer",
-      "title": "Search Result Shaping draft slimmer JSON",
-      "last_updated": "2026-03-30",
-      "parent_id": "search-result-shaping",
-      "sort_order": 20,
-      "source_path": "search/search-result-shaping-slimmer-json.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-result-shaping-json-slimmer",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-result-shaping-json-slimmer.json"
     },
     {
       "scope": "studio",
@@ -553,17 +531,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "config-next-steps",
-      "title": "Config Next Steps",
-      "last_updated": "2026-03-31",
-      "parent_id": "config",
-      "sort_order": 60,
-      "source_path": "config/config-next-steps.md",
-      "viewer_url": "/docs/?scope=studio&doc=config-next-steps",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/config-next-steps.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-delete-work",
       "title": "Delete Work",
       "last_updated": "2026-03-31",
@@ -674,17 +641,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-next-steps",
-      "title": "Search Next Steps",
-      "last_updated": "2026-03-31",
-      "parent_id": "search",
-      "sort_order": 90,
-      "source_path": "search/search-next-steps.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-next-steps",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-next-steps.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-audit-site-consistency",
       "title": "Site Consistency Audit",
       "last_updated": "2026-03-31",
@@ -693,17 +649,6 @@
       "source_path": "scripts/scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-site-consistency.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-next-steps",
-      "title": "Site Next Steps",
-      "last_updated": "2026-03-31",
-      "parent_id": "",
-      "sort_order": 90,
-      "source_path": "site-next-steps.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-next-steps",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-next-steps.json"
     },
     {
       "scope": "studio",
@@ -718,17 +663,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-config-architecture",
-      "title": "Search Config Architecture",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "sort_order": 100,
-      "source_path": "search/search-config-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-config-architecture",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-config-architecture.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "site-change-log-guidance",
       "title": "Site Change Log Guidance",
       "last_updated": "2026-03-31",
@@ -737,28 +671,6 @@
       "source_path": "site-change-log-guidance.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log-guidance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-guidance.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-config-implementation-note",
-      "title": "Search Config Implementation Note",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "sort_order": 101,
-      "source_path": "search/search-config-implementation-note.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-config-implementation-note",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-config-implementation-note.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-pipeline-target-architecture",
-      "title": "Search Pipeline Target Architecture",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "sort_order": 102,
-      "source_path": "search/search-pipeline-target-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-pipeline-target-architecture",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-pipeline-target-architecture.json"
     },
     {
       "scope": "studio",
@@ -773,20 +685,9 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search-result-shaping",
-      "title": "Search Result Shaping",
-      "last_updated": "2026-03-31",
-      "parent_id": "search",
-      "sort_order": 200,
-      "source_path": "search/search-result-shaping.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-result-shaping",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-result-shaping.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-change-log-guidance",
       "title": "Search Change Log Guidance",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 1000,
       "source_path": "search/search-change-log-guidance.md",

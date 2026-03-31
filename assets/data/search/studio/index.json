@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "sha256-3eb3ea86d7dde05721ec6b66b6dfa493f93ac15285fdf52d5854b612eea6c43e",
-    "generated_at_utc": "2026-03-31T15:57:28Z",
-    "count": 73
+    "version": "sha256-6d935f897d1e37eac8e060afd0ff0a0cddd14d9d6ecfb17695f61eda943c57ae",
+    "generated_at_utc": "2026-03-31T17:09:00Z",
+    "count": 64
   },
   "entries": [
     {
@@ -169,31 +169,6 @@
         "29"
       ],
       "search_text": "pipeline-use-cases pipeline use cases pipeline use cases scripts 2026-03-29 2026 03 29"
-    },
-    {
-      "id": "search-result-shaping-json",
-      "kind": "doc",
-      "title": "Search Result Shaping draft JSON",
-      "href": "/docs/?scope=studio&doc=search-result-shaping-json",
-      "last_updated": "2026-03-30",
-      "parent_id": "search-result-shaping",
-      "parent_title": "Search Result Shaping",
-      "display_meta": "2026-03-30 • Search Result Shaping",
-      "search_terms": [
-        "search-result-shaping-json",
-        "search",
-        "result",
-        "shaping",
-        "json",
-        "search result shaping draft json",
-        "draft",
-        "search result shaping",
-        "2026-03-30",
-        "2026",
-        "03",
-        "30"
-      ],
-      "search_text": "search-result-shaping-json search result shaping json search result shaping draft json draft search result shaping 2026-03-30 2026 03 30"
     },
     {
       "id": "data-models-shared",
@@ -389,32 +364,6 @@
         "31"
       ],
       "search_text": "search-overview search overview search overview 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "search-result-shaping-json-slimmer",
-      "kind": "doc",
-      "title": "Search Result Shaping draft slimmer JSON",
-      "href": "/docs/?scope=studio&doc=search-result-shaping-json-slimmer",
-      "last_updated": "2026-03-30",
-      "parent_id": "search-result-shaping",
-      "parent_title": "Search Result Shaping",
-      "display_meta": "2026-03-30 • Search Result Shaping",
-      "search_terms": [
-        "search-result-shaping-json-slimmer",
-        "search",
-        "result",
-        "shaping",
-        "json",
-        "slimmer",
-        "search result shaping draft slimmer json",
-        "draft",
-        "search result shaping",
-        "2026-03-30",
-        "2026",
-        "03",
-        "30"
-      ],
-      "search_text": "search-result-shaping-json-slimmer search result shaping json slimmer search result shaping draft slimmer json draft search result shaping 2026-03-30 2026 03 30"
     },
     {
       "id": "site-shell-runtime",
@@ -1094,28 +1043,6 @@
       "search_text": "search-public-ui-contract search public ui contract search public ui contract 2026-03-31 2026 03 31"
     },
     {
-      "id": "config-next-steps",
-      "kind": "doc",
-      "title": "Config Next Steps",
-      "href": "/docs/?scope=studio&doc=config-next-steps",
-      "last_updated": "2026-03-31",
-      "parent_id": "config",
-      "parent_title": "Config",
-      "display_meta": "2026-03-31 • Config",
-      "search_terms": [
-        "config-next-steps",
-        "config",
-        "next",
-        "steps",
-        "config next steps",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "config-next-steps config next steps config next steps 2026-03-31 2026 03 31"
-    },
-    {
       "id": "scripts-delete-work",
       "kind": "doc",
       "title": "Delete Work",
@@ -1341,28 +1268,6 @@
       "search_text": "studio-works studio works studio works 2026-03-31 2026 03 31"
     },
     {
-      "id": "search-next-steps",
-      "kind": "doc",
-      "title": "Search Next Steps",
-      "href": "/docs/?scope=studio&doc=search-next-steps",
-      "last_updated": "2026-03-31",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
-      "search_terms": [
-        "search-next-steps",
-        "search",
-        "next",
-        "steps",
-        "search next steps",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "search-next-steps search next steps search next steps 2026-03-31 2026 03 31"
-    },
-    {
       "id": "scripts-audit-site-consistency",
       "kind": "doc",
       "title": "Site Consistency Audit",
@@ -1384,26 +1289,6 @@
         "31"
       ],
       "search_text": "scripts-audit-site-consistency scripts audit site consistency site consistency audit 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "site-next-steps",
-      "kind": "doc",
-      "title": "Site Next Steps",
-      "href": "/docs/?scope=studio&doc=site-next-steps",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
-      "search_terms": [
-        "site-next-steps",
-        "site",
-        "next",
-        "steps",
-        "site next steps",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "site-next-steps site next steps site next steps 2026-03-31 2026 03 31"
     },
     {
       "id": "scripts-fix-missing-title-sort",
@@ -1431,28 +1316,6 @@
       "search_text": "scripts-fix-missing-title-sort scripts fix missing title sort legacy title sort fix legacy 2026-03-31 2026 03 31"
     },
     {
-      "id": "search-config-architecture",
-      "kind": "doc",
-      "title": "Search Config Architecture",
-      "href": "/docs/?scope=studio&doc=search-config-architecture",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-03-30 • Search",
-      "search_terms": [
-        "search-config-architecture",
-        "search",
-        "config",
-        "architecture",
-        "search config architecture",
-        "2026-03-30",
-        "2026",
-        "03",
-        "30"
-      ],
-      "search_text": "search-config-architecture search config architecture search config architecture 2026-03-30 2026 03 30"
-    },
-    {
       "id": "site-change-log-guidance",
       "kind": "doc",
       "title": "Site Change Log Guidance",
@@ -1472,52 +1335,6 @@
         "31"
       ],
       "search_text": "site-change-log-guidance site change log guidance site change log guidance 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "search-config-implementation-note",
-      "kind": "doc",
-      "title": "Search Config Implementation Note",
-      "href": "/docs/?scope=studio&doc=search-config-implementation-note",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-03-30 • Search",
-      "search_terms": [
-        "search-config-implementation-note",
-        "search",
-        "config",
-        "implementation",
-        "note",
-        "search config implementation note",
-        "2026-03-30",
-        "2026",
-        "03",
-        "30"
-      ],
-      "search_text": "search-config-implementation-note search config implementation note search config implementation note 2026-03-30 2026 03 30"
-    },
-    {
-      "id": "search-pipeline-target-architecture",
-      "kind": "doc",
-      "title": "Search Pipeline Target Architecture",
-      "href": "/docs/?scope=studio&doc=search-pipeline-target-architecture",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-03-30 • Search",
-      "search_terms": [
-        "search-pipeline-target-architecture",
-        "search",
-        "pipeline",
-        "target",
-        "architecture",
-        "search pipeline target architecture",
-        "2026-03-30",
-        "2026",
-        "03",
-        "30"
-      ],
-      "search_text": "search-pipeline-target-architecture search pipeline target architecture search pipeline target architecture 2026-03-30 2026 03 30"
     },
     {
       "id": "site-change-log",
@@ -1540,36 +1357,14 @@
       "search_text": "site-change-log site change log site change log 2026-03-31 2026 03 31"
     },
     {
-      "id": "search-result-shaping",
-      "kind": "doc",
-      "title": "Search Result Shaping",
-      "href": "/docs/?scope=studio&doc=search-result-shaping",
-      "last_updated": "2026-03-31",
-      "parent_id": "search",
-      "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
-      "search_terms": [
-        "search-result-shaping",
-        "search",
-        "result",
-        "shaping",
-        "search result shaping",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "search-result-shaping search result shaping search result shaping 2026-03-31 2026 03 31"
-    },
-    {
       "id": "search-change-log-guidance",
       "kind": "doc",
       "title": "Search Change Log Guidance",
       "href": "/docs/?scope=studio&doc=search-change-log-guidance",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-03-31",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-29 • Search",
+      "display_meta": "2026-03-31 • Search",
       "search_terms": [
         "search-change-log-guidance",
         "search",
@@ -1577,12 +1372,12 @@
         "log",
         "guidance",
         "search change log guidance",
-        "2026-03-29",
+        "2026-03-31",
         "2026",
         "03",
-        "29"
+        "31"
       ],
-      "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-03-29 2026 03 29"
+      "search_text": "search-change-log-guidance search change log guidance search change log guidance 2026-03-31 2026 03 31"
     },
     {
       "id": "search-change-log",
