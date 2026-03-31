@@ -1,7 +1,7 @@
 ---
 doc_id: search-ranking-model
 title: Search Ranking Model
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: search
 sort_order: 40
 ---
@@ -146,7 +146,6 @@ Current score bands in descending order:
 | `620` | all query tokens match `title` tokens exactly or by prefix | medium-strong | title-token-oriented retrieval |
 | `480` | any `series_titles` value contains the query | medium | contextual series discovery |
 | `460` | `medium_type` contains the query | medium | structured metadata discovery |
-| `440` | `storage` contains the query | low-medium | narrower metadata lookup |
 | `420` | `series_type` contains the query | low-medium | narrower metadata lookup |
 | `320` | `search_text` contains the query | weakest | fallback broad recall only |
 
@@ -217,18 +216,6 @@ Strong matches:
 
 Notes:
 Weaker than title and series-title matches, stronger than broad fallback.
-
-### `storage`
-
-Ranking role:
-Narrow structured metadata field.
-
-Strong matches:
-
-- query substring within `storage`
-
-Notes:
-Active in ranking, but not currently surfaced in result display.
 
 ### `series_type`
 

@@ -143,7 +143,6 @@ Current content families:
 - work identity
 - title and year display
 - series membership
-- selected lightweight metadata such as `medium_type` and `storage`
 
 Current consumers:
 
@@ -255,7 +254,7 @@ Current content families:
 - one `entries[]` array across all three catalogue kinds
 - per-entry display metadata and route href
 - normalized search terms and combined `search_text`
-- selected structured fields such as series relationships, medium/storage data, and Studio-derived tag data where available
+- selected structured fields such as series relationships, work medium type from per-work JSON, and Studio-derived tag data where available
 
 Current site mapping:
 

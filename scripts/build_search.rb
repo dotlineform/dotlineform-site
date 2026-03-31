@@ -67,6 +67,7 @@ class SearchDataBuilder
     @tag_assignments_path = resolve_path(tag_assignments_path || @defaults[:tag_assignments_path]) if @kind == :catalogue
     @tag_registry_path = resolve_path(tag_registry_path || @defaults[:tag_registry_path]) if @kind == :catalogue
     @works_json_dir = resolve_path("assets/works/index") if @kind == :catalogue
+    @work_search_metadata_by_id = {}
   end
 
   def run(write:, force:)
@@ -134,8 +135,7 @@ class SearchDataBuilder
         display_meta: normalize_text(work_record["year_display"]),
         series_ids: series_ids,
         series_titles: series_titles,
-        medium_type: resolve_work_medium_type(work_id, work_record),
-        storage: normalize_text(work_record["storage"]),
+        medium_type: resolve_work_search_metadata(work_id)["medium_type"],
         tag_ids: work_tag_ids,
         tag_labels: work_tag_labels
       )
@@ -332,7 +332,6 @@ class SearchDataBuilder
     series_ids: [],
     series_titles: [],
     medium_type: nil,
-    storage: nil,
     series_type: nil,
     tag_ids: [],
     tag_labels: []
@@ -350,7 +349,6 @@ class SearchDataBuilder
       normalized_series_ids,
       normalized_series_titles,
       medium_type,
-      storage,
       series_type
     )
 
@@ -365,7 +363,6 @@ class SearchDataBuilder
       "series_ids" => normalized_series_ids,
       "series_titles" => normalized_series_titles,
       "medium_type" => normalize_text(medium_type),
-      "storage" => normalize_text(storage),
       "series_type" => normalize_text(series_type),
       "tag_ids" => normalized_tag_ids,
       "tag_labels" => normalized_tag_labels,
@@ -439,18 +436,22 @@ class SearchDataBuilder
     tokens
   end
 
-  def resolve_work_medium_type(work_id, work_record)
-    medium_type = normalize_text(work_record["medium_type"])
-    return medium_type unless medium_type.empty?
+  def resolve_work_search_metadata(work_id)
+    cached = @work_search_metadata_by_id[work_id]
+    return cached if cached
 
     work_json_path = @works_json_dir.join("#{work_id}.json")
-    return "" unless work_json_path.file?
+    metadata = {
+      "medium_type" => ""
+    }
+    return metadata unless work_json_path.file?
 
     payload = load_json(work_json_path)
     work_payload = payload.is_a?(Hash) ? payload["work"] : nil
-    return "" unless work_payload.is_a?(Hash)
+    return metadata unless work_payload.is_a?(Hash)
 
-    normalize_text(work_payload["medium_type"])
+    metadata["medium_type"] = normalize_text(work_payload["medium_type"])
+    @work_search_metadata_by_id[work_id] = metadata
   end
 
   def blake2b_payload_hash(payload)

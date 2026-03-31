@@ -237,7 +237,7 @@ def finalize_works_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     works_map = payload.get("works")
     if not isinstance(works_map, dict):
         raise SystemExit("Invalid works_index.json payload: missing works map")
-    schema = str((payload.get("header") or {}).get("schema") or "works_index_v3")
+    schema = str((payload.get("header") or {}).get("schema") or "works_index_v4")
     payload["header"] = {
         "schema": schema,
         "version": compute_payload_version({"schema": schema, "works": works_map}),

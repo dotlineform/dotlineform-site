@@ -1,7 +1,7 @@
 ---
 doc_id: search-build-pipeline
 title: Search Build Pipeline
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: search
 sort_order: 70
 ---
@@ -172,7 +172,6 @@ Current display and structured support fields may include:
 - `series_ids`
 - `series_titles`
 - `medium_type`
-- `storage`
 - `series_type`
 - `tag_ids`
 - `tag_labels`

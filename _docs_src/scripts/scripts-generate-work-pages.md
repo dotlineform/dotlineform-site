@@ -103,7 +103,7 @@ Artifact behavior:
   writes `assets/data/series_index.json` as a full rebuild
 - `works-index-json`
   writes `assets/data/works_index.json` as a lightweight full rebuild keyed by `work_id`
-  and includes the lightweight search-relevant fields used by the catalogue search builder
+  for shared card and lookup metadata
 - `work-json`
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 

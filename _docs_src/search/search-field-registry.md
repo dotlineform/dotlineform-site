@@ -1,7 +1,7 @@
 ---
 doc_id: search-field-registry
 title: Search Field Registry
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: search
 sort_order: 30
 ---
@@ -85,7 +85,6 @@ Current field-policy registry:
 | `series_ids` | indirect | no | yes | no | medium | via `search_terms` | structured | present in derived token bundle |
 | `series_titles` | yes | no | yes | yes | medium | contains | structured | explicit mid-tier ranking field for works |
 | `medium_type` | yes | no | yes | yes | medium | contains | structured | explicit mid-tier ranking field for works |
-| `storage` | yes | no | yes | no | low-medium | contains | structured | searched in v1, not displayed in current UI |
 | `series_type` | yes | no | yes | yes | low-medium | contains | structured | searched in v1 and displayed for series |
 | `tag_ids` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current filtering |
 | `tag_labels` | no | no | yes | no | none in v1 | none | structured | stored in the current artifact but inactive in current ranking and filtering |
@@ -109,7 +108,6 @@ Current examples:
 - `series_ids`
 - `series_titles`
 - `medium_type`
-- `storage`
 - `series_type`
 - `tag_ids`
 - `tag_labels`
@@ -284,20 +282,6 @@ Provides structured medium information for works.
 Notes:
 The runtime has an explicit metadata tier for `medium_type` matching.
 
-### `storage`
-Searchable in v1: yes  
-Filterable now: no  
-Displayed in results: no  
-Importance: low-medium  
-Match modes: contains  
-Field class: structured  
-
-Purpose:
-Provides structured work storage metadata.
-
-Notes:
-The runtime can rank matches on `storage`, but the current UI does not display it in result rows.
-
 ### `series_type`
 Searchable in v1: yes  
 Filterable now: no  
@@ -382,7 +366,6 @@ Current policy split:
   - `title`
   - `series_titles`
   - `medium_type`
-  - `storage`
   - `series_type`
   - `search_terms`
   - `search_text`
@@ -410,7 +393,6 @@ Current fields that could support structured filters if that capability is enabl
 - `date`
 - `series_ids`
 - `medium_type`
-- `storage`
 - `series_type`
 - `tag_ids`
 
@@ -442,7 +424,6 @@ Current fields stored but not displayed:
 - `year`
 - `date`
 - `series_ids`
-- `storage`
 - `tag_ids`
 - `tag_labels`
 - `search_terms`
@@ -478,7 +459,6 @@ Fields that help recall in narrower cases but should not dominate results.
 
 Current examples:
 
-- `storage`
 - `series_type`
 
 ### Low
@@ -517,8 +497,6 @@ Current field-policy fit by match mode:
 - `series_titles`
   - contains
 - `medium_type`
-  - contains
-- `storage`
   - contains
 - `series_type`
   - contains

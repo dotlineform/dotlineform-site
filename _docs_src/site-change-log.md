@@ -8,6 +8,32 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Slimmed `works_index` and removed storage from public search
+
+**Status:** implemented
+
+**Area:** search
+
+**Summary:**  
+`works_index.json` no longer carries `storage` or `medium_type`, and public catalogue search no longer indexes or ranks on `storage`.
+
+**Reason:**  
+`works_index.json` is a shared runtime summary artifact and should stay as lean as possible. `storage` is no longer intended to be publicly searchable, and `medium_type` can be sourced directly from per-work JSON during the offline search build instead of being duplicated into the lightweight works index.
+
+**Effect:**  
+The lightweight works index now carries identity, title/year display, and series membership only. Catalogue search still exposes `medium_type`, but now resolves it from `assets/works/index/<work_id>.json`. `storage` has been removed from the public search artifact and from the current search ranking model.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- `scripts/build_search.rb`
+- `assets/js/search/search-page.js`
+- `scripts/delete_work.py`
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+
 ## [2026-04-01] Added work and series prose tracking to build_catalogue planning
 
 **Status:** implemented

@@ -163,7 +163,6 @@ function normalizeEntries(entries) {
         date: String(entry.date || "").trim(),
         seriesTitles,
         mediumType: String(entry.medium_type || "").trim(),
-        storage: String(entry.storage || "").trim(),
         seriesType: String(entry.series_type || "").trim(),
         tagLabels: Array.isArray(entry.tag_labels) ? entry.tag_labels.map((item) => String(item || "").trim()).filter(Boolean) : [],
         searchTerms,
@@ -174,7 +173,6 @@ function normalizeEntries(entries) {
         parentTitleNorm: normalize(parentTitle),
         seriesTitleNorms: seriesTitles.map(normalize).filter(Boolean),
         mediumTypeNorm: normalize(String(entry.medium_type || "")),
-        storageNorm: normalize(String(entry.storage || "")),
         seriesTypeNorm: normalize(String(entry.series_type || ""))
       };
     })
@@ -245,7 +243,6 @@ function scoreEntry(entry, query) {
   if (queryTokens.every((token) => entry.titleTokens.some((candidate) => candidate === token || candidate.startsWith(token)))) return 620;
   if (entry.seriesTitleNorms.some((value) => value.includes(query))) return 480;
   if (entry.mediumTypeNorm && entry.mediumTypeNorm.includes(query)) return 460;
-  if (entry.storageNorm && entry.storageNorm.includes(query)) return 440;
   if (entry.seriesTypeNorm && entry.seriesTypeNorm.includes(query)) return 420;
   if (entry.searchText.includes(query)) return 320;
   return null;

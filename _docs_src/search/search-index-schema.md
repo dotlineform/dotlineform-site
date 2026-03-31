@@ -1,7 +1,7 @@
 ---
 doc_id: search-index-schema
 title: Search Index Schema
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: search
 sort_order: 20
 ---
@@ -102,7 +102,6 @@ The current serialized schema uses these fields.
 | `series_ids` | array of strings | yes | associated series ids | empty array when none |
 | `series_titles` | array of strings | yes | associated series titles | empty array when none |
 | `medium_type` | string | no | structured work metadata | currently appears on works when populated |
-| `storage` | string | no | structured work metadata | currently optional and often absent |
 | `series_type` | string | no | structured series metadata | currently appears on series when populated |
 | `tag_ids` | array of strings | yes | canonical assigned tag ids | empty array when none |
 | `tag_labels` | array of strings | yes | display labels for assigned tags | empty array when none |
@@ -116,7 +115,7 @@ The table above is the canonical field inventory for the serialized payload.
 The main search-specific distinctions to keep in mind are:
 
 - `title`, `href`, and `display_meta` exist so the browser can render a useful result row without a secondary fetch
-- `series_ids`, `series_titles`, `medium_type`, `storage`, `series_type`, `tag_ids`, and `tag_labels` are structured fields carried through so search can reason over more than titles alone
+- `series_ids`, `series_titles`, `medium_type`, `series_type`, `tag_ids`, and `tag_labels` are structured fields carried through so search can reason over more than titles alone
 - `search_terms` and `search_text` are generated specifically for search and are not authored source fields
 
 ## Display fields vs search fields
@@ -140,7 +139,6 @@ Fields used for both structured meaning and search support:
 - `date`
 - `series_ids`
 - `medium_type`
-- `storage`
 - `series_type`
 - `tag_ids`
 - `tag_labels`
@@ -159,7 +157,6 @@ Structured fields carried from source-like data:
 - `series_ids`
 - `series_titles`
 - `medium_type`
-- `storage`
 - `series_type`
 - `tag_ids`
 - `tag_labels`
@@ -182,7 +179,7 @@ Current serialization rules:
   - `tag_labels`
 - optional scalar fields are omitted when empty rather than serialized as `null`
 - `year` and `date` are not both expected on every record
-- `medium_type` and `storage` are work-oriented
+- `medium_type` is work-oriented
 - `series_type` is series-oriented
 
 Current kind differences:

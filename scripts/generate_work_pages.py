@@ -1386,16 +1386,12 @@ def main() -> None:
         title_value = coerce_string(work_record.get("title"))
         year_value = work_record.get("year")
         year_display_value = coerce_string(work_record.get("year_display"))
-        medium_type_value = coerce_string(work_record.get("medium_type"))
-        storage_value = coerce_string(work_record.get("storage"))
         return compact_json_object({
             "work_id": wid,
             "title": title_value,
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
-            "medium_type": medium_type_value,
-            "storage": storage_value,
         })
 
     def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
@@ -2558,13 +2554,13 @@ def main() -> None:
             )
 
     version_payload = compact_json_object({
-        "schema": "works_index_v3",
+        "schema": "works_index_v4",
         "works": works_payload,
     })
     version = compute_payload_version(version_payload)
     payload = compact_json_object({
         "header": {
-            "schema": "works_index_v3",
+            "schema": "works_index_v4",
             "version": version,
             "generated_at_utc": utc_timestamp_now(),
             "count": len(works_payload),

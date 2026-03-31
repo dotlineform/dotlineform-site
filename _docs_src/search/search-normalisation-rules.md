@@ -1,7 +1,7 @@
 ---
 doc_id: search-normalisation-rules
 title: Search Normalisation Rules
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: search
 sort_order: 50
 ---
@@ -79,7 +79,6 @@ The search builder reads source values such as:
 - series ids
 - series titles
 - `medium_type`
-- `storage`
 - `series_type`
 - tag ids for structural storage
 
@@ -290,7 +289,7 @@ Current treatment:
 - full normalized phrase is retained
 - split tokens are also emitted
 
-### `medium_type`, `storage`, `series_type`
+### `medium_type`, `series_type`
 
 Current treatment:
 
