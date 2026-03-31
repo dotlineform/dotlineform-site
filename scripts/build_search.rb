@@ -121,6 +121,7 @@ class SearchDataBuilder
 
     works_payload.keys.sort.each do |work_id|
       work_record = works_payload[work_id]
+      work_search_metadata = resolve_work_search_metadata(work_id)
       series_ids = normalize_string_array(work_record["series_ids"])
       series_titles = series_ids.map { |series_id| series_title_by_id.fetch(series_id, series_id) }
       work_tag_ids = collect_work_tag_ids(assignments_series, series_ids, work_id)
@@ -135,7 +136,8 @@ class SearchDataBuilder
         display_meta: normalize_text(work_record["year_display"]),
         series_ids: series_ids,
         series_titles: series_titles,
-        medium_type: resolve_work_search_metadata(work_id)["medium_type"],
+        medium_type: work_search_metadata["medium_type"],
+        medium_caption: work_search_metadata["medium_caption"],
         tag_ids: work_tag_ids,
         tag_labels: work_tag_labels
       )
@@ -332,6 +334,7 @@ class SearchDataBuilder
     series_ids: [],
     series_titles: [],
     medium_type: nil,
+    medium_caption: nil,
     series_type: nil,
     tag_ids: [],
     tag_labels: []
@@ -349,6 +352,7 @@ class SearchDataBuilder
       normalized_series_ids,
       normalized_series_titles,
       medium_type,
+      medium_caption,
       series_type
     )
 
@@ -442,7 +446,8 @@ class SearchDataBuilder
 
     work_json_path = @works_json_dir.join("#{work_id}.json")
     metadata = {
-      "medium_type" => ""
+      "medium_type" => "",
+      "medium_caption" => ""
     }
     return metadata unless work_json_path.file?
 
@@ -451,6 +456,7 @@ class SearchDataBuilder
     return metadata unless work_payload.is_a?(Hash)
 
     metadata["medium_type"] = normalize_text(work_payload["medium_type"])
+    metadata["medium_caption"] = normalize_text(work_payload["medium_caption"])
     @work_search_metadata_by_id[work_id] = metadata
   end
 

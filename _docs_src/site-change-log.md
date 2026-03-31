@@ -8,6 +8,28 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added `medium_caption` to derived catalogue search terms
+
+**Status:** implemented
+
+**Area:** search
+
+**Summary:**  
+Catalogue search now enriches work entries with `medium_caption` from per-work JSON, but keeps that value in derived search fields rather than exposing a new displayed result field.
+
+**Reason:**  
+The search builder already reads per-work JSON for work-only enrichment. Adding `medium_caption` improves public recall for material descriptions without re-bloating `works_index.json` or the visible result-row contract.
+
+**Effect:**  
+`build_search.rb` now reads `medium_caption` from `assets/works/index/<work_id>.json` and folds it into `search_terms` and `search_text` for work entries. Result rows still display `medium_type`, not `medium_caption`, and the serialized field inventory for catalogue search remains unchanged.
+
+**Affected files/docs:**  
+- `scripts/build_search.rb`
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+
 ## [2026-04-01] Slimmed `works_index` and removed storage from public search
 
 **Status:** implemented

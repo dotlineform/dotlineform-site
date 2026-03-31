@@ -69,6 +69,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Query by title prefix and confirm the intended item appears at or near the top
 - [ ] Query by series title and confirm the intended series or related works appear sensibly
 - [ ] Query by `medium_type` and confirm results are sensible
+- [ ] Query by `medium_caption` wording and confirm relevant works are still discoverable
 - [ ] Query by a year or date fragment and confirm results are plausible rather than obviously broken
 - [ ] Confirm a broad fallback query still returns relevant results without outranking strong exact matches
 
@@ -76,6 +77,7 @@ Suggested current examples:
 
 - exact work id: `00533`
 - exact work title: `2 bodies monoprint`
+- medium caption: `pen on paper`
 - series title: `2 bodies`
 - slug/spaced equivalence: `2-bodies` and `2 bodies`
 - date-like moment query: `2020`

@@ -181,6 +181,10 @@ Current derived search fields:
 - `search_terms`
 - `search_text`
 
+Current work-only enrichment from per-work JSON may also add values such as:
+
+- `medium_caption`
+
 Current transformation behaviour:
 
 - lowercase normalization

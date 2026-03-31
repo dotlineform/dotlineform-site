@@ -79,6 +79,7 @@ The search builder reads source values such as:
 - series ids
 - series titles
 - `medium_type`
+- `medium_caption`
 - `series_type`
 - tag ids for structural storage
 
@@ -289,7 +290,7 @@ Current treatment:
 - full normalized phrase is retained
 - split tokens are also emitted
 
-### `medium_type`, `series_type`
+### `medium_type`, `medium_caption`, `series_type`
 
 Current treatment:
 
