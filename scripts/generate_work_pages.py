@@ -2602,6 +2602,9 @@ def main() -> None:
     # - image_alt
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
+    image_file_col = None
+    image_alt_col = None
+    project_filename_col = None
     if not run_moments and not run_moments_index_json:
         if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
             print("Moment pages/JSON skipped: not selected by --only.")

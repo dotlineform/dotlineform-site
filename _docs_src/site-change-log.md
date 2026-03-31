@@ -31,6 +31,25 @@ Work prose files are intentionally rare in this repo. Missing prose should show 
 **Notes:**  
 This changes only the work-prose boundary. Series and moment prose handling still follows their existing rules.
 
+## [2026-04-01] Fixed moments index rebuild on scoped non-moment runs
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+Fixed a local-variable scoping bug in `generate_work_pages.py` that could crash scoped runs such as `--work-ids ...` when the script still rebuilt the global moments index JSON afterward.
+
+**Reason:**  
+The moments index rebuild path is meant to remain available even when moment page generation is not selected, but it was reusing column helper variables that were only initialized inside the moment-page branch.
+
+**Effect:**  
+Scoped work-only runs now complete normally while still allowing the global moments index pass to evaluate its inputs and write-skip correctly.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+
 ## [2026-04-01] Added workbook-aware planning to the catalogue pipeline entrypoint
 
 **Status:** implemented
