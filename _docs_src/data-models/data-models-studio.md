@@ -199,6 +199,7 @@ Key dependencies:
 Current enforcement:
 
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages) syncs missing series rows into `tag_assignments.json`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline) prunes removed series rows and removed per-work overrides from `tag_assignments.json` when the owning workbook rows are removed
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency) checks cross-references between assignments, series membership, and works
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server) constrains writes to the Studio-owned JSON files and creates backups/logs
 

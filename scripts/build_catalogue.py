@@ -872,6 +872,140 @@ def build_activity_entry(
     }
 
 
+def load_json_object(path: Path) -> Dict[str, Any] | None:
+    if not path.exists():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else None
+
+
+def write_json_object(path: Path, payload: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def plan_stale_artifact_paths(
+    repo_root: Path,
+    *,
+    removed_work_ids: Set[str],
+    removed_series_ids: Set[str],
+    removed_detail_uids: Set[str],
+    removed_moment_ids: Set[str],
+) -> Dict[str, list[Path]]:
+    planned: list[Path] = []
+    work_details_dir = repo_root / "_work_details"
+
+    for work_id in sorted(removed_work_ids):
+        planned.append(repo_root / "_works" / f"{work_id}.md")
+        planned.append(repo_root / "assets/works/index" / f"{work_id}.json")
+        planned.extend(sorted(work_details_dir.glob(f"{work_id}-*.md")))
+    for uid in sorted(removed_detail_uids):
+        planned.append(work_details_dir / f"{uid}.md")
+    for series_id in sorted(removed_series_ids):
+        planned.append(repo_root / "_series" / f"{series_id}.md")
+        planned.append(repo_root / "assets/series/index" / f"{series_id}.json")
+    for moment_id in sorted(removed_moment_ids):
+        planned.append(repo_root / "_moments" / f"{moment_id}.md")
+        planned.append(repo_root / "assets/moments/index" / f"{moment_id}.json")
+
+    seen: Set[Path] = set()
+    existing: list[Path] = []
+    missing: list[Path] = []
+    for path in planned:
+        if path in seen:
+            continue
+        seen.add(path)
+        if path.exists():
+            existing.append(path)
+        else:
+            missing.append(path)
+    return {
+        "existing": existing,
+        "missing": missing,
+    }
+
+
+def prune_tag_assignments_for_removed_rows(
+    repo_root: Path,
+    *,
+    removed_series_ids: Set[str],
+    removed_work_ids: Set[str],
+    write: bool,
+) -> Dict[str, int]:
+    path = repo_root / "assets/studio/data/tag_assignments.json"
+    payload = load_json_object(path)
+    if payload is None:
+        return {
+            "series_removed": 0,
+            "work_overrides_removed": 0,
+            "series_touched": 0,
+            "payload_written": 0,
+        }
+
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        raise SystemExit(f"Invalid tag assignments payload: {path}")
+
+    now_utc = utc_timestamp_now()
+    series_removed = 0
+    work_overrides_removed = 0
+    series_touched = 0
+
+    for series_id in sorted(removed_series_ids):
+        if series_id not in series_map:
+            continue
+        row = series_map.get(series_id)
+        if isinstance(row, dict):
+            works = row.get("works")
+            if isinstance(works, dict):
+                work_overrides_removed += len(works)
+        del series_map[series_id]
+        series_removed += 1
+
+    for series_id, row in series_map.items():
+        if not isinstance(row, dict):
+            continue
+        works = row.get("works")
+        if not isinstance(works, dict):
+            continue
+        removed_here = 0
+        for work_id in sorted(removed_work_ids):
+            if work_id not in works:
+                continue
+            del works[work_id]
+            removed_here += 1
+        if removed_here:
+            row["updated_at_utc"] = now_utc
+            work_overrides_removed += removed_here
+            series_touched += 1
+
+    payload_changed = bool(series_removed or work_overrides_removed)
+    if payload_changed:
+        payload["series"] = series_map
+        payload["updated_at_utc"] = now_utc
+        if not normalize_text(payload.get("tag_assignments_version")):
+            payload["tag_assignments_version"] = "tag_assignments_v1"
+        if write:
+            write_json_object(path, payload)
+
+    return {
+        "series_removed": series_removed,
+        "work_overrides_removed": work_overrides_removed,
+        "series_touched": series_touched,
+        "payload_written": 1 if payload_changed and write else 0,
+    }
+
+
+def delete_stale_artifact_paths(paths: Iterable[Path]) -> int:
+    deleted = 0
+    for path in paths:
+        if not path.exists():
+            continue
+        path.unlink()
+        deleted += 1
+    return deleted
+
+
 def main() -> int:
     media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
     projects_base = env_var_value(PIPELINE_CONFIG, "projects_base_dir")
@@ -1161,18 +1295,33 @@ def main() -> int:
         planned_series_ids.update(series_ids_for_work_ids(previous_works, changed_work_row_ids | work_diff["removed"]))
         planned_series_ids &= set(current_series.keys())
 
-    deletion_warnings: list[str] = []
-    if work_diff["removed"]:
-        deletion_warnings.append(f"Works rows removed: {summarize_ids(work_diff['removed'])}")
-    if series_diff["removed"]:
-        deletion_warnings.append(f"Series rows removed: {summarize_ids(series_diff['removed'])}")
-    if detail_diff["removed"]:
-        deletion_warnings.append(f"WorkDetails rows removed: {summarize_ids(detail_diff['removed'])}")
-    if moments_diff["removed"]:
-        deletion_warnings.append(f"Moments rows removed: {summarize_ids(moments_diff['removed'])}")
+    removed_work_ids = set(work_diff["removed"]) if "work" in selected_modes else set()
+    removed_series_ids = set(series_diff["removed"]) if "work" in selected_modes else set()
+    removed_detail_uids = set(detail_diff["removed"]) if "work_details" in selected_modes else set()
+    removed_moment_ids = set(moments_diff["removed"]) if "moment" in selected_modes else set()
 
-    plan_needs_generate = bool(planned_generate_work_ids or planned_generate_moment_ids or planned_series_ids)
-    plan_needs_search = plan_needs_generate
+    if not manual_scope_requested and "work" in selected_modes:
+        planned_series_ids.update(series_ids_for_work_ids(previous_works, removed_work_ids))
+        planned_series_ids &= set(current_series.keys())
+
+    stale_cleanup_requested = bool(
+        not manual_scope_requested
+        and (removed_work_ids or removed_series_ids or removed_detail_uids or removed_moment_ids)
+    )
+    stale_cleanup_plan = (
+        plan_stale_artifact_paths(
+            repo_root,
+            removed_work_ids=removed_work_ids,
+            removed_series_ids=removed_series_ids,
+            removed_detail_uids=removed_detail_uids,
+            removed_moment_ids=removed_moment_ids,
+        )
+        if stale_cleanup_requested
+        else {"existing": [], "missing": []}
+    )
+
+    plan_needs_generate = bool(planned_generate_work_ids or planned_generate_moment_ids or planned_series_ids or stale_cleanup_requested)
+    plan_needs_search = bool(plan_needs_generate or stale_cleanup_requested)
     planner_mode = "full" if args.full else ("bootstrap" if bootstrap_state else "incremental")
 
     def print_plan_summary() -> None:
@@ -1217,12 +1366,22 @@ def main() -> int:
         print(f"- work generation ids: {len(planned_generate_work_ids)}")
         print(f"- moment generation ids: {len(planned_generate_moment_ids)}")
         print(f"- series generation ids: {len(planned_series_ids)}")
+        print(f"- stale generated files to delete: {len(stale_cleanup_plan['existing'])}")
         print(f"- rebuild catalogue search: {'yes' if plan_needs_search else 'no'}")
-        if deletion_warnings:
-            print("Planner warnings:")
-            for warning in deletion_warnings:
-                print(f"- {warning}")
-            print("- Removed rows can still leave stale generated files; planner state does not prune them.")
+        if stale_cleanup_requested:
+            print("Stale cleanup:")
+            if removed_work_ids:
+                print(f"- removed works: {summarize_ids(removed_work_ids)}")
+            if removed_series_ids:
+                print(f"- removed series: {summarize_ids(removed_series_ids)}")
+            if removed_detail_uids:
+                print(f"- removed work_details: {summarize_ids(removed_detail_uids)}")
+            if removed_moment_ids:
+                print(f"- removed moments: {summarize_ids(removed_moment_ids)}")
+            if stale_cleanup_plan["existing"]:
+                print(f"- generated files present to delete: {len(stale_cleanup_plan['existing'])}")
+            if stale_cleanup_plan["missing"]:
+                print(f"- generated files already missing: {len(stale_cleanup_plan['missing'])}")
 
     print_plan_summary()
     if args.plan:
@@ -1456,17 +1615,56 @@ def main() -> int:
         )
 
         selected_series_for_generate = set(planned_series_ids)
-        if generate_ids or generate_moment_ids or selected_series_for_generate:
+        cleanup_stats = {
+            "generated_files_deleted": 0,
+            "tag_assignment_series_removed": 0,
+            "tag_assignment_work_overrides_removed": 0,
+            "tag_assignment_series_touched": 0,
+            "tag_assignments_written": 0,
+        }
+        if generate_ids or generate_moment_ids or selected_series_for_generate or stale_cleanup_requested:
             generate_cmd = [py, str(generate_script), str(xlsx_path)]
             generate_cmd += ["--work-ids-file", str(generate_ids_file)]
             generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
             if selected_series_for_generate:
                 generate_cmd += ["--series-ids", ",".join(sorted(selected_series_for_generate))]
+            elif stale_cleanup_requested and not generate_ids and not generate_moment_ids:
+                generate_cmd += ["--only", "series-index-json", "--only", "works-index-json", "--only", "moments-index-json"]
             if not args.dry_run:
                 generate_cmd.append("--write")
             if args.force_generate:
                 generate_cmd.append("--force")
             run_step("Generate Work Pages", generate_cmd, cwd=repo_root)
+
+            if stale_cleanup_requested:
+                print("\n==> Cleanup Stale Generated Artifacts")
+                existing_cleanup_paths = stale_cleanup_plan["existing"]
+                missing_cleanup_paths = stale_cleanup_plan["missing"]
+                print(f"Generated files to delete: {len(existing_cleanup_paths)}")
+                for path in existing_cleanup_paths:
+                    print(f"  - delete {path.relative_to(repo_root)}")
+                for path in missing_cleanup_paths:
+                    print(f"  - missing {path.relative_to(repo_root)}")
+                cleanup_tag_stats = prune_tag_assignments_for_removed_rows(
+                    repo_root,
+                    removed_series_ids=removed_series_ids,
+                    removed_work_ids=removed_work_ids,
+                    write=not args.dry_run,
+                )
+                print(
+                    "Tag assignments cleanup: "
+                    f"series removed={cleanup_tag_stats['series_removed']}; "
+                    f"work overrides removed={cleanup_tag_stats['work_overrides_removed']}; "
+                    f"series touched={cleanup_tag_stats['series_touched']}"
+                )
+                if args.dry_run:
+                    print("DRY-RUN: stale artifact cleanup not written.")
+                else:
+                    cleanup_stats["generated_files_deleted"] = delete_stale_artifact_paths(existing_cleanup_paths)
+                    cleanup_stats["tag_assignment_series_removed"] = cleanup_tag_stats["series_removed"]
+                    cleanup_stats["tag_assignment_work_overrides_removed"] = cleanup_tag_stats["work_overrides_removed"]
+                    cleanup_stats["tag_assignment_series_touched"] = cleanup_tag_stats["series_touched"]
+                    cleanup_stats["tag_assignments_written"] = cleanup_tag_stats["payload_written"]
 
             search_cmd = [str(search_script), "--scope", "catalogue"]
             if not args.dry_run:
@@ -1505,12 +1703,17 @@ def main() -> int:
                         "generate_work_ids": len(generate_ids),
                         "generate_series_ids": len(selected_series_for_generate),
                         "generate_moment_ids": len(generate_moment_ids),
-                        "rebuild_search": bool(generate_ids or generate_moment_ids or selected_series_for_generate),
+                        "delete_generated_files": cleanup_stats["generated_files_deleted"],
+                        "clean_tag_assignment_series": cleanup_stats["tag_assignment_series_removed"],
+                        "clean_tag_assignment_work_overrides": cleanup_stats["tag_assignment_work_overrides_removed"],
+                        "rebuild_search": bool(generate_ids or generate_moment_ids or selected_series_for_generate or stale_cleanup_requested),
                     },
                     results={
                         "planner_state_updated": True,
                         "media_tracking_initialized": True,
                         "planner_state_migrated": legacy_state_loaded,
+                        "stale_cleanup_requested": stale_cleanup_requested,
+                        "tag_assignments_written": bool(cleanup_stats["tag_assignments_written"]),
                     },
                 ),
             )
@@ -1525,6 +1728,8 @@ def main() -> int:
             "modes": sorted(selected_modes),
             "generated_work_ids": len(generate_ids),
             "generated_moment_ids": len(generate_moment_ids),
+            "stale_cleanup_requested": stale_cleanup_requested,
+            "deleted_generated_files": cleanup_stats["generated_files_deleted"],
             "state_updated": not args.dry_run,
         },
     )

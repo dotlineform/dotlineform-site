@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T19:44:04Z",
+  "generated_at": "2026-03-31T20:01:09Z",
   "docs": [
     {
       "scope": "studio",
@@ -676,7 +676,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "",
       "sort_order": 110,
       "source_path": "site-change-log.md",

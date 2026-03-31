@@ -8,6 +8,30 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added removed-row stale-artifact cleanup to build_catalogue
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`build_catalogue.py` now cleans up repo-owned generated artifacts when workbook rows are removed, instead of only warning that stale files may remain.
+
+**Reason:**  
+The planner already knew which workbook rows had disappeared. Turning that into concrete cleanup reduces drift in route stubs, per-record JSON, and Studio assignment data without requiring a separate manual delete pass for the common cases.
+
+**Effect:**  
+Removed work, work-detail, series, and moment rows now trigger deletion of the matching generated route stubs and per-record JSON files in the repo. The same pass also prunes removed series rows and removed per-work overrides from `assets/studio/data/tag_assignments.json`, then rebuilds aggregate indexes and catalogue search from the current workbook state.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+
+**Notes:**  
+This first slice only cleans repo-owned generated artifacts and Studio assignment rows. External source media and derivative media cleanup still remain separate.
+
 ## [2026-04-01] Added explicit planner version metadata to build_catalogue state
 
 **Status:** implemented
@@ -123,7 +147,7 @@ Default `./scripts/build_catalogue.py` runs now compare workbook-backed source r
 - [Scripts](/docs/?scope=studio&doc=scripts)
 
 **Notes:**  
-Removed workbook rows can still leave stale generated files behind. The planner currently improves incremental rebuild targeting, not deletion cleanup.
+This was the first planner slice. Removed-row stale-artifact cleanup was added in a later follow-up on the same day.
 
 ## [2026-04-01] Extended catalogue planning to track canonical source media
 
