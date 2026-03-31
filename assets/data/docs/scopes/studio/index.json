@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T17:08:47Z",
+  "generated_at": "2026-03-31T17:21:26Z",
   "docs": [
     {
       "scope": "studio",
@@ -440,17 +440,6 @@
       "source_path": "studio/tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-build-search-data",
-      "title": "Build Search Data",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "sort_order": 45,
-      "source_path": "scripts/scripts-build-search-data.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-build-search-data",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-search-data.json"
     },
     {
       "scope": "studio",

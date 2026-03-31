@@ -10,156 +10,116 @@ sort_order: 70
 
 ## Purpose
 
-This document defines how the current search index is generated during the build process.
-
-It explains which source inputs feed search, how records are constructed, where normalization and derivation occur, what output is written, and how search generation fits into the wider content-generation workflow.
-
-This is a build-time document. It is not the ranking or UI document.
-
-## Scope
-
-This document applies to the current process that generates:
-
-- `assets/data/search/catalogue/index.json`
+This document defines how the current search artifacts are built.
 
 It covers:
 
-- source inputs
-- inclusion and exclusion rules
-- record construction
-- normalization and derived field generation
-- output assembly and write behaviour
-- current validation and change-detection behaviour
-- pipeline integration
+- the current design of the search build layer
+- which script currently owns each live scope
+- what each scope reads and writes
+- how record construction, validation, and change detection work in practice
 
-Current docs-domain note:
+This is a build-time document. It does not define ranking or UI behaviour.
 
-- a search-owned builder entrypoint now exists at `scripts/build_search_data.rb`
-- its current implemented scopes are `studio` and `library`
-- it reads canonical docs outputs and writes:
-  - `assets/data/search/studio/index.json`
-  - `assets/data/search/library/index.json`
-- both docs-domain scopes now use inline docs-viewer search rather than the dedicated `/search/` page, so this document still treats catalogue as the current live dedicated search-page build
+## Current Design And Implementation
 
-## Relationship to other documents
+The current search build is one subsystem with two implementation paths.
 
-- [Search Overview](/docs/?scope=studio&doc=search-overview) describes the subsystem at a high level
-- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) defines the output structure
-- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) defines how fields participate in search
-- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) defines normalization rules in detail
-- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist) defines operational verification steps
+Why the build is split today:
 
-## Build pipeline principles
+- `catalogue` search is derived from workbook-driven catalogue data that already exists in memory inside `scripts/generate_work_pages.py`
+- `studio` and `library` search are derived from canonical published docs indexes, so they are built by the separate search-owned script `scripts/build_search_data.rb`
 
-The current search build follows these principles.
+Current live search outputs:
 
-### Deterministic
+- `assets/data/search/catalogue/index.json`
+- `assets/data/search/studio/index.json`
+- `assets/data/search/library/index.json`
 
-Given the same source inputs, the generated search payload should be stable.
+Current build principles:
 
-### Search-owned but pipeline-aligned
+- deterministic output from stable inputs
+- scope-owned search artifacts
+- compact records rather than prose-heavy payloads
+- search stays downstream of canonical source systems rather than becoming a new source of truth
 
-Search owns its own generated artifact, but it does not replace the canonical content pipeline or become a new source of truth.
+Current ownership split:
 
-### Compact
+- `scripts/generate_work_pages.py`
+  owns `catalogue` search generation
+- `scripts/build_search_data.rb`
+  owns docs-domain search generation for `studio` and `library`
 
-The generated payload should contain the fields needed for search, filtering growth, and result display, while excluding large bodies of prose.
+This means the current implementation is scope-owned at the artifact level, but not yet unified behind one single build entrypoint.
 
-### Structured
+## Cross-Scope Conventions
 
-Structured source-like fields and derived search fields should remain distinguishable in the output.
+All current search artifacts use the same high-level top-level structure:
 
-### Compatible
+- `header`
+- `entries`
 
-Search generation should fit into the same generator workflow that already builds works, series, and moments outputs.
+Current shared build conventions:
 
-## Pipeline overview
+- outputs are written under `assets/data/search/<scope>/`
+- records are generated at build time, not assembled in the browser
+- content-version hashing is used for write skipping
+- generated payloads stay compact and avoid body-prose indexing
 
-The current build path is:
+Current non-goals across all scopes:
 
-1. parse CLI arguments in `scripts/generate_work_pages.py`
-2. load the workbook and supporting pipeline inputs
-3. build the normal works, series, and moments in-memory payloads
-4. if search generation is enabled, derive search records from those in-memory payloads plus tag metadata
-5. sort and assemble the flat search entry list
-6. compute a version hash and header metadata
-7. write `assets/data/search/catalogue/index.json` if the content version changed or `--force` is used
+- no raw HTML or Markdown parsing at runtime
+- no search-specific backend service
+- no prose shard loading
+- no strict schema-fail validation layer separate from the builders themselves
 
-Search generation is therefore not a completely separate script today. It is a dedicated artifact stage inside the broader content generator.
+## Catalogue Scope
 
-## Current Docs-Domain Builder
+### Current Writer
 
-The first search-owned pipeline step now exists separately from the catalogue generator:
+- `scripts/generate_work_pages.py`
 
-```bash
-ruby ./scripts/build_search_data.rb --scope studio --write
-ruby ./scripts/build_search_data.rb --scope library --write
-```
+### Current Output
 
-Current role:
+- `assets/data/search/catalogue/index.json`
 
-- reads `assets/data/docs/scopes/studio/index.json`
-- reads `assets/data/docs/scopes/library/index.json`
-- emits `assets/data/search/studio/index.json`
-- emits `assets/data/search/library/index.json`
-- constructs one search record per published Studio doc
-- constructs one search record per published Library doc
+### Current Source Inputs
 
-Current non-goals:
+Primary canonical source:
 
-- no raw-Markdown parsing
-- no summary generation
-- no body-prose indexing
-- no section-level records
+- `data/works.xlsx`
 
-## Source inputs
-
-The current search build draws from multiple source layers.
-
-### Canonical workbook-driven content
-
-Primary canonical content still originates from `data/works.xlsx`, read by `scripts/generate_work_pages.py`.
-
-From that generator flow, search consumes the canonical or generator-derived values needed for:
-
-- works
-- series
-- moments
-
-### Generator-built in-memory payloads
-
-The current search records are built from in-memory payloads already assembled by the main generator:
+Current in-memory generator payloads used by search assembly:
 
 - `series_payload`
 - `works_payload`
 - `moments_payload`
 - `canonical_work_record_by_id`
 
-This means search is not reparsing page files or consuming the published site HTML.
-
-### Tag metadata inputs
-
-The search build also reads:
+Current tag metadata inputs:
 
 - `assets/studio/data/tag_registry.json`
 - `assets/studio/data/tag_assignments.json`
 
-These are used to derive:
+### Current Build Path
 
-- `tag_ids`
-- `tag_labels`
+The current catalogue build path is:
 
-for works and series.
+1. parse CLI arguments in `scripts/generate_work_pages.py`
+2. load workbook and supporting pipeline inputs
+3. build works, series, and moments in-memory payloads
+4. derive search records from those payloads plus tag metadata
+5. sort and assemble the flat search entry list
+6. compute header metadata and version hash
+7. write `assets/data/search/catalogue/index.json` if changed or forced
 
-### Source-model principle
+Current integration facts:
 
-The current implementation does not make search a new canonical data model. It remains downstream of the existing workbook and pipeline-owned metadata.
+- search generation is enabled whenever the generator runs
+- `--only search-index-json` can be used for a search-focused generator pass
+- aggregate JSON artifacts, including search, are treated as always-rebuilt stages within the script execution model
 
-## Inclusion and exclusion rules
-
-### Included content
-
-Current indexed content types:
+### Current Included Content
 
 - works
 - series
@@ -167,49 +127,25 @@ Current indexed content types:
 
 Each included content item becomes one search record.
 
-### Excluded content
-
-Current intentionally excluded content:
+### Current Exclusions
 
 - full prose or body text
 - docs content
 - Studio/admin pages
-- other site sections not represented in the current search generator stage
+- unrelated site sections outside the current catalogue generator stage
 
-### Eligibility rules
+### Current Record Construction
 
-The current generator applies practical fallback rules rather than strict hard validation at record-construction time.
+The generator currently uses `build_search_entry(...)` to construct catalogue records.
 
-Examples:
-
-- title falls back to item id if title is missing
-- works and series may omit optional structured metadata fields when empty
-- empty relationship and tag arrays are still serialized as arrays
-
-The client runtime later discards any malformed entry missing required runtime fields such as `kind`, `id`, `title`, or `href`, but the generator itself currently tries to construct a usable record rather than fail early on sparse optional metadata.
-
-## Record construction rules
-
-The current generator uses one helper, `build_search_entry(...)`, to construct records for all three content kinds.
-
-### Core identity fields
-
-Every record is built with:
+Current core identity fields:
 
 - `kind`
 - `id`
 - `title`
 - `href`
 
-Current href conventions:
-
-- works: `/works/<id>/`
-- series: `/series/<id>/`
-- moments: `/moments/<id>/`
-
-### Display support fields
-
-Depending on content kind, the generator may also include:
+Current display and structured support fields may include:
 
 - `year`
 - `date`
@@ -222,26 +158,12 @@ Depending on content kind, the generator may also include:
 - `tag_ids`
 - `tag_labels`
 
-Current kind-specific construction:
-
-- series records are built from `series_payload` plus series-level tag assignments
-- work records combine canonical work metadata, `works_payload` relationships, series-title lookup, inherited series tags, and work-specific tag overrides
-- moment records are built from `moments_payload`
-
-### Search support fields
-
-Every record also gets:
+Current derived search fields:
 
 - `search_terms`
 - `search_text`
 
-These are generated during record construction, not appended later by a separate pass.
-
-## Normalisation and derivation stage
-
-The current derivation step happens inside the generator before serialization.
-
-Current helpers:
+Current helper functions involved in normalization and derivation:
 
 - `normalize_search_text(value)`
 - `build_search_tokens(*values)`
@@ -249,125 +171,182 @@ Current helpers:
 
 Current transformation behaviour:
 
-- values are normalized to lowercase text
-- whitespace is collapsed
-- normalized phrases are retained
-- additional split tokens are generated by replacing non-alphanumeric separators with spaces
-- duplicate tokens are removed while preserving first-seen order
-- `search_text` is built by joining `search_terms` with spaces
+- lowercase normalization
+- whitespace collapse
+- phrase retention
+- additional split-token generation
+- duplicate-token removal while preserving first-seen order
+- `search_text` assembled from `search_terms`
 
-Current build inputs to `search_terms` include combinations of:
+### Current Validation And Fallbacks
 
-- id
-- title
-- display metadata
-- year text
-- date text
-- series ids
-- series titles
-- `medium_type`
-- `storage`
-- `series_type`
-
-Tag ids and tag labels are currently serialized structurally, but they are not part of the current `search_terms` build set.
-
-## Output structure and location
-
-Current output:
-
-- one file: `assets/data/search/catalogue/index.json`
-
-Current top-level structure:
-
-- `header`
-- `entries`
-
-Current header includes:
-
-- schema id
-- content-derived version hash
-- UTC generated timestamp
-- entry count
-
-Current output is a generated artifact that is intended to live in the repo’s generated data tree alongside other generated JSON assets.
-
-## Build integration
-
-The current search build is integrated into `scripts/generate_work_pages.py`.
-
-Important current facts:
-
-- search generation is enabled whenever the generator runs
-- `--only search-index-json` can be used to run a search-focused generation pass
-- aggregate JSON artifacts, including search, are treated as always-rebuilt stages within the script’s execution model
-- search output depends on the same generator pass that builds in-memory works, series, and moments payloads
-
-This means search generation is not a post-Jekyll step and not a browser-side preprocessing step. It is part of the content-generation pipeline.
-
-## Error handling and fallback behaviour
-
-Current behaviour is pragmatic rather than heavily validated.
+Current behaviour is pragmatic rather than strict.
 
 Current examples:
 
-- if a title is missing, the generator falls back to the item id
-- if optional metadata is empty, the field may be omitted or serialized as an empty array depending on field type
-- if tag registry labels are unavailable for a tag id, the id may still be retained structurally while the label list remains partial or empty
+- missing titles fall back to item id
+- optional scalar fields may be omitted when empty
+- array-valued relationship and tag fields are still serialized as arrays
+- partial tag-label lookup does not block record generation
 
-There is not yet a dedicated search-only validation layer that hard-fails on schema or field-policy issues.
+Current safeguards include:
 
-## Validation during generation
-
-Current implemented validation is limited but not absent.
-
-Current checks or safeguards include:
-
-- controlled generation through a shared helper `build_search_entry(...)`
+- controlled record construction through shared helpers
 - normalized and deduplicated token generation
 - deterministic sort order before serialization
-- content-version hashing to detect unchanged output
+- content-version hashing for change detection
 
-Current change-detection behaviour:
+## Studio Scope
 
-- if the newly generated payload version matches the existing output version and `--force` is not set, the script reports `Wrote: 0. Skipped: 1.`
-- otherwise it writes the file when `--write` is supplied
+### Current Writer
 
-What is not yet implemented as a dedicated search validation layer:
+- `scripts/build_search_data.rb --scope studio`
 
-- explicit schema assertion pass
-- duplicate-record detection beyond ordinary source identity
-- payload size budgets
-- classification-rule enforcement
-- benchmark-style relevance validation during generation
+### Current Output
 
-## Performance and size considerations
+- `assets/data/search/studio/index.json`
 
-Current pipeline decisions that keep the base artifact lightweight:
+### Current Source Input
 
-- only one compact record per searchable item
-- no full prose bodies in the base artifact
-- derived search fields are compact text/token forms rather than richer provenance structures
+- `assets/data/docs/scopes/studio/index.json`
+
+The current Studio search artifact is derived from the published Studio docs index rather than directly from `_docs_src/`.
+
+### Current Commands
+
+Default write command:
+
+```bash
+./scripts/build_search_data.rb --scope studio --write
+```
+
+Dry run:
+
+```bash
+./scripts/build_search_data.rb --scope studio
+```
+
+Current supported overrides:
+
+- `--source-index PATH`
+- `--output PATH`
+- `--write`
+
+### Current Build Behaviour
+
+Current builder behaviour for Studio:
+
+- reads the published Studio docs index
+- emits one search record per published Studio doc
+- keeps record shape compatible with the shared Docs Viewer inline search runtime
+- does not create section-level records
+- does not index doc body prose
+- does not generate summaries or snippets
+
+Current record inputs come from docs metadata such as:
+
+- `doc_id`
+- `title`
+- `last_updated`
+- `parent_id`
+- `viewer_url`
+
+Current derived search support fields:
+
+- `search_terms`
+- `search_text`
+
+### Current Runtime Mapping
+
+The generated Studio search artifact is consumed by:
+
+- inline docs search on `/docs/`
+
+## Library Scope
+
+### Current Writer
+
+- `scripts/build_search_data.rb --scope library`
+
+### Current Output
+
+- `assets/data/search/library/index.json`
+
+### Current Source Input
+
+- `assets/data/docs/scopes/library/index.json`
+
+The current Library search artifact is derived from the published Library docs index rather than directly from `_docs_library_src/`.
+
+### Current Commands
+
+Default write command:
+
+```bash
+./scripts/build_search_data.rb --scope library --write
+```
+
+Dry run:
+
+```bash
+./scripts/build_search_data.rb --scope library
+```
+
+Current supported overrides:
+
+- `--source-index PATH`
+- `--output PATH`
+- `--write`
+
+### Current Build Behaviour
+
+Current builder behaviour for Library:
+
+- reads the published Library docs index
+- emits one search record per published Library doc
+- uses the same docs-domain record contract as Studio, with `scope=library`
+- does not create section-level records
+- does not index doc body prose
+- does not generate summaries or snippets
+
+### Current Runtime Mapping
+
+The generated Library search artifact is consumed by:
+
+- inline docs search on `/library/`
+
+## Change Detection And Write Behaviour
+
+Current write behaviour differs slightly by implementation path, but both paths are content-driven rather than timestamp-driven.
+
+Current catalogue behaviour:
+
+- `scripts/generate_work_pages.py` writes the file when content changed or `--force` is used
+
+Current Studio and Library behaviour:
+
+- `scripts/build_search_data.rb` writes only when `--write` is supplied
+- dry runs report the selected scope and target path without persisting output
+
+## Performance And Size Considerations
+
+Current build decisions that keep the search layer lightweight:
+
+- one compact record per searchable item
+- no full prose bodies in the base artifacts
+- derived search fields are precomputed at build time
 - duplicate tokens are removed during generation
-- optional empty scalar fields are omitted from serialized output
+- optional empty scalar fields are omitted from serialized output where the current builders do so
 
-## Current implementation summary
+The current tradeoff is that search assembly is split across two writers. That is acceptable in the current implementation because each path is still downstream of the canonical source for that scope.
 
-Current build behaviour in practice:
+## Related Documents
 
-- `scripts/generate_work_pages.py` produces the search index
-- search reads workbook-derived content plus tag registry and tag assignment data
-- records are assembled for works, series, and moments
-- normalization and token derivation happen at build time
-- the output is one flat generated artifact at `assets/data/search/catalogue/index.json`
-- write-skipping uses a content-derived version hash rather than file timestamps alone
-- validation is currently light and pragmatic rather than strict
-
-## Out of scope for this document
-
-This document does not define:
-
-- ranking behaviour
-- browser UI behaviour
-- keyboard interaction
-- detailed field semantics already defined in the schema document
-- low-level line-by-line implementation commentary
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
+- [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

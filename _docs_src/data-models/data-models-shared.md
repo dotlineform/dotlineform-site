@@ -132,8 +132,8 @@ Current enforcement layers:
   writes the main catalogue indexes and record payloads, syncs missing Studio assignment rows, and hashes generated payloads
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   validates duplicate `doc_id` values and unknown `parent_id` references before writing docs-scope payloads
-- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
-  derives docs-scope search from the canonical docs index, so docs search cannot drift from the published docs corpus without the docs index drifting first
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+  documents both the catalogue search writer and the docs-domain search writer, so the search artifacts can be reviewed in one place
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
   checks cross-references and key JSON schema expectations across catalogue and Studio artifacts
 

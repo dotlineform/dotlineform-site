@@ -91,8 +91,6 @@ Catalogue/media builds:
   Stage source media for works, work details, and moments from workbook-driven IDs.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
-- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
-  Build search-owned artifacts for docs-domain scopes; current implemented scopes are `studio` and `library`.
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, aggregate indexes, and the catalogue search artifact.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
@@ -109,6 +107,7 @@ Catalogue/media builds:
 ## Related References
 
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
 - [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)

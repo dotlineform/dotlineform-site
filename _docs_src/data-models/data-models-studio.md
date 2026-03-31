@@ -262,7 +262,7 @@ Why it is derived from the docs index rather than the source Markdown directly:
 
 Current writer:
 
-- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 
 ## Performance Notes
 

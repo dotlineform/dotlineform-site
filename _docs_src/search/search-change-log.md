@@ -54,7 +54,6 @@ Once Studio docs search moved inline, leaving Library on a different pattern wou
 - `library/index.md`
 - `scripts/build_search_data.rb`
 - `assets/data/search/library/index.json`
-- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
 - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
@@ -142,7 +141,6 @@ The repo now has `scripts/build_search_data.rb` as a search-owned build entrypoi
 - [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
 
 **Notes:**  
 This is a first search-owned build step, not the full standalone end-state pipeline yet.
