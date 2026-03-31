@@ -1,7 +1,7 @@
 ---
 doc_id: scripts
 title: Scripts
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: ""
 sort_order: 30
 ---
@@ -79,7 +79,7 @@ Search builds:
 Catalogue/media builds:
 
 - `./scripts/build_catalogue.py`
-  - orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
+  - plans workbook-backed generation from `var/build_catalogue_state.json`, then orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
 - `./scripts/generate_work_pages.py`
   - builds catalogue pages plus runtime JSON, including:
     - `assets/data/series_index.json`

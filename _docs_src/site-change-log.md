@@ -8,6 +8,54 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Made work prose optional in catalogue generation
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`generate_work_pages.py` no longer treats missing work prose mappings or missing work prose source files as a reason to skip work page or work JSON generation.
+
+**Reason:**  
+Work prose files are intentionally rare in this repo. Missing prose should show up as absent page prose on the site, not block unrelated metadata, routing, or JSON refresh.
+
+**Effect:**  
+`_works/<work_id>.md` stubs and `assets/works/index/<work_id>.json` now continue to generate when `Works.work_prose_file` is empty, unresolved, or points at a missing file. In those cases the work payload is written without prose content rather than emitting a per-work warning and skipping the record.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+
+**Notes:**  
+This changes only the work-prose boundary. Series and moment prose handling still follows their existing rules.
+
+## [2026-04-01] Added workbook-aware planning to the catalogue pipeline entrypoint
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`build_catalogue.py` now plans workbook-backed generation before it runs, using a persisted planner state file to infer affected work IDs, series IDs, and moment IDs instead of requiring those scopes to be supplied manually most of the time.
+
+**Reason:**  
+The previous pipeline wrapper still depended on the user to translate workbook edits into `--mode`, `--work-ids`, `--series-ids`, and `--moment-ids`. That made safe incremental rebuilds harder to reason about and kept future pipeline enhancements tightly coupled to manual operator knowledge.
+
+**Effect:**  
+Default `./scripts/build_catalogue.py` runs now compare workbook-backed source records against `var/build_catalogue_state.json`, print an execution plan, skip generate/search when nothing relevant changed, and persist the new planner state after successful write runs. Copy/srcset stages remain draft-driven for now, so published media-only changes still need explicit flags.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- `.gitignore`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
+**Notes:**  
+Removed workbook rows can still leave stale generated files behind. The planner currently improves incremental rebuild targeting, not deletion cleanup.
+
 ## [2026-03-30] Removed the docs compatibility mirror and legacy Studio doc-link fallback
 
 **Status:** implemented

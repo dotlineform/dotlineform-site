@@ -1212,8 +1212,6 @@ def main() -> None:
 
     work_prose_file_by_id: Dict[str, str] = {}
     has_work_prose_file_col = "work_prose_file" in works_hi
-    if (run_work_pages or run_work_json) and not has_work_prose_file_col:
-        raise SystemExit("Works sheet missing required column for prose migration: work_prose_file")
     if has_work_prose_file_col:
         for wr in works_rows[1:]:
             wid_raw = cell(wr, works_hi, "work_id")
@@ -1230,17 +1228,6 @@ def main() -> None:
         if not project_folder or not prose_filename:
             return None
         return projects_root / project_folder / works_prose_subdir / prose_filename
-
-    missing_work_prose_warned: set[str] = set()
-
-    def warn_missing_work_prose(wid: str, prose_path: Optional[Path]) -> None:
-        if wid in missing_work_prose_warned:
-            return
-        if prose_path is None:
-            print(f"[work {wid}] WARNING: missing prose source mapping; skipping work.")
-        else:
-            print(f"[work {wid}] WARNING: missing source prose {prose_path}; skipping work.")
-        missing_work_prose_warned.add(wid)
 
     has_series_prose_file_col = "series_prose_file" in series_hi
     if run_series_pages and not has_series_prose_file_col:
@@ -1691,12 +1678,6 @@ def main() -> None:
                     "layout": "work",
                     "checksum": checksum,
                 }
-
-                source_prose_path = resolve_work_prose_source_path(wid)
-                if source_prose_path is None or not source_prose_path.exists():
-                    warn_missing_work_prose(wid, source_prose_path)
-                    skipped += 1
-                    continue
 
                 work_page_content = build_front_matter(work_page_fm) + "\n"
                 out_path = out_dir / f"{wid}.md"
@@ -2493,15 +2474,13 @@ def main() -> None:
                 prefix_wj = f"[Work JSON {wj_processed}/{wj_total}] "
 
                 source_prose_path = resolve_work_prose_source_path(wid)
-                if source_prose_path is None or not source_prose_path.exists():
-                    warn_missing_work_prose(wid, source_prose_path)
-                    wj_skipped += 1
-                    continue
 
                 sections = build_sections_from_detail_records(detail_records_by_work.get(wid, []))
                 details_total = sum(len(s.get("details", [])) for s in sections)
                 work_record = build_work_json_record(canonical_work_record_by_id.get(wid, {"work_id": wid}))
-                content_html = render_markdown_with_jekyll(source_prose_path)
+                content_html: Optional[str] = None
+                if source_prose_path is not None and source_prose_path.exists():
+                    content_html = render_markdown_with_jekyll(source_prose_path)
                 payload_version = compute_payload_version(compact_json_object({"work": work_record, "sections": sections, "content_html": content_html}))
 
                 payload = compact_json_object({

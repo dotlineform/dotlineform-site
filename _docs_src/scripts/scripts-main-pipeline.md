@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-main-pipeline
 title: Build Catalogue
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 20
 ---
@@ -21,9 +21,14 @@ Run everything:
 ./scripts/build_catalogue.py
 ```
 
+Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. The copy/srcset stages remain draft-driven for now, so published media-only changes still need explicit flags.
+
 ## Useful Flags
 
 - `--dry-run`: preview only, with no workbook writes or deletes
+- `--plan`: print the inferred execution plan and exit
+- `--full`: ignore saved planner state and rebuild all workbook-backed generation targets
+- `--reset-state`: remove `var/build_catalogue_state.json` before planning
 - `--force-generate`: pass `--force` through to `generate_work_pages.py` and the catalogue search rebuild
 - `--jobs N`: srcset parallel jobs; default `4`, or `MAKE_SRCSET_JOBS`
 - `--mode work|work_details|moment`: run only selected flow(s); repeat flag to run multiple
@@ -38,13 +43,15 @@ Run everything:
 ## Mode Examples
 
 ```bash
+./scripts/build_catalogue.py --plan
+./scripts/build_catalogue.py --full --dry-run
 ./scripts/build_catalogue.py --mode moment --dry-run
 ./scripts/build_catalogue.py --mode work --mode work_details --dry-run
 ./scripts/build_catalogue.py --mode moment --moment-ids blue-sky,compiled --dry-run
 ./scripts/build_catalogue.py --mode work --work-ids 00456 --dry-run
 ```
 
-When `--mode work` is used and no `--series-ids*` flags are provided, draft series are auto-included in generation.
+When `--mode work` is used and no `--series-ids*` flags are provided, the planner auto-includes draft series, changed series rows, and series linked to affected works.
 
 Current pipeline tail:
 
@@ -59,6 +66,8 @@ Primary source artifacts:
 - source media under `DOTLINEFORM_PROJECTS_BASE_DIR`
   - `projects/...`
   - `moments/...`
+- planner state:
+  - `var/build_catalogue_state.json`
 
 Primary target artifacts:
 
@@ -77,6 +86,19 @@ Primary target artifacts:
   - `assets/moments/index/`
 - generated repo artifact written by `build_search.rb --scope catalogue`:
   - `assets/data/search/catalogue/index.json`
+
+## Planner Notes
+
+- The saved planner state is orchestration data, not canonical site data.
+- The planner currently tracks workbook-backed rows and grouped workbook sections:
+  - `Works`
+  - `Series`
+  - `WorkDetails`
+  - `WorkFiles`
+  - `WorkLinks`
+  - `Moments`
+- It uses those fingerprints to infer generation/search scope, but it does not yet fingerprint source media.
+- Removed workbook rows can still leave stale generated files. Deletion flows remain separate from planner-driven rebuilds.
 
 ## Logging
 

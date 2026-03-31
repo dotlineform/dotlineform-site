@@ -1,7 +1,7 @@
 ---
 doc_id: pipeline-use-cases
 title: Pipeline Use Cases
-last_updated: 2026-03-29
+last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 10
 ---
@@ -22,10 +22,17 @@ export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 
 Two current CLI rules matter for almost every use case:
 
-- `build_catalogue.py` is best when source media has changed and you need copy + srcset + generation.
+- `build_catalogue.py` is now the default catalogue entrypoint. It plans workbook-backed generation automatically from `var/build_catalogue_state.json`, while keeping copy + srcset draft-driven.
 - `generate_work_pages.py` is best when workbook metadata changed and you mainly need generated repo artifacts refreshed.
+- `build_catalogue.py --plan` is the quickest way to inspect what the planner thinks changed before a write run.
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
 - removal flows do not fully clean up stale generated artifacts; only full work deletion has a dedicated script, and even that still leaves workbook/source cleanup to you.
+
+Planner boundary:
+
+- workbook-row edits in `Works`, `Series`, `WorkDetails`, `WorkFiles`, `WorkLinks`, and `Moments` are now picked up automatically by `build_catalogue.py`
+- published media-only changes are not planner-detected yet; keep using explicit `--mode` and ID filters for those
+- removed rows can still require manual cleanup of stale generated files
 
 Scoping notes:
 

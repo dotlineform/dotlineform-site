@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-generate-work-pages
 title: Generate Work Pages
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 50
 ---
@@ -63,7 +63,8 @@ Work prose source path:
 
 - canonical Markdown lives at `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<paths.source_subdirs.prose>/<work_prose_file>`
 - default `paths.source_subdirs.prose` value is `site text`
-- if `Works.work_prose_file` is empty or the resolved Markdown file is missing, the pipeline warns and skips that work
+- if `Works.work_prose_file` is empty, cannot be resolved, or points at a missing Markdown file, work page and work JSON generation still continue
+- in that case the work record is written without prose content and `content_html` is omitted or empty at runtime
 
 ## `--only` Artifacts
 
@@ -104,7 +105,7 @@ Artifact behavior:
   writes `assets/data/works_index.json` as a lightweight full rebuild keyed by `work_id`
   and includes the lightweight search-relevant fields used by the catalogue search builder
 - `work-json`
-  writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html`
+  writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 
 There is no separate `works-prose` artifact; use `work-json` for prose-only refreshes.
 
