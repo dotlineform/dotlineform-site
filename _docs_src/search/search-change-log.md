@@ -48,11 +48,11 @@ Added a library search artifact, wired `/library/` into the shared inline docs-v
 Once Studio docs search moved inline, leaving Library on a different pattern would have left the docs viewer/search architecture inconsistent across the two docs-domain scopes.
 
 **Effect:**  
-`/library/` now exposes the same inline search pattern as `/docs/`, `scripts/build_search_data.rb` supports both `studio` and `library`, and the dedicated `/search/` page remains catalogue-only.
+`/library/` now exposes the same inline search pattern as `/docs/`, `scripts/build_search.rb` supports both `studio` and `library`, and the dedicated `/search/` page remains catalogue-only.
 
 **Affected files/docs:**  
 - `library/index.md`
-- `scripts/build_search_data.rb`
+- `scripts/build_search.rb`
 - `assets/data/search/library/index.json`
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
@@ -133,10 +133,10 @@ Added a new search-owned Ruby builder entrypoint for non-catalogue scopes and us
 Studio search needed a concrete first implementation step that moves search ownership toward a dedicated pipeline without forcing a full refactor of either the catalogue generator or the docs builder first.
 
 **Effect:**  
-The repo now has `scripts/build_search_data.rb` as a search-owned build entrypoint, `assets/data/search/studio/index.json` can be generated from `assets/data/docs/scopes/studio/index.json`, and the Studio v1 record shape plus locked rollout decisions are now explicitly documented. Public `scope=studio` search remains disabled for now.
+The repo now has `scripts/build_search.rb` as a search-owned build entrypoint, `assets/data/search/studio/index.json` can be generated from `assets/data/docs/scopes/studio/index.json`, and the Studio v1 record shape plus locked rollout decisions are now explicitly documented. Public `scope=studio` search remains disabled for now.
 
 **Affected files/docs:**  
-- `scripts/build_search_data.rb`
+- `scripts/build_search.rb`
 - `assets/data/search/studio/index.json`
 - [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)

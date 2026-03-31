@@ -57,5 +57,5 @@ The script prepares source files for the later srcset step. It does not generate
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)

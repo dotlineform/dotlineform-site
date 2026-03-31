@@ -68,7 +68,7 @@ They do not own the final search artifacts as a long-term design.
 Target entrypoint shape:
 
 - one search-owned build script such as:
-  - `scripts/build_search_data.rb`
+  - `scripts/build_search.rb`
   - or `scripts/build_search_data.py`
 
 Target responsibilities:
@@ -157,7 +157,7 @@ Prematurely forcing all scopes into one generic indexing framework would add com
 Current state is transitional:
 
 - `catalogue` search output is still built from `scripts/generate_work_pages.py`
-- docs canonical outputs are still built from `scripts/build_docs_data.rb`
+- docs canonical outputs are still built from `scripts/build_docs.rb`
 - the public `/search/` shell is already scope-led
 - the runtime now has a scope-aware policy layer
 

@@ -24,7 +24,7 @@ The repo now uses explicit scope-owned viewer routes and scoped docs JSON output
 The docs builder now writes only `assets/data/docs/scopes/studio/` and `assets/data/docs/scopes/library/`, legacy `/docs/.../` path rewriting is gone, Studio source-doc links now use `/docs/?scope=studio&doc=...`, and the shared docs viewer normalizes incoming Studio viewer URLs onto the scoped route.
 
 **Affected files/docs:**  
-- `scripts/build_docs_data.rb`
+- `scripts/build_docs.rb`
 - `assets/js/docs-viewer.js`
 - `AGENTS.md`
 - `studio/index.md`
@@ -71,7 +71,7 @@ The scripts docs are now easier to scan at the top level, while script-specific 
 **Affected files/docs:**  
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
 - `AGENTS.md`
@@ -95,7 +95,7 @@ Library docs need to support remotely hosted full-size images without hardcoding
 Docs can now stay as ordinary `.md` source files while embedding raw HTML and config-backed remote media URLs, keeping the repo aligned with the “repo holds text and thumbnails, R2 holds full media” principle.
 
 **Affected files/docs:**  
-- `scripts/build_docs_data.rb`
+- `scripts/build_docs.rb`
 - [Scripts](/docs/?scope=studio&doc=scripts)
 
 **Notes:**  
@@ -117,7 +117,7 @@ The existing docs system implicitly belonged to the Studio domain even though th
 Studio docs now build into a scope-owned output tree under `assets/data/docs/scopes/studio/`, library docs have their own source root and scoped output tree, `/docs/?scope=studio&doc=...` is now the explicit Studio docs contract, and `/library/` now hosts the library docs viewer.
 
 **Affected files/docs:**  
-- `scripts/build_docs_data.rb`
+- `scripts/build_docs.rb`
 - `assets/js/docs-viewer.js`
 - `docs/index.md`
 - `library/index.md`

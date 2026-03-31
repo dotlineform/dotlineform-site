@@ -25,7 +25,7 @@ This is a build-time document. It does not define ranking or UI behaviour.
 
 The current search build is one subsystem with one build entrypoint:
 
-- `scripts/build_search_data.rb`
+- `scripts/build_search.rb`
 
 Current live search outputs:
 
@@ -72,7 +72,7 @@ Current non-goals across all scopes:
 
 ### Current Writer
 
-- `./scripts/build_search_data.rb --scope catalogue`
+- `./scripts/build_search.rb --scope catalogue`
 
 ### Current Output
 
@@ -120,13 +120,13 @@ Current integration facts:
 Default write command:
 
 ```bash
-./scripts/build_search_data.rb --scope catalogue --write
+./scripts/build_search.rb --scope catalogue --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search_data.rb --scope catalogue
+./scripts/build_search.rb --scope catalogue
 ```
 
 Current supported overrides:
@@ -212,7 +212,7 @@ Current safeguards include:
 
 ### Current Writer
 
-- `./scripts/build_search_data.rb --scope studio`
+- `./scripts/build_search.rb --scope studio`
 
 ### Current Output
 
@@ -229,13 +229,13 @@ The current Studio search artifact is derived from the published Studio docs ind
 Default write command:
 
 ```bash
-./scripts/build_search_data.rb --scope studio --write
+./scripts/build_search.rb --scope studio --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search_data.rb --scope studio
+./scripts/build_search.rb --scope studio
 ```
 
 Current supported overrides:
@@ -278,7 +278,7 @@ Current derived search support fields:
 
 ### Current Writer
 
-- `./scripts/build_search_data.rb --scope library`
+- `./scripts/build_search.rb --scope library`
 
 ### Current Output
 
@@ -295,13 +295,13 @@ The current Library search artifact is derived from the published Library docs i
 Default write command:
 
 ```bash
-./scripts/build_search_data.rb --scope library --write
+./scripts/build_search.rb --scope library --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_search_data.rb --scope library
+./scripts/build_search.rb --scope library
 ```
 
 Current supported overrides:
@@ -331,7 +331,7 @@ Current builder behaviour for Library:
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
 - [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 - [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
 - [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)

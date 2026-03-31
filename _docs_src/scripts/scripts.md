@@ -33,13 +33,13 @@ The current script surface falls into four groups:
 - run project commands from `dotlineform-site/`
 - use project-local script paths
   - the two Ruby docs builders are executable directly:
-    - `./scripts/build_docs_data.rb`
-    - `./scripts/build_search_data.rb`
+    - `./scripts/build_docs.rb`
+    - `./scripts/build_search.rb`
   - most Python entrypoints are currently invoked through `python3 ./scripts/...`
 - docs-data rebuild command:
 
 ```bash
-./scripts/build_docs_data.rb --write
+./scripts/build_docs.rb --write
 ```
 
 - if `jekyll serve` or `bin/dev-studio` is already running, verify one-off builds to `/tmp/dlf-jekyll-build` rather than `_site/`
@@ -52,7 +52,7 @@ The current script surface falls into four groups:
 
 Docs-domain builds:
 
-- `./scripts/build_docs_data.rb`
+- `./scripts/build_docs.rb`
   - source docs:
     - `_docs_src/`
     - `_docs_library_src/`
@@ -62,7 +62,7 @@ Docs-domain builds:
 
 Search builds:
 
-- `./scripts/build_search_data.rb`
+- `./scripts/build_search.rb`
   - source indexes:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
@@ -78,7 +78,7 @@ Search builds:
 
 Catalogue/media builds:
 
-- `./scripts/run_draft_pipeline.py`
+- `./scripts/build_catalogue.py`
   - orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
 - `./scripts/generate_work_pages.py`
   - builds catalogue pages plus runtime JSON, including:
@@ -94,7 +94,7 @@ Catalogue/media builds:
 
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   Build scope-owned docs JSON for Studio and Library docs.
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
   Run the copy -> srcset -> generation pipeline from one entrypoint.
 - [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
   Stage source media for works, work details, and moments from workbook-driven IDs.

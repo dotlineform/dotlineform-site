@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Run the draft publish pipeline end-to-end (fail-fast):
+Build the catalogue pipeline end-to-end (fail-fast):
 
 1) copy_draft_media_files.py --mode work --write
 2) make_srcset_images.sh
@@ -9,7 +9,7 @@ Run the draft publish pipeline end-to-end (fail-fast):
 5) copy_draft_media_files.py --mode moment --write
 6) make_srcset_images.sh (for moments)
 7) generate_work_pages.py data/works.xlsx --write (for affected work IDs only)
-8) build_search_data.rb --scope catalogue --write
+8) build_search.rb --scope catalogue --write
 
 Dry-run mode:
 - copy + srcset + generate + catalogue-search build run in preview mode
@@ -394,7 +394,7 @@ def main() -> int:
     default_moment_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "moment"))
     default_moment_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "moment"))
 
-    ap = argparse.ArgumentParser(description="Run copy -> make_srcset -> generate pipeline.")
+    ap = argparse.ArgumentParser(description="Build the catalogue pipeline: copy -> srcset -> generate -> search.")
     ap.add_argument("--xlsx", default="data/works.xlsx", help="Path to workbook")
     ap.add_argument(
         "--mode",
@@ -505,7 +505,7 @@ def main() -> int:
     copy_script = repo_root / "scripts/copy_draft_media_files.py"
     make_script = repo_root / "scripts/make_srcset_images.sh"
     generate_script = repo_root / "scripts/generate_work_pages.py"
-    search_script = repo_root / "scripts/build_search_data.rb"
+    search_script = repo_root / "scripts/build_search.rb"
     py = sys.executable
 
     with tempfile.TemporaryDirectory(prefix="draft-pipeline-") as tmp:

@@ -28,7 +28,7 @@ Current responsibilities include:
 Current Python callers load it through `scripts/pipeline_config.py`:
 
 - `scripts/generate_work_pages.py`
-- `scripts/run_draft_pipeline.py`
+- `scripts/build_catalogue.py`
 - `scripts/make_srcset_images.py`
 - `scripts/copy_draft_media_files.py`
 - `scripts/audit_site_consistency.py`

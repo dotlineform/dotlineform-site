@@ -22,7 +22,7 @@ export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 
 Two current CLI rules matter for almost every use case:
 
-- `run_draft_pipeline.py` is best when source media has changed and you need copy + srcset + generation.
+- `build_catalogue.py` is best when source media has changed and you need copy + srcset + generation.
 - `generate_work_pages.py` is best when workbook metadata changed and you mainly need generated repo artifacts refreshed.
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
 - removal flows do not fully clean up stale generated artifacts; only full work deletion has a dedicated script, and even that still leaves workbook/source cleanup to you.
@@ -50,8 +50,8 @@ Workbook edits before run:
 CLI:
 
 ```bash
-./scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234 --dry-run
-./scripts/run_draft_pipeline.py --mode work --mode work_details --work-ids 01234
+./scripts/build_catalogue.py --mode work --mode work_details --work-ids 01234 --dry-run
+./scripts/build_catalogue.py --mode work --mode work_details --work-ids 01234
 ./scripts/generate_work_pages.py \
   --series-ids existing-series \
   --only work-pages \
@@ -91,7 +91,7 @@ Repo artifacts touched by the calls:
 Workbook/manual follow-up after run:
 
 - None normally.
-- Keep the series-scoped `work-pages` pass. `run_draft_pipeline.py` only regenerates the selected work, not every existing work in the series.
+- Keep the series-scoped `work-pages` pass. `build_catalogue.py` only regenerates the selected work, not every existing work in the series.
 - The work-scoped `work-json` pass avoids rewriting per-work JSON for unaffected works in the series.
 - `series-index-json` and `works-index-json` are still global rebuilds in the work-scoped pass.
 - If you backed out any new detail rows after the first run, manually remove stale `_work_details/<detail_uid>.md` files and stale staged media.
@@ -99,7 +99,7 @@ Workbook/manual follow-up after run:
 Potential improvements:
 
 - Add a single `add-work` command that chains media generation with the required series-cache refresh.
-- Let `run_draft_pipeline.py` optionally refresh all work pages for affected series when membership/order changes.
+- Let `build_catalogue.py` optionally refresh all work pages for affected series when membership/order changes.
 
 ## 2) Add new work details to an existing work
 
@@ -113,8 +113,8 @@ Workbook edits before run:
 CLI:
 
 ```bash
-./scripts/run_draft_pipeline.py --mode work_details --work-ids 01234 --dry-run
-./scripts/run_draft_pipeline.py --mode work_details --work-ids 01234
+./scripts/build_catalogue.py --mode work_details --work-ids 01234 --dry-run
+./scripts/build_catalogue.py --mode work_details --work-ids 01234
 ```
 
 Repo artifacts touched by the call:
@@ -643,8 +643,8 @@ CLI:
 If the primary source image changed as well, run the media pipeline first:
 
 ```bash
-./scripts/run_draft_pipeline.py --mode work --work-ids 01234 --dry-run
-./scripts/run_draft_pipeline.py --mode work --work-ids 01234
+./scripts/build_catalogue.py --mode work --work-ids 01234 --dry-run
+./scripts/build_catalogue.py --mode work --work-ids 01234
 ```
 
 Repo artifacts touched by the call:

@@ -20,7 +20,7 @@ This is a normalization-policy document. It is not the schema, ranking, or UI do
 
 This document applies to two related processes:
 
-- index-time normalization in `scripts/build_search_data.rb`
+- index-time normalization in `scripts/build_search.rb`
 - query-time normalization in the client search runtimes
 
 It covers:

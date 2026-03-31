@@ -152,6 +152,6 @@ If `WorkLinks` contains rows for a work, generation exposes them as `work.links`
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

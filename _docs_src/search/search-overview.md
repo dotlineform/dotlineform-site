@@ -42,7 +42,7 @@ It is based on:
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
-- a search-owned builder entrypoint for all live scopes at `scripts/build_search_data.rb`
+- a search-owned builder entrypoint for all live scopes at `scripts/build_search.rb`
 
 The browser loads scope-owned search data into memory per surface as needed.
 
@@ -82,7 +82,7 @@ Those source and upstream artifact families are documented in:
 
 ### 2. Search index generation
 
-`scripts/build_search_data.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical published docs indexes.
+`scripts/build_search.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical published docs indexes.
 
 ### 3. Search policy
 

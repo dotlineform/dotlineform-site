@@ -248,7 +248,7 @@ Common commands:
 
 ```bash
 ./scripts/audit_site_consistency.py --strict
-./scripts/run_draft_pipeline.py --dry-run
+./scripts/build_catalogue.py --dry-run
 ./scripts/generate_work_pages.py --write
 python3 ./scripts/css_token_audit.py
 ./scripts/studio/tag_write_server.py

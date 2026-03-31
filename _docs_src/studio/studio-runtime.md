@@ -96,7 +96,7 @@ Studio no longer owns a separate documentation route. Its docs are served by the
 Current Studio usage of the Docs Viewer:
 
 - Studio section docs live in `_docs_src/`
-- `scripts/build_docs_data.rb` builds the Studio docs payload into the Studio docs scope
+- `scripts/build_docs.rb` builds the Studio docs payload into the Studio docs scope
 - `/docs/?scope=studio&doc=<doc_id>` opens those docs in the shared Docs Viewer shell
 - Studio page `i` links use those scoped URLs directly
 
@@ -108,7 +108,7 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 
 What it starts:
 
-- `bundle exec ruby scripts/build_docs_data.rb --write`
+- `bundle exec ruby scripts/build_docs.rb --write`
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/tag_write_server.py`
 

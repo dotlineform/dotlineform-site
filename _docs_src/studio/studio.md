@@ -65,5 +65,5 @@ Current limits:
 If you edit docs after the runner has started, rebuild the docs payloads manually:
 
 ```bash
-./scripts/build_docs_data.rb --write
+./scripts/build_docs.rb --write
 ```

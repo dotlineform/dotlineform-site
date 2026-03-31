@@ -352,7 +352,7 @@ options = {
 }
 
 OptionParser.new do |parser|
-  parser.banner = "Usage: ./scripts/build_docs_data.rb [options]"
+  parser.banner = "Usage: ./scripts/build_docs.rb [options]"
 
   parser.on("--scope NAME", "Limit build to a named docs scope (repeatable)") do |value|
     options[:scopes] << value.to_s.strip.downcase

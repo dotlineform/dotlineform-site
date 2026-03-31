@@ -34,9 +34,9 @@ Prefer real site examples over synthetic test strings.
 ## A. Catalogue Build And Artifact Checks
 
 - [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/generate_work_pages.py`
-- [ ] Run `./scripts/build_search_data.rb --scope catalogue`
+- [ ] Run `./scripts/build_search.rb --scope catalogue`
 - [ ] Confirm the dry run completes without error
-- [ ] Run `./scripts/build_search_data.rb --scope catalogue --write`
+- [ ] Run `./scripts/build_search.rb --scope catalogue --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
 - [ ] Confirm the header contains `schema`, `version`, `generated_at_utc`, and `count`
@@ -44,11 +44,11 @@ Prefer real site examples over synthetic test strings.
 
 ## B. Docs-Domain Build And Artifact Checks
 
-- [ ] Run `./scripts/build_docs_data.rb`
+- [ ] Run `./scripts/build_docs.rb`
 - [ ] Confirm the docs dry run completes without error for both `studio` and `library`
-- [ ] Run `./scripts/build_search_data.rb --scope studio`
+- [ ] Run `./scripts/build_search.rb --scope studio`
 - [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
-- [ ] Run `./scripts/build_search_data.rb --scope library`
+- [ ] Run `./scripts/build_search.rb --scope library`
 - [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`

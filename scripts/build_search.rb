@@ -552,7 +552,7 @@ options = {
 }
 
 OptionParser.new do |parser|
-  parser.banner = "Usage: ./scripts/build_search_data.rb [options]"
+  parser.banner = "Usage: ./scripts/build_search.rb [options]"
 
   parser.on("--scope NAME", "Search scope to build (current values: #{SCOPE_DEFAULTS.keys.join(', ')})") do |value|
     options[:scope] = value

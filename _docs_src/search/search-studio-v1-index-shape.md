@@ -111,8 +111,8 @@ Current builder behavior:
 Current builder entrypoint:
 
 ```bash
-./scripts/build_search_data.rb --scope studio --write
-./scripts/build_search_data.rb --scope library --write
+./scripts/build_search.rb --scope studio --write
+./scripts/build_search.rb --scope library --write
 ```
 
 ## Relationship To Other Search Artifacts

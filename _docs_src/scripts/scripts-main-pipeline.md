@@ -1,24 +1,24 @@
 ---
 doc_id: scripts-main-pipeline
-title: Main Draft Pipeline
+title: Build Catalogue
 last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 20
 ---
 
-# Main Draft Pipeline
+# Build Catalogue
 
 Script:
 
 ```bash
-./scripts/run_draft_pipeline.py
+./scripts/build_catalogue.py
 ```
 
 Run everything:
 
 ```bash
-./scripts/run_draft_pipeline.py --dry-run
-./scripts/run_draft_pipeline.py
+./scripts/build_catalogue.py --dry-run
+./scripts/build_catalogue.py
 ```
 
 ## Useful Flags
@@ -38,10 +38,10 @@ Run everything:
 ## Mode Examples
 
 ```bash
-./scripts/run_draft_pipeline.py --mode moment --dry-run
-./scripts/run_draft_pipeline.py --mode work --mode work_details --dry-run
-./scripts/run_draft_pipeline.py --mode moment --moment-ids blue-sky,compiled --dry-run
-./scripts/run_draft_pipeline.py --mode work --work-ids 00456 --dry-run
+./scripts/build_catalogue.py --mode moment --dry-run
+./scripts/build_catalogue.py --mode work --mode work_details --dry-run
+./scripts/build_catalogue.py --mode moment --moment-ids blue-sky,compiled --dry-run
+./scripts/build_catalogue.py --mode work --work-ids 00456 --dry-run
 ```
 
 When `--mode work` is used and no `--series-ids*` flags are provided, draft series are auto-included in generation.
@@ -49,7 +49,7 @@ When `--mode work` is used and no `--series-ids*` flags are provided, draft seri
 Current pipeline tail:
 
 - `generate_work_pages.py` refreshes the canonical catalogue route stubs and JSON artifacts
-- `build_search_data.rb --scope catalogue` then rebuilds `assets/data/search/catalogue/index.json` from those repo JSON artifacts
+- `build_search.rb --scope catalogue` then rebuilds `assets/data/search/catalogue/index.json` from those repo JSON artifacts
 
 ## Source And Target Artifacts
 
@@ -75,7 +75,7 @@ Primary target artifacts:
   - `assets/series/index/`
   - `assets/works/index/`
   - `assets/moments/index/`
-- generated repo artifact written by `build_search_data.rb --scope catalogue`:
+- generated repo artifact written by `build_search.rb --scope catalogue`:
   - `assets/data/search/catalogue/index.json`
 
 ## Logging
@@ -84,7 +84,7 @@ Per-script logs are written to repo-root log directories and are auto-created as
 
 Current logged scripts:
 
-- `scripts/run_draft_pipeline.py` -> `logs/run_draft_pipeline.log`
+- `scripts/build_catalogue.py` -> `logs/build_catalogue.log`
 - `scripts/generate_work_pages.py` -> `logs/generate_work_pages.log`
 - `scripts/delete_work.py` -> `logs/delete_work.log`
 - `scripts/studio/tag_write_server.py` -> `var/studio/logs/tag_write_server.log`

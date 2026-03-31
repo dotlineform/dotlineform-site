@@ -11,7 +11,7 @@ sort_order: 10
 Script:
 
 ```bash
-./scripts/build_docs_data.rb --write
+./scripts/build_docs.rb --write
 ```
 
 ## Scope
@@ -92,13 +92,13 @@ Docs media tokens:
 Default command:
 
 ```bash
-./scripts/build_docs_data.rb --write
+./scripts/build_docs.rb --write
 ```
 
 Dry run:
 
 ```bash
-./scripts/build_docs_data.rb
+./scripts/build_docs.rb
 ```
 
 Flags:
@@ -118,7 +118,7 @@ Flags:
 ## Operational Notes
 
 - `bin/dev-studio` runs this builder once before starting Jekyll
-- if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs_data.rb --write`
+- if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs.rb --write`
 - changing only the docs data does not require any separate asset pipeline
 
 Jekyll verification builds:

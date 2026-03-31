@@ -39,7 +39,7 @@ Current direct readers:
   - `series/index.md`
   - `studio/series-tag-editor/index.md`
   - `_includes/work_index_item.html`
-- `scripts/build_docs_data.rb`, which reads `media_base` when resolving docs media tokens
+- `scripts/build_docs.rb`, which reads `media_base` when resolving docs media tokens
 
 Some scripts also use `_config.yml` as a repo-root marker. In those cases they check for the file’s presence, but do not parse its fields.
 

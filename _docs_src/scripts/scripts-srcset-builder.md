@@ -84,5 +84,5 @@ The builder writes image derivatives only. It does not update workbook rows or g
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
