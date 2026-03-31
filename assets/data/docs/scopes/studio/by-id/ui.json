@@ -1,0 +1,11 @@
+{
+  "scope": "studio",
+  "doc_id": "ui",
+  "title": "UI",
+  "last_updated": "2026-03-30",
+  "parent_id": "site",
+  "sort_order": 20,
+  "source_path": "site/UI.md",
+  "viewer_url": "/docs/?scope=studio&doc=ui",
+  "content_html": "<p>This section describes the UI and general design principles of the site.</p>\n"
+}

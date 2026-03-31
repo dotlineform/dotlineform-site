@@ -1,0 +1,11 @@
+{
+  "scope": "studio",
+  "doc_id": "docs-viewer",
+  "title": "Docs Viewer",
+  "last_updated": "2026-03-30",
+  "parent_id": "",
+  "sort_order": 30,
+  "source_path": "docs-viewer/docs-viewer.md",
+  "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
+  "content_html": "<h1 id=\"document-viewer\">Document Viewer</h1>\n\n<p>Document Viewer is a shared component providing a document index and viewer.</p>\n"
+}

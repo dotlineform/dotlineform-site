@@ -3,7 +3,7 @@
   "doc_id": "ui-framework",
   "title": "UI Framework",
   "last_updated": "2026-03-28",
-  "parent_id": "studio",
+  "parent_id": "ui",
   "sort_order": 10,
   "source_path": "site/ui-framework.md",
   "viewer_url": "/docs/?scope=studio&doc=ui-framework",

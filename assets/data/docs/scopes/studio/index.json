@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-30T21:17:36Z",
+  "generated_at": "2026-03-31T11:26:16Z",
   "docs": [
     {
       "scope": "studio",
@@ -39,7 +39,7 @@
       "doc_id": "css-primitives",
       "title": "CSS Primitives",
       "last_updated": "2026-03-29",
-      "parent_id": "site",
+      "parent_id": "ui",
       "sort_order": 10,
       "source_path": "site/css-primitives.md",
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
@@ -66,17 +66,6 @@
       "source_path": "site/moments-json-migration-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=moments-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/moments-json.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "multiple-content-domains-brief",
-      "title": "Multiple Content Domains - Brief",
-      "last_updated": "2026-03-29",
-      "parent_id": "multiple-content-domains",
-      "sort_order": 10,
-      "source_path": "domains/multiple-content-domains-brief.md",
-      "viewer_url": "/docs/?scope=studio&doc=multiple-content-domains-brief",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/multiple-content-domains-brief.json"
     },
     {
       "scope": "studio",
@@ -138,7 +127,7 @@
       "doc_id": "sorting-architecture",
       "title": "Sorting Architecture",
       "last_updated": "2026-03-29",
-      "parent_id": "site",
+      "parent_id": "ui",
       "sort_order": 10,
       "source_path": "site/sorting-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
@@ -171,7 +160,7 @@
       "doc_id": "ui-framework",
       "title": "UI Framework",
       "last_updated": "2026-03-28",
-      "parent_id": "studio",
+      "parent_id": "ui",
       "sort_order": 10,
       "source_path": "site/ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
@@ -267,6 +256,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui",
+      "title": "UI",
+      "last_updated": "2026-03-30",
+      "parent_id": "site",
+      "sort_order": 20,
+      "source_path": "site/UI.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "studio-archive",
       "title": "Archive",
       "last_updated": "2026-03-29",
@@ -289,12 +289,23 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer",
+      "title": "Docs Viewer",
+      "last_updated": "2026-03-30",
+      "parent_id": "",
+      "sort_order": 30,
+      "source_path": "docs-viewer/docs-viewer.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "docs-viewer-runtime-boundary",
       "title": "Docs Viewer Runtime Boundary",
       "last_updated": "2026-03-30",
-      "parent_id": "site",
+      "parent_id": "docs-viewer",
       "sort_order": 30,
-      "source_path": "site/docs-viewer-runtime-boundary.md",
+      "source_path": "docs-viewer/docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
     },
@@ -578,9 +589,9 @@
       "doc_id": "css-refactor",
       "title": "CSS Refactor",
       "last_updated": "2026-03-28",
-      "parent_id": "studio-archive",
+      "parent_id": "ui",
       "sort_order": 100,
-      "source_path": "studio/css refactor.md",
+      "source_path": "site/css refactor.md",
       "viewer_url": "/docs/?scope=studio&doc=css-refactor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json"
     },
@@ -594,17 +605,6 @@
       "source_path": "site/scripts-fix-missing-title-sort.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-fix-missing-title-sort.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "multiple-content-domains",
-      "title": "Multiple Content Domains",
-      "last_updated": "2026-03-29",
-      "parent_id": "",
-      "sort_order": 100,
-      "source_path": "domains/multiple-content-domains.md",
-      "viewer_url": "/docs/?scope=studio&doc=multiple-content-domains",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/multiple-content-domains.json"
     },
     {
       "scope": "studio",
@@ -666,7 +666,7 @@
       "doc_id": "css-audit-spec",
       "title": "CSS Audit Spec (v1)",
       "last_updated": "2026-03-28",
-      "parent_id": "site",
+      "parent_id": "ui",
       "sort_order": null,
       "source_path": "site/css-audit-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
