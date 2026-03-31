@@ -26,13 +26,14 @@ Two current CLI rules matter for almost every use case:
 - `generate_work_pages.py` is best when workbook metadata changed and you mainly need generated repo artifacts refreshed.
 - `build_catalogue.py --plan` is the quickest way to inspect what the planner thinks changed before a write run.
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
-- removal flows do not fully clean up stale generated artifacts; only full work deletion has a dedicated script, and even that still leaves workbook/source cleanup to you.
+- removed workbook rows are now cleaned up by `build_catalogue.py` for repo-owned generated artifacts, local staged/srcset/download media, and `tag_assignments.json`, but only when the planner is allowed to infer scope from workbook diffs.
 
 Planner boundary:
 
 - workbook-row edits in `Works`, `Series`, `WorkDetails`, `WorkFiles`, `WorkLinks`, and `Moments` are now picked up automatically by `build_catalogue.py`
 - source-image changes for works, work details, and moments are now picked up automatically once planner media state has been initialized
-- removed rows can still require manual cleanup of stale generated files
+- removed rows are now picked up for planner-driven cleanup when you use `build_catalogue.py` without explicit `--work-ids`, `--series-ids`, or `--moment-ids` fences
+- canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` is never in cleanup scope
 
 Scoping notes:
 
@@ -249,36 +250,34 @@ Workbook edits before run:
 CLI:
 
 ```bash
-./scripts/generate_work_pages.py \
-  --work-ids 01234 \
-  --only work-json \
-  --only works-index-json
-./scripts/generate_work_pages.py \
-  --work-ids 01234 \
-  --only work-json \
-  --only works-index-json \
-  --write
+./scripts/build_catalogue.py --mode work_details --plan
+./scripts/build_catalogue.py --mode work_details
 ```
 
 Repo artifacts touched by the call:
 
+- `_work_details/01234-*.md` removed
 - `assets/works/index/01234.json`
 - `assets/data/works_index.json`
 
+Local media touched by the call:
+
+- matching staged work-detail files under `$DOTLINEFORM_MEDIA_BASE_DIR`
+- matching work-detail srcset derivatives under `$DOTLINEFORM_MEDIA_BASE_DIR`
+
 Workbook/manual follow-up after run:
 
-- Manually delete stale `_work_details/01234-*.md` files.
-- Manually delete stale detail media and derivatives for that work if they should no longer exist anywhere in the publishing pipeline.
 - No further workbook edit is needed if the rows were already removed before the run.
+- Do not fence the run with `--work-ids` here. Removed-row cleanup depends on planner diffing from the saved state.
 
 Scoping note:
 
-- `assets/works/index/01234.json` is work-scoped here.
+- `assets/works/index/01234.json` is still work-scoped in effect because the planner derives the parent work from removed detail rows.
 - `assets/data/works_index.json` is still rebuilt globally.
 
 Potential improvements:
 
-- Add a `delete-work-details --work-id <id>` command that prunes detail stubs and derivative media in sync with the workbook.
+- Add a clearer planner subcommand or summary mode specifically for removed-detail cleanup.
 
 ## 6) Remove specific work details from an existing work
 
@@ -289,36 +288,34 @@ Workbook edits before run:
 CLI:
 
 ```bash
-./scripts/generate_work_pages.py \
-  --work-ids 01234 \
-  --only work-json \
-  --only works-index-json
-./scripts/generate_work_pages.py \
-  --work-ids 01234 \
-  --only work-json \
-  --only works-index-json \
-  --write
+./scripts/build_catalogue.py --mode work_details --plan
+./scripts/build_catalogue.py --mode work_details
 ```
 
 Repo artifacts touched by the call:
 
+- `_work_details/01234-005.md` removed
 - `assets/works/index/01234.json`
 - `assets/data/works_index.json`
 
+Local media touched by the call:
+
+- matching staged work-detail files under `$DOTLINEFORM_MEDIA_BASE_DIR`
+- matching work-detail srcset derivatives under `$DOTLINEFORM_MEDIA_BASE_DIR`
+
 Workbook/manual follow-up after run:
 
-- Manually delete the stale stub files for the removed detail IDs, for example `_work_details/01234-005.md`.
-- Manually delete stale detail media and derivatives for the removed detail IDs if they should no longer exist.
+- None normally, if the rows were removed before the run.
+- Do not fence the run with `--work-ids` here. Removed-row cleanup depends on planner diffing from the saved state.
 
 Scoping note:
 
-- `assets/works/index/01234.json` is work-scoped here.
+- `assets/works/index/01234.json` is still work-scoped in effect because the planner derives the parent work from removed detail rows.
 - `assets/data/works_index.json` is still rebuilt globally.
 
 Potential improvements:
 
-- Add a `delete-work-detail --detail-uid <uid>` command.
-- Add generator-side pruning of orphaned `_work_details/*.md` files.
+- Add a clearer planner subcommand or summary mode specifically for removed-detail cleanup.
 
 ## 7) For a work associated with multiple series, remove it from one of the series
 
