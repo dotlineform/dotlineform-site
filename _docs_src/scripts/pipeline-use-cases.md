@@ -26,7 +26,7 @@ Two current CLI rules matter for almost every use case:
 - `generate_work_pages.py` is best when workbook metadata changed and you mainly need generated repo artifacts refreshed.
 - `build_catalogue.py --plan` is the quickest way to inspect what the planner thinks changed before a write run.
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
-- removed workbook rows are now cleaned up by `build_catalogue.py` for repo-owned generated artifacts, local staged/srcset/download media, and `tag_assignments.json`, but only when the planner is allowed to infer scope from workbook diffs.
+- removed workbook rows are now cleaned up by `build_catalogue.py` for repo-owned generated artifacts, local staged/srcset/download media, and `tag_assignments.json`, but only when the planner is allowed to infer scope from workbook diffs
 
 Planner boundary:
 
@@ -34,6 +34,9 @@ Planner boundary:
 - source-image changes for works, work details, and moments are now picked up automatically once planner media state has been initialized
 - removed rows are now picked up for planner-driven cleanup when you use `build_catalogue.py` without explicit `--work-ids`, `--series-ids`, or `--moment-ids` fences
 - canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` is never in cleanup scope
+- work and series prose changes are now in planner scope
+  they trigger generation targeting only, not copy/srcset
+- moment prose is still outside planner scope for now
 
 Scoping notes:
 
@@ -102,7 +105,7 @@ Workbook/manual follow-up after run:
 - Keep the series-scoped `work-pages` pass. `build_catalogue.py` only regenerates the selected work, not every existing work in the series.
 - The work-scoped `work-json` pass avoids rewriting per-work JSON for unaffected works in the series.
 - `series-index-json` and `works-index-json` are still global rebuilds in the work-scoped pass.
-- If you backed out any new detail rows after the first run, manually remove stale `_work_details/<detail_uid>.md` files and stale staged media.
+- If you backed out any new detail rows after the first run and then remove those rows from the workbook, the later removed-row cleanup should be run through unscoped `build_catalogue.py`, not a work-fenced call.
 
 Potential improvements:
 
@@ -269,6 +272,7 @@ Workbook/manual follow-up after run:
 
 - No further workbook edit is needed if the rows were already removed before the run.
 - Do not fence the run with `--work-ids` here. Removed-row cleanup depends on planner diffing from the saved state.
+- If there are unrelated workbook edits pending, the planner may include them too. Keep removal runs close to the workbook edit they are meant to publish.
 
 Scoping note:
 
@@ -307,6 +311,7 @@ Workbook/manual follow-up after run:
 
 - None normally, if the rows were removed before the run.
 - Do not fence the run with `--work-ids` here. Removed-row cleanup depends on planner diffing from the saved state.
+- If there are unrelated workbook edits pending, the planner may include them too. Keep removal runs close to the workbook edit they are meant to publish.
 
 Scoping note:
 
@@ -532,6 +537,7 @@ Potential improvements:
 Current caveat:
 
 - Dry-run this command before relying on it. The script is clearly intended to be the delete path, but it still leaves important workbook cleanup manual and should be treated as a targeted generated-artifact cleanup tool, not a full catalog mutation workflow.
+- If you remove rows from workbook sheets instead of using `status=delete`, use the planner-driven `build_catalogue.py` removal path described above rather than expecting `delete_work.py` to cover those cases.
 
 ## 11) Delete a series and all the works in it
 
