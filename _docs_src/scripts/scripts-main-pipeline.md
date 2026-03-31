@@ -21,7 +21,7 @@ Run everything:
 ./scripts/build_catalogue.py
 ```
 
-Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. The copy/srcset stages remain draft-driven for now, so published media-only changes still need explicit flags.
+Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates media tracking, the next write run treats current source media as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
 ## Useful Flags
 
@@ -97,7 +97,10 @@ Primary target artifacts:
   - `WorkFiles`
   - `WorkLinks`
   - `Moments`
-- It uses those fingerprints to infer generation/search scope, but it does not yet fingerprint source media.
+- It also fingerprints canonical source media for:
+  - work primary images
+  - work-detail source images
+  - moment source images
 - Removed workbook rows can still leave stale generated files. Deletion flows remain separate from planner-driven rebuilds.
 
 ## Logging

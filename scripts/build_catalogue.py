@@ -70,6 +70,8 @@ try:
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
+        source_moments_images_subdir,
+        source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import (
@@ -79,6 +81,8 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
+        source_moments_images_subdir,
+        source_works_root_subdir,
     )
 
 
@@ -424,6 +428,67 @@ def stable_payload_hash(payload: Any) -> str:
     return f"blake2b-{digest}"
 
 
+def stable_file_hash(path: Path) -> str:
+    digest = hashlib.blake2b(digest_size=16)
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return f"blake2b-{digest.hexdigest()}"
+
+
+def relative_to_base(path: Path, base: Path) -> str:
+    try:
+        return path.resolve().relative_to(base.resolve()).as_posix()
+    except ValueError:
+        return path.resolve().as_posix()
+
+
+def fingerprint_media_path(
+    resolved_path: Path | None,
+    *,
+    base_dir: Path,
+    previous_entry: Dict[str, Any] | None = None,
+    missing_reason: str | None = None,
+) -> Dict[str, Any]:
+    if resolved_path is None:
+        return {
+            "path": None,
+            "exists": False,
+            "missing_reason": missing_reason or "unmapped",
+        }
+
+    path_info = relative_to_base(resolved_path, base_dir)
+    if not resolved_path.exists() or not resolved_path.is_file():
+        return {
+            "path": path_info,
+            "exists": False,
+            "missing_reason": missing_reason or "missing",
+        }
+
+    stat = resolved_path.stat()
+    size = int(stat.st_size)
+    mtime_ns = int(stat.st_mtime_ns)
+    previous_path = normalize_text(previous_entry.get("path")) if isinstance(previous_entry, dict) else ""
+    previous_exists = bool(previous_entry.get("exists")) if isinstance(previous_entry, dict) else False
+    previous_size = previous_entry.get("size") if isinstance(previous_entry, dict) else None
+    previous_mtime_ns = previous_entry.get("mtime_ns") if isinstance(previous_entry, dict) else None
+    previous_hash = normalize_text(previous_entry.get("hash")) if isinstance(previous_entry, dict) else ""
+
+    file_hash = ""
+    if previous_exists and previous_path == path_info and previous_size == size and previous_mtime_ns == mtime_ns and previous_hash:
+        file_hash = previous_hash
+    else:
+        file_hash = stable_file_hash(resolved_path)
+
+    return {
+        "path": path_info,
+        "exists": True,
+        "size": size,
+        "mtime_ns": mtime_ns,
+        "hash": file_hash,
+    }
+
+
 def sorted_unique_series_ids(raw_value: Any) -> list[str]:
     seen: set[str] = set()
     out: list[str] = []
@@ -440,7 +505,12 @@ def workbook_headers(ws) -> list[str]:
     return [normalize_text(cell.value) for cell in next(ws.iter_rows(min_row=1, max_row=1))]
 
 
-def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
+def build_workbook_state(
+    xlsx_path: Path,
+    *,
+    projects_base_dir: Path,
+    previous_media: Dict[str, Any] | None = None,
+) -> Dict[str, Any]:
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
 
     works: Dict[str, Dict[str, Any]] = {}
@@ -449,6 +519,16 @@ def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
     work_files_rows: Dict[str, list[Dict[str, Any]]] = {}
     work_links_rows: Dict[str, list[Dict[str, Any]]] = {}
     moments: Dict[str, Dict[str, Any]] = {}
+    media_work: Dict[str, Dict[str, Any]] = {}
+    media_work_details: Dict[str, Dict[str, Any]] = {}
+    media_moments: Dict[str, Dict[str, Any]] = {}
+    previous_media = previous_media or {}
+    previous_media_work = previous_media.get("work", {}) if isinstance(previous_media.get("work"), dict) else {}
+    previous_media_work_details = previous_media.get("work_details", {}) if isinstance(previous_media.get("work_details"), dict) else {}
+    previous_media_moments = previous_media.get("moment", {}) if isinstance(previous_media.get("moment"), dict) else {}
+    works_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
+    moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+    work_project_folder_by_id: Dict[str, str] = {}
 
     if "Works" in wb.sheetnames:
         ws = wb["Works"]
@@ -464,6 +544,24 @@ def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
                 "status": normalize_status(payload.get("status")),
                 "series_ids": sorted_unique_series_ids(payload.get("series_ids")),
             }
+            project_folder = normalize_text(payload.get("project_folder"))
+            project_filename = normalize_text(payload.get("project_filename"))
+            if project_folder:
+                work_project_folder_by_id[work_id] = project_folder
+            resolved_path: Path | None = None
+            missing_reason: str | None = None
+            if project_folder and project_filename:
+                resolved_path = works_root / project_folder / project_filename
+            elif project_filename:
+                missing_reason = "missing_project_folder"
+            else:
+                missing_reason = "missing_project_filename"
+            media_work[work_id] = fingerprint_media_path(
+                resolved_path,
+                base_dir=projects_base_dir,
+                previous_entry=previous_media_work.get(work_id),
+                missing_reason=missing_reason,
+            )
 
     if "Series" in wb.sheetnames:
         ws = wb["Series"]
@@ -498,6 +596,26 @@ def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
                 "status": normalize_status(payload.get("status")),
                 "work_id": work_id,
             }
+            project_subfolder = normalize_text(payload.get("project_subfolder"))
+            project_filename = normalize_text(payload.get("project_filename"))
+            project_folder = work_project_folder_by_id.get(work_id, "")
+            resolved_path = None
+            missing_reason = None
+            if project_folder and project_filename:
+                resolved_path = works_root / project_folder
+                if project_subfolder:
+                    resolved_path = resolved_path / project_subfolder
+                resolved_path = resolved_path / project_filename
+            elif project_filename:
+                missing_reason = "missing_project_folder"
+            else:
+                missing_reason = "missing_project_filename"
+            media_work_details[uid] = fingerprint_media_path(
+                resolved_path,
+                base_dir=projects_base_dir,
+                previous_entry=previous_media_work_details.get(uid),
+                missing_reason=missing_reason,
+            )
 
     if "WorkFiles" in wb.sheetnames:
         ws = wb["WorkFiles"]
@@ -536,6 +654,13 @@ def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
                 "hash": stable_payload_hash(payload),
                 "status": normalize_status(payload.get("status")),
             }
+            project_filename = normalize_text(payload.get("project_filename")) or f"{moment_id}.jpg"
+            media_moments[moment_id] = fingerprint_media_path(
+                moments_images_root / project_filename,
+                base_dir=projects_base_dir,
+                previous_entry=previous_media_moments.get(moment_id),
+                missing_reason="missing_project_filename",
+            )
 
     work_files = {
         work_id: {"hash": stable_payload_hash(rows), "count": len(rows)}
@@ -556,6 +681,11 @@ def build_workbook_state(xlsx_path: Path) -> Dict[str, Any]:
             "work_files": work_files,
             "work_links": work_links,
             "moments": moments,
+            "media": {
+                "work": media_work,
+                "work_details": media_work_details,
+                "moment": media_moments,
+            },
         },
     }
 
@@ -595,6 +725,34 @@ def diff_state_entries(previous: Dict[str, Any], current: Dict[str, Any]) -> Dic
     }
 
 
+def diff_media_entries(previous: Dict[str, Any], current: Dict[str, Any]) -> Dict[str, Set[str]]:
+    previous_ids = set(previous.keys())
+    current_ids = set(current.keys())
+    added = current_ids - previous_ids
+    removed = previous_ids - current_ids
+    changed: Set[str] = set()
+    for entry_id in previous_ids & current_ids:
+        previous_entry = previous[entry_id]
+        current_entry = current[entry_id]
+        if previous_entry.get("path") != current_entry.get("path"):
+            changed.add(entry_id)
+            continue
+        if bool(previous_entry.get("exists")) != bool(current_entry.get("exists")):
+            changed.add(entry_id)
+            continue
+        if previous_entry.get("missing_reason") != current_entry.get("missing_reason"):
+            changed.add(entry_id)
+            continue
+        if bool(current_entry.get("exists")):
+            if previous_entry.get("hash") != current_entry.get("hash"):
+                changed.add(entry_id)
+    return {
+        "added": added,
+        "changed": changed,
+        "removed": removed,
+    }
+
+
 def ids_with_status(entries: Dict[str, Dict[str, Any]], statuses: Set[str]) -> Set[str]:
     return {
         entry_id
@@ -621,6 +779,7 @@ def summarize_ids(ids: Set[str], limit: int = 8) -> str:
 
 def main() -> int:
     media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
+    projects_base = env_var_value(PIPELINE_CONFIG, "projects_base_dir")
     default_work_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work"))
     default_work_output = join_base_and_subdir(media_base, media_mode_output_subdir(PIPELINE_CONFIG, "work"))
     default_detail_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work_details"))
@@ -730,11 +889,16 @@ def main() -> int:
     if args.reset_state and state_path.exists():
         state_path.unlink()
 
-    current_state = build_workbook_state(xlsx_path)
     previous_state = None if args.full else load_build_state(state_path)
+    previous_inputs = previous_state.get("inputs", {}) if previous_state else {}
+    previous_media_inputs = previous_inputs.get("media", {}) if isinstance(previous_inputs.get("media"), dict) else {}
+    current_state = build_workbook_state(
+        xlsx_path,
+        projects_base_dir=Path(projects_base).expanduser() if projects_base else Path("."),
+        previous_media=previous_media_inputs,
+    )
     bootstrap_state = previous_state is None
     current_inputs = current_state["inputs"]
-    previous_inputs = previous_state.get("inputs", {}) if previous_state else {}
 
     current_works = current_inputs["works"]
     current_series = current_inputs["series"]
@@ -742,6 +906,10 @@ def main() -> int:
     current_work_files = current_inputs["work_files"]
     current_work_links = current_inputs["work_links"]
     current_moments = current_inputs["moments"]
+    current_media_inputs = current_inputs.get("media", {})
+    current_media_work = current_media_inputs.get("work", {}) if isinstance(current_media_inputs.get("work"), dict) else {}
+    current_media_work_details = current_media_inputs.get("work_details", {}) if isinstance(current_media_inputs.get("work_details"), dict) else {}
+    current_media_moments = current_media_inputs.get("moment", {}) if isinstance(current_media_inputs.get("moment"), dict) else {}
 
     previous_works = previous_inputs.get("works", {})
     previous_series = previous_inputs.get("series", {})
@@ -749,6 +917,10 @@ def main() -> int:
     previous_work_files = previous_inputs.get("work_files", {})
     previous_work_links = previous_inputs.get("work_links", {})
     previous_moments = previous_inputs.get("moments", {})
+    previous_media_work = previous_media_inputs.get("work", {}) if isinstance(previous_media_inputs.get("work"), dict) else {}
+    previous_media_work_details = previous_media_inputs.get("work_details", {}) if isinstance(previous_media_inputs.get("work_details"), dict) else {}
+    previous_media_moments = previous_media_inputs.get("moment", {}) if isinstance(previous_media_inputs.get("moment"), dict) else {}
+    media_tracking_available = bool(previous_state) and bool(previous_media_inputs)
 
     work_diff = diff_state_entries(previous_works, current_works)
     series_diff = diff_state_entries(previous_series, current_series)
@@ -756,6 +928,9 @@ def main() -> int:
     work_files_diff = diff_state_entries(previous_work_files, current_work_files)
     work_links_diff = diff_state_entries(previous_work_links, current_work_links)
     moments_diff = diff_state_entries(previous_moments, current_moments)
+    media_work_diff = diff_media_entries(previous_media_work, current_media_work) if media_tracking_available else {"added": set(), "changed": set(), "removed": set()}
+    media_work_details_diff = diff_media_entries(previous_media_work_details, current_media_work_details) if media_tracking_available else {"added": set(), "changed": set(), "removed": set()}
+    media_moments_diff = diff_media_entries(previous_media_moments, current_media_moments) if media_tracking_available else {"added": set(), "changed": set(), "removed": set()}
 
     if args.full:
         work_diff = {"added": set(current_works.keys()), "changed": set(), "removed": set()}
@@ -764,6 +939,9 @@ def main() -> int:
         work_files_diff = {"added": set(current_work_files.keys()), "changed": set(), "removed": set()}
         work_links_diff = {"added": set(current_work_links.keys()), "changed": set(), "removed": set()}
         moments_diff = {"added": set(current_moments.keys()), "changed": set(), "removed": set()}
+        media_work_diff = {"added": set(current_media_work.keys()), "changed": set(), "removed": set()}
+        media_work_details_diff = {"added": set(current_media_work_details.keys()), "changed": set(), "removed": set()}
+        media_moments_diff = {"added": set(current_media_moments.keys()), "changed": set(), "removed": set()}
 
     draft_work_ids = ids_with_status(current_works, {"draft"})
     draft_series_ids = ids_with_status(current_series, {"draft"})
@@ -771,6 +949,9 @@ def main() -> int:
     draft_moment_ids = ids_with_status(current_moments, {"draft"})
 
     explicit_media_statuses = {"draft", "published"}
+    changed_work_media_ids = media_work_diff["added"] | media_work_diff["changed"] | media_work_diff["removed"]
+    changed_detail_media_uids = media_work_details_diff["added"] | media_work_details_diff["changed"] | media_work_details_diff["removed"]
+    changed_moment_media_ids = media_moments_diff["added"] | media_moments_diff["changed"] | media_moments_diff["removed"]
     work_media_candidate_ids = set()
     if "work" in selected_modes:
         if work_filter is not None:
@@ -781,6 +962,7 @@ def main() -> int:
             }
         elif not manual_scope_requested:
             work_media_candidate_ids = set(draft_work_ids)
+            work_media_candidate_ids.update(changed_work_media_ids & set(current_works.keys()))
 
     detail_media_candidate_uids = set()
     if "work_details" in selected_modes:
@@ -792,6 +974,7 @@ def main() -> int:
             }
         elif not manual_scope_requested:
             detail_media_candidate_uids = set(draft_detail_uids)
+            detail_media_candidate_uids.update(changed_detail_media_uids & set(current_work_details.keys()))
 
     moment_media_candidate_ids = set()
     if "moment" in selected_modes:
@@ -803,6 +986,7 @@ def main() -> int:
             }
         elif not manual_scope_requested:
             moment_media_candidate_ids = set(draft_moment_ids)
+            moment_media_candidate_ids.update(changed_moment_media_ids & set(current_moments.keys()))
 
     changed_work_row_ids = work_diff["added"] | work_diff["changed"]
     changed_series_row_ids = series_diff["added"] | series_diff["changed"]
@@ -832,6 +1016,7 @@ def main() -> int:
         elif not manual_scope_requested:
             planned_generate_work_ids.update(draft_work_ids)
             planned_generate_work_ids.update(changed_work_row_ids)
+            planned_generate_work_ids.update(changed_work_media_ids)
             planned_generate_work_ids.update(changed_work_file_ids)
             planned_generate_work_ids.update(changed_work_link_ids)
     if "work_details" in selected_modes:
@@ -846,6 +1031,7 @@ def main() -> int:
         elif not manual_scope_requested:
             planned_generate_work_ids.update(work_ids_from_detail_uids(draft_detail_uids))
             planned_generate_work_ids.update(changed_detail_parent_ids)
+            planned_generate_work_ids.update(work_ids_from_detail_uids(changed_detail_media_uids))
     planned_generate_work_ids &= set(current_works.keys())
 
     planned_generate_moment_ids: Set[str] = set()
@@ -861,6 +1047,7 @@ def main() -> int:
         elif not manual_scope_requested:
             planned_generate_moment_ids.update(draft_moment_ids)
             planned_generate_moment_ids.update(changed_moment_ids)
+            planned_generate_moment_ids.update(changed_moment_media_ids)
     planned_generate_moment_ids &= set(current_moments.keys())
 
     planned_series_ids: Set[str] = set()
@@ -906,6 +1093,14 @@ def main() -> int:
         print(f"- work_files groups: {len(work_files_diff['added'] | work_files_diff['changed'] | work_files_diff['removed'])}")
         print(f"- work_links groups: {len(work_links_diff['added'] | work_links_diff['changed'] | work_links_diff['removed'])}")
         print(f"- moments: {len(changed_moment_ids)} changed/new, {len(moments_diff['removed'])} removed")
+        if media_tracking_available or args.full:
+            print("Media changes:")
+            print(f"- work sources: {len(changed_work_media_ids)} changed/new, {len(media_work_diff['removed'])} removed")
+            print(f"- work detail sources: {len(changed_detail_media_uids)} changed/new, {len(media_work_details_diff['removed'])} removed")
+            print(f"- moment sources: {len(changed_moment_media_ids)} changed/new, {len(media_moments_diff['removed'])} removed")
+        else:
+            print("Media changes:")
+            print("- source media tracking not yet initialized in planner state; current media will be treated as baseline on the next write run")
         print("Planned scope:")
         print(f"- work media candidates: {len(work_media_candidate_ids)}")
         print(f"- work detail media candidates: {len(detail_media_candidate_uids)}")

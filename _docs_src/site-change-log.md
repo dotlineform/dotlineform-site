@@ -75,6 +75,27 @@ Default `./scripts/build_catalogue.py` runs now compare workbook-backed source r
 **Notes:**  
 Removed workbook rows can still leave stale generated files behind. The planner currently improves incremental rebuild targeting, not deletion cleanup.
 
+## [2026-04-01] Extended catalogue planning to track canonical source media
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`build_catalogue.py` now fingerprints canonical source images for works, work details, and moments in addition to workbook-backed rows, so published media replacements can be picked up without manual ID scoping.
+
+**Reason:**  
+Workbook-only planning was enough for metadata changes, but it still left source-image edits outside the default build path. That kept routine image replacement work dependent on user-supplied flags and IDs.
+
+**Effect:**  
+The planner state now includes source-media fingerprints and can infer copy/srcset plus downstream generation scope from file changes. Existing planner state files that predate media tracking are treated as a baseline until the next write run updates them.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
 ## [2026-03-30] Removed the docs compatibility mirror and legacy Studio doc-link fallback
 
 **Status:** implemented
