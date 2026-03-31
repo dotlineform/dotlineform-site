@@ -15,13 +15,13 @@ sort_order: 110
 **Area:** scripts
 
 **Summary:**  
-`build_catalogue.py` now fingerprints work and series prose source files as part of planner state, so prose-only edits can be picked up by the default planner path.
+`build_catalogue.py` now fingerprints work, series, and moment prose source files as part of planner state, so prose-only edits can be picked up by the default planner path.
 
 **Reason:**  
-After workbook rows, source images, and removed-row cleanup were covered, work and series prose files were the remaining practical catalogue inputs still outside the planner. Bringing them into scope makes the default build path more complete without widening cleanup scope to canonical source trees.
+After workbook rows, source images, and removed-row cleanup were covered, prose files were the remaining practical catalogue inputs still outside the planner. Bringing them into scope makes the default build path more complete without widening cleanup scope to canonical source trees.
 
 **Effect:**  
-Planner state now tracks work prose resolved from `Works.project_folder` plus `Works.work_prose_file`, and series prose resolved from `Series.primary_work_id` plus `Series.series_prose_file`. Work and series prose changes now trigger generation targeting only. They do not trigger copy/srcset and do not force a catalogue search rebuild on their own.
+Planner state now tracks work prose resolved from `Works.project_folder` plus `Works.work_prose_file`, series prose resolved from `Series.primary_work_id` plus `Series.series_prose_file`, and moment prose resolved from `moments/<moment_id>.md`. Work, series, and moment prose changes now trigger generation targeting only. They do not trigger copy/srcset and do not force a catalogue search rebuild on their own.
 
 **Affected files/docs:**  
 - `scripts/build_catalogue.py`
@@ -30,7 +30,7 @@ Planner state now tracks work prose resolved from `Works.project_folder` plus `W
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
 
 **Notes:**  
-Moment prose is still outside planner scope for now.
+Planner state migration now rewrites earlier prose-tracking baselines to include moment prose.
 
 ## [2026-04-01] Extended removed-row cleanup to local staged and derivative media
 

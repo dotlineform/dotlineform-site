@@ -21,7 +21,7 @@ Run everything:
 ./scripts/build_catalogue.py
 ```
 
-Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media and current work/series prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
+Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media and current work/series/moment prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
 When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
@@ -114,7 +114,8 @@ Primary target artifacts:
 - It also fingerprints canonical prose sources for:
   - work prose files resolved from `Works.project_folder` plus `Works.work_prose_file`
   - series prose files resolved from `Series.primary_work_id` plus `Series.series_prose_file`
-- Work and series prose changes trigger generation targeting only.
+- moment prose files resolved from `moments/<moment_id>.md`
+- Work, series, and moment prose changes trigger generation targeting only.
   They do not trigger copy/srcset and do not currently force a catalogue search rebuild on their own.
 - The current stale-artifact cleanup pass removes repo-owned generated artifacts for removed:
   - works

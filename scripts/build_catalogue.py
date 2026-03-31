@@ -77,6 +77,7 @@ try:
         media_mode_output_subdir,
         media_work_files_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_prose_subdir,
         source_works_root_subdir,
     )
@@ -90,6 +91,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         media_mode_output_subdir,
         media_work_files_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_prose_subdir,
         source_works_root_subdir,
     )
@@ -102,9 +104,9 @@ SRCSET_SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_id
 SRCSET_SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
 BUILD_STATE_SCHEMA = "build_catalogue_state"
 LEGACY_BUILD_STATE_SCHEMAS = {"build_catalogue_state_v1"}
-BUILD_STATE_PLANNER_VERSION = 3
+BUILD_STATE_PLANNER_VERSION = 4
 BUILD_STATE_MIGRATION_NOTE = (
-    "planner_version 3 adds work and series prose tracking. Legacy state files are "
+    "planner_version 4 adds moment prose tracking. Legacy state files are "
     "accepted and normalized in memory, then rewritten on the next successful write run."
 )
 DEFAULT_BUILD_STATE_PATH = Path("var/build_catalogue_state.json")
@@ -540,6 +542,7 @@ def build_workbook_state(
     media_moments: Dict[str, Dict[str, Any]] = {}
     prose_work: Dict[str, Dict[str, Any]] = {}
     prose_series: Dict[str, Dict[str, Any]] = {}
+    prose_moments: Dict[str, Dict[str, Any]] = {}
     previous_media = previous_media or {}
     previous_prose = previous_prose or {}
     previous_media_work = previous_media.get("work", {}) if isinstance(previous_media.get("work"), dict) else {}
@@ -547,7 +550,9 @@ def build_workbook_state(
     previous_media_moments = previous_media.get("moment", {}) if isinstance(previous_media.get("moment"), dict) else {}
     previous_prose_work = previous_prose.get("work", {}) if isinstance(previous_prose.get("work"), dict) else {}
     previous_prose_series = previous_prose.get("series", {}) if isinstance(previous_prose.get("series"), dict) else {}
+    previous_prose_moments = previous_prose.get("moment", {}) if isinstance(previous_prose.get("moment"), dict) else {}
     works_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
+    moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
     works_prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
     work_project_folder_by_id: Dict[str, str] = {}
@@ -715,6 +720,11 @@ def build_workbook_state(
                 previous_entry=previous_media_moments.get(moment_id),
                 missing_reason="missing_project_filename",
             )
+            prose_moments[moment_id] = fingerprint_media_path(
+                moments_root / f"{moment_id}.md",
+                base_dir=projects_base_dir,
+                previous_entry=previous_prose_moments.get(moment_id),
+            )
 
     work_files = {
         work_id: {"hash": stable_payload_hash(rows), "count": len(rows)}
@@ -745,6 +755,7 @@ def build_workbook_state(
             "prose": {
                 "work": prose_work,
                 "series": prose_series,
+                "moment": prose_moments,
             },
         },
     }
@@ -1301,6 +1312,7 @@ def main() -> int:
     current_prose_inputs = current_inputs.get("prose", {})
     current_prose_work = current_prose_inputs.get("work", {}) if isinstance(current_prose_inputs.get("work"), dict) else {}
     current_prose_series = current_prose_inputs.get("series", {}) if isinstance(current_prose_inputs.get("series"), dict) else {}
+    current_prose_moments = current_prose_inputs.get("moment", {}) if isinstance(current_prose_inputs.get("moment"), dict) else {}
 
     previous_works = previous_inputs.get("works", {})
     previous_series = previous_inputs.get("series", {})
@@ -1313,6 +1325,7 @@ def main() -> int:
     previous_media_moments = previous_media_inputs.get("moment", {}) if isinstance(previous_media_inputs.get("moment"), dict) else {}
     previous_prose_work = previous_prose_inputs.get("work", {}) if isinstance(previous_prose_inputs.get("work"), dict) else {}
     previous_prose_series = previous_prose_inputs.get("series", {}) if isinstance(previous_prose_inputs.get("series"), dict) else {}
+    previous_prose_moments = previous_prose_inputs.get("moment", {}) if isinstance(previous_prose_inputs.get("moment"), dict) else {}
     media_tracking_available = bool(previous_state) and bool(previous_media_inputs)
     prose_tracking_available = bool(previous_state) and bool(previous_prose_inputs)
 
@@ -1327,6 +1340,7 @@ def main() -> int:
     media_moments_diff = diff_media_entries(previous_media_moments, current_media_moments) if media_tracking_available else {"added": set(), "changed": set(), "removed": set()}
     prose_work_diff = diff_media_entries(previous_prose_work, current_prose_work) if prose_tracking_available else {"added": set(), "changed": set(), "removed": set()}
     prose_series_diff = diff_media_entries(previous_prose_series, current_prose_series) if prose_tracking_available else {"added": set(), "changed": set(), "removed": set()}
+    prose_moments_diff = diff_media_entries(previous_prose_moments, current_prose_moments) if prose_tracking_available else {"added": set(), "changed": set(), "removed": set()}
 
     if args.full:
         work_diff = {"added": set(current_works.keys()), "changed": set(), "removed": set()}
@@ -1340,6 +1354,7 @@ def main() -> int:
         media_moments_diff = {"added": set(current_media_moments.keys()), "changed": set(), "removed": set()}
         prose_work_diff = {"added": set(current_prose_work.keys()), "changed": set(), "removed": set()}
         prose_series_diff = {"added": set(current_prose_series.keys()), "changed": set(), "removed": set()}
+        prose_moments_diff = {"added": set(current_prose_moments.keys()), "changed": set(), "removed": set()}
 
     draft_work_ids = ids_with_status(current_works, {"draft"})
     draft_series_ids = ids_with_status(current_series, {"draft"})
@@ -1352,6 +1367,7 @@ def main() -> int:
     changed_moment_media_ids = media_moments_diff["added"] | media_moments_diff["changed"] | media_moments_diff["removed"]
     changed_work_prose_ids = prose_work_diff["added"] | prose_work_diff["changed"] | prose_work_diff["removed"]
     changed_series_prose_ids = prose_series_diff["added"] | prose_series_diff["changed"] | prose_series_diff["removed"]
+    changed_moment_prose_ids = prose_moments_diff["added"] | prose_moments_diff["changed"] | prose_moments_diff["removed"]
     work_media_candidate_ids = set()
     if "work" in selected_modes:
         if work_filter is not None:
@@ -1449,6 +1465,7 @@ def main() -> int:
             planned_generate_moment_ids.update(draft_moment_ids)
             planned_generate_moment_ids.update(changed_moment_ids)
             planned_generate_moment_ids.update(changed_moment_media_ids)
+            planned_generate_moment_ids.update(changed_moment_prose_ids)
     planned_generate_moment_ids &= set(current_moments.keys())
 
     planned_series_ids: Set[str] = set()
@@ -1562,6 +1579,7 @@ def main() -> int:
             print("Prose changes:")
             print(f"- work prose sources: {len(changed_work_prose_ids)} changed/new, {len(prose_work_diff['removed'])} removed")
             print(f"- series prose sources: {len(changed_series_prose_ids)} changed/new, {len(prose_series_diff['removed'])} removed")
+            print(f"- moment prose sources: {len(changed_moment_prose_ids)} changed/new, {len(prose_moments_diff['removed'])} removed")
         else:
             print("Prose changes:")
             print("- prose tracking not yet initialized in planner state; current prose paths will be treated as baseline on the next successful write run")
@@ -1898,7 +1916,7 @@ def main() -> int:
                 search_cmd.append("--force")
             run_step("Build Catalogue Search Index", search_cmd, cwd=repo_root)
         else:
-            print("\n==> Skip Generate/Search\nPlanner found no affected workbook targets in this run.")
+            print("\n==> Skip Generate/Search\nPlanner found no affected targets in this run.")
 
     print("\nPipeline complete.")
     if not args.dry_run:
@@ -1924,6 +1942,7 @@ def main() -> int:
                     prose_changes={
                         "work": changed_work_prose_ids,
                         "series": changed_series_prose_ids,
+                        "moment": changed_moment_prose_ids,
                     },
                     actions={
                         "copy_work": len(draft_ids),

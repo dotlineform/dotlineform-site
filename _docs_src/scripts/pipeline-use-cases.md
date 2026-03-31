@@ -34,9 +34,8 @@ Planner boundary:
 - source-image changes for works, work details, and moments are now picked up automatically once planner media state has been initialized
 - removed rows are now picked up for planner-driven cleanup when you use `build_catalogue.py` without explicit `--work-ids`, `--series-ids`, or `--moment-ids` fences
 - canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` is never in cleanup scope
-- work and series prose changes are now in planner scope
+- work, series, and moment prose changes are now in planner scope
   they trigger generation targeting only, not copy/srcset
-- moment prose is still outside planner scope for now
 
 Scoping notes:
 
