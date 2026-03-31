@@ -3,6 +3,7 @@ doc_id: data-flow
 title: Data Flow
 last_updated: 2026-03-30
 parent_id: architecture
+sort_order: 10
 ---
 
 # Data Flow

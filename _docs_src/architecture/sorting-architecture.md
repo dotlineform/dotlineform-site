@@ -3,7 +3,7 @@ doc_id: sorting-architecture
 title: Sorting Architecture
 last_updated: 2026-03-29
 parent_id: architecture
-sort_order: 10
+sort_order: 30
 ---
 
 # Sorting Architecture

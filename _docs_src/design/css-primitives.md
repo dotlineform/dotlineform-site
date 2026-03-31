@@ -3,7 +3,7 @@ doc_id: css-primitives
 title: CSS Primitives
 last_updated: 2026-03-29
 parent_id: design
-sort_order: 10
+sort_order: 20
 ---
 
 # CSS Primitives

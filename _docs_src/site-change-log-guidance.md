@@ -3,7 +3,7 @@ doc_id: site-change-log-guidance
 title: Site Change Log Guidance
 last_updated: 2026-03-29
 parent_id: ""
-sort_order: 90
+sort_order: 100
 ---
 
 # Site Change Log Guidance

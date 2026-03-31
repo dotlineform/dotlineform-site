@@ -3,6 +3,7 @@ doc_id: architecture
 title: Architecture
 last_updated: 2026-03-30
 parent_id: ""
+sort_order: 20
 ---
 
 # Architecture

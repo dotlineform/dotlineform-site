@@ -3,6 +3,7 @@ doc_id: css-audit-spec
 title: CSS Audit Spec (v1)
 last_updated: 2026-03-28
 parent_id: design
+sort_order: 30
 ---
 
 # CSS Audit Spec (v1)

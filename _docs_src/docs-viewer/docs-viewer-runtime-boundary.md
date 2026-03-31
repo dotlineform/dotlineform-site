@@ -3,7 +3,7 @@ doc_id: docs-viewer-runtime-boundary
 title: Docs Viewer Runtime Boundary
 last_updated: 2026-03-30
 parent_id: docs-viewer
-sort_order: 30
+sort_order: 10
 ---
 
 # Docs Viewer Runtime Boundary

@@ -3,7 +3,7 @@ doc_id: studio
 title: Studio
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 10
+sort_order: 5
 ---
 
 # Studio

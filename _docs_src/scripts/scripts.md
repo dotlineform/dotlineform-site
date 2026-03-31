@@ -3,7 +3,7 @@ doc_id: scripts
 title: Scripts
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 20
+sort_order: 30
 ---
 
 # Scripts
