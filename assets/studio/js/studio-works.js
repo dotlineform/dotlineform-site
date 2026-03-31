@@ -31,6 +31,7 @@ function initStudioWorksPage() {
 
   const baseurl = String(worksListRoot.dataset.baseurl || "");
   const worksIndexUrl = String(worksListRoot.dataset.worksIndexUrl || "");
+  const workStorageIndexUrl = String(worksListRoot.dataset.workStorageIndexUrl || "");
   const seriesIndexUrl = String(worksListRoot.dataset.seriesIndexUrl || "");
   const seriesBaseHref = String(worksListRoot.dataset.seriesBaseHref || `${baseurl}/series/`);
   const validKeys = { cat: true, year: true, title: true, series: true, storage: true, seriessort: true };
@@ -309,7 +310,7 @@ function initStudioWorksPage() {
     window.history.replaceState({}, "", nextUrl);
   }
 
-  function makeWorkRow(work, seriesMetaById) {
+  function makeWorkRow(work, seriesMetaById, workStorage) {
     const wid = normalizeText(work && work.work_id);
     if (!wid) return null;
     const rawSeriesIds = Array.isArray(work && work.series_ids) ? work.series_ids : [];
@@ -323,7 +324,8 @@ function initStudioWorksPage() {
     const titleRaw = normalizeText(work && work.title) || wid;
     const titleSortRaw = normalizeText(work && work.title_sort);
     const titleSort = (titleSortRaw || numericAwareSortKey(titleRaw)).toLowerCase();
-    let storageRaw = normalizeText(work && work.storage);
+    let storageRaw = normalizeText(workStorage && workStorage.storage);
+    if (!storageRaw) storageRaw = normalizeText(work && work.storage);
     if (!storageRaw) storageRaw = normalizeText(work && work.storage_location);
     let seriesSort = wid;
     if (sm && sm.custom_sort && sm.rank_map && sm.rank_map[wid]) {
@@ -375,9 +377,10 @@ function initStudioWorksPage() {
     return li;
   }
 
-  function renderFromJson(worksPayload, seriesPayload) {
+  function renderFromJson(worksPayload, seriesPayload, workStoragePayload) {
     const worksMap = worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {};
     const seriesMap = seriesPayload && seriesPayload.series && typeof seriesPayload.series === "object" ? seriesPayload.series : {};
+    const workStorageMap = workStoragePayload && workStoragePayload.works && typeof workStoragePayload.works === "object" ? workStoragePayload.works : {};
     const seriesMetaById = buildSeriesMeta(seriesMap);
     const rows = [];
     const seriesIdSet = {};
@@ -393,7 +396,7 @@ function initStudioWorksPage() {
     copySeriesButton.disabled = !copySeriesText;
 
     Object.keys(worksMap).forEach((wid) => {
-      const row = makeWorkRow(worksMap[wid], seriesMetaById);
+      const row = makeWorkRow(worksMap[wid], seriesMetaById, workStorageMap[wid]);
       if (!row) return;
       rows.push(row);
       const sid = slugSortKey(row.getAttribute("data-series-id"));
@@ -443,12 +446,13 @@ function initStudioWorksPage() {
   Promise.all([
     loadStudioConfig().catch(() => null),
     fetchJson(worksIndexUrl),
+    workStorageIndexUrl ? fetchJson(workStorageIndexUrl).catch(() => null) : Promise.resolve(null),
     fetchJson(seriesIndexUrl).catch(() => null)
   ])
       .then((parts) => {
         config = parts[0];
         copySeriesButton.textContent = worksText("copy_series_button", "copy series");
-        const hasRows = renderFromJson(parts[1], parts[2]);
+        const hasRows = renderFromJson(parts[1], parts[3], parts[2]);
         if (!hasRows) {
           worksListRoot.hidden = true;
           emptyEl.hidden = false;

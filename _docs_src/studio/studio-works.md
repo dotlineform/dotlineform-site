@@ -1,7 +1,7 @@
 ---
 doc_id: studio-works
 title: Studio Works
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: studio
 sort_order: 80
 ---
@@ -30,6 +30,12 @@ Supporting modules:
 
 - `assets/studio/js/studio-ui.js`
 - `assets/studio/js/studio-data.js`
+
+Current data sources:
+
+- `assets/data/works_index.json`
+- `assets/data/series_index.json`
+- `assets/studio/data/work_storage_index.json`
 
 Top-level structure:
 
@@ -100,6 +106,7 @@ DOM / CSS:
 Meaning:
 
 - the existing Studio works rows and links
+- curator-only storage values are merged in from the Studio-only work storage index rather than the public works index
 - work links carry Studio sort/filter return state so the work-page back link returns to `/studio/studio-works/`
 
 ## UI Layout and Styling

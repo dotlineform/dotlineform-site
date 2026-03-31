@@ -11,6 +11,7 @@ studio_page_doc: /docs/?scope=studio&doc=studio-works
   data-role="studio-works"
   data-baseurl="{{ site.baseurl | default: '' | escape }}"
   data-works-index-url="{{ '/assets/data/works_index.json' | relative_url }}"
+  data-work-storage-index-url="{{ '/assets/studio/data/work_storage_index.json' | relative_url }}"
   data-series-index-url="{{ '/assets/data/series_index.json' | relative_url }}"
   data-series-base-href="{{ '/series/' | relative_url }}"
   hidden

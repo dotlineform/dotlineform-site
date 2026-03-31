@@ -14,6 +14,7 @@ Deletion scope:
 - assets/works/index/<work_id>.json
 - assets/data/series_index.json
 - assets/data/works_index.json
+- assets/studio/data/work_storage_index.json
 - assets/studio/data/tag_assignments.json (per-work overrides only)
 
 Intentionally left untouched:
@@ -247,6 +248,20 @@ def finalize_works_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     return payload
 
 
+def finalize_work_storage_index_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
+    works_map = payload.get("works")
+    if not isinstance(works_map, dict):
+        raise SystemExit("Invalid work_storage_index.json payload: missing works map")
+    schema = str((payload.get("header") or {}).get("schema") or "work_storage_index_v1")
+    payload["header"] = {
+        "schema": schema,
+        "version": compute_payload_version({"schema": schema, "works": works_map}),
+        "generated_at_utc": utc_now(),
+        "count": len(works_map),
+    }
+    return payload
+
+
 def remove_work_from_series_index(payload: Dict[str, Any], work_id: str) -> Dict[str, int]:
     series_map = payload.get("series")
     if not isinstance(series_map, dict):
@@ -279,6 +294,16 @@ def remove_work_from_works_index(payload: Dict[str, Any], work_id: str) -> bool:
     works_map = payload.get("works")
     if not isinstance(works_map, dict):
         raise SystemExit("Invalid works_index.json payload: missing works map")
+    if work_id not in works_map:
+        return False
+    del works_map[work_id]
+    return True
+
+
+def remove_work_from_work_storage_index(payload: Dict[str, Any], work_id: str) -> bool:
+    works_map = payload.get("works")
+    if not isinstance(works_map, dict):
+        raise SystemExit("Invalid work_storage_index.json payload: missing works map")
     if work_id not in works_map:
         return False
     del works_map[work_id]
@@ -335,6 +360,7 @@ def main() -> None:
     work_json_dir = repo_root / "assets/works/index"
     series_index_path = repo_root / "assets/data/series_index.json"
     works_index_path = repo_root / "assets/data/works_index.json"
+    work_storage_index_path = repo_root / "assets/studio/data/work_storage_index.json"
     tag_assignments_path = repo_root / "assets/studio/data/tag_assignments.json"
 
     log_event("delete_work_start", {"argv": sys.argv[1:], "work_id": work_id, "write": bool(args.write)})
@@ -382,14 +408,20 @@ def main() -> None:
 
     series_index_payload = load_json_object(series_index_path, "series_index.json")
     works_index_payload = load_json_object(works_index_path, "works_index.json")
+    work_storage_index_payload = load_json_object(work_storage_index_path, "work_storage_index.json") if work_storage_index_path.exists() else None
     tag_assignments_payload = load_json_object(tag_assignments_path, "tag_assignments.json")
 
     series_stats = remove_work_from_series_index(series_index_payload, work_id)
     works_index_removed = remove_work_from_works_index(works_index_payload, work_id)
+    work_storage_index_removed = False
+    if work_storage_index_payload is not None:
+        work_storage_index_removed = remove_work_from_work_storage_index(work_storage_index_payload, work_id)
     override_stats = remove_work_overrides(tag_assignments_payload, work_id)
 
     finalize_series_index_payload(series_index_payload)
     finalize_works_index_payload(works_index_payload)
+    if work_storage_index_payload is not None:
+        finalize_work_storage_index_payload(work_storage_index_payload)
 
     work_page_path = works_dir / f"{work_id}.md"
     work_json_path = work_json_dir / f"{work_id}.json"
@@ -403,6 +435,8 @@ def main() -> None:
         json_updates[series_index_path] = series_index_payload
     if works_index_removed:
         json_updates[works_index_path] = works_index_payload
+    if work_storage_index_removed and work_storage_index_payload is not None:
+        json_updates[work_storage_index_path] = work_storage_index_payload
     if override_stats["removed_overrides"] > 0:
         json_updates[tag_assignments_path] = tag_assignments_payload
 
@@ -419,6 +453,7 @@ def main() -> None:
         f"series touched={override_stats['touched_series']}; "
         f"work overrides removed={override_stats['removed_overrides']}"
     )
+    print(f"Work storage index updates: removed entry={1 if work_storage_index_removed else 0}")
     print(f"Delete generated files: {len(existing_delete_paths)} found; {len(missing_delete_paths)} already missing.")
     for path in existing_delete_paths:
         print(f"  - delete {path.relative_to(repo_root)}")
@@ -436,6 +471,7 @@ def main() -> None:
                 "missing_paths": [str(path.relative_to(repo_root)) for path in missing_delete_paths],
                 "series_stats": series_stats,
                 "works_index_removed": works_index_removed,
+                "work_storage_index_removed": work_storage_index_removed,
                 "override_stats": override_stats,
             },
         )

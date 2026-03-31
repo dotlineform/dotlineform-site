@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-delete-work
 title: Delete Work
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 60
 ---
@@ -27,6 +27,7 @@ Script:
   - `assets/works/index/<work_id>.json`
   - removes the work from `assets/data/series_index.json`
   - removes the work from `assets/data/works_index.json`
+  - removes the work from `assets/studio/data/work_storage_index.json`
   - removes per-work overrides from `assets/studio/data/tag_assignments.json`
 - if a deleted work is referenced by a series `primary_work_id`, that field is set to `null`
 
@@ -59,6 +60,7 @@ Source artifacts:
 - `assets/works/index/<work_id>.json`
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
+- `assets/studio/data/work_storage_index.json`
 - `assets/studio/data/tag_assignments.json`
 
 Target artifacts on `--write`:

@@ -8,6 +8,7 @@ file per work (e.g. `_works/00286.md`) with YAML front matter populated from the
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
+Studio-only work storage index JSON is written to assets/studio/data/work_storage_index.json (object keyed by work_id).
 Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
 Lightweight moments index JSON is written to assets/data/moments_index.json (object keyed by moment_id).
 
@@ -743,6 +744,7 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
+    ap.add_argument("--work-storage-index-json-path", default="assets/studio/data/work_storage_index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
@@ -985,6 +987,8 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
     works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
+    work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
+    work_storage_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_json_dir = Path(args.moments_json_dir).expanduser()
@@ -1392,6 +1396,14 @@ def main() -> None:
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
+        })
+
+    def build_work_storage_index_record(work_record: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        storage_value = coerce_string(work_record.get("storage"))
+        if storage_value is None:
+            return None
+        return compact_json_object({
+            "storage": storage_value,
         })
 
     def build_work_json_record(work_record: Dict[str, Any]) -> Dict[str, Any]:
@@ -2528,6 +2540,12 @@ def main() -> None:
             continue
         works_payload[wid] = build_work_index_record(record)
 
+    work_storage_payload: Dict[str, Dict[str, Any]] = {}
+    for wid, record in works_payload.items():
+        storage_record = build_work_storage_index_record(canonical_work_record_by_id.get(wid, {}))
+        if storage_record is not None:
+            work_storage_payload[wid] = storage_record
+
     detail_records_by_work: Dict[str, List[Dict[str, Any]]] = {}
     if work_details_rows and len(work_details_rows) > 1:
         for dr, dr_cells in zip(work_details_rows[1:], work_details_ws.iter_rows(min_row=2), strict=False):
@@ -2583,6 +2601,38 @@ def main() -> None:
             print(
                 "Works index JSON done. Would write: 1. Skipped: 0. "
                 f"Path: {works_index_json_path} (overwrite={exists})"
+            )
+
+    work_storage_version_payload = compact_json_object({
+        "schema": "work_storage_index_v1",
+        "works": work_storage_payload,
+    })
+    work_storage_version = compute_payload_version(work_storage_version_payload)
+    work_storage_payload_out = compact_json_object({
+        "header": {
+            "schema": "work_storage_index_v1",
+            "version": work_storage_version,
+            "generated_at_utc": utc_timestamp_now(),
+            "count": len(work_storage_payload),
+        },
+        "works": work_storage_payload,
+    })
+    work_storage_payload_version = work_storage_payload_out["header"]["version"]
+    work_storage_exists = work_storage_index_json_path.exists()
+    existing_work_storage_version = extract_existing_header_scalar(work_storage_index_json_path, "version") if work_storage_exists else None
+    if (existing_work_storage_version is not None) and (existing_work_storage_version == work_storage_payload_version) and (not args.force):
+        print("Work storage index JSON done. Wrote: 0. Skipped: 1.")
+    else:
+        if args.write:
+            work_storage_index_json_path.write_text(
+                json.dumps(work_storage_payload_out, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Work storage index JSON done. Wrote: 1. Skipped: 0. Path: {work_storage_index_json_path}")
+        else:
+            print(
+                "Work storage index JSON done. Would write: 1. Skipped: 0. "
+                f"Path: {work_storage_index_json_path} (overwrite={work_storage_exists})"
             )
 
     # ----------------------------

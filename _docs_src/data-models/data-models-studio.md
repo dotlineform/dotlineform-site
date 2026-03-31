@@ -25,6 +25,7 @@ Current checked-in Studio data artifacts:
   - `assets/studio/data/tag_assignments.json`
   - `assets/studio/data/tag_groups.json`
   - `assets/studio/data/build_activity.json`
+  - `assets/studio/data/work_storage_index.json`
 - Studio docs source:
   - `_docs_src/**/*.md`
 - generated Studio docs data:
@@ -39,6 +40,27 @@ Related config, documented separately:
 - `assets/studio/js/studio-config.js`
 
 ## Studio Route Data
+
+### `work_storage_index.json`
+
+Purpose:
+
+- provide Studio-only work storage lookups without putting curator-only storage data into the public `works_index.json`
+
+Current content families:
+
+- header metadata
+- `works` map keyed by `work_id`
+- per-work storage values only where storage is populated
+
+Current consumers:
+
+- `/studio/studio-works/`
+
+Why it is separate:
+
+- `storage` is useful to the curator but does not belong in the current public works summary index
+- the Studio works page needs one lightweight bulk lookup, not one per-work JSON fetch per row
 
 ### `build_activity.json`
 

@@ -104,6 +104,7 @@ Artifact behavior:
 - `works-index-json`
   writes `assets/data/works_index.json` as a lightweight full rebuild keyed by `work_id`
   for shared card and lookup metadata
+  and writes `assets/studio/data/work_storage_index.json` as a Studio-only companion lookup for curator storage values
 - `work-json`
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 
@@ -119,6 +120,7 @@ There is no separate `works-prose` artifact; use `work-json` for prose-only refr
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`
 - `/search/` reads `assets/data/search/catalogue/index.json`
+- `/studio/studio-works/` reads `assets/studio/data/work_storage_index.json` for curator-only storage values
 
 Catalogue search note:
 

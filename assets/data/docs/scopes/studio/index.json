@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T21:30:18Z",
+  "generated_at": "2026-03-31T21:42:41Z",
   "docs": [
     {
       "scope": "studio",
@@ -533,7 +533,7 @@
       "scope": "studio",
       "doc_id": "scripts-delete-work",
       "title": "Delete Work",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "sort_order": 60,
       "source_path": "scripts/scripts-delete-work.md",
@@ -632,7 +632,7 @@
       "scope": "studio",
       "doc_id": "studio-works",
       "title": "Studio Works",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "studio",
       "sort_order": 80,
       "source_path": "studio/studio-works.md",

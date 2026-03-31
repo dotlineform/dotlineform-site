@@ -86,6 +86,7 @@ Primary target artifacts:
   - `assets/series/index/`
   - `assets/works/index/`
   - `assets/moments/index/`
+  - `assets/studio/data/work_storage_index.json`
 - generated repo artifact written by `build_search.rb --scope catalogue`:
   - `assets/data/search/catalogue/index.json`
 - generated local activity artifacts written after successful non-dry-run runs:

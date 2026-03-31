@@ -8,6 +8,30 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added a Studio-only work storage index
+
+**Status:** implemented
+
+**Area:** studio
+
+**Summary:**  
+Added `assets/studio/data/work_storage_index.json` so `/studio/studio-works/` can continue surfacing storage without putting curator-only storage data back into the public `works_index.json`.
+
+**Reason:**  
+The public works index was intentionally slimmed for runtime use, but the Studio works page still needs a fast bulk answer to “where is a work stored?”. A separate Studio-only lookup keeps that curator use case intact without re-expanding the public artifact.
+
+**Effect:**  
+`generate_work_pages.py` now writes a Studio-only storage map keyed by `work_id`, `studio-works.js` merges it into the existing row rendering and storage sort behavior, and `delete_work.py` removes stale entries from that Studio index during one-off deletions.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- `scripts/delete_work.py`
+- `studio/studio-works/index.md`
+- `assets/studio/js/studio-works.js`
+- [Studio Works](/docs/?scope=studio&doc=studio-works)
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+
 ## [2026-04-01] Added `medium_caption` to derived catalogue search terms
 
 **Status:** implemented
