@@ -80,6 +80,7 @@ Catalogue/media builds:
 
 - `./scripts/build_catalogue.py`
   - plans workbook-backed generation and canonical source-media changes from `var/build_catalogue_state.json`, then orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
+  - writes a local build-activity journal and a Studio-facing recent-activity feed after successful non-dry-run runs
 - `./scripts/generate_work_pages.py`
   - builds catalogue pages plus runtime JSON, including:
     - `assets/data/series_index.json`

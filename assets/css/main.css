@@ -326,6 +326,150 @@ th{ background: var(--panel-2); }
   margin: 0 0 0.45rem;
 }
 
+.buildActivityPage{
+  max-width: 980px;
+}
+
+.buildActivityPage__panel{
+  display: grid;
+  gap: 1rem;
+}
+
+.buildActivityPage__meta,
+.buildActivityPage__status,
+.buildActivityPage__empty{
+  margin: 0;
+  color: var(--muted);
+}
+
+.buildActivityPage__list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.buildActivityEntry{
+  margin: 0;
+}
+
+.buildActivityEntry__details{
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  overflow: clip;
+}
+
+.buildActivityEntry__summary{
+  display: grid;
+  grid-template-columns: minmax(9rem, auto) auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  list-style: none;
+}
+
+.buildActivityEntry__summary::-webkit-details-marker{
+  display: none;
+}
+
+.buildActivityEntry__time{
+  color: var(--muted);
+  font-size: var(--font-small);
+}
+
+.buildActivityEntry__status{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  font-size: var(--font-small);
+  text-transform: lowercase;
+}
+
+.buildActivityEntry__status[data-status="completed"]{
+  border-color: rgba(37, 108, 62, 0.24);
+  background: rgba(37, 108, 62, 0.08);
+  color: #256c3e;
+}
+
+.buildActivityEntry__status[data-status="failed"]{
+  border-color: rgba(146, 56, 44, 0.24);
+  background: rgba(146, 56, 44, 0.08);
+  color: #92382c;
+}
+
+.buildActivityEntry__headline{
+  font-weight: 600;
+}
+
+.buildActivityEntry__body{
+  display: grid;
+  gap: 0.85rem;
+  padding: 0 1rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.buildActivityEntry__meta{
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: var(--font-small);
+}
+
+.buildActivityEntry__section{
+  display: grid;
+  gap: 0.45rem;
+}
+
+.buildActivityEntry__sectionTitle{
+  margin: 0;
+  font-size: var(--font-small);
+  text-transform: lowercase;
+  color: var(--muted);
+}
+
+.buildActivityEntry__detailList{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.buildActivityEntry__detailItem{
+  display: grid;
+  grid-template-columns: minmax(7rem, 9rem) 1fr;
+  gap: 0.8rem;
+}
+
+.buildActivityEntry__detailLabel{
+  color: var(--muted);
+  font-size: var(--font-small);
+  text-transform: lowercase;
+}
+
+.buildActivityEntry__detailValue,
+.buildActivityEntry__detailEmpty{
+  margin: 0;
+}
+
+@media (max-width: 720px){
+  .buildActivityEntry__summary{
+    grid-template-columns: 1fr;
+  }
+
+  .buildActivityEntry__detailItem{
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
 .studioSearch{
   display: grid;
   max-width: var(--content-measure);

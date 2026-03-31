@@ -86,6 +86,9 @@ Primary target artifacts:
   - `assets/moments/index/`
 - generated repo artifact written by `build_search.rb --scope catalogue`:
   - `assets/data/search/catalogue/index.json`
+- generated local activity artifacts written after successful non-dry-run runs:
+  - `var/build_activity/build_catalogue.jsonl`
+  - `assets/studio/data/build_activity.json`
 
 ## Planner Notes
 
@@ -106,6 +109,13 @@ Primary target artifacts:
 ## Logging
 
 Per-script logs are written to repo-root log directories and are auto-created as needed.
+
+`build_catalogue.py` also writes a separate curated activity summary after successful non-dry-run runs:
+
+- local journal:
+  - `var/build_activity/build_catalogue.jsonl`
+- Studio-facing feed:
+  - `assets/studio/data/build_activity.json`
 
 Current logged scripts:
 

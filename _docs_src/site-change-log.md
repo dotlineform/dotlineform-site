@@ -8,6 +8,34 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added a curator-facing Studio build activity feed
+
+**Status:** implemented
+
+**Area:** studio
+
+**Summary:**  
+Added a curated build-activity journal and a Studio page at `/studio/build-activity/` so recent catalogue build runs can be reviewed without reading raw script logs.
+
+**Reason:**  
+The catalogue planner now has enough context to explain what changed and what it rebuilt. A lightweight recent-activity surface makes that information useful to the curator and creates a cleaner base for any later public “recent updates” work.
+
+**Effect:**  
+Successful non-dry-run `build_catalogue.py` runs now append a local journal under `var/build_activity/`, regenerate `assets/studio/data/build_activity.json`, and the new Studio page renders the latest entries with changed workbook/media groups plus action summaries.
+
+**Affected files/docs:**  
+- `scripts/build_activity.py`
+- `scripts/build_catalogue.py`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/build-activity.js`
+- `studio/build-activity/index.md`
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+
+**Notes:**  
+This feed is a local Studio summary surface, not the canonical low-level script log and not yet a public site history feed.
+
 ## [2026-04-01] Made work prose optional in catalogue generation
 
 **Status:** implemented

@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: Studio
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: ""
 sort_order: 5
 ---
@@ -23,6 +23,7 @@ Read this section in this order:
 1. **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
 2. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 3. Page-specific docs:
+   - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
@@ -33,6 +34,7 @@ Read this section in this order:
 Current Studio pages:
 
 - `/studio/`
+- `/studio/build-activity/`
 - `/studio/tag-groups/`
 - `/studio/tag-registry/`
 - `/studio/tag-aliases/`

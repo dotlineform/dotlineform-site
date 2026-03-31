@@ -1,7 +1,7 @@
 ---
 doc_id: studio-runtime
 title: Studio Runtime
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: studio
 sort_order: 10
 ---
@@ -36,6 +36,7 @@ This keeps Studio implementation notes in the shared `/docs/` module rather than
 Current route inventory:
 
 - `studio/index.md`
+- `studio/build-activity/index.md`
 - `studio/tag-groups/index.md`
 - `studio/tag-registry/index.md`
 - `studio/tag-aliases/index.md`
@@ -46,6 +47,7 @@ Current route inventory:
 Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
+- Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
 - Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
@@ -65,6 +67,7 @@ Shared Studio runtime and wiring currently live in:
 
 Current page controllers:
 
+- `assets/studio/js/build-activity.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/tag-registry.js`
 - `assets/studio/js/tag-aliases.js`
@@ -117,5 +120,9 @@ What it does not start:
 - docs-search builders
 - catalogue/search regeneration scripts
 - any separate Studio-only frontend server
+
+Current local generated Studio feed surfaced through this runtime:
+
+- `assets/studio/data/build_activity.json`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.

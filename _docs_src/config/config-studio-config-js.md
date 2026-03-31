@@ -1,7 +1,7 @@
 ---
 doc_id: config-studio-config-js
 title: Studio Config Loader JS
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: config
 sort_order: 40
 ---
@@ -29,6 +29,7 @@ Current direct importers include:
 - `assets/studio/js/series-tags.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
+- `assets/studio/js/build-activity.js`
 - `assets/js/search/search-page.js`
 
 Its exported helpers are also used indirectly through:

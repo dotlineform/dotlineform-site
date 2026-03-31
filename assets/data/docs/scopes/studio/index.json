@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T19:14:58Z",
+  "generated_at": "2026-03-31T19:44:04Z",
   "docs": [
     {
       "scope": "studio",
@@ -16,7 +16,7 @@
       "scope": "studio",
       "doc_id": "studio",
       "title": "Studio",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "",
       "sort_order": 5,
       "source_path": "studio/studio.md",
@@ -104,7 +104,7 @@
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "studio",
       "sort_order": 10,
       "source_path": "studio/studio-runtime.md",
@@ -335,7 +335,7 @@
       "scope": "studio",
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "config",
       "sort_order": 30,
       "source_path": "config/config-studio-config-json.md",
@@ -346,7 +346,7 @@
       "scope": "studio",
       "doc_id": "data-models-studio",
       "title": "Studio Scope",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "data-models",
       "sort_order": 30,
       "source_path": "data-models/data-models-studio.md",
@@ -363,6 +363,17 @@
       "source_path": "studio/tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "build-activity",
+      "title": "Build Activity",
+      "last_updated": "2026-04-01",
+      "parent_id": "studio",
+      "sort_order": 35,
+      "source_path": "studio/build-activity.md",
+      "viewer_url": "/docs/?scope=studio&doc=build-activity",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/build-activity.json"
     },
     {
       "scope": "studio",
@@ -423,7 +434,7 @@
       "scope": "studio",
       "doc_id": "config-studio-config-js",
       "title": "Studio Config Loader JS",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "config",
       "sort_order": 40,
       "source_path": "config/config-studio-config-js.md",

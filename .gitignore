@@ -29,3 +29,7 @@ var/studio/backups/
 
 # Catalogue planner state
 var/build_catalogue_state.json
+
+# Local build activity artifacts
+var/build_activity/
+assets/studio/data/build_activity.json

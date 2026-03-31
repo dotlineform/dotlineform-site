@@ -1,7 +1,7 @@
 ---
 doc_id: config-studio-config-json
 title: Studio Config JSON
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: config
 sort_order: 30
 ---
@@ -20,6 +20,7 @@ Current responsibilities include:
 
 - route paths used by Studio and search UI
 - JSON data paths used by Studio and search loaders
+- the route and feed path for the current Studio build-activity page
 - Studio analysis group and RAG settings
 - Studio-owned UI text, including search-shell text that is shared through the same loader
 
@@ -36,6 +37,7 @@ Current direct consumers of that loader include:
 - `assets/studio/js/series-tags.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/studio-works.js`
+- `assets/studio/js/build-activity.js`
 - `assets/js/search/search-page.js`
 
 It also feeds shared path resolution used by:

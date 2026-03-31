@@ -1,7 +1,7 @@
 ---
 doc_id: data-models-studio
 title: Studio Scope
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: data-models
 sort_order: 30
 ---
@@ -24,6 +24,7 @@ Current checked-in Studio data artifacts:
   - `assets/studio/data/tag_aliases.json`
   - `assets/studio/data/tag_assignments.json`
   - `assets/studio/data/tag_groups.json`
+  - `assets/studio/data/build_activity.json`
 - Studio docs source:
   - `_docs_src/**/*.md`
 - generated Studio docs data:
@@ -38,6 +39,33 @@ Related config, documented separately:
 - `assets/studio/js/studio-config.js`
 
 ## Studio Route Data
+
+### `build_activity.json`
+
+Purpose:
+
+- lightweight Studio-facing feed of recent catalogue build runs
+
+Current content families:
+
+- feed header metadata
+- recent run entries with:
+  - time
+  - status
+  - short summary
+  - workbook change groups
+  - media change groups
+  - action counts
+  - result flags
+
+Why it is separate:
+
+- the curator-facing feed should stay smaller and more stable than raw script logs
+- the Studio page only needs the latest small slice of recent activity
+
+Current consumers:
+
+- `/studio/build-activity/`
 
 ### `tag_registry.json`
 

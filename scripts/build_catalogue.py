@@ -58,6 +58,11 @@ from typing import Any, Dict, Iterable, Set
 import openpyxl
 
 try:
+    from build_activity import append_build_activity
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.build_activity import append_build_activity
+
+try:
     from script_logging import append_script_log
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.script_logging import append_script_log
@@ -777,6 +782,73 @@ def summarize_ids(ids: Set[str], limit: int = 8) -> str:
     return f"{head}, +{len(ordered) - limit} more"
 
 
+def summarize_run_text(
+    *,
+    workbook_change_count: int,
+    media_change_count: int,
+    action_count: int,
+    search_rebuilt: bool,
+    status: str,
+) -> str:
+    if status != "completed":
+        return "Build failed."
+    if workbook_change_count == 0 and media_change_count == 0 and action_count == 0 and not search_rebuilt:
+        return "No changes detected."
+
+    parts: list[str] = []
+    if workbook_change_count:
+        parts.append(f"{workbook_change_count} workbook change{'s' if workbook_change_count != 1 else ''}")
+    if media_change_count:
+        parts.append(f"{media_change_count} media change{'s' if media_change_count != 1 else ''}")
+    if action_count:
+        parts.append(f"{action_count} planned action{'s' if action_count != 1 else ''}")
+    if search_rebuilt:
+        parts.append("catalogue search rebuilt")
+    return "; ".join(parts) if parts else "Build completed."
+
+
+def build_activity_entry(
+    *,
+    time_utc: str,
+    status: str,
+    dry_run: bool,
+    planner_mode: str,
+    workbook_changes: Dict[str, Set[str]],
+    media_changes: Dict[str, Set[str]],
+    actions: Dict[str, Any],
+    results: Dict[str, Any],
+) -> Dict[str, Any]:
+    workbook_change_count = sum(len(values) for values in workbook_changes.values())
+    media_change_count = sum(len(values) for values in media_changes.values())
+    action_count = sum(
+        int(value)
+        for key, value in actions.items()
+        if key != "rebuild_search" and isinstance(value, int)
+    )
+    search_rebuilt = bool(actions.get("rebuild_search"))
+    return {
+        "id": f"{time_utc}-build_catalogue",
+        "time_utc": time_utc,
+        "script": "build_catalogue",
+        "status": status,
+        "dry_run": dry_run,
+        "planner_mode": planner_mode,
+        "summary": summarize_run_text(
+            workbook_change_count=workbook_change_count,
+            media_change_count=media_change_count,
+            action_count=action_count,
+            search_rebuilt=search_rebuilt,
+            status=status,
+        ),
+        "changes": {
+            "workbook": {key: sorted(values) for key, values in workbook_changes.items()},
+            "media": {key: sorted(values) for key, values in media_changes.items()},
+        },
+        "actions": actions,
+        "results": results,
+    }
+
+
 def main() -> int:
     media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
     projects_base = env_var_value(PIPELINE_CONFIG, "projects_base_dir")
@@ -1076,6 +1148,7 @@ def main() -> int:
 
     plan_needs_generate = bool(planned_generate_work_ids or planned_generate_moment_ids or planned_series_ids)
     plan_needs_search = plan_needs_generate
+    planner_mode = "full" if args.full else ("bootstrap" if bootstrap_state else "incremental")
 
     def print_plan_summary() -> None:
         print("\n==> Build Plan")
@@ -1370,6 +1443,42 @@ def main() -> int:
 
     print("\nPipeline complete.")
     if not args.dry_run:
+        try:
+            append_build_activity(
+                repo_root,
+                build_activity_entry(
+                    time_utc=utc_timestamp_now(),
+                    status="completed",
+                    dry_run=False,
+                    planner_mode=planner_mode,
+                    workbook_changes={
+                        "works": changed_work_row_ids,
+                        "series": changed_series_row_ids,
+                        "work_details": changed_detail_uids,
+                        "moments": changed_moment_ids,
+                    },
+                    media_changes={
+                        "work": changed_work_media_ids,
+                        "work_details": changed_detail_media_uids,
+                        "moment": changed_moment_media_ids,
+                    },
+                    actions={
+                        "copy_work": len(draft_ids),
+                        "copy_work_details": len(draft_detail_uids),
+                        "copy_moment": len(draft_moment_ids),
+                        "generate_work_ids": len(generate_ids),
+                        "generate_series_ids": len(selected_series_for_generate),
+                        "generate_moment_ids": len(generate_moment_ids),
+                        "rebuild_search": bool(generate_ids or generate_moment_ids or selected_series_for_generate),
+                    },
+                    results={
+                        "planner_state_updated": True,
+                        "media_tracking_initialized": True,
+                    },
+                ),
+            )
+        except Exception:
+            pass
         write_build_state(state_path, current_state)
     log_event(
         repo_root,

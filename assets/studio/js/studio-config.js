@@ -7,6 +7,7 @@ const DEFAULT_STUDIO_CONFIG = {
       search: "/search/",
       series_tags: "/studio/series-tags/",
       series_tag_editor: "/studio/series-tag-editor/",
+      build_activity: "/studio/build-activity/",
       tag_registry: "/studio/tag-registry/",
       tag_aliases: "/studio/tag-aliases/",
       tag_groups: "/studio/tag-groups/",
@@ -21,7 +22,8 @@ const DEFAULT_STUDIO_CONFIG = {
         tag_registry: "/assets/studio/data/tag_registry.json",
         tag_aliases: "/assets/studio/data/tag_aliases.json",
         tag_assignments: "/assets/studio/data/tag_assignments.json",
-        tag_groups: "/assets/studio/data/tag_groups.json"
+        tag_groups: "/assets/studio/data/tag_groups.json",
+        build_activity: "/assets/studio/data/build_activity.json"
       },
       site: {
         series_index: "/assets/data/series_index.json",
@@ -160,6 +162,20 @@ const DEFAULT_STUDIO_CONFIG = {
     },
     studio_works: {
       copy_series_button: "copy series"
+    },
+    build_activity: {
+      load_failed_error: "Failed to load build activity.",
+      empty_state: "No build activity yet.",
+      meta_summary: "{count} recent build entries",
+      meta_summary_one: "1 recent build entry",
+      status_completed: "completed",
+      status_failed: "failed",
+      status_other: "status unknown",
+      detail_workbook: "workbook",
+      detail_media: "media",
+      detail_actions: "actions",
+      detail_results: "results",
+      none: "none"
     },
     search: {
       load_failed_error: "Failed to load search data.",
