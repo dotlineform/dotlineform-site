@@ -1,9 +1,9 @@
 ---
 doc_id: css-primitives
 title: CSS Primitives
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: design
-sort_order: 20
+sort_order: 30
 ---
 
 # CSS Primitives

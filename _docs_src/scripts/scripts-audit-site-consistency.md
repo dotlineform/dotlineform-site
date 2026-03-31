@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-audit-site-consistency
 title: Site Consistency Audit
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 90
 ---
@@ -86,6 +86,26 @@ Optional orphan-media scan:
 
 Markdown report defaults to `_docs_src/audit-latest.md`.
 
+## Source And Target Artifacts
+
+Source artifacts checked by the current audit include:
+
+- `_works/*.md`
+- `_series/*.md`
+- `_work_details/*.md`
+- `_moments/*.md`
+- `assets/data/series_index.json`
+- `assets/data/works_index.json`
+- `assets/works/index/*.json`
+- `assets/studio/data/tag_assignments.json`
+- generated URLs and media paths referenced by those artifacts
+
+Target artifacts:
+
+- terminal report
+- optional JSON report via `--json-out`
+- optional Markdown report via `--md-out`
+
 ## Known Limits
 
 - `media` assumes primaries and work download files are remote or staged and checks local thumbs only
@@ -99,5 +119,5 @@ Warning policy:
 
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

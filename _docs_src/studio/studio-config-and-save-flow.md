@@ -1,0 +1,154 @@
+---
+doc_id: studio-config-and-save-flow
+title: Studio Config and Save Flow
+last_updated: 2026-03-31
+parent_id: studio
+sort_order: 20
+---
+
+# Studio Config and Save Flow
+
+This document describes the current shared Studio config, data-loading boundary, and local/offline save behavior.
+
+For file-level ownership of the current config artifacts, see:
+
+- **[Config](/docs/?scope=studio&doc=config)**
+- **[Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)**
+- **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
+- **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
+
+## Shared Config
+
+Studio configuration is defined in:
+
+- `assets/studio/data/studio_config.json`
+
+It is loaded by:
+
+- `assets/studio/js/studio-config.js`
+
+Current responsibilities:
+
+- public route paths used across Studio links
+- public JSON paths used by Studio pages
+- RAG analysis group and threshold settings
+- Studio-owned UI copy used by the editor, registry, aliases, series tags, tag groups, and search surfaces
+
+Current route/data-path responsibilities include:
+
+- Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
+- shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
+- Studio-owned JSON paths
+- shared catalogue index paths
+- dedicated search policy and per-scope search index paths
+
+The exact key inventory belongs in the [Config](/docs/?scope=studio&doc=config) section rather than here.
+
+## Shared Data and Transport Modules
+
+`assets/studio/js/studio-data.js` centralizes shared read-side helpers for Studio pages.
+
+Current shared responsibilities include:
+
+- fetching Studio and site JSON payloads from config-derived paths
+- registry lookup building
+- group-description normalization
+- assignment and series data shaping used across Studio pages
+
+`assets/studio/js/studio-transport.js` centralizes the local write-service boundary.
+
+Current responsibilities include:
+
+- local endpoint definitions
+- health probing for local write availability
+- shared JSON POST transport
+
+Current write endpoints include:
+
+- `/health`
+- `/save-tags`
+- `/import-tag-assignments-preview`
+- `/import-tag-assignments`
+- `/import-tag-registry`
+- `/mutate-tag`
+- `/mutate-tag-preview`
+- `/demote-tag`
+- `/demote-tag-preview`
+- `/import-tag-aliases`
+- `/delete-tag-alias`
+- `/mutate-tag-alias`
+- `/promote-tag-alias`
+- `/promote-tag-alias-preview`
+
+## Save Modes
+
+The Tag Editor probes local write availability at page load.
+
+Current mode selection:
+
+- if the local write service responds successfully, Studio uses `Local server`
+- otherwise Studio falls back to `Offline session`
+
+### Local Server Mode
+
+Current local save behavior:
+
+- the editor sends `POST /save-tags` to the local write service
+- only the current diff is persisted, not a full materialized export
+- work rows are normalized before save
+- inherited series tags are not persisted into work rows
+- duplicate work tags are collapsed
+- optional `alias` metadata is preserved when present in the editor state
+
+Current write-service implementation notes:
+
+- the local service is `scripts/studio/tag_write_server.py`
+- writes are constrained to Studio-owned JSON files
+- server writes create timestamped backups in `var/studio/backups/`
+- write activity is logged to `var/studio/logs/tag_write_server.log`
+
+### Offline Session Mode
+
+Current offline behavior:
+
+- the editor stages normalized series rows in browser `localStorage`
+- staged rows preserve assignment objects, including `w_manual` and optional `alias`
+- the editor advances its baseline after staging so the page behaves like a save flow
+- local-only changes are surfaced back into the UI
+
+Current session management surface:
+
+- the Series Tags page is the session hub
+- `Session` opens the offline-session modal
+- `Import` opens the import-preview/apply flow when the local server is available
+
+## Data Files and Ownership
+
+Studio currently depends on four data families:
+
+- Studio-owned tag data
+- shared catalogue index data
+- dedicated search policy/search-index data
+- Studio docs data rebuilt by the docs builder
+
+Current ownership boundary:
+
+- Studio reads both Studio-owned JSON and shared site/search artifacts
+- Studio writes only through the local save service
+- detailed payload shape belongs in [Data Models](/docs/?scope=studio&doc=data-models), not here
+
+Use these references for the contracts:
+
+- [Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Config](/docs/?scope=studio&doc=config)
+
+## Operational Notes
+
+Current operational constraints:
+
+- `bin/dev-studio` rebuilds Docs Viewer data, but not docs-search artifacts
+- Studio route behavior depends on the current site build being present under Jekyll
+- `scripts/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
+
+For command-level usage and script flags, keep **[Scripts](/docs/?scope=studio&doc=scripts)** aligned with Studio workflow changes.

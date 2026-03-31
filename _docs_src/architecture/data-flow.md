@@ -1,21 +1,28 @@
 ---
 doc_id: data-flow
 title: Data Flow
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: architecture
 sort_order: 10
 ---
 
 # Data Flow
 
-This document describes the runtime JSON data flow for the main browsing path:
+This document describes the current runtime data flow for the public catalogue.
 
-1. `catalogue index`
-2. `series page`
-3. `work page`
-4. `detail page`
+It focuses on which generated artifacts each route reads at runtime. It does not try to document every field in those payloads.
 
-It focuses on which JSON files are used by the frontend at each step and what data each file supplies.
+For the catalogue artifact contracts themselves, use [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
+
+Current public browsing routes covered here:
+
+- `/series/`
+- `/series/<series_id>/`
+- `/works/<work_id>/`
+- `/work_details/<detail_uid>/`
+- `/moments/<moment_id>/`
+
+The main writer for these artifacts is [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages), usually run directly or through the site [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline).
 
 ## Overview
 
@@ -24,22 +31,17 @@ Current generated JSON files involved in this flow:
 - `assets/data/series_index.json`
 - `assets/data/moments_index.json`
 - `assets/data/works_index.json`
+- `assets/series/index/<series_id>.json`
 - `assets/works/index/<work_id>.json`
-
-Current direction:
-
-- keep `series_index.json`
-- keep `moments_index.json`
-- keep `works_index.json`
-- keep per-work JSON in `assets/works/index/<work_id>.json`
-- remove the obsolete global work-details index
+- `assets/moments/index/<moment_id>.json`
 
 ## 1. Catalogue Index
 
 User-facing step:
 
 - `/series/`
-- lists all series or all moments, depending on the active toggle
+- lists series in `works` mode
+- lists moments in `moments` mode
 
 Current JSON used:
 
@@ -50,32 +52,13 @@ Template:
 
 - `series/index.md`
 
-What `series_index.json` provides:
+How the page uses them:
 
-- full list of series IDs
-- series title
-- year / year display
-- ordered `works` membership for each series
-- canonical `primary_work_id` for each series
-- sort metadata and other series-level fields
+- `works` mode is built from `series_index.json`
+- `moments` mode is built from `moments_index.json`
+- moment card URLs still come from `site.moments` URLs embedded into the page at build time
 
-What `moments_index.json` provides:
-
-- lightweight moment metadata keyed by `moment_id`
-- moment title
-- moment date / date display
-- canonical `thumb_id` for each moment card
-
-Why both are used:
-
-- the merged catalogue uses `series_index.json` for works mode
-- the merged catalogue uses `moments_index.json` for moments mode
-- moment card routes still come from the built `site.moments` collection URLs embedded in the page template
-
-Replacement for the removed global work-details index:
-
-- none here
-- this step does not depend on any global detail index
+This route does not read per-series, per-work, or per-moment JSON records.
 
 ## 2. Series Page
 
@@ -83,37 +66,24 @@ User-facing step:
 
 - `/series/<series_id>/`
 - shows a grid of all works in the series
+- shows optional series prose below the grid
 
 Current JSON used:
 
 - `assets/data/series_index.json`
 - `assets/data/works_index.json`
+- `assets/series/index/<series_id>.json`
 
 Template:
 
 - `_layouts/series.html`
 
-What `series_index.json` provides:
-
-- the canonical ordered list of work IDs for the series
-- series title
-- series year / year display
-
-What `works_index.json` provides:
-
-- lightweight work metadata for each work card
-- currently mainly title
-- the card thumbs are derived by filename convention from `work_id`, not read from JSON
-
-Why both are used:
+How the page uses them:
 
 - `series_index.json` answers membership and ordering
 - `works_index.json` answers lightweight work-card metadata without fetching one JSON file per work
-
-Replacement for the removed global work-details index:
-
-- none here
-- this step does not depend on any global detail index
+- `assets/series/index/<series_id>.json` supplies prose content for the lower content block
+- the page does not fetch per-work JSON for the series grid
 
 ## 3. Work Page
 
@@ -132,34 +102,13 @@ Template:
 
 - `_layouts/work.html`
 
-What `assets/works/index/<work_id>.json` provides:
-
-- canonical work metadata used by the page JS
-- canonical `series_ids` membership for the work
-- `sections[]`
-- each section's `project_subfolder`
-- each detail record in that work
-- detail title
-- detail UID
-- detail dimensions
-- detail-level metadata
-
 What `series_index.json` provides on the work page:
 
-- series context when the work is being viewed from a series
-- previous / next work navigation
-- series membership ordering
-- the primary-series label/link derived from `work.series_ids[0]`
+- series context when the work is opened with `?series=<series_id>`
+- previous and next work navigation inside that series
+- series title used for the inline series link and back-link labeling
 
-Why this is the right source:
-
-- details belong to a work, so per-work JSON is the natural source for detail sections and detail grids
-- this already scales better than using a global details JSON for work-page rendering
-
-Replacement for the removed global work-details index:
-
-- none needed for this step
-- the work page already uses per-work JSON and does not depend on any global detail index
+The work page is work-local by design. Detail sections, detail links, prose, downloads, and published links all come from the per-work record.
 
 ## 4. Detail Page
 
@@ -176,47 +125,45 @@ Template:
 
 - `_layouts/work_details.html`
 
-What the detail stub front matter provides:
-
-- `work_id`
-- `detail_id`
-- `detail_uid`
-- `title` as fallback text only
-
-What per-work JSON provides:
-
-- canonical detail record
-- detail dimensions
-- detail title
-- section membership
-- sibling detail ordering for prev/next navigation
-- parent work title
-
-How the page now works:
+How the page works:
 
 - it reads `page.work_id` from the stub
 - it fetches `assets/works/index/<work_id>.json`
 - it finds the matching `detail_uid` in that work payload
 
-From that work-local payload, the page derives:
+This route does not use a global detail index.
 
-- correct detail title
-- section ID
-- dimensions
-- previous / next detail links
-- back-link context
+## 5. Moment Page
 
-## Removed Global Detail Index
+User-facing step:
 
-Removed artefacts:
+- `/moments/<moment_id>/`
+- shows one moment plus its prose body
 
-- the global work-details index JSON
-- `work_details/index.md`
+Current JSON used:
 
-Replacement:
+- `assets/moments/index/<moment_id>.json`
 
-- no replacement is needed
-- per-work detail grids on `/works/<work_id>/` are the only detail index UI
+Template and runtime:
+
+- `_layouts/moment.html`
+- `assets/js/moment.js`
+
+The moment page is moment-local. It does not read `moments_index.json` at runtime.
+
+## Search Boundary
+
+Catalogue search is a separate surface:
+
+- `/search/?scope=catalogue`
+
+It reads:
+
+- `assets/data/search/catalogue/index.json`
+
+Search behavior, ranking, and index structure are documented in the [Search](/docs/?scope=studio&doc=search) section rather than repeated here.
+
+The catalogue artifact families themselves are documented in [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
 
 ## Current State
 
@@ -229,6 +176,7 @@ The implemented data flow is now:
 2. `/series/<series_id>/`
    - uses `assets/data/series_index.json`
    - uses `assets/data/works_index.json`
+   - uses `assets/series/index/<series_id>.json`
 
 3. `/works/<work_id>/`
    - uses `assets/works/index/<work_id>.json`
@@ -238,8 +186,8 @@ The implemented data flow is now:
    - uses stub front matter for `work_id`
    - uses `assets/works/index/<work_id>.json`
 
-Result:
+5. `/moments/<moment_id>/`
+   - uses `assets/moments/index/<moment_id>.json`
 
-- detail browsing becomes fully work-local
-- very large detail sets scale with the size of one work's JSON, not with one global details index
-- a very large work+details set has no runtime impact on unrelated works
+6. `/search/?scope=catalogue`
+   - uses `assets/data/search/catalogue/index.json`

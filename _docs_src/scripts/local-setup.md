@@ -1,7 +1,7 @@
 ---
 doc_id: local-setup
 title: Local Setup
-last_updated: 2026-03-28
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 30
 ---
@@ -250,7 +250,7 @@ Common commands:
 ./scripts/audit_site_consistency.py --strict
 ./scripts/run_draft_pipeline.py --dry-run
 ./scripts/generate_work_pages.py --write
-./scripts/css_token_audit.py
+python3 ./scripts/css_token_audit.py
 ./scripts/studio/tag_write_server.py
 ```
 

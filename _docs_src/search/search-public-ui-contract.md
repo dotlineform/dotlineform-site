@@ -1,7 +1,7 @@
 ---
 doc_id: search-public-ui-contract
 title: Search Public UI Contract
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 55
 ---
@@ -10,17 +10,21 @@ sort_order: 55
 
 ## Purpose
 
-This document defines the public-site search entry model and URL contract that should guide continued search work.
+This document defines the current public-site search entry model and URL contract for search.
 
-It exists to settle the scalable UI direction before the larger modular search refactor expands search across additional content domains.
+It records the route and scope contract that the current implementation already uses across the dedicated search page and the inline docs-viewer search surfaces.
 
 This is a contract-and-behaviour document. It does not define ranking rules, index schema, or implementation internals.
 
 ## Why this document exists now
 
-Search now has a public route at `/search/`, with `catalogue` backed by `assets/data/search/catalogue/index.json`, and an inline Studio docs search surface on `/docs/`.
+Search now has:
 
-That implementation is sufficient for the current indexed content, but the route/state contract still needs to stay explicit as:
+- a dedicated public route at `/search/`, with `catalogue` backed by `assets/data/search/catalogue/index.json`
+- an inline Studio docs search surface on `/docs/`
+- an inline Library docs search surface on `/library/`
+
+The route/state contract still needs to stay explicit because:
 
 - additional content domains such as Studio or library are added
 - each domain starts to own its own search JSON and search policy/config
@@ -106,19 +110,17 @@ Reason:
 
 ### `library`
 
-This scope is reserved for future library content once that content domain has its own search support.
+This scope currently exists as an inline docs-viewer search scope on `/library/`.
+
+The dedicated `/search/` page does not currently enable `library`.
 
 ### `studio`
 
-This scope is reserved for Studio-owned searchable content.
+This scope currently exists as an inline docs-viewer search scope on `/docs/`.
 
-Initial likely coverage:
+Current coverage:
 
 - Studio docs
-
-Possible later coverage:
-
-- wider Studio reference or tool-adjacent content if the Studio domain expands
 
 Reason:
 
@@ -181,17 +183,20 @@ Examples of acceptable signals:
 
 The user should not need to infer scope only from the URL.
 
-## First public rollout rule
+## Current Dedicated-Route Scope
 
-The first public scope should be:
+The dedicated `/search/` page currently enables:
 
 - `catalogue`
 
-The first CTA should therefore point from the catalogue page to:
+That scope is configured in `assets/data/search/policy.json`.
 
-- `/search/?scope=catalogue`
+Current docs-domain scopes:
 
-This is the minimal public rollout that aligns with the current indexed content and the current search value proposition.
+- `studio`
+- `library`
+
+Those scopes currently use inline docs-viewer search rather than the dedicated `/search/` page.
 
 ## Relationship to future modular search architecture
 
@@ -231,7 +236,7 @@ The current public rollout is now split by page anatomy:
 5. Library docs search lives inline on `/library/`
 6. future scopes can still use `/search/` if a standalone page is the better fit
 
-The next phase can now focus on domain-specific search surfaces and artifacts behind the same scope vocabulary.
+Further refinement areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

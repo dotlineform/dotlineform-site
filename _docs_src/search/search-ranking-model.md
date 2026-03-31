@@ -1,7 +1,7 @@
 ---
 doc_id: search-ranking-model
 title: Search Ranking Model
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 40
 ---
@@ -331,16 +331,9 @@ Current ranking behaviour in practice:
 - tie-breaking is explicit and alphabetical, not source-order-based
 - duplicate term frequency does not currently amplify ranking
 
-## Known limitations or open ranking questions
+## Further Refinement
 
-Current ranking questions for later work:
-
-- whether exact title should outrank exact id, or the current id-first order should remain
-- whether `search_terms` exact-match band is too generous because it can contain multiple kinds of derived values
-- whether metadata `contains` matching should become more field-specific or phrase-aware
-- whether tag-aware ranking should sit above or below current metadata bands once tag coverage improves
-- whether multi-field reinforcement bonuses should be introduced instead of using only the first satisfied band
-- whether the content-type-neutral model remains right when search moves into the main site shell
+Ranking follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

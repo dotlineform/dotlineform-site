@@ -390,15 +390,9 @@ Current normalization behaviour in practice:
 - ids, years, and date fragments remain searchable as strings
 - no alias, synonym, or fuzzy layer is currently present
 
-## Known limitations or open normalisation questions
+## Further Refinement
 
-Current normalization questions for later work:
-
-- whether the asymmetry between index-time phrase preservation and query-time aggressive separator reduction should remain
-- whether generic date fragments such as `01` are too permissive
-- whether tags should eventually enter derived token generation
-- whether some very common metadata tokens should be filtered or classified differently
-- whether field-specific provenance should be preserved more explicitly in derived search terms
+Normalization follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

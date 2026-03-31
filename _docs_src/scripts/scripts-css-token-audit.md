@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-css-token-audit
 title: CSS Token Audit
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 80
 ---
@@ -11,7 +11,7 @@ sort_order: 80
 Script:
 
 ```bash
-./scripts/css_token_audit.py
+python3 ./scripts/css_token_audit.py
 ```
 
 ## Optional Flags
@@ -25,8 +25,22 @@ Script:
 - reports repeated raw typography values and direct color literals
 - writes the current snapshot to `_docs_src/css-audit-latest.md`
 
+## Source And Target Artifacts
+
+Source artifacts:
+
+- default CSS inputs are whatever file list the command receives
+- current common inputs are:
+  - `assets/css/main.css`
+  - `assets/studio/css/studio.css`
+
+Target artifact:
+
+- Markdown audit snapshot at `_docs_src/css-audit-latest.md` by default
+- or the path passed through `--md-out`
+
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)
 - [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest)

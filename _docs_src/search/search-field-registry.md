@@ -1,7 +1,7 @@
 ---
 doc_id: search-field-registry
 title: Search Field Registry
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 30
 ---
@@ -566,14 +566,9 @@ Current answers in v1:
 - should empty array fields still be present in the schema
   - yes, where empty-list semantics are meaningful
 
-## Open questions
+## Further Refinement
 
-Field-registry questions for later phases:
-
-- whether tag fields should become active ranking and filtering fields once coverage improves
-- whether `storage` is useful enough to remain an active search field
-- whether some metadata terms should keep participating directly or only through derived fallback
-- whether future prose search should introduce new field classes or provenance-aware derived fields
+Field-policy follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

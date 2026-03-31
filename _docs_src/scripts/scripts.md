@@ -1,7 +1,7 @@
 ---
 doc_id: scripts
 title: Scripts
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: ""
 sort_order: 30
 ---
@@ -12,12 +12,6 @@ This section describes the scripts used to build site data.
 
 # Introduction
 
-Use this command prefix for all script commands:
-
-```bash
-./
-```
-
 All commands below assume you are in `dotlineform-site/`.
 
 For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc=local-setup).
@@ -27,10 +21,18 @@ For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc
 This page is now the high-level entry point for repo scripts.
 Command-level usage, flags, output paths, and operational notes now live in the child docs below.
 
+The current script surface falls into three groups:
+
+- docs-domain builders for scope-owned docs and docs-search artifacts
+- catalogue/media generators for public site content
+- local tooling for audits, CSS analysis, and Studio write flows
+
 ## Common Runtime Assumptions
 
 - run project commands from `dotlineform-site/`
-- use project-local script paths such as `./scripts/...`
+- use project-local script paths
+  - some entrypoints are executable directly, such as `./scripts/build_docs_data.rb`
+  - some are currently invoked through `python3 ./scripts/...` or `ruby ./scripts/...`
 - docs-data rebuild command:
 
 ```bash
@@ -43,6 +45,40 @@ Command-level usage, flags, output paths, and operational notes now live in the 
   - `DOTLINEFORM_MEDIA_BASE_DIR`
 - shared pipeline defaults live in `_data/pipeline.json`
 
+## Current Build Boundaries
+
+Docs-domain builds:
+
+- `./scripts/build_docs_data.rb`
+  - source docs:
+    - `_docs_src/`
+    - `_docs_library_src/`
+  - outputs:
+    - `assets/data/docs/scopes/studio/`
+    - `assets/data/docs/scopes/library/`
+- `./scripts/build_search_data.rb`
+  - source docs indexes:
+    - `assets/data/docs/scopes/studio/index.json`
+    - `assets/data/docs/scopes/library/index.json`
+  - outputs:
+    - `assets/data/search/studio/index.json`
+    - `assets/data/search/library/index.json`
+
+Catalogue/media builds:
+
+- `./scripts/run_draft_pipeline.py`
+  - orchestrates copy -> srcset -> generation for works, work details, and moments
+- `./scripts/generate_work_pages.py`
+  - builds catalogue pages plus runtime JSON, including:
+    - `assets/data/series_index.json`
+    - `assets/data/works_index.json`
+    - `assets/data/moments_index.json`
+    - `assets/data/search/catalogue/index.json`
+- `./scripts/copy_draft_media_files.py`
+  - stages source media into the srcset input folders
+- `bash scripts/make_srcset_images.sh`
+  - builds derivative image outputs from staged source media
+
 ## Script References
 
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
@@ -54,7 +90,7 @@ Command-level usage, flags, output paths, and operational notes now live in the 
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Build Search Data](/docs/?scope=studio&doc=scripts-build-search-data)
-  Build search-owned artifacts for non-catalogue scopes; current implemented scope is `studio`.
+  Build search-owned artifacts for docs-domain scopes; current implemented scopes are `studio` and `library`.
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, aggregate indexes, and the catalogue search artifact.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)

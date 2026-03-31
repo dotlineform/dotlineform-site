@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-generate-work-pages
 title: Generate Work Pages
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 50
 ---
@@ -152,7 +152,7 @@ If `WorkLinks` contains rows for a work, generation exposes them as `work.links`
 
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Main Draft Pipeline](/docs/?scope=studio&doc=scripts-main-pipeline)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)

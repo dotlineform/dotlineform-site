@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-main-pipeline
 title: Main Draft Pipeline
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 20
 ---
@@ -46,6 +46,32 @@ Run everything:
 
 When `--mode work` is used and no `--series-ids*` flags are provided, draft series are auto-included in generation.
 
+## Source And Target Artifacts
+
+Primary source artifacts:
+
+- `data/works.xlsx`
+- source media under `DOTLINEFORM_PROJECTS_BASE_DIR`
+  - `projects/...`
+  - `moments/...`
+
+Primary target artifacts:
+
+- staged media under `DOTLINEFORM_MEDIA_BASE_DIR`
+- srcset derivatives under `DOTLINEFORM_MEDIA_BASE_DIR`
+- generated repo artifacts written by `generate_work_pages.py`, including:
+  - `_works/`
+  - `_series/`
+  - `_work_details/`
+  - `_moments/`
+  - `assets/data/series_index.json`
+  - `assets/data/works_index.json`
+  - `assets/data/moments_index.json`
+  - `assets/data/search/catalogue/index.json`
+  - `assets/series/index/`
+  - `assets/works/index/`
+  - `assets/moments/index/`
+
 ## Logging
 
 Per-script logs are written to repo-root log directories and are auto-created as needed.
@@ -68,7 +94,7 @@ Retention policy:
 
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)

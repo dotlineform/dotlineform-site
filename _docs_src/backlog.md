@@ -18,7 +18,15 @@ This file tracks deferred improvements and follow-up work.
 - Add CI job(s) to run `scripts/audit_site_consistency.py` on pull requests.
 - Decide CI policy for warnings vs errors (`--strict` currently errors-only).
 - Add a short contributor checklist for when to run scoped vs full audit checks.
+- Add a local front-end for selected repo scripts so common dry-run/write flows can be run without dropping to the terminal.
 - Extend `scripts/css_token_audit.py` beyond tokens into selector/declaration duplication reporting.
+- Run a second-pass cleanup now that the `data-models` section exists:
+  - trim duplicated model detail from older docs
+  - add direct links from architecture, docs-viewer, Studio, search, and config docs where the new section is now the better reference
+- Decide whether any artifact family now documented in `data-models` needs a deeper child doc later, especially if:
+  - catalogue per-record payloads gain more nested structure
+  - docs-scope payloads gain more fields than the current scope docs can explain cleanly
+- Clean up remaining published-doc references that still point to removed `doc=site` targets.
 - Start a UI review pass that logs:
   - style variations that should be consolidated
   - UI inconsistencies that justify controlled redesign
@@ -176,7 +184,7 @@ Use this section for CSS cleanup and UI consistency work.
     - registry and aliases toolbar result/status areas
     - modal warning/status/impact areas
   - follow-up:
-    - update `docs/studio/ui-framework.md` once the shared message pattern exists in code
+    - update `design/studio-ui-framework.md` once the shared message pattern exists in code
 - `redesign`: `Delete Tag` modal needs its own redesign pass beyond shared message-container cleanup.
   - technical target:
     - delete-tag modal content and rendering in registry flow

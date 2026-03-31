@@ -1,7 +1,7 @@
 ---
 doc_id: search-validation-checklist
 title: Search Validation Checklist
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 80
 ---
@@ -31,17 +31,28 @@ Keep this checklist practical. It is for confirming that the implemented v1 sear
 
 Prefer real site examples over synthetic test strings.
 
-## A. Build and artifact checks
+## A. Catalogue Build And Artifact Checks
 
-- [ ] Run `python scripts/generate_work_pages.py --only search-index-json`
+- [ ] Run `./scripts/generate_work_pages.py --only search-index-json`
 - [ ] Confirm the dry run completes without error
-- [ ] Run `python scripts/generate_work_pages.py --only search-index-json --write`
+- [ ] Run `./scripts/generate_work_pages.py --only search-index-json --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
 - [ ] Confirm the header contains `schema`, `version`, `generated_at_utc`, and `count`
 - [ ] Confirm the entry count is plausible for current works, series, and moments coverage
 
-## B. Index integrity checks
+## B. Docs-Domain Build And Artifact Checks
+
+- [ ] Run `./scripts/build_docs_data.rb`
+- [ ] Confirm the docs dry run completes without error for both `studio` and `library`
+- [ ] Run `ruby ./scripts/build_search_data.rb --scope studio`
+- [ ] Confirm the dry run reports `assets/data/search/studio/index.json`
+- [ ] Run `ruby ./scripts/build_search_data.rb --scope library`
+- [ ] Confirm the dry run reports `assets/data/search/library/index.json`
+- [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
+- [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
+
+## C. Catalogue Index Integrity Checks
 
 - [ ] Confirm records exist for all three current kinds: `work`, `series`, `moment`
 - [ ] Confirm every serialized record has `kind`, `id`, `title`, `href`, `search_terms`, and `search_text`
@@ -50,7 +61,7 @@ Prefer real site examples over synthetic test strings.
 - [ ] Confirm ids are unique across the full entry list
 - [ ] Confirm representative example records in the docs still reflect reality closely enough to stay useful
 
-## C. Search behaviour checks
+## D. Catalogue Search Behaviour Checks
 
 - [ ] Query by exact work id and confirm the intended item appears at or near the top
 - [ ] Query by exact work title and confirm the intended item appears at or near the top
@@ -69,7 +80,7 @@ Suggested current examples:
 - date-like moment query: `2020`
 - empty-results example: `zzzz-not-a-real-query`
 
-## D. UI checks
+## E. Dedicated Search Page UI Checks
 
 - [ ] Open `/search/?scope=catalogue`
 - [ ] Confirm the page loads and the input is visible
@@ -86,15 +97,27 @@ Suggested current examples:
 - [ ] Open `/search/` without `scope`
 - [ ] Confirm the input is disabled and the page shows the missing-scope message
 
-## E. Keyboard and accessibility checks
+## F. Docs-Viewer Search Checks
+
+- [ ] Open `/docs/?scope=studio&doc=search&q=search`
+- [ ] Confirm the Docs Viewer switches the right pane into inline search mode
+- [ ] Confirm the left docs tree remains visible
+- [ ] Confirm Studio docs results link back into `/docs/?scope=studio&doc=...`
+- [ ] Open `/library/?doc=library&q=library`
+- [ ] Confirm the Library viewer shows inline search results
+- [ ] Confirm Library docs results link back into `/library/?doc=...`
+- [ ] Confirm both docs scopes show `more` when result counts exceed the current batch size
+
+## G. Keyboard And Accessibility Checks
 
 - [ ] Confirm the input receives focus on page load
 - [ ] Confirm the page can be used without a pointer
 - [ ] Confirm the input, result links, and `more` are reachable by Tab when `scope=catalogue`
+- [ ] Confirm inline docs-viewer search results are keyboard reachable on `/docs/` and `/library/`
 - [ ] Confirm focus-visible styling is present on interactive controls
 - [ ] Confirm there is no broken keyboard behaviour from unsupported features such as arrow-key navigation or Escape handling
 
-## F. Documentation alignment checks
+## H. Documentation Alignment Checks
 
 - [ ] [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) still matches the generated index
 - [ ] [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) still matches active field usage
@@ -102,6 +125,7 @@ Suggested current examples:
 - [ ] [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) still matches the score-band logic
 - [ ] [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) still matches current runtime behaviour
 - [ ] [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) still matches how the artifact is generated
+- [ ] [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape) still matches the current Studio and Library docs search artifacts
 
 ## Current known validation gaps
 

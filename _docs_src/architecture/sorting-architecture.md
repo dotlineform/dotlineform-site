@@ -1,14 +1,16 @@
 ---
 doc_id: sorting-architecture
 title: Sorting Architecture
-last_updated: 2026-03-29
+last_updated: 2026-03-31
 parent_id: architecture
 sort_order: 30
 ---
 
 # Sorting Architecture
 
-This document defines canonical sorting behavior across generated artifacts and runtime pages.
+This document records the current canonical ordering rules across generated artifacts and runtime pages.
+
+It is an architecture note because it defines where ordering is owned and how different runtime surfaces stay aligned. It is not a field-by-field schema reference.
 
 ## Canonical Source Of Truth
 
@@ -21,7 +23,7 @@ This document defines canonical sorting behavior across generated artifacts and 
 ## Cached Derivative
 
 - `_works/<work_id>.md` contains `series_sort`.
-- `series_sort` is a cache derived by `scripts/generate_work_pages.py` from workbook rules.
+- `series_sort` is a cache derived by [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages) from workbook rules.
 - `series_sort` is still used by some build-time Liquid/JS sorting paths (for example the works index `seriessort` sort key).
 
 ## Runtime Usage By Page
@@ -49,6 +51,8 @@ Recommended command:
 ```bash
 ./scripts/generate_work_pages.py --only work-pages,series-index-json,works-index-json --series-ids <series_id> --force --write
 ```
+
+This command is usually part of the wider site [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline) or a targeted maintenance run documented in [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases).
 
 ## Why This Hybrid Exists
 

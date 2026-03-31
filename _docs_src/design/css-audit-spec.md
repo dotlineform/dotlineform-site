@@ -1,9 +1,9 @@
 ---
 doc_id: css-audit-spec
 title: CSS Audit Spec (v1)
-last_updated: 2026-03-28
+last_updated: 2026-03-31
 parent_id: design
-sort_order: 30
+sort_order: 40
 ---
 
 # CSS Audit Spec (v1)

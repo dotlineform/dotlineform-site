@@ -1,7 +1,7 @@
 ---
 doc_id: search-ui-behaviour
 title: Search UI Behaviour
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 60
 ---
@@ -348,7 +348,7 @@ Current gaps:
 - no active-result announcement model
 - no dedicated live-region treatment for result-count updates
 
-Those gaps are acceptable for v1 but should remain visible as future improvement areas.
+Those gaps are acceptable in the current implementation. Further refinement areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Current implementation summary
 
@@ -364,16 +364,9 @@ Current UI behaviour in practice:
 - results are shown in batches of `50` with a `more` control
 - keyboard support is basic tab-and-activate behaviour rather than full result-list navigation
 
-## Known limitations or open UI questions
+## Further Refinement
 
-Current UI questions for later phases:
-
-- whether the main site should use a dedicated search page, a nav overlay, or both
-- whether a minimum query length should be introduced
-- whether result-list keyboard navigation should be added
-- whether the loading and error states need richer treatment
-- whether result metadata is exactly the right amount for public search
-- whether query state should persist in the URL
+UI follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

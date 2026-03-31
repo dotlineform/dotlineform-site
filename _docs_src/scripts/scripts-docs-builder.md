@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 10
 ---
@@ -148,7 +148,7 @@ Pipeline policy config:
 
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)

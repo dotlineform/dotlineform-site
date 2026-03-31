@@ -1,108 +1,53 @@
 ---
 doc_id: search-studio-v1-index-shape
-title: Search Studio V1 Index Shape
-last_updated: 2026-03-30
+title: Docs Scope Index Shape
+last_updated: 2026-03-31
 parent_id: search
-sort_order: 103
+sort_order: 75
 ---
 
-# Search Studio V1 Index Shape
+# Docs Scope Index Shape
 
 ## Purpose
 
-This document defines the proposed v1 search-record shape for `scope=studio` and explains how that first Studio implementation fits into the wider search architecture.
+This document defines the current search-record shape for the docs-domain search artifacts.
 
-It exists to make the Studio rollout concrete without requiring a full search-pipeline refactor first.
+It covers the current generated outputs for:
 
-## Design constraint
+- `assets/data/search/studio/index.json`
+- `assets/data/search/library/index.json`
 
-Studio v1 should be:
+These are the current search artifacts used by the inline Docs Viewer search on `/docs/` and `/library/`.
 
-- simple enough to implement soon
-- compatible with the shared `/search/` shell
-- explicitly transitional toward a search-owned pipeline
+For the wider docs-scope model that these artifacts sit on top of, use:
 
-Studio v1 should not:
+- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
 
-- make the docs builder the long-term owner of Studio search
-- require the catalogue indexing pipeline to absorb docs-specific schema
-- force a full cross-scope generic indexing framework before there is enough evidence for one
+## Upstream Sources
 
-## Locked v1 decisions
-
-The following decisions are now treated as fixed for the first Studio implementation:
-
-- one search-owned builder entrypoint in Ruby
-- upstream source is the published Studio docs outputs, not raw Markdown
-- one search record per published doc
-- no section-level records
-- no summary or snippet field in v1
-- `display_meta` stays compact and is based on date plus optional parent context
-- Studio ranking is scope-specific and simple rather than shared with catalogue
-- the public `/search/` shell and scope-aware runtime policy remain shared
-
-## Upstream source for v1
-
-The canonical upstream source for Studio v1 search should be:
-
-- the published Studio docs outputs
-
-That means Studio search can read from the docs system’s canonical published data rather than re-parsing raw Markdown as a first step.
-
-Locked v1 source material:
+The docs-domain search builder reads the published docs indexes:
 
 - `assets/data/docs/scopes/studio/index.json`
-- `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
+- `assets/data/docs/scopes/library/index.json`
 
-This keeps the source of truth clear while avoiding direct ownership by the docs builder.
+It does not read raw Markdown source files directly.
 
-## Proposed v1 record contract
+## Top-Level Output Shape
 
-Studio v1 should emit normalized records that fit the shared public search shell.
+Each docs-domain search artifact currently uses:
 
-Required fields:
+- `header`
+- `entries`
 
-- `id`
-- `kind`
-- `title`
-- `href`
-- `display_meta`
-- `search_terms`
-- `search_text`
-
-Recommended v1 values:
-
-- `id`
-  - the docs `doc_id`
-- `kind`
-  - `doc`
-- `title`
-  - the docs title
-- `href`
-  - the docs viewer URL for the Studio scope
-- `display_meta`
-  - compact metadata for result display, likely the doc date and possibly the parent section label
-- `search_terms`
-  - high-value exact/prefix lookup terms such as:
-    - `doc_id`
-    - title tokens
-    - selected section or parent labels when useful
-- `search_text`
-  - a lightweight normalized text field built from:
-    - title
-    - doc id
-    - parent title or section title
-    - possibly small selected metadata fields
-
-## Proposed v1 output shape
-
-Recommended first output:
+Current top-level example:
 
 ```json
 {
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
+    "version": "sha256-...",
     "generated_at_utc": "2026-03-30T00:00:00Z",
     "count": 1
   },
@@ -125,105 +70,65 @@ Recommended first output:
 }
 ```
 
-This is intentionally simpler than the catalogue schema, but it still retains the shared top-level `header` plus `entries` shape used by the public runtime today.
+The Library artifact uses the same shape, but `header.scope` is `library` and `header.schema` is `search_index_library_v1`.
 
-## What v1 intentionally omits
+## Current Record Contract
 
-Studio v1 does not need:
+Current required record fields:
 
-- a true summary field
-- body-prose full-text search
-- rich snippet extraction
-- scope-wide filter UI
-- catalogue-style work metadata fields
+- `id`
+- `kind`
+- `title`
+- `href`
+- `search_terms`
+- `search_text`
 
-Reason:
+Current optional record fields:
 
-- the current docs system does not yet have a canonical summary concept
-- summary generation would be a separate product decision, not a required precondition for v1 search
-- the shared shell already supports useful ranked lookup with a minimal normalized record
+- `last_updated`
+- `parent_id`
+- `parent_title`
+- `display_meta`
 
-## Ranking implications
+Current field mapping back to the docs model:
 
-Studio v1 ranking should be scope-specific.
+- `id` <- docs `doc_id`
+- `kind` <- always `doc`
+- `title` <- docs title
+- `href` <- scope-owned docs viewer URL
+- `last_updated`, `parent_id`, `parent_title`, `display_meta` <- docs metadata used for context and search support
+- `search_terms` and `search_text` <- search-specific derived fields built from that metadata
 
-That likely means:
+## Current Builder Rules
 
-- strong preference for exact `doc_id`
-- strong preference for exact title
-- title-token prefix behavior
-- fallback to compact `search_text`
+Current builder behavior:
 
-This does not need to match catalogue ranking exactly.
+- one search record per published doc
+- no section-level records
+- no summary or snippet field
+- no body-prose indexing
+- one scope-owned artifact per docs scope
 
-The shared runtime should tolerate different scope-specific ranking behavior keyed by `scope`.
+Current builder entrypoint:
 
-## Recommended build ownership for v1
+```bash
+ruby ./scripts/build_search_data.rb --scope studio --write
+ruby ./scripts/build_search_data.rb --scope library --write
+```
 
-Studio v1 should be implemented as:
+## Relationship To Other Search Artifacts
 
-- a search-owned adapter over docs outputs
+These docs-domain search artifacts are separate from:
 
-Locked v1 interpretation:
+- `assets/data/search/catalogue/index.json`
 
-- the docs builder still publishes canonical docs JSON
-- a search-owned build step reads those docs outputs
-- that search-owned step emits `assets/data/search/studio/index.json`
-
-This is the key boundary that keeps Studio search compatible with the target architecture.
-
-## What not to do for v1
-
-Avoid these shortcuts:
-
-- adding permanent Studio-search ownership to `scripts/build_docs_data.rb`
-- folding docs indexing rules into `scripts/generate_work_pages.py`
-- making the shared runtime depend on catalogue-only fields
-- inventing a full declarative cross-scope indexing framework before `library` exists
-
-These would increase coupling without enough long-term clarity yet.
-
-## How v1 fits the grand plan
-
-Studio v1 is the first non-catalogue scope.
-
-Its role in the wider plan is:
-
-1. prove that the public `/search/` shell can support a second scope
-2. prove that a second scope can use a different upstream source and a simpler normalized record
-3. keep search assembly on the search side of the boundary
-4. delay deeper shared build abstractions until both `studio` and `library` provide real comparison points
-
-This is exactly the kind of staged implementation the target architecture is meant to allow.
-
-## Suggested implementation order
-
-1. keep the current scope-aware public shell and policy layer as-is
-2. add a search-owned Studio index builder in Ruby that reads canonical docs outputs
-3. emit `assets/data/search/studio/index.json`
-4. enable `studio` in `assets/data/search/policy.json`
-5. add a Studio-owned CTA to `/search/?scope=studio`
-6. add scope-specific ranking behavior for `studio`
-
-Only after that should the repo decide whether `catalogue` and `studio` have enough genuine overlap to justify a deeper shared build abstraction.
-
-## Main benefits
-
-- ships Studio search without blocking on a large refactor
-- preserves the intended ownership boundary
-- keeps the shared runtime contract small and stable
-- avoids overfitting catalogue assumptions onto docs search
-
-## Main risks
-
-- some duplication between scope adapters is likely at first
-- if Studio v1 reaches too far into body text too early, payload size and ranking complexity may jump before the product model is clear
-
-Those risks are acceptable for a v1 as long as the build boundary stays search-owned.
+The dedicated `/search/` page currently uses only `catalogue`.
+The Studio and Library artifacts are currently consumed by the shared Docs Viewer runtime for inline search.
 
 ## Related documents
 
+- [Data Models](/docs/?scope=studio&doc=data-models)
 - [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
 - [Search Public UI Contract](/docs/?scope=studio&doc=search-public-ui-contract)
-- [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
-- [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps)

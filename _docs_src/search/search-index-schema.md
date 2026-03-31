@@ -1,7 +1,7 @@
 ---
 doc_id: search-index-schema
 title: Search Index Schema
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 20
 ---
@@ -10,9 +10,9 @@ sort_order: 20
 
 ## Purpose
 
-This document defines the current data contract for the generated search index used by site search.
+This document defines the current search-specific data contract for the generated catalogue search index.
 
-It describes the actual serialized shape of `assets/data/search/catalogue/index.json`, the meaning of each field, and the difference between structured fields and derived search-support fields.
+It describes the serialized shape of `assets/data/search/catalogue/index.json`, the meaning of its search-facing fields, and the difference between structured fields and derived search-support fields.
 
 This is a schema document. It does not define ranking, UI behaviour, or detailed build flow.
 
@@ -30,6 +30,8 @@ It covers:
 - cross-kind conventions shared by works, series, and moments
 
 It does not attempt to define future prose shards or other later index partitions.
+
+For the wider role of this artifact inside the catalogue model, use [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue).
 
 ## Top-level index structure
 
@@ -107,135 +109,15 @@ The current serialized schema uses these fields.
 | `search_terms` | array of strings | yes | normalized token bundle used by runtime matching | derived at build time |
 | `search_text` | string | yes | flattened broad-match string | derived at build time |
 
-## Field definitions
+## Field Notes
 
-### `kind`
+The table above is the canonical field inventory for the serialized payload.
 
-Type: string  
-Required: yes  
-Purpose: identifies the indexed content type.  
-Usage: filtering, type-aware rendering, and stable grouping semantics.  
-Notes: current values are a controlled set: `work`, `series`, `moment`.
+The main search-specific distinctions to keep in mind are:
 
-### `id`
-
-Type: string  
-Required: yes  
-Purpose: canonical stable identifier for the indexed item.  
-Usage: direct lookup, identity, sorting, and display.  
-Notes: ids remain strings even when numerically shaped, such as `00533`.
-
-### `title`
-
-Type: string  
-Required: yes  
-Purpose: primary human-readable title.  
-Usage: result display and major retrieval field.  
-Notes: the generator falls back to the item id if a title is missing.
-
-### `href`
-
-Type: string  
-Required: yes  
-Purpose: target route for result navigation.  
-Usage: result rendering.  
-Notes: current values are relative site paths such as `/works/00533/`.
-
-### `year`
-
-Type: integer  
-Required: no  
-Purpose: canonical year value for year-based records.  
-Usage: display support and token generation.  
-Notes: serialized only when available; currently common on works and series.
-
-### `date`
-
-Type: string  
-Required: no  
-Purpose: canonical date value for date-based records.  
-Usage: display support and token generation.  
-Notes: currently used on moments.
-
-### `display_meta`
-
-Type: string  
-Required: no  
-Purpose: compact human-readable metadata summary for the result row.  
-Usage: display and token generation.  
-Notes: examples include year display strings and moment date display strings.
-
-### `series_ids`
-
-Type: array of strings  
-Required: yes  
-Purpose: canonical series relationships attached to the item.  
-Usage: structured metadata and search support.  
-Notes: works may contain related series ids; other kinds currently serialize `[]`.
-
-### `series_titles`
-
-Type: array of strings  
-Required: yes  
-Purpose: display-facing series relationships attached to the item.  
-Usage: result display and search support.  
-Notes: works may contain related series titles; other kinds currently serialize `[]`.
-
-### `medium_type`
-
-Type: string  
-Required: no  
-Purpose: structured work medium metadata.  
-Usage: search support and result metadata display for works.  
-Notes: omitted when empty.
-
-### `storage`
-
-Type: string  
-Required: no  
-Purpose: structured work storage metadata.  
-Usage: reserved search support field.  
-Notes: present in the logical schema, but may be absent from many or most current records.
-
-### `series_type`
-
-Type: string  
-Required: no  
-Purpose: structured series classification metadata.  
-Usage: search support and result metadata display for series.  
-Notes: omitted when empty.
-
-### `tag_ids`
-
-Type: array of strings  
-Required: yes  
-Purpose: canonical assigned tag ids.  
-Usage: structured future-facing search metadata.  
-Notes: currently populated from tag assignments; often empty because tag coverage is still sparse.
-
-### `tag_labels`
-
-Type: array of strings  
-Required: yes  
-Purpose: human-readable labels for assigned tags.  
-Usage: future-facing search and review support.  
-Notes: currently not used by the v1 ranking code, but present in the serialized schema.
-
-### `search_terms`
-
-Type: array of strings  
-Required: yes  
-Purpose: build-time-derived set of normalized discrete search tokens.  
-Usage: exact-term and prefix-oriented runtime checks.  
-Notes: may include canonical ids, titles, split title tokens, display metadata tokens, year/date text, related series terms, and structured metadata values when present.
-
-### `search_text`
-
-Type: string  
-Required: yes  
-Purpose: flattened broad-match text field derived from `search_terms`.  
-Usage: fallback contains matching in the runtime.  
-Notes: generated by joining `search_terms` with spaces.
+- `title`, `href`, and `display_meta` exist so the browser can render a useful result row without a secondary fetch
+- `series_ids`, `series_titles`, `medium_type`, `storage`, `series_type`, `tag_ids`, and `tag_labels` are structured fields carried through so search can reason over more than titles alone
+- `search_terms` and `search_text` are generated specifically for search and are not authored source fields
 
 ## Display fields vs search fields
 
@@ -419,14 +301,9 @@ The current schema is shaped this way for pragmatic reasons:
 - `search_terms` and `search_text` are precomputed so the browser does not need to reconstruct token bundles from heterogeneous fields on every search
 - the index stays compact by excluding full content bodies and other large page data
 
-## Known limitations or open schema questions
+## Further Refinement
 
-Current schema-level follow-up questions:
-
-- whether `search_text` should continue to duplicate `search_terms` so directly, or evolve into a more selective broad-match field
-- whether future filtering requires additional explicit structured fields beyond the current optional set
-- whether tag-derived fields should eventually be expanded beyond `tag_ids` and `tag_labels`
-- how future prose shards should share or diverge from the base record model
+Schema follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

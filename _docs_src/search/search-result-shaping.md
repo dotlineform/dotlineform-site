@@ -1,7 +1,7 @@
 ---
 doc_id: search-result-shaping
 title: Search Result Shaping
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 200
 ---
@@ -35,12 +35,12 @@ This document should define the site-specific result-policy layer rather than th
 
 This document should be read alongside:
 
-- `search_overview.md`
-- `search_field_registry.md`
-- `search_ranking_model.md`
-- `search_ui_behaviour.md`
-- `search_index_schema.md`
-- `search_open_issues.md`
+- [Search Overview](/docs/?scope=studio&doc=search-overview)
+- [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
+- [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
+- [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
+- [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
+- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps)
 
 ## Why result shaping exists
 

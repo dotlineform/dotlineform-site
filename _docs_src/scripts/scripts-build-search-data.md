@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-build-search-data
 title: Build Search Data
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 45
 ---
@@ -11,7 +11,7 @@ sort_order: 45
 Script:
 
 ```bash
-./scripts/build_search_data.rb
+ruby ./scripts/build_search_data.rb
 ```
 
 Current purpose:
@@ -22,11 +22,16 @@ Current purpose:
 Default command:
 
 ```bash
-./scripts/build_search_data.rb
-./scripts/build_search_data.rb --write
+ruby ./scripts/build_search_data.rb --write
 ```
 
-## Current defaults
+Dry-run:
+
+```bash
+ruby ./scripts/build_search_data.rb
+```
+
+## Current Defaults
 
 - scope:
   - `studio`
@@ -44,7 +49,21 @@ Library scope:
 - generated output:
   - `assets/data/search/library/index.json`
 
-## Current flags
+## Source And Target Artifacts
+
+Source artifacts:
+
+- `assets/data/docs/scopes/studio/index.json`
+- `assets/data/docs/scopes/library/index.json`
+
+Generated target artifacts:
+
+- `assets/data/search/studio/index.json`
+- `assets/data/search/library/index.json`
+
+These outputs are the docs-domain search indexes consumed by the shared Docs Viewer runtime for inline search in the Studio and Library scopes.
+
+## Current Flags
 
 - `--scope NAME`
   - current supported values: `studio`, `library`
@@ -57,17 +76,16 @@ Library scope:
 
 ## Current behavior
 
-- reads the published Studio docs index
-- reads the published Library docs index when `--scope library` is used
+- reads the published docs index for the selected scope
 - emits one search record per published doc
-- keeps record shape compatible with the shared `/search/` runtime
+- keeps record shape compatible with the shared docs-viewer inline search runtime
 - does not index section-level records
 - does not index doc body prose or summaries
 
 This is the first search-owned builder step toward the longer-term search pipeline documented in [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture).
 
-## Related references
+## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)

@@ -3,7 +3,7 @@ layout: studio
 title: Series Tag Editor
 permalink: /studio/series-tag-editor/
 section: works
-studio_page_doc: /docs/?doc=tag-editor
+studio_page_doc: /docs/?scope=studio&doc=tag-editor
 ---
 
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">

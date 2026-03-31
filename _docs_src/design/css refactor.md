@@ -1,9 +1,9 @@
 ---
 doc_id: css-refactor
 title: CSS Refactor
-last_updated: 2026-03-28
+last_updated: 2026-03-31
 parent_id: design
-sort_order: 40
+sort_order: 50
 ---
 
 Tackle it as a controlled design-system cleanup, not a general “make CSS nicer” pass.

@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-tag-write-server
 title: Tag Write Server
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: scripts
 sort_order: 70
 ---
@@ -128,9 +128,25 @@ Tag Aliases behavior:
   - `tag_registry.json.bak-YYYYMMDD-HHMMSS`
   - `tag_aliases.json.bak-YYYYMMDD-HHMMSS`
 
+## Source And Target Artifacts
+
+Source and target JSON artifacts:
+
+- `assets/studio/data/tag_assignments.json`
+- `assets/studio/data/tag_registry.json`
+- `assets/studio/data/tag_aliases.json`
+
+Backup target:
+
+- `var/studio/backups/`
+
+Operational log target:
+
+- `var/studio/logs/tag_write_server.log`
+
 ## Related References
 
-- [Scripts Overview](/docs/?scope=studio&doc=scripts-overview)
+- [Scripts](/docs/?scope=studio&doc=scripts)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Series Tags](/docs/?scope=studio&doc=series-tags)
 - [Tag Editor](/docs/?scope=studio&doc=tag-editor)

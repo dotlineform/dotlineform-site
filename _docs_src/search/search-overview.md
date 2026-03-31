@@ -1,7 +1,7 @@
 ---
 doc_id: search-overview
 title: Search Overview
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 20
 ---
@@ -28,7 +28,7 @@ Current goals:
 
 ## Current scope
 
-The current implementation has two public search surfaces:
+The current implementation has three live search surfaces:
 
 - a dedicated catalogue search page at `/search/`
 - an inline Studio docs search experience on `/docs/`
@@ -42,9 +42,11 @@ It is based on:
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
-- an initial search-owned builder entrypoint for future non-catalogue scopes at `scripts/build_search_data.rb`
+- a search-owned builder entrypoint for docs-domain scopes at `scripts/build_search_data.rb`
 
 The browser loads scope-owned search data into memory per surface as needed.
+
+For the role of those artifacts in the wider site model, use [Data Models](/docs/?scope=studio&doc=data-models). This section stays focused on the search subsystem itself.
 
 ## Content covered by search
 
@@ -72,6 +74,12 @@ The current subsystem has five main parts.
 
 Canonical site data for works, series, moments, and available tag metadata acts as the source input.
 
+Those source and upstream artifact families are documented in:
+
+- [Data Models: Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+- [Data Models: Studio Scope](/docs/?scope=studio&doc=data-models-studio)
+- [Data Models: Library Scope](/docs/?scope=studio&doc=data-models-library)
+
 ### 2. Search index generation
 
 `scripts/generate_work_pages.py` builds a dedicated catalogue search artifact at build time. Search owns this artifact separately from `works_index.json`, `series_index.json`, and `moments_index.json`.
@@ -82,9 +90,10 @@ Search policy currently exists in a combination of:
 
 - generated field preparation in the build script
 - deterministic ranking tiers in the client runtime
-- shared search UI text and route config in `assets/studio/data/studio_config.json`
+- dedicated `/search/` runtime policy in `assets/data/search/policy.json`
+- shared route/data-path lookup and shared UI text in `assets/studio/data/studio_config.json`
 
-This policy is documented separately so it can later move out of implementation code more cleanly.
+The file-level config boundary is documented in the new **[Config](/docs/?scope=studio&doc=config)** section.
 
 ### 4. Search engine
 
@@ -108,7 +117,7 @@ Search has its own artifact and its own documentation set rather than piggybacki
 
 ### Reviewable
 
-Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow.
+Search behaviour should be understandable from focused documents covering schema, ranking, normalization, UI behaviour, and build flow. Deferred work is collated separately in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ### Incremental
 
@@ -127,7 +136,7 @@ This document does not define:
 - ranking tiers or scoring details
 - UI event timing and pagination details
 - validation procedure
-- future config extraction architecture
+- later config extraction architecture
 
 Those belong in the dedicated companion documents.
 
@@ -139,14 +148,16 @@ Those belong in the dedicated companion documents.
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
+- [Search Next Steps](/docs/?scope=studio&doc=search-next-steps)
+- [Config](/docs/?scope=studio&doc=config)
+- [Data Models](/docs/?scope=studio&doc=data-models)
 - [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 - [Search Change Log](/docs/?scope=studio&doc=search-change-log)
-- [Search Archive](/docs/?scope=studio&doc=search-archive)
 
-[Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture) is reserved for a later phase and should not be treated as current implementation documentation yet.
+[Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture) and [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture) are future-direction docs rather than current implementation specs.
 
 ## Current status
 
@@ -165,14 +176,4 @@ Current implementation status:
 - Library docs search is inline on `/library/`
 - results are rendered client-side in ranked order, with additional batches revealed via `more`
 
-This is a production-like implementation with a dedicated catalogue search page and an inline Studio docs search surface, but it is still early in the wider multi-domain search architecture.
-
-## Open questions
-
-High-level follow-up questions for the next phase:
-
-- when tag coverage becomes strong enough, how should tags enter ranking and filtering
-- when prose content expands substantially, how should prose search be added without inflating the base payload
-- which additional structured fields should be promoted from schema presence to first-class ranking or filter signals
-- how the later `studio` and `library` scopes should plug into the same public route contract
-- when the second search scope is live, what abstractions truly want to be shared across scope adapters and what should remain scope-specific
+This is a live multi-scope implementation with one dedicated catalogue route and two inline docs-domain surfaces. Follow-up work is collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).

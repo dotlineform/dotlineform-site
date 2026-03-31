@@ -22,7 +22,7 @@ This document does not define the detailed rules themselves. Those belong in:
 - [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
 - [Search Config Implementation Note](/docs/?scope=studio&doc=search-config-implementation-note)
 - [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 
 ## Current state
 

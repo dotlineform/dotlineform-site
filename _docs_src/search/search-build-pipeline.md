@@ -1,7 +1,7 @@
 ---
 doc_id: search-build-pipeline
 title: Search Build Pipeline
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 70
 ---
@@ -32,7 +32,7 @@ It covers:
 - current validation and change-detection behaviour
 - pipeline integration
 
-Transitional note:
+Current docs-domain note:
 
 - a search-owned builder entrypoint now exists at `scripts/build_search_data.rb`
 - its current implemented scopes are `studio` and `library`
@@ -87,13 +87,13 @@ The current build path is:
 
 Search generation is therefore not a completely separate script today. It is a dedicated artifact stage inside the broader content generator.
 
-## Transitional Studio builder
+## Current Docs-Domain Builder
 
 The first search-owned pipeline step now exists separately from the catalogue generator:
 
 ```bash
-./scripts/build_search_data.rb --scope studio --write
-./scripts/build_search_data.rb --scope library --write
+ruby ./scripts/build_search_data.rb --scope studio --write
+ruby ./scripts/build_search_data.rb --scope library --write
 ```
 
 Current role:
@@ -342,7 +342,7 @@ What is not yet implemented as a dedicated search validation layer:
 - classification-rule enforcement
 - benchmark-style relevance validation during generation
 
-Those remain future hardening work.
+Those follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Performance and size considerations
 
@@ -353,12 +353,6 @@ Current pipeline decisions that keep the base artifact lightweight:
 - derived search fields are compact text/token forms rather than richer provenance structures
 - duplicate tokens are removed during generation
 - optional empty scalar fields are omitted from serialized output
-
-Current future-scaling direction:
-
-- keep the base artifact focused on compact metadata
-- add future structured fields carefully
-- use later partitioning or shards for prose-heavy search rather than bloating the `catalogue/index.json` payload
 
 ## Current implementation summary
 
@@ -372,15 +366,9 @@ Current build behaviour in practice:
 - write-skipping uses a content-derived version hash rather than file timestamps alone
 - validation is currently light and pragmatic rather than strict
 
-## Known limitations or open pipeline questions
+## Further Refinement
 
-Current pipeline questions for later phases:
-
-- whether search should eventually move to a dedicated generator module while still sharing canonical inputs
-- whether search should add an explicit validation pass for schema, field classification, and payload budgets
-- whether tags should enter derived search token generation once tag coverage improves
-- whether prose search should be added through separate shards rather than expanding the base artifact
-- whether more explicit provenance should be retained between source fields and derived search fields
+Pipeline follow-up areas are collated in [Search Next Steps](/docs/?scope=studio&doc=search-next-steps).
 
 ## Out of scope for this document
 

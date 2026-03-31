@@ -122,10 +122,12 @@
 
 ## Studio UI Guidance
 
-- `_docs_src/studio/ui-framework.md` defines the site-wide UI interaction defaults and the Studio shared UI contracts.
-- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use the Studio-specific sections of `_docs_src/studio/ui-framework.md` as the basis.
-- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, or DOM hook conventions, use the site-wide sections of `_docs_src/studio/ui-framework.md` as the basis.
-- If site-wide UI defaults or Studio UI definitions, scope, or shared naming boundaries change, update `_docs_src/studio/ui-framework.md` in the same change.
+- `_docs_src/design/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI standards.
+- `_docs_src/design/studio-ui-framework.md` defines the Studio shared UI contracts.
+- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use `_docs_src/design/studio-ui-framework.md` as the basis.
+- When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, docs-viewer UI, or public-search UI, use `_docs_src/design/ui-framework.md` as the basis.
+- If site-wide UI defaults change, update `_docs_src/design/ui-framework.md` in the same change.
+- If Studio UI definitions, scope, or shared naming boundaries change, update `_docs_src/design/studio-ui-framework.md` in the same change.
 - Prefer extending shared `tagStudio*` primitives over borrowing another page's namespace or creating one-off patterns.
 - Keep UI shell concerns separate from application logic, validation, and mutation behavior.
 
@@ -145,11 +147,15 @@
 
 - `_docs_src/studio/*.md` are the central product/behavior docs for Studio features.
 - `_docs_src/search/*.md` are the central product/behavior docs for search.
+- `_docs_src/data-models/*.md` are the central schema and payload-contract docs for generated/runtime data artifacts and source-data records.
 - `_docs_src/site/*.md` plus `_docs_src/site-change-log.md` are the central architecture/history docs for the broader non-search site.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.
-- Keep `_docs_src/site/scripts-overview.md` as the high-level entry point for repo scripts.
-- Keep `_docs_src/site/scripts-*.md` as the canonical script-specific references for command usage, flags, outputs, and operational notes.
+- Keep `_docs_src/scripts/scripts.md` as the high-level entry point for repo scripts.
+- Keep `_docs_src/scripts/scripts-*.md` as the canonical script-specific references for command usage, flags, outputs, and operational notes.
+- When a schema or payload contract changes, update the relevant `_docs_src/data-models/*.md` scope doc in the same change.
+- Also update the owning runtime, UI, or script doc when behavior, dependencies, or build/write responsibilities changed; do not spread partial schema notes across multiple sections.
+- Only split a lower-level data-model child doc out of a scope doc when one artifact family has become too dense to stay readable and maintainable in the parent scope doc.
 - When Studio features are implemented or changed, update Studio docs and relevant scripts docs in the same change.
 - When search behaviour, schema, ranking, normalization, UI, build flow, validation, or architecture changes materially, update the relevant `_docs_src/search/*.md` docs in the same change.
 - For meaningful search changes, update `_docs_src/search/search-change-log.md` in the same change set as part of normal close-out.

@@ -25,7 +25,7 @@ Related docs:
 
 - [Search Config Architecture](/docs/?scope=studio&doc=search-config-architecture)
 - [Search Pipeline Target Architecture](/docs/?scope=studio&doc=search-pipeline-target-architecture)
-- [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
+- [Docs Scope Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search Field Registry](/docs/?scope=studio&doc=search-field-registry)
 - [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model)
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)

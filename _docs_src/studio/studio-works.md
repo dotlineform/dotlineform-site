@@ -1,9 +1,9 @@
 ---
 doc_id: studio-works
 title: Studio Works
-last_updated: 2026-03-28
+last_updated: 2026-03-31
 parent_id: studio
-sort_order: 20
+sort_order: 80
 ---
 
 # Studio Works
@@ -135,7 +135,7 @@ Meaning:
 
 ## UI Contract
 
-This page follows the Studio-specific shared UI boundary documented in [UI Framework](/docs/?scope=studio&doc=ui-framework):
+This page follows the Studio-specific shared UI boundary documented in [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework):
 
 - classes define presentation
 - `data-role` defines JS selectors
