@@ -2,8 +2,8 @@
 doc_id: tag-registry
 title: Tag Registry
 last_updated: 2026-03-28
-parent_id: tagging
-sort_order: 50
+parent_id: studio
+sort_order: 20
 ---
 
 # Tag Registry

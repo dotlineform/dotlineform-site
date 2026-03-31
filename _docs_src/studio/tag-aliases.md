@@ -2,8 +2,8 @@
 doc_id: tag-aliases
 title: Tag Aliases
 last_updated: 2026-03-28
-parent_id: tagging
-sort_order: 60
+parent_id: studio
+sort_order: 30
 ---
 
 # Tag Aliases

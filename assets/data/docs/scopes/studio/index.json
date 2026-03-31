@@ -1,38 +1,27 @@
 {
-  "generated_at": "2026-03-31T11:57:38Z",
+  "generated_at": "2026-03-31T12:30:36Z",
   "docs": [
     {
       "scope": "studio",
-      "doc_id": "search-change-log-guidance",
-      "title": "Search Change Log Guidance",
-      "last_updated": "2026-03-29",
-      "parent_id": "search",
-      "sort_order": 2,
-      "source_path": "search/search-change-log-guidance.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-change-log",
-      "title": "Search Change Log",
+      "doc_id": "studio",
+      "title": "Studio",
       "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "sort_order": 3,
-      "source_path": "search/search-change-log.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-change-log",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json"
+      "parent_id": "",
+      "sort_order": 5,
+      "source_path": "studio/studio.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json"
     },
     {
       "scope": "studio",
-      "doc_id": "css-primitives",
-      "title": "CSS Primitives",
-      "last_updated": "2026-03-29",
-      "parent_id": "design",
+      "doc_id": "data-flow",
+      "title": "Data Flow",
+      "last_updated": "2026-03-30",
+      "parent_id": "architecture",
       "sort_order": 10,
-      "source_path": "design/css-primitives.md",
-      "viewer_url": "/docs/?scope=studio&doc=css-primitives",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json"
+      "source_path": "architecture/data-flow.md",
+      "viewer_url": "/docs/?scope=studio&doc=data-flow",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/data-flow.json"
     },
     {
       "scope": "studio",
@@ -58,6 +47,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "docs-viewer-runtime-boundary",
+      "title": "Docs Viewer Runtime Boundary",
+      "last_updated": "2026-03-30",
+      "parent_id": "docs-viewer",
+      "sort_order": 10,
+      "source_path": "docs-viewer/docs-viewer-runtime-boundary.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "pipeline-use-cases",
       "title": "Pipeline Use Cases",
       "last_updated": "2026-03-29",
@@ -66,17 +66,6 @@
       "source_path": "scripts/pipeline-use-cases.md",
       "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "search-overview",
-      "title": "Search Overview",
-      "last_updated": "2026-03-30",
-      "parent_id": "search",
-      "sort_order": 10,
-      "source_path": "search/search-overview.md",
-      "viewer_url": "/docs/?scope=studio&doc=search-overview",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json"
     },
     {
       "scope": "studio",
@@ -91,25 +80,14 @@
     },
     {
       "scope": "studio",
-      "doc_id": "sorting-architecture",
-      "title": "Sorting Architecture",
-      "last_updated": "2026-03-29",
-      "parent_id": "architecture",
+      "doc_id": "tag-groups",
+      "title": "Tag Groups",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
       "sort_order": 10,
-      "source_path": "architecture/sorting-architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/sorting-architecture.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "studio",
-      "title": "Studio",
-      "last_updated": "2026-03-30",
-      "parent_id": "",
-      "sort_order": 10,
-      "source_path": "studio/studio.md",
-      "viewer_url": "/docs/?scope=studio&doc=studio",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json"
+      "source_path": "studio/tag-groups.md",
+      "viewer_url": "/docs/?scope=studio&doc=tag-groups",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json"
     },
     {
       "scope": "studio",
@@ -124,6 +102,28 @@
     },
     {
       "scope": "studio",
+      "doc_id": "architecture",
+      "title": "Architecture",
+      "last_updated": "2026-03-30",
+      "parent_id": "",
+      "sort_order": 20,
+      "source_path": "architecture/architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/architecture.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "css-primitives",
+      "title": "CSS Primitives",
+      "last_updated": "2026-03-29",
+      "parent_id": "design",
+      "sort_order": 20,
+      "source_path": "design/css-primitives.md",
+      "viewer_url": "/docs/?scope=studio&doc=css-primitives",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-main-pipeline",
       "title": "Main Draft Pipeline",
       "last_updated": "2026-03-30",
@@ -132,17 +132,6 @@
       "source_path": "scripts/scripts-main-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts",
-      "title": "Scripts",
-      "last_updated": "2026-03-30",
-      "parent_id": "",
-      "sort_order": 20,
-      "source_path": "scripts/scripts.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json"
     },
     {
       "scope": "studio",
@@ -157,6 +146,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "search-overview",
+      "title": "Search Overview",
+      "last_updated": "2026-03-30",
+      "parent_id": "search",
+      "sort_order": 20,
+      "source_path": "search/search-overview.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-overview",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-result-shaping-json-slimmer",
       "title": "Search Result Shaping draft slimmer JSON",
       "last_updated": "2026-03-30",
@@ -165,17 +165,6 @@
       "source_path": "search/search-result-shaping-slimmer-json.md",
       "viewer_url": "/docs/?scope=studio&doc=search-result-shaping-json-slimmer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-result-shaping-json-slimmer.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "site-change-log",
-      "title": "Site Change Log",
-      "last_updated": "2026-03-30",
-      "parent_id": "",
-      "sort_order": 20,
-      "source_path": "site-change-log.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-change-log",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json"
     },
     {
       "scope": "studio",
@@ -201,6 +190,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "tag-registry",
+      "title": "Tag Registry",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 20,
+      "source_path": "studio/tag-registry.md",
+      "viewer_url": "/docs/?scope=studio&doc=tag-registry",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-copy-draft-media",
       "title": "Copy Draft Media",
       "last_updated": "2026-03-30",
@@ -212,25 +212,14 @@
     },
     {
       "scope": "studio",
-      "doc_id": "docs-viewer",
-      "title": "Docs Viewer",
-      "last_updated": "2026-03-30",
-      "parent_id": "",
+      "doc_id": "css-audit-spec",
+      "title": "CSS Audit Spec (v1)",
+      "last_updated": "2026-03-28",
+      "parent_id": "design",
       "sort_order": 30,
-      "source_path": "docs-viewer/docs-viewer.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "docs-viewer-runtime-boundary",
-      "title": "Docs Viewer Runtime Boundary",
-      "last_updated": "2026-03-30",
-      "parent_id": "docs-viewer",
-      "sort_order": 30,
-      "source_path": "docs-viewer/docs-viewer-runtime-boundary.md",
-      "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
+      "source_path": "design/css-audit-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/css-audit-spec.json"
     },
     {
       "scope": "studio",
@@ -245,14 +234,14 @@
     },
     {
       "scope": "studio",
-      "doc_id": "search",
-      "title": "Search",
+      "doc_id": "scripts",
+      "title": "Scripts",
       "last_updated": "2026-03-30",
       "parent_id": "",
       "sort_order": 30,
-      "source_path": "search/search.md",
-      "viewer_url": "/docs/?scope=studio&doc=search",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/search.json"
+      "source_path": "scripts/scripts.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json"
     },
     {
       "scope": "studio",
@@ -267,25 +256,47 @@
     },
     {
       "scope": "studio",
-      "doc_id": "series-tags",
-      "title": "Series Tags",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
+      "doc_id": "sorting-architecture",
+      "title": "Sorting Architecture",
+      "last_updated": "2026-03-29",
+      "parent_id": "architecture",
       "sort_order": 30,
-      "source_path": "studio/tagging/series-tags.md",
-      "viewer_url": "/docs/?scope=studio&doc=series-tags",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+      "source_path": "architecture/sorting-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/sorting-architecture.json"
     },
     {
       "scope": "studio",
-      "doc_id": "tagging",
-      "title": "Tagging",
-      "last_updated": "2026-03-29",
+      "doc_id": "tag-aliases",
+      "title": "Tag Aliases",
+      "last_updated": "2026-03-28",
       "parent_id": "studio",
       "sort_order": 30,
-      "source_path": "studio/tagging/tagging.md",
-      "viewer_url": "/docs/?scope=studio&doc=tagging",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tagging.json"
+      "source_path": "studio/tag-aliases.md",
+      "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "css-refactor",
+      "title": "CSS Refactor",
+      "last_updated": "2026-03-28",
+      "parent_id": "design",
+      "sort_order": 40,
+      "source_path": "design/css refactor.md",
+      "viewer_url": "/docs/?scope=studio&doc=css-refactor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "docs-viewer",
+      "title": "Docs Viewer",
+      "last_updated": "2026-03-30",
+      "parent_id": "",
+      "sort_order": 40,
+      "source_path": "docs-viewer/docs-viewer.md",
+      "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
     },
     {
       "scope": "studio",
@@ -300,6 +311,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "series-tags",
+      "title": "Series Tags",
+      "last_updated": "2026-03-28",
+      "parent_id": "studio",
+      "sort_order": 40,
+      "source_path": "studio/series-tags.md",
+      "viewer_url": "/docs/?scope=studio&doc=series-tags",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "scripts-srcset-builder",
       "title": "Srcset Builder",
       "last_updated": "2026-03-30",
@@ -308,17 +330,6 @@
       "source_path": "scripts/scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "tag-editor",
-      "title": "Tag Editor",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
-      "sort_order": 40,
-      "source_path": "studio/tagging/tag-editor.md",
-      "viewer_url": "/docs/?scope=studio&doc=tag-editor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-editor.json"
     },
     {
       "scope": "studio",
@@ -344,6 +355,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "search",
+      "title": "Search",
+      "last_updated": "2026-03-30",
+      "parent_id": "",
+      "sort_order": 50,
+      "source_path": "search/search.md",
+      "viewer_url": "/docs/?scope=studio&doc=search",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-normalisation-rules",
       "title": "Search Normalisation Rules",
       "last_updated": "2026-03-30",
@@ -355,14 +377,14 @@
     },
     {
       "scope": "studio",
-      "doc_id": "tag-registry",
-      "title": "Tag Registry",
+      "doc_id": "tag-editor",
+      "title": "Tag Editor",
       "last_updated": "2026-03-28",
-      "parent_id": "tagging",
+      "parent_id": "studio",
       "sort_order": 50,
-      "source_path": "studio/tagging/tag-registry.md",
-      "viewer_url": "/docs/?scope=studio&doc=tag-registry",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
+      "source_path": "studio/tag-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=tag-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-editor.json"
     },
     {
       "scope": "studio",
@@ -399,17 +421,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "tag-aliases",
-      "title": "Tag Aliases",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
-      "sort_order": 60,
-      "source_path": "studio/tagging/tag-aliases.md",
-      "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search-build-pipeline",
       "title": "Search Build Pipeline",
       "last_updated": "2026-03-30",
@@ -418,17 +429,6 @@
       "source_path": "search/search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "tag-groups",
-      "title": "Tag Groups",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
-      "sort_order": 70,
-      "source_path": "studio/tagging/tag-groups.md",
-      "viewer_url": "/docs/?scope=studio&doc=tag-groups",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json"
     },
     {
       "scope": "studio",
@@ -465,17 +465,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "site-change-log-guidance",
-      "title": "Site Change Log Guidance",
-      "last_updated": "2026-03-29",
-      "parent_id": "",
-      "sort_order": 90,
-      "source_path": "site-change-log-guidance.md",
-      "viewer_url": "/docs/?scope=studio&doc=site-change-log-guidance",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-guidance.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "scripts-audit-site-consistency",
       "title": "Site Consistency Audit",
       "last_updated": "2026-03-30",
@@ -484,17 +473,6 @@
       "source_path": "scripts/scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-site-consistency.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "css-refactor",
-      "title": "CSS Refactor",
-      "last_updated": "2026-03-28",
-      "parent_id": "design",
-      "sort_order": 100,
-      "source_path": "design/css refactor.md",
-      "viewer_url": "/docs/?scope=studio&doc=css-refactor",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json"
     },
     {
       "scope": "studio",
@@ -517,6 +495,17 @@
       "source_path": "search/search-config-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=search-config-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-config-architecture.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-change-log-guidance",
+      "title": "Site Change Log Guidance",
+      "last_updated": "2026-03-29",
+      "parent_id": "",
+      "sort_order": 100,
+      "source_path": "site-change-log-guidance.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-change-log-guidance",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log-guidance.json"
     },
     {
       "scope": "studio",
@@ -553,6 +542,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "site-change-log",
+      "title": "Site Change Log",
+      "last_updated": "2026-03-30",
+      "parent_id": "",
+      "sort_order": 110,
+      "source_path": "site-change-log.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-change-log",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-result-shaping",
       "title": "Search Result Shaping",
       "last_updated": "2026-03-30",
@@ -564,58 +564,25 @@
     },
     {
       "scope": "studio",
-      "doc_id": "architecture",
-      "title": "Architecture",
+      "doc_id": "search-change-log-guidance",
+      "title": "Search Change Log Guidance",
+      "last_updated": "2026-03-29",
+      "parent_id": "search",
+      "sort_order": 1000,
+      "source_path": "search/search-change-log-guidance.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "search-change-log",
+      "title": "Search Change Log",
       "last_updated": "2026-03-30",
-      "parent_id": "",
-      "sort_order": null,
-      "source_path": "architecture/architecture.md",
-      "viewer_url": "/docs/?scope=studio&doc=architecture",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/architecture.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "css-audit-spec",
-      "title": "CSS Audit Spec (v1)",
-      "last_updated": "2026-03-28",
-      "parent_id": "design",
-      "sort_order": null,
-      "source_path": "design/css-audit-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/css-audit-spec.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "data-flow",
-      "title": "Data Flow",
-      "last_updated": "2026-03-30",
-      "parent_id": "architecture",
-      "sort_order": null,
-      "source_path": "architecture/data-flow.md",
-      "viewer_url": "/docs/?scope=studio&doc=data-flow",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/data-flow.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "offline-tag-assignments-implementation-breakdown",
-      "title": "Offline Tag Assignments Implementation Breakdown",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
-      "sort_order": null,
-      "source_path": "studio/tagging/offline-tag-assignments-implementation-breakdown.md",
-      "viewer_url": "/docs/?scope=studio&doc=offline-tag-assignments-implementation-breakdown",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/offline-tag-assignments-implementation-breakdown.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "offline-tag-assignments-product-spec",
-      "title": "Offline Tag Assignments Product Spec",
-      "last_updated": "2026-03-28",
-      "parent_id": "tagging",
-      "sort_order": null,
-      "source_path": "studio/tagging/offline-tag-assignments-product-spec.md",
-      "viewer_url": "/docs/?scope=studio&doc=offline-tag-assignments-product-spec",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/offline-tag-assignments-product-spec.json"
+      "parent_id": "search",
+      "sort_order": 1010,
+      "source_path": "search/search-change-log.md",
+      "viewer_url": "/docs/?scope=studio&doc=search-change-log",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json"
     }
   ]
 }

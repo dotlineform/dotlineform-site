@@ -3,7 +3,7 @@ doc_id: search-overview
 title: Search Overview
 last_updated: 2026-03-30
 parent_id: search
-sort_order: 10
+sort_order: 20
 ---
 
 # Search Overview

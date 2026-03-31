@@ -2,8 +2,8 @@
 doc_id: series-tags
 title: Series Tags
 last_updated: 2026-03-28
-parent_id: tagging
-sort_order: 30
+parent_id: studio
+sort_order: 40
 ---
 
 # Series Tags

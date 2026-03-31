@@ -2,8 +2,8 @@
 doc_id: tag-editor
 title: Tag Editor
 last_updated: 2026-03-28
-parent_id: tagging
-sort_order: 40
+parent_id: studio
+sort_order: 50
 ---
 
 # Tag Editor

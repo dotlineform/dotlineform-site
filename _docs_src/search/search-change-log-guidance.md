@@ -3,7 +3,7 @@ doc_id: search-change-log-guidance
 title: Search Change Log Guidance
 last_updated: 2026-03-29
 parent_id: search
-sort_order: 2
+sort_order: 1000
 ---
 
 # Search Change Log Guidance
