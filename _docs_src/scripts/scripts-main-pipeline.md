@@ -95,6 +95,11 @@ Primary target artifacts:
 ## Planner Notes
 
 - The saved planner state is orchestration data, not canonical site data.
+- `var/build_catalogue_state.json` is intentionally local and untracked:
+  - it is derived from canonical inputs rather than being a canonical input itself
+  - it changes during normal local runs and would create noisy commits
+  - different machines can have different valid baselines without that meaning the site data has diverged
+  - it can be bootstrapped again from the current workbook, prose, and source-media state by deleting it and running `build_catalogue.py`
 - `var/build_catalogue_state.json` now includes top-level planner metadata:
   - `schema`
   - `planner_version`
