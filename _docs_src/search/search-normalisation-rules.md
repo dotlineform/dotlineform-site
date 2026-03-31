@@ -1,7 +1,7 @@
 ---
 doc_id: search-normalisation-rules
 title: Search Normalisation Rules
-last_updated: 2026-03-30
+last_updated: 2026-03-31
 parent_id: search
 sort_order: 50
 ---
@@ -20,8 +20,8 @@ This is a normalization-policy document. It is not the schema, ranking, or UI do
 
 This document applies to two related processes:
 
-- index-time normalization in `scripts/generate_work_pages.py`
-- query-time normalization in `assets/js/search/search-page.js`
+- index-time normalization in `scripts/build_search_data.rb`
+- query-time normalization in the client search runtimes
 
 It covers:
 
@@ -52,7 +52,7 @@ Index-time and query-time rules are aligned around lowercase, whitespace cleanup
 
 ### Phrase plus token
 
-The generator preserves normalized phrase forms and also emits split tokens.
+The search builder preserves normalized phrase forms and also emits split tokens.
 
 ### Conservative
 
@@ -70,7 +70,7 @@ The browser normalizes aggressively into a lowercase alphanumeric-and-space form
 
 ### 1. Source value preparation
 
-The generator reads source values such as:
+The search builder reads source values such as:
 
 - ids
 - titles
@@ -85,7 +85,7 @@ The generator reads source values such as:
 
 ### 2. Index-time normalization
 
-The generator uses:
+The search builder uses:
 
 - `normalize_search_text(value)`
 - `build_search_tokens(*values)`
@@ -127,7 +127,7 @@ Current broad rules:
 | lowercase values | yes | yes | case-insensitive matching baseline |
 | trim leading/trailing whitespace | yes | yes | basic cleanup |
 | collapse repeated internal whitespace | yes | yes | stabilizes comparisons |
-| preserve normalized phrase form | yes | no | generator keeps phrase tokens such as `2-bodies` or `c. 2020?` |
+| preserve normalized phrase form | yes | no | builder keeps phrase tokens such as `2-bodies` or `c. 2020?` |
 | split phrases into additional tokens | yes | yes | index and query both use token forms |
 | replace non-alphanumeric separators with spaces for tokenization | yes | yes | key to slug/phrase equivalence |
 | deduplicate repeated derived terms | yes | no | build-time only |
@@ -192,7 +192,7 @@ Leading zeros are preserved because normalization is string-based, not numeric p
 
 ## Index-time normalisation rules
 
-The generator’s `normalize_search_text(value)` currently applies these rules:
+The search builder’s `normalize_search_text(value)` currently applies these rules:
 
 - normalize text through the shared text normalization path
 - lowercase
@@ -210,13 +210,13 @@ Examples:
 - `c. 2020?` -> normalized phrase `c. 2020?`
 - `2020-01-01` -> normalized phrase `2020-01-01`
 
-The generator then builds additional split tokens from those phrase forms.
+The search builder then builds additional split tokens from those phrase forms.
 
 ### Structured fields
 
 Structured values are passed into `build_search_tokens(...)` in their normalized text form.
 
-The generator does not currently store separate original-form and normalized-form fields for search. Instead it emits:
+The builder does not currently store separate original-form and normalized-form fields for search. Instead it emits:
 
 - structured display fields in their ordinary serialized form
 - derived normalized fields in `search_terms` and `search_text`

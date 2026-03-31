@@ -198,7 +198,7 @@ Important current conventions:
 - ids are always strings
 - links are site-relative paths
 - array-valued relationship and tag fields serialize as arrays, not omitted scalars
-- optional scalar fields are omitted when empty by the current generator
+- optional scalar fields are omitted when empty by the current builder
 - `search_terms` values are already normalized at build time
 - `search_text` is derived from `search_terms`, not authored independently
 

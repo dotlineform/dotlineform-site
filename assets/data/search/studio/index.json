@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "sha256-6d935f897d1e37eac8e060afd0ff0a0cddd14d9d6ecfb17695f61eda943c57ae",
-    "generated_at_utc": "2026-03-31T17:09:00Z",
-    "count": 64
+    "version": "blake2b-2d6a0075204d019fd1450e50f48c72c1",
+    "generated_at_utc": "2026-03-31T18:07:54Z",
+    "count": 63
   },
   "entries": [
     {
@@ -869,29 +869,6 @@
       "search_text": "tag-registry tag registry tag registry studio 2026-03-31 2026 03 31"
     },
     {
-      "id": "scripts-build-search-data",
-      "kind": "doc",
-      "title": "Build Search Data",
-      "href": "/docs/?scope=studio&doc=scripts-build-search-data",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
-      "search_terms": [
-        "scripts-build-search-data",
-        "scripts",
-        "build",
-        "search",
-        "data",
-        "build search data",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "scripts-build-search-data scripts build search data build search data 2026-03-31 2026 03 31"
-    },
-    {
       "id": "css-refactor",
       "kind": "doc",
       "title": "CSS Refactor",
@@ -957,22 +934,22 @@
       "kind": "doc",
       "title": "Search Normalisation Rules",
       "href": "/docs/?scope=studio&doc=search-normalisation-rules",
-      "last_updated": "2026-03-30",
+      "last_updated": "2026-03-31",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-30 • Search",
+      "display_meta": "2026-03-31 • Search",
       "search_terms": [
         "search-normalisation-rules",
         "search",
         "normalisation",
         "rules",
         "search normalisation rules",
-        "2026-03-30",
+        "2026-03-31",
         "2026",
         "03",
-        "30"
+        "31"
       ],
-      "search_text": "search-normalisation-rules search normalisation rules search normalisation rules 2026-03-30 2026 03 30"
+      "search_text": "search-normalisation-rules search normalisation rules search normalisation rules 2026-03-31 2026 03 31"
     },
     {
       "id": "config-search-policy-json",

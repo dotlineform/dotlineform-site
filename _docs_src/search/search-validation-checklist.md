@@ -33,9 +33,10 @@ Prefer real site examples over synthetic test strings.
 
 ## A. Catalogue Build And Artifact Checks
 
-- [ ] Run `./scripts/generate_work_pages.py --only search-index-json`
+- [ ] If the change touched catalogue source generation, refresh the canonical source artifacts with `./scripts/generate_work_pages.py`
+- [ ] Run `./scripts/build_search_data.rb --scope catalogue`
 - [ ] Confirm the dry run completes without error
-- [ ] Run `./scripts/generate_work_pages.py --only search-index-json --write`
+- [ ] Run `./scripts/build_search_data.rb --scope catalogue --write`
 - [ ] Confirm `assets/data/search/catalogue/index.json` is updated or correctly skipped by version check
 - [ ] Confirm the output is valid JSON
 - [ ] Confirm the header contains `schema`, `version`, `generated_at_utc`, and `count`
@@ -45,10 +46,10 @@ Prefer real site examples over synthetic test strings.
 
 - [ ] Run `./scripts/build_docs_data.rb`
 - [ ] Confirm the docs dry run completes without error for both `studio` and `library`
-- [ ] Run `ruby ./scripts/build_search_data.rb --scope studio`
-- [ ] Confirm the dry run reports `assets/data/search/studio/index.json`
-- [ ] Run `ruby ./scripts/build_search_data.rb --scope library`
-- [ ] Confirm the dry run reports `assets/data/search/library/index.json`
+- [ ] Run `./scripts/build_search_data.rb --scope studio`
+- [ ] Confirm the dry run reports `assets/data/search/studio/index.json` or correctly skips by version check
+- [ ] Run `./scripts/build_search_data.rb --scope library`
+- [ ] Confirm the dry run reports `assets/data/search/library/index.json` or correctly skips by version check
 - [ ] On write runs, confirm the Studio and Library search artifacts update or correctly skip by version check
 - [ ] Confirm each docs-domain artifact has `header.scope`, `header.schema`, `header.version`, `generated_at_utc`, and `count`
 
@@ -121,7 +122,7 @@ Suggested current examples:
 
 - [ ] [Search Index Schema](/docs/?scope=studio&doc=search-index-schema) still matches the generated index
 - [ ] [Search Field Registry](/docs/?scope=studio&doc=search-field-registry) still matches active field usage
-- [ ] [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) still matches current generator and runtime behaviour
+- [ ] [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules) still matches current builder and runtime behaviour
 - [ ] [Search Ranking Model](/docs/?scope=studio&doc=search-ranking-model) still matches the score-band logic
 - [ ] [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour) still matches current runtime behaviour
 - [ ] [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) still matches how the artifact is generated

@@ -9,15 +9,16 @@ Run the draft publish pipeline end-to-end (fail-fast):
 5) copy_draft_media_files.py --mode moment --write
 6) make_srcset_images.sh (for moments)
 7) generate_work_pages.py data/works.xlsx --write (for affected work IDs only)
+8) build_search_data.rb --scope catalogue --write
 
 Dry-run mode:
-- copy + srcset + generate run in preview mode
+- copy + srcset + generate + catalogue-search build run in preview mode
 - no workbook writes/deletes are performed
 
 Flag usage summary:
 - --xlsx: workbook path (repo-relative by default)
-- --dry-run: preview-only mode for all steps
-- --force-generate: pass --force to generate_work_pages.py
+- --dry-run: preview-only mode for all steps, including catalogue search rebuild
+- --force-generate: pass --force to generate_work_pages.py and the catalogue search rebuild
 - --jobs: parallelism for make_srcset_images.sh
 - --*-input-dir / --*-output-dir: source/derivative directories for each media type
 - --mode: select one or more flows: work, work_details, moment (repeatable)
@@ -437,7 +438,7 @@ def main() -> int:
         default=int(os.environ.get(SRCSET_JOBS_ENV_NAME, "4")),
         help="Parallel jobs",
     )
-    ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py")
+    ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py and the catalogue search rebuild")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
     ap.add_argument(
         "--work-ids",
@@ -504,6 +505,7 @@ def main() -> int:
     copy_script = repo_root / "scripts/copy_draft_media_files.py"
     make_script = repo_root / "scripts/make_srcset_images.sh"
     generate_script = repo_root / "scripts/generate_work_pages.py"
+    search_script = repo_root / "scripts/build_search_data.rb"
     py = sys.executable
 
     with tempfile.TemporaryDirectory(prefix="draft-pipeline-") as tmp:
@@ -740,6 +742,13 @@ def main() -> int:
         if args.force_generate:
             generate_cmd.append("--force")
         run_step("Generate Work Pages", generate_cmd, cwd=repo_root)
+
+        search_cmd = [str(search_script), "--scope", "catalogue"]
+        if not args.dry_run:
+            search_cmd.append("--write")
+        if args.force_generate:
+            search_cmd.append("--force")
+        run_step("Build Catalogue Search Index", search_cmd, cwd=repo_root)
 
     print("\nPipeline complete.")
     log_event(

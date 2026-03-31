@@ -21,9 +21,10 @@ For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc
 This page is now the high-level entry point for repo scripts.
 Command-level usage, flags, output paths, and operational notes now live in the child docs below.
 
-The current script surface falls into three groups:
+The current script surface falls into four groups:
 
-- docs-domain builders for scope-owned docs and docs-search artifacts
+- docs-domain builders for scope-owned docs artifacts
+- search builders for scope-owned search artifacts
 - catalogue/media generators for public site content
 - local tooling for audits, CSS analysis, and Studio write flows
 
@@ -58,24 +59,32 @@ Docs-domain builds:
   - outputs:
     - `assets/data/docs/scopes/studio/`
     - `assets/data/docs/scopes/library/`
+
+Search builds:
+
 - `./scripts/build_search_data.rb`
-  - source docs indexes:
+  - source indexes:
+    - `assets/data/series_index.json`
+    - `assets/data/works_index.json`
+    - `assets/data/moments_index.json`
+    - `assets/studio/data/tag_assignments.json`
+    - `assets/studio/data/tag_registry.json`
     - `assets/data/docs/scopes/studio/index.json`
     - `assets/data/docs/scopes/library/index.json`
   - outputs:
+    - `assets/data/search/catalogue/index.json`
     - `assets/data/search/studio/index.json`
     - `assets/data/search/library/index.json`
 
 Catalogue/media builds:
 
 - `./scripts/run_draft_pipeline.py`
-  - orchestrates copy -> srcset -> generation for works, work details, and moments
+  - orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
 - `./scripts/generate_work_pages.py`
   - builds catalogue pages plus runtime JSON, including:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
-    - `assets/data/search/catalogue/index.json`
 - `./scripts/copy_draft_media_files.py`
   - stages source media into the srcset input folders
 - `bash scripts/make_srcset_images.sh`
@@ -92,7 +101,7 @@ Catalogue/media builds:
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-  Generate collection stubs, per-record JSON, aggregate indexes, and the catalogue search artifact.
+  Generate collection stubs, per-record JSON, and aggregate catalogue indexes.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
   Remove one work from generated artifacts when workbook status is `delete`.
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)

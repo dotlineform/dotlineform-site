@@ -23,7 +23,6 @@ Common runs:
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
 ./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
 ./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
-./scripts/generate_work_pages.py --only search-index-json --write
 ```
 
 ## Useful Flags
@@ -55,9 +54,6 @@ Common runs:
   - stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` with default `assets/data/series_index.json`
 - `--works-index-json-path` with default `assets/data/works_index.json`
-- `--search-index-json-path` with default `assets/data/search/catalogue/index.json`
-  - writes a flat catalogue search artifact spanning works, series, and moments
-  - rebuilt on every pipeline run as a full index and not scoped by `--work-ids`, `--series-ids`, or `--moment-ids`
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
@@ -71,7 +67,7 @@ Work prose source path:
 
 ## `--only` Artifacts
 
-`--only` limits generation to selected artifacts, but aggregate index JSON artifacts for `series`, `works`, `search`, and `moments` are always rebuilt on every run.
+`--only` limits generation to selected artifacts, but aggregate index JSON artifacts for `series`, `works`, and `moments` are always rebuilt on every run.
 
 Allowed values:
 
@@ -83,7 +79,6 @@ Allowed values:
 - `work-details-pages`
 - `work-json`
 - `works-index-json`
-- `search-index-json`
 - `moments`
 - `moments-index-json`
 
@@ -107,8 +102,7 @@ Artifact behavior:
   writes `assets/data/series_index.json` as a full rebuild
 - `works-index-json`
   writes `assets/data/works_index.json` as a lightweight full rebuild keyed by `work_id`
-- `search-index-json`
-  writes `assets/data/search/catalogue/index.json` as a flat catalogue search index spanning `work`, `series`, and `moment`
+  and includes the lightweight search-relevant fields used by the catalogue search builder
 - `work-json`
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html`
 
@@ -124,6 +118,11 @@ There is no separate `works-prose` artifact; use `work-json` for prose-only refr
 - `/work_details/<detail_uid>/` reads stub front matter for `work_id` and then fetches `assets/works/index/<work_id>.json`
 - `/moments/<moment_id>/` reads `assets/moments/index/<moment_id>.json`
 - `/search/` reads `assets/data/search/catalogue/index.json`
+
+Catalogue search note:
+
+- `generate_work_pages.py` no longer writes `assets/data/search/catalogue/index.json`
+- catalogue search is now rebuilt separately by [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) from the generated repo JSON artifacts above plus Studio tag metadata
 
 ## Works Download Files
 

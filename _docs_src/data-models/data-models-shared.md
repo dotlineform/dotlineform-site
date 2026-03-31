@@ -130,10 +130,10 @@ Current enforcement layers:
 
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   writes the main catalogue indexes and record payloads, syncs missing Studio assignment rows, and hashes generated payloads
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+  documents the unified search builder that now owns `catalogue`, `studio`, and `library` search outputs from canonical repo JSON and published docs indexes
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   validates duplicate `doc_id` values and unknown `parent_id` references before writing docs-scope payloads
-- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-  documents both the catalogue search writer and the docs-domain search writer, so the search artifacts can be reviewed in one place
 - [Audit Site Consistency](/docs/?scope=studio&doc=scripts-audit-site-consistency)
   checks cross-references and key JSON schema expectations across catalogue and Studio artifacts
 

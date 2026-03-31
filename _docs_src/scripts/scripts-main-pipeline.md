@@ -24,7 +24,7 @@ Run everything:
 ## Useful Flags
 
 - `--dry-run`: preview only, with no workbook writes or deletes
-- `--force-generate`: pass `--force` through to `generate_work_pages.py`
+- `--force-generate`: pass `--force` through to `generate_work_pages.py` and the catalogue search rebuild
 - `--jobs N`: srcset parallel jobs; default `4`, or `MAKE_SRCSET_JOBS`
 - `--mode work|work_details|moment`: run only selected flow(s); repeat flag to run multiple
 - `--work-ids`, `--work-ids-file`: limit work and work-details scope
@@ -45,6 +45,11 @@ Run everything:
 ```
 
 When `--mode work` is used and no `--series-ids*` flags are provided, draft series are auto-included in generation.
+
+Current pipeline tail:
+
+- `generate_work_pages.py` refreshes the canonical catalogue route stubs and JSON artifacts
+- `build_search_data.rb --scope catalogue` then rebuilds `assets/data/search/catalogue/index.json` from those repo JSON artifacts
 
 ## Source And Target Artifacts
 
@@ -67,10 +72,11 @@ Primary target artifacts:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
   - `assets/data/moments_index.json`
-  - `assets/data/search/catalogue/index.json`
   - `assets/series/index/`
   - `assets/works/index/`
   - `assets/moments/index/`
+- generated repo artifact written by `build_search_data.rb --scope catalogue`:
+  - `assets/data/search/catalogue/index.json`
 
 ## Logging
 

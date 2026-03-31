@@ -68,7 +68,7 @@ Current consumers:
 - Tag Registry
 - Tag Aliases
 - Series Tags status and labeling logic
-- catalogue search tag-label enrichment through the generator
+- catalogue search tag-label enrichment through the search builder
 
 ### `tag_aliases.json`
 

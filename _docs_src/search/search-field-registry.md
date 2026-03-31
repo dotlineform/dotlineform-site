@@ -58,7 +58,7 @@ Fields should not influence relevance unless they improve known-item lookup or d
 
 ### Reviewable
 
-Field policy should be understandable without reading the generator and runtime side by side.
+Field policy should be understandable without reading the builder and runtime side by side.
 
 ### Distinct
 

@@ -30,9 +30,10 @@ Current checked-in catalogue model families:
 - scope search:
   - `assets/data/search/catalogue/index.json`
 
-Primary writer:
+Primary writers:
 
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages) for route stubs, shared indexes, and per-record catalogue payloads
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) for `assets/data/search/catalogue/index.json`
 
 Primary validator:
 
@@ -142,7 +143,7 @@ Current content families:
 - work identity
 - title and year display
 - series membership
-- selected lightweight metadata such as storage
+- selected lightweight metadata such as `medium_type` and `storage`
 
 Current consumers:
 
@@ -278,7 +279,8 @@ Important dependencies:
 
 Current enforcement visible in code:
 
-- the generator writes and hashes all catalogue JSON families together
+- the generator writes and hashes the shared catalogue indexes and per-record catalogue payloads
+- the search builder writes the catalogue search artifact from those generated JSON families plus Studio tag data
 - the generator keeps `_moments`, `_series`, and `_works` stubs minimal and current
 - the audit script checks:
   - `detail_uid` and `work_id` consistency

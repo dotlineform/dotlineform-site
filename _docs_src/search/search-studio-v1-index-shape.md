@@ -47,7 +47,7 @@ Current top-level example:
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "sha256-...",
+    "version": "blake2b-...",
     "generated_at_utc": "2026-03-30T00:00:00Z",
     "count": 1
   },
@@ -111,8 +111,8 @@ Current builder behavior:
 Current builder entrypoint:
 
 ```bash
-ruby ./scripts/build_search_data.rb --scope studio --write
-ruby ./scripts/build_search_data.rb --scope library --write
+./scripts/build_search_data.rb --scope studio --write
+./scripts/build_search_data.rb --scope library --write
 ```
 
 ## Relationship To Other Search Artifacts

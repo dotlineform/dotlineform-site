@@ -19,10 +19,10 @@ Detailed UI and CSS work stays in:
 
 Detailed search architecture proposals stay in:
 
-- `_docs_src/_dev/search-config-architecture.md`
-- `_docs_src/_dev/search-config-implementation-note.md`
-- `_docs_src/_dev/search-pipeline-target-architecture.md`
-- `_docs_src/_dev/search-result-shaping.md`
+- `_docs_src/_draft/search-config-architecture.md`
+- `_docs_src/_draft/search-config-implementation-note.md`
+- `_docs_src/_draft/search-pipeline-target-architecture.md`
+- `_docs_src/_draft/search-result-shaping.md`
 
 ## Active Backlog
 
@@ -34,7 +34,6 @@ Detailed search architecture proposals stay in:
 - Extend orphan checks to additional optional media or content domains as needed.
 - Review whether route-level shared values such as Studio `studio_page_doc` links should move out of page front matter if more shared route metadata is added.
 - Review whether additional checked-in shared config files should move into the documented config layer once they affect normal repo workflows.
-- Move catalogue search assembly fully into a search-owned builder rather than leaving it inside `scripts/generate_work_pages.py`.
 - Review the current search ranking and field-participation model once there is enough evidence to justify stronger field policy or tag-aware ranking.
 - Decide whether the current search validation flow needs a dedicated schema or artifact-budget check beyond the existing pragmatic validation.
 - Continue cleanup of historical and guidance docs so removed section names, legacy routes, and compatibility references do not reappear in the published docs set.

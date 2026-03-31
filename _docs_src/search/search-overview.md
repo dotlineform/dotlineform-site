@@ -42,7 +42,7 @@ It is based on:
 - an in-house client-side search runtime in `assets/js/search/search-page.js`
 - a shared docs viewer runtime in `assets/js/docs-viewer.js` which now owns inline Studio and Library docs search
 - no third-party search libraries, plugins, or external search services
-- a search-owned builder entrypoint for docs-domain scopes at `scripts/build_search_data.rb`
+- a search-owned builder entrypoint for all live scopes at `scripts/build_search_data.rb`
 
 The browser loads scope-owned search data into memory per surface as needed.
 
@@ -82,7 +82,7 @@ Those source and upstream artifact families are documented in:
 
 ### 2. Search index generation
 
-`scripts/generate_work_pages.py` builds a dedicated catalogue search artifact at build time. Search owns this artifact separately from `works_index.json`, `series_index.json`, and `moments_index.json`.
+`scripts/build_search_data.rb` now builds all live search artifacts at build time. For `catalogue`, it reads the canonical repo JSON artifacts written by `scripts/generate_work_pages.py`; for `studio` and `library`, it reads the canonical published docs indexes.
 
 ### 3. Search policy
 
@@ -162,8 +162,7 @@ Current implementation status:
 - the current dedicated public route is `/search/?scope=catalogue`
 - the dedicated `/search/` runtime and policy are now trimmed to catalogue-only behavior
 - the current catalogue search index is generated at build time into `assets/data/search/catalogue/index.json`
-- a search-owned Studio builder emits `assets/data/search/studio/index.json` from published Studio docs outputs
-- a search-owned Library builder emits `assets/data/search/library/index.json` from published Library docs outputs
+- a single search-owned builder emits `assets/data/search/catalogue/index.json`, `assets/data/search/studio/index.json`, and `assets/data/search/library/index.json`
 - indexed content types are works, series, moments, Studio docs, and Library docs
 - ranking is field-aware and deterministic rather than flat
 - the UI currently searches all indexed catalogue kinds together and does not expose per-kind filter buttons

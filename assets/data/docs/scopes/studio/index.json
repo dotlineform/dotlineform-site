@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T17:21:26Z",
+  "generated_at": "2026-03-31T18:07:44Z",
   "docs": [
     {
       "scope": "studio",
@@ -478,7 +478,7 @@
       "scope": "studio",
       "doc_id": "search-normalisation-rules",
       "title": "Search Normalisation Rules",
-      "last_updated": "2026-03-30",
+      "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 50,
       "source_path": "search/search-normalisation-rules.md",

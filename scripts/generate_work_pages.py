@@ -713,55 +713,6 @@ def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
     return payload
 
 
-def normalize_search_text(value: Any) -> str:
-    text = normalize_text(value).lower()
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
-
-
-def build_search_tokens(*values: Any) -> List[str]:
-    tokens: List[str] = []
-    seen: set[str] = set()
-
-    for value in values:
-        if isinstance(value, list):
-            for item in value:
-                for token in build_search_tokens(item):
-                    if token not in seen:
-                        seen.add(token)
-                        tokens.append(token)
-            continue
-
-        normalized = normalize_search_text(value)
-        if not normalized:
-            continue
-
-        for candidate in [normalized, *re.sub(r"[^a-z0-9]+", " ", normalized).split()]:
-            token = normalize_search_text(candidate)
-            if not token or token in seen:
-                continue
-            seen.add(token)
-            tokens.append(token)
-
-    return tokens
-
-
-def assignment_tag_ids_from_rows(tags_value: Any) -> List[str]:
-    out: List[str] = []
-    seen: set[str] = set()
-    if not isinstance(tags_value, list):
-        return out
-    for raw_tag in tags_value:
-        if isinstance(raw_tag, dict):
-            tag_id = normalize_search_text(raw_tag.get("tag_id"))
-        else:
-            tag_id = normalize_search_text(raw_tag)
-        if not tag_id or tag_id in seen:
-            continue
-        seen.add(tag_id)
-        out.append(tag_id)
-    return out
-
 # ----------------------------
 # Main program
 # ----------------------------
@@ -792,7 +743,6 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
-    ap.add_argument("--search-index-json-path", default="assets/data/search/catalogue/index.json", help="Output path for generated catalogue search index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
     ap.add_argument("--moments-index-json-path", default="assets/data/moments_index.json", help="Output path for generated lightweight moments index JSON")
@@ -849,7 +799,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,search-index-json,moments,moments-index-json. "
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json. "
             "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
     )
@@ -872,7 +822,6 @@ def main() -> None:
         "work-details-pages",
         "work-json",
         "works-index-json",
-        "search-index-json",
         "moments",
         "moments-index-json",
     }
@@ -907,7 +856,6 @@ def main() -> None:
     run_work_details_pages = artifact_enabled("work-details-pages")
     run_work_json = artifact_enabled("work-json") or run_work_pages
     run_works_index_json = True
-    run_search_index_json = True
     run_moments_artifact = artifact_enabled("moments")
     run_moments_index_json = True
     run_studio_series_pages = False  # retired: use /studio/series-tag-editor/?series=<id>
@@ -1029,8 +977,6 @@ def main() -> None:
 
     tag_assignments_path = Path("assets/studio/data/tag_assignments.json").expanduser()
     tag_assignments_path.parent.mkdir(parents=True, exist_ok=True)
-    tag_registry_path = Path("assets/studio/data/tag_registry.json").expanduser()
-
     series_index_json_path = Path(args.series_index_json_path).expanduser()
     series_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_details_out_dir = Path(args.work_details_output_dir).expanduser()
@@ -1039,8 +985,6 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
     works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
-    search_index_json_path = Path(args.search_index_json_path).expanduser()
-    search_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
     moments_out_dir.mkdir(parents=True, exist_ok=True)
     moments_json_dir = Path(args.moments_json_dir).expanduser()
@@ -1455,6 +1399,7 @@ def main() -> None:
         title_value = coerce_string(work_record.get("title"))
         year_value = work_record.get("year")
         year_display_value = coerce_string(work_record.get("year_display"))
+        medium_type_value = coerce_string(work_record.get("medium_type"))
         storage_value = coerce_string(work_record.get("storage"))
         return compact_json_object({
             "work_id": wid,
@@ -1462,6 +1407,7 @@ def main() -> None:
             "year": year_value,
             "year_display": year_display_value if year_display_value is not None else (str(year_value) if year_value is not None else None),
             "series_ids": list(work_record.get("series_ids", [])) if isinstance(work_record.get("series_ids"), list) else [],
+            "medium_type": medium_type_value,
             "storage": storage_value,
         })
 
@@ -1499,58 +1445,6 @@ def main() -> None:
             "date": date_value,
             "date_display": date_display_value,
             "thumb_id": thumb_id_value,
-        })
-
-    def build_search_entry(
-        *,
-        kind: str,
-        item_id: str,
-        title: Optional[str],
-        href: str,
-        year: Optional[int] = None,
-        date: Optional[str] = None,
-        display_meta: Optional[str] = None,
-        series_ids: Optional[List[str]] = None,
-        series_titles: Optional[List[str]] = None,
-        medium_type: Optional[str] = None,
-        storage: Optional[str] = None,
-        series_type: Optional[str] = None,
-        tag_ids: Optional[List[str]] = None,
-        tag_labels: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
-        series_ids = list(series_ids or [])
-        series_titles = list(series_titles or [])
-        tag_ids = list(tag_ids or [])
-        tag_labels = list(tag_labels or [])
-        search_terms = build_search_tokens(
-            item_id,
-            title,
-            display_meta,
-            str(year) if year is not None else None,
-            date,
-            series_ids,
-            series_titles,
-            medium_type,
-            storage,
-            series_type,
-        )
-        return compact_json_object({
-            "kind": kind,
-            "id": item_id,
-            "title": title,
-            "href": href,
-            "year": year,
-            "date": date,
-            "display_meta": display_meta,
-            "series_ids": series_ids,
-            "series_titles": series_titles,
-            "medium_type": medium_type,
-            "storage": storage,
-            "series_type": series_type,
-            "tag_ids": tag_ids,
-            "tag_labels": tag_labels,
-            "search_terms": search_terms,
-            "search_text": " ".join(search_terms),
         })
 
     def build_sections_from_detail_records(detail_records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -2716,80 +2610,6 @@ def main() -> None:
                 f"Path: {works_index_json_path} (overwrite={exists})"
             )
 
-    search_entries_unsorted: List[Dict[str, Any]] = []
-    if run_search_index_json:
-        tag_assignments_payload = load_tag_assignments_payload(tag_assignments_path)
-        assignments_series = tag_assignments_payload.get("series", {}) if isinstance(tag_assignments_payload.get("series"), dict) else {}
-        tag_registry_payload = load_tag_registry_payload(tag_registry_path)
-        tag_label_by_id: Dict[str, str] = {}
-        for raw_tag in tag_registry_payload.get("tags", []):
-            if not isinstance(raw_tag, dict):
-                continue
-            tag_id = normalize_search_text(raw_tag.get("tag_id"))
-            label = coerce_string(raw_tag.get("label"))
-            if tag_id and label:
-                tag_label_by_id[tag_id] = label
-
-        for sid in sorted(series_payload.keys()):
-            series_record = series_payload[sid]
-            assignment_row = assignments_series.get(sid, {}) if isinstance(assignments_series.get(sid), dict) else {}
-            series_tag_ids = assignment_tag_ids_from_rows(assignment_row.get("tags"))
-            series_tag_labels = [tag_label_by_id[tag_id] for tag_id in series_tag_ids if tag_id in tag_label_by_id]
-            search_entries_unsorted.append(
-                build_search_entry(
-                    kind="series",
-                    item_id=sid,
-                    title=coerce_string(series_record.get("title")) or sid,
-                    href=f"/series/{sid}/",
-                    year=coerce_int(series_record.get("year")),
-                    display_meta=coerce_string(series_record.get("year_display")),
-                    series_type=coerce_string(series_record.get("series_type")),
-                    tag_ids=series_tag_ids,
-                    tag_labels=series_tag_labels,
-                )
-            )
-
-        for wid in sorted(works_payload.keys()):
-            work_record = canonical_work_record_by_id.get(wid, {})
-            if not isinstance(work_record, dict):
-                work_record = {}
-            work_payload = works_payload.get(wid, {})
-            series_ids = list(work_payload.get("series_ids", [])) if isinstance(work_payload.get("series_ids"), list) else []
-            series_titles = [series_title_by_id.get(sid, sid) for sid in series_ids]
-
-            work_tag_ids: List[str] = []
-            seen_tag_ids: set[str] = set()
-            for sid in series_ids:
-                assignment_row = assignments_series.get(sid, {}) if isinstance(assignments_series.get(sid), dict) else {}
-                for tag_id in assignment_tag_ids_from_rows(assignment_row.get("tags")):
-                    if tag_id not in seen_tag_ids:
-                        seen_tag_ids.add(tag_id)
-                        work_tag_ids.append(tag_id)
-                works_assignment = assignment_row.get("works", {}) if isinstance(assignment_row.get("works"), dict) else {}
-                work_assignment_row = works_assignment.get(wid, {}) if isinstance(works_assignment.get(wid), dict) else {}
-                for tag_id in assignment_tag_ids_from_rows(work_assignment_row.get("tags")):
-                    if tag_id not in seen_tag_ids:
-                        seen_tag_ids.add(tag_id)
-                        work_tag_ids.append(tag_id)
-            work_tag_labels = [tag_label_by_id[tag_id] for tag_id in work_tag_ids if tag_id in tag_label_by_id]
-
-            search_entries_unsorted.append(
-                build_search_entry(
-                    kind="work",
-                    item_id=wid,
-                    title=coerce_string(work_record.get("title")) or wid,
-                    href=f"/works/{wid}/",
-                    year=coerce_int(work_record.get("year")),
-                    display_meta=coerce_string(work_record.get("year_display")),
-                    series_ids=series_ids,
-                    series_titles=series_titles,
-                    medium_type=coerce_string(work_record.get("medium_type")),
-                    storage=coerce_string(work_record.get("storage")),
-                    tag_ids=work_tag_ids,
-                    tag_labels=work_tag_labels,
-                )
-            )
-
     # ----------------------------
     # Moment page + JSON generation (Moments)
     # ----------------------------
@@ -3176,20 +2996,6 @@ def main() -> None:
         }
         moments_payload[moment_id] = build_moment_index_record(moment_record)
 
-    if run_search_index_json:
-        for moment_id in sorted(moments_payload.keys()):
-            moment_record = moments_payload[moment_id]
-            search_entries_unsorted.append(
-                build_search_entry(
-                    kind="moment",
-                    item_id=moment_id,
-                    title=coerce_string(moment_record.get("title")) or moment_id,
-                    href=f"/moments/{moment_id}/",
-                    date=coerce_string(moment_record.get("date")),
-                    display_meta=coerce_string(moment_record.get("date_display")) or coerce_string(moment_record.get("date")),
-                )
-            )
-
     version_payload = compact_json_object({
         "schema": "moments_index_v1",
         "moments": moments_payload,
@@ -3222,46 +3028,6 @@ def main() -> None:
                 f"Path: {moments_index_json_path} (overwrite={exists})"
             )
 
-    if run_search_index_json:
-        search_entries = sorted(
-            search_entries_unsorted,
-            key=lambda entry: (
-                coerce_string(entry.get("kind")) or "",
-                numeric_aware_sort_key(entry.get("title")),
-                coerce_string(entry.get("id")) or "",
-            ),
-        )
-        version_payload = compact_json_object({
-            "schema": "search_index_v1",
-            "entries": search_entries,
-        })
-        version = compute_payload_version(version_payload)
-        payload = compact_json_object({
-            "header": {
-                "schema": "search_index_v1",
-                "version": version,
-                "generated_at_utc": utc_timestamp_now(),
-                "count": len(search_entries),
-            },
-            "entries": search_entries,
-        })
-        payload_version = payload["header"]["version"]
-        exists = search_index_json_path.exists()
-        existing_version = extract_existing_header_scalar(search_index_json_path, "version") if exists else None
-        if (existing_version is not None) and (existing_version == payload_version) and (not args.force):
-            print("Search index JSON done. Wrote: 0. Skipped: 1.")
-        else:
-            if args.write:
-                search_index_json_path.write_text(
-                    json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                    encoding="utf-8",
-                )
-                print(f"Search index JSON done. Wrote: 1. Skipped: 0. Path: {search_index_json_path}")
-            else:
-                print(
-                    "Search index JSON done. Would write: 1. Skipped: 0. "
-                    f"Path: {search_index_json_path} (overwrite={exists})"
-                )
     log_event(
         "generate_complete",
         {
