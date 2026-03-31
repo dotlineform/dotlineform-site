@@ -8,7 +8,7 @@ sort_order: 10
 
 # Studio
 
-This document is the central reference for the Studio pages, which are designed to enable analysis of work in the portfolio.
+This section is a reference for the Studio pages, which are designed to enable analysis of work in the portfolio.
 
 Related references:
 
