@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T18:07:44Z",
+  "generated_at": "2026-03-31T18:18:13Z",
   "docs": [
     {
       "scope": "studio",
@@ -135,6 +135,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-main-pipeline",
+      "title": "Build Catalogue",
+      "last_updated": "2026-03-31",
+      "parent_id": "scripts",
+      "sort_order": 20,
+      "source_path": "scripts/scripts-main-pipeline.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "last_updated": "2026-03-31",
@@ -143,17 +154,6 @@
       "source_path": "data-models/data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-catalogue.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "scripts-main-pipeline",
-      "title": "Main Draft Pipeline",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "sort_order": 20,
-      "source_path": "scripts/scripts-main-pipeline.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
     },
     {
       "scope": "studio",
