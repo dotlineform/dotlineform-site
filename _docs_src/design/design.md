@@ -1,6 +1,6 @@
 ---
-doc_id: css-primitives
-title: CSS Primitives
+doc_id: design
+title: Design
 last_updated: 2026-03-29
 parent_id: ""
 sort_order: 10
