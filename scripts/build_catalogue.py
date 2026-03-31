@@ -75,6 +75,7 @@ try:
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
+        media_work_files_subdir,
         source_moments_images_subdir,
         source_works_root_subdir,
     )
@@ -86,6 +87,7 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         load_pipeline_config,
         media_mode_input_subdir,
         media_mode_output_subdir,
+        media_work_files_subdir,
         source_moments_images_subdir,
         source_works_root_subdir,
     )
@@ -925,6 +927,112 @@ def plan_stale_artifact_paths(
     }
 
 
+def collect_matching_paths(root: Path, patterns: Iterable[str]) -> list[Path]:
+    collected: list[Path] = []
+    seen: Set[Path] = set()
+    if not root.exists():
+        return collected
+    for pattern in patterns:
+        for path in sorted(root.glob(pattern)):
+            if path in seen or not path.is_file():
+                continue
+            seen.add(path)
+            collected.append(path)
+    return collected
+
+
+def plan_local_media_cleanup_paths(
+    *,
+    media_base_dir: Path | None,
+    removed_work_ids: Set[str],
+    removed_detail_uids: Set[str],
+    removed_moment_ids: Set[str],
+) -> Dict[str, list[Path] | bool]:
+    if media_base_dir is None:
+        return {
+            "available": False,
+            "existing": [],
+            "missing": [],
+        }
+
+    work_input_dir = media_base_dir / media_mode_input_subdir(PIPELINE_CONFIG, "work")
+    work_output_dir = media_base_dir / media_mode_output_subdir(PIPELINE_CONFIG, "work")
+    detail_input_dir = media_base_dir / media_mode_input_subdir(PIPELINE_CONFIG, "work_details")
+    detail_output_dir = media_base_dir / media_mode_output_subdir(PIPELINE_CONFIG, "work_details")
+    moment_input_dir = media_base_dir / media_mode_input_subdir(PIPELINE_CONFIG, "moment")
+    moment_output_dir = media_base_dir / media_mode_output_subdir(PIPELINE_CONFIG, "moment")
+    work_files_dir = media_base_dir / media_work_files_subdir(PIPELINE_CONFIG)
+
+    primary_subdir = str(PIPELINE_CONFIG["variants"]["primary"]["output_subdir"])
+    thumb_subdir = str(PIPELINE_CONFIG["variants"]["thumb"]["output_subdir"])
+    output_format = str(PIPELINE_CONFIG["encoding"]["format"])
+
+    planned: list[Path] = []
+
+    for work_id in sorted(removed_work_ids):
+        planned.extend(collect_matching_paths(work_input_dir, [f"{work_id}.*"]))
+        planned.extend(
+            collect_matching_paths(
+                work_output_dir / primary_subdir,
+                [f"{work_id}-primary-*.{output_format}"],
+            )
+        )
+        planned.extend(
+            collect_matching_paths(
+                work_output_dir / thumb_subdir,
+                [f"{work_id}-thumb-*.{output_format}"],
+            )
+        )
+        planned.extend(collect_matching_paths(work_files_dir, [f"{work_id}-*"]))
+
+    for uid in sorted(removed_detail_uids):
+        planned.extend(collect_matching_paths(detail_input_dir, [f"{uid}.*"]))
+        planned.extend(
+            collect_matching_paths(
+                detail_output_dir / primary_subdir,
+                [f"{uid}-primary-*.{output_format}"],
+            )
+        )
+        planned.extend(
+            collect_matching_paths(
+                detail_output_dir / thumb_subdir,
+                [f"{uid}-thumb-*.{output_format}"],
+            )
+        )
+
+    for moment_id in sorted(removed_moment_ids):
+        planned.extend(collect_matching_paths(moment_input_dir, [f"{moment_id}.*"]))
+        planned.extend(
+            collect_matching_paths(
+                moment_output_dir / primary_subdir,
+                [f"{moment_id}-primary-*.{output_format}"],
+            )
+        )
+        planned.extend(
+            collect_matching_paths(
+                moment_output_dir / thumb_subdir,
+                [f"{moment_id}-thumb-*.{output_format}"],
+            )
+        )
+
+    seen: Set[Path] = set()
+    existing: list[Path] = []
+    missing: list[Path] = []
+    for path in planned:
+        if path in seen:
+            continue
+        seen.add(path)
+        if path.exists():
+            existing.append(path)
+        else:
+            missing.append(path)
+    return {
+        "available": True,
+        "existing": existing,
+        "missing": missing,
+    }
+
+
 def prune_tag_assignments_for_removed_rows(
     repo_root: Path,
     *,
@@ -1319,6 +1427,17 @@ def main() -> int:
         if stale_cleanup_requested
         else {"existing": [], "missing": []}
     )
+    media_base_dir = Path(media_base).expanduser() if media_base else None
+    local_media_cleanup_plan = (
+        plan_local_media_cleanup_paths(
+            media_base_dir=media_base_dir,
+            removed_work_ids=removed_work_ids,
+            removed_detail_uids=removed_detail_uids,
+            removed_moment_ids=removed_moment_ids,
+        )
+        if stale_cleanup_requested
+        else {"available": bool(media_base_dir), "existing": [], "missing": []}
+    )
 
     plan_needs_generate = bool(planned_generate_work_ids or planned_generate_moment_ids or planned_series_ids or stale_cleanup_requested)
     plan_needs_search = bool(plan_needs_generate or stale_cleanup_requested)
@@ -1367,6 +1486,7 @@ def main() -> int:
         print(f"- moment generation ids: {len(planned_generate_moment_ids)}")
         print(f"- series generation ids: {len(planned_series_ids)}")
         print(f"- stale generated files to delete: {len(stale_cleanup_plan['existing'])}")
+        print(f"- stale local media files to delete: {len(local_media_cleanup_plan['existing'])}")
         print(f"- rebuild catalogue search: {'yes' if plan_needs_search else 'no'}")
         if stale_cleanup_requested:
             print("Stale cleanup:")
@@ -1382,6 +1502,11 @@ def main() -> int:
                 print(f"- generated files present to delete: {len(stale_cleanup_plan['existing'])}")
             if stale_cleanup_plan["missing"]:
                 print(f"- generated files already missing: {len(stale_cleanup_plan['missing'])}")
+            if local_media_cleanup_plan.get("available"):
+                if local_media_cleanup_plan["existing"]:
+                    print(f"- local media files present to delete: {len(local_media_cleanup_plan['existing'])}")
+            else:
+                print("- local media cleanup skipped: DOTLINEFORM_MEDIA_BASE_DIR is not configured")
 
     print_plan_summary()
     if args.plan:
@@ -1617,6 +1742,7 @@ def main() -> int:
         selected_series_for_generate = set(planned_series_ids)
         cleanup_stats = {
             "generated_files_deleted": 0,
+            "local_media_files_deleted": 0,
             "tag_assignment_series_removed": 0,
             "tag_assignment_work_overrides_removed": 0,
             "tag_assignment_series_touched": 0,
@@ -1645,6 +1771,17 @@ def main() -> int:
                     print(f"  - delete {path.relative_to(repo_root)}")
                 for path in missing_cleanup_paths:
                     print(f"  - missing {path.relative_to(repo_root)}")
+                if local_media_cleanup_plan.get("available"):
+                    existing_local_media_paths = local_media_cleanup_plan["existing"]
+                    print(f"Local media files to delete: {len(existing_local_media_paths)}")
+                    for path in existing_local_media_paths:
+                        try:
+                            rel_path = path.relative_to(media_base_dir) if media_base_dir is not None else path
+                        except ValueError:
+                            rel_path = path
+                        print(f"  - delete [media] {rel_path}")
+                else:
+                    existing_local_media_paths = []
                 cleanup_tag_stats = prune_tag_assignments_for_removed_rows(
                     repo_root,
                     removed_series_ids=removed_series_ids,
@@ -1661,6 +1798,7 @@ def main() -> int:
                     print("DRY-RUN: stale artifact cleanup not written.")
                 else:
                     cleanup_stats["generated_files_deleted"] = delete_stale_artifact_paths(existing_cleanup_paths)
+                    cleanup_stats["local_media_files_deleted"] = delete_stale_artifact_paths(existing_local_media_paths)
                     cleanup_stats["tag_assignment_series_removed"] = cleanup_tag_stats["series_removed"]
                     cleanup_stats["tag_assignment_work_overrides_removed"] = cleanup_tag_stats["work_overrides_removed"]
                     cleanup_stats["tag_assignment_series_touched"] = cleanup_tag_stats["series_touched"]
@@ -1704,6 +1842,7 @@ def main() -> int:
                         "generate_series_ids": len(selected_series_for_generate),
                         "generate_moment_ids": len(generate_moment_ids),
                         "delete_generated_files": cleanup_stats["generated_files_deleted"],
+                        "delete_local_media_files": cleanup_stats["local_media_files_deleted"],
                         "clean_tag_assignment_series": cleanup_stats["tag_assignment_series_removed"],
                         "clean_tag_assignment_work_overrides": cleanup_stats["tag_assignment_work_overrides_removed"],
                         "rebuild_search": bool(generate_ids or generate_moment_ids or selected_series_for_generate or stale_cleanup_requested),
@@ -1713,6 +1852,7 @@ def main() -> int:
                         "media_tracking_initialized": True,
                         "planner_state_migrated": legacy_state_loaded,
                         "stale_cleanup_requested": stale_cleanup_requested,
+                        "local_media_cleanup_available": bool(local_media_cleanup_plan.get("available")),
                         "tag_assignments_written": bool(cleanup_stats["tag_assignments_written"]),
                     },
                 ),
@@ -1730,6 +1870,7 @@ def main() -> int:
             "generated_moment_ids": len(generate_moment_ids),
             "stale_cleanup_requested": stale_cleanup_requested,
             "deleted_generated_files": cleanup_stats["generated_files_deleted"],
+            "deleted_local_media_files": cleanup_stats["local_media_files_deleted"],
             "state_updated": not args.dry_run,
         },
     )

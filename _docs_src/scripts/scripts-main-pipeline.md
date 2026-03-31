@@ -23,7 +23,7 @@ Run everything:
 
 Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media tracking, the next write run treats current source media as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
-When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts and prunes stale `tag_assignments.json` rows before rebuilding catalogue search.
+When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
 ## Useful Flags
 
@@ -116,8 +116,12 @@ Primary target artifacts:
   - work details
   - series
   - moments
+- The same cleanup pass removes local media artifacts for removed works, work details, and moments under `DOTLINEFORM_MEDIA_BASE_DIR`, including:
+  - staged `make_srcset_images` inputs
+  - generated `primary/` and `thumb/` srcset files
+  - staged work downloads under `works/files/`
 - The same pass also prunes removed series rows and removed work overrides from `assets/studio/data/tag_assignments.json`.
-- External source media and derivative media cleanup remain separate from planner-driven rebuilds.
+- Canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` and remote media such as R2 remain separate from planner-driven cleanup.
 
 ## Logging
 

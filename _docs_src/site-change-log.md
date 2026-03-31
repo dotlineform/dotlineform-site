@@ -8,6 +8,29 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Extended removed-row cleanup to local staged and derivative media
+
+**Status:** implemented
+
+**Area:** scripts
+
+**Summary:**  
+`build_catalogue.py` now removes stale local media outputs under `DOTLINEFORM_MEDIA_BASE_DIR` when workbook rows are removed.
+
+**Reason:**  
+Cleaning only repo-owned route stubs and JSON still left stale staged inputs, srcset outputs, and staged downloads on the local media side. Those files are owned by the same catalogue pipeline and should be cleaned by the same removed-row pass.
+
+**Effect:**  
+Removed work, work-detail, and moment rows now also delete matching files from the local `make_srcset_images` input folders, the generated `primary/` and `thumb/` srcset folders, and staged work downloads under `works/files/`. Aggregate catalogue JSON and search rebuilds still run afterward from the current workbook state.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
+**Notes:**  
+This still does not touch canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` or remote media such as R2.
+
 ## [2026-04-01] Added removed-row stale-artifact cleanup to build_catalogue
 
 **Status:** implemented
