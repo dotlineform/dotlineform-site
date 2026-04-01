@@ -172,10 +172,14 @@ def display_path(path: Path | str) -> str:
     )
 
 
+def display_filename(path: Path | str) -> str:
+    return Path(path).name
+
+
 def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessResult) -> None:
     label = THUMB_SUFFIX
     if dry_run:
-        result.messages.append(f"DRY-RUN write thumb: {out}")
+        result.messages.append(f"DRY-RUN write thumb: {display_filename(out)}")
         result.dry_counts[label] = result.dry_counts.get(label, 0) + 1
         return
 
@@ -204,14 +208,14 @@ def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessRe
             str(out),
         ]
     )
-    result.messages.append(f"Wrote thumb: {display_path(out)}")
+    result.messages.append(f"Wrote thumb: {display_filename(out)}")
     result.written_counts[label] = result.written_counts.get(label, 0) + 1
 
 
 def make_primary(src: Path, width: int, out: Path, dry_run: bool, result: ProcessResult) -> None:
     label = f"{PRIMARY_SUFFIX}-{width}"
     if dry_run:
-        result.messages.append(f"DRY-RUN write {label}: {out}")
+        result.messages.append(f"DRY-RUN write {label}: {display_filename(out)}")
         result.dry_counts[label] = result.dry_counts.get(label, 0) + 1
         return
 
@@ -240,7 +244,7 @@ def make_primary(src: Path, width: int, out: Path, dry_run: bool, result: Proces
             str(out),
         ]
     )
-    result.messages.append(f"Wrote {label}: {display_path(out)}")
+    result.messages.append(f"Wrote {label}: {display_filename(out)}")
     result.written_counts[label] = result.written_counts.get(label, 0) + 1
 
 

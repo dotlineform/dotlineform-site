@@ -1,23 +1,4 @@
-current:
-[projects]/projects/simultaneous equations/00541 - model 7 - boundary condition.jpg
--> [media]/website/pipeline/works/make_srcset_images/01941.jpg
 
-new:
-simultaneous equations/00541 - model 7 - boundary condition.jpg -> 01941.jpg
-
-current:
-Wrote thumb: [media]/website/pipeline/works/srcset_images/thumb/01941-thumb-96.webp
-Wrote thumb: [media]/website/pipeline/works/srcset_images/thumb/01941-thumb-192.webp
-Wrote primary-800: [media]/website/pipeline/works/srcset_images/primary/01941-primary-800.webp
-Wrote primary-1200: [media]/website/pipeline/works/srcset_images/primary/01941-primary-1200.webp
-Wrote primary-1600: [media]/website/pipeline/works/srcset_images/primary/01941-primary-1600.webp
-
-new:
-01941-thumb-96.webp
-01941-thumb-192.webp
-01941-primary-800.webp
-01941-primary-1200.webp
-01941-primary-1600.webp
 
 
 (base) Michaels-MacBook-Pro:dotlineform-site dlf$ ./scripts/build_catalogue.py

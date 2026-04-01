@@ -73,6 +73,8 @@ WORKS_BASE_DIR_ENV = env_var_value(PIPELINE_CONFIG, "media_base_dir")
 WORKS_BASE_DIR = Path(WORKS_BASE_DIR_ENV).expanduser() if WORKS_BASE_DIR_ENV else Path(".")
 WORKBOOK_PATH = Path("data/works.xlsx")
 REPO_ROOT = Path(__file__).resolve().parents[1]
+WORKS_SOURCE_ROOT = PROJECTS_BASE_DIR / source_works_root_subdir(PIPELINE_CONFIG)
+MOMENTS_SOURCE_ROOT = PROJECTS_BASE_DIR / source_moments_images_subdir(PIPELINE_CONFIG)
 
 
 def display_path(path: Path | str) -> str:
@@ -100,8 +102,26 @@ def display_media_path(path: Path | str) -> str:
     )
 
 
+def display_transfer_source(path: Path | str) -> str:
+    source_path = Path(path)
+    try:
+        return source_path.relative_to(WORKS_SOURCE_ROOT).as_posix()
+    except Exception:
+        pass
+    try:
+        return source_path.relative_to(MOMENTS_SOURCE_ROOT).as_posix()
+    except Exception:
+        pass
+    return display_projects_path(source_path)
+
+
+def display_transfer_dest(path: Path | str) -> str:
+    return Path(path).name
+
+
 def print_transfer(prefix: str, src: Path, dest: Path) -> None:
-    print(f"{prefix}:\n{display_projects_path(src)}\n-> {display_media_path(dest)}")
+    print(f"{prefix}:")
+    print(f"{display_transfer_source(src)} -> {display_transfer_dest(dest)}")
 
 
 def normalize_text(value: Any) -> str:
