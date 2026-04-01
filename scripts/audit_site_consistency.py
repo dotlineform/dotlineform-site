@@ -25,6 +25,11 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.pipeline_config import load_pipeline_config
 
+try:
+    from series_ids import normalize_series_id
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.series_ids import normalize_series_id
+
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
@@ -116,6 +121,27 @@ def parse_front_matter(path: Path) -> Dict[str, Any]:
 
 def is_slug_safe(s: str) -> bool:
     return re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", s or "") is not None
+
+
+def normalize_series_ref(value: Any) -> str:
+    raw = normalize_text(value)
+    if raw == "":
+        return ""
+    try:
+        return normalize_series_id(raw)
+    except ValueError:
+        return raw
+
+
+def is_valid_series_ref(value: Any) -> bool:
+    raw = normalize_text(value)
+    if raw == "":
+        return False
+    try:
+        normalize_series_id(raw)
+    except ValueError:
+        return False
+    return True
 
 
 def load_collection(path_glob: str, id_field: str) -> Tuple[Dict[str, Dict[str, Any]], List[str]]:
@@ -262,7 +288,7 @@ def check_cross_refs(
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
-        sid = normalize_text(row["fm"].get("series_id"))
+        sid = normalize_series_ref(row["fm"].get("series_id"))
         if sid == "":
             continue
         if series_ids_scope is not None and sid not in series_ids_scope:
@@ -503,7 +529,7 @@ def check_schema(
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         fm = row["fm"]
-        sid = normalize_text(fm.get("series_id"))
+        sid = normalize_series_ref(fm.get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         for field in works_required:
@@ -517,9 +543,9 @@ def check_schema(
         if layout not in {"", "work"}:
             warnings += 1
             add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "works layout should be 'work'"}, max_samples)
-        if sid != "" and not is_slug_safe(sid):
+        if sid != "" and not is_valid_series_ref(sid):
             errors += 1
-            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": wid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
 
     # _series
     series_required = ["series_id", "layout"]
@@ -531,9 +557,9 @@ def check_schema(
             if is_empty(fm.get(field)):
                 errors += 1
                 add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": f"missing required series field '{field}'"}, max_samples)
-        if not is_slug_safe(normalize_text(fm.get("series_id"))):
+        if not is_valid_series_ref(fm.get("series_id")):
             errors += 1
-            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id slug format"}, max_samples)
+            add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "invalid series_id format"}, max_samples)
         if normalize_text(fm.get("layout")) != "series":
             warnings += 1
             add_sample(samples, {"check": "schema", "id": sid, "path": row["path"], "message": "series layout should be 'series'"}, max_samples)
@@ -547,7 +573,7 @@ def check_schema(
             continue
         sid = ""
         if wid in works:
-            sid = normalize_text(works[wid]["fm"].get("series_id"))
+            sid = normalize_series_ref(works[wid]["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         for field in detail_required:
@@ -927,7 +953,7 @@ def check_links(
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
-        sid = normalize_text(row["fm"].get("series_id"))
+        sid = normalize_series_ref(row["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         if sid != "" and sid not in series:
@@ -939,7 +965,7 @@ def check_links(
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
         if wid in works:
-            sid = normalize_text(works[wid]["fm"].get("series_id"))
+            sid = normalize_series_ref(works[wid]["fm"].get("series_id"))
             if series_ids_scope is not None and sid not in series_ids_scope:
                 continue
         if wid not in works:
@@ -984,7 +1010,7 @@ def check_media(
     for wid, row in works.items():
         if work_ids_scope is not None and wid not in work_ids_scope:
             continue
-        sid = normalize_text(row["fm"].get("series_id"))
+        sid = normalize_series_ref(row["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         fm = row["fm"]
@@ -1004,7 +1030,7 @@ def check_media(
             continue
         sid = ""
         if wid in works:
-            sid = normalize_text(works[wid]["fm"].get("series_id"))
+            sid = normalize_series_ref(works[wid]["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         expected = expected_thumb_names(duid)
@@ -1044,7 +1070,7 @@ def check_orphans(
         for wid, row in works.items():
             if work_ids_scope is not None and wid not in work_ids_scope:
                 continue
-            sid = normalize_text(row["fm"].get("series_id"))
+            sid = normalize_series_ref(row["fm"].get("series_id"))
             if sid == "":
                 continue
             works_by_series[sid] = works_by_series.get(sid, 0) + 1
@@ -1062,7 +1088,7 @@ def check_orphans(
             continue
         sid = ""
         if wid in works:
-            sid = normalize_text(works[wid]["fm"].get("series_id"))
+            sid = normalize_series_ref(works[wid]["fm"].get("series_id"))
         if series_ids_scope is not None and sid not in series_ids_scope:
             continue
         if duid not in canonical_detail_ids:
@@ -1214,7 +1240,10 @@ def main() -> None:
     if invalid:
         raise SystemExit(f"Invalid --checks value(s): {', '.join(invalid)}. Allowed: {', '.join(sorted(valid_checks))}")
 
-    series_ids_scope = {normalize_text(x) for x in args.series_ids.split(",") if normalize_text(x) != ""} or None
+    try:
+        series_ids_scope = {normalize_series_id(x) for x in args.series_ids.split(",") if normalize_text(x) != ""} or None
+    except ValueError as exc:
+        raise SystemExit(f"Invalid --series-ids value: {exc}") from exc
     work_ids_scope = parse_work_id_selection(args.work_ids) if normalize_text(args.work_ids) != "" else None
 
     cwd_prev = Path.cwd()

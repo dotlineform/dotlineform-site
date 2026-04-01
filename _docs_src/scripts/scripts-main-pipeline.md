@@ -27,7 +27,9 @@ Default behavior now includes a planner pass before execution. `build_catalogue.
 
 When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
-Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values. The run stops at that point if any blocking errors are found.
+Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values. Series IDs no longer need to be slug-safe; the pipeline accepts numeric series IDs and still tolerates the current legacy slug-style series IDs during transition. The run stops at that point if any blocking errors are found.
+
+When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` artifacts to match the planned scope. That prevents work-only runs from needlessly dry-running or rewriting `_work_details/*.md` when no work-detail rows or work-detail media changed.
 
 ## Useful Flags
 
@@ -41,6 +43,7 @@ Before any copy, srcset, workbook, or generated-file writes begin, the pipeline 
 - `--mode work|work_details|moment`: run only selected flow(s); repeat flag to run multiple
 - `--work-ids`, `--work-ids-file`: limit work and work-details scope
 - `--series-ids`, `--series-ids-file`: pass series scope to generation
+  - accepts numeric series IDs and current legacy slug-style series IDs during transition
 - `--moment-ids`, `--moment-ids-file`: limit moment scope
 - `--xlsx PATH`: workbook path override
 - `--input-dir`, `--output-dir`: works source and derivative dirs

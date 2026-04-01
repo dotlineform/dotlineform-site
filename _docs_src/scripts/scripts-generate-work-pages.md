@@ -21,7 +21,7 @@ Common runs:
 ./scripts/generate_work_pages.py --write
 ./scripts/generate_work_pages.py --work-ids 00456 --write
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
-./scripts/generate_work_pages.py --series-ids curve-poems,dots --write
+./scripts/generate_work_pages.py --series-ids 001,002 --write
 ./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
 ```
 
@@ -37,6 +37,7 @@ When `--write` is used, the generator now reads cached formula values from one w
 - `--force`: regenerate even when checksums match
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
+  - accepts numeric series IDs and current legacy slug-style series IDs during transition
 - `--moment-ids`, `--moment-ids-file`
 - `--work-files-sheet` with default `WorkFiles`
 - `--work-links-sheet` with default `WorkLinks`
@@ -121,7 +122,7 @@ There is no separate `works-prose` artifact; use `work-json` for prose-only refr
 The shared preflight currently stops the run when actionable catalogue rows contain blocking workbook errors such as:
 
 - malformed `work_id`, `detail_id`, `series_id`, or `moment_id` values
-- `Works.series_ids` values that are not slug-safe or do not exist in `Series`
+- `Works.series_ids` values that do not normalize to a valid series ID or do not exist in `Series`
 - missing `Series.primary_work_id`
 - `Series.primary_work_id` values that do not resolve to a `Works` row
 - `Series.primary_work_id` values whose `Works.series_ids` do not include that series

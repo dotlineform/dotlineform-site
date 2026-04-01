@@ -119,6 +119,11 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
 
+try:
+    from series_ids import normalize_series_id
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.series_ids import normalize_series_id
+
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
@@ -986,16 +991,15 @@ def main() -> None:
         return None
 
     def parse_work_series_ids(row: tuple) -> List[str]:
-        parsed_values: List[str] = []
         series_ids_col = first_present_col(works_hi, ["series_ids"])
-        if series_ids_col is not None:
-            parsed_values = parse_list(cell(row, works_hi, series_ids_col))
-
+        if series_ids_col is None:
+            return []
         series_ids: List[str] = []
         seen_series_ids: set[str] = set()
-        for raw_series_id in parsed_values:
-            sid = normalize_text(raw_series_id)
-            if not sid:
+        for raw_series_id in parse_list(cell(row, works_hi, series_ids_col)):
+            try:
+                sid = normalize_series_id(raw_series_id)
+            except ValueError:
                 continue
             if sid in seen_series_ids:
                 continue
@@ -1096,8 +1100,12 @@ def main() -> None:
     if series_rows and len(series_rows) > 1 and "series_id" in series_hi:
         first_row_by_series_id: Dict[str, int] = {}
         for row_number, row in enumerate(series_rows[1:], start=2):
-            sid = normalize_text(cell(row, series_hi, "series_id"))
-            if not sid:
+            raw_series_id = cell(row, series_hi, "series_id")
+            if is_empty(raw_series_id):
+                continue
+            try:
+                sid = normalize_series_id(raw_series_id)
+            except ValueError:
                 continue
             if sid not in first_row_by_series_id:
                 first_row_by_series_id[sid] = row_number
@@ -1119,7 +1127,10 @@ def main() -> None:
         sid_raw = cell(r, series_hi, "series_id")
         if is_empty(sid_raw):
             continue
-        sid = str(sid_raw).strip()
+        try:
+            sid = normalize_series_id(sid_raw)
+        except ValueError:
+            continue
         title_raw = cell(r, series_hi, "title")
         title = coerce_string(title_raw)
         if title is None:
@@ -1183,7 +1194,7 @@ def main() -> None:
             sid_raw = cell(sr, series_sort_hi, "series_id")
             if is_empty(sid_raw):
                 continue
-            sid = require_slug_safe("series_id", sid_raw)
+            sid = normalize_series_id(sid_raw)
             if sid in seen_series_ids:
                 raise SystemExit(f"{args.series_sort_sheet} has duplicate series_id: {sid}")
             seen_series_ids.add(sid)
@@ -1546,17 +1557,23 @@ def main() -> None:
         sids_path = Path(args.series_ids_file).expanduser()
         if not sids_path.exists():
             raise SystemExit(f"series_ids file not found: {sids_path}")
-        selected_series_ids = {
-            require_slug_safe("series_id", line.strip())
-            for line in sids_path.read_text(encoding="utf-8").splitlines()
-            if line.strip()
-        }
+        try:
+            selected_series_ids = {
+                normalize_series_id(line.strip())
+                for line in sids_path.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            }
+        except ValueError as exc:
+            raise SystemExit(f"Invalid series_ids file value: {exc}") from exc
     elif args.series_ids:
-        selected_series_ids = {
-            require_slug_safe("series_id", sid.strip())
-            for sid in args.series_ids.split(",")
-            if sid.strip()
-        }
+        try:
+            selected_series_ids = {
+                normalize_series_id(sid.strip())
+                for sid in args.series_ids.split(",")
+                if sid.strip()
+            }
+        except ValueError as exc:
+            raise SystemExit(f"Invalid --series-ids value: {exc}") from exc
 
     selected_moment_ids = None
     if args.moment_ids_file:
@@ -1897,7 +1914,7 @@ def main() -> None:
     # Series page generation (Series)
     # ----------------------------
     # Series worksheet required columns:
-    # - series_id (slug-safe)
+    # - series_id
     # - title
     # Optional columns:
     # - year_display (preferred display value)
@@ -1932,7 +1949,7 @@ def main() -> None:
             sid_raw = cell(sr, series_hi, "series_id")
             if is_empty(sid_raw):
                 continue
-            sid = require_slug_safe("series_id", sid_raw)
+            sid = normalize_series_id(sid_raw)
             if series_page_selected_ids is not None and sid not in series_page_selected_ids:
                 continue
             status = normalize_status(cell(sr, series_hi, "status"))
@@ -1946,7 +1963,7 @@ def main() -> None:
                 if is_empty(sid_raw):
                     series_skipped += 1
                     continue
-                series_id = require_slug_safe("series_id", sid_raw)
+                series_id = normalize_series_id(sid_raw)
                 if series_page_selected_ids is not None and series_id not in series_page_selected_ids:
                     series_skipped += 1
                     continue
@@ -2213,7 +2230,7 @@ def main() -> None:
         sid_raw = cell(sr, series_hi, "series_id")
         if is_empty(sid_raw):
             continue
-        sid = require_slug_safe("series_id", sid_raw)
+        sid = normalize_series_id(sid_raw)
         status = normalize_status(cell(sr, series_hi, "status"))
         if status not in {"draft", "published"}:
             continue

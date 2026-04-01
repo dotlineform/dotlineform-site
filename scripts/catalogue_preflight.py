@@ -6,6 +6,11 @@ from typing import Any, Dict, List, Sequence
 
 import openpyxl
 
+try:
+    from series_ids import normalize_series_id, parse_series_ids
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.series_ids import normalize_series_id, parse_series_ids
+
 
 ACTIONABLE_STATUSES = {"draft", "published"}
 
@@ -65,18 +70,6 @@ def cell(row: Sequence[Any], header_index: Dict[str, int], col_name: str) -> Any
     if idx is None or idx >= len(row):
         return None
     return row[idx]
-
-
-def parse_series_ids(raw: Any) -> List[str]:
-    values: List[str] = []
-    seen: set[str] = set()
-    for part in normalize_text(raw).split(","):
-        sid = normalize_text(part)
-        if not sid or sid in seen:
-            continue
-        seen.add(sid)
-        values.append(sid)
-    return values
 
 
 def _ensure_sheet(wb, sheet_name: str, errors: List[str]):
@@ -142,31 +135,28 @@ def validate_catalogue_workbook(
             continue
 
         all_work_ids.add(work_id)
-        series_ids = parse_series_ids(cell(row, works_hi, "series_ids"))
+        try:
+            series_ids = parse_series_ids(cell(row, works_hi, "series_ids"))
+        except ValueError as exc:
+            errors.append(f"{works_sheet} row {row_number}: {exc}")
+            series_ids = []
         work_series_ids_by_work_id[work_id] = series_ids
 
         if normalize_status(cell(row, works_hi, "status")) not in ACTIONABLE_STATUSES:
             continue
 
-        for series_id in series_ids:
-            if not is_slug_safe(series_id):
-                errors.append(
-                    f"{works_sheet} row {row_number}: series_ids contains non-slug-safe value {series_id!r}"
-                )
-
     for row_number, row in enumerate(series_ws.iter_rows(min_row=2, values_only=True), start=2):
         raw_series_id = cell(row, series_hi, "series_id")
         if is_empty(raw_series_id):
             continue
-        series_id = normalize_text(raw_series_id)
-        if not series_id:
+        try:
+            series_id = normalize_series_id(raw_series_id)
+        except ValueError as exc:
+            errors.append(f"{series_sheet} row {row_number}: {exc}")
             continue
         all_series_ids.add(series_id)
         if normalize_status(cell(row, series_hi, "status")) not in ACTIONABLE_STATUSES:
             continue
-
-        if not is_slug_safe(series_id):
-            errors.append(f"{series_sheet} row {row_number}: series_id is not slug-safe: {series_id!r}")
 
         raw_primary_work_id = cell(row, series_hi, "primary_work_id")
         if is_empty(raw_primary_work_id):
@@ -204,8 +194,6 @@ def validate_catalogue_workbook(
             continue
 
         for series_id in work_series_ids_by_work_id.get(work_id, []):
-            if not is_slug_safe(series_id):
-                continue
             if series_id not in all_series_ids:
                 errors.append(
                     f"{works_sheet} row {row_number}: work {work_id!r} references unknown series_id {series_id!r}"

@@ -107,6 +107,11 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
 
+try:
+    from series_ids import normalize_series_id
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.series_ids import normalize_series_id
+
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
@@ -178,16 +183,20 @@ def first_present_col(header_index: Dict[str, int], names: list[str]) -> str | N
 
 
 def parse_series_ids_from_works_row(row: tuple[Any, ...], hi: Dict[str, int]) -> list[str]:
-    parsed: list[str] = []
     series_ids_col = first_present_col(hi, ["series_ids"])
-    if series_ids_col is not None:
-        raw_value = row[hi[series_ids_col]]
-        parsed = [normalize_text(part) for part in normalize_text(raw_value).split(",") if normalize_text(part)]
-
+    if series_ids_col is None:
+        return []
     out: list[str] = []
     seen: set[str] = set()
-    for sid in parsed:
-        if not sid or sid in seen:
+    for part in normalize_text(row[hi[series_ids_col]]).split(","):
+        token = normalize_text(part)
+        if not token:
+            continue
+        try:
+            sid = normalize_series_id(token)
+        except ValueError:
+            continue
+        if sid in seen:
             continue
         seen.add(sid)
         out.append(sid)
@@ -382,8 +391,9 @@ def collect_draft_series_ids(xlsx_path: Path, allowed_ids: Set[str] | None = Non
         raw_series_id = row[hi["series_id"]]
         if is_empty(raw_series_id):
             continue
-        sid = normalize_text(raw_series_id)
-        if not sid:
+        try:
+            sid = normalize_series_id(raw_series_id)
+        except ValueError:
             continue
         if allowed_ids is not None and sid not in allowed_ids:
             continue
@@ -529,11 +539,17 @@ def fingerprint_media_path(
 
 
 def sorted_unique_series_ids(raw_value: Any) -> list[str]:
-    seen: set[str] = set()
     out: list[str] = []
+    seen: set[str] = set()
     for part in normalize_text(raw_value).split(","):
-        sid = normalize_text(part)
-        if not sid or sid in seen:
+        token = normalize_text(part)
+        if not token:
+            continue
+        try:
+            sid = normalize_series_id(token)
+        except ValueError:
+            sid = token
+        if sid in seen:
             continue
         seen.add(sid)
         out.append(sid)
@@ -635,8 +651,9 @@ def build_workbook_state(
             raw_series_id = payload.get("series_id")
             if is_empty(raw_series_id):
                 continue
-            series_id = normalize_text(raw_series_id)
-            if not series_id:
+            try:
+                series_id = normalize_series_id(raw_series_id)
+            except ValueError:
                 continue
             series[series_id] = {
                 "hash": stable_payload_hash(payload),
@@ -883,6 +900,23 @@ def summarize_ids(ids: Set[str], limit: int = 8) -> str:
         return ", ".join(ordered)
     head = ", ".join(ordered[:limit])
     return f"{head}, +{len(ordered) - limit} more"
+
+
+def summarize_diff_counts(diff: Dict[str, Set[str]]) -> str:
+    return (
+        f"{len(diff['added'])} added, "
+        f"{len(diff['changed'])} changed, "
+        f"{len(diff['removed'])} removed"
+    )
+
+
+def append_only_args(cmd: list[str], artifacts: Iterable[str]) -> None:
+    seen: set[str] = set()
+    for artifact in artifacts:
+        if artifact in seen:
+            continue
+        seen.add(artifact)
+        cmd.extend(["--only", artifact])
 
 
 def confirm_continue(*, no_confirm: bool) -> None:
@@ -1307,9 +1341,17 @@ def main() -> int:
         explicit_work_ids.update(parse_work_id_selection(args.work_ids))
     work_filter = explicit_work_ids if explicit_work_ids else None
 
-    explicit_series_ids = read_optional_ids_file(args.series_ids_file)
+    explicit_series_ids: Set[str] = set()
+    if args.series_ids_file:
+        try:
+            explicit_series_ids.update({normalize_series_id(value) for value in read_optional_ids_file(args.series_ids_file)})
+        except ValueError as exc:
+            raise SystemExit(f"Invalid series_ids file value: {exc}") from exc
     if args.series_ids:
-        explicit_series_ids.update({normalize_text(s.strip()) for s in args.series_ids.split(",") if s.strip()})
+        try:
+            explicit_series_ids.update({normalize_series_id(s.strip()) for s in args.series_ids.split(",") if s.strip()})
+        except ValueError as exc:
+            raise SystemExit(f"Invalid --series-ids value: {exc}") from exc
     series_filter = explicit_series_ids if explicit_series_ids else None
 
     explicit_moment_ids = read_optional_ids_file(args.moment_ids_file)
@@ -1603,25 +1645,25 @@ def main() -> int:
                     )
         print(f"Selected modes: {', '.join(sorted(selected_modes))}")
         print("Workbook changes:")
-        print(f"- works: {len(changed_work_row_ids)} changed/new, {len(work_diff['removed'])} removed")
-        print(f"- series: {len(changed_series_row_ids)} changed/new, {len(series_diff['removed'])} removed")
-        print(f"- work_details: {len(changed_detail_uids)} changed/new, {len(detail_diff['removed'])} removed")
-        print(f"- work_files groups: {len(work_files_diff['added'] | work_files_diff['changed'] | work_files_diff['removed'])}")
-        print(f"- work_links groups: {len(work_links_diff['added'] | work_links_diff['changed'] | work_links_diff['removed'])}")
-        print(f"- moments: {len(changed_moment_ids)} changed/new, {len(moments_diff['removed'])} removed")
+        print(f"- works: {summarize_diff_counts(work_diff)}")
+        print(f"- series: {summarize_diff_counts(series_diff)}")
+        print(f"- work_details: {summarize_diff_counts(detail_diff)}")
+        print(f"- work_files groups: {summarize_diff_counts(work_files_diff)}")
+        print(f"- work_links groups: {summarize_diff_counts(work_links_diff)}")
+        print(f"- moments: {summarize_diff_counts(moments_diff)}")
         if media_tracking_available or args.full:
             print("Media changes:")
-            print(f"- work sources: {len(changed_work_media_ids)} changed/new, {len(media_work_diff['removed'])} removed")
-            print(f"- work detail sources: {len(changed_detail_media_uids)} changed/new, {len(media_work_details_diff['removed'])} removed")
-            print(f"- moment sources: {len(changed_moment_media_ids)} changed/new, {len(media_moments_diff['removed'])} removed")
+            print(f"- work sources: {summarize_diff_counts(media_work_diff)}")
+            print(f"- work detail sources: {summarize_diff_counts(media_work_details_diff)}")
+            print(f"- moment sources: {summarize_diff_counts(media_moments_diff)}")
         else:
             print("Media changes:")
             print("- source media tracking not yet initialized in planner state; current media will be treated as baseline on the next write run")
         if prose_tracking_available or args.full:
             print("Prose changes:")
-            print(f"- work prose sources: {len(changed_work_prose_ids)} changed/new, {len(prose_work_diff['removed'])} removed")
-            print(f"- series prose sources: {len(changed_series_prose_ids)} changed/new, {len(prose_series_diff['removed'])} removed")
-            print(f"- moment prose sources: {len(changed_moment_prose_ids)} changed/new, {len(prose_moments_diff['removed'])} removed")
+            print(f"- work prose sources: {summarize_diff_counts(prose_work_diff)}")
+            print(f"- series prose sources: {summarize_diff_counts(prose_series_diff)}")
+            print(f"- moment prose sources: {summarize_diff_counts(prose_moments_diff)}")
         else:
             print("Prose changes:")
             print("- prose tracking not yet initialized in planner state; current prose paths will be treated as baseline on the next successful write run")
@@ -1904,10 +1946,33 @@ def main() -> int:
             generate_cmd = [py, str(generate_script), str(xlsx_path)]
             generate_cmd += ["--work-ids-file", str(generate_ids_file)]
             generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
+            generate_only_artifacts: list[str] = []
+            if generate_ids:
+                generate_only_artifacts.extend(["work-pages", "work-files", "work-links", "work-json"])
+            if selected_series_for_generate:
+                generate_only_artifacts.append("series-pages")
+            detail_pages_needed = bool(
+                "work_details" in selected_modes
+                and (
+                    args.full
+                    or work_filter is not None
+                    or detail_media_candidate_uids
+                    or generated_detail_uids
+                    or changed_detail_uids
+                    or changed_detail_media_uids
+                    or removed_detail_uids
+                )
+            )
+            if detail_pages_needed:
+                generate_only_artifacts.append("work-details-pages")
+            if generate_moment_ids:
+                generate_only_artifacts.append("moments")
             if selected_series_for_generate:
                 generate_cmd += ["--series-ids", ",".join(sorted(selected_series_for_generate))]
-            elif stale_cleanup_requested and not generate_ids and not generate_moment_ids:
+            if stale_cleanup_requested and not generate_ids and not generate_moment_ids and not selected_series_for_generate:
                 generate_cmd += ["--only", "series-index-json", "--only", "works-index-json", "--only", "moments-index-json"]
+            elif generate_only_artifacts:
+                append_only_args(generate_cmd, generate_only_artifacts)
             if not args.dry_run:
                 generate_cmd.append("--write")
             if args.force_generate:

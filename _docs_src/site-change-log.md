@@ -8,6 +8,55 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Scoped wrapper generation artifacts to the planned flow
+
+**Status:** implemented
+
+**Area:** build pipeline
+
+**Summary:**  
+`build_catalogue.py` now passes a narrower `--only` artifact list into `generate_work_pages.py` based on the planned scope instead of always letting the generator run every work-side artifact type.
+
+**Reason:**  
+The planner could correctly report no `WorkDetails` row changes while the later generator phase still dry-ran or rewrote all `_work_details/*.md` pages for selected works. That made the plan harder to trust and caused unnecessary noise during work-only migrations such as the numeric series-id transition.
+
+**Effect:**  
+Work-only runs now skip `work-details-pages` unless the work-details flow actually needs them. Aggregate indexes still rebuild as before, and work JSON can still include detail metadata without regenerating `_work_details` route stubs.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+
+**Notes:**  
+This only changes which artifact groups are requested from `generate_work_pages.py`. It does not change planner diff detection or the underlying detail JSON model.
+
+## [2026-04-01] Added numeric series-id support to the catalogue pipeline
+
+**Status:** implemented
+
+**Area:** series model migration
+
+**Summary:**  
+The catalogue planner, workbook preflight, generator, and audit tooling no longer require `series_id` to be slug-safe.
+
+**Reason:**  
+`series_id` is being migrated toward a numeric catalogue-style identifier instead of a user-authored slug. The pipeline needed to stop treating series IDs as route slugs before the workbook can be bulk-migrated safely.
+
+**Effect:**  
+`build_catalogue.py`, `generate_work_pages.py`, and the shared workbook preflight now normalize numeric series IDs such as `1` to `001`, accept those values in `Works.series_ids`, `Series.series_id`, `SeriesSort.series_id`, and `--series-ids*` CLI filters, and still tolerate the current legacy slug-style series IDs during transition. Generated artifact naming continues to follow whatever normalized series IDs are present in the workbook.
+
+**Affected files/docs:**  
+- `scripts/series_ids.py`
+- `scripts/catalogue_preflight.py`
+- `scripts/build_catalogue.py`
+- `scripts/generate_work_pages.py`
+- `scripts/audit_site_consistency.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+
+**Notes:**  
+This is a transition step, not the workbook migration itself. The canonical workbook still needs to be bulk-edited from legacy slug-style series IDs to numeric series IDs before the site fully switches over.
+
 ## [2026-04-01] Preserved workbook formulas during generator writes
 
 **Status:** implemented
