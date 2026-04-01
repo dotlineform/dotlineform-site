@@ -97,6 +97,12 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 
+try:
+    from catalogue_preflight import raise_if_invalid_catalogue_workbook
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
+
+
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
@@ -1616,6 +1622,10 @@ def main() -> int:
     print_plan_summary()
     if args.plan:
         return 0
+
+    print("\n==> Workbook Preflight")
+    raise_if_invalid_catalogue_workbook(xlsx_path)
+    print("Workbook preflight passed.")
 
     log_event(
         repo_root,

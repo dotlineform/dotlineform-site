@@ -25,6 +25,8 @@ Common runs:
 ./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
 ```
 
+Before any writes begin, the generator now runs the same shared catalogue workbook preflight used by `build_catalogue.py`. Blocking workbook errors are aggregated and reported together before file writes or workbook status updates start.
+
 ## Useful Flags
 
 - `--write`: persist file and workbook changes
@@ -109,6 +111,19 @@ Artifact behavior:
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 
 There is no separate `works-prose` artifact; use `work-json` for prose-only refreshes.
+
+## Workbook Preflight
+
+The shared preflight currently stops the run when actionable catalogue rows contain blocking workbook errors such as:
+
+- malformed `work_id`, `detail_id`, `series_id`, or `moment_id` values
+- `Works.series_ids` values that are not slug-safe or do not exist in `Series`
+- missing `Series.primary_work_id`
+- `Series.primary_work_id` values that do not resolve to a `Works` row
+- `Series.primary_work_id` values whose `Works.series_ids` do not include that series
+- `WorkDetails.work_id` values that do not resolve to `Works`
+
+This preflight runs before generated files or workbook status/date updates are written, so those failures no longer appear after a partially written run.
 
 ## Runtime Canonical Data Flow
 

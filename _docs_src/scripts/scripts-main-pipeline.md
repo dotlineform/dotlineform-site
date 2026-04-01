@@ -25,6 +25,8 @@ Default behavior now includes a planner pass before execution. `build_catalogue.
 
 When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
+Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values. The run stops at that point if any blocking errors are found.
+
 ## Useful Flags
 
 - `--dry-run`: preview only, with no workbook writes or deletes
@@ -41,6 +43,12 @@ When workbook rows have been removed, the planner now also deletes the matching 
 - `--input-dir`, `--output-dir`: works source and derivative dirs
 - `--detail-input-dir`, `--detail-output-dir`: work-details source and derivative dirs
 - `--moment-input-dir`, `--moment-output-dir`: moments source and derivative dirs
+
+## Preflight Behavior
+
+- workbook preflight runs after planning and before any copy/srcset/generation step
+- preflight failures are aggregated and printed together so workbook fixes can be made in one pass
+- preflight is intended to prevent partial publish states where work rows or media are written before a later series or moment validation failure aborts the run
 
 ## Mode Examples
 

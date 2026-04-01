@@ -8,6 +8,32 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added fail-fast catalogue workbook preflight
+
+**Status:** implemented
+
+**Area:** validation
+
+**Summary:**  
+`build_catalogue.py` and `generate_work_pages.py` now run a shared workbook preflight before copy, generation, or workbook-write steps begin.
+
+**Reason:**  
+The catalogue pipeline could previously write work pages, stage media, or persist workbook status changes before a later workbook integrity error such as a missing `Series.primary_work_id` aborted the run. That made failures harder to recover from and left partial publish state behind.
+
+**Effect:**  
+Blocking workbook issues for actionable catalogue rows are now aggregated and reported before the run starts mutating outputs. The current preflight covers malformed IDs, unknown `Works.series_ids` references, missing or invalid `Series.primary_work_id` values, series primary works that are not members of the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values.
+
+**Affected files/docs:**  
+- `scripts/catalogue_preflight.py`
+- `scripts/build_catalogue.py`
+- `scripts/generate_work_pages.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
+**Notes:**  
+This change adds an earlier validation gate but does not relax the underlying generator requirements. It moves the failure point earlier and makes the errors easier to fix in one pass.
+
 ## [2026-04-01] Added a Studio-only work storage index
 
 **Status:** implemented

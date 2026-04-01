@@ -109,6 +109,12 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     )
 
 
+try:
+    from catalogue_preflight import raise_if_invalid_catalogue_workbook
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
+
+
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 PROJECTS_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "projects_base_dir")
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
@@ -1559,6 +1565,14 @@ def main() -> None:
     ):
         run_moments = False
         run_moments_index_json = False
+
+    raise_if_invalid_catalogue_workbook(
+        xlsx_path,
+        works_sheet=args.works_sheet,
+        series_sheet=args.series_sheet,
+        work_details_sheet=args.work_details_sheet,
+        moments_sheet=args.moments_sheet,
+    )
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
