@@ -885,6 +885,25 @@ def summarize_ids(ids: Set[str], limit: int = 8) -> str:
     return f"{head}, +{len(ordered) - limit} more"
 
 
+def confirm_continue(*, no_confirm: bool) -> None:
+    if no_confirm:
+        print("Continue? [Y|N] auto-accepted via --no-confirm")
+        return
+
+    while True:
+        try:
+            response = input("Continue? [Y|N] ").strip().lower()
+        except EOFError as exc:
+            raise SystemExit("Confirmation required. Re-run with --no-confirm to continue without prompting.") from exc
+
+        if response in {"", "y", "yes"}:
+            return
+        if response in {"n", "no"}:
+            print("Cancelled.")
+            raise SystemExit(0)
+        print("Please enter Y or N.")
+
+
 def summarize_run_text(
     *,
     workbook_change_count: int,
@@ -1251,6 +1270,7 @@ def main() -> int:
     ap.add_argument("--force-generate", action="store_true", help="Pass --force to generate_work_pages.py and the catalogue search rebuild")
     ap.add_argument("--dry-run", action="store_true", help="Preview mode; no writes/deletes.")
     ap.add_argument("--plan", action="store_true", help="Print the inferred execution plan and exit.")
+    ap.add_argument("--no-confirm", action="store_true", help="Skip the post-plan confirmation prompt and continue immediately.")
     ap.add_argument("--full", action="store_true", help="Ignore previous planner state and rebuild all workbook-backed generation targets.")
     ap.add_argument("--reset-state", action="store_true", help=f"Remove the stored planner state at {DEFAULT_BUILD_STATE_PATH} before planning.")
     ap.add_argument(
@@ -1638,6 +1658,7 @@ def main() -> int:
     print_plan_summary()
     if args.plan:
         return 0
+    confirm_continue(no_confirm=bool(args.no_confirm))
 
     print("\n==> Workbook Preflight")
     raise_if_invalid_catalogue_workbook(xlsx_path)

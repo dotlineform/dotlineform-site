@@ -8,6 +8,28 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added a default post-plan confirmation prompt to build_catalogue
+
+**Status:** implemented
+
+**Area:** build pipeline
+
+**Summary:**  
+`build_catalogue.py` now pauses after printing `==> Build Plan` and asks `Continue? [Y|N]` unless `--no-confirm` is passed.
+
+**Reason:**  
+The build plan is now detailed enough to act as a real operator checkpoint. Adding an explicit confirmation step makes it easier to catch scope mistakes before copy, srcset, workbook, or generated-file work begins.
+
+**Effect:**  
+Interactive runs now require a simple confirmation after the plan. `--no-confirm` skips that prompt and continues immediately, which is the intended path for unattended invocations. `--plan` still exits after printing the plan without prompting.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+
+**Notes:**  
+This change affects orchestration behavior only. Generation logic and output contracts are unchanged.
+
 ## [2026-04-01] Shortened local path output in catalogue pipeline logs
 
 **Status:** implemented

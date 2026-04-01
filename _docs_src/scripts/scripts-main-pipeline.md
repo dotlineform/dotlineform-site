@@ -18,7 +18,9 @@ Run everything:
 
 ```bash
 ./scripts/build_catalogue.py --dry-run
+./scripts/build_catalogue.py --dry-run --no-confirm
 ./scripts/build_catalogue.py
+./scripts/build_catalogue.py --no-confirm
 ```
 
 Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media and current work/series/moment prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
@@ -31,6 +33,7 @@ Before any copy, srcset, workbook, or generated-file writes begin, the pipeline 
 
 - `--dry-run`: preview only, with no workbook writes or deletes
 - `--plan`: print the inferred execution plan and exit
+- `--no-confirm`: skip the post-plan `Continue? [Y|N]` prompt and continue immediately
 - `--full`: ignore saved planner state and rebuild all workbook-backed generation targets
 - `--reset-state`: remove `var/build_catalogue_state.json` before planning
 - `--force-generate`: pass `--force` through to `generate_work_pages.py` and the catalogue search rebuild
@@ -46,6 +49,8 @@ Before any copy, srcset, workbook, or generated-file writes begin, the pipeline 
 
 ## Preflight Behavior
 
+- after printing `==> Build Plan`, the pipeline now asks `Continue? [Y|N]`
+- `--no-confirm` bypasses that prompt and continues immediately
 - workbook preflight runs after planning and before any copy/srcset/generation step
 - preflight failures are aggregated and printed together so workbook fixes can be made in one pass
 - preflight is intended to prevent partial publish states where work rows or media are written before a later series or moment validation failure aborts the run
