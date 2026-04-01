@@ -679,6 +679,11 @@ def build_recent_index_payload(entries: List[Dict[str, Any]]) -> Dict[str, Any]:
     })
 
 
+def format_series_work_count_caption(work_count: Any) -> str:
+    count = int(work_count or 0)
+    return f"{count} work{'s' if count != 1 else ''}"
+
+
 def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     """Extract header.<key> from an existing JSON payload."""
     try:
@@ -2807,11 +2812,49 @@ def main() -> None:
     ]
 
     recorded_at_utc = utc_timestamp_now()
-    recent_entries_new: List[Dict[str, Any]] = []
     newly_published_series_ids = {
         str(entry.get("series_id") or "")
         for entry in series_publish_transitions
         if str(entry.get("series_id") or "")
+    }
+
+    def primary_series_id_for_work(work_id: Any) -> str:
+        work_meta = work_meta_by_id.get(str(work_id) or "", {})
+        series_ids = work_meta.get("series_ids") if isinstance(work_meta, dict) else []
+        if isinstance(series_ids, list) and series_ids:
+            return str(series_ids[0] or "")
+        return ""
+
+    def refresh_series_recent_entry(
+        series_id: str,
+        published_date: Any,
+        session_order_value: int,
+        recorded_at_utc_value: Optional[str] = None,
+    ) -> bool:
+        if not series_id:
+            return False
+        series_entry = existing_by_id.get(f"series:{series_id}")
+        series_record = series_payload.get(series_id, {})
+        if not isinstance(series_record, dict) or not series_entry:
+            return False
+        refreshed = normalize_recent_entry({
+            "kind": "series",
+            "target_id": series_id,
+            "title": coerce_string(series_record.get("title")) or series_id,
+            "caption": format_series_work_count_caption(len(series_record.get("works") or [])),
+            "published_date": published_date or series_entry.get("published_date"),
+            "thumb_id": coerce_string(series_record.get("primary_work_id")) or coerce_string(series_entry.get("thumb_id")),
+            "recorded_at_utc": recorded_at_utc_value or recorded_at_utc,
+            "session_order": session_order_value,
+        })
+        if refreshed is None:
+            return False
+        existing_by_id[str(refreshed.get("id") or "")] = refreshed
+        return True
+
+    existing_by_id = {
+        str(entry.get("id") or f"{entry.get('kind')}:{entry.get('target_id')}"): entry
+        for entry in retained_recent_entries
     }
 
     session_order = 0
@@ -2824,14 +2867,46 @@ def main() -> None:
             "kind": "series",
             "target_id": series_id,
             "title": coerce_string(entry.get("title")) or series_id,
-            "caption": f"{int(entry.get('work_count') or 0)} work{'s' if int(entry.get('work_count') or 0) != 1 else ''}",
+            "caption": format_series_work_count_caption(entry.get("work_count")),
             "published_date": entry.get("published_date"),
             "thumb_id": coerce_string(entry.get("primary_work_id")),
             "recorded_at_utc": recorded_at_utc,
             "session_order": session_order,
         })
         if normalized is not None:
-            recent_entries_new.append(normalized)
+            existing_by_id[str(normalized.get("id") or "")] = normalized
+
+    def latest_series_recent_entry() -> Optional[Dict[str, Any]]:
+        series_entries = [
+            entry for entry in existing_by_id.values()
+            if str(entry.get("kind") or "") == "series"
+        ]
+        if not series_entries:
+            return None
+        return sort_recent_entries(series_entries)[0]
+
+    latest_series_entry = latest_series_recent_entry()
+    latest_series_id = str(latest_series_entry.get("target_id") or "") if latest_series_entry else ""
+    if latest_series_id:
+        latest_series_work_entries = [
+            entry for entry in existing_by_id.values()
+            if (
+                str(entry.get("kind") or "") == "work"
+                and primary_series_id_for_work(entry.get("target_id")) == latest_series_id
+            )
+        ]
+        if latest_series_work_entries:
+            newest_absorbed_entry = sort_recent_entries(
+                [existing_by_id.get(f"series:{latest_series_id}", latest_series_entry)] + latest_series_work_entries
+            )[0]
+            refresh_series_recent_entry(
+                latest_series_id,
+                newest_absorbed_entry.get("published_date"),
+                coerce_int(newest_absorbed_entry.get("session_order")) or 1,
+                coerce_string(newest_absorbed_entry.get("recorded_at_utc")),
+            )
+            for work_entry in latest_series_work_entries:
+                existing_by_id.pop(str(work_entry.get("id") or ""), None)
 
     grouped_work_transitions: Dict[str, List[Dict[str, Any]]] = {}
     for entry in work_publish_transitions:
@@ -2854,6 +2929,20 @@ def main() -> None:
         new_work_count = len(entries_sorted)
         series_title = coerce_string(first_entry.get("series_title")) or series_title_by_id.get(series_id) or series_id
         caption = series_title if new_work_count == 1 else f"{new_work_count} new works in {series_title}"
+        if latest_series_id and series_id == latest_series_id:
+            session_order += 1
+            refresh_series_recent_entry(
+                series_id,
+                first_entry.get("published_date"),
+                session_order,
+            )
+            for existing_id, existing_entry in list(existing_by_id.items()):
+                if (
+                    str(existing_entry.get("kind") or "") == "work"
+                    and primary_series_id_for_work(existing_entry.get("target_id")) == series_id
+                ):
+                    existing_by_id.pop(existing_id, None)
+            continue
         session_order += 1
         normalized = normalize_recent_entry({
             "kind": "work",
@@ -2866,14 +2955,7 @@ def main() -> None:
             "session_order": session_order,
         })
         if normalized is not None:
-            recent_entries_new.append(normalized)
-
-    existing_by_id = {
-        str(entry.get("id") or f"{entry.get('kind')}:{entry.get('target_id')}"): entry
-        for entry in retained_recent_entries
-    }
-    for entry in recent_entries_new:
-        existing_by_id[str(entry.get("id") or "")] = entry
+            existing_by_id[str(normalized.get("id") or "")] = normalized
     recent_index_payload = build_recent_index_payload(list(existing_by_id.values()))
     recent_exists = recent_index_json_path.exists()
     recent_existing_version = extract_existing_header_scalar(recent_index_json_path, "version") if recent_exists else None

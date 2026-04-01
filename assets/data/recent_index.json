@@ -1,31 +1,20 @@
 {
   "header": {
     "schema": "recent_index_v1",
-    "version": "blake2b-aeb1a9568c31a73944fc23442a46c1ab",
-    "generated_at_utc": "2026-04-01T21:17:07Z",
-    "count": 13
+    "version": "blake2b-c3680f1d9f3a7a0b200c0e7d58579def",
+    "generated_at_utc": "2026-04-01T21:39:06Z",
+    "count": 12
   },
   "entries": [
-    {
-      "id": "work:01942",
-      "kind": "work",
-      "target_id": "01942",
-      "title": "se2",
-      "caption": "simultaneous equations",
-      "published_date": "2026-04-01",
-      "thumb_id": "01942",
-      "recorded_at_utc": "2026-04-01T21:17:07Z",
-      "session_order": 1
-    },
     {
       "id": "series:143",
       "kind": "series",
       "target_id": "143",
       "title": "simultaneous equations",
-      "caption": "1 work",
+      "caption": "2 works",
       "published_date": "2026-04-01",
       "thumb_id": "01941",
-      "recorded_at_utc": "2026-04-01T07:49:22Z",
+      "recorded_at_utc": "2026-04-01T21:17:07Z",
       "session_order": 1
     },
     {
