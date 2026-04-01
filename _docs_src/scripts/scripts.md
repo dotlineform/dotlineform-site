@@ -105,6 +105,10 @@ Catalogue/media builds:
   Generate collection stubs, per-record JSON, and aggregate catalogue indexes.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
   Remove one work from generated artifacts when workbook status is `delete`.
+- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
+  Remove one moment from generated artifacts, with optional source-file deletion.
+- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
+  Remove one moment from canonical source files and generated artifacts.
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
   Run the local Studio tag-save/import service with explicit write allowlists.
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)

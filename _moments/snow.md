@@ -2,6 +2,6 @@
 moment_id: "snow"
 title: "snow"
 layout: "moment"
-checksum: "ae295f2ee38ae73a7ac10988876e3076"
+checksum: "3ffbfff7628259f8d16b8eabd2a493a0"
 ---
 

@@ -51,7 +51,7 @@ Moment canonical source model:
 
 ## Useful Flags
 
-- `--write`: persist file and workbook changes
+- `--write`: persist generated file changes plus workbook-backed work/work-detail/link updates
 - `--force`: regenerate even when checksums match
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`

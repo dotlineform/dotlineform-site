@@ -35,7 +35,7 @@ python3 ./scripts/copy_draft_media_files.py --mode moment --ids-file /tmp/moment
 Source artifacts:
 
 - workbook:
-  - `data/works.xlsx`
+  - `data/works.xlsx` for `work` and `work_details`
 - source media roots resolved from `_data/pipeline.json` and local env vars:
   - works:
     - `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<project_filename>`

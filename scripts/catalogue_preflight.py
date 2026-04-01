@@ -104,7 +104,6 @@ def validate_catalogue_workbook(
     works_sheet: str = "Works",
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
-    moments_sheet: str = "Moments",
     projects_base_dir: Path | None = None,
 ) -> List[str]:
     errors: List[str] = []
@@ -262,7 +261,6 @@ def raise_if_invalid_catalogue_workbook(
     works_sheet: str = "Works",
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
-    moments_sheet: str = "Moments",
     projects_base_dir: Path | None = None,
 ) -> None:
     errors = validate_catalogue_workbook(
@@ -270,7 +268,6 @@ def raise_if_invalid_catalogue_workbook(
         works_sheet=works_sheet,
         series_sheet=series_sheet,
         work_details_sheet=work_details_sheet,
-        moments_sheet=moments_sheet,
         projects_base_dir=projects_base_dir,
     )
     if not errors:

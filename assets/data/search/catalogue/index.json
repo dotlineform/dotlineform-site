@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-dbc970be14251e3640287ec65cd1d4d3",
-    "generated_at_utc": "2026-04-01T19:22:39Z",
-    "count": 2130
+    "version": "blake2b-8a9e139936fd9cf962e78a49ab7108b5",
+    "generated_at_utc": "2026-04-01T20:51:35Z",
+    "count": 2129
   },
   "entries": [
     {
@@ -32,25 +32,8 @@
     },
     {
       "kind": "moment",
-      "id": "4-stories-copy",
-      "title": "4-stories-copy",
-      "href": "/moments/4-stories-copy/",
-      "series_ids": [],
-      "series_titles": [],
-      "tag_ids": [],
-      "tag_labels": [],
-      "search_terms": [
-        "4-stories-copy",
-        "4",
-        "stories",
-        "copy"
-      ],
-      "search_text": "4-stories-copy 4 stories copy"
-    },
-    {
-      "kind": "moment",
       "id": "13-moments-in-october",
-      "title": "13 moments in October",
+      "title": "13 moments in october",
       "href": "/moments/13-moments-in-october/",
       "date": "2024-10-23",
       "display_meta": "2024-10-23",
@@ -71,39 +54,6 @@
         "23"
       ],
       "search_text": "13-moments-in-october 13 moments in october 13 moments in october 2024-10-23 2024 10 23"
-    },
-    {
-      "kind": "moment",
-      "id": "i-felt-my-self-sinking",
-      "title": "I felt my self sinking, but not alone, and in peace",
-      "href": "/moments/i-felt-my-self-sinking/",
-      "date": "2015-01-01",
-      "display_meta": "c. 2015",
-      "series_ids": [],
-      "series_titles": [],
-      "tag_ids": [],
-      "tag_labels": [],
-      "search_terms": [
-        "i-felt-my-self-sinking",
-        "i",
-        "felt",
-        "my",
-        "self",
-        "sinking",
-        "i felt my self sinking, but not alone, and in peace",
-        "but",
-        "not",
-        "alone",
-        "and",
-        "in",
-        "peace",
-        "c. 2015",
-        "c",
-        "2015",
-        "2015-01-01",
-        "01"
-      ],
-      "search_text": "i-felt-my-self-sinking i felt my self sinking i felt my self sinking, but not alone, and in peace but not alone and in peace c. 2015 c 2015 2015-01-01 01"
     },
     {
       "kind": "moment",
@@ -134,8 +84,8 @@
       "id": "a-beautiful-route",
       "title": "a beautiful route",
       "href": "/moments/a-beautiful-route/",
-      "date": "2019-02-15",
-      "display_meta": "2019-02-15",
+      "date": "2015-02-19",
+      "display_meta": "2015-02-19",
       "series_ids": [],
       "series_titles": [],
       "tag_ids": [],
@@ -146,12 +96,12 @@
         "beautiful",
         "route",
         "a beautiful route",
-        "2019-02-15",
-        "2019",
+        "2015-02-19",
+        "2015",
         "02",
-        "15"
+        "19"
       ],
-      "search_text": "a-beautiful-route a beautiful route a beautiful route 2019-02-15 2019 02 15"
+      "search_text": "a-beautiful-route a beautiful route a beautiful route 2015-02-19 2015 02 19"
     },
     {
       "kind": "moment",
@@ -679,7 +629,7 @@
       "title": "hi honey",
       "href": "/moments/hi-honey/",
       "date": "2024-10-23",
-      "display_meta": "c. 2024?",
+      "display_meta": "c. 2024",
       "series_ids": [],
       "series_titles": [],
       "tag_ids": [],
@@ -689,14 +639,41 @@
         "hi",
         "honey",
         "hi honey",
-        "c. 2024?",
+        "c. 2024",
         "c",
         "2024",
         "2024-10-23",
         "10",
         "23"
       ],
-      "search_text": "hi-honey hi honey hi honey c. 2024? c 2024 2024-10-23 10 23"
+      "search_text": "hi-honey hi honey hi honey c. 2024 c 2024 2024-10-23 10 23"
+    },
+    {
+      "kind": "moment",
+      "id": "i-felt-my-self-sinking",
+      "title": "i felt my self sinking",
+      "href": "/moments/i-felt-my-self-sinking/",
+      "date": "2015-01-01",
+      "display_meta": "c. 2015",
+      "series_ids": [],
+      "series_titles": [],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "i-felt-my-self-sinking",
+        "i",
+        "felt",
+        "my",
+        "self",
+        "sinking",
+        "i felt my self sinking",
+        "c. 2015",
+        "c",
+        "2015",
+        "2015-01-01",
+        "01"
+      ],
+      "search_text": "i-felt-my-self-sinking i felt my self sinking i felt my self sinking c. 2015 c 2015 2015-01-01 01"
     },
     {
       "kind": "moment",
@@ -1011,20 +988,20 @@
       "title": "snow",
       "href": "/moments/snow/",
       "date": "2018-01-01",
-      "display_meta": "2018-2020",
+      "display_meta": "2018-20",
       "series_ids": [],
       "series_titles": [],
       "tag_ids": [],
       "tag_labels": [],
       "search_terms": [
         "snow",
-        "2018-2020",
+        "2018-20",
         "2018",
-        "2020",
+        "20",
         "2018-01-01",
         "01"
       ],
-      "search_text": "snow 2018-2020 2018 2020 2018-01-01 01"
+      "search_text": "snow 2018-20 2018 20 2018-01-01 01"
     },
     {
       "kind": "moment",
@@ -1105,21 +1082,19 @@
       "title": "timeless",
       "href": "/moments/timeless/",
       "date": "2018-05-01",
-      "display_meta": "c. 2018",
+      "display_meta": "2018-05-01",
       "series_ids": [],
       "series_titles": [],
       "tag_ids": [],
       "tag_labels": [],
       "search_terms": [
         "timeless",
-        "c. 2018",
-        "c",
-        "2018",
         "2018-05-01",
+        "2018",
         "05",
         "01"
       ],
-      "search_text": "timeless c. 2018 c 2018 2018-05-01 05 01"
+      "search_text": "timeless 2018-05-01 2018 05 01"
     },
     {
       "kind": "moment",
@@ -1213,6 +1188,26 @@
     },
     {
       "kind": "moment",
+      "id": "where",
+      "title": "where",
+      "href": "/moments/where/",
+      "date": "2019-07-02",
+      "display_meta": "2019-07-02",
+      "series_ids": [],
+      "series_titles": [],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "where",
+        "2019-07-02",
+        "2019",
+        "07",
+        "02"
+      ],
+      "search_text": "where 2019-07-02 2019 07 02"
+    },
+    {
+      "kind": "moment",
       "id": "where-words-end",
       "title": "where words end",
       "href": "/moments/where-words-end/",
@@ -1234,27 +1229,6 @@
         "06"
       ],
       "search_text": "where-words-end where words end where words end 2018-05-06 2018 05 06"
-    },
-    {
-      "kind": "moment",
-      "id": "where",
-      "title": "where?",
-      "href": "/moments/where/",
-      "date": "2019-07-02",
-      "display_meta": "2019-07-02",
-      "series_ids": [],
-      "series_titles": [],
-      "tag_ids": [],
-      "tag_labels": [],
-      "search_terms": [
-        "where",
-        "where?",
-        "2019-07-02",
-        "2019",
-        "07",
-        "02"
-      ],
-      "search_text": "where where? 2019-07-02 2019 07 02"
     },
     {
       "kind": "moment",

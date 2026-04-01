@@ -1,8 +1,8 @@
 {
   "header": {
     "schema": "moment_record_v1",
-    "version": "blake2b-627b02b55a9a6c7d830b6193b3d1b673",
-    "generated_at_utc": "2026-03-28T16:00:54Z",
+    "version": "blake2b-df5556eec9307607dc1412af4888d0e4",
+    "generated_at_utc": "2026-04-01T20:30:06Z",
     "moment_id": "all-the-little-cracks"
   },
   "moment": {
@@ -10,9 +10,7 @@
     "title": "all the little cracks",
     "date": "2015-01-01",
     "date_display": "c. 2015",
-    "images": [],
-    "width_px": 1600,
-    "height_px": 1600
+    "images": []
   },
   "content_html": "<pre class=\"moment-text\">\nall these little cracks\nthey seem to come from nowhere\ni can see them coming\n \nthese cracks aren’t the world falling apart\nall the little cracks are inside\n \nthey are just showing little patterns\nwhich if we could read them\nwould tell our stories\n</pre>\n"
 }

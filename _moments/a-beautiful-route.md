@@ -2,6 +2,6 @@
 moment_id: "a-beautiful-route"
 title: "a beautiful route"
 layout: "moment"
-checksum: "5ea7bd7e6fb43ef25206f1e574c0e0d7"
+checksum: "e791b8b0717e7b458f9dbffe64a5b8be"
 ---
 

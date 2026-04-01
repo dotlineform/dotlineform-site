@@ -264,23 +264,6 @@ def build_moment_sources_manifest_payload(
     }
 
 
-def build_compat_moment_sources_manifest_payload(
-    *,
-    xlsx_path: Path,
-    moments_sheet: str,
-    moments_root: Path,
-    moments_images_root: Path,
-    source_index: Optional[Dict[str, Dict[str, Any]]] = None,
-) -> Dict[str, Any]:
-    """Compatibility wrapper for older callers; workbook arguments are ignored."""
-    del xlsx_path, moments_sheet
-    return build_moment_sources_manifest_payload(
-        moments_root=moments_root,
-        moments_images_root=moments_images_root,
-        source_index=source_index,
-    )
-
-
 def load_moment_sources_manifest(path: Path) -> Dict[str, Dict[str, Any]]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, Mapping):

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T19:35:07Z",
+  "generated_at": "2026-04-01T20:58:02Z",
   "docs": [
     {
       "scope": "studio",
@@ -561,6 +561,17 @@
       "source_path": "studio/series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-delete-moment",
+      "title": "Delete Moment",
+      "last_updated": "2026-04-01",
+      "parent_id": "scripts",
+      "sort_order": 70,
+      "source_path": "scripts/scripts-delete-moment.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-delete-moment",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-delete-moment.json"
     },
     {
       "scope": "studio",

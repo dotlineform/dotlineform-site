@@ -1,15 +1,15 @@
 {
   "header": {
     "schema": "moment_record_v1",
-    "version": "blake2b-5d7b92de0012870e9c82e550b19e1a24",
-    "generated_at_utc": "2026-03-28T16:00:54Z",
+    "version": "blake2b-f785bd2883a9d34c59418afcd36ea207",
+    "generated_at_utc": "2026-04-01T20:30:06Z",
     "moment_id": "hi-honey"
   },
   "moment": {
     "moment_id": "hi-honey",
     "title": "hi honey",
     "date": "2024-10-23",
-    "date_display": "c. 2024?",
+    "date_display": "c. 2024",
     "images": [
       {
         "file": "hi-honey.jpg",

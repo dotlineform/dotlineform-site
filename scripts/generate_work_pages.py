@@ -841,7 +841,6 @@ def main() -> None:
     ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
     ap.add_argument("--work-files-sheet", default="WorkFiles", help="Worksheet name for work download-file metadata")
     ap.add_argument("--work-links-sheet", default="WorkLinks", help="Worksheet name for work published-link metadata")
-    ap.add_argument("--moments-sheet", default="Moments", help="Legacy compatibility flag; moments are now sourced from moment markdown front matter.")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
@@ -1725,7 +1724,6 @@ def main() -> None:
         works_sheet=args.works_sheet,
         series_sheet=args.series_sheet,
         work_details_sheet=args.work_details_sheet,
-        moments_sheet=args.moments_sheet,
         projects_base_dir=Path(args.projects_base_dir).expanduser(),
     )
 
@@ -3046,7 +3044,7 @@ def main() -> None:
                 continue
 
             if not is_slug_safe(moment_id):
-                raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id!r}")
+                raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
 
             moments_processed += 1
             prefix_m = f"[moment {moment_id}] "
@@ -3216,7 +3214,7 @@ def main() -> None:
             continue
 
         if not is_slug_safe(moment_id):
-            raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id!r}")
+            raise SystemExit(f"Moment source filename must be slug-safe; got: {moment_id!r}")
 
         title = coerce_string(moment_entry.get("title")) or moment_id
         date_value = parse_date(moment_entry.get("date"))

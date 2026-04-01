@@ -25,7 +25,7 @@ Run everything:
 
 Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed work/series/detail/link records plus canonical source media and current work/series/moment prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. Moment records are now sourced from `moments/*.md` front matter rather than the workbook. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
-When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
+When workbook rows or moment source files have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
 When series IDs are renamed rather than truly removed, the wrapper now migrates matching `tag_assignments.json` series rows onto the new IDs before generation and stale cleanup. The migration matches old and new series by title, `primary_work_id`, and member works.
 
@@ -58,7 +58,7 @@ When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` 
 - `--no-confirm` bypasses that prompt and continues immediately
 - workbook/source preflight runs after planning and before any copy/srcset/generation step
 - preflight failures are aggregated and printed together so workbook or moment-source fixes can be made in one pass
-- preflight is intended to prevent partial publish states where work rows or media are written before a later series or moment validation failure aborts the run
+- preflight is intended to prevent partial publish states where generated files or media are written before a later series or moment validation failure aborts the run
 
 Pipeline output now also shortens machine-local absolute paths in command echoes and step logs. Repo-owned paths are shown repo-relative, canonical source paths are shown relative to `DOTLINEFORM_PROJECTS_BASE_DIR`, staged/derivative media paths are shown relative to `DOTLINEFORM_MEDIA_BASE_DIR`, and temporary manifest paths are shown under a `[tmp]/...` prefix.
 

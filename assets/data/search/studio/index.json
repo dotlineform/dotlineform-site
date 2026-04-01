@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b2a947557af37533d8af1e02fd816ea9",
-    "generated_at_utc": "2026-04-01T19:35:50Z",
-    "count": 64
+    "version": "blake2b-93b2ea8665f167e0d55406c4a8dcac39",
+    "generated_at_utc": "2026-04-01T20:41:38Z",
+    "count": 65
   },
   "entries": [
     {
@@ -1107,6 +1107,28 @@
         "31"
       ],
       "search_text": "series-tags series tags series tags studio 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "scripts-delete-moment",
+      "kind": "doc",
+      "title": "Delete Moment",
+      "href": "/docs/?scope=studio&doc=scripts-delete-moment",
+      "last_updated": "2026-04-01",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-01 • Scripts",
+      "search_terms": [
+        "scripts-delete-moment",
+        "scripts",
+        "delete",
+        "moment",
+        "delete moment",
+        "2026-04-01",
+        "2026",
+        "04",
+        "01"
+      ],
+      "search_text": "scripts-delete-moment scripts delete moment delete moment 2026-04-01 2026 04 01"
     },
     {
       "id": "search-build-pipeline",

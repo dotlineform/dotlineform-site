@@ -1,14 +1,14 @@
 {
   "header": {
     "schema": "moments_index_v1",
-    "version": "blake2b-dbc3b4c1c3bbc42b2f7f47a61327a26c",
-    "generated_at_utc": "2026-04-01T19:22:39Z",
-    "count": 57
+    "version": "blake2b-a956ae54a90e3c547268a1bf0162f3e8",
+    "generated_at_utc": "2026-04-01T20:51:35Z",
+    "count": 56
   },
   "moments": {
     "13-moments-in-october": {
       "moment_id": "13-moments-in-october",
-      "title": "13 moments in October",
+      "title": "13 moments in october",
       "date": "2024-10-23",
       "thumb_id": "13-moments-in-october"
     },
@@ -19,15 +19,10 @@
       "date_display": "c. 2020?",
       "thumb_id": "4-stories"
     },
-    "4-stories-copy": {
-      "moment_id": "4-stories-copy",
-      "title": "4-stories-copy",
-      "thumb_id": "4-stories-copy"
-    },
     "a-beautiful-route": {
       "moment_id": "a-beautiful-route",
       "title": "a beautiful route",
-      "date": "2019-02-15",
+      "date": "2015-02-19",
       "thumb_id": "a-beautiful-route"
     },
     "a-dance": {
@@ -165,12 +160,12 @@
       "moment_id": "hi-honey",
       "title": "hi honey",
       "date": "2024-10-23",
-      "date_display": "c. 2024?",
+      "date_display": "c. 2024",
       "thumb_id": "hi-honey"
     },
     "i-felt-my-self-sinking": {
       "moment_id": "i-felt-my-self-sinking",
-      "title": "I felt my self sinking, but not alone, and in peace",
+      "title": "i felt my self sinking",
       "date": "2015-01-01",
       "date_display": "c. 2015",
       "thumb_id": "i-felt-my-self-sinking"
@@ -271,7 +266,7 @@
       "moment_id": "snow",
       "title": "snow",
       "date": "2018-01-01",
-      "date_display": "2018-2020",
+      "date_display": "2018-20",
       "thumb_id": "snow"
     },
     "the-moment-collector": {
@@ -294,8 +289,7 @@
     "timeless": {
       "moment_id": "timeless",
       "title": "timeless",
-      "date": "2018-05-01",
-      "date_display": "c. 2018"
+      "date": "2018-05-01"
     },
     "vessels": {
       "moment_id": "vessels",
@@ -323,7 +317,7 @@
     },
     "where": {
       "moment_id": "where",
-      "title": "where?",
+      "title": "where",
       "date": "2019-07-02"
     },
     "where-words-end": {

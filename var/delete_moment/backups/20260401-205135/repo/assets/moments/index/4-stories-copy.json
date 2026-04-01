@@ -1,13 +1,15 @@
 {
   "header": {
     "schema": "moment_record_v1",
-    "version": "blake2b-d65e51ab0022e0e5f1acb2a81596d90f",
-    "generated_at_utc": "2026-04-01T19:22:37Z",
+    "version": "blake2b-97b20c1db3ed998d26b2a3421d1a8cd1",
+    "generated_at_utc": "2026-04-01T19:43:30Z",
     "moment_id": "4-stories-copy"
   },
   "moment": {
     "moment_id": "4-stories-copy",
     "title": "4-stories-copy",
+    "date": "2020-01-01",
+    "date_display": "c. 2020?",
     "images": [
       {
         "file": "4-stories-copy.jpg",
