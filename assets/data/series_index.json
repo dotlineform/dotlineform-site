@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-46473a5499aecd2fdd7e04dbc80b9571",
-    "generated_at_utc": "2026-03-28T19:01:07Z",
-    "count": 138
+    "version": "blake2b-7d82c0c46a358e34259d51a57baedd89",
+    "generated_at_utc": "2026-04-01T07:42:28Z",
+    "count": 139
   },
   "series": {
     "10000": {
@@ -3618,6 +3618,23 @@
         "01630",
         "01631",
         "01632"
+      ]
+    },
+    "simultaneous-equations": {
+      "series_id": "simultaneous-equations",
+      "layout": "series",
+      "status": "draft",
+      "title": "simultaneous equations",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2026,
+      "year_display": "2026",
+      "primary_work_id": "01941",
+      "project_folders": [
+        "simultaneous equations"
+      ],
+      "works": [
+        "01941"
       ]
     },
     "snow": {

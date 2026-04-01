@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-abcd6b7be4d279630ac5cef087ef4bd2",
-    "generated_at_utc": "2026-03-31T21:31:57Z",
-    "count": 2127
+    "version": "blake2b-a5f43957bc19193105d46ea913194930",
+    "generated_at_utc": "2026-04-01T07:42:30Z",
+    "count": 2129
   },
   "entries": [
     {
@@ -3938,6 +3938,28 @@
         "primary"
       ],
       "search_text": "room 2007-08 2007 08 primary"
+    },
+    {
+      "kind": "series",
+      "id": "simultaneous-equations",
+      "title": "simultaneous equations",
+      "href": "/series/simultaneous-equations/",
+      "year": 2026,
+      "display_meta": "2026",
+      "series_ids": [],
+      "series_titles": [],
+      "series_type": "primary",
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "simultaneous-equations",
+        "simultaneous",
+        "equations",
+        "simultaneous equations",
+        "2026",
+        "primary"
+      ],
+      "search_text": "simultaneous-equations simultaneous equations simultaneous equations 2026 primary"
     },
     {
       "kind": "series",
@@ -58881,6 +58903,39 @@
         "type"
       ],
       "search_text": "01632 room 4 room 4 2008 digital print digital print digital c-type print c type"
+    },
+    {
+      "kind": "work",
+      "id": "01941",
+      "title": "se1",
+      "href": "/works/01941/",
+      "year": 2026,
+      "display_meta": "2026",
+      "series_ids": [
+        "simultaneous-equations"
+      ],
+      "series_titles": [
+        "simultaneous equations"
+      ],
+      "medium_type": "digital print",
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "01941",
+        "se1",
+        "2026",
+        "simultaneous-equations",
+        "simultaneous",
+        "equations",
+        "simultaneous equations",
+        "digital print",
+        "digital",
+        "print",
+        "digital c-type print",
+        "c",
+        "type"
+      ],
+      "search_text": "01941 se1 2026 simultaneous-equations simultaneous equations simultaneous equations digital print digital print digital c-type print c type"
     },
     {
       "kind": "work",

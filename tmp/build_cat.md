@@ -1,10 +1,4 @@
-remove full paths:
-/Users/dlf/miniconda3/bin/python3 /Users/dlf/Developer/dotlineform/dotlineform-site/scripts/
-/var/folders/6b/fp0n5d2d20n3_qz782zkzyjm0000gn/T/draft-pipeline-ys1p734j/
-/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/
-/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/website/
-/Users/dlf/Developer/dotlineform/dotlineform-site/
-/Users/dlf/Library/Mobile Documents/com~apple~CloudDocs/dotlineform/website/pipeline/works/srcset_images/thumb/
+
 
 (base) Michaels-MacBook-Pro:dotlineform-site dlf$ ./scripts/build_catalogue.py
 

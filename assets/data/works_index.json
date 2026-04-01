@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v4",
-    "version": "blake2b-7a0a8b18e5880e755aff57161c60ce2b",
-    "generated_at_utc": "2026-03-31T21:32:42Z",
-    "count": 1933
+    "version": "blake2b-6f82a00e68c5bc19455c6999218b8cb9",
+    "generated_at_utc": "2026-04-01T07:42:28Z",
+    "count": 1934
   },
   "works": {
     "00001": {
@@ -17403,6 +17403,15 @@
       "year_display": "2023",
       "series_ids": [
         "water-sea-pond"
+      ]
+    },
+    "01941": {
+      "work_id": "01941",
+      "title": "se1",
+      "year": 2026,
+      "year_display": "2026",
+      "series_ids": [
+        "simultaneous-equations"
       ]
     }
   }

@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-f9c032a9558bb8159605150984f125ae",
+    "generated_at_utc": "2026-04-01T07:42:28Z",
+    "work_id": "01941",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01941",
+    "title": "se1",
+    "year": 2026,
+    "year_display": "2026",
+    "series_ids": [
+      "simultaneous-equations"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 30.0,
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "sections": []
+}
