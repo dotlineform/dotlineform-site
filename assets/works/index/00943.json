@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-af6159cff58ed7332d8ec468fd09068a",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-036ab2374ce130a93f72417be233e600",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00943",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
-      "dot-theory"
+      "041"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-c828414bb42bb94b37a58ef908a99d70",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-624de22dc61850abc02fb76e19d2fb96",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00386",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
-      "nerve-forms"
+      "106"
     ],
     "storage": "4",
     "medium_type": "digital print",

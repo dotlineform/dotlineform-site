@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2c685195d179e858e77d3e4290e38f58",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a95065dc07dacadcefce8abb1e9b9576",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00465",
     "count": 3
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "forests-2023"
+      "062"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

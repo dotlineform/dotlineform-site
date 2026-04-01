@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-87c4c5f6c8467ea40b91d0c2e8a197fa",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b50808f4ed8757dbec4a70a82a1f3549",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00895",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "c. 2008",
     "series_ids": [
-      "doll"
+      "037"
     ],
     "medium_type": "drawing",
     "medium_caption": "pencil on paper",

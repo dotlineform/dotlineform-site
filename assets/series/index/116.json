@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-35254e50b5e4579beadfd9d2b9d364a2",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "116",
+    "count": 17
+  },
+  "series": {
+    "series_id": "116",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "pole vault",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2004,
+    "year_display": "2004",
+    "project_folders": [
+      "pole vault"
+    ],
+    "works": [
+      "01566",
+      "01567",
+      "01568",
+      "01569",
+      "01570",
+      "01571",
+      "01572",
+      "01573",
+      "01574",
+      "01575",
+      "01576",
+      "01577",
+      "01578",
+      "01579",
+      "01580",
+      "01581",
+      "01582"
+    ],
+    "primary_work_id": "01580"
+  }
+}

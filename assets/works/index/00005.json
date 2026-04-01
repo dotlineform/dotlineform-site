@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ca2daa23a8d3ffbdff37c2c3d83a1270",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4c0161ae63efc518a7b3a85cc2767782",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00005",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1998,
     "year_display": "c. 1989-98",
     "series_ids": [
-      "collected-1989-1998"
+      "026"
     ],
     "storage": "1",
     "medium_type": "painting",

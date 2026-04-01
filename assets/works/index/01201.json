@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-7376525219b0d2bdcb8ebd9d7e8b170b",
-    "generated_at_utc": "2026-03-23T15:35:09Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a6b52b5b231055b02189e9319098e766",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01201",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1990,
     "year_display": "c. 1990-92?",
     "series_ids": [
-      "forms-painting"
+      "066"
     ],
     "medium_type": "painting",
     "medium_caption": "mixed media on canvas",

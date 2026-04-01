@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-40933874f633ab41962b51012cee1d7d",
-    "generated_at_utc": "2026-03-23T21:31:00Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-3f932264781032599759b25606f171f9",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01393",
     "count": 3
   },
@@ -12,7 +12,7 @@
     "year": 2005,
     "year_display": "2005",
     "series_ids": [
-      "interior-design"
+      "080"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

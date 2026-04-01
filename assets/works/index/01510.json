@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-1f7515236309d3cf0fa50b732702303e",
-    "generated_at_utc": "2026-03-25T15:21:07Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-13347f523e1a1b3ed43047df9f12e7a8",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01510",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
-      "petri"
+      "112"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

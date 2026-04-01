@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ca658ff975c9fcb9fc1866ed87e1ec49",
-    "generated_at_utc": "2026-03-25T18:08:29Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-c935131a84ed715f2b13461793540ae8",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01566",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
-      "pole-vault"
+      "116"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

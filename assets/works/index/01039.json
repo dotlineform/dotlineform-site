@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ad488a5784388eeb06505e7a1397d103",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a68745b0ac1e9c3c293e4467da4da80e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01039",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "egg-prints"
+      "047"
     ],
     "storage": "5",
     "medium_type": "monoprint",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-194607f9c3edadb1126464330c124e4b",
-    "generated_at_utc": "2026-03-23T21:12:48Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-80fe31a05fb8bce6402101960b2fd81e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01387",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "in-the-end-we-know"
+      "079"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

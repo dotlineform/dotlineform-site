@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-16c2d82cee3752fd4c4e0bbd4c4a4164",
-    "generated_at_utc": "2026-03-25T15:02:18Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6d2dee691eaf1dc03215f2bc9b798ee8",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01499",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "k-particles"
+      "083"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

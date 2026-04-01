@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-f275a4cf1a5452e3869025fc347d0b4a",
-    "generated_at_utc": "2026-03-25T19:18:01Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-5c70d919efa3b2c8e5b0005f9703828b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01587",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
-      "porto-santo"
+      "117"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

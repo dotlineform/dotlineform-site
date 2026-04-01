@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-337a9298d1c6459e6ae208792ef6c9c2",
-    "generated_at_utc": "2026-03-26T19:51:41Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-329f99c97f48ac651c3d7a0124c1ff02",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01732",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2014,
     "year_display": "2014",
     "series_ids": [
-      "still-life"
+      "128"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

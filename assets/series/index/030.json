@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-ffb9b129f23735fe001be3a2b7107f95",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "030",
+    "count": 3
+  },
+  "series": {
+    "series_id": "030",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "composite (blue red smoke)",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2004,
+    "year_display": "2004",
+    "project_folders": [
+      "composite (blue red smoke)"
+    ],
+    "works": [
+      "00391",
+      "00616",
+      "00617"
+    ],
+    "primary_work_id": "00391"
+  }
+}

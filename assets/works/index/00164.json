@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ad43ac1418161bb06703dff7bec1ea10",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-ce0eaf62bb30908f0fa4c06e91dd3ee8",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00164",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1997,
     "year_display": "1997",
     "series_ids": [
-      "collected-1989-1998"
+      "026"
     ],
     "storage": "1",
     "medium_type": "writing",

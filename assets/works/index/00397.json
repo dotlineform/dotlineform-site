@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-a5edd8b3d95c008df55309e1cfb3ebe8",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6f4d23b2c9d72fed9a5778691ce2161a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00397",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "wa"
+      "140"
     ],
     "storage": "5",
     "medium_type": "drawing",

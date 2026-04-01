@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-acc582ba4ff8074b4ce42b60076580aa",
-    "generated_at_utc": "2026-03-22T18:43:50Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-c8600c894ee7ce53308d77f1c06e9741",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01159",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2022,
     "year_display": "2022",
     "series_ids": [
-      "folding-forms"
+      "056"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

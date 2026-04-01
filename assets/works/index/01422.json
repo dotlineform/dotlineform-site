@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d6618ebae4fb5eacee5c1e0ec661eab0",
-    "generated_at_utc": "2026-03-24T16:21:36Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-80600a799d1c97f5c84037dee85d0ebd",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01422",
     "count": 9
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "matter"
+      "094"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

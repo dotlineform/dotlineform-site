@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-5711a908821daf49c1779263a6f5f40e",
-    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-1df445f92f45f6dccf1c163d131a06e4",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01166",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2016,
     "year_display": "2016",
     "series_ids": [
-      "folding-structure"
+      "057"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-a83d9e23191f33bff75d25993c5a37fe",
-    "generated_at_utc": "2026-03-26T20:33:31Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a1d01710d7b0842ddc72e44a6b577a0e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01744",
     "count": 10
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "tabula-rasa"
+      "132"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

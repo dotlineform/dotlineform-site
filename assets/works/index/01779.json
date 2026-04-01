@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-c38b16d026e9c7bd98566c5eb9302d5e",
-    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-abc8c9da7c46cd9a9a9bdf0de89a3058",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01779",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
-      "train-moments"
+      "135"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

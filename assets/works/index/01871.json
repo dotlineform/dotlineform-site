@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-63e3ee9c5f79cff14fdca6ccc06d0a4a",
-    "generated_at_utc": "2026-03-27T12:44:37Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-fca8a2a7bc686e38ca5566356070fda1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01871",
     "count": 4
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "tulips"
+      "137"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

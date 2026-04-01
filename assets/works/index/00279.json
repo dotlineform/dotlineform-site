@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-f326b21b879e370b9750e3d8318bb40e",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-cb6e7474415f7c5796c986ef94621c2d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00279",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1998,
     "year_display": "c. 1998",
     "series_ids": [
-      "collected-digital-1998"
+      "027"
     ],
     "storage": "3",
     "medium_type": "digital print",

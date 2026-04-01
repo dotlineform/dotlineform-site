@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-b6556e811e49ca7d45db9289f19ffe45",
-    "generated_at_utc": "2026-03-26T16:17:51Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-cb863059c5b2f8d4cb683c7cb853edf9",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01691",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023-24",
     "series_ids": [
-      "spider-webs"
+      "124"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

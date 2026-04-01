@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-1d170e43e2fb95b9879c9ebc584d2322",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a5b4d511c2beb0801fbf6943170a243b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00553",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "particle-theory"
+      "110"
     ],
     "storage": "12",
     "medium_type": "paper collage",

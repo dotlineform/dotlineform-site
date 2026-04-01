@@ -1,0 +1,38 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-6e4727bc8eca1e39007efa3eb3693f15",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "057",
+    "count": 13
+  },
+  "series": {
+    "series_id": "057",
+    "status": "published",
+    "published_date": "2026-03-22",
+    "title": "folding structure",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2013-20",
+    "project_folders": [
+      "folding structure"
+    ],
+    "works": [
+      "01161",
+      "01162",
+      "01163",
+      "01164",
+      "01165",
+      "01166",
+      "01167",
+      "01169",
+      "01170",
+      "01171",
+      "01172",
+      "01173",
+      "01174"
+    ],
+    "primary_work_id": "01161"
+  }
+}

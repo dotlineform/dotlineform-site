@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-1bdf98a2b7d7233841d109381c1da725",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-237a868daa6c7b43615787b7c3c259eb",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00223",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1996,
     "year_display": "1996",
     "series_ids": [
-      "colouring-book"
+      "028"
     ],
     "storage": "1",
     "medium_type": "drawing",

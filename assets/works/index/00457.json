@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2cb7a8ea5e459a9cce302385efd3647e",
-    "generated_at_utc": "2026-03-20T20:16:30Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-7a6ab9f4577a14ebdfcc67bc5072656e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00457",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "c. 2001-11",
     "series_ids": [
-      "intuition-2020"
+      "081"
     ],
     "medium_type": "music",
     "medium_caption": "audio files (mp3/FLAC/wav)",

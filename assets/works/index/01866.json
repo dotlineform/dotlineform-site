@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-71a207aea5bd1ed925b6ed3b03ef8f66",
-    "generated_at_utc": "2026-03-27T09:54:25Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-d81df94e7bf9611ca6f1784679f824a0",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01866",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2018,
     "year_display": "2018",
     "series_ids": [
-      "train-moments"
+      "135"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

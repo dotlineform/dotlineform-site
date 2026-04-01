@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-8e739a14813934c7a95b0b2b8e111687",
-    "generated_at_utc": "2026-03-25T20:47:00Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-216d0939c4551fda9fc2de1739d1d935",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01625",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2021,
     "year_display": "2021",
     "series_ids": [
-      "residues"
+      "121"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

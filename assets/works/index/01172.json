@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-98b2e6ecaabec13ee2919a0e35774939",
-    "generated_at_utc": "2026-03-22T20:32:22Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4b72e64365c3401a92af9d4860a64c7f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01172",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
-      "folding-structure"
+      "057"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-dfa46852539f973d7fb4e7723566feab",
-    "generated_at_utc": "2026-03-23T16:34:52Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a7c94e018ef3fbcf43e0ca5d00aaf586",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01240",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1990,
     "year_display": "1990",
     "series_ids": [
-      "fragments"
+      "068"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

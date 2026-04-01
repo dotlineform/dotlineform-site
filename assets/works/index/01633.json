@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-087f311a7c8258d63f174de900f62dac",
-    "generated_at_utc": "2026-03-25T22:04:21Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b7393cb8bc69ab0aa3e887a7ba5e334b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01633",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "body-form"
+      "018"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print (reverse perspex mount)",

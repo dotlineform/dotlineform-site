@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-148b30e8312c1957c0eb0726dce54f8f",
-    "generated_at_utc": "2026-03-24T20:44:47Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b26f2e486a871189506f124dabed99c7",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00214",
     "count": 0
   },
@@ -12,8 +12,8 @@
     "year": 1995,
     "year_display": "c. 1995?",
     "series_ids": [
-      "mother-and-child",
-      "collected-1989-1998"
+      "103",
+      "026"
     ],
     "storage": "1",
     "medium_type": "drawing",

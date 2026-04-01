@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-a51463333a61c85201db7e3de1c0aaf4",
-    "generated_at_utc": "2026-03-23T17:53:58Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-9cf588d291f2fc4b7a7e989d8fd7424e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01259",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2025,
     "year_display": "2025",
     "series_ids": [
-      "grey-series"
+      "071"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

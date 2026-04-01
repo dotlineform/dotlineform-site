@@ -1,13 +1,13 @@
 {
   "header": {
     "schema": "series_index_v2",
-    "version": "blake2b-7d82c0c46a358e34259d51a57baedd89",
-    "generated_at_utc": "2026-04-01T07:42:28Z",
+    "version": "blake2b-973bb8ed80ef79126024679f21cff48c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "count": 139
   },
   "series": {
-    "10000": {
-      "series_id": "10000",
+    "001": {
+      "series_id": "001",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-14",
@@ -26,8 +26,8 @@
         "00637"
       ]
     },
-    "16-forms": {
-      "series_id": "16-forms",
+    "003": {
+      "series_id": "003",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-14",
@@ -44,8 +44,8 @@
         "00639"
       ]
     },
-    "2-bodies": {
-      "series_id": "2-bodies",
+    "004": {
+      "series_id": "004",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -70,8 +70,8 @@
         "00534"
       ]
     },
-    "3-symbols": {
-      "series_id": "3-symbols",
+    "005": {
+      "series_id": "005",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-14",
@@ -88,8 +88,8 @@
         "00638"
       ]
     },
-    "a-doll-story": {
-      "series_id": "a-doll-story",
+    "006": {
+      "series_id": "006",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -180,8 +180,8 @@
         "00715"
       ]
     },
-    "a-feeling-that-we-are-part-of-a-structure": {
-      "series_id": "a-feeling-that-we-are-part-of-a-structure",
+    "007": {
+      "series_id": "007",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -203,8 +203,8 @@
         "00721"
       ]
     },
-    "a-humid-home-full-of-light": {
-      "series_id": "a-humid-home-full-of-light",
+    "008": {
+      "series_id": "008",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -232,8 +232,8 @@
         "00733"
       ]
     },
-    "a-poem-divided-into-4-parts": {
-      "series_id": "a-poem-divided-into-4-parts",
+    "009": {
+      "series_id": "009",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -254,8 +254,8 @@
         "00004"
       ]
     },
-    "a-theory-of-happiness": {
-      "series_id": "a-theory-of-happiness",
+    "010": {
+      "series_id": "010",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -273,8 +273,8 @@
         "00735"
       ]
     },
-    "all-the-little-cracks": {
-      "series_id": "all-the-little-cracks",
+    "012": {
+      "series_id": "012",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -292,8 +292,8 @@
         "00752"
       ]
     },
-    "an-act-of-kindness": {
-      "series_id": "an-act-of-kindness",
+    "013": {
+      "series_id": "013",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -324,8 +324,8 @@
         "00750"
       ]
     },
-    "assembly-codes": {
-      "series_id": "assembly-codes",
+    "014": {
+      "series_id": "014",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -344,8 +344,8 @@
         "00755"
       ]
     },
-    "base-series": {
-      "series_id": "base-series",
+    "015": {
+      "series_id": "015",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -379,8 +379,8 @@
         "00773"
       ]
     },
-    "birds": {
-      "series_id": "birds",
+    "016": {
+      "series_id": "016",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -404,8 +404,8 @@
         "00781"
       ]
     },
-    "birth-of-healing-forms": {
-      "series_id": "birth-of-healing-forms",
+    "017": {
+      "series_id": "017",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -422,8 +422,8 @@
         "00782"
       ]
     },
-    "body-form": {
-      "series_id": "body-form",
+    "018": {
+      "series_id": "018",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -440,8 +440,8 @@
         "01633"
       ]
     },
-    "body-space": {
-      "series_id": "body-space",
+    "019": {
+      "series_id": "019",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -466,8 +466,8 @@
         "00791"
       ]
     },
-    "body-space-reclining-state": {
-      "series_id": "body-space-reclining-state",
+    "020": {
+      "series_id": "020",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -492,8 +492,8 @@
         "00800"
       ]
     },
-    "book-dna": {
-      "series_id": "book-dna",
+    "021": {
+      "series_id": "021",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -514,8 +514,8 @@
         "00805"
       ]
     },
-    "book-of-curves": {
-      "series_id": "book-of-curves",
+    "022": {
+      "series_id": "022",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -536,8 +536,8 @@
         "00810"
       ]
     },
-    "certainty": {
-      "series_id": "certainty",
+    "023": {
+      "series_id": "023",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -554,8 +554,8 @@
         "00389"
       ]
     },
-    "changed-photos": {
-      "series_id": "changed-photos",
+    "024": {
+      "series_id": "024",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -592,8 +592,8 @@
         "01654"
       ]
     },
-    "closeness": {
-      "series_id": "closeness",
+    "025": {
+      "series_id": "025",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -611,8 +611,8 @@
         "00812"
       ]
     },
-    "collected-1989-1998": {
-      "series_id": "collected-1989-1998",
+    "026": {
+      "series_id": "026",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -796,8 +796,8 @@
         "00005"
       ]
     },
-    "collected-digital-1998": {
-      "series_id": "collected-digital-1998",
+    "027": {
+      "series_id": "027",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -870,8 +870,8 @@
         "00285"
       ]
     },
-    "colouring-book": {
-      "series_id": "colouring-book",
+    "028": {
+      "series_id": "028",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -896,8 +896,8 @@
         "00225"
       ]
     },
-    "colours": {
-      "series_id": "colours",
+    "029": {
+      "series_id": "029",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -918,8 +918,8 @@
         "00817"
       ]
     },
-    "composite-blue-red-smoke": {
-      "series_id": "composite-blue-red-smoke",
+    "030": {
+      "series_id": "030",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -938,8 +938,8 @@
         "00617"
       ]
     },
-    "concrete": {
-      "series_id": "concrete",
+    "031": {
+      "series_id": "031",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -969,8 +969,8 @@
         "00831"
       ]
     },
-    "creases": {
-      "series_id": "creases",
+    "032": {
+      "series_id": "032",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -992,8 +992,8 @@
         "00837"
       ]
     },
-    "cube-structure": {
-      "series_id": "cube-structure",
+    "033": {
+      "series_id": "033",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -1021,8 +1021,8 @@
         "00849"
       ]
     },
-    "curl": {
-      "series_id": "curl",
+    "034": {
+      "series_id": "034",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-15",
@@ -1055,8 +1055,8 @@
         "00866"
       ]
     },
-    "curve-machine": {
-      "series_id": "curve-machine",
+    "035": {
+      "series_id": "035",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-16",
@@ -1077,8 +1077,8 @@
         "00871"
       ]
     },
-    "curve-poems": {
-      "series_id": "curve-poems",
+    "036": {
+      "series_id": "036",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -1182,8 +1182,8 @@
         "00454"
       ]
     },
-    "doll": {
-      "series_id": "doll",
+    "037": {
+      "series_id": "037",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-17",
@@ -1228,8 +1228,8 @@
         "00895"
       ]
     },
-    "doll-faces": {
-      "series_id": "doll-faces",
+    "038": {
+      "series_id": "038",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-17",
@@ -1253,8 +1253,8 @@
         "00908"
       ]
     },
-    "doll-sees-everything": {
-      "series_id": "doll-sees-everything",
+    "039": {
+      "series_id": "039",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-17",
@@ -1287,8 +1287,8 @@
         "00925"
       ]
     },
-    "dot": {
-      "series_id": "dot",
+    "040": {
+      "series_id": "040",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-17",
@@ -1315,8 +1315,8 @@
         "00936"
       ]
     },
-    "dot-theory": {
-      "series_id": "dot-theory",
+    "041": {
+      "series_id": "041",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-17",
@@ -1344,8 +1344,8 @@
         "00948"
       ]
     },
-    "dotlineform-2021": {
-      "series_id": "dotlineform-2021",
+    "042": {
+      "series_id": "042",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-18",
@@ -1396,8 +1396,8 @@
         "00983"
       ]
     },
-    "dotlineform-2023": {
-      "series_id": "dotlineform-2023",
+    "043": {
+      "series_id": "043",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-18",
@@ -1431,8 +1431,8 @@
         "01000"
       ]
     },
-    "dots": {
-      "series_id": "dots",
+    "044": {
+      "series_id": "044",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -1455,8 +1455,8 @@
         "01006"
       ]
     },
-    "droplets": {
-      "series_id": "droplets",
+    "045": {
+      "series_id": "045",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-18",
@@ -1502,8 +1502,8 @@
         "01036"
       ]
     },
-    "egg-forms": {
-      "series_id": "egg-forms",
+    "046": {
+      "series_id": "046",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-18",
@@ -1520,8 +1520,8 @@
         "01037"
       ]
     },
-    "egg-prints": {
-      "series_id": "egg-prints",
+    "047": {
+      "series_id": "047",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1543,8 +1543,8 @@
         "01043"
       ]
     },
-    "entangled-form": {
-      "series_id": "entangled-form",
+    "048": {
+      "series_id": "048",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1562,8 +1562,8 @@
         "01045"
       ]
     },
-    "espresso": {
-      "series_id": "espresso",
+    "049": {
+      "series_id": "049",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1580,8 +1580,8 @@
         "01046"
       ]
     },
-    "field": {
-      "series_id": "field",
+    "050": {
+      "series_id": "050",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1599,8 +1599,8 @@
         "01048"
       ]
     },
-    "fireworks-form": {
-      "series_id": "fireworks-form",
+    "051": {
+      "series_id": "051",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1619,8 +1619,8 @@
         "01051"
       ]
     },
-    "flowers": {
-      "series_id": "flowers",
+    "052": {
+      "series_id": "052",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1639,8 +1639,8 @@
         "01054"
       ]
     },
-    "fluid-forms": {
-      "series_id": "fluid-forms",
+    "053": {
+      "series_id": "053",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-20",
@@ -1672,8 +1672,8 @@
         "01070"
       ]
     },
-    "fog": {
-      "series_id": "fog",
+    "055": {
+      "series_id": "055",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-22",
@@ -1725,8 +1725,8 @@
         "01106"
       ]
     },
-    "folding-forms": {
-      "series_id": "folding-forms",
+    "056": {
+      "series_id": "056",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-22",
@@ -1796,8 +1796,8 @@
         "01160"
       ]
     },
-    "folding-structure": {
-      "series_id": "folding-structure",
+    "057": {
+      "series_id": "057",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-22",
@@ -1826,8 +1826,8 @@
         "01174"
       ]
     },
-    "for-david-lynch": {
-      "series_id": "for-david-lynch",
+    "058": {
+      "series_id": "058",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -1844,8 +1844,8 @@
         "00346"
       ]
     },
-    "forest": {
-      "series_id": "forest",
+    "059": {
+      "series_id": "059",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -1866,8 +1866,8 @@
         "00393"
       ]
     },
-    "forest-2024": {
-      "series_id": "forest-2024",
+    "060": {
+      "series_id": "060",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-22",
@@ -1884,8 +1884,8 @@
         "01175"
       ]
     },
-    "forest-memories-1-48": {
-      "series_id": "forest-memories-1-48",
+    "061": {
+      "series_id": "061",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -1902,8 +1902,8 @@
         "00464"
       ]
     },
-    "forests-2023": {
-      "series_id": "forests-2023",
+    "062": {
+      "series_id": "062",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-19",
@@ -1923,8 +1923,8 @@
         "00468"
       ]
     },
-    "form-mobile": {
-      "series_id": "form-mobile",
+    "063": {
+      "series_id": "063",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -1959,8 +1959,8 @@
         "00599"
       ]
     },
-    "form-space": {
-      "series_id": "form-space",
+    "064": {
+      "series_id": "064",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-22",
@@ -1996,8 +1996,8 @@
         "01195"
       ]
     },
-    "forms": {
-      "series_id": "forms",
+    "065": {
+      "series_id": "065",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2017,8 +2017,8 @@
         "01199"
       ]
     },
-    "forms-painting": {
-      "series_id": "forms-painting",
+    "066": {
+      "series_id": "066",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2036,8 +2036,8 @@
         "01201"
       ]
     },
-    "found-forms": {
-      "series_id": "found-forms",
+    "067": {
+      "series_id": "067",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-28",
@@ -2105,8 +2105,8 @@
         "00453"
       ]
     },
-    "fragments": {
-      "series_id": "fragments",
+    "068": {
+      "series_id": "068",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2170,8 +2170,8 @@
         "01249"
       ]
     },
-    "genetic-2020": {
-      "series_id": "genetic-2020",
+    "069": {
+      "series_id": "069",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2189,8 +2189,8 @@
         "01250"
       ]
     },
-    "glass-forms": {
-      "series_id": "glass-forms",
+    "070": {
+      "series_id": "070",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -2207,8 +2207,8 @@
         "00384"
       ]
     },
-    "grey-series": {
-      "series_id": "grey-series",
+    "071": {
+      "series_id": "071",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2237,8 +2237,8 @@
         "01263"
       ]
     },
-    "grid-cells": {
-      "series_id": "grid-cells",
+    "072": {
+      "series_id": "072",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2256,8 +2256,8 @@
         "01364"
       ]
     },
-    "grid-fields": {
-      "series_id": "grid-fields",
+    "073": {
+      "series_id": "073",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2368,8 +2368,8 @@
         "01358"
       ]
     },
-    "grid-theory": {
-      "series_id": "grid-theory",
+    "074": {
+      "series_id": "074",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2389,8 +2389,8 @@
         "01362"
       ]
     },
-    "harmony": {
-      "series_id": "harmony",
+    "075": {
+      "series_id": "075",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -2411,8 +2411,8 @@
         "00620"
       ]
     },
-    "heaven-and-earth": {
-      "series_id": "heaven-and-earth",
+    "076": {
+      "series_id": "076",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2431,8 +2431,8 @@
         "01366"
       ]
     },
-    "home": {
-      "series_id": "home",
+    "077": {
+      "series_id": "077",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2453,8 +2453,8 @@
         "01371"
       ]
     },
-    "home-land-loss": {
-      "series_id": "home-land-loss",
+    "078": {
+      "series_id": "078",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2473,8 +2473,8 @@
         "01374"
       ]
     },
-    "in-the-end-we-know": {
-      "series_id": "in-the-end-we-know",
+    "079": {
+      "series_id": "079",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2506,8 +2506,8 @@
         "01390"
       ]
     },
-    "interior-design": {
-      "series_id": "interior-design",
+    "080": {
+      "series_id": "080",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2526,8 +2526,8 @@
         "01393"
       ]
     },
-    "intuition-2020": {
-      "series_id": "intuition-2020",
+    "081": {
+      "series_id": "081",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2545,8 +2545,8 @@
         "00457"
       ]
     },
-    "k-crystals": {
-      "series_id": "k-crystals",
+    "082": {
+      "series_id": "082",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -2570,8 +2570,8 @@
         "00628"
       ]
     },
-    "k-particles": {
-      "series_id": "k-particles",
+    "083": {
+      "series_id": "083",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -2590,8 +2590,8 @@
         "01500"
       ]
     },
-    "kylie-structures": {
-      "series_id": "kylie-structures",
+    "084": {
+      "series_id": "084",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2611,8 +2611,8 @@
         "00523"
       ]
     },
-    "kylie-wax-model": {
-      "series_id": "kylie-wax-model",
+    "085": {
+      "series_id": "085",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2634,8 +2634,8 @@
         "01399"
       ]
     },
-    "landscape-for-symbols": {
-      "series_id": "landscape-for-symbols",
+    "086": {
+      "series_id": "086",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2652,8 +2652,8 @@
         "01400"
       ]
     },
-    "landscapes": {
-      "series_id": "landscapes",
+    "087": {
+      "series_id": "087",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-23",
@@ -2672,8 +2672,8 @@
         "00518"
       ]
     },
-    "leaf": {
-      "series_id": "leaf",
+    "088": {
+      "series_id": "088",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2691,8 +2691,8 @@
         "00458"
       ]
     },
-    "learning-to-draw-landscapes": {
-      "series_id": "learning-to-draw-landscapes",
+    "089": {
+      "series_id": "089",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2725,8 +2725,8 @@
         "00519"
       ]
     },
-    "lights": {
-      "series_id": "lights",
+    "090": {
+      "series_id": "090",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2758,8 +2758,8 @@
         "01416"
       ]
     },
-    "lipseyes": {
-      "series_id": "lipseyes",
+    "091": {
+      "series_id": "091",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -2776,8 +2776,8 @@
         "00388"
       ]
     },
-    "living-surface-hand-form": {
-      "series_id": "living-surface-hand-form",
+    "092": {
+      "series_id": "092",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -2794,8 +2794,8 @@
         "00463"
       ]
     },
-    "maps": {
-      "series_id": "maps",
+    "093": {
+      "series_id": "093",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2816,8 +2816,8 @@
         "01421"
       ]
     },
-    "matter": {
-      "series_id": "matter",
+    "094": {
+      "series_id": "094",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2834,8 +2834,8 @@
         "01422"
       ]
     },
-    "melancholy-hope-cell": {
-      "series_id": "melancholy-hope-cell",
+    "095": {
+      "series_id": "095",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2869,8 +2869,8 @@
         "01440"
       ]
     },
-    "memory-loss-hope": {
-      "series_id": "memory-loss-hope",
+    "096": {
+      "series_id": "096",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2888,8 +2888,8 @@
         "01442"
       ]
     },
-    "memory-loss-vessels": {
-      "series_id": "memory-loss-vessels",
+    "097": {
+      "series_id": "097",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -2909,8 +2909,8 @@
         "01446"
       ]
     },
-    "mm": {
-      "series_id": "mm",
+    "098": {
+      "series_id": "098",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -2974,8 +2974,8 @@
         "00515"
       ]
     },
-    "models": {
-      "series_id": "models",
+    "099": {
+      "series_id": "099",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -3002,8 +3002,8 @@
         "00545"
       ]
     },
-    "molecule-forms": {
-      "series_id": "molecule-forms",
+    "100": {
+      "series_id": "100",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -3020,8 +3020,8 @@
         "00459"
       ]
     },
-    "molecules": {
-      "series_id": "molecules",
+    "101": {
+      "series_id": "101",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -3040,8 +3040,8 @@
         "00462"
       ]
     },
-    "mother-and-child": {
-      "series_id": "mother-and-child",
+    "103": {
+      "series_id": "103",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -3060,8 +3060,8 @@
         "01447"
       ]
     },
-    "mouse-story": {
-      "series_id": "mouse-story",
+    "104": {
+      "series_id": "104",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -3080,8 +3080,8 @@
         "00162"
       ]
     },
-    "nerve": {
-      "series_id": "nerve",
+    "105": {
+      "series_id": "105",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -3103,8 +3103,8 @@
         "00166"
       ]
     },
-    "nerve-forms": {
-      "series_id": "nerve-forms",
+    "106": {
+      "series_id": "106",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -3126,8 +3126,8 @@
         "00581"
       ]
     },
-    "nothing-is-missing": {
-      "series_id": "nothing-is-missing",
+    "107": {
+      "series_id": "107",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -3174,8 +3174,8 @@
         "01478"
       ]
     },
-    "olive-tree": {
-      "series_id": "olive-tree",
+    "108": {
+      "series_id": "108",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -3192,8 +3192,8 @@
         "01479"
       ]
     },
-    "particle-machine": {
-      "series_id": "particle-machine",
+    "109": {
+      "series_id": "109",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-24",
@@ -3220,8 +3220,8 @@
         "01490"
       ]
     },
-    "particle-theory": {
-      "series_id": "particle-theory",
+    "110": {
+      "series_id": "110",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -3242,8 +3242,8 @@
         "00553"
       ]
     },
-    "particles": {
-      "series_id": "particles",
+    "111": {
+      "series_id": "111",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3266,8 +3266,8 @@
         "01497"
       ]
     },
-    "petri": {
-      "series_id": "petri",
+    "112": {
+      "series_id": "112",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3305,8 +3305,8 @@
         "01522"
       ]
     },
-    "pi-particles": {
-      "series_id": "pi-particles",
+    "113": {
+      "series_id": "113",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3326,8 +3326,8 @@
         "01526"
       ]
     },
-    "plant-forms": {
-      "series_id": "plant-forms",
+    "114": {
+      "series_id": "114",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3350,8 +3350,8 @@
         "01533"
       ]
     },
-    "poa": {
-      "series_id": "poa",
+    "115": {
+      "series_id": "115",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3399,8 +3399,8 @@
         "01565"
       ]
     },
-    "pole-vault": {
-      "series_id": "pole-vault",
+    "116": {
+      "series_id": "116",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3433,8 +3433,8 @@
         "01582"
       ]
     },
-    "porto-santo": {
-      "series_id": "porto-santo",
+    "117": {
+      "series_id": "117",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3463,8 +3463,8 @@
         "01595"
       ]
     },
-    "qrnt": {
-      "series_id": "qrnt",
+    "118": {
+      "series_id": "118",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-14",
@@ -3488,8 +3488,8 @@
         "00634"
       ]
     },
-    "r": {
-      "series_id": "r",
+    "119": {
+      "series_id": "119",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-05",
@@ -3532,8 +3532,8 @@
         "00524"
       ]
     },
-    "reduce-and-return": {
-      "series_id": "reduce-and-return",
+    "120": {
+      "series_id": "120",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3559,8 +3559,8 @@
         "01605"
       ]
     },
-    "residues": {
-      "series_id": "residues",
+    "121": {
+      "series_id": "121",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3599,8 +3599,8 @@
         "01628"
       ]
     },
-    "room": {
-      "series_id": "room",
+    "122": {
+      "series_id": "122",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-25",
@@ -3620,25 +3620,8 @@
         "01632"
       ]
     },
-    "simultaneous-equations": {
-      "series_id": "simultaneous-equations",
-      "layout": "series",
-      "status": "draft",
-      "title": "simultaneous equations",
-      "sort_fields": "work_id",
-      "series_type": "primary",
-      "year": 2026,
-      "year_display": "2026",
-      "primary_work_id": "01941",
-      "project_folders": [
-        "simultaneous equations"
-      ],
-      "works": [
-        "01941"
-      ]
-    },
-    "snow": {
-      "series_id": "snow",
+    "123": {
+      "series_id": "123",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3674,8 +3657,8 @@
         "01674"
       ]
     },
-    "spider-webs": {
-      "series_id": "spider-webs",
+    "124": {
+      "series_id": "124",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3736,8 +3719,8 @@
         "01719"
       ]
     },
-    "spiders": {
-      "series_id": "spiders",
+    "125": {
+      "series_id": "125",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -3754,8 +3737,8 @@
         "00402"
       ]
     },
-    "spine-symbols": {
-      "series_id": "spine-symbols",
+    "126": {
+      "series_id": "126",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3772,8 +3755,8 @@
         "01720"
       ]
     },
-    "state-of-mind": {
-      "series_id": "state-of-mind",
+    "127": {
+      "series_id": "127",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3790,8 +3773,8 @@
         "01721"
       ]
     },
-    "still-life": {
-      "series_id": "still-life",
+    "128": {
+      "series_id": "128",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3820,8 +3803,8 @@
         "01734"
       ]
     },
-    "string-theory": {
-      "series_id": "string-theory",
+    "129": {
+      "series_id": "129",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -3864,8 +3847,8 @@
         "00580"
       ]
     },
-    "sunflower": {
-      "series_id": "sunflower",
+    "130": {
+      "series_id": "130",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3884,8 +3867,8 @@
         "01737"
       ]
     },
-    "surface-history": {
-      "series_id": "surface-history",
+    "131": {
+      "series_id": "131",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3907,8 +3890,8 @@
         "01743"
       ]
     },
-    "tabula-rasa": {
-      "series_id": "tabula-rasa",
+    "132": {
+      "series_id": "132",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3925,8 +3908,8 @@
         "01744"
       ]
     },
-    "thorns": {
-      "series_id": "thorns",
+    "133": {
+      "series_id": "133",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3960,8 +3943,8 @@
         "01762"
       ]
     },
-    "through-a-glass-clearly": {
-      "series_id": "through-a-glass-clearly",
+    "134": {
+      "series_id": "134",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-26",
@@ -3984,8 +3967,8 @@
         "01769"
       ]
     },
-    "train-moments": {
-      "series_id": "train-moments",
+    "135": {
+      "series_id": "135",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4100,8 +4083,8 @@
         "01868"
       ]
     },
-    "tree": {
-      "series_id": "tree",
+    "136": {
+      "series_id": "136",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -4120,8 +4103,8 @@
         "00548"
       ]
     },
-    "tulips": {
-      "series_id": "tulips",
+    "137": {
+      "series_id": "137",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4142,8 +4125,8 @@
         "01873"
       ]
     },
-    "untitled-composites": {
-      "series_id": "untitled-composites",
+    "138": {
+      "series_id": "138",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4168,8 +4151,8 @@
         "01882"
       ]
     },
-    "untitled-destroyed": {
-      "series_id": "untitled-destroyed",
+    "139": {
+      "series_id": "139",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4212,8 +4195,8 @@
         "01909"
       ]
     },
-    "wa": {
-      "series_id": "wa",
+    "140": {
+      "series_id": "140",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-13",
@@ -4253,8 +4236,8 @@
         "00615"
       ]
     },
-    "water": {
-      "series_id": "water",
+    "141": {
+      "series_id": "141",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4298,8 +4281,8 @@
         "01937"
       ]
     },
-    "water-sea-pond": {
-      "series_id": "water-sea-pond",
+    "142": {
+      "series_id": "142",
       "layout": "series",
       "status": "published",
       "published_date": "2026-03-27",
@@ -4316,6 +4299,24 @@
         "01938",
         "01939",
         "01940"
+      ]
+    },
+    "143": {
+      "series_id": "143",
+      "layout": "series",
+      "status": "published",
+      "published_date": "2026-04-01",
+      "title": "simultaneous equations",
+      "sort_fields": "work_id",
+      "series_type": "primary",
+      "year": 2026,
+      "year_display": "2026",
+      "primary_work_id": "01941",
+      "project_folders": [
+        "simultaneous equations"
+      ],
+      "works": [
+        "01941"
       ]
     }
   }

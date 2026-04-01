@@ -1,0 +1,48 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-7e7362269ee2ce7da1b67a1137c14b1f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "121",
+    "count": 23
+  },
+  "series": {
+    "series_id": "121",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "residues",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2012,
+    "year_display": "2012, 2021",
+    "project_folders": [
+      "residues"
+    ],
+    "works": [
+      "01606",
+      "01607",
+      "01608",
+      "01609",
+      "01610",
+      "01611",
+      "01612",
+      "01613",
+      "01614",
+      "01615",
+      "01616",
+      "01617",
+      "01618",
+      "01619",
+      "01620",
+      "01621",
+      "01622",
+      "01623",
+      "01624",
+      "01625",
+      "01626",
+      "01627",
+      "01628"
+    ],
+    "primary_work_id": "01608"
+  }
+}

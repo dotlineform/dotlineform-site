@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-5b36fd5763489e5b40a08e910c6ed0ac",
-    "generated_at_utc": "2026-03-26T14:18:55Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-c260d9b393ef17c5f6a4932962fb0a13",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01661",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2018,
     "year_display": "2018",
     "series_ids": [
-      "snow"
+      "123"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

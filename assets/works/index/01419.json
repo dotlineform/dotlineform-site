@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-5c3127eaa37d7ef8889716176fa1fc02",
-    "generated_at_utc": "2026-03-24T16:06:41Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-0590bb07342c1b095ed456bd48da2b99",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01419",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2004,
     "year_display": "2004, 2011",
     "series_ids": [
-      "maps"
+      "093"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

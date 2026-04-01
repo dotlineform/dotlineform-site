@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-c66db44056a6bc5614dfe6073b1d9df9",
-    "generated_at_utc": "2026-03-23T19:17:59Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-bdd14c6c584b311528995e382ced3301",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01360",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "grid-theory"
+      "074"
     ],
     "storage": "7",
     "medium_type": "drawing",

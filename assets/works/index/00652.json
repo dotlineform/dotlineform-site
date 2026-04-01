@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-681c484ea8d94f76e64eab9c19c7ea6d",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-1932b5df7ed79f2a5748cf3754771a44",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00652",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "a-doll-story"
+      "006"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

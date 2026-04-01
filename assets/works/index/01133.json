@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-b637f510e0d2bc9f799bf25ef2e3fa4a",
-    "generated_at_utc": "2026-03-22T18:43:50Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-05326217eb271dfe5279a3c178131c4a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01133",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "folding-forms"
+      "056"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

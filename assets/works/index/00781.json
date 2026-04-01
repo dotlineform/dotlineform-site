@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-03dcc71d36fe11f5fbb52b5e6b1d5df2",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-14bce25b11a836411cc9340b0414488b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00781",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
-      "birds"
+      "016"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

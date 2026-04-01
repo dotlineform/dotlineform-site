@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-dbc0cf44494420a159c67bc989ec4a03",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6d5234a4fc73460c9964d441d609aa3c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00519",
     "count": 75
   },
@@ -12,7 +12,7 @@
     "year": 2022,
     "year_display": "c. 2022?",
     "series_ids": [
-      "learning-to-draw-landscapes"
+      "089"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

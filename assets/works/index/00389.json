@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-31cad95f37d207e8b6f5a8f259ecb8d8",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-0c3f13cedc7e77b2399beb452c4a4fc3",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00389",
     "count": 523
   },
@@ -12,7 +12,7 @@
     "year": 2026,
     "year_display": "2001-26",
     "series_ids": [
-      "certainty"
+      "023"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

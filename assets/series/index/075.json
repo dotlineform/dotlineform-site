@@ -1,0 +1,30 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-e348dd6dfc00dc86018e2622fec7f420",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "075",
+    "count": 5
+  },
+  "series": {
+    "series_id": "075",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "harmony",
+    "sort_fields": "title,work_id",
+    "series_type": "primary",
+    "year": 2009,
+    "year_display": "2009",
+    "project_folders": [
+      "harmony"
+    ],
+    "works": [
+      "00379",
+      "00380",
+      "00381",
+      "00382",
+      "00620"
+    ],
+    "primary_work_id": "00379"
+  }
+}

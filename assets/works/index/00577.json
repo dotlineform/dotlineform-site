@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-f4878210ae8f6d56a54b08aeffee18e2",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-bb0acd86b1fb882230d18610603657d5",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00577",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "string-theory"
+      "129"
     ],
     "storage": "7",
     "medium_type": "digital composite",

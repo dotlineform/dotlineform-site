@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-f96b0f434d1e791c9bf93c33c555d669",
-    "generated_at_utc": "2026-03-26T20:21:49Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6b208128f6e7ca0c66b41b9a3468793c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01738",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2017,
     "year_display": "2017",
     "series_ids": [
-      "surface-history"
+      "131"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-47a0b722fccfb2b210b831f192894665",
-    "generated_at_utc": "2026-03-27T18:42:21Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-e355b6f61cf2db5ef8e9d0941013a926",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01935",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2013,
     "year_display": "2013",
     "series_ids": [
-      "water"
+      "141"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

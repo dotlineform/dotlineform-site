@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-3272dabd687cd24d684694b5d91de3d5",
-    "generated_at_utc": "2026-03-22T15:21:36Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-89ba15af2352cf626cb12f5f732d6e7a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01075",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
-      "fog"
+      "055"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

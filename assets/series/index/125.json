@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-bdcde5d2fd4bdaa0a4801b5f5aa14c06",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "125",
+    "count": 1
+  },
+  "series": {
+    "series_id": "125",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "spiders",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2006,
+    "year_display": "2006",
+    "project_folders": [
+      "spiders"
+    ],
+    "works": [
+      "00402"
+    ],
+    "primary_work_id": "00402"
+  }
+}

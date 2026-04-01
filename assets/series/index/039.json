@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-032ba2920313b1982780f238e14eb2ad",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "039",
+    "count": 17
+  },
+  "series": {
+    "series_id": "039",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "title": "doll sees everything",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "doll sees everything"
+    ],
+    "works": [
+      "00909",
+      "00910",
+      "00911",
+      "00912",
+      "00913",
+      "00914",
+      "00915",
+      "00916",
+      "00917",
+      "00918",
+      "00919",
+      "00920",
+      "00921",
+      "00922",
+      "00923",
+      "00924",
+      "00925"
+    ],
+    "primary_work_id": "00919"
+  }
+}

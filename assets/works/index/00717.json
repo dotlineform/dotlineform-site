@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2642c4a8c1c69a4d732fc625d289c1c9",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-7f492b2b5326b793ce82b91d09b82b3f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00717",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "a-feeling-that-we-are-part-of-a-structure"
+      "007"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

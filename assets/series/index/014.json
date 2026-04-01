@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-2bc827b10d26bd972ea8a7f55f069329",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "014",
+    "count": 3
+  },
+  "series": {
+    "series_id": "014",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "assembly codes",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "assembly codes"
+    ],
+    "works": [
+      "00753",
+      "00754",
+      "00755"
+    ],
+    "primary_work_id": "00753"
+  }
+}

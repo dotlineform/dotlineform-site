@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2a2d02821757db00dfd8412c3495fe1e",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-5bd5f89fe0e35d1b63ea137ec77966a3",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00920",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "doll-sees-everything"
+      "039"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

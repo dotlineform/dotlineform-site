@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-e2890debccbc7b5831b85281dc5564b2",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-21a14fdb3946464e523ebb5b2ab1b347",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00473",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2015,
     "year_display": "2015",
     "series_ids": [
-      "mm"
+      "098"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

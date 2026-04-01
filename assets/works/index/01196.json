@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-7410c748c5b3a6dff080353b828fc2c4",
-    "generated_at_utc": "2026-03-23T13:50:04Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-46e3749ab837f185ec0420e2bfd73f5c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01196",
     "count": 65
   },
@@ -12,7 +12,7 @@
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
-      "forms"
+      "065"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

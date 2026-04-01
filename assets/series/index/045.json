@@ -1,0 +1,55 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-1d126e06a71f4721c593550916a4cd2b",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "045",
+    "count": 30
+  },
+  "series": {
+    "series_id": "045",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "title": "droplets",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2016,
+    "year_display": "2014-16",
+    "project_folders": [
+      "droplets"
+    ],
+    "works": [
+      "01007",
+      "01008",
+      "01009",
+      "01010",
+      "01011",
+      "01012",
+      "01013",
+      "01014",
+      "01015",
+      "01016",
+      "01017",
+      "01018",
+      "01019",
+      "01020",
+      "01021",
+      "01022",
+      "01023",
+      "01024",
+      "01025",
+      "01026",
+      "01027",
+      "01028",
+      "01029",
+      "01030",
+      "01031",
+      "01032",
+      "01033",
+      "01034",
+      "01035",
+      "01036"
+    ],
+    "primary_work_id": "01017"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-4cdfae96dbd603cc31aa5902a4e1f4ec",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "140",
+    "count": 24
+  },
+  "series": {
+    "series_id": "140",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "wa",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2008,
+    "year_display": "2008, 2011",
+    "project_folders": [
+      "wa"
+    ],
+    "works": [
+      "00394",
+      "00395",
+      "00396",
+      "00397",
+      "00398",
+      "00399",
+      "00400",
+      "00401",
+      "00600",
+      "00601",
+      "00602",
+      "00603",
+      "00604",
+      "00605",
+      "00606",
+      "00607",
+      "00608",
+      "00609",
+      "00610",
+      "00611",
+      "00612",
+      "00613",
+      "00614",
+      "00615"
+    ],
+    "primary_work_id": "00615"
+  }
+}

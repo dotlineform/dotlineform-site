@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-61b200c4e7e97564f094b6f17a592120",
-    "generated_at_utc": "2026-03-23T21:58:39Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-8f10de613cdfd070a09e59fada016603",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01395",
     "count": 10
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "kylie-wax-model"
+      "085"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

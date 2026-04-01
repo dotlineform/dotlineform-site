@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-b73e046977305b04c298004442a7a616",
-    "generated_at_utc": "2026-03-24T21:55:32Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-d6a352a3ec9b810eb5cb1f3aafb147e6",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01480",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
-      "particle-machine"
+      "109"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

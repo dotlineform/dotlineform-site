@@ -1,0 +1,30 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-154f1c1f04ccf16220af33cca94906dd",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "022",
+    "count": 5
+  },
+  "series": {
+    "series_id": "022",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "book of curves",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2011,
+    "year_display": "2011",
+    "project_folders": [
+      "book of curves"
+    ],
+    "works": [
+      "00806",
+      "00807",
+      "00808",
+      "00809",
+      "00810"
+    ],
+    "primary_work_id": "00806"
+  }
+}

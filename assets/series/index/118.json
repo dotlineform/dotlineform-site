@@ -1,0 +1,33 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-aad1dc0a46ba048e2288a69568a265ab",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "118",
+    "count": 7
+  },
+  "series": {
+    "series_id": "118",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "title": "quantum random number theory",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2015,
+    "year_display": "2009, 2015",
+    "project_folders": [
+      "qrnt",
+      "qrnt (bits symbols)"
+    ],
+    "works": [
+      "00383",
+      "00629",
+      "00630",
+      "00631",
+      "00632",
+      "00633",
+      "00634"
+    ],
+    "primary_work_id": "00630"
+  }
+}

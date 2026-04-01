@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-07e3ea182b954bb85a9e7a0332a1d063",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-55c3426735387ef8084006b1a31b5b82",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00390",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2003,
     "year_display": "2003",
     "series_ids": [
-      "forest"
+      "059"
     ],
     "storage": "4",
     "medium_type": "digital print",

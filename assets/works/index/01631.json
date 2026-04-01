@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2e35477921e40f10e1ab2da5cdf00a13",
-    "generated_at_utc": "2026-03-25T21:10:08Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4437e25f830b4f31b85ed22a02dc1182",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01631",
     "count": 3
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "room"
+      "122"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

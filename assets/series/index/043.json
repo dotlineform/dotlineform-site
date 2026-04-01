@@ -1,0 +1,43 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-44d9cf500fa0bfe9219ecff121eb5b26",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "043",
+    "count": 18
+  },
+  "series": {
+    "series_id": "043",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "title": "dotlineform (2023)",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "dotlineform (2023)"
+    ],
+    "works": [
+      "00455",
+      "00984",
+      "00985",
+      "00986",
+      "00987",
+      "00988",
+      "00989",
+      "00990",
+      "00991",
+      "00992",
+      "00993",
+      "00994",
+      "00995",
+      "00996",
+      "00997",
+      "00998",
+      "00999",
+      "01000"
+    ],
+    "primary_work_id": "00455"
+  }
+}

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-31b4b9df04a62b1da0977bf701c9ec2e",
-    "generated_at_utc": "2026-03-25T16:09:06Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-11c1597a7fdf11e31b3a343d8283b7ea",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01528",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2022,
     "year_display": "2022",
     "series_ids": [
-      "plant-forms"
+      "114"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

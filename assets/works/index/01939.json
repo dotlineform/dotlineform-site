@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-b2c7de1c2ef740a9196f660554c91f0d",
-    "generated_at_utc": "2026-03-27T19:05:08Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-3f245185e9d5746db21d1ff6bfbebe2d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01939",
     "count": 4
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "water-sea-pond"
+      "142"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

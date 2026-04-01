@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-caf92dafbaafd9b1b9f0fe310bf75f89",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "013",
+    "count": 15
+  },
+  "series": {
+    "series_id": "013",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "an act of kindness",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2024,
+    "year_display": "2024",
+    "project_folders": [
+      "an act of kindness"
+    ],
+    "works": [
+      "00736",
+      "00737",
+      "00738",
+      "00739",
+      "00740",
+      "00741",
+      "00742",
+      "00743",
+      "00744",
+      "00745",
+      "00746",
+      "00747",
+      "00748",
+      "00749",
+      "00750"
+    ],
+    "primary_work_id": "00748"
+  }
+}

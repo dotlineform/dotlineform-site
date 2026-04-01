@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ae697f80b72ecf9c394d125c8e4e5eeb",
-    "generated_at_utc": "2026-03-26T19:02:28Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-f751acb981844f78b83cc3d6ef92f14d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01721",
     "count": 119
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "state-of-mind"
+      "127"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-344da8c222ed5b4782f61369435a581f",
-    "generated_at_utc": "2026-03-20T23:15:45Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-2667c24829620f2e449f0285bb5f1853",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01057",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "fluid-forms"
+      "053"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

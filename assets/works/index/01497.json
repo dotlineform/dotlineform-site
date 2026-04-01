@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d44ca36d656e368ff02b30b5acfcd77b",
-    "generated_at_utc": "2026-03-25T14:25:39Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4a8d9589335444f7004d1a7a48d59d4f",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01497",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2013,
     "year_display": "2013",
     "series_ids": [
-      "particles"
+      "111"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

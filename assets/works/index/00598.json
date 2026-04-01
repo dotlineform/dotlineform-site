@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ba5c05397a47c93166c1afab96244d15",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6495c0773280c6a20fb91d5e065ce1bd",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00598",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2021,
     "year_display": "2021",
     "series_ids": [
-      "form-mobile"
+      "063"
     ],
     "storage": "7",
     "medium_type": "drawing",

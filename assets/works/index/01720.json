@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d6b4c3c5d96f367e7206fb123af9d640",
-    "generated_at_utc": "2026-03-26T18:41:04Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-46688f1aafa55439d376414825fb85bb",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01720",
     "count": 73
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "2008",
     "series_ids": [
-      "spine-symbols"
+      "126"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

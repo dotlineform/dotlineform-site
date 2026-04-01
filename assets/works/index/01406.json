@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-628966fd26ef97a6a70e2c03df9e404e",
-    "generated_at_utc": "2026-03-24T15:16:13Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-e60e190af18a6141b8c8937b2a27700e",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01406",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "lights"
+      "090"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

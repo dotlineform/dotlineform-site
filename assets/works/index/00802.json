@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-01e798b494a88a2430459d9a90101142",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-752591516e0f6ef7997c65ce5875317d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00802",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2010,
     "year_display": "2010",
     "series_ids": [
-      "book-dna"
+      "021"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

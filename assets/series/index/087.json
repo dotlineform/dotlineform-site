@@ -1,0 +1,28 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-f942309ba5332ada53dea5adb14cc7f4",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "087",
+    "count": 3
+  },
+  "series": {
+    "series_id": "087",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "title": "landscapes",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "landscapes"
+    ],
+    "works": [
+      "00516",
+      "00517",
+      "00518"
+    ],
+    "primary_work_id": "00516"
+  }
+}

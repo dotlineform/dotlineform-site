@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-cb9ad6ba55bd12607d6ab0deaa0d542b",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "053",
+    "count": 16
+  },
+  "series": {
+    "series_id": "053",
+    "status": "published",
+    "published_date": "2026-03-20",
+    "title": "fluid forms",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2012,
+    "year_display": "2012",
+    "project_folders": [
+      "fluid forms"
+    ],
+    "works": [
+      "01055",
+      "01056",
+      "01057",
+      "01058",
+      "01059",
+      "01060",
+      "01061",
+      "01062",
+      "01063",
+      "01064",
+      "01065",
+      "01066",
+      "01067",
+      "01068",
+      "01069",
+      "01070"
+    ],
+    "primary_work_id": "01055"
+  }
+}

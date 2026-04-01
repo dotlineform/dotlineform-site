@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-aa5a550471f8b42550e13eaa348f2605",
-    "generated_at_utc": "2026-03-23T22:13:07Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4158ddc1b1369d0072b236c68f9f0c0d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00518",
     "count": 3
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "landscapes"
+      "087"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

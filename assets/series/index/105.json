@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-28e60b1fa681568807a5102e1f5c02c1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "105",
+    "count": 3
+  },
+  "series": {
+    "series_id": "105",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "nerve",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 1995,
+    "year_display": "1990-95",
+    "notes": "works and details to publish",
+    "project_folders": [
+      "nerve",
+      "nerve (abattoir)",
+      "nerve (formaldehyde form)"
+    ],
+    "works": [
+      "00008",
+      "00163",
+      "00166"
+    ],
+    "primary_work_id": "00008"
+  }
+}

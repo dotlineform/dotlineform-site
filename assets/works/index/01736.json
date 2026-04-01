@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d5ed8cf8f9f9c8ea3f7ea6bb7bbb6cd0",
-    "generated_at_utc": "2026-03-26T20:08:01Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-0f04d816a71698d9e665239360db3aee",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01736",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "sunflower"
+      "130"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

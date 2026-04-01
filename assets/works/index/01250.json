@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-a656c05977800e7d4bf9f6543ebf3961",
-    "generated_at_utc": "2026-03-23T16:54:42Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-98430ac388e4361641f5490cbc3d31dd",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01250",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "c. 2001-11",
     "series_ids": [
-      "genetic-2020"
+      "069"
     ],
     "medium_type": "music",
     "medium_caption": "audio files (mp3/FLAC/wav)",

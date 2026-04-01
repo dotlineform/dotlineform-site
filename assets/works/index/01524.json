@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-8711e5476616f2a423fb074153eb64c7",
-    "generated_at_utc": "2026-03-25T15:54:17Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-6adbba3104e8bee7cc2bc46908bcdaad",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01524",
     "count": 3
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "pi-particles"
+      "113"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

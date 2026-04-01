@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-34513ae274220a77bbd38f2a24747282",
-    "generated_at_utc": "2026-03-27T14:00:59Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-c013eac9ca72f093d5b5235979acd973",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01875",
     "count": 4
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "untitled-composites"
+      "138"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

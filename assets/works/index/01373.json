@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d3a478bdf60e02f6676c94b1ed2aa7c7",
-    "generated_at_utc": "2026-03-23T20:43:45Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-89ad36ac27374f8be8326a719063cfe0",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01373",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2021,
     "year_display": "2021",
     "series_ids": [
-      "home-land-loss"
+      "078"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

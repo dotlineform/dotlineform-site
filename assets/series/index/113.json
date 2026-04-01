@@ -1,0 +1,29 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-0ecc9d1956e12f02f8ec2cfbda2177de",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "113",
+    "count": 4
+  },
+  "series": {
+    "series_id": "113",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "pi particles",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2012,
+    "year_display": "2012",
+    "project_folders": [
+      "pi particles"
+    ],
+    "works": [
+      "01523",
+      "01524",
+      "01525",
+      "01526"
+    ],
+    "primary_work_id": "01525"
+  }
+}

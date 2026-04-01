@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-aa83701cad7e212f910d5eea77c68a9d",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-e0e8f3f7acc35e2b2c42abb9f4e5b9cd",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00507",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
-      "mm"
+      "098"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-2165674530b1dfd4a28c247a16d9b7ca",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-ed161a49a4e755670d357989735e72d9",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00868",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2020,
     "year_display": "2020",
     "series_ids": [
-      "curve-machine"
+      "035"
     ],
     "medium_type": "mixed media",
     "medium_caption": "mixed media",

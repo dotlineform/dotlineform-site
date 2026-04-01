@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-bc57778b03d6342af79494d26a271026",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-1351177083e1de21f870fef63f4df7dc",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00744",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "an-act-of-kindness"
+      "013"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

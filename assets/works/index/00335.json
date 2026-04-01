@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-8597e4a1151d1f88d94d450dfc6988bd",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-292826294bdf0f9ee294c26155b787e0",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00335",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2024,
     "year_display": "2024",
     "series_ids": [
-      "curve-poems"
+      "036"
     ],
     "storage": "2",
     "medium_type": "drawing",

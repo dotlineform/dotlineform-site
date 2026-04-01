@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-b329b57361f40b78b7b3f16465f32581",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "138",
+    "count": 9
+  },
+  "series": {
+    "series_id": "138",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "title": "untitled composites",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "untitled composites"
+    ],
+    "works": [
+      "01874",
+      "01875",
+      "01876",
+      "01877",
+      "01878",
+      "01879",
+      "01880",
+      "01881",
+      "01882"
+    ],
+    "primary_work_id": "01874"
+  }
+}

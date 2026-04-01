@@ -1,0 +1,34 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-0ab42f9779074c01f14cdbcf10e058b8",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "004",
+    "count": 9
+  },
+  "series": {
+    "series_id": "004",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "title": "2 bodies",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2025,
+    "year_display": "2025",
+    "project_folders": [
+      "2 bodies"
+    ],
+    "works": [
+      "00526",
+      "00527",
+      "00528",
+      "00529",
+      "00530",
+      "00531",
+      "00532",
+      "00533",
+      "00534"
+    ],
+    "primary_work_id": "00533"
+  }
+}

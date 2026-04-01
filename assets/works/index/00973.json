@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-deb7e68ce15e92c8a52e9afc5c486b18",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-3a4e4c1be1faf148515dfc0099106d3b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00973",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2021,
     "year_display": "2021",
     "series_ids": [
-      "dotlineform-2021"
+      "042"
     ],
     "medium_type": "painting",
     "medium_caption": "acrylic on canvas",

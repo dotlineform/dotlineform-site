@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-ff81c4264104258ddb999aa7d64bc5a7",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-d25b4032f673a72100ea86266d90efb5",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00540",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1994,
     "year_display": "1994",
     "series_ids": [
-      "models"
+      "099"
     ],
     "storage": "9",
     "medium_type": "photocopy",

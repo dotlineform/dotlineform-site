@@ -1,0 +1,32 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-d81a833ebf53494dcddf5c267b8c2085",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "111",
+    "count": 7
+  },
+  "series": {
+    "series_id": "111",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "title": "particles",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2013",
+    "project_folders": [
+      "particles"
+    ],
+    "works": [
+      "01491",
+      "01492",
+      "01493",
+      "01494",
+      "01495",
+      "01496",
+      "01497"
+    ],
+    "primary_work_id": "01491"
+  }
+}

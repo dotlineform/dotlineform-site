@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-24f3158a0fa6ff456a1632bf658bfd8b",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "007",
+    "count": 6
+  },
+  "series": {
+    "series_id": "007",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "a feeling that we are part of a structure",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2024,
+    "year_display": "2024",
+    "project_folders": [
+      "a feeling that we are part of a structure"
+    ],
+    "works": [
+      "00716",
+      "00717",
+      "00718",
+      "00719",
+      "00720",
+      "00721"
+    ],
+    "primary_work_id": "00717"
+  }
+}

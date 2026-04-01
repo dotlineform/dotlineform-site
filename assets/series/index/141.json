@@ -1,0 +1,53 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-bfe2c7aeb202e99a3549ac0b4c042805",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
+    "series_id": "141",
+    "count": 28
+  },
+  "series": {
+    "series_id": "141",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "title": "water",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2013,
+    "year_display": "2005-13",
+    "project_folders": [
+      "water"
+    ],
+    "works": [
+      "01910",
+      "01911",
+      "01912",
+      "01913",
+      "01914",
+      "01915",
+      "01916",
+      "01917",
+      "01918",
+      "01919",
+      "01920",
+      "01921",
+      "01922",
+      "01923",
+      "01924",
+      "01925",
+      "01926",
+      "01927",
+      "01928",
+      "01929",
+      "01930",
+      "01931",
+      "01932",
+      "01933",
+      "01934",
+      "01935",
+      "01936",
+      "01937"
+    ],
+    "primary_work_id": "01912"
+  }
+}

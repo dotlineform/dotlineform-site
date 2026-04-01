@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-f8a4c23854a9af2376e2b20818682f8b",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-64ac8eb4cc2feb5df70cc0cd82529f2b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00894",
     "count": 4
   },
@@ -12,7 +12,7 @@
     "year": 2008,
     "year_display": "c. 2008",
     "series_ids": [
-      "doll"
+      "037"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

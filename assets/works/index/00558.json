@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-5326f9422a0d3797e44adb1101673dd3",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-7b0a5d70cd33fa43ecbc9dad346a2f83",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00558",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2005,
     "year_display": "2005",
     "series_ids": [
-      "string-theory"
+      "129"
     ],
     "storage": "12",
     "medium_type": "paper collage",

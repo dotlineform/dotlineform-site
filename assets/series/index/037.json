@@ -1,0 +1,54 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-706340fb5d17c387b25801d831cc99e6",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "037",
+    "count": 29
+  },
+  "series": {
+    "series_id": "037",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "title": "doll",
+    "sort_fields": "year,work_id",
+    "series_type": "primary",
+    "year": 1989,
+    "year_display": "1989-2008",
+    "project_folders": [
+      "doll"
+    ],
+    "works": [
+      "00872",
+      "00873",
+      "00874",
+      "00875",
+      "00876",
+      "00877",
+      "00878",
+      "00879",
+      "00880",
+      "00881",
+      "00882",
+      "00883",
+      "00884",
+      "00885",
+      "00886",
+      "00887",
+      "00888",
+      "00889",
+      "00890",
+      "00891",
+      "00892",
+      "00893",
+      "00894",
+      "00895",
+      "00896",
+      "00897",
+      "00898",
+      "00899",
+      "00900"
+    ],
+    "primary_work_id": "00872"
+  }
+}

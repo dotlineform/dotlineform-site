@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-73f0fa27569ca3544729d358ef5f7748",
-    "generated_at_utc": "2026-03-20T19:59:27Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b54fbf432b2de0f3fae03c796700903a",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00160",
     "count": 10
   },
@@ -12,7 +12,7 @@
     "year": 1991,
     "year_display": "1991",
     "series_ids": [
-      "mouse-story"
+      "104"
     ],
     "storage": "1",
     "medium_type": "writing",

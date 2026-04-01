@@ -1,0 +1,26 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-361278ca838028ce61d4b4dd015dc4fe",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "061",
+    "count": 1
+  },
+  "series": {
+    "series_id": "061",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "title": "forest memories 1-48",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2023,
+    "year_display": "2023",
+    "project_folders": [
+      "forest memories 1-48"
+    ],
+    "works": [
+      "00464"
+    ],
+    "primary_work_id": "00464"
+  }
+}

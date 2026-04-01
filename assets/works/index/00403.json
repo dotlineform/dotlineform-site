@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d689808380050ee04c88860ecec62490",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-a7464940d2a02af725879db2f5dd52e1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00403",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2017,
     "year_display": "2017",
     "series_ids": [
-      "found-forms"
+      "067"
     ],
     "medium_type": "photograph",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-abdcf6759e18040cfb37401d4f191914",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-2a703a2876f138c0bdf7077afe690b64",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00807",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
-      "book-of-curves"
+      "022"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

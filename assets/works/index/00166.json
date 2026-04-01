@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-534f56bc96a06a6b9ac360bdcac09da0",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-d02720c983df6e90b09b1b7b5553f93c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00166",
     "count": 19
   },
@@ -12,7 +12,7 @@
     "year": 1993,
     "year_display": "1993",
     "series_ids": [
-      "nerve"
+      "105"
     ],
     "storage": "1",
     "medium_type": "writing",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-9a4178e8fe3bce8482ddbd2690e6b1d7",
-    "generated_at_utc": "2026-03-20T19:59:27Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-7336e1966ea4b55f6af94a912e725bb0",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00163",
     "count": 10
   },
@@ -12,7 +12,7 @@
     "year": 1995,
     "year_display": "1990-95",
     "series_ids": [
-      "nerve"
+      "105"
     ],
     "storage": "1",
     "medium_type": "mixed media",

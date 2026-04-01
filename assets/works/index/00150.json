@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-e5756f71139015603d49e8daa7faa02c",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-4479f3ed458fcb9afe6cb8d46619427b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00150",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2001,
     "year_display": "2001",
     "series_ids": [
-      "r"
+      "119"
     ],
     "storage": "1",
     "medium_type": "photocopy",

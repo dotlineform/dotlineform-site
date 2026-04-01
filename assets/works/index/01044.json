@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-03c502846c1b9ee75bafe2f1f92f3fbe",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-dfc54cbca73e7159e4743105be4402d6",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01044",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "entangled-form"
+      "048"
     ],
     "storage": "framed",
     "medium_type": "monoprint",

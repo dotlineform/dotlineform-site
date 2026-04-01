@@ -1,0 +1,30 @@
+{
+  "header": {
+    "schema": "series_record_v1",
+    "version": "blake2b-b48e60d0cf104c0d8f35f981e1790456",
+    "generated_at_utc": "2026-04-01T10:39:18Z",
+    "series_id": "029",
+    "count": 5
+  },
+  "series": {
+    "series_id": "029",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "title": "colours",
+    "sort_fields": "work_id",
+    "series_type": "primary",
+    "year": 2008,
+    "year_display": "2008",
+    "project_folders": [
+      "colours"
+    ],
+    "works": [
+      "00813",
+      "00814",
+      "00815",
+      "00816",
+      "00817"
+    ],
+    "primary_work_id": "00813"
+  }
+}

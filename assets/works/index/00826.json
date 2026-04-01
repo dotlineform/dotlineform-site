@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-216d350e4156c339961decf1d80919dd",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-972ae8f5b49c2bf5ea29de5676bd557d",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00826",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2012,
     "year_display": "2012",
     "series_ids": [
-      "concrete"
+      "031"
     ],
     "medium_type": "digital print",
     "medium_caption": "giclée print",

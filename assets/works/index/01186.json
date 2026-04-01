@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-51664a7643d312b98c974cf112716830",
-    "generated_at_utc": "2026-03-22T21:48:01Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-27fcedf3b4ec7f0e9461e57de0ec8d80",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01186",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2007,
     "year_display": "2007",
     "series_ids": [
-      "form-space"
+      "064"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-83a9d868bef1165710be0d08e6476c9f",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-be37b977f15334918a641203a2b690d1",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00121",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2010,
     "year_display": "c. 2010?",
     "series_ids": [
-      "learning-to-draw-landscapes"
+      "089"
     ],
     "storage": "1",
     "medium_type": "drawing",

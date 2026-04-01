@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-c1856f2ddb70b5d673d5a8afa12d7c4c",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-e60d4f3bc6ac3f69de39b30e57bcc46b",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00616",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2004,
     "year_display": "2004",
     "series_ids": [
-      "composite-blue-red-smoke"
+      "030"
     ],
     "storage": "7",
     "medium_type": "digital print",

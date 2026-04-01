@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-bb244622ffe3e78a3170fad253945fc7",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-855b76b2791620ddc41b062f0e7c500c",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00986",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2023,
     "year_display": "2023",
     "series_ids": [
-      "dotlineform-2023"
+      "043"
     ],
     "storage": "6",
     "medium_type": "painting",

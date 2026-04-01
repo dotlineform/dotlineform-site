@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-8745b278678850814c2da238d9fe6050",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b00a8f2c5b13fbda4b77eb4b8e07d0b3",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00204",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1994,
     "year_display": "1994",
     "series_ids": [
-      "collected-1989-1998"
+      "026"
     ],
     "storage": "1",
     "medium_type": "photocopy",

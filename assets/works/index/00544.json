@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-e3af395f6d497af8386e0a5fd9f8400f",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-f24311452d17d06a6b8ea83531072939",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00544",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 1994,
     "year_display": "1994",
     "series_ids": [
-      "models"
+      "099"
     ],
     "storage": "9",
     "medium_type": "ink on paper",

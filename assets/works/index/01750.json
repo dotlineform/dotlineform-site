@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-b0598ae98e5535999e91df536b0c9fb5",
-    "generated_at_utc": "2026-03-26T21:29:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b2f4378678c7ef214304e4d09c885fe6",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "01750",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2006,
     "year_display": "2006",
     "series_ids": [
-      "thorns"
+      "133"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital c-type print",

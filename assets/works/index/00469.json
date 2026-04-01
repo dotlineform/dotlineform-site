@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-8be2c819ba70fb2192c035026ddc2e33",
-    "generated_at_utc": "2026-03-23T19:59:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-046a257739e5a553322441eec17c89ea",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00469",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2011,
     "year_display": "2011",
     "series_ids": [
-      "heaven-and-earth"
+      "076"
     ],
     "medium_type": "photograph",
     "medium_caption": "giclée print",

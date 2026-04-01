@@ -1,8 +1,8 @@
 {
   "header": {
-    "schema": "work_record_v2",
-    "version": "blake2b-d46a0ff84880f3de0f6433e038c91664",
-    "generated_at_utc": "2026-03-20T13:50:43Z",
+    "schema": "work_record_v3",
+    "version": "blake2b-b3de47800e4a5a11a01c22462c1753f0",
+    "generated_at_utc": "2026-04-01T10:39:19Z",
     "work_id": "00628",
     "count": 0
   },
@@ -12,7 +12,7 @@
     "year": 2009,
     "year_display": "2009",
     "series_ids": [
-      "k-crystals"
+      "082"
     ],
     "medium_type": "digital print",
     "medium_caption": "digital print",
