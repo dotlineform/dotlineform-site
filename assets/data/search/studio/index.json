@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-2d6a0075204d019fd1450e50f48c72c1",
-    "generated_at_utc": "2026-03-31T18:07:54Z",
-    "count": 63
+    "version": "blake2b-8812c6e7f851dc70dada0bb03ffa41e8",
+    "generated_at_utc": "2026-04-01T15:51:26Z",
+    "count": 64
   },
   "entries": [
     {
@@ -31,16 +31,16 @@
       "kind": "doc",
       "title": "Studio",
       "href": "/docs/?scope=studio&doc=studio",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-01",
+      "display_meta": "2026-04-01",
       "search_terms": [
         "studio",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "studio 2026-03-31 2026 03 31"
+      "search_text": "studio 2026-04-01 2026 04 01"
     },
     {
       "id": "data-flow",
@@ -152,10 +152,10 @@
       "kind": "doc",
       "title": "Pipeline Use Cases",
       "href": "/docs/?scope=studio&doc=pipeline-use-cases",
-      "last_updated": "2026-03-29",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-29 • Scripts",
+      "display_meta": "2026-04-01 • Scripts",
       "search_terms": [
         "pipeline-use-cases",
         "pipeline",
@@ -163,12 +163,12 @@
         "cases",
         "pipeline use cases",
         "scripts",
-        "2026-03-29",
+        "2026-04-01",
         "2026",
-        "03",
-        "29"
+        "04",
+        "01"
       ],
-      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases scripts 2026-03-29 2026 03 29"
+      "search_text": "pipeline-use-cases pipeline use cases pipeline use cases scripts 2026-04-01 2026 04 01"
     },
     {
       "id": "data-models-shared",
@@ -199,21 +199,21 @@
       "kind": "doc",
       "title": "Studio Runtime",
       "href": "/docs/?scope=studio&doc=studio-runtime",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-03-31 • Studio",
+      "display_meta": "2026-04-01 • Studio",
       "search_terms": [
         "studio-runtime",
         "studio",
         "runtime",
         "studio runtime",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "studio-runtime studio runtime studio runtime 2026-03-31 2026 03 31"
+      "search_text": "studio-runtime studio runtime studio runtime 2026-04-01 2026 04 01"
     },
     {
       "id": "ui-framework",
@@ -254,14 +254,38 @@
       "search_text": "architecture 2026-03-31 2026 03 31"
     },
     {
+      "id": "scripts-main-pipeline",
+      "kind": "doc",
+      "title": "Build Catalogue",
+      "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
+      "last_updated": "2026-04-01",
+      "parent_id": "scripts",
+      "parent_title": "Scripts",
+      "display_meta": "2026-04-01 • Scripts",
+      "search_terms": [
+        "scripts-main-pipeline",
+        "scripts",
+        "main",
+        "pipeline",
+        "build catalogue",
+        "build",
+        "catalogue",
+        "2026-04-01",
+        "2026",
+        "04",
+        "01"
+      ],
+      "search_text": "scripts-main-pipeline scripts main pipeline build catalogue build catalogue 2026-04-01 2026 04 01"
+    },
+    {
       "id": "data-models-catalogue",
       "kind": "doc",
       "title": "Catalogue Scope",
       "href": "/docs/?scope=studio&doc=data-models-catalogue",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-03-31 • Data Models",
+      "display_meta": "2026-04-01 • Data Models",
       "search_terms": [
         "data-models-catalogue",
         "data",
@@ -270,35 +294,12 @@
         "catalogue scope",
         "scope",
         "data models",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-03-31 2026 03 31"
-    },
-    {
-      "id": "scripts-main-pipeline",
-      "kind": "doc",
-      "title": "Main Draft Pipeline",
-      "href": "/docs/?scope=studio&doc=scripts-main-pipeline",
-      "last_updated": "2026-03-31",
-      "parent_id": "scripts",
-      "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
-      "search_terms": [
-        "scripts-main-pipeline",
-        "scripts",
-        "main",
-        "pipeline",
-        "main draft pipeline",
-        "draft",
-        "2026-03-31",
-        "2026",
-        "03",
-        "31"
-      ],
-      "search_text": "scripts-main-pipeline scripts main pipeline main draft pipeline draft 2026-03-31 2026 03 31"
+      "search_text": "data-models-catalogue data models catalogue catalogue scope scope data models 2026-04-01 2026 04 01"
     },
     {
       "id": "config-pipeline-json",
@@ -327,22 +328,22 @@
       "kind": "doc",
       "title": "Search Index Schema",
       "href": "/docs/?scope=studio&doc=search-index-schema",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-index-schema",
         "search",
         "index",
         "schema",
         "search index schema",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-index-schema search index schema search index schema 2026-03-31 2026 03 31"
+      "search_text": "search-index-schema search index schema search index schema 2026-04-01 2026 04 01"
     },
     {
       "id": "search-overview",
@@ -590,38 +591,38 @@
       "kind": "doc",
       "title": "Scripts",
       "href": "/docs/?scope=studio&doc=scripts",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-01",
+      "display_meta": "2026-04-01",
       "search_terms": [
         "scripts",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "scripts 2026-03-31 2026 03 31"
+      "search_text": "scripts 2026-04-01 2026 04 01"
     },
     {
       "id": "search-field-registry",
       "kind": "doc",
       "title": "Search Field Registry",
       "href": "/docs/?scope=studio&doc=search-field-registry",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-field-registry",
         "search",
         "field",
         "registry",
         "search field registry",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-field-registry search field registry search field registry 2026-03-31 2026 03 31"
+      "search_text": "search-field-registry search field registry search field registry 2026-04-01 2026 04 01"
     },
     {
       "id": "sorting-architecture",
@@ -649,32 +650,32 @@
       "kind": "doc",
       "title": "Studio Config JSON",
       "href": "/docs/?scope=studio&doc=config-studio-config-json",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-03-31 • Config",
+      "display_meta": "2026-04-01 • Config",
       "search_terms": [
         "config-studio-config-json",
         "config",
         "studio",
         "json",
         "studio config json",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "config-studio-config-json config studio json studio config json 2026-03-31 2026 03 31"
+      "search_text": "config-studio-config-json config studio json studio config json 2026-04-01 2026 04 01"
     },
     {
       "id": "data-models-studio",
       "kind": "doc",
       "title": "Studio Scope",
       "href": "/docs/?scope=studio&doc=data-models-studio",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "data-models",
       "parent_title": "Data Models",
-      "display_meta": "2026-03-31 • Data Models",
+      "display_meta": "2026-04-01 • Data Models",
       "search_terms": [
         "data-models-studio",
         "data",
@@ -683,12 +684,12 @@
         "studio scope",
         "scope",
         "data models",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "data-models-studio data models studio studio scope scope data models 2026-03-31 2026 03 31"
+      "search_text": "data-models-studio data models studio studio scope scope data models 2026-04-01 2026 04 01"
     },
     {
       "id": "tag-groups",
@@ -711,6 +712,28 @@
         "31"
       ],
       "search_text": "tag-groups tag groups tag groups studio 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "build-activity",
+      "kind": "doc",
+      "title": "Build Activity",
+      "href": "/docs/?scope=studio&doc=build-activity",
+      "last_updated": "2026-04-01",
+      "parent_id": "studio",
+      "parent_title": "Studio",
+      "display_meta": "2026-04-01 • Studio",
+      "search_terms": [
+        "build-activity",
+        "build",
+        "activity",
+        "build activity",
+        "studio",
+        "2026-04-01",
+        "2026",
+        "04",
+        "01"
+      ],
+      "search_text": "build-activity build activity build activity studio 2026-04-01 2026 04 01"
     },
     {
       "id": "css-audit-spec",
@@ -784,22 +807,22 @@
       "kind": "doc",
       "title": "Search Ranking Model",
       "href": "/docs/?scope=studio&doc=search-ranking-model",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-ranking-model",
         "search",
         "ranking",
         "model",
         "search ranking model",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-ranking-model search ranking model search ranking model 2026-03-31 2026 03 31"
+      "search_text": "search-ranking-model search ranking model search ranking model 2026-04-01 2026 04 01"
     },
     {
       "id": "scripts-srcset-builder",
@@ -828,10 +851,10 @@
       "kind": "doc",
       "title": "Studio Config Loader JS",
       "href": "/docs/?scope=studio&doc=config-studio-config-js",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "config",
       "parent_title": "Config",
-      "display_meta": "2026-03-31 • Config",
+      "display_meta": "2026-04-01 • Config",
       "search_terms": [
         "config-studio-config-js",
         "config",
@@ -839,12 +862,12 @@
         "js",
         "studio config loader js",
         "loader",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-03-31 2026 03 31"
+      "search_text": "config-studio-config-js config studio js studio config loader js loader 2026-04-01 2026 04 01"
     },
     {
       "id": "tag-registry",
@@ -895,10 +918,10 @@
       "kind": "doc",
       "title": "Generate Work Pages",
       "href": "/docs/?scope=studio&doc=scripts-generate-work-pages",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
+      "display_meta": "2026-04-01 • Scripts",
       "search_terms": [
         "scripts-generate-work-pages",
         "scripts",
@@ -906,12 +929,12 @@
         "work",
         "pages",
         "generate work pages",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-03-31 2026 03 31"
+      "search_text": "scripts-generate-work-pages scripts generate work pages generate work pages 2026-04-01 2026 04 01"
     },
     {
       "id": "search",
@@ -934,22 +957,22 @@
       "kind": "doc",
       "title": "Search Normalisation Rules",
       "href": "/docs/?scope=studio&doc=search-normalisation-rules",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-normalisation-rules",
         "search",
         "normalisation",
         "rules",
         "search normalisation rules",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-normalisation-rules search normalisation rules search normalisation rules 2026-03-31 2026 03 31"
+      "search_text": "search-normalisation-rules search normalisation rules search normalisation rules 2026-04-01 2026 04 01"
     },
     {
       "id": "config-search-policy-json",
@@ -1024,22 +1047,22 @@
       "kind": "doc",
       "title": "Delete Work",
       "href": "/docs/?scope=studio&doc=scripts-delete-work",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
+      "display_meta": "2026-04-01 • Scripts",
       "search_terms": [
         "scripts-delete-work",
         "scripts",
         "delete",
         "work",
         "delete work",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "scripts-delete-work scripts delete work delete work 2026-03-31 2026 03 31"
+      "search_text": "scripts-delete-work scripts delete work delete work 2026-04-01 2026 04 01"
     },
     {
       "id": "search-ui-behaviour",
@@ -1090,22 +1113,22 @@
       "kind": "doc",
       "title": "Search Build Pipeline",
       "href": "/docs/?scope=studio&doc=search-build-pipeline",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-build-pipeline",
         "search",
         "build",
         "pipeline",
         "search build pipeline",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-03-31 2026 03 31"
+      "search_text": "search-build-pipeline search build pipeline search build pipeline 2026-04-01 2026 04 01"
     },
     {
       "id": "tag-editor",
@@ -1206,43 +1229,43 @@
       "kind": "doc",
       "title": "Search Validation Checklist",
       "href": "/docs/?scope=studio&doc=search-validation-checklist",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-03-31 • Search",
+      "display_meta": "2026-04-01 • Search",
       "search_terms": [
         "search-validation-checklist",
         "search",
         "validation",
         "checklist",
         "search validation checklist",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-03-31 2026 03 31"
+      "search_text": "search-validation-checklist search validation checklist search validation checklist 2026-04-01 2026 04 01"
     },
     {
       "id": "studio-works",
       "kind": "doc",
       "title": "Studio Works",
       "href": "/docs/?scope=studio&doc=studio-works",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-03-31 • Studio",
+      "display_meta": "2026-04-01 • Studio",
       "search_terms": [
         "studio-works",
         "studio",
         "works",
         "studio works",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "studio-works studio works studio works 2026-03-31 2026 03 31"
+      "search_text": "studio-works studio works studio works 2026-04-01 2026 04 01"
     },
     {
       "id": "scripts-audit-site-consistency",
@@ -1318,20 +1341,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-01",
+      "display_meta": "2026-04-01",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "site-change-log site change log site change log 2026-03-31 2026 03 31"
+      "search_text": "site-change-log site change log site change log 2026-04-01 2026 04 01"
     },
     {
       "id": "search-change-log-guidance",

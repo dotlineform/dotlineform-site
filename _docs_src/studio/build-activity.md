@@ -48,6 +48,14 @@ Each entry currently includes:
 
 IDs are intentionally sampled in the published feed rather than dumped in full.
 
+Current planner mode labels:
+
+- `full`
+- `bootstrap`
+- `incremental`
+
+Those labels are defined by the catalogue pipeline rather than the Studio page itself. See **[Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)** for the current meanings.
+
 ## Current Boundaries
 
 What this page is for:

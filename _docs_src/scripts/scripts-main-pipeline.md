@@ -62,6 +62,19 @@ When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` 
 
 Pipeline output now also shortens machine-local absolute paths in command echoes and step logs. Repo-owned paths are shown repo-relative, canonical source paths are shown relative to `DOTLINEFORM_PROJECTS_BASE_DIR`, staged/derivative media paths are shown relative to `DOTLINEFORM_MEDIA_BASE_DIR`, and temporary manifest paths are shown under a `[tmp]/...` prefix.
 
+## Planner Modes
+
+The planner currently reports one of three mode labels in the build plan output and in the Studio Build Activity feed:
+
+- `full`
+  the run was invoked with `--full`, so saved planner state is ignored and workbook-backed generation targets are rebuilt from current source state
+- `bootstrap`
+  no prior `var/build_catalogue_state.json` baseline was available, so the planner is establishing an initial local state snapshot
+- `incremental`
+  an existing planner state baseline was available, so the planner is diffing current workbook, prose, and source-media inputs against that saved state
+
+`bootstrap` is not the same as `full`. A bootstrap run initializes local planner state when no prior baseline exists, while a full run intentionally ignores an existing baseline.
+
 ## Mode Examples
 
 ```bash
