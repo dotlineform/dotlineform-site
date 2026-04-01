@@ -8,6 +8,37 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Migrated moments from workbook rows to source-file front matter
+
+**Status:** implemented
+
+**Area:** moments pipeline
+
+**Summary:**  
+Moments are now sourced from `moments/*.md` front matter instead of the `Moments` worksheet in `works.xlsx`.
+
+**Reason:**  
+The old model duplicated moment metadata between source prose files and the workbook even though moments only need a small metadata surface and already have a canonical source file. Moving that metadata into front matter makes each moment self-contained, removes unnecessary workbook maintenance, and aligns the pipeline with how moment prose is actually authored.
+
+**Effect:**  
+`build_catalogue.py`, `copy_draft_media_files.py`, `generate_work_pages.py`, and the shared preflight now scan moment source files directly. Canonical moment metadata now lives in front matter as `title`, `status`, `published_date`, `date`, optional `date_display`, and optional `image_file`, with `moment_id` fixed by the filename stem. Moment publish writes now update source front matter while preserving the first `published_date`, missing source images are treated as optional, and the standalone `delete_moment.py` script now handles repo-side moment cleanup without requiring workbook rows.
+
+**Affected files/docs:**  
+- `scripts/moment_sources.py`
+- `scripts/build_catalogue.py`
+- `scripts/copy_draft_media_files.py`
+- `scripts/generate_work_pages.py`
+- `scripts/catalogue_preflight.py`
+- `scripts/jekyll_markdown_renderer.rb`
+- `scripts/delete_moment.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Copy Draft Media Files](/docs/?scope=studio&doc=scripts-copy-draft-media)
+- [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
+
+**Notes:**  
+This change retires the `Moments` worksheet as a pipeline source. During the migration, older workbook-backed fallbacks were briefly retained and then removed once moment front matter had been completed across the source tree.
+
 ## [2026-04-01] Added a public recently added page and publication ledger
 
 **Status:** implemented
@@ -194,7 +225,7 @@ This change only affects human-readable output. The underlying commands and file
 The catalogue pipeline could previously write work pages, stage media, or persist workbook status changes before a later workbook integrity error such as a missing `Series.primary_work_id` aborted the run. That made failures harder to recover from and left partial publish state behind.
 
 **Effect:**  
-Blocking workbook issues for actionable catalogue rows are now aggregated and reported before the run starts mutating outputs. The current preflight covers malformed IDs, unknown `Works.series_ids` references, missing or invalid `Series.primary_work_id` values, series primary works that are not members of the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values.
+Blocking workbook issues for actionable catalogue rows are now aggregated and reported before the run starts mutating outputs. The current preflight covers malformed IDs, unknown `Works.series_ids` references, missing or invalid `Series.primary_work_id` values, series primary works that are not members of the series, orphaned `WorkDetails.work_id` values, and invalid moment source filenames or front matter.
 
 **Affected files/docs:**  
 - `scripts/catalogue_preflight.py`

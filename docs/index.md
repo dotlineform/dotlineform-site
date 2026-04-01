@@ -13,7 +13,7 @@ section: studio-docs
   viewer_base_url=docs_viewer_base_url
   viewer_scope='studio'
   include_scope_param=true
-  default_doc_id='studio'
+  default_doc_id='site-docs'
   search_index_url=docs_search_index_url
   search_placeholder='search studio docs'
   search_aria_label='Search Studio docs'
