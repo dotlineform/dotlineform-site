@@ -81,6 +81,11 @@ import sys
 import openpyxl
 
 try:
+    from display_paths import format_display_path
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.display_paths import format_display_path
+
+try:
     from script_logging import append_script_log
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.script_logging import append_script_log
@@ -812,6 +817,32 @@ def main() -> None:
         ),
     )
     args = ap.parse_args()
+    repo_root = Path(__file__).resolve().parents[1]
+    projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
+    media_base_dir_display = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) else None
+
+    def display_path(path: Path | str) -> str:
+        return format_display_path(
+            path,
+            repo_root=repo_root,
+            projects_base_dir=projects_base_dir_display,
+            media_base_dir=media_base_dir_display,
+        )
+
+    def display_projects_path(path: Path | str) -> str:
+        return format_display_path(
+            path,
+            repo_root=repo_root,
+            projects_base_dir=projects_base_dir_display,
+        )
+
+    def display_media_path(path: Path | str) -> str:
+        return format_display_path(
+            path,
+            repo_root=repo_root,
+            media_base_dir=media_base_dir_display,
+        )
+
     log_event(
         "generate_start",
         {
@@ -1632,7 +1663,7 @@ def main() -> None:
                             wr_cells[works_height_px_idx].value = src_h
                             work_dimensions_updated += 1
                 else:
-                    print(f"Warning: could not read dimensions for work primary source image: {src_path}")
+                    print(f"Warning: could not read dimensions for work primary source image: {display_projects_path(src_path)}")
             elif project_filename:
                 print(f"Warning: could not resolve work primary source image path for {wid} ({project_filename})")
 
@@ -1714,13 +1745,13 @@ def main() -> None:
                         except Exception:
                             existing_content = None
                         if existing_content == page_content:
-                            print(f"{prefix}SKIP ({label}; checksum+content match): {path}")
+                            print(f"{prefix}SKIP ({label}; checksum+content match): {display_path(path)}")
                             return False
                     if args.write:
                         path.write_text(page_content, encoding="utf-8")
-                        print(f"{prefix}WRITE ({label}): {path}")
+                        print(f"{prefix}WRITE ({label}): {display_path(path)}")
                     else:
-                        print(f"{prefix}DRY-RUN: would write {path} (overwrite={exists})")
+                        print(f"{prefix}DRY-RUN: would write {display_path(path)} (overwrite={exists})")
                     return True
 
                 if write_page(out_path, "work", work_page_content):
@@ -1762,7 +1793,7 @@ def main() -> None:
                         downloads_missing += 1
                         continue
                     if not download_src.exists():
-                        print(f"{prefix}Warning: missing download source: {download_src}")
+                        print(f"{prefix}Warning: missing download source: {display_projects_path(download_src)}")
                         downloads_missing += 1
                         continue
                     if download_dest is None:
@@ -1773,7 +1804,7 @@ def main() -> None:
                     if args.write:
                         download_dest.parent.mkdir(parents=True, exist_ok=True)
                         shutil.copy2(download_src, download_dest)
-                        print(f"{prefix}COPY download: {download_src} -> {download_dest}")
+                        print(f"{prefix}COPY download: {display_projects_path(download_src)} -> {display_media_path(download_dest)}")
                         downloads_copied += 1
                         if work_files_status_idx is not None:
                             status_was = normalize_status(row_cells[work_files_status_idx].value)
@@ -1788,7 +1819,7 @@ def main() -> None:
                                     print(f"Warning: {args.work_files_sheet} sheet missing published_date column; skipping date updates.")
                                     work_files_published_date_missing_warned = True
                     else:
-                        print(f"{prefix}DRY-RUN: would copy download {download_src} -> {download_dest}")
+                        print(f"{prefix}DRY-RUN: would copy download {display_projects_path(download_src)} -> {display_media_path(download_dest)}")
                         downloads_copied += 1
 
             if run_work_links:
@@ -1841,7 +1872,7 @@ def main() -> None:
             f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
             f" Missing/unresolved: {downloads_missing}."
         )
-        print(f"Workbook: {xlsx_path}")
+        print(f"Workbook: {display_path(xlsx_path)}")
         if args.write:
             print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
     else:
@@ -1971,7 +2002,7 @@ def main() -> None:
                     if source_prose_path.exists():
                         content_html = render_markdown_with_jekyll(source_prose_path)
                     else:
-                        print(f"[series {series_id}] WARNING: missing source prose {source_prose_path}; omitting prose content.")
+                        print(f"[series {series_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; omitting prose content.")
 
                 payload_version = compute_payload_version(
                     compact_json_object({"series": public_series_record, "content_html": content_html})
@@ -1994,12 +2025,12 @@ def main() -> None:
 
                 needs_write = (existing_text != series_content)
                 if (not needs_write) and (not args.force):
-                    print(f"{prefix_s}SKIP (no change): {series_path}")
+                    print(f"{prefix_s}SKIP (no change): {display_path(series_path)}")
                     series_skipped += 1
                 else:
                     if args.write:
                         series_path.write_text(series_content, encoding="utf-8")
-                        print(f"{prefix_s}WRITE: {series_path}")
+                        print(f"{prefix_s}WRITE: {display_path(series_path)}")
                         series_written += 1
                         status_idx = series_hi.get("status")
                         if status_idx is not None:
@@ -2015,7 +2046,7 @@ def main() -> None:
                                     print("Warning: Series sheet missing published_date column; skipping date updates.")
                                     series_published_date_missing_warned = True
                     else:
-                        print(f"{prefix_s}DRY-RUN: would write {series_path} (overwrite={series_path.exists()})")
+                        print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_path.exists()})")
                         series_written += 1
 
                 payload = compact_json_object({
@@ -2037,10 +2068,10 @@ def main() -> None:
                 else:
                     if args.write:
                         out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                        print(f"[Series JSON {s_processed}/{s_total}] WRITE: {out_json_path}")
+                        print(f"[Series JSON {s_processed}/{s_total}] WRITE: {display_path(out_json_path)}")
                         series_json_written += 1
                     else:
-                        print(f"[Series JSON {s_processed}/{s_total}] DRY-RUN: would write {out_json_path} (overwrite={out_exists})")
+                        print(f"[Series JSON {s_processed}/{s_total}] DRY-RUN: would write {display_path(out_json_path)} (overwrite={out_exists})")
                         series_json_written += 1
 
                 if run_studio_series_pages:
@@ -2075,10 +2106,10 @@ def main() -> None:
                     else:
                         if args.write:
                             studio_series_path.write_text(studio_series_content, encoding="utf-8")
-                            print(f"{prefix_ts}WRITE: {studio_series_path}")
+                            print(f"{prefix_ts}WRITE: {display_path(studio_series_path)}")
                             studio_series_written += 1
                         else:
-                            print(f"{prefix_ts}DRY-RUN: would write {studio_series_path} (overwrite={studio_series_path.exists()})")
+                            print(f"{prefix_ts}DRY-RUN: would write {display_path(studio_series_path)} (overwrite={studio_series_path.exists()})")
                             studio_series_written += 1
 
                 if series_id not in tag_assignments_series:
@@ -2121,12 +2152,12 @@ def main() -> None:
                 if args.write:
                     tag_assignments_path.write_text(tag_assignments_text, encoding="utf-8")
                     print(
-                        f"Tag assignments sync: WRITE {tag_assignments_path} "
+                        f"Tag assignments sync: WRITE {display_path(tag_assignments_path)} "
                         f"(added missing entries: {tag_assignments_added})."
                     )
                 else:
                     print(
-                        f"Tag assignments sync: DRY-RUN would write {tag_assignments_path} "
+                        f"Tag assignments sync: DRY-RUN would write {display_path(tag_assignments_path)} "
                         f"(added missing entries: {tag_assignments_added})."
                     )
             else:
@@ -2241,11 +2272,11 @@ def main() -> None:
                 json.dumps(series_index_payload, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {series_index_json_path}")
+            print(f"Series index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(series_index_json_path)}")
         else:
             print(
                 "Series index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {series_index_json_path} (overwrite={exists})"
+                f"Path: {display_path(series_index_json_path)} (overwrite={exists})"
             )
 
     # ----------------------------
@@ -2377,7 +2408,7 @@ def main() -> None:
                                 dr_cells[height_px_idx].value = src_h
                                 details_dimensions_updated += 1
                     else:
-                        print(f"Warning: could not read dimensions for detail source image: {src_path}")
+                        print(f"Warning: could not read dimensions for detail source image: {display_projects_path(src_path)}")
                 elif project_filename:
                     print(f"Warning: could not resolve detail source image path for {detail_uid} ({project_filename})")
 
@@ -2401,7 +2432,7 @@ def main() -> None:
 
                 if args.write:
                     d_path.write_text(d_content, encoding="utf-8")
-                    print(f"{prefix_d}WRITE: {d_path}")
+                    print(f"{prefix_d}WRITE: {display_path(d_path)}")
                     details_written += 1
 
                     status_idx = work_details_hi.get("status")
@@ -2418,7 +2449,7 @@ def main() -> None:
                                 print("Warning: WorkDetails sheet missing published_date column; skipping date updates.")
                                 details_published_date_missing_warned = True
                 else:
-                    print(f"{prefix_d}DRY-RUN: would write {d_path} (overwrite={d_exists})")
+                    print(f"{prefix_d}DRY-RUN: would write {display_path(d_path)} (overwrite={d_exists})")
                     details_written += 1
 
             if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
@@ -2528,10 +2559,10 @@ def main() -> None:
 
                 if args.write:
                     out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                    print(f"{prefix_wj}WRITE: {out_json_path}")
+                    print(f"{prefix_wj}WRITE: {display_path(out_json_path)}")
                     wj_written += 1
                 else:
-                    print(f"{prefix_wj}DRY-RUN: would write {out_json_path} (overwrite={exists})")
+                    print(f"{prefix_wj}DRY-RUN: would write {display_path(out_json_path)} (overwrite={exists})")
                     wj_written += 1
 
             print(
@@ -2610,11 +2641,11 @@ def main() -> None:
                 json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {works_index_json_path}")
+            print(f"Works index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(works_index_json_path)}")
         else:
             print(
                 "Works index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {works_index_json_path} (overwrite={exists})"
+                f"Path: {display_path(works_index_json_path)} (overwrite={exists})"
             )
 
     work_storage_version_payload = compact_json_object({
@@ -2642,11 +2673,11 @@ def main() -> None:
                 json.dumps(work_storage_payload_out, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            print(f"Work storage index JSON done. Wrote: 1. Skipped: 0. Path: {work_storage_index_json_path}")
+            print(f"Work storage index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(work_storage_index_json_path)}")
         else:
             print(
                 "Work storage index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {work_storage_index_json_path} (overwrite={work_storage_exists})"
+                f"Path: {display_path(work_storage_index_json_path)} (overwrite={work_storage_exists})"
             )
 
     # ----------------------------
@@ -2851,7 +2882,7 @@ def main() -> None:
 
             source_prose_path = moments_root / f"{moment_id}.md"
             if not source_prose_path.exists():
-                print(f"{prefix_m}WARNING: missing source prose {source_prose_path}; skipping moment.")
+                print(f"{prefix_m}WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moment.")
                 if moment_actionable:
                     moments_pages_skipped += 1
                     moments_json_skipped += 1
@@ -2876,7 +2907,7 @@ def main() -> None:
                     else:
                         if args.write:
                             m_path.write_text(m_content, encoding="utf-8")
-                            print(f"{prefix_m}WRITE: {m_path}")
+                            print(f"{prefix_m}WRITE: {display_path(m_path)}")
                             moments_pages_written += 1
 
                             status_idx = moments_hi.get("status")
@@ -2893,12 +2924,12 @@ def main() -> None:
                                         print("Warning: Moments sheet missing published_date column; skipping date updates.")
                                         moments_published_date_missing_warned = True
                         else:
-                            print(f"{prefix_m}DRY-RUN: would write {m_path} (overwrite={m_exists})")
+                            print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                             moments_pages_written += 1
                 else:
                     if args.write:
                         m_path.write_text(m_content, encoding="utf-8")
-                        print(f"{prefix_m}WRITE: {m_path}")
+                        print(f"{prefix_m}WRITE: {display_path(m_path)}")
                         moments_pages_written += 1
 
                         status_idx = moments_hi.get("status")
@@ -2915,7 +2946,7 @@ def main() -> None:
                                     print("Warning: Moments sheet missing published_date column; skipping date updates.")
                                     moments_published_date_missing_warned = True
                     else:
-                        print(f"{prefix_m}DRY-RUN: would write {m_path} (overwrite={m_exists})")
+                        print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                         moments_pages_written += 1
 
                 content_html = render_markdown_with_jekyll(source_prose_path)
@@ -2941,10 +2972,10 @@ def main() -> None:
                 else:
                     if args.write:
                         out_json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-                        print(f"{prefix_m}WRITE moment JSON: {out_json_path}")
+                        print(f"{prefix_m}WRITE moment JSON: {display_path(out_json_path)}")
                         moments_json_written += 1
                     else:
-                        print(f"{prefix_m}DRY-RUN: would write moment JSON {out_json_path} (overwrite={exists})")
+                        print(f"{prefix_m}DRY-RUN: would write moment JSON {display_path(out_json_path)} (overwrite={exists})")
                         moments_json_written += 1
 
         if args.write and (moments_status_updated > 0 or moments_published_date_updated > 0 or moments_dimensions_updated > 0):
@@ -3024,7 +3055,7 @@ def main() -> None:
 
         source_prose_path = moments_root / f"{moment_id}.md"
         if not source_prose_path.exists():
-            print(f"[moment {moment_id}] WARNING: missing source prose {source_prose_path}; skipping moments index.")
+            print(f"[moment {moment_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moments index.")
             continue
 
         moment_record = {
@@ -3063,11 +3094,11 @@ def main() -> None:
                 json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
                 encoding="utf-8",
             )
-            print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {moments_index_json_path}")
+            print(f"Moments index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(moments_index_json_path)}")
         else:
             print(
                 "Moments index JSON done. Would write: 1. Skipped: 0. "
-                f"Path: {moments_index_json_path} (overwrite={exists})"
+                f"Path: {display_path(moments_index_json_path)} (overwrite={exists})"
             )
 
     log_event(

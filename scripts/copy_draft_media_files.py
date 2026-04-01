@@ -36,6 +36,11 @@ from typing import Any, Dict, List, Optional, Set
 import openpyxl
 
 try:
+    from display_paths import format_display_path
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.display_paths import format_display_path
+
+try:
     from pipeline_config import (
         env_var_name,
         env_var_value,
@@ -67,10 +72,36 @@ PROJECTS_BASE_DIR = Path(PROJECTS_BASE_DIR_ENV).expanduser() if PROJECTS_BASE_DI
 WORKS_BASE_DIR_ENV = env_var_value(PIPELINE_CONFIG, "media_base_dir")
 WORKS_BASE_DIR = Path(WORKS_BASE_DIR_ENV).expanduser() if WORKS_BASE_DIR_ENV else Path(".")
 WORKBOOK_PATH = Path("data/works.xlsx")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def display_path(path: Path | str) -> str:
+    return format_display_path(
+        path,
+        repo_root=REPO_ROOT,
+        projects_base_dir=PROJECTS_BASE_DIR if PROJECTS_BASE_DIR_ENV else None,
+        media_base_dir=WORKS_BASE_DIR if WORKS_BASE_DIR_ENV else None,
+    )
+
+
+def display_projects_path(path: Path | str) -> str:
+    return format_display_path(
+        path,
+        repo_root=REPO_ROOT,
+        projects_base_dir=PROJECTS_BASE_DIR if PROJECTS_BASE_DIR_ENV else None,
+    )
+
+
+def display_media_path(path: Path | str) -> str:
+    return format_display_path(
+        path,
+        repo_root=REPO_ROOT,
+        media_base_dir=WORKS_BASE_DIR if WORKS_BASE_DIR_ENV else None,
+    )
 
 
 def print_transfer(prefix: str, src: Path, dest: Path) -> None:
-    print(f"{prefix}:\n{src}\n-> {dest}")
+    print(f"{prefix}:\n{display_projects_path(src)}\n-> {display_media_path(dest)}")
 
 
 def normalize_text(value: Any) -> str:
@@ -165,7 +196,7 @@ def copy_work(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write:
 
         total += 1
         if not src.exists():
-            print(f"Missing source: {src}")
+            print(f"Missing source: {display_projects_path(src)}")
             missing_src += 1
             continue
 
@@ -241,7 +272,7 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
         dest = (dest_dir / f"{uid}{ext}") if keep_ext else (dest_dir / uid)
         total += 1
         if not src.exists():
-            print(f"Missing source: {src}")
+            print(f"Missing source: {display_projects_path(src)}")
             missing_src += 1
             continue
 
@@ -283,7 +314,7 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
         dest = (dest_dir / f"{mid}{ext}") if keep_ext else (dest_dir / mid)
         total += 1
         if not src.exists():
-            print(f"Missing source: {src}")
+            print(f"Missing source: {display_projects_path(src)}")
             missing_src += 1
             continue
 
@@ -363,7 +394,7 @@ def main() -> int:
         ids_path = Path(args.copied_ids_file).expanduser()
         ids_path.parent.mkdir(parents=True, exist_ok=True)
         ids_path.write_text("\n".join(copied_ids) + ("\n" if copied_ids else ""), encoding="utf-8")
-        print(f"Wrote copied IDs manifest: {ids_path} ({len(copied_ids)} ids)")
+        print(f"Wrote copied IDs manifest: {display_path(ids_path)} ({len(copied_ids)} ids)")
 
     print(f"{label}: {total}, copied: {copied}, missing source: {missing_src}")
     if not args.write:

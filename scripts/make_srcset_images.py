@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 
 try:
+    from display_paths import format_display_command, format_display_path
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.display_paths import format_display_command, format_display_path
+
+try:
     from pipeline_config import (
         env_var_name,
         env_var_value,
@@ -51,6 +56,8 @@ MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
 SRCSET_JOBS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_jobs")
 SELECTED_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_selected_ids_file")
 SUCCESS_IDS_ENV_NAME = env_var_name(PIPELINE_CONFIG, "srcset_success_ids_file")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+MEDIA_BASE_DIR = Path(media_base).expanduser() if (media_base := env_var_value(PIPELINE_CONFIG, "media_base_dir")) else None
 
 PRIMARY_WIDTHS = [int(v) for v in PIPELINE_CONFIG["variants"]["compatibility"]["generate_widths"]]
 THUMB_SIZES = [int(v) for v in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]]
@@ -157,6 +164,14 @@ def result_summary(result: ProcessResult, dry_run: bool) -> str:
     return format_summary(counts)
 
 
+def display_path(path: Path | str) -> str:
+    return format_display_path(
+        path,
+        repo_root=REPO_ROOT,
+        media_base_dir=MEDIA_BASE_DIR,
+    )
+
+
 def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessResult) -> None:
     label = THUMB_SUFFIX
     if dry_run:
@@ -189,7 +204,7 @@ def make_thumb(src: Path, size: int, out: Path, dry_run: bool, result: ProcessRe
             str(out),
         ]
     )
-    result.messages.append(f"Wrote thumb: {out}")
+    result.messages.append(f"Wrote thumb: {display_path(out)}")
     result.written_counts[label] = result.written_counts.get(label, 0) + 1
 
 
@@ -225,7 +240,7 @@ def make_primary(src: Path, width: int, out: Path, dry_run: bool, result: Proces
             str(out),
         ]
     )
-    result.messages.append(f"Wrote {label}: {out}")
+    result.messages.append(f"Wrote {label}: {display_path(out)}")
     result.written_counts[label] = result.written_counts.get(label, 0) + 1
 
 
@@ -346,7 +361,7 @@ def main() -> int:
 
     sources = collect_sources(input_dir)
     if not sources:
-        print(f"No supported image files found in: {input_dir} (jpg/jpeg/heic/heif/png/tif/tiff)")
+        print(f"No supported image files found in: {display_path(input_dir)} (jpg/jpeg/heic/heif/png/tif/tiff)")
         if dry_run:
             print("Dry-run: no source images found; skipping derivative simulation.")
             return 0
@@ -389,11 +404,11 @@ def main() -> int:
     success_ids = [result.success_id for result in results if result.success_id is not None]
 
     if dry_run:
-        print(f"DRY-RUN delete source file(s): {len(processed_sources)} from: {input_dir}")
+        print(f"DRY-RUN delete source file(s): {len(processed_sources)} from: {display_path(input_dir)}")
     else:
         for src in processed_sources:
             Path(src).unlink(missing_ok=True)
-        print(f"Deleted {len(processed_sources)} source file(s) from: {input_dir}")
+        print(f"Deleted {len(processed_sources)} source file(s) from: {display_path(input_dir)}")
 
     if (not dry_run) and success_ids_env:
         success_ids_path = Path(success_ids_env).expanduser()
@@ -403,8 +418,8 @@ def main() -> int:
             encoding="utf-8",
         )
 
-    print(f"Done. Primaries written to: {output_dir / PRIMARY_OUTPUT_SUBDIR}")
-    print(f"Done. Thumbnails written to: {output_dir / THUMB_OUTPUT_SUBDIR}")
+    print(f"Done. Primaries written to: {display_path(output_dir / PRIMARY_OUTPUT_SUBDIR)}")
+    print(f"Done. Thumbnails written to: {display_path(output_dir / THUMB_OUTPUT_SUBDIR)}")
 
     written_counts = merge_counts(results, "written_counts")
     dry_counts = merge_counts(results, "dry_counts")
@@ -421,5 +436,14 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except subprocess.CalledProcessError as exc:
-        print(f"Error: command failed with exit code {exc.returncode}: {' '.join(str(part) for part in exc.cmd)}", file=sys.stderr)
+        print(
+            "Error: command failed with exit code "
+            f"{exc.returncode}: "
+            + format_display_command(
+                [str(part) for part in exc.cmd],
+                repo_root=REPO_ROOT,
+                media_base_dir=MEDIA_BASE_DIR,
+            ),
+            file=sys.stderr,
+        )
         raise SystemExit(exc.returncode)

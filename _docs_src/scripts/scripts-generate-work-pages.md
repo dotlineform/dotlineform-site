@@ -27,6 +27,8 @@ Common runs:
 
 Before any writes begin, the generator now runs the same shared catalogue workbook preflight used by `build_catalogue.py`. Blocking workbook errors are aggregated and reported together before file writes or workbook status updates start.
 
+Generator log output also shortens local absolute paths for workbook, source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
+
 ## Useful Flags
 
 - `--write`: persist file and workbook changes

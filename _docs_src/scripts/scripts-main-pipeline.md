@@ -50,6 +50,8 @@ Before any copy, srcset, workbook, or generated-file writes begin, the pipeline 
 - preflight failures are aggregated and printed together so workbook fixes can be made in one pass
 - preflight is intended to prevent partial publish states where work rows or media are written before a later series or moment validation failure aborts the run
 
+Pipeline output now also shortens machine-local absolute paths in command echoes and step logs. Repo-owned paths are shown repo-relative, canonical source paths are shown relative to `DOTLINEFORM_PROJECTS_BASE_DIR`, staged/derivative media paths are shown relative to `DOTLINEFORM_MEDIA_BASE_DIR`, and temporary manifest paths are shown under a `[tmp]/...` prefix.
+
 ## Mode Examples
 
 ```bash

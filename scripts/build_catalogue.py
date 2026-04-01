@@ -63,6 +63,11 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.build_activity import append_build_activity
 
 try:
+    from display_paths import format_display_command, format_display_path
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.display_paths import format_display_command, format_display_path
+
+try:
     from script_logging import append_script_log
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.script_logging import append_script_log
@@ -116,6 +121,9 @@ BUILD_STATE_MIGRATION_NOTE = (
     "accepted and normalized in memory, then rewritten on the next successful write run."
 )
 DEFAULT_BUILD_STATE_PATH = Path("var/build_catalogue_state.json")
+REPO_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_PROJECTS_BASE_DIR = Path(projects_base).expanduser() if (projects_base := env_var_value(PIPELINE_CONFIG, "projects_base_dir")) else None
+DEFAULT_MEDIA_BASE_DIR = Path(media_base).expanduser() if (media_base := env_var_value(PIPELINE_CONFIG, "media_base_dir")) else None
 
 
 def normalize_text(value: Any) -> str:
@@ -189,7 +197,15 @@ def parse_series_ids_from_works_row(row: tuple[Any, ...], hi: Dict[str, int]) ->
 def run_step(label: str, cmd: list[str], cwd: Path, env: Dict[str, str] | None = None) -> None:
     """Run one pipeline step and fail fast on non-zero exit."""
     print(f"\n==> {label}")
-    print("+", " ".join(cmd))
+    print(
+        "+",
+        format_display_command(
+            cmd,
+            repo_root=REPO_ROOT,
+            projects_base_dir=DEFAULT_PROJECTS_BASE_DIR,
+            media_base_dir=DEFAULT_MEDIA_BASE_DIR,
+        ),
+    )
     subprocess.run(cmd, cwd=str(cwd), env=env, check=True)
 
 
@@ -1999,12 +2015,11 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    repo_root = Path(__file__).resolve().parents[1]
     try:
         raise SystemExit(main())
     except subprocess.CalledProcessError as e:
         log_event(
-            repo_root,
+            REPO_ROOT,
             "pipeline_failed",
             {
                 "kind": "called_process_error",
@@ -2012,11 +2027,20 @@ if __name__ == "__main__":
                 "cmd": list(e.cmd),
             },
         )
-        print(f"\nPipeline failed at command: {' '.join(e.cmd)}", file=sys.stderr)
+        print(
+            "\nPipeline failed at command: "
+            + format_display_command(
+                [str(part) for part in e.cmd],
+                repo_root=REPO_ROOT,
+                projects_base_dir=DEFAULT_PROJECTS_BASE_DIR,
+                media_base_dir=DEFAULT_MEDIA_BASE_DIR,
+            ),
+            file=sys.stderr,
+        )
         raise SystemExit(e.returncode)
     except Exception as e:  # noqa: BLE001
         log_event(
-            repo_root,
+            REPO_ROOT,
             "pipeline_failed",
             {
                 "kind": "exception",

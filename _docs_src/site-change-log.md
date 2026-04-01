@@ -8,6 +8,33 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Shortened local path output in catalogue pipeline logs
+
+**Status:** implemented
+
+**Area:** build pipeline
+
+**Summary:**  
+Catalogue pipeline command echoes and step logs now avoid printing machine-specific absolute filesystem roots during normal runs.
+
+**Reason:**  
+The previous output was noisy and leaked long local absolute paths for interpreters, repo files, canonical source media, staged media, and temporary manifest files. That made routine logs harder to scan and less portable.
+
+**Effect:**  
+`build_catalogue.py`, `copy_draft_media_files.py`, `make_srcset_images.py`, and `generate_work_pages.py` now render repo-owned paths as repo-relative, canonical source paths as `[projects]/...`, staged and derivative media paths as `[media]/...`, and temporary paths as `[tmp]/...`. Runtime behavior is unchanged; this is a display-only logging cleanup.
+
+**Affected files/docs:**  
+- `scripts/display_paths.py`
+- `scripts/build_catalogue.py`
+- `scripts/copy_draft_media_files.py`
+- `scripts/make_srcset_images.py`
+- `scripts/generate_work_pages.py`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+
+**Notes:**  
+This change only affects human-readable output. The underlying commands and file writes still use the full resolved paths internally.
+
 ## [2026-04-01] Added fail-fast catalogue workbook preflight
 
 **Status:** implemented
