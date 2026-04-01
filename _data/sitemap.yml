@@ -16,6 +16,12 @@ sections:
         depth: 0
         node_type: "index"
       -
+        title: "recently added"
+        url: "/recent/"
+        source: "recent/index.md"
+        depth: 0
+        node_type: "index"
+      -
         title: "works in series"
         url: "/works/:id/"
         source: "_works/*.md"

@@ -8,6 +8,7 @@ file per work (e.g. `_works/00286.md`) with YAML front matter populated from the
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
 Lightweight works index JSON is written to assets/data/works_index.json (object keyed by work_id).
+Recent publications JSON is written to assets/data/recent_index.json.
 Studio-only work storage index JSON is written to assets/studio/data/work_storage_index.json (object keyed by work_id).
 Moment JSON index files are written to assets/moments/index/<moment_id>.json (one per selected moment).
 Lightweight moments index JSON is written to assets/data/moments_index.json (object keyed by moment_id).
@@ -79,6 +80,10 @@ import json
 import sys
 
 import openpyxl
+
+
+RECENT_INDEX_SCHEMA = "recent_index_v1"
+RECENT_INDEX_LIMIT = 50
 
 try:
     from display_paths import format_display_path
@@ -588,6 +593,83 @@ def compact_json_object(payload: Dict[str, Any]) -> Dict[str, Any]:
     return compacted if isinstance(compacted, dict) else {}
 
 
+def normalize_recent_entry(entry: Any) -> Optional[Dict[str, Any]]:
+    if not isinstance(entry, dict):
+        return None
+    kind = normalize_text(entry.get("kind")).lower()
+    if kind not in {"series", "work"}:
+        return None
+    target_id = normalize_text(entry.get("target_id"))
+    title = coerce_string(entry.get("title"))
+    caption = coerce_string(entry.get("caption"))
+    published_date = parse_date(entry.get("published_date"))
+    thumb_id = coerce_string(entry.get("thumb_id"))
+    recorded_at_utc = coerce_string(entry.get("recorded_at_utc"))
+    session_order = coerce_int(entry.get("session_order"))
+    if not target_id or not title or not published_date:
+        return None
+    return compact_json_object({
+        "id": f"{kind}:{target_id}",
+        "kind": kind,
+        "target_id": target_id,
+        "title": title,
+        "caption": caption,
+        "published_date": published_date,
+        "thumb_id": thumb_id,
+        "recorded_at_utc": recorded_at_utc,
+        "session_order": session_order,
+    })
+
+
+def load_recent_entries(path: Path) -> List[Dict[str, Any]]:
+    if not path.exists():
+        return []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+    entries_raw = payload.get("entries") if isinstance(payload, dict) else None
+    if not isinstance(entries_raw, list):
+        return []
+    entries: List[Dict[str, Any]] = []
+    for raw in entries_raw:
+        normalized = normalize_recent_entry(raw)
+        if normalized is not None:
+            entries.append(normalized)
+    return entries
+
+
+def sort_recent_entries(entries: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def key(entry: Dict[str, Any]) -> tuple[str, str, int, str, str]:
+        return (
+            str(entry.get("published_date") or ""),
+            str(entry.get("recorded_at_utc") or ""),
+            -(coerce_int(entry.get("session_order")) or 0),
+            str(entry.get("title") or ""),
+            str(entry.get("target_id") or ""),
+        )
+
+    return sorted(entries, key=key, reverse=True)
+
+
+def build_recent_index_payload(entries: List[Dict[str, Any]]) -> Dict[str, Any]:
+    sorted_entries = sort_recent_entries(entries)[:RECENT_INDEX_LIMIT]
+    version_payload = compact_json_object({
+        "schema": RECENT_INDEX_SCHEMA,
+        "entries": sorted_entries,
+    })
+    version = compute_payload_version(version_payload)
+    return compact_json_object({
+        "header": {
+            "schema": RECENT_INDEX_SCHEMA,
+            "version": version,
+            "generated_at_utc": utc_timestamp_now(),
+            "count": len(sorted_entries),
+        },
+        "entries": sorted_entries,
+    })
+
+
 def extract_existing_header_scalar(path: Path, key: str) -> Optional[str]:
     """Extract header.<key> from an existing JSON payload."""
     try:
@@ -760,6 +842,7 @@ def main() -> None:
     ap.add_argument("--work-details-output-dir", default="_work_details", help="Output folder for generated work detail pages")
     ap.add_argument("--works-json-dir", default="assets/works/index", help="Output folder for generated per-work detail JSON index files")
     ap.add_argument("--works-index-json-path", default="assets/data/works_index.json", help="Output path for generated lightweight works index JSON")
+    ap.add_argument("--recent-index-json-path", default="assets/data/recent_index.json", help="Output path for generated recent publications index JSON")
     ap.add_argument("--work-storage-index-json-path", default="assets/studio/data/work_storage_index.json", help="Output path for generated Studio-only work storage index JSON")
     ap.add_argument("--moments-output-dir", default="_moments", help="Output folder for generated moment pages")
     ap.add_argument("--moments-json-dir", default="assets/moments/index", help="Output folder for generated per-moment JSON index files")
@@ -817,7 +900,7 @@ def main() -> None:
         default=[],
         help=(
             "Limit run to selected artifacts. Repeat flag and/or pass comma-separated values. "
-            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,moments,moments-index-json. "
+            "Allowed: work-pages,work-files,work-links,series-pages,series-index-json,work-details-pages,work-json,works-index-json,recent-index-json,moments,moments-index-json. "
             "Aggregate index JSON artifacts are always rebuilt on every run."
         ),
     )
@@ -866,6 +949,7 @@ def main() -> None:
         "work-details-pages",
         "work-json",
         "works-index-json",
+        "recent-index-json",
         "moments",
         "moments-index-json",
     }
@@ -1032,6 +1116,8 @@ def main() -> None:
     works_json_dir.mkdir(parents=True, exist_ok=True)
     works_index_json_path = Path(args.works_index_json_path).expanduser()
     works_index_json_path.parent.mkdir(parents=True, exist_ok=True)
+    recent_index_json_path = Path(args.recent_index_json_path).expanduser()
+    recent_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     work_storage_index_json_path = Path(args.work_storage_index_json_path).expanduser()
     work_storage_index_json_path.parent.mkdir(parents=True, exist_ok=True)
     moments_out_dir = Path(args.moments_output_dir).expanduser()
@@ -1720,6 +1806,7 @@ def main() -> None:
     published_date_idx = works_hi.get("published_date")
     published_date_missing_warned = False
     today = dt.date.today()
+    work_publish_transitions: List[Dict[str, Any]] = []
 
     # Iterate each Works row and emit one Markdown file per work.
     if run_work_processing:
@@ -1792,6 +1879,17 @@ def main() -> None:
                             elif not published_date_missing_warned:
                                 print("Warning: Works sheet missing published_date column; skipping date updates.")
                                 published_date_missing_warned = True
+                        if status_was != "published":
+                            work_meta = work_meta_by_id.get(wid, {})
+                            series_ids = work_meta.get("series_ids") if isinstance(work_meta, dict) else []
+                            primary_series_id = series_ids[0] if isinstance(series_ids, list) and series_ids else ""
+                            work_publish_transitions.append({
+                                "work_id": wid,
+                                "title": coerce_string(work_meta.get("title")) if isinstance(work_meta, dict) else None,
+                                "primary_series_id": primary_series_id,
+                                "series_title": series_title_by_id.get(primary_series_id) if primary_series_id else None,
+                                "published_date": today.isoformat(),
+                            })
                 else:
                     skipped += 1
 
@@ -1919,6 +2017,8 @@ def main() -> None:
     # Optional columns:
     # - year_display (preferred display value)
     # - year (numeric; also fallback for display when year_display column absent)
+
+    series_publish_transitions: List[Dict[str, Any]] = []
 
     if not series_rows or len(series_rows) < 2:
         print("No series pages to generate (Series sheet empty).")
@@ -2069,6 +2169,14 @@ def main() -> None:
                                 elif not series_published_date_missing_warned:
                                     print("Warning: Series sheet missing published_date column; skipping date updates.")
                                     series_published_date_missing_warned = True
+                            if status_was != "published":
+                                series_publish_transitions.append({
+                                    "series_id": series_id,
+                                    "title": series_title,
+                                    "published_date": today.isoformat(),
+                                    "primary_work_id": primary_work_id,
+                                    "work_count": len(series_work_ids_sorted),
+                                })
                     else:
                         print(f"{prefix_s}DRY-RUN: would write {display_path(series_path)} (overwrite={series_path.exists()})")
                         series_written += 1
@@ -2672,6 +2780,104 @@ def main() -> None:
             print(
                 "Works index JSON done. Would write: 1. Skipped: 0. "
                 f"Path: {display_path(works_index_json_path)} (overwrite={exists})"
+            )
+
+    recent_entries_existing = load_recent_entries(recent_index_json_path)
+    current_work_ids = set(works_payload.keys())
+    current_series_ids = set(series_payload.keys())
+    retained_recent_entries = [
+        entry for entry in recent_entries_existing
+        if (
+            (entry.get("kind") == "work" and str(entry.get("target_id") or "") in current_work_ids)
+            or (entry.get("kind") == "series" and str(entry.get("target_id") or "") in current_series_ids)
+        )
+    ]
+
+    recorded_at_utc = utc_timestamp_now()
+    recent_entries_new: List[Dict[str, Any]] = []
+    newly_published_series_ids = {
+        str(entry.get("series_id") or "")
+        for entry in series_publish_transitions
+        if str(entry.get("series_id") or "")
+    }
+
+    session_order = 0
+    for entry in series_publish_transitions:
+        series_id = str(entry.get("series_id") or "")
+        if not series_id:
+            continue
+        session_order += 1
+        normalized = normalize_recent_entry({
+            "kind": "series",
+            "target_id": series_id,
+            "title": coerce_string(entry.get("title")) or series_id,
+            "caption": f"{int(entry.get('work_count') or 0)} work{'s' if int(entry.get('work_count') or 0) != 1 else ''}",
+            "published_date": entry.get("published_date"),
+            "thumb_id": coerce_string(entry.get("primary_work_id")),
+            "recorded_at_utc": recorded_at_utc,
+            "session_order": session_order,
+        })
+        if normalized is not None:
+            recent_entries_new.append(normalized)
+
+    grouped_work_transitions: Dict[str, List[Dict[str, Any]]] = {}
+    for entry in work_publish_transitions:
+        primary_series_id = str(entry.get("primary_series_id") or "")
+        if not primary_series_id or primary_series_id in newly_published_series_ids:
+            continue
+        grouped_work_transitions.setdefault(primary_series_id, []).append(entry)
+
+    for series_id, entries in sorted(grouped_work_transitions.items()):
+        entries_sorted = sorted(
+            entries,
+            key=lambda item: (
+                str(series_sort_by_series_id.get(series_id, {}).get(str(item.get("work_id") or ""), str(item.get("work_id") or ""))),
+                str(item.get("work_id") or ""),
+            ),
+        )
+        first_entry = entries_sorted[0] if entries_sorted else {}
+        if not first_entry:
+            continue
+        new_work_count = len(entries_sorted)
+        series_title = coerce_string(first_entry.get("series_title")) or series_title_by_id.get(series_id) or series_id
+        caption = series_title if new_work_count == 1 else f"{new_work_count} new works in {series_title}"
+        session_order += 1
+        normalized = normalize_recent_entry({
+            "kind": "work",
+            "target_id": str(first_entry.get("work_id") or ""),
+            "title": coerce_string(first_entry.get("title")) or str(first_entry.get("work_id") or ""),
+            "caption": caption,
+            "published_date": first_entry.get("published_date"),
+            "thumb_id": str(first_entry.get("work_id") or ""),
+            "recorded_at_utc": recorded_at_utc,
+            "session_order": session_order,
+        })
+        if normalized is not None:
+            recent_entries_new.append(normalized)
+
+    existing_by_id = {
+        str(entry.get("id") or f"{entry.get('kind')}:{entry.get('target_id')}"): entry
+        for entry in retained_recent_entries
+    }
+    for entry in recent_entries_new:
+        existing_by_id[str(entry.get("id") or "")] = entry
+    recent_index_payload = build_recent_index_payload(list(existing_by_id.values()))
+    recent_exists = recent_index_json_path.exists()
+    recent_existing_version = extract_existing_header_scalar(recent_index_json_path, "version") if recent_exists else None
+    recent_payload_version = recent_index_payload["header"]["version"]
+    if (recent_existing_version is not None) and (recent_existing_version == recent_payload_version) and (not args.force):
+        print("Recent index JSON done. Wrote: 0. Skipped: 1.")
+    else:
+        if args.write:
+            recent_index_json_path.write_text(
+                json.dumps(recent_index_payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            print(f"Recent index JSON done. Wrote: 1. Skipped: 0. Path: {display_path(recent_index_json_path)}")
+        else:
+            print(
+                "Recent index JSON done. Would write: 1. Skipped: 0. "
+                f"Path: {display_path(recent_index_json_path)} (overwrite={recent_exists})"
             )
 
     work_storage_version_payload = compact_json_object({

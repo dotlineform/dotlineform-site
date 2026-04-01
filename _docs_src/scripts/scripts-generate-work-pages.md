@@ -61,6 +61,11 @@ When `--write` is used, the generator now reads cached formula values from one w
   - stages downloadable files to `$DOTLINEFORM_MEDIA_BASE_DIR/works/files/`
 - `--series-index-json-path` with default `assets/data/series_index.json`
 - `--works-index-json-path` with default `assets/data/works_index.json`
+- `--recent-index-json-path` with default `assets/data/recent_index.json`
+  - writes a capped recent-publications ledger for `/recent/`
+  - snapshots only first-time `draft -> published` transitions for series and works
+  - groups multiple newly published works in the same existing series into one work entry anchored to the first published work in that run
+  - prunes entries whose target series or work no longer exists in the current catalogue
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`
@@ -112,6 +117,8 @@ Artifact behavior:
   writes `assets/data/works_index.json` as a lightweight full rebuild keyed by `work_id`
   for shared card and lookup metadata
   and writes `assets/studio/data/work_storage_index.json` as a Studio-only companion lookup for curator storage values
+- `recent-index-json`
+  writes `assets/data/recent_index.json` as a capped recent-publications ledger for `/recent/`
 - `work-json`
   writes `assets/works/index/<work_id>.json` with full `work`, `sections[].details[]`, and rendered `content_html` when work prose exists
 
@@ -133,6 +140,7 @@ This preflight runs before generated files or workbook status/date updates are w
 ## Runtime Canonical Data Flow
 
 - `/series/` reads `assets/data/series_index.json` and `assets/data/moments_index.json` for the merged works and moments catalogue
+- `/recent/` reads `assets/data/recent_index.json`
 - `/series/<series_id>/` reads `assets/data/series_index.json`
 - `/series/<series_id>/` also reads `assets/data/works_index.json` for card metadata
 - `/series/<series_id>/` reads `assets/series/index/<series_id>.json` for series prose HTML

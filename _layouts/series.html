@@ -328,5 +328,24 @@ layout: default
       href="{{ '/series/' | relative_url }}"
     >← works</a>
   </nav>
-  
+  <script>
+    (function () {
+      var link = document.getElementById('seriesPageBackLink');
+      var root = document.getElementById('seriesPageRoot');
+      if (!link || !root) return;
+
+      var baseurl = String(root.getAttribute('data-baseurl') || '').replace(/\/$/, '');
+      var params = new URLSearchParams(window.location.search);
+      var from = String(params.get('from') || '').trim().toLowerCase();
+
+      if (from === 'recent') {
+        link.textContent = '← recently added';
+        link.setAttribute('href', baseurl + '/recent/');
+      } else {
+        link.textContent = '← works';
+        link.setAttribute('href', baseurl + '/series/');
+      }
+    })();
+  </script>
+
 </article>

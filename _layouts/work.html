@@ -490,6 +490,9 @@ layout: default
       if (seriesPage > 0) seriesQuery.set('series_page', String(seriesPage));
       if (seriesQuery.toString()) href += '?' + seriesQuery.toString();
       link.setAttribute('href', href);
+    } else if (from === 'recent') {
+      link.textContent = '← recently added';
+      link.setAttribute('href', baseurl + '/recent/');
     } else if (from === 'studio_works_index') {
       var studioWorksUrl = baseurl + '/studio/studio-works/';
       var studioWorksQuery = new URLSearchParams();

@@ -22,6 +22,7 @@ Current checked-in catalogue model families:
 - shared indexes:
   - `assets/data/series_index.json`
   - `assets/data/works_index.json`
+  - `assets/data/recent_index.json`
   - `assets/data/moments_index.json`
 - per-record payloads:
   - `assets/series/index/<series_id>.json`
@@ -153,6 +154,31 @@ Why it stays lightweight:
 
 - the work page’s full detail/prose payload is much larger
 - series grids need fast bulk access to many works at once
+
+### `assets/data/recent_index.json`
+
+Purpose:
+
+- snapshot ledger for the public `/recent/` page
+
+Current content families:
+
+- recent publication entry kind: `series` or `work`
+- target id for route resolution
+- snapshot title and caption text
+- publication date
+- thumbnail indirection via `thumb_id`
+- lightweight write-order metadata for stable same-day ordering
+
+Current consumers:
+
+- `/recent/`
+
+Why it is a separate derived artifact:
+
+- the page needs publish-event history, not just current catalogue state
+- snapshot titles and captions intentionally do not track later title edits or work-to-series moves
+- deleted targets can be pruned centrally by the generator when the catalogue rebuilds
 
 ### `assets/data/moments_index.json`
 
@@ -295,6 +321,7 @@ Current enforcement visible in code:
 The catalogue model is optimized for the current static-site runtime:
 
 - `/series/` reads only shared indexes
+- `/recent/` reads only the recent-publications index
 - `/series/<series_id>/` reads one per-series record, not one record per work
 - `/works/<work_id>/` reads one work-local payload that already contains all detail sections
 - `/work_details/<detail_uid>/` reuses the work-local payload instead of requiring a second fetch family

@@ -8,6 +8,35 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Added a public recently added page and publication ledger
+
+**Status:** implemented
+
+**Area:** catalogue
+
+**Summary:**  
+Added a public `/recent/` page plus a generated `assets/data/recent_index.json` ledger for recent first-time series and work publications.
+
+**Reason:**  
+The public catalogue needed a lightweight way to surface newly published work without treating later title edits, series edits, or work moves as fresh additions. That requires a small persistent event ledger rather than a page derived only from current catalogue state.
+
+**Effect:**  
+`generate_work_pages.py` now records first-time `draft -> published` transitions into a capped recent-publications index, prunes entries whose target series or work has been deleted, and groups multiple newly published works in the same existing series into one entry anchored to the first work from that run. The public `/recent/` page renders that ledger, `/series/` now links to it with a `recently added` control, and series/work pages now show `← recently added` when opened from that route.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- `recent/index.md`
+- `series/index.md`
+- `_layouts/series.html`
+- `_layouts/work.html`
+- `assets/css/main.css`
+- `assets/data/recent_index.json`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
+
+**Notes:**  
+Existing historic entries are not backfilled in this change. Until a real publish run creates entries, `/recent/` shows an empty state.
+
 ## [2026-04-01] Preserved tag assignments across series-id renames
 
 **Status:** implemented

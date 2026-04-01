@@ -113,6 +113,12 @@ permalink: /series/
         </button>
       </div>
     </div>
+    <div class="seriesIndex__toolbarMiddle">
+      <a
+        class="theme-toggle seriesIndex__recentBtn"
+        href="{{ '/recent/' | relative_url }}"
+      >recently added</a>
+    </div>
     <div class="seriesIndex__toolbarSecondary">
       <div class="seriesIndex__modeControls" role="group" aria-label="Browse works or moments">
         <button
