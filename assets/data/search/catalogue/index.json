@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-8a9e139936fd9cf962e78a49ab7108b5",
-    "generated_at_utc": "2026-04-01T20:51:35Z",
-    "count": 2129
+    "version": "blake2b-e77cc5c928927cbe5c4f9aed882a4534",
+    "generated_at_utc": "2026-04-01T21:17:08Z",
+    "count": 2130
   },
   "entries": [
     {
@@ -59463,6 +59463,39 @@
         "type"
       ],
       "search_text": "01941 se1 2026 143 simultaneous equations simultaneous equations digital print digital print digital c-type print c type"
+    },
+    {
+      "kind": "work",
+      "id": "01942",
+      "title": "se2",
+      "href": "/works/01942/",
+      "year": 2026,
+      "display_meta": "2026",
+      "series_ids": [
+        "143"
+      ],
+      "series_titles": [
+        "simultaneous equations"
+      ],
+      "medium_type": "digital print",
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "01942",
+        "se2",
+        "2026",
+        "143",
+        "simultaneous equations",
+        "simultaneous",
+        "equations",
+        "digital print",
+        "digital",
+        "print",
+        "digital c-type print",
+        "c",
+        "type"
+      ],
+      "search_text": "01942 se2 2026 143 simultaneous equations simultaneous equations digital print digital print digital c-type print c type"
     },
     {
       "kind": "work",

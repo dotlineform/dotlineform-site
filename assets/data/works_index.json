@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "works_index_v4",
-    "version": "blake2b-f6fbac74f68d56ac507e9717df2b1167",
-    "generated_at_utc": "2026-04-01T20:30:06Z",
-    "count": 1934
+    "version": "blake2b-8cb24ad3b26b7bfaacecf935ebf354d5",
+    "generated_at_utc": "2026-04-01T21:17:07Z",
+    "count": 1935
   },
   "works": {
     "00001": {
@@ -17408,6 +17408,15 @@
     "01941": {
       "work_id": "01941",
       "title": "se1",
+      "year": 2026,
+      "year_display": "2026",
+      "series_ids": [
+        "143"
+      ]
+    },
+    "01942": {
+      "work_id": "01942",
+      "title": "se2",
       "year": 2026,
       "year_display": "2026",
       "series_ids": [

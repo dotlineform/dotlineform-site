@@ -1,0 +1,25 @@
+{
+  "header": {
+    "schema": "work_record_v3",
+    "version": "blake2b-4fcf8568ad5f4b2f9bbd713adc1fb52c",
+    "generated_at_utc": "2026-04-01T21:17:07Z",
+    "work_id": "01942",
+    "count": 0
+  },
+  "work": {
+    "work_id": "01942",
+    "title": "se2",
+    "year": 2026,
+    "year_display": "2026",
+    "series_ids": [
+      "143"
+    ],
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "height_cm": 30.0,
+    "width_cm": 40.0,
+    "width_px": 4724,
+    "height_px": 3543
+  },
+  "sections": []
+}
