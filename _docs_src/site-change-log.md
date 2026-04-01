@@ -8,6 +8,28 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Preserved workbook formulas during generator writes
+
+**Status:** implemented
+
+**Area:** workbook writes
+
+**Summary:**  
+`generate_work_pages.py` now reads workbook values from a `data_only=True` workbook while saving updates through a separate non-`data_only` workbook.
+
+**Reason:**  
+The previous write path saved the same `data_only=True` workbook instance that was used for reading. That risks stripping formulas from the workbook when the generator updates status, `published_date`, or image dimensions.
+
+**Effect:**  
+Write runs now preserve existing workbook formulas while keeping the current generated-file and workbook-update behavior. This clears the way for supported formula-driven helper columns in `Works`, such as series-title lookup aids, without the generator destroying those formulas on save.
+
+**Affected files/docs:**  
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+
+**Notes:**  
+The generator still relies on Excel's cached formula values when reading with `data_only=True`. If a formula result has not been calculated and saved by Excel yet, the read value may still be empty or stale.
+
 ## [2026-04-01] Added a default post-plan confirmation prompt to build_catalogue
 
 **Status:** implemented

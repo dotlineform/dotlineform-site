@@ -29,6 +29,8 @@ Before any writes begin, the generator now runs the same shared catalogue workbo
 
 Generator log output also shortens local absolute paths for workbook, source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
 
+When `--write` is used, the generator now reads cached formula values from one workbook instance and writes updates through a separate non-`data_only` workbook instance. That preserves existing workbook formulas while still allowing the script to update status, `published_date`, `width_px`, and `height_px`.
+
 ## Useful Flags
 
 - `--write`: persist file and workbook changes

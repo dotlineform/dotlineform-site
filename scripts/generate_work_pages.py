@@ -917,17 +917,19 @@ def main() -> None:
         raise SystemExit(f"Workbook not found: {xlsx_path}")
 
     # `data_only=True` reads the last-calculated values of formula cells.
-    # If your sheet relies on formulas that haven't been calculated/saved, values may be None.
-    wb = openpyxl.load_workbook(xlsx_path, data_only=True)
+    # Keep a second non-data_only workbook for writes so formulas are preserved on save.
+    # If your sheet relies on formulas that haven't been calculated/saved, cached values may be None.
+    wb_values = openpyxl.load_workbook(xlsx_path, data_only=True)
+    wb_write = openpyxl.load_workbook(xlsx_path, data_only=False) if args.write else None
 
-    if args.works_sheet not in wb.sheetnames:
+    if args.works_sheet not in wb_values.sheetnames:
         raise SystemExit(f"Sheet not found in workbook: {args.works_sheet}")
-    works_ws = wb[args.works_sheet]
+    works_ws = wb_write[args.works_sheet] if wb_write is not None else wb_values[args.works_sheet]
 
     def read_sheet_rows(sheet_name: str) -> List[tuple]:
-        if sheet_name not in wb.sheetnames:
+        if sheet_name not in wb_values.sheetnames:
             raise SystemExit(f"Sheet not found in workbook: {sheet_name}")
-        ws = wb[sheet_name]
+        ws = wb_values[sheet_name]
         rows = list(ws.iter_rows(values_only=True))
         if not rows:
             return []
@@ -967,13 +969,15 @@ def main() -> None:
             raise ValueError(f"Series '{sid}' primary_work_id '{wid}' is not in its works list")
         return wid
 
-    def live_cell_value(row: tuple, row_cells: tuple | None, header_index: Dict[str, int], col_name: str) -> Any:
+    def read_cell_value(row: tuple, row_cells: tuple | None, header_index: Dict[str, int], col_name: str) -> Any:
         i = header_index.get(col_name)
         if i is None:
             return None
+        if i < len(row):
+            return row[i]
         if row_cells is not None and i < len(row_cells):
             return row_cells[i].value
-        return None if i >= len(row) else row[i]
+        return None
 
     def first_present_col(header_index: Dict[str, int], names: List[str]) -> Optional[str]:
         for n in names:
@@ -1042,16 +1046,18 @@ def main() -> None:
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
-    series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb.sheetnames else []
-    work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb.sheetnames else []
+    series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb_values.sheetnames else []
+    work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb_values.sheetnames else []
     work_files_rows = read_sheet_rows(args.work_files_sheet)
     work_links_rows = read_sheet_rows(args.work_links_sheet)
     moments_rows = read_sheet_rows(args.moments_sheet)
-    series_ws = wb[args.series_sheet]
-    work_details_ws = wb[args.work_details_sheet] if args.work_details_sheet in wb.sheetnames else None
-    work_files_ws = wb[args.work_files_sheet]
-    work_links_ws = wb[args.work_links_sheet]
-    moments_ws = wb[args.moments_sheet]
+    series_ws = wb_write[args.series_sheet] if wb_write is not None else wb_values[args.series_sheet]
+    work_details_ws = (
+        wb_write[args.work_details_sheet] if wb_write is not None else wb_values[args.work_details_sheet]
+    ) if args.work_details_sheet in wb_values.sheetnames else None
+    work_files_ws = wb_write[args.work_files_sheet] if wb_write is not None else wb_values[args.work_files_sheet]
+    work_links_ws = wb_write[args.work_links_sheet] if wb_write is not None else wb_values[args.work_links_sheet]
+    moments_ws = wb_write[args.moments_sheet] if wb_write is not None else wb_values[args.moments_sheet]
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
@@ -1299,8 +1305,8 @@ def main() -> None:
             wid = slug_id(wid_raw)
             try:
                 download_entry = build_download_entry(
-                    live_cell_value(wf_row, wf_cells, work_files_hi, "filename"),
-                    live_cell_value(wf_row, wf_cells, work_files_hi, "label"),
+                    read_cell_value(wf_row, wf_cells, work_files_hi, "filename"),
+                    read_cell_value(wf_row, wf_cells, work_files_hi, "label"),
                 )
             except ValueError as exc:
                 raise SystemExit(f"{args.work_files_sheet} row {row_number}: {exc}") from exc
@@ -1326,8 +1332,8 @@ def main() -> None:
             wid = slug_id(wid_raw)
             try:
                 link_entry = build_link_entry(
-                    live_cell_value(wl_row, wl_cells, work_links_hi, "url"),
-                    live_cell_value(wl_row, wl_cells, work_links_hi, "label"),
+                    read_cell_value(wl_row, wl_cells, work_links_hi, "url"),
+                    read_cell_value(wl_row, wl_cells, work_links_hi, "label"),
                 )
             except ValueError as exc:
                 raise SystemExit(f"{args.work_links_sheet} row {row_number}: {exc}") from exc
@@ -1631,9 +1637,9 @@ def main() -> None:
             if status not in {"draft", "published"}:
                 continue
 
-            width_px = coerce_int(live_cell_value(wr, wr_cells, works_hi, "width_px")) if "width_px" in works_hi else None
-            height_px = coerce_int(live_cell_value(wr, wr_cells, works_hi, "height_px")) if "height_px" in works_hi else None
-            project_filename = coerce_string(live_cell_value(wr, wr_cells, works_hi, "project_filename")) if "project_filename" in works_hi else None
+            width_px = coerce_int(read_cell_value(wr, wr_cells, works_hi, "width_px")) if "width_px" in works_hi else None
+            height_px = coerce_int(read_cell_value(wr, wr_cells, works_hi, "height_px")) if "height_px" in works_hi else None
+            project_filename = coerce_string(read_cell_value(wr, wr_cells, works_hi, "project_filename")) if "project_filename" in works_hi else None
 
             src_path: Optional[Path] = None
             if project_filename:
@@ -1848,7 +1854,8 @@ def main() -> None:
         or work_links_status_updated > 0
         or work_links_published_date_updated > 0
     ):
-        wb.save(xlsx_path)
+        assert wb_write is not None
+        wb_write.save(xlsx_path)
         if status_updated > 0:
             print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
@@ -2164,7 +2171,8 @@ def main() -> None:
                 print("Tag assignments sync: no missing series entries.")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
-            wb.save(xlsx_path)
+            assert wb_write is not None
+            wb_write.save(xlsx_path)
             if series_status_updated > 0:
                 print(f"Updated series status to 'published' for {series_status_updated} row(s).")
             if series_published_date_updated > 0:
@@ -2453,7 +2461,8 @@ def main() -> None:
                     details_written += 1
 
             if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
-                wb.save(xlsx_path)
+                assert wb_write is not None
+                wb_write.save(xlsx_path)
                 if details_status_updated > 0:
                     print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
                 if details_published_date_updated > 0:
@@ -2509,10 +2518,10 @@ def main() -> None:
                 detail_record = build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
-                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                    title=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "title")),
+                    project_subfolder=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(dr_cells[work_details_hi["width_px"]].value) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr_cells) else None,
+                    height_px=coerce_int(dr_cells[work_details_hi["height_px"]].value) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr_cells) else None,
                 )
                 detail_records_by_work.setdefault(wid, []).append(detail_record)
 
@@ -2601,7 +2610,7 @@ def main() -> None:
             wid = slug_id(wid_raw)
             if wid not in works_payload:
                 continue
-            status = normalize_status(live_cell_value(dr, dr_cells, work_details_hi, "status"))
+            status = normalize_status(dr_cells[work_details_hi["status"]].value if work_details_hi["status"] < len(dr_cells) else cell(dr, work_details_hi, "status"))
             if status not in {"draft", "published"}:
                 continue
             did = slug_id(did_raw, width=3)
@@ -2609,10 +2618,10 @@ def main() -> None:
                 build_canonical_detail_record(
                     wid=wid,
                     did=did,
-                    title=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "title")),
-                    project_subfolder=coerce_string(live_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
-                    width_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "width_px")) if "width_px" in work_details_hi else None,
-                    height_px=coerce_int(live_cell_value(dr, dr_cells, work_details_hi, "height_px")) if "height_px" in work_details_hi else None,
+                    title=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "title")),
+                    project_subfolder=coerce_string(read_cell_value(dr, dr_cells, work_details_hi, "project_subfolder")),
+                    width_px=coerce_int(dr_cells[work_details_hi["width_px"]].value) if "width_px" in work_details_hi and work_details_hi["width_px"] < len(dr_cells) else None,
+                    height_px=coerce_int(dr_cells[work_details_hi["height_px"]].value) if "height_px" in work_details_hi and work_details_hi["height_px"] < len(dr_cells) else None,
                 )
             )
 
@@ -2979,7 +2988,8 @@ def main() -> None:
                         moments_json_written += 1
 
         if args.write and (moments_status_updated > 0 or moments_published_date_updated > 0 or moments_dimensions_updated > 0):
-            wb.save(xlsx_path)
+            assert wb_write is not None
+            wb_write.save(xlsx_path)
             if moments_status_updated > 0:
                 print(f"Updated moment status to 'published' for {moments_status_updated} row(s).")
             if moments_published_date_updated > 0:
