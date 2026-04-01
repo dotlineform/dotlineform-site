@@ -7,6 +7,8 @@ require "pathname"
 module JekyllMarkdownRenderer
   module_function
 
+  FRONT_MATTER_PATTERN = /\A---[ \t]*\r?\n.*?\r?\n---[ \t]*\r?\n/m.freeze
+
   def repo_root
     @repo_root ||= Pathname(__dir__).parent.realpath
   end
@@ -32,7 +34,12 @@ module JekyllMarkdownRenderer
     active_converter = converter
     raise "Could not initialize Jekyll markdown converter" if active_converter.nil?
 
-    active_converter.convert(markdown.to_s)
+    active_converter.convert(strip_front_matter(markdown.to_s))
+  end
+
+  def strip_front_matter(markdown)
+    text = markdown.to_s
+    text.sub(FRONT_MATTER_PATTERN, "")
   end
 
   def render_file(path)

@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "search_index_v1",
-    "version": "blake2b-481ed6c673bbbfae47674a52a3755564",
-    "generated_at_utc": "2026-04-01T10:39:22Z",
-    "count": 2129
+    "version": "blake2b-dbc970be14251e3640287ec65cd1d4d3",
+    "generated_at_utc": "2026-04-01T19:22:39Z",
+    "count": 2130
   },
   "entries": [
     {
@@ -29,6 +29,23 @@
         "01"
       ],
       "search_text": "4-stories 4 stories 4 stories c. 2020? c 2020 2020-01-01 01"
+    },
+    {
+      "kind": "moment",
+      "id": "4-stories-copy",
+      "title": "4-stories-copy",
+      "href": "/moments/4-stories-copy/",
+      "series_ids": [],
+      "series_titles": [],
+      "tag_ids": [],
+      "tag_labels": [],
+      "search_terms": [
+        "4-stories-copy",
+        "4",
+        "stories",
+        "copy"
+      ],
+      "search_text": "4-stories-copy 4 stories copy"
     },
     {
       "kind": "moment",
@@ -2077,8 +2094,16 @@
       "series_ids": [],
       "series_titles": [],
       "series_type": "primary",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "036",
         "curve poems",
@@ -2213,8 +2238,12 @@
       "series_ids": [],
       "series_titles": [],
       "series_type": "primary",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "042",
         "dotlineform (2021)",
@@ -2255,8 +2284,12 @@
       "series_ids": [],
       "series_titles": [],
       "series_type": "primary",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "044",
         "dots",
@@ -4617,8 +4650,20 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence",
+        "subject:grid",
+        "theme:symbol"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence",
+        "grid",
+        "symbol"
+      ],
       "search_terms": [
         "00296",
         "4 things that are completely different but at the same time are the same",
@@ -4662,8 +4707,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00363",
         "7 particles",
@@ -4698,8 +4751,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00342",
         "9 moments that are exactly the same but different and unique",
@@ -4844,8 +4905,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00362",
         "13 particles",
@@ -4912,8 +4981,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00295",
         "64 symbols",
@@ -4946,8 +5023,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00361",
         "83 particles",
@@ -10599,8 +10684,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00454",
         "i bet you look good on the dancefloor",
@@ -25151,8 +25244,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00949",
         "dotlineform",
@@ -25754,8 +25851,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00950",
         "dotlineform surface (1)",
@@ -25787,8 +25888,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00951",
         "dotlineform surface (2)",
@@ -25820,8 +25925,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00952",
         "dotlineform surface (3)",
@@ -25853,8 +25962,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00953",
         "dotlineform surface (4)",
@@ -25886,8 +25999,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00954",
         "dotlineform surface (5)",
@@ -25919,8 +26036,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00955",
         "dotlineform surface (6)",
@@ -25952,8 +26073,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00956",
         "dotlineform surface (7)",
@@ -25985,8 +26110,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00957",
         "dotlineform surface (8)",
@@ -26018,8 +26147,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00958",
         "dotlineform surface (9)",
@@ -26051,8 +26184,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00959",
         "dotlineform surface (10)",
@@ -26084,8 +26221,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00960",
         "dotlineform surface (11)",
@@ -26117,8 +26258,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00961",
         "dotlineform surface (12)",
@@ -26150,8 +26295,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00962",
         "dotlineform surface (13)",
@@ -26183,8 +26332,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00963",
         "dotlineform surface (14)",
@@ -26216,8 +26369,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00964",
         "dotlineform surface (15)",
@@ -26249,8 +26406,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00965",
         "dotlineform surface (16)",
@@ -26282,8 +26443,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00966",
         "dotlineform surface (17)",
@@ -26315,8 +26480,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00967",
         "dotlineform surface (18)",
@@ -26348,8 +26517,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00968",
         "dotlineform surface (19)",
@@ -26381,8 +26554,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00969",
         "dotlineform surface (20)",
@@ -26414,8 +26591,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00970",
         "dotlineform surface (21)",
@@ -26447,8 +26628,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00971",
         "dotlineform surface (22)",
@@ -26480,8 +26665,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00972",
         "dotlineform surface (23)",
@@ -26513,8 +26702,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00973",
         "dotlineform surface (24)",
@@ -26546,8 +26739,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00974",
         "dotlineform surface (25)",
@@ -26579,8 +26776,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00975",
         "dotlineform surface (26)",
@@ -26612,8 +26813,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00976",
         "dotlineform surface (27)",
@@ -26645,8 +26850,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00977",
         "dotlineform surface (28)",
@@ -26678,8 +26887,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00978",
         "dotlineform surface (29)",
@@ -26711,8 +26924,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00979",
         "dotlineform surface (30)",
@@ -26744,8 +26961,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00980",
         "dotlineform surface (31)",
@@ -26777,8 +26998,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00981",
         "dotlineform surface (32)",
@@ -26810,8 +27035,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00982",
         "dotlineform surface (33)",
@@ -26843,8 +27072,12 @@
         "dotlineform (2021)"
       ],
       "medium_type": "painting",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "domain:memory"
+      ],
+      "tag_labels": [
+        "memory"
+      ],
       "search_terms": [
         "00983",
         "dotlineform surface (34)",
@@ -26876,8 +27109,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "00456",
         "dots",
@@ -26906,8 +27143,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01005",
         "dots (equations particles)",
@@ -26939,8 +27180,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01006",
         "dots (equations sample grid)",
@@ -26973,8 +27218,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01004",
         "dots (equations)",
@@ -27005,8 +27254,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01002",
         "dots (first normal form)",
@@ -27039,8 +27292,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01001",
         "dots (inside)",
@@ -27071,8 +27328,12 @@
         "dots"
       ],
       "medium_type": "digital print",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear"
+      ],
+      "tag_labels": [
+        "curvilinear"
+      ],
       "search_terms": [
         "01003",
         "dots (second normal form)",
@@ -39201,8 +39462,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00318",
         "grid",
@@ -39233,8 +39502,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00364",
         "grid",
@@ -44893,8 +45170,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00319",
         "it never ends",
@@ -52973,8 +53258,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00308",
         "our paths may cross",
@@ -63611,8 +63904,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00365",
         "the eye",
@@ -64192,8 +64493,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00286",
         "untitled",
@@ -64224,8 +64533,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00287",
         "untitled",
@@ -64256,8 +64573,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00288",
         "untitled",
@@ -64288,8 +64613,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00289",
         "untitled",
@@ -64320,8 +64653,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00290",
         "untitled",
@@ -64352,8 +64693,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00291",
         "untitled",
@@ -64384,8 +64733,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00292",
         "untitled",
@@ -64419,8 +64776,20 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence",
+        "subject:grid",
+        "theme:symbol"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence",
+        "grid",
+        "symbol"
+      ],
       "search_terms": [
         "00293",
         "untitled",
@@ -64453,8 +64822,18 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence",
+        "subject:grid"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence",
+        "grid"
+      ],
       "search_terms": [
         "00294",
         "untitled",
@@ -64487,8 +64866,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00297",
         "untitled",
@@ -64521,8 +64908,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00298",
         "untitled",
@@ -64555,8 +64950,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00299",
         "untitled",
@@ -64589,8 +64992,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00300",
         "untitled",
@@ -64623,8 +65034,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00301",
         "untitled",
@@ -64657,8 +65076,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00302",
         "untitled",
@@ -64689,8 +65116,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00303",
         "untitled",
@@ -64721,8 +65156,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00304",
         "untitled",
@@ -64753,8 +65196,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00305",
         "untitled",
@@ -64785,8 +65236,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00306",
         "untitled",
@@ -64819,8 +65278,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00307",
         "untitled",
@@ -64851,8 +65318,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00309",
         "untitled",
@@ -64883,8 +65358,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00310",
         "untitled",
@@ -64917,8 +65400,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00311",
         "untitled",
@@ -64949,8 +65440,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00312",
         "untitled",
@@ -64983,8 +65482,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00313",
         "untitled",
@@ -65015,8 +65522,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00314",
         "untitled",
@@ -65048,8 +65563,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00315",
         "untitled",
@@ -65080,8 +65603,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00316",
         "untitled",
@@ -65112,8 +65643,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00317",
         "untitled",
@@ -65144,8 +65683,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00320",
         "untitled",
@@ -65176,8 +65723,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00321",
         "untitled",
@@ -65210,8 +65765,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00322",
         "untitled",
@@ -65244,8 +65807,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00323",
         "untitled",
@@ -65276,8 +65847,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00324",
         "untitled",
@@ -65308,8 +65887,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00325",
         "untitled",
@@ -65340,8 +65927,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00326",
         "untitled",
@@ -65372,8 +65967,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00327",
         "untitled",
@@ -65404,8 +66007,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00328",
         "untitled",
@@ -65436,8 +66047,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00329",
         "untitled",
@@ -65468,8 +66087,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00330",
         "untitled",
@@ -65502,8 +66129,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00331",
         "untitled",
@@ -65534,8 +66169,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00332",
         "untitled",
@@ -65566,8 +66209,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00333",
         "untitled",
@@ -65598,8 +66249,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00334",
         "untitled",
@@ -65630,8 +66289,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00335",
         "untitled",
@@ -65662,8 +66329,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00336",
         "untitled",
@@ -65694,8 +66369,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00337",
         "untitled",
@@ -65726,8 +66409,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00338",
         "untitled",
@@ -65758,8 +66449,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00339",
         "untitled",
@@ -65790,8 +66489,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00340",
         "untitled",
@@ -65822,8 +66529,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00341",
         "untitled",
@@ -65854,8 +66569,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00343",
         "untitled",
@@ -65886,8 +66609,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00344",
         "untitled",
@@ -65918,8 +66649,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00345",
         "untitled",
@@ -65950,8 +66689,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00347",
         "untitled",
@@ -65982,8 +66729,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00348",
         "untitled",
@@ -66014,8 +66769,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00349",
         "untitled",
@@ -66046,8 +66809,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00350",
         "untitled",
@@ -66078,8 +66849,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00351",
         "untitled",
@@ -66112,8 +66891,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00352",
         "untitled",
@@ -66146,8 +66933,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00353",
         "untitled",
@@ -66180,8 +66975,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00354",
         "untitled",
@@ -66214,8 +67017,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00355",
         "untitled",
@@ -66248,8 +67059,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00356",
         "untitled",
@@ -66282,8 +67101,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00357",
         "untitled",
@@ -66316,8 +67143,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00358",
         "untitled",
@@ -66350,8 +67185,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00359",
         "untitled",
@@ -66384,8 +67227,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00360",
         "untitled",
@@ -66418,8 +67269,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00366",
         "untitled",
@@ -66450,8 +67309,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00367",
         "untitled",
@@ -66482,8 +67349,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00368",
         "untitled",
@@ -66514,8 +67389,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00369",
         "untitled",
@@ -66546,8 +67429,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00370",
         "untitled",
@@ -66578,8 +67469,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00371",
         "untitled",
@@ -66610,8 +67509,16 @@
         "curve poems"
       ],
       "medium_type": "drawing",
-      "tag_ids": [],
-      "tag_labels": [],
+      "tag_ids": [
+        "form:curvilinear",
+        "form:line",
+        "theme:emergence"
+      ],
+      "tag_labels": [
+        "curvilinear",
+        "line",
+        "emergence"
+      ],
       "search_terms": [
         "00372",
         "untitled",

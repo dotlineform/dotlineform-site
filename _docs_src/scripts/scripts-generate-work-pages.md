@@ -25,11 +25,29 @@ Common runs:
 ./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
 ```
 
-Before any writes begin, the generator now runs the same shared catalogue workbook preflight used by `build_catalogue.py`. Blocking workbook errors are aggregated and reported together before file writes or workbook status updates start.
+Before any writes begin, the generator now runs the same shared catalogue workbook/source preflight used by `build_catalogue.py`. Blocking workbook and moment-source errors are aggregated and reported together before file writes or workbook status updates start.
 
 Generator log output also shortens local absolute paths for workbook, source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
 
-When `--write` is used, the generator now reads cached formula values from one workbook instance and writes updates through a separate non-`data_only` workbook instance. That preserves existing workbook formulas while still allowing the script to update status, `published_date`, `width_px`, and `height_px`.
+When `--write` is used, the generator now reads cached formula values from one workbook instance and writes updates through a separate non-`data_only` workbook instance for workbook-backed outputs. Moment publish status and `published_date` are now written back to moment source front matter rather than to the workbook.
+
+Moment canonical source model:
+
+- source prose file: `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
+- canonical `moment_id`: filename stem
+- required front matter:
+  - `title`
+  - `status`
+  - `published_date`
+  - `date`
+- optional front matter:
+  - `date_display`
+  - `image_file`
+- default source image path:
+  - `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/images/<moment_id>.jpg`
+- when `image_file` is present:
+  - source image lookup uses that filename instead
+- public/generated moment image stem remains `<moment_id>`
 
 ## Useful Flags
 
@@ -41,7 +59,6 @@ When `--write` is used, the generator now reads cached formula values from one w
 - `--moment-ids`, `--moment-ids-file`
 - `--work-files-sheet` with default `WorkFiles`
 - `--work-links-sheet` with default `WorkLinks`
-- `--moments-sheet` with default `Moments`
 - `--moments-output-dir` with default `_moments`
 - `--moments-json-dir` with default `assets/moments/index`
   - writes per-moment JSON payloads at `assets/moments/index/<moment_id>.json`
@@ -135,6 +152,7 @@ The shared preflight currently stops the run when actionable catalogue rows cont
 - `Series.primary_work_id` values that do not resolve to a `Works` row
 - `Series.primary_work_id` values whose `Works.series_ids` do not include that series
 - `WorkDetails.work_id` values that do not resolve to `Works`
+- non-slug-safe moment source filenames under `moments/*.md`
 
 This preflight runs before generated files or workbook status/date updates are written, so those failures no longer appear after a partially written run.
 

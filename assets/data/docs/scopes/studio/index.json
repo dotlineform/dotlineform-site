@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T17:05:44Z",
+  "generated_at": "2026-04-01T19:35:07Z",
   "docs": [
     {
       "scope": "studio",
@@ -258,7 +258,7 @@
       "scope": "studio",
       "doc_id": "scripts-copy-draft-media",
       "title": "Copy Draft Media",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "sort_order": 30,
       "source_path": "scripts/scripts-copy-draft-media.md",

@@ -22,7 +22,7 @@ export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
 
 Two current CLI rules matter for almost every use case:
 
-- `build_catalogue.py` is now the default catalogue entrypoint. It plans workbook-backed generation and canonical source-media changes automatically from `var/build_catalogue_state.json`.
+- `build_catalogue.py` is now the default catalogue entrypoint. It plans workbook-backed work/series/detail generation plus file-backed moment generation automatically from `var/build_catalogue_state.json`.
 - `generate_work_pages.py` is best when workbook metadata changed and you mainly need generated repo artifacts refreshed.
 - `build_catalogue.py --plan` is the quickest way to inspect what the planner thinks changed before a write run.
 - `--force` is required when the affected `Works` or `Series` rows are already `published` and you need page stubs, work-file staging, or work-link publishing loops to run again.
@@ -30,7 +30,8 @@ Two current CLI rules matter for almost every use case:
 
 Planner boundary:
 
-- workbook-row edits in `Works`, `Series`, `WorkDetails`, `WorkFiles`, `WorkLinks`, and `Moments` are now picked up automatically by `build_catalogue.py`
+- workbook-row edits in `Works`, `Series`, `WorkDetails`, `WorkFiles`, and `WorkLinks` are now picked up automatically by `build_catalogue.py`
+- moment front-matter edits in `moments/*.md` are now picked up automatically by `build_catalogue.py`
 - source-image changes for works, work details, and moments are now picked up automatically once planner media state has been initialized
 - removed rows are now picked up for planner-driven cleanup when you use `build_catalogue.py` without explicit `--work-ids`, `--series-ids`, or `--moment-ids` fences
 - canonical source media under `DOTLINEFORM_PROJECTS_BASE_DIR` is never in cleanup scope

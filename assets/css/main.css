@@ -1442,6 +1442,7 @@ figure.diagram figcaption{
   border-radius: 6px;
   display: block;
   align-self: center;
+  background: var(--panel-2);
 }
 
 .workIndexItem__title,
@@ -1780,6 +1781,10 @@ pre.theme-text{
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.seriesGrid__img--placeholder{
+  background: var(--panel-2);
 }
 
 .seriesGridFooter{

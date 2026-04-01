@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8812c6e7f851dc70dada0bb03ffa41e8",
-    "generated_at_utc": "2026-04-01T15:51:26Z",
+    "version": "blake2b-b2a947557af37533d8af1e02fd816ea9",
+    "generated_at_utc": "2026-04-01T19:35:50Z",
     "count": 64
   },
   "entries": [
@@ -500,10 +500,10 @@
       "kind": "doc",
       "title": "Copy Draft Media",
       "href": "/docs/?scope=studio&doc=scripts-copy-draft-media",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-03-31 • Scripts",
+      "display_meta": "2026-04-01 • Scripts",
       "search_terms": [
         "scripts-copy-draft-media",
         "scripts",
@@ -511,12 +511,12 @@
         "draft",
         "media",
         "copy draft media",
-        "2026-03-31",
+        "2026-04-01",
         "2026",
-        "03",
-        "31"
+        "04",
+        "01"
       ],
-      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-03-31 2026 03 31"
+      "search_text": "scripts-copy-draft-media scripts copy draft media copy draft media 2026-04-01 2026 04 01"
     },
     {
       "id": "css-primitives",

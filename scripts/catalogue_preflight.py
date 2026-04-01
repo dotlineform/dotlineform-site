@@ -7,12 +7,23 @@ from typing import Any, Dict, List, Sequence
 import openpyxl
 
 try:
+    from moment_sources import parse_front_matter
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.moment_sources import parse_front_matter
+
+try:
+    from pipeline_config import env_var_value, load_pipeline_config, source_moments_root_subdir
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import env_var_value, load_pipeline_config, source_moments_root_subdir
+
+try:
     from series_ids import normalize_series_id, parse_series_ids
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id, parse_series_ids
 
 
 ACTIONABLE_STATUSES = {"draft", "published"}
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 
 
 def normalize_text(value: Any) -> str:
@@ -94,6 +105,7 @@ def validate_catalogue_workbook(
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
     moments_sheet: str = "Moments",
+    projects_base_dir: Path | None = None,
 ) -> List[str]:
     errors: List[str] = []
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
@@ -101,7 +113,6 @@ def validate_catalogue_workbook(
     works_ws = _ensure_sheet(wb, works_sheet, errors)
     series_ws = _ensure_sheet(wb, series_sheet, errors)
     work_details_ws = _ensure_sheet(wb, work_details_sheet, errors)
-    moments_ws = _ensure_sheet(wb, moments_sheet, errors)
 
     if errors:
         return errors
@@ -109,15 +120,12 @@ def validate_catalogue_workbook(
     works_hi = header_map(works_ws)
     series_hi = header_map(series_ws)
     work_details_hi = header_map(work_details_ws)
-    moments_hi = header_map(moments_ws)
 
     if not _ensure_columns(works_sheet, works_hi, ["work_id", "status", "series_ids"], errors):
         return errors
     if not _ensure_columns(series_sheet, series_hi, ["series_id", "status", "primary_work_id"], errors):
         return errors
     if not _ensure_columns(work_details_sheet, work_details_hi, ["work_id", "detail_id", "status"], errors):
-        return errors
-    if not _ensure_columns(moments_sheet, moments_hi, ["moment_id", "status"], errors):
         return errors
 
     all_series_ids: set[str] = set()
@@ -221,17 +229,29 @@ def validate_catalogue_workbook(
                 f"{work_details_sheet} row {row_number}: work_id {work_id!r} not found in {works_sheet}"
             )
 
-    for row_number, row in enumerate(moments_ws.iter_rows(min_row=2, values_only=True), start=2):
-        if normalize_status(cell(row, moments_hi, "status")) not in ACTIONABLE_STATUSES:
-            continue
-        raw_moment_id = cell(row, moments_hi, "moment_id")
-        if is_empty(raw_moment_id):
-            continue
-        moment_id = normalize_text(raw_moment_id).lower()
-        if not moment_id:
-            continue
-        if not is_slug_safe(moment_id):
-            errors.append(f"{moments_sheet} row {row_number}: moment_id is not slug-safe: {raw_moment_id!r}")
+    configured_projects_base_dir = (
+        projects_base_dir
+        if projects_base_dir is not None
+        else Path(env_var_value(PIPELINE_CONFIG, "projects_base_dir")).expanduser()
+        if env_var_value(PIPELINE_CONFIG, "projects_base_dir")
+        else None
+    )
+    if configured_projects_base_dir is not None:
+        moments_root = configured_projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
+        if moments_root.exists():
+            for path in sorted(moments_root.glob("*.md")):
+                moment_id = path.stem.strip().lower()
+                if not moment_id:
+                    continue
+                if not is_slug_safe(moment_id):
+                    errors.append(f"Moment source file {path.name!r}: moment_id is not slug-safe")
+                    continue
+                front_matter = parse_front_matter(path)
+                status = normalize_status(front_matter.get("status"))
+                if status and status not in ACTIONABLE_STATUSES:
+                    errors.append(
+                        f"Moment source file {path.name!r}: invalid status {front_matter.get('status')!r}; expected draft or published"
+                    )
 
     return errors
 
@@ -243,6 +263,7 @@ def raise_if_invalid_catalogue_workbook(
     series_sheet: str = "Series",
     work_details_sheet: str = "WorkDetails",
     moments_sheet: str = "Moments",
+    projects_base_dir: Path | None = None,
 ) -> None:
     errors = validate_catalogue_workbook(
         xlsx_path,
@@ -250,6 +271,7 @@ def raise_if_invalid_catalogue_workbook(
         series_sheet=series_sheet,
         work_details_sheet=work_details_sheet,
         moments_sheet=moments_sheet,
+        projects_base_dir=projects_base_dir,
     )
     if not errors:
         return

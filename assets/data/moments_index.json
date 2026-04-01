@@ -1,9 +1,9 @@
 {
   "header": {
     "schema": "moments_index_v1",
-    "version": "blake2b-aca496c7f12ea2a874482dbae72c9a1c",
-    "generated_at_utc": "2026-04-01T10:39:21Z",
-    "count": 56
+    "version": "blake2b-dbc3b4c1c3bbc42b2f7f47a61327a26c",
+    "generated_at_utc": "2026-04-01T19:22:39Z",
+    "count": 57
   },
   "moments": {
     "13-moments-in-october": {
@@ -18,6 +18,11 @@
       "date": "2020-01-01",
       "date_display": "c. 2020?",
       "thumb_id": "4-stories"
+    },
+    "4-stories-copy": {
+      "moment_id": "4-stories-copy",
+      "title": "4-stories-copy",
+      "thumb_id": "4-stories-copy"
     },
     "a-beautiful-route": {
       "moment_id": "a-beautiful-route",
@@ -316,16 +321,16 @@
       "date_display": "c. 2014",
       "thumb_id": "we-make-ghosts"
     },
+    "where": {
+      "moment_id": "where",
+      "title": "where?",
+      "date": "2019-07-02"
+    },
     "where-words-end": {
       "moment_id": "where-words-end",
       "title": "where words end",
       "date": "2018-05-06",
       "thumb_id": "where-words-end"
-    },
-    "where": {
-      "moment_id": "where",
-      "title": "where?",
-      "date": "2019-07-02"
     },
     "will-we-leave-residues": {
       "moment_id": "will-we-leave-residues",

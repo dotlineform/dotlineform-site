@@ -112,6 +112,19 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id
 
+try:
+    from moment_sources import (
+        build_moment_sources_manifest_payload,
+        scan_moment_source_files,
+        write_moment_sources_manifest,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.moment_sources import (
+        build_moment_sources_manifest_payload,
+        scan_moment_source_files,
+        write_moment_sources_manifest,
+    )
+
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
 MEDIA_BASE_DIR_ENV_NAME = env_var_name(PIPELINE_CONFIG, "media_base_dir")
@@ -339,40 +352,6 @@ def collect_draft_detail_uids(
     return out
 
 
-def collect_draft_moment_ids(
-    xlsx_path: Path,
-    allowed_ids: Set[str] | None = None,
-    include_published: bool = False,
-) -> Set[str]:
-    """Collect draft moment_ids from Moments.status."""
-    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
-    if "Moments" not in wb.sheetnames:
-        return set()
-    ws = wb["Moments"]
-    hi = header_map(ws)
-
-    required = ["moment_id", "status"]
-    missing = [c for c in required if c not in hi]
-    if missing:
-        raise SystemExit(f"Moments sheet missing required columns: {', '.join(missing)}")
-
-    out: Set[str] = set()
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        raw_moment_id = row[hi["moment_id"]]
-        if is_empty(raw_moment_id):
-            continue
-        mid = normalize_text(raw_moment_id).lower()
-        if not mid:
-            continue
-        if allowed_ids is not None and mid not in allowed_ids:
-            continue
-        status = normalize_status(row[hi["status"]])
-        if status != "draft" and not (include_published and status == "published"):
-            continue
-        out.add(mid)
-    return out
-
-
 def collect_draft_series_ids(xlsx_path: Path, allowed_ids: Set[str] | None = None) -> Set[str]:
     """Collect draft series_ids from Series.status."""
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
@@ -566,6 +545,7 @@ def build_workbook_state(
     projects_base_dir: Path,
     previous_media: Dict[str, Any] | None = None,
     previous_prose: Dict[str, Any] | None = None,
+    moment_source_index: Dict[str, Dict[str, Any]] | None = None,
 ) -> Dict[str, Any]:
     wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
 
@@ -592,6 +572,7 @@ def build_workbook_state(
     works_root = projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)
     moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+    moment_source_index = moment_source_index if moment_source_index is not None else scan_moment_source_files(moments_root)
     works_prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
     work_project_folder_by_id: Dict[str, str] = {}
 
@@ -737,33 +718,33 @@ def build_workbook_state(
             work_id = slug_id(raw_work_id)
             work_links_rows.setdefault(work_id, []).append(payload)
 
-    if "Moments" in wb.sheetnames:
-        ws = wb["Moments"]
-        headers = workbook_headers(ws)
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            payload = normalize_row_payload(headers, row)
-            raw_moment_id = payload.get("moment_id")
-            if is_empty(raw_moment_id):
-                continue
-            moment_id = normalize_text(raw_moment_id).lower()
-            if not moment_id:
-                continue
-            moments[moment_id] = {
-                "hash": stable_payload_hash(payload),
-                "status": normalize_status(payload.get("status")),
-            }
-            project_filename = normalize_text(payload.get("project_filename")) or f"{moment_id}.jpg"
-            media_moments[moment_id] = fingerprint_media_path(
-                moments_images_root / project_filename,
-                base_dir=projects_base_dir,
-                previous_entry=previous_media_moments.get(moment_id),
-                missing_reason="missing_project_filename",
-            )
-            prose_moments[moment_id] = fingerprint_media_path(
-                moments_root / f"{moment_id}.md",
-                base_dir=projects_base_dir,
-                previous_entry=previous_prose_moments.get(moment_id),
-            )
+    for moment_id, source_entry in moment_source_index.items():
+        effective_payload = {
+            "moment_id": moment_id,
+            "title": normalize_text(source_entry.get("title")),
+            "status": normalize_status(source_entry.get("status")),
+            "published_date": normalize_text(source_entry.get("published_date")),
+            "date": normalize_text(source_entry.get("date")),
+            "date_display": normalize_text(source_entry.get("date_display")),
+            "image_alt": normalize_text(source_entry.get("image_alt")),
+            "source_image_file": normalize_text(source_entry.get("source_image_file")) or f"{moment_id}.jpg",
+        }
+        moments[moment_id] = {
+            "hash": stable_payload_hash(effective_payload),
+            "status": normalize_status(effective_payload.get("status")),
+        }
+        project_filename = normalize_text(effective_payload.get("source_image_file")) or f"{moment_id}.jpg"
+        media_moments[moment_id] = fingerprint_media_path(
+            moments_images_root / project_filename,
+            base_dir=projects_base_dir,
+            previous_entry=previous_media_moments.get(moment_id),
+            missing_reason="missing_project_filename",
+        )
+        prose_moments[moment_id] = fingerprint_media_path(
+            moments_root / f"{moment_id}.md",
+            base_dir=projects_base_dir,
+            previous_entry=previous_prose_moments.get(moment_id),
+        )
 
     work_files = {
         work_id: {"hash": stable_payload_hash(rows), "count": len(rows)}
@@ -1561,11 +1542,14 @@ def main() -> int:
     previous_state_migration = previous_state.get("_migration", {}) if previous_state else {}
     previous_media_inputs = previous_inputs.get("media", {}) if isinstance(previous_inputs.get("media"), dict) else {}
     previous_prose_inputs = previous_inputs.get("prose", {}) if isinstance(previous_inputs.get("prose"), dict) else {}
+    projects_base_dir_resolved = Path(projects_base).expanduser() if projects_base else Path(".")
+    moment_source_index = scan_moment_source_files(projects_base_dir_resolved / source_moments_root_subdir(PIPELINE_CONFIG))
     current_state = build_workbook_state(
         xlsx_path,
-        projects_base_dir=Path(projects_base).expanduser() if projects_base else Path("."),
+        projects_base_dir=projects_base_dir_resolved,
         previous_media=previous_media_inputs,
         previous_prose=previous_prose_inputs,
+        moment_source_index=moment_source_index,
     )
     bootstrap_state = previous_state is None
     legacy_state_loaded = bool(previous_state_migration.get("legacy_state_loaded"))
@@ -1839,7 +1823,7 @@ def main() -> int:
                         f"it will be rewritten with planner_version {BUILD_STATE_PLANNER_VERSION} on the next successful write run"
                     )
         print(f"Selected modes: {', '.join(sorted(selected_modes))}")
-        print("Workbook changes:")
+        print("Record changes:")
         print(f"- works: {summarize_diff_counts(work_diff)}")
         print(f"- series: {summarize_diff_counts(series_diff)}")
         print(f"- work_details: {summarize_diff_counts(detail_diff)}")
@@ -1903,9 +1887,9 @@ def main() -> int:
         return 0
     confirm_continue(no_confirm=bool(args.no_confirm))
 
-    print("\n==> Workbook Preflight")
-    raise_if_invalid_catalogue_workbook(xlsx_path)
-    print("Workbook preflight passed.")
+    print("\n==> Workbook/Source Preflight")
+    raise_if_invalid_catalogue_workbook(xlsx_path, projects_base_dir=projects_base_dir_resolved)
+    print("Workbook/source preflight passed.")
 
     log_event(
         repo_root,
@@ -1939,6 +1923,16 @@ def main() -> int:
         copied_moment_ids_file = tmp_dir / "copied_moment_ids.txt"
         generate_moment_ids_file = tmp_dir / "generate_moment_ids.txt"
         generate_ids_file = tmp_dir / "generate_ids.txt"
+        moment_sources_manifest_file = tmp_dir / "moment_sources_manifest.json"
+
+        write_moment_sources_manifest(
+            moment_sources_manifest_file,
+            build_moment_sources_manifest_payload(
+                moments_root=projects_base_dir_resolved / source_moments_root_subdir(PIPELINE_CONFIG),
+                moments_images_root=projects_base_dir_resolved / source_moments_images_subdir(PIPELINE_CONFIG),
+                source_index=moment_source_index,
+            ),
+        )
 
         draft_ids = set(work_media_candidate_ids)
         draft_ids_file.write_text(
@@ -2080,6 +2074,8 @@ def main() -> int:
                         "moment",
                         "--ids-file",
                         str(draft_moment_ids_file),
+                        "--moment-sources-manifest",
+                        str(moment_sources_manifest_file),
                         "--copied-ids-file",
                         str(copied_moment_ids_file),
                     ]
@@ -2167,6 +2163,7 @@ def main() -> int:
             generate_cmd = [py, str(generate_script), str(xlsx_path)]
             generate_cmd += ["--work-ids-file", str(generate_ids_file)]
             generate_cmd += ["--moment-ids-file", str(generate_moment_ids_file)]
+            generate_cmd += ["--moment-sources-manifest", str(moment_sources_manifest_file)]
             generate_only_artifacts: list[str] = []
             if generate_ids:
                 generate_only_artifacts.extend(["work-pages", "work-files", "work-links", "work-json"])

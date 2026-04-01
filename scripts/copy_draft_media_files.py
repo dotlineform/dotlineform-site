@@ -5,7 +5,7 @@ Copy and rename draft media files from data/works.xlsx.
 Modes:
 - work:        projects/[project_folder]/[project_filename] -> works/make_srcset_images/[work_id][.ext]
 - work_details: projects/[work.project_folder]/[project_subfolder]/[project_filename] -> work_details/make_srcset_images/[work_id]-[detail_id][.ext]
-- moment:      moments/images/[moment_id].jpg -> moments/make_srcset_images/[moment_id][.ext]
+- moment:      moment source front matter + moments/images/[image_file] -> moments/make_srcset_images/[moment_id][.ext]
 
 Use --ids-file to limit processing to selected IDs (one per line):
 - work: work_id
@@ -47,6 +47,7 @@ try:
         load_pipeline_config,
         media_mode_input_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_root_subdir,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -56,8 +57,14 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         load_pipeline_config,
         media_mode_input_subdir,
         source_moments_images_subdir,
+        source_moments_root_subdir,
         source_works_root_subdir,
     )
+
+try:
+    from moment_sources import load_moment_sources_manifest, scan_moment_source_files
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.moment_sources import load_moment_sources_manifest, scan_moment_source_files
 
 
 # Source roots:
@@ -308,33 +315,34 @@ def copy_work_details(wb, selected_ids: Optional[Set[str]], keep_ext: bool, writ
     return total, copied, missing_src
 
 
-def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, write: bool, copied_ids: List[str]) -> tuple[int, int, int]:
-    """Copy moment source images to moments/make_srcset_images."""
-    required = ["moment_id"]
-    missing = [c for c in required if c not in cols]
-    if missing:
-        raise SystemExit(f"Missing required columns in Moments sheet: {', '.join(missing)}")
-
+def copy_moments_from_manifest(
+    moments: Dict[str, Dict[str, Any]],
+    selected_ids: Optional[Set[str]],
+    keep_ext: bool,
+    write: bool,
+    copied_ids: List[str],
+) -> tuple[int, int, int]:
+    """Copy moment source images using a prebuilt source manifest."""
     dest_dir = WORKS_BASE_DIR / media_mode_input_subdir(PIPELINE_CONFIG, "moment")
     if write:
         dest_dir.mkdir(parents=True, exist_ok=True)
 
     total = copied = missing_src = 0
-    for row_cells in ws.iter_rows(min_row=2):
-        row = [cell.value for cell in row_cells]
-        mid = moment_id(row[cols["moment_id"]])
+    for mid in sorted(moments.keys()):
         if not mid:
             continue
         if selected_ids is not None and mid not in selected_ids:
             continue
 
-        filename = f"{mid}.jpg"
-        src = PROJECTS_BASE_DIR / source_moments_images_subdir(PIPELINE_CONFIG) / filename
-        ext = Path(filename).suffix
+        record = moments[mid]
+        source_image_path = normalize_text(record.get("source_image_path"))
+        source_image_file = normalize_text(record.get("source_image_file")) or f"{mid}.jpg"
+        src = Path(source_image_path) if source_image_path else (PROJECTS_BASE_DIR / source_moments_images_subdir(PIPELINE_CONFIG) / source_image_file)
+        ext = src.suffix or Path(source_image_file).suffix
         dest = (dest_dir / f"{mid}{ext}") if keep_ext else (dest_dir / mid)
+
         total += 1
         if not src.exists():
-            print(f"Missing source: {display_projects_path(src)}")
             missing_src += 1
             continue
 
@@ -348,6 +356,25 @@ def copy_moments(ws, cols, selected_ids: Optional[Set[str]], keep_ext: bool, wri
         else:
             print_transfer("Dry-run", src, dest)
     return total, copied, missing_src
+
+
+def copy_moments_from_sources(
+    selected_ids: Optional[Set[str]],
+    keep_ext: bool,
+    write: bool,
+    copied_ids: List[str],
+) -> tuple[int, int, int]:
+    moments_root = PROJECTS_BASE_DIR / source_moments_root_subdir(PIPELINE_CONFIG)
+    moments = scan_moment_source_files(moments_root)
+    manifest_like: Dict[str, Dict[str, Any]] = {}
+    for mid, record in moments.items():
+        source_image_file = normalize_text(record.get("source_image_file")) or f"{mid}.jpg"
+        manifest_like[mid] = {
+            "moment_id": mid,
+            "source_image_file": source_image_file,
+            "source_image_path": str(PROJECTS_BASE_DIR / source_moments_images_subdir(PIPELINE_CONFIG) / source_image_file),
+        }
+    return copy_moments_from_manifest(manifest_like, selected_ids, keep_ext, write, copied_ids)
 
 
 def main() -> int:
@@ -379,6 +406,11 @@ def main() -> int:
         default="",
         help="Optional output manifest of copied IDs (one ID per line).",
     )
+    parser.add_argument(
+        "--moment-sources-manifest",
+        default="",
+        help="Optional JSON manifest of resolved moment source records.",
+    )
     args = parser.parse_args()
 
     if PROJECTS_BASE_DIR_ENV == "":
@@ -390,25 +422,39 @@ def main() -> int:
     if args.keep_ext:
         keep_ext = True
 
-    wb = openpyxl.load_workbook(WORKBOOK_PATH, read_only=False, data_only=True)
     selected_ids = read_selected_ids(args.ids_file, args.mode)
     copied_ids: List[str] = []
 
     if args.mode == "work":
+        wb = openpyxl.load_workbook(WORKBOOK_PATH, read_only=False, data_only=True)
         if "Works" not in wb.sheetnames:
             raise SystemExit("Worksheet not found: 'Works'")
         ws = wb["Works"]
         total, copied, missing_src = copy_work(ws, header_map(ws), selected_ids, keep_ext, args.write, copied_ids)
         label = "Work rows"
     elif args.mode == "work_details":
+        wb = openpyxl.load_workbook(WORKBOOK_PATH, read_only=False, data_only=True)
         total, copied, missing_src = copy_work_details(wb, selected_ids, keep_ext, args.write, copied_ids)
         label = "Detail rows"
     else:
-        if "Moments" not in wb.sheetnames:
-            raise SystemExit("Worksheet not found: 'Moments'")
-        ws = wb["Moments"]
-        total, copied, missing_src = copy_moments(ws, header_map(ws), selected_ids, keep_ext, args.write, copied_ids)
-        label = "Moment rows"
+        manifest_path = Path(args.moment_sources_manifest).expanduser() if args.moment_sources_manifest else None
+        if manifest_path is not None:
+            total, copied, missing_src = copy_moments_from_manifest(
+                load_moment_sources_manifest(manifest_path),
+                selected_ids,
+                keep_ext,
+                args.write,
+                copied_ids,
+            )
+            label = "Moment sources"
+        else:
+            total, copied, missing_src = copy_moments_from_sources(
+                selected_ids,
+                keep_ext,
+                args.write,
+                copied_ids,
+            )
+            label = "Moment sources"
 
     if args.copied_ids_file:
         ids_path = Path(args.copied_ids_file).expanduser()
@@ -416,7 +462,10 @@ def main() -> int:
         ids_path.write_text("\n".join(copied_ids) + ("\n" if copied_ids else ""), encoding="utf-8")
         print(f"Wrote copied IDs manifest: {display_path(ids_path)} ({len(copied_ids)} ids)")
 
-    print(f"{label}: {total}, copied: {copied}, missing source: {missing_src}")
+    if args.mode == "moment":
+        print(f"{label}: {total}, copied: {copied}")
+    else:
+        print(f"{label}: {total}, copied: {copied}, missing source: {missing_src}")
     if not args.write:
         print("Dry-run only. Re-run with --write to copy files.")
     return 0

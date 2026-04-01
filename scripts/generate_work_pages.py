@@ -18,7 +18,7 @@ Lightweight moments index JSON is written to assets/data/moments_index.json (obj
 - WorkDetails: additional detail images associated with a work
 - WorkFiles: downloadable files associated with a work
 - WorkLinks: published links associated with a work
-- Moments: standalone moment entries
+- Moments: standalone moment entries sourced from `moments/*.md` front matter
 
 YAML typing rules enforced by this script (so Excel cells do NOT need quoting):
 - Numbers are emitted unquoted for: year, height_cm, width_cm, depth_cm
@@ -49,11 +49,10 @@ Common flags:
 - --work-ids / --work-ids-file: limit work/work_details generation scope
 - --series-ids / --series-ids-file: limit series page/JSON scope
 - --moment-ids / --moment-ids-file: limit moments generation scope
-- --moments-sheet: worksheet name for moments (default: Moments)
 - --moments-output-dir: moment page destination
 - --moments-json-dir: moment JSON output destination
 - --moments-index-json-path: moments index JSON output destination
-- --projects-base-dir: base path used for dimension lookups and WorkFiles source lookup
+- --projects-base-dir: base path used for work/work_details dimension lookups, WorkFiles source lookup, and moment source discovery
 - --media-base-dir: base path used for staging work download files into works/files
 
 Path variables used by the script:
@@ -128,6 +127,16 @@ try:
     from series_ids import normalize_series_id
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id
+
+try:
+    from moment_sources import load_moment_sources_manifest, scan_moment_source_files
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.moment_sources import load_moment_sources_manifest, scan_moment_source_files
+
+try:
+    from moment_sources import update_moment_source_front_matter
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.moment_sources import update_moment_source_front_matter
 
 
 PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
@@ -832,7 +841,7 @@ def main() -> None:
     ap.add_argument("--work-details-sheet", default="WorkDetails", help="Worksheet name for work detail metadata")
     ap.add_argument("--work-files-sheet", default="WorkFiles", help="Worksheet name for work download-file metadata")
     ap.add_argument("--work-links-sheet", default="WorkLinks", help="Worksheet name for work published-link metadata")
-    ap.add_argument("--moments-sheet", default="Moments", help="Worksheet name for moment metadata")
+    ap.add_argument("--moments-sheet", default="Moments", help="Legacy compatibility flag; moments are now sourced from moment markdown front matter.")
 
     # Output
     ap.add_argument("--output-dir", default="_works", help="Output folder for generated work pages")
@@ -893,6 +902,11 @@ def main() -> None:
         "--moment-ids-file",
         default="",
         help="Path to moment_ids file (one id per line). If set, only these moments are processed.",
+    )
+    ap.add_argument(
+        "--moment-sources-manifest",
+        default="",
+        help="Optional JSON manifest of resolved moment source records.",
     )
     ap.add_argument(
         "--only",
@@ -1140,14 +1154,12 @@ def main() -> None:
     work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb_values.sheetnames else []
     work_files_rows = read_sheet_rows(args.work_files_sheet)
     work_links_rows = read_sheet_rows(args.work_links_sheet)
-    moments_rows = read_sheet_rows(args.moments_sheet)
     series_ws = wb_write[args.series_sheet] if wb_write is not None else wb_values[args.series_sheet]
     work_details_ws = (
         wb_write[args.work_details_sheet] if wb_write is not None else wb_values[args.work_details_sheet]
     ) if args.work_details_sheet in wb_values.sheetnames else None
     work_files_ws = wb_write[args.work_files_sheet] if wb_write is not None else wb_values[args.work_files_sheet]
     work_links_ws = wb_write[args.work_links_sheet] if wb_write is not None else wb_values[args.work_links_sheet]
-    moments_ws = wb_write[args.moments_sheet] if wb_write is not None else wb_values[args.moments_sheet]
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
@@ -1158,7 +1170,6 @@ def main() -> None:
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
     work_files_hi = build_header_index(work_files_rows) if work_files_rows else {}
     work_links_hi = build_header_index(work_links_rows) if work_links_rows else {}
-    moments_hi = build_header_index(moments_rows) if moments_rows else {}
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
@@ -1179,9 +1190,6 @@ def main() -> None:
     missing_work_links = [c for c in required_work_links if c not in work_links_hi]
     if missing_work_links:
         raise SystemExit(f"{args.work_links_sheet} sheet missing required columns: {', '.join(missing_work_links)}")
-    if moments_rows and "status" not in moments_hi:
-        raise SystemExit("Moments sheet missing required column: status")
-
     series_duplicate_rows: Dict[str, List[int]] = {}
     if series_rows and len(series_rows) > 1 and "series_id" in series_hi:
         first_row_by_series_id: Dict[str, int] = {}
@@ -1678,6 +1686,12 @@ def main() -> None:
             if mid.strip()
         }
     explicit_moment_filter = bool(args.moment_ids_file or args.moment_ids)
+    moment_sources_manifest_records: Dict[str, Dict[str, Any]] = {}
+    if args.moment_sources_manifest:
+        manifest_path = Path(args.moment_sources_manifest).expanduser()
+        if not manifest_path.exists():
+            raise SystemExit(f"moment sources manifest not found: {manifest_path}")
+        moment_sources_manifest_records = load_moment_sources_manifest(manifest_path)
 
     # If caller scopes by series but does not provide an explicit work filter:
     # - when work artifacts are explicitly selected via --only, derive selected work_ids from those series
@@ -1712,6 +1726,7 @@ def main() -> None:
         series_sheet=args.series_sheet,
         work_details_sheet=args.work_details_sheet,
         moments_sheet=args.moments_sheet,
+        projects_base_dir=Path(args.projects_base_dir).expanduser(),
     )
 
     works_width_px_idx = works_hi.get("width_px")
@@ -2925,58 +2940,61 @@ def main() -> None:
     # - image_alt
     # - width_px, height_px
     # - project_folder, project_subfolder, project_filename, work_id (for source image resolution)
-    image_file_col = None
-    image_alt_col = None
-    project_filename_col = None
+    moment_source_records: List[Dict[str, Any]] = []
+    projects_base_dir = Path(args.projects_base_dir).expanduser()
+    moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
+    moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+    source_moment_index = scan_moment_source_files(moments_root)
     if not run_moments and not run_moments_index_json:
         if selected_artifacts is not None and not run_moments_artifact and not run_moments_index_json:
             print("Moment pages/JSON skipped: not selected by --only.")
         else:
             print("Moment pages/JSON skipped: scoped run without --moment-ids/--moment-ids-file.")
-    elif not moments_rows or len(moments_rows) < 2 or moments_ws is None:
-        print("No moment artifacts to generate (Moments sheet empty or missing).")
+    elif not moment_sources_manifest_records and not source_moment_index:
+        print("No moment artifacts to generate (no moment source files found).")
     else:
-        required_moments = [
-            "moment_id",
-            "title",
-            "status",
-            "published_date",
-            "date",
-            "date_display",
-            "width_px",
-            "height_px",
-        ]
-        missing_moments = [c for c in required_moments if c not in moments_hi]
-        if missing_moments:
-            raise SystemExit(f"Moments sheet missing required columns: {', '.join(missing_moments)}")
+        def collect_moment_source_records() -> List[Dict[str, Any]]:
+            records: List[Dict[str, Any]] = []
+            if moment_sources_manifest_records:
+                for moment_id in sorted(moment_sources_manifest_records.keys()):
+                    manifest_record = moment_sources_manifest_records[moment_id]
+                    records.append({
+                        "moment_id": moment_id,
+                        "title": coerce_string(manifest_record.get("title")) or moment_id,
+                        "status": normalize_status(manifest_record.get("status")),
+                        "published_date": parse_date(manifest_record.get("published_date")),
+                        "date": parse_date(manifest_record.get("date")),
+                        "date_display": coerce_string(manifest_record.get("date_display")),
+                        "width_px": coerce_int(manifest_record.get("width_px")),
+                        "height_px": coerce_int(manifest_record.get("height_px")),
+                        "image_file": coerce_string(manifest_record.get("image_file")) or f"{moment_id}.jpg",
+                        "source_image_file": coerce_string(manifest_record.get("source_image_file")) or f"{moment_id}.jpg",
+                        "image_alt": coerce_string(manifest_record.get("image_alt")),
+                        "source_prose_path": Path(coerce_string(manifest_record.get("source_prose_path")) or (moments_root / f"{moment_id}.md")),
+                        "source_image_path": Path(coerce_string(manifest_record.get("source_image_path")) or (moments_images_root / (coerce_string(manifest_record.get('source_image_file')) or f"{moment_id}.jpg"))),
+                    })
+                return records
 
-        title_col = "title"
-        moment_id_col = "moment_id"
-        date_col = "date"
-        date_display_col = "date_display"
-        image_file_col = first_present_col(
-            moments_hi,
-            ["image_file", "image_filename", "images_file", "images_filename", "hero_file", "file"],
-        )
-        image_alt_col = first_present_col(moments_hi, ["image_alt", "alt"])
-        project_filename_col = first_present_col(moments_hi, ["project_filename"])
+            for moment_id in sorted(source_moment_index.keys()):
+                source_record = source_moment_index[moment_id]
+                records.append({
+                    "moment_id": moment_id,
+                    "title": coerce_string(source_record.get("title")) or moment_id,
+                    "status": normalize_status(source_record.get("status")),
+                    "published_date": parse_date(source_record.get("published_date")),
+                    "date": parse_date(source_record.get("date")),
+                    "date_display": coerce_string(source_record.get("date_display")),
+                    "width_px": None,
+                    "height_px": None,
+                    "image_file": f"{moment_id}.jpg",
+                    "source_image_file": coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg",
+                    "image_alt": coerce_string(source_record.get("image_alt")),
+                    "source_prose_path": Path(coerce_string(source_record.get("source_prose_path")) or (moments_root / f"{moment_id}.md")),
+                    "source_image_path": moments_images_root / ((coerce_string(source_record.get("source_image_file")) or f"{moment_id}.jpg")),
+                })
+            return records
 
-        moments_published_date_idx = moments_hi.get("published_date")
-        moments_width_px_idx = moments_hi.get("width_px")
-        moments_height_px_idx = moments_hi.get("height_px")
-        if args.write and run_moments:
-            if moments_width_px_idx is None:
-                moments_width_px_idx = moments_ws.max_column
-                moments_ws.cell(row=1, column=moments_width_px_idx + 1, value="width_px")
-                moments_hi["width_px"] = moments_width_px_idx
-            if moments_height_px_idx is None:
-                moments_height_px_idx = moments_ws.max_column
-                moments_ws.cell(row=1, column=moments_height_px_idx + 1, value="height_px")
-                moments_hi["height_px"] = moments_height_px_idx
-
-        projects_base_dir = Path(args.projects_base_dir).expanduser()
-        moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
-        moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
+        moment_source_records = collect_moment_source_records()
 
         def is_actionable_moment_status(status_value: str) -> bool:
             if status_value == "draft":
@@ -2987,14 +3005,13 @@ def main() -> None:
 
         moments_pages_total = 0
         moments_json_total = 0
-        for mr in moments_rows[1:]:
-            mid_raw = cell(mr, moments_hi, "moment_id")
-            if is_empty(mid_raw):
+        for moment_entry in moment_source_records:
+            mid = str(moment_entry.get("moment_id") or "").strip().lower()
+            if not mid:
                 continue
-            mid = normalize_text(mid_raw).lower()
             if selected_moment_ids is not None and mid not in selected_moment_ids:
                 continue
-            status = normalize_status(cell(mr, moments_hi, "status"))
+            status = normalize_status(moment_entry.get("status"))
             if run_moments and is_actionable_moment_status(status):
                 moments_pages_total += 1
                 moments_json_total += 1
@@ -3003,27 +3020,24 @@ def main() -> None:
         moments_pages_skipped = 0
         moments_json_written = 0
         moments_json_skipped = 0
-        moments_status_updated = 0
-        moments_published_date_updated = 0
-        moments_dimensions_updated = 0
-        moments_published_date_missing_warned = False
+        moments_source_metadata_updated = 0
         moment_json_generated_at_utc = utc_timestamp_now()
         moments_processed = 0
 
-        for mr, mr_cells in zip(moments_rows[1:], moments_ws.iter_rows(min_row=2), strict=False):
-            mid_raw = cell(mr, moments_hi, "moment_id")
-            if is_empty(mid_raw):
+        for moment_entry in moment_source_records:
+            moment_id = str(moment_entry.get("moment_id") or "").strip().lower()
+            if not moment_id:
                 if run_moments:
                     moments_pages_skipped += 1
                     moments_json_skipped += 1
                 continue
-            mid = normalize_text(mid_raw).lower()
+            mid = moment_id
             if selected_moment_ids is not None and mid not in selected_moment_ids:
                 if run_moments:
                     moments_pages_skipped += 1
                     moments_json_skipped += 1
                 continue
-            status = normalize_status(cell(mr, moments_hi, "status"))
+            status = normalize_status(moment_entry.get("status"))
             moment_actionable = run_moments and is_actionable_moment_status(status)
             if not moment_actionable and run_moments:
                 moments_pages_skipped += 1
@@ -3031,62 +3045,43 @@ def main() -> None:
             if not moment_actionable:
                 continue
 
-            title = coerce_string(cell(mr, moments_hi, title_col)) if title_col else None
-            moment_id_raw = coerce_string(cell(mr, moments_hi, moment_id_col)) if moment_id_col else None
-            if moment_id_raw:
-                moment_id = moment_id_raw.strip().lower()
-                if not is_slug_safe(moment_id):
-                    raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id_raw!r}")
-            else:
-                raise SystemExit("Moments.moment_id is required")
-
-            if not moment_id:
-                if moment_actionable:
-                    moments_pages_skipped += 1
-                    moments_json_skipped += 1
-                continue
+            if not is_slug_safe(moment_id):
+                raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id!r}")
 
             moments_processed += 1
             prefix_m = f"[moment {moment_id}] "
             print(f"[moment {moments_processed}/{moments_pages_total}] {moment_id}", flush=True)
 
-            date_value = parse_date(cell(mr, moments_hi, date_col)) if date_col else None
-            date_display = coerce_string(cell(mr, moments_hi, date_display_col)) if date_display_col else None
-            width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
-            height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
+            title = coerce_string(moment_entry.get("title")) or moment_id
+            date_value = parse_date(moment_entry.get("date"))
+            date_display = coerce_string(moment_entry.get("date_display"))
+            width_px = coerce_int(moment_entry.get("width_px"))
+            height_px = coerce_int(moment_entry.get("height_px"))
 
             default_moment_filename = f"{moment_id}.jpg"
-            project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
-            if project_filename is None:
-                project_filename = default_moment_filename
-            image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
-            image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
+            image_file = coerce_string(moment_entry.get("image_file")) or default_moment_filename
+            source_image_file = coerce_string(moment_entry.get("source_image_file")) or default_moment_filename
+            image_alt = coerce_string(moment_entry.get("image_alt"))
 
             # Resolve source image for dimensions when possible.
             src_path: Optional[Path] = None
-            source_filename = project_filename or image_file
+            source_filename = source_image_file
             if source_filename:
-                src_path = moments_images_root / source_filename
+                source_image_path_value = coerce_string(moment_entry.get("source_image_path"))
+                src_path = Path(source_image_path_value) if source_image_path_value else (moments_images_root / source_filename)
+
+            source_image_exists = bool(src_path is not None and src_path.exists())
 
             if src_path is not None:
                 src_w, src_h = read_image_dims_px(src_path)
                 if src_w is not None and src_h is not None:
                     width_px = src_w
                     height_px = src_h
-                    if args.write and moment_actionable and moments_width_px_idx is not None and moments_height_px_idx is not None:
-                        prev_w = mr_cells[moments_width_px_idx].value if moments_width_px_idx < len(mr_cells) else None
-                        prev_h = mr_cells[moments_height_px_idx].value if moments_height_px_idx < len(mr_cells) else None
-                        if prev_w != src_w or prev_h != src_h:
-                            mr_cells[moments_width_px_idx].value = src_w
-                            mr_cells[moments_height_px_idx].value = src_h
-                            moments_dimensions_updated += 1
 
             images_list: List[Dict[str, Any]] = []
-            if image_file is None and src_path is not None and src_path.exists():
-                image_file = default_moment_filename
             if image_file is not None and image_alt is None:
                 image_alt = title or moment_id
-            if image_file is not None:
+            if image_file is not None and source_image_exists:
                 images_list.append(
                     {
                         "file": image_file,
@@ -3112,7 +3107,8 @@ def main() -> None:
             m_checksum = compute_work_checksum(moment_record)
             moment_page_fm["checksum"] = m_checksum
 
-            source_prose_path = moments_root / f"{moment_id}.md"
+            source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
+            source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_root / f"{moment_id}.md")
             if not source_prose_path.exists():
                 print(f"{prefix_m}WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moment.")
                 if moment_actionable:
@@ -3141,20 +3137,6 @@ def main() -> None:
                             m_path.write_text(m_content, encoding="utf-8")
                             print(f"{prefix_m}WRITE: {display_path(m_path)}")
                             moments_pages_written += 1
-
-                            status_idx = moments_hi.get("status")
-                            if status_idx is not None:
-                                status_was = normalize_status(mr_cells[status_idx].value)
-                                if status_was != "published":
-                                    mr_cells[status_idx].value = "published"
-                                    moments_status_updated += 1
-                                if (status_was != "published") or args.force:
-                                    if moments_published_date_idx is not None:
-                                        mr_cells[moments_published_date_idx].value = today
-                                        moments_published_date_updated += 1
-                                    elif not moments_published_date_missing_warned:
-                                        print("Warning: Moments sheet missing published_date column; skipping date updates.")
-                                        moments_published_date_missing_warned = True
                         else:
                             print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                             moments_pages_written += 1
@@ -3163,23 +3145,21 @@ def main() -> None:
                         m_path.write_text(m_content, encoding="utf-8")
                         print(f"{prefix_m}WRITE: {display_path(m_path)}")
                         moments_pages_written += 1
-
-                        status_idx = moments_hi.get("status")
-                        if status_idx is not None:
-                            status_was = normalize_status(mr_cells[status_idx].value)
-                            if status_was != "published":
-                                mr_cells[status_idx].value = "published"
-                                moments_status_updated += 1
-                            if (status_was != "published") or args.force:
-                                if moments_published_date_idx is not None:
-                                    mr_cells[moments_published_date_idx].value = today
-                                    moments_published_date_updated += 1
-                                elif not moments_published_date_missing_warned:
-                                    print("Warning: Moments sheet missing published_date column; skipping date updates.")
-                                    moments_published_date_missing_warned = True
                     else:
                         print(f"{prefix_m}DRY-RUN: would write {display_path(m_path)} (overwrite={m_exists})")
                         moments_pages_written += 1
+
+                if args.write:
+                    image_override = source_image_file if source_image_file != default_moment_filename else None
+                    if update_moment_source_front_matter(
+                        source_prose_path,
+                        title=title,
+                        status="published",
+                        published_date=today.isoformat(),
+                        image_file=image_override,
+                        preserve_existing_published_date=True,
+                    ):
+                        moments_source_metadata_updated += 1
 
                 content_html = render_markdown_with_jekyll(source_prose_path)
                 moment_json_record = build_moment_json_record(moment_record)
@@ -3210,15 +3190,8 @@ def main() -> None:
                         print(f"{prefix_m}DRY-RUN: would write moment JSON {display_path(out_json_path)} (overwrite={exists})")
                         moments_json_written += 1
 
-        if args.write and (moments_status_updated > 0 or moments_published_date_updated > 0 or moments_dimensions_updated > 0):
-            assert wb_write is not None
-            wb_write.save(xlsx_path)
-            if moments_status_updated > 0:
-                print(f"Updated moment status to 'published' for {moments_status_updated} row(s).")
-            if moments_published_date_updated > 0:
-                print(f"Set moment published_date for {moments_published_date_updated} row(s).")
-            if moments_dimensions_updated > 0:
-                print(f"Updated moment width_px/height_px for {moments_dimensions_updated} row(s).")
+        if args.write and moments_source_metadata_updated > 0:
+            print(f"Updated moment source front matter for {moments_source_metadata_updated} file(s).")
 
         if run_moments:
             print(
@@ -3233,39 +3206,34 @@ def main() -> None:
     moments_root = projects_base_dir / source_moments_root_subdir(PIPELINE_CONFIG)
     moments_images_root = projects_base_dir / source_moments_images_subdir(PIPELINE_CONFIG)
 
-    for mr in moments_rows[1:]:
-        mid_raw = cell(mr, moments_hi, "moment_id")
-        if is_empty(mid_raw):
+    for moment_entry in moment_source_records:
+        moment_id = str(moment_entry.get("moment_id") or "").strip().lower()
+        if not moment_id:
             continue
 
-        status = normalize_status(cell(mr, moments_hi, "status"))
+        status = normalize_status(moment_entry.get("status"))
         if status not in {"draft", "published"}:
             continue
 
-        moment_id_raw = coerce_string(cell(mr, moments_hi, "moment_id"))
-        if moment_id_raw is None:
-            continue
-        moment_id = moment_id_raw.strip().lower()
         if not is_slug_safe(moment_id):
-            raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id_raw!r}")
+            raise SystemExit(f"Moments.moment_id must be slug-safe; got: {moment_id!r}")
 
-        title = coerce_string(cell(mr, moments_hi, "title")) or moment_id
-        date_value = parse_date(cell(mr, moments_hi, "date"))
-        date_display = coerce_string(cell(mr, moments_hi, "date_display"))
-        width_px = coerce_int(cell(mr, moments_hi, "width_px")) if "width_px" in moments_hi else None
-        height_px = coerce_int(cell(mr, moments_hi, "height_px")) if "height_px" in moments_hi else None
-
-        default_moment_filename = f"{moment_id}.jpg"
-        project_filename = coerce_string(cell(mr, moments_hi, project_filename_col)) if project_filename_col else None
-        if project_filename is None:
-            project_filename = default_moment_filename
-        image_file = coerce_string(cell(mr, moments_hi, image_file_col)) if image_file_col else None
-        image_alt = coerce_string(cell(mr, moments_hi, image_alt_col)) if image_alt_col else None
+        title = coerce_string(moment_entry.get("title")) or moment_id
+        date_value = parse_date(moment_entry.get("date"))
+        date_display = coerce_string(moment_entry.get("date_display"))
+        width_px = coerce_int(moment_entry.get("width_px"))
+        height_px = coerce_int(moment_entry.get("height_px"))
+        image_file = coerce_string(moment_entry.get("image_file")) or f"{moment_id}.jpg"
+        source_image_file = coerce_string(moment_entry.get("source_image_file")) or f"{moment_id}.jpg"
+        image_alt = coerce_string(moment_entry.get("image_alt"))
 
         src_path: Optional[Path] = None
-        source_filename = project_filename or image_file
+        source_filename = source_image_file
         if source_filename:
-            src_path = moments_images_root / source_filename
+            source_image_path_value = coerce_string(moment_entry.get("source_image_path"))
+            src_path = Path(source_image_path_value) if source_image_path_value else (moments_images_root / source_filename)
+
+        source_image_exists = bool(src_path is not None and src_path.exists())
 
         if src_path is not None:
             src_w, src_h = read_image_dims_px(src_path)
@@ -3274,11 +3242,9 @@ def main() -> None:
                 height_px = src_h
 
         images_list: List[Dict[str, Any]] = []
-        if image_file is None and src_path is not None and src_path.exists():
-            image_file = default_moment_filename
         if image_file is not None and image_alt is None:
             image_alt = title or moment_id
-        if image_file is not None:
+        if image_file is not None and source_image_exists:
             images_list.append(
                 {
                     "file": image_file,
@@ -3286,7 +3252,8 @@ def main() -> None:
                 }
             )
 
-        source_prose_path = moments_root / f"{moment_id}.md"
+        source_prose_path_value = coerce_string(moment_entry.get("source_prose_path"))
+        source_prose_path = Path(source_prose_path_value) if source_prose_path_value else (moments_root / f"{moment_id}.md")
         if not source_prose_path.exists():
             print(f"[moment {moment_id}] WARNING: missing source prose {display_projects_path(source_prose_path)}; skipping moments index.")
             continue

@@ -23,13 +23,13 @@ Run everything:
 ./scripts/build_catalogue.py --no-confirm
 ```
 
-Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed source records plus canonical source media and current work/series/moment prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
+Default behavior now includes a planner pass before execution. `build_catalogue.py` fingerprints workbook-backed work/series/detail/link records plus canonical source media and current work/series/moment prose sources, compares them to `var/build_catalogue_state.json`, and infers which work IDs, series IDs, and moment IDs need generation. Moment records are now sourced from `moments/*.md` front matter rather than the workbook. When the planner state predates a newer planner version, the script loads that state in compatibility mode and rewrites it with the current planner metadata on the next successful write run. When the planner state predates media or prose tracking, the next write run treats current source files as the baseline and updates `var/build_catalogue_state.json` without forcing a synthetic rebuild.
 
 When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
 When series IDs are renamed rather than truly removed, the wrapper now migrates matching `tag_assignments.json` series rows onto the new IDs before generation and stale cleanup. The migration matches old and new series by title, `primary_work_id`, and member works.
 
-Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values. Series IDs no longer need to be slug-safe; the pipeline accepts numeric series IDs and still tolerates the current legacy slug-style series IDs during transition. The run stops at that point if any blocking errors are found.
+Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook/source preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe moment source filenames under `moments/*.md`. Series IDs no longer need to be slug-safe; the pipeline accepts numeric series IDs and still tolerates the current legacy slug-style series IDs during transition. The run stops at that point if any blocking errors are found.
 
 When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` artifacts to match the planned scope. That prevents work-only runs from needlessly dry-running or rewriting `_work_details/*.md` when no work-detail rows or work-detail media changed.
 
@@ -38,7 +38,7 @@ When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` 
 - `--dry-run`: preview only, with no workbook writes or deletes
 - `--plan`: print the inferred execution plan and exit
 - `--no-confirm`: skip the post-plan `Continue? [Y|N]` prompt and continue immediately
-- `--full`: ignore saved planner state and rebuild all workbook-backed generation targets
+- `--full`: ignore saved planner state and rebuild all current generation targets
 - `--reset-state`: remove `var/build_catalogue_state.json` before planning
 - `--force-generate`: pass `--force` through to `generate_work_pages.py` and the catalogue search rebuild
 - `--jobs N`: srcset parallel jobs; default `4`, or `MAKE_SRCSET_JOBS`
@@ -56,8 +56,8 @@ When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` 
 
 - after printing `==> Build Plan`, the pipeline now asks `Continue? [Y|N]`
 - `--no-confirm` bypasses that prompt and continues immediately
-- workbook preflight runs after planning and before any copy/srcset/generation step
-- preflight failures are aggregated and printed together so workbook fixes can be made in one pass
+- workbook/source preflight runs after planning and before any copy/srcset/generation step
+- preflight failures are aggregated and printed together so workbook or moment-source fixes can be made in one pass
 - preflight is intended to prevent partial publish states where work rows or media are written before a later series or moment validation failure aborts the run
 
 Pipeline output now also shortens machine-local absolute paths in command echoes and step logs. Repo-owned paths are shown repo-relative, canonical source paths are shown relative to `DOTLINEFORM_PROJECTS_BASE_DIR`, staged/derivative media paths are shown relative to `DOTLINEFORM_MEDIA_BASE_DIR`, and temporary manifest paths are shown under a `[tmp]/...` prefix.
@@ -67,7 +67,7 @@ Pipeline output now also shortens machine-local absolute paths in command echoes
 The planner currently reports one of three mode labels in the build plan output and in the Studio Build Activity feed:
 
 - `full`
-  the run was invoked with `--full`, so saved planner state is ignored and workbook-backed generation targets are rebuilt from current source state
+  the run was invoked with `--full`, so saved planner state is ignored and current generation targets are rebuilt from current source state
 - `bootstrap`
   no prior `var/build_catalogue_state.json` baseline was available, so the planner is establishing an initial local state snapshot
 - `incremental`
@@ -100,7 +100,8 @@ Primary source artifacts:
 - `data/works.xlsx`
 - source media under `DOTLINEFORM_PROJECTS_BASE_DIR`
   - `projects/...`
-  - `moments/...`
+  - `moments/<moment_id>.md`
+  - `moments/images/...`
 - planner state:
   - `var/build_catalogue_state.json`
 
@@ -145,7 +146,13 @@ Primary target artifacts:
   - `WorkDetails`
   - `WorkFiles`
   - `WorkLinks`
-  - `Moments`
+- Moment records are tracked from source front matter in `moments/*.md`, including:
+  - `title`
+  - `status`
+  - `published_date`
+  - `date`
+  - optional `date_display`
+  - optional `image_file`
 - It also fingerprints canonical source media for:
   - work primary images
   - work-detail source images

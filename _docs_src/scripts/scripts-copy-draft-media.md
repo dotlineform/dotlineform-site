@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-copy-draft-media
 title: Copy Draft Media
-last_updated: 2026-03-31
+last_updated: 2026-04-01
 parent_id: scripts
 sort_order: 30
 ---
@@ -42,7 +42,9 @@ Source artifacts:
   - work details:
     - `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<project_folder>/<project_subfolder>/<project_filename>`
   - moments:
-    - `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/images/<moment_id>.jpg`
+    - source records come from `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/<moment_id>.md`
+    - source image lookup defaults to `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/images/<moment_id>.jpg`
+    - if front matter sets `image_file`, source image lookup uses that filename instead
 
 Target artifacts:
 

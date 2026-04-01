@@ -79,7 +79,7 @@ Search builds:
 Catalogue/media builds:
 
 - `./scripts/build_catalogue.py`
-  - plans workbook-backed generation, canonical source-media changes, and current work/series/moment prose changes from `var/build_catalogue_state.json`, runs a shared workbook preflight, prunes stale repo-owned generated artifacts and stale local media outputs for removed rows, then orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
+  - plans workbook-backed work/series/detail generation plus file-backed moment generation, canonical source-media changes, and current work/series/moment prose changes from `var/build_catalogue_state.json`, runs a shared workbook/source preflight, prunes stale repo-owned generated artifacts and stale local media outputs for removed rows, then orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
   - writes a local build-activity journal and a Studio-facing recent-activity feed after successful non-dry-run runs
 - `./scripts/generate_work_pages.py`
   - runs the shared workbook preflight, then builds catalogue pages plus runtime JSON, including:
