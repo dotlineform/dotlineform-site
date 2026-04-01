@@ -919,6 +919,194 @@ def append_only_args(cmd: list[str], artifacts: Iterable[str]) -> None:
         cmd.extend(["--only", artifact])
 
 
+def series_signature(title: Any, primary_work_id: Any, works: Iterable[str]) -> tuple[str, str, tuple[str, ...]]:
+    return (
+        normalize_text(title),
+        slug_id(primary_work_id) if not is_empty(primary_work_id) else "",
+        tuple(sorted({normalize_text(work_id) for work_id in works if normalize_text(work_id)})),
+    )
+
+
+def load_series_signatures_from_series_index(path: Path) -> Dict[str, tuple[str, str, tuple[str, ...]]]:
+    payload = load_json_object(path)
+    if payload is None:
+        return {}
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        return {}
+    out: Dict[str, tuple[str, str, tuple[str, ...]]] = {}
+    for raw_series_id, row in series_map.items():
+        if not isinstance(row, dict):
+            continue
+        try:
+            series_id = normalize_series_id(raw_series_id)
+        except ValueError:
+            continue
+        works = row.get("works")
+        out[series_id] = series_signature(
+            row.get("title"),
+            row.get("primary_work_id"),
+            works if isinstance(works, list) else [],
+        )
+    return out
+
+
+def load_current_series_signatures_from_workbook(xlsx_path: Path) -> Dict[str, tuple[str, str, tuple[str, ...]]]:
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
+    if "Works" not in wb.sheetnames or "Series" not in wb.sheetnames:
+        return {}
+
+    works_ws = wb["Works"]
+    series_ws = wb["Series"]
+    works_hi = header_map(works_ws)
+    series_hi = header_map(series_ws)
+    if "work_id" not in works_hi or "series_ids" not in works_hi or "series_id" not in series_hi:
+        return {}
+
+    work_ids_by_series: Dict[str, Set[str]] = {}
+    for row in works_ws.iter_rows(min_row=2, values_only=True):
+        raw_work_id = row[works_hi["work_id"]]
+        if is_empty(raw_work_id):
+            continue
+        work_id = slug_id(raw_work_id)
+        for series_id in parse_series_ids_from_works_row(row, works_hi):
+            work_ids_by_series.setdefault(series_id, set()).add(work_id)
+
+    out: Dict[str, tuple[str, str, tuple[str, ...]]] = {}
+    for row in series_ws.iter_rows(min_row=2, values_only=True):
+        raw_series_id = row[series_hi["series_id"]]
+        if is_empty(raw_series_id):
+            continue
+        try:
+            series_id = normalize_series_id(raw_series_id)
+        except ValueError:
+            continue
+        title = row[series_hi["title"]] if "title" in series_hi else None
+        primary_work_id = row[series_hi["primary_work_id"]] if "primary_work_id" in series_hi else None
+        out[series_id] = series_signature(title, primary_work_id, work_ids_by_series.get(series_id, set()))
+    return out
+
+
+def infer_series_id_renames(
+    *,
+    previous_series_index_path: Path,
+    xlsx_path: Path,
+    removed_series_ids: Set[str],
+    added_series_ids: Set[str],
+) -> Dict[str, str]:
+    if not removed_series_ids or not added_series_ids:
+        return {}
+
+    previous_signatures = load_series_signatures_from_series_index(previous_series_index_path)
+    current_signatures = load_current_series_signatures_from_workbook(xlsx_path)
+    if not previous_signatures or not current_signatures:
+        return {}
+
+    added_by_signature: Dict[tuple[str, str, tuple[str, ...]], str] = {}
+    duplicate_added_signatures: Set[tuple[str, str, tuple[str, ...]]] = set()
+    for series_id in added_series_ids:
+        signature = current_signatures.get(series_id)
+        if signature is None:
+            continue
+        if signature in added_by_signature:
+            duplicate_added_signatures.add(signature)
+            continue
+        added_by_signature[signature] = series_id
+
+    rename_map: Dict[str, str] = {}
+    for old_series_id in removed_series_ids:
+        signature = previous_signatures.get(old_series_id)
+        if signature is None or signature in duplicate_added_signatures:
+            continue
+        new_series_id = added_by_signature.get(signature)
+        if new_series_id and new_series_id != old_series_id:
+            rename_map[old_series_id] = new_series_id
+    return rename_map
+
+
+def merge_tag_assignment_rows(old_row: Dict[str, Any], new_row: Dict[str, Any]) -> Dict[str, Any]:
+    merged_tags: list[Dict[str, Any]] = []
+    seen_tag_ids: set[str] = set()
+    for source_row in (new_row, old_row):
+        tags = source_row.get("tags")
+        if not isinstance(tags, list):
+            continue
+        for tag in tags:
+            if not isinstance(tag, dict):
+                continue
+            tag_id = normalize_text(tag.get("tag_id"))
+            dedupe_key = tag_id or json.dumps(tag, sort_keys=True, ensure_ascii=False)
+            if dedupe_key in seen_tag_ids:
+                continue
+            seen_tag_ids.add(dedupe_key)
+            merged_tags.append(dict(tag))
+
+    merged_works: Dict[str, Any] = {}
+    for source_row in (old_row, new_row):
+        works = source_row.get("works")
+        if not isinstance(works, dict):
+            continue
+        for work_id, value in works.items():
+            merged_works[str(work_id)] = value
+
+    return {
+        "tags": merged_tags,
+        "works": merged_works,
+        "updated_at_utc": utc_timestamp_now(),
+    }
+
+
+def migrate_tag_assignments_for_series_id_renames(
+    repo_root: Path,
+    *,
+    renamed_series_ids: Dict[str, str],
+    write: bool,
+) -> Dict[str, int]:
+    path = repo_root / "assets/studio/data/tag_assignments.json"
+    payload = load_json_object(path)
+    if payload is None:
+        return {
+            "series_migrated": 0,
+            "series_merged": 0,
+            "payload_written": 0,
+        }
+
+    series_map = payload.get("series")
+    if not isinstance(series_map, dict):
+        raise SystemExit(f"Invalid tag assignments payload: {path}")
+
+    series_migrated = 0
+    series_merged = 0
+    payload_changed = False
+    for old_series_id, new_series_id in sorted(renamed_series_ids.items()):
+        old_row = series_map.get(old_series_id)
+        if not isinstance(old_row, dict):
+            continue
+        new_row = series_map.get(new_series_id)
+        if isinstance(new_row, dict):
+            series_map[new_series_id] = merge_tag_assignment_rows(old_row, new_row)
+            series_merged += 1
+        else:
+            migrated_row = dict(old_row)
+            migrated_row["updated_at_utc"] = utc_timestamp_now()
+            series_map[new_series_id] = migrated_row
+            series_migrated += 1
+        del series_map[old_series_id]
+        payload_changed = True
+
+    if payload_changed:
+        payload["series"] = series_map
+        payload["updated_at_utc"] = utc_timestamp_now()
+        if write:
+            path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    return {
+        "series_migrated": series_migrated,
+        "series_merged": series_merged,
+        "payload_written": 1 if payload_changed and write else 0,
+    }
+
+
 def confirm_continue(*, no_confirm: bool) -> None:
     if no_confirm:
         print("Continue? [Y|N] auto-accepted via --no-confirm")
@@ -1571,6 +1759,13 @@ def main() -> int:
     removed_series_ids = set(series_diff["removed"]) if "work" in selected_modes else set()
     removed_detail_uids = set(detail_diff["removed"]) if "work_details" in selected_modes else set()
     removed_moment_ids = set(moments_diff["removed"]) if "moment" in selected_modes else set()
+    renamed_series_ids = infer_series_id_renames(
+        previous_series_index_path=repo_root / "assets/data/series_index.json",
+        xlsx_path=xlsx_path,
+        removed_series_ids=removed_series_ids,
+        added_series_ids=set(series_diff["added"]),
+    )
+    removed_series_ids -= set(renamed_series_ids.keys())
 
     if not manual_scope_requested and "work" in selected_modes:
         planned_series_ids.update(series_ids_for_work_ids(previous_works, removed_work_ids))
@@ -1676,6 +1871,7 @@ def main() -> int:
         print(f"- series generation ids: {len(planned_series_ids)}")
         print(f"- stale generated files to delete: {len(stale_cleanup_plan['existing'])}")
         print(f"- stale local media files to delete: {len(local_media_cleanup_plan['existing'])}")
+        print(f"- tag assignment series-id migrations: {len(renamed_series_ids)}")
         print(f"- rebuild catalogue search: {'yes' if plan_needs_search else 'no'}")
         if stale_cleanup_requested:
             print("Stale cleanup:")
@@ -1683,6 +1879,11 @@ def main() -> int:
                 print(f"- removed works: {summarize_ids(removed_work_ids)}")
             if removed_series_ids:
                 print(f"- removed series: {summarize_ids(removed_series_ids)}")
+            if renamed_series_ids:
+                print(
+                    "- renamed series ids: "
+                    + ", ".join(f"{old}->{new}" for old, new in sorted(renamed_series_ids.items()))
+                )
             if removed_detail_uids:
                 print(f"- removed work_details: {summarize_ids(removed_detail_uids)}")
             if removed_moment_ids:
@@ -1937,11 +2138,31 @@ def main() -> int:
         cleanup_stats = {
             "generated_files_deleted": 0,
             "local_media_files_deleted": 0,
+            "tag_assignment_series_migrated": 0,
+            "tag_assignment_series_merged": 0,
             "tag_assignment_series_removed": 0,
             "tag_assignment_work_overrides_removed": 0,
             "tag_assignment_series_touched": 0,
             "tag_assignments_written": 0,
         }
+        if renamed_series_ids:
+            print("\n==> Migrate Tag Assignments For Renamed Series IDs")
+            migration_stats = migrate_tag_assignments_for_series_id_renames(
+                repo_root,
+                renamed_series_ids=renamed_series_ids,
+                write=not args.dry_run,
+            )
+            print(
+                "Tag assignments migration: "
+                f"migrated={migration_stats['series_migrated']}; "
+                f"merged={migration_stats['series_merged']}"
+            )
+            if args.dry_run:
+                print("DRY-RUN: tag assignment migration not written.")
+            else:
+                cleanup_stats["tag_assignment_series_migrated"] = migration_stats["series_migrated"]
+                cleanup_stats["tag_assignment_series_merged"] = migration_stats["series_merged"]
+                cleanup_stats["tag_assignments_written"] += migration_stats["payload_written"]
         if generate_ids or generate_moment_ids or selected_series_for_generate or stale_cleanup_requested:
             generate_cmd = [py, str(generate_script), str(xlsx_path)]
             generate_cmd += ["--work-ids-file", str(generate_ids_file)]
@@ -2019,7 +2240,7 @@ def main() -> int:
                     cleanup_stats["tag_assignment_series_removed"] = cleanup_tag_stats["series_removed"]
                     cleanup_stats["tag_assignment_work_overrides_removed"] = cleanup_tag_stats["work_overrides_removed"]
                     cleanup_stats["tag_assignment_series_touched"] = cleanup_tag_stats["series_touched"]
-                    cleanup_stats["tag_assignments_written"] = cleanup_tag_stats["payload_written"]
+                    cleanup_stats["tag_assignments_written"] += cleanup_tag_stats["payload_written"]
 
             search_cmd = [str(search_script), "--scope", "catalogue"]
             if not args.dry_run:
@@ -2065,6 +2286,8 @@ def main() -> int:
                         "generate_moment_ids": len(generate_moment_ids),
                         "delete_generated_files": cleanup_stats["generated_files_deleted"],
                         "delete_local_media_files": cleanup_stats["local_media_files_deleted"],
+                        "migrate_tag_assignment_series": cleanup_stats["tag_assignment_series_migrated"],
+                        "merge_tag_assignment_series": cleanup_stats["tag_assignment_series_merged"],
                         "clean_tag_assignment_series": cleanup_stats["tag_assignment_series_removed"],
                         "clean_tag_assignment_work_overrides": cleanup_stats["tag_assignment_work_overrides_removed"],
                         "rebuild_search": bool(generate_ids or generate_moment_ids or selected_series_for_generate or stale_cleanup_requested),

@@ -8,6 +8,29 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-01] Preserved tag assignments across series-id renames
+
+**Status:** implemented
+
+**Area:** build pipeline
+
+**Summary:**  
+`build_catalogue.py` now migrates matching `assets/studio/data/tag_assignments.json` series rows when series IDs are renamed.
+
+**Reason:**  
+During the numeric series-id migration, the planner correctly treated old slug-style series IDs as removed and new numeric series IDs as added, but the previous cleanup path deleted the old tag-assignment rows and the later generator pass recreated empty rows for the new IDs. That dropped curator tags and per-work tag overrides.
+
+**Effect:**  
+Before generation and stale cleanup, the wrapper now compares the existing `assets/data/series_index.json` to the current workbook and infers series-ID renames by matching title, `primary_work_id`, and member works. Matching tag-assignment rows are migrated to the new IDs instead of being deleted. True removals still prune tag-assignment rows as before.
+
+**Affected files/docs:**  
+- `scripts/build_catalogue.py`
+- `assets/studio/data/tag_assignments.json`
+- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+
+**Notes:**  
+This protects future series-ID renames. Existing lost tags had to be restored once from the previous commit's tag-assignment data.
+
 ## [2026-04-01] Scoped wrapper generation artifacts to the planned flow
 
 **Status:** implemented

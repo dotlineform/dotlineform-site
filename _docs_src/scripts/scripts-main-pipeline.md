@@ -27,6 +27,8 @@ Default behavior now includes a planner pass before execution. `build_catalogue.
 
 When workbook rows have been removed, the planner now also deletes the matching stale repo-owned generated artifacts, stale local media under `DOTLINEFORM_MEDIA_BASE_DIR`, and stale `tag_assignments.json` rows before rebuilding catalogue search.
 
+When series IDs are renamed rather than truly removed, the wrapper now migrates matching `tag_assignments.json` series rows onto the new IDs before generation and stale cleanup. The migration matches old and new series by title, `primary_work_id`, and member works.
+
 Before any copy, srcset, workbook, or generated-file writes begin, the pipeline now runs a shared workbook preflight. That preflight aggregates blocking workbook errors for actionable catalogue rows, including malformed IDs, unknown `Works.series_ids` references, missing `Series.primary_work_id`, `Series.primary_work_id` values that do not belong to the series, orphaned `WorkDetails.work_id` values, and non-slug-safe `Moments.moment_id` values. Series IDs no longer need to be slug-safe; the pipeline accepts numeric series IDs and still tolerates the current legacy slug-style series IDs during transition. The run stops at that point if any blocking errors are found.
 
 When the wrapper invokes `generate_work_pages.py`, it now also narrows `--only` artifacts to match the planned scope. That prevents work-only runs from needlessly dry-running or rewriting `_work_details/*.md` when no work-detail rows or work-detail media changed.
