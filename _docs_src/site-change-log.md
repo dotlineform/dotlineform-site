@@ -25,6 +25,7 @@ The public catalogue needed a lightweight way to surface newly published work wi
 
 **Affected files/docs:**  
 - `scripts/generate_work_pages.py`
+- `scripts/backfill_recent_index_from_git_history.py`
 - `recent/index.md`
 - `series/index.md`
 - `_layouts/series.html`
@@ -35,7 +36,7 @@ The public catalogue needed a lightweight way to surface newly published work wi
 - [Catalogue Scope](/docs/?scope=studio&doc=data-models-catalogue)
 
 **Notes:**  
-Existing historic entries are not backfilled in this change. Until a real publish run creates entries, `/recent/` shows an empty state.
+The initial `/recent/` ledger can be seeded from workbook git history with `scripts/backfill_recent_index_from_git_history.py`. That one-off backfill only records provable `draft -> published` transitions and drops any historic series entry that cannot be mapped confidently onto a current live series ID.
 
 ## [2026-04-01] Preserved tag assignments across series-id renames
 

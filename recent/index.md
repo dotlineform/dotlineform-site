@@ -60,6 +60,7 @@ section: works
     var thumbSuffix = String(root.getAttribute('data-thumb-suffix') || 'thumb').trim() || 'thumb';
     var assetFormat = String(root.getAttribute('data-asset-format') || 'webp').trim() || 'webp';
     var recentIndexUrl = baseurl + '/assets/data/recent_index.json';
+    var seriesIndexUrl = baseurl + '/assets/data/series_index.json';
     var monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
     function fetchJson(url) {
@@ -93,11 +94,16 @@ section: works
       return String(day) + ' ' + monthNames[month - 1] + ' ' + String(year);
     }
 
-    function entryHref(entry) {
+    function entryHref(entry, seriesMap) {
       var kind = text(entry && entry.kind).toLowerCase();
       var targetId = text(entry && entry.target_id);
       if (!targetId) return '';
       if (kind === 'series') {
+        var seriesItem = seriesMap && typeof seriesMap === 'object' ? seriesMap[targetId] : null;
+        var works = Array.isArray(seriesItem && seriesItem.works) ? seriesItem.works : [];
+        if (works.length === 1) {
+          return baseurl + '/works/' + encodeURIComponent(String(works[0])) + '/?from=recent';
+        }
         return baseurl + '/series/' + encodeURIComponent(targetId) + '/?from=recent';
       }
       return baseurl + '/works/' + encodeURIComponent(targetId) + '/?from=recent';
@@ -111,8 +117,8 @@ section: works
       return text(a && a.title).localeCompare(text(b && b.title), undefined, { numeric: true, sensitivity: 'base' });
     }
 
-    function renderEntry(entry) {
-      var href = entryHref(entry);
+    function renderEntry(entry, seriesMap) {
+      var href = entryHref(entry, seriesMap);
       if (!href) return null;
 
       var title = text(entry && entry.title) || text(entry && entry.target_id);
@@ -166,15 +172,21 @@ section: works
       return item;
     }
 
-    fetchJson(recentIndexUrl)
-      .then(function (payload) {
+    Promise.all([
+      fetchJson(recentIndexUrl),
+      fetchJson(seriesIndexUrl).catch(function () { return {}; })
+    ])
+      .then(function (responses) {
+        var payload = responses[0] || {};
+        var seriesPayload = responses[1] || {};
+        var seriesMap = seriesPayload && typeof seriesPayload.series === 'object' ? seriesPayload.series : {};
         var entries = payload && Array.isArray(payload.entries) ? payload.entries.slice() : [];
         entries.sort(compareEntries);
         entries = entries.slice(0, 50);
 
         list.innerHTML = '';
         entries.forEach(function (entry) {
-          var item = renderEntry(entry);
+          var item = renderEntry(entry, seriesMap);
           if (item) list.appendChild(item);
         });
 

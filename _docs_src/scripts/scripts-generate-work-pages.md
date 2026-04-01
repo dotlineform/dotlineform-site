@@ -66,6 +66,7 @@ When `--write` is used, the generator now reads cached formula values from one w
   - snapshots only first-time `draft -> published` transitions for series and works
   - groups multiple newly published works in the same existing series into one work entry anchored to the first published work in that run
   - prunes entries whose target series or work no longer exists in the current catalogue
+  - existing ledgers can be seeded once from workbook git history with `scripts/backfill_recent_index_from_git_history.py`
 - `--series-json-dir` with default `assets/series/index`
   - writes per-series JSON payloads at `assets/series/index/<series_id>.json`
   - resolves canonical series prose from `<DOTLINEFORM_PROJECTS_BASE_DIR>/projects/<primary_work_project_folder>/<paths.source_subdirs.prose>/<series_prose_file>`

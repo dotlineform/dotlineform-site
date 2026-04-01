@@ -115,7 +115,9 @@ permalink: /series/
     </div>
     <div class="seriesIndex__toolbarMiddle">
       <a
+        id="seriesIndexRecentBtn"
         class="theme-toggle seriesIndex__recentBtn"
+        data-enabled-href="{{ '/recent/' | relative_url }}"
         href="{{ '/recent/' | relative_url }}"
       >recently added</a>
     </div>
@@ -172,8 +174,9 @@ permalink: /series/
     var pagerStatus = document.getElementById('seriesIndexPagerStatus');
     var prevBtn = document.getElementById('seriesIndexPrev');
     var nextBtn = document.getElementById('seriesIndexNext');
+    var recentBtn = document.getElementById('seriesIndexRecentBtn');
     var empty = document.getElementById('seriesIndexEmpty');
-    if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !empty) return;
+    if (!root || !list || !thumbGrid || !pager || !pagerStatus || !prevBtn || !nextBtn || !recentBtn || !empty) return;
 
     var viewButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-view-btn"]'));
     var sortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="catalog-index-sort-btn"]'));
@@ -654,6 +657,20 @@ permalink: /series/
         button.disabled = !hasItems;
         if (labelEl) labelEl.textContent = label;
       });
+      syncRecentButtonState();
+    }
+
+    function syncRecentButtonState() {
+      var enabledHref = String(recentBtn.getAttribute('data-enabled-href') || '').trim();
+      var disabled = currentMode === 'moments';
+      recentBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+      if (disabled) {
+        recentBtn.removeAttribute('href');
+        recentBtn.setAttribute('tabindex', '-1');
+      } else {
+        if (enabledHref) recentBtn.setAttribute('href', enabledHref);
+        recentBtn.removeAttribute('tabindex');
+      }
     }
 
     function updateSortUi() {

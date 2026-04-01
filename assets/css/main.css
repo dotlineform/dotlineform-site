@@ -1163,6 +1163,13 @@ th{ background: var(--panel-2); }
   text-decoration: none;
 }
 
+.seriesIndex__recentBtn[aria-disabled="true"]{
+  color: var(--border-strong);
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
 .seriesIndex__recentBtn:focus-visible,
 .seriesIndex__searchBtn:focus-visible{
   outline: 2px solid var(--border-strong);
