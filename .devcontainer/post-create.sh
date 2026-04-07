@@ -6,6 +6,7 @@ cd /workspaces/dotlineform-site
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 
+bundle config set --local path vendor/bundle
 bundle _2.6.9_ install
 
 python3 -V
