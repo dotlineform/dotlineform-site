@@ -1,0 +1,24 @@
+{
+  "name": "dotlineform-site",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python3"
+      },
+      "extensions": [
+        "ms-python.python",
+        "rebornix.Ruby"
+      ]
+    }
+  },
+  "containerEnv": {
+    "DOTLINEFORM_PROJECTS_BASE_DIR": "/workspaces",
+    "DOTLINEFORM_MEDIA_BASE_DIR": "/workspaces/.dotlineform-media",
+    "MAKE_SRCSET_JOBS": "4"
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "remoteUser": "vscode"
+}
