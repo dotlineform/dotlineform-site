@@ -68,6 +68,22 @@ Recommended bootstrap actions in `postCreateCommand`:
 - run `bundle _2.6.9_ install`
 - print version checks
 
+### 2.1) Add a Codex setup script entrypoint
+
+Use `.codex/setup.sh` as the single setup/bootstrap script for Codex cloud sessions.
+
+Current intent:
+
+- install and verify the pinned Ruby/Bundler/Python runtime
+- install repo Python/Ruby dependencies
+- run a docs-builder smoke check (`./scripts/build_docs.rb`)
+
+If Codex Cloud supports setup script paths in environment config, point that field to:
+
+```bash
+bash .codex/setup.sh
+```
+
 ### 3) Keep dependency declarations machine-readable
 
 - Python deps in `requirements.txt`
