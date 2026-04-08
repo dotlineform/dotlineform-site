@@ -17,6 +17,24 @@
   - use `./scripts/...` rather than `python3 scripts/...`
   - omit the positional `data/works.xlsx` argument when using the default workbook
 
+## Codex Cloud / Codespaces Runtime Contract
+
+- Treat local and cloud sessions as one workflow with the same command shapes and validation steps.
+- In cloud sessions, keep repo docs and examples machine-agnostic (no user-specific absolute paths).
+- Required shared env vars for media/generation flows:
+  - `DOTLINEFORM_PROJECTS_BASE_DIR`
+  - `DOTLINEFORM_MEDIA_BASE_DIR`
+- Optional shared env var:
+  - `MAKE_SRCSET_JOBS`
+- Keep remote media credentials out of tracked files; use platform secret stores for values such as:
+  - `R2_ACCOUNT_ID`
+  - `R2_ACCESS_KEY_ID`
+  - `R2_SECRET_ACCESS_KEY`
+  - `R2_BUCKET`
+  - `R2_ENDPOINT`
+- Before reporting environment issues in Codex Cloud or Codespaces, run a version check pass for Python, Ruby, Bundler, and Jekyll.
+- Use dry-run generator commands first in cloud sessions unless an explicit write run was requested.
+
 ## Ruby / Jekyll Toolchain
 
 - This repo expects:
