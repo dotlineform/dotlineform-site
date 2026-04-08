@@ -14,3 +14,4 @@ python3 -c "import openpyxl; print('openpyxl', openpyxl.__version__)"
 ruby -v
 bundle -v
 bundle exec jekyll -v
+bundle _2.6.9_ exec ./scripts/build_docs.rb
