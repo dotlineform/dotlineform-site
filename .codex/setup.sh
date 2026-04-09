@@ -22,6 +22,14 @@ run_as_root() {
     sudo -n "$@"
   else
     return 1
+export RBENV_ROOT="${RBENV_ROOT:-/usr/local/rbenv}"
+export PATH="$RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH"
+
+run_as_root() {
+  if command -v sudo >/dev/null 2>&1; then
+    sudo "$@"
+  else
+    "$@"
   fi
 }
 
@@ -52,6 +60,33 @@ fi
 if [ ! -d "$RBENV_ROOT" ]; then
   git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
   git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
+  run_as_root apt-get update
+  run_as_root apt-get install -y --no-install-recommends \
+    build-essential \
+    libyaml-dev \
+    zlib1g-dev \
+    libffi-dev \
+    libgdbm-dev \
+    libreadline-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libheif-examples \
+    ffmpeg \
+    pkg-config \
+    python3 \
+    python3-pip \
+    python3-venv \
+    git
+fi
+
+if [ ! -d "$RBENV_ROOT" ]; then
+  run_as_root git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
+  run_as_root git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
+fi
+
+if command -v sudo >/dev/null 2>&1; then
+  run_as_root chown -R "$(id -u)":"$(id -g)" "$RBENV_ROOT"
 fi
 
 if ! command -v rbenv >/dev/null 2>&1; then
