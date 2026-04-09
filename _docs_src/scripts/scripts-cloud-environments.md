@@ -77,6 +77,7 @@ Current intent:
 - install and verify the pinned Ruby/Bundler/Python runtime
 - install repo Python/Ruby dependencies
 - run a docs-builder smoke check (`./scripts/build_docs.rb`)
+- avoid interactive sudo prompts by using non-interactive elevation only and a user-local `RBENV_ROOT` fallback when root writes are unavailable
 
 If Codex Cloud supports setup script paths in environment config, point that field to:
 
