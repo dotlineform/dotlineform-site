@@ -10,6 +10,8 @@ sort_order: 30
 
 This guide centralizes the current local toolchain needed to run the Python scripts in this repo and to verify the Jekyll site locally.
 
+For cloud-hosted development guidance, see [Cloud Environments](/docs/?scope=studio&doc=scripts-cloud-environments).
+
 All commands below assume you are in `dotlineform-site/` unless stated otherwise.
 
 ## Current repo/runtime summary
