@@ -42,6 +42,10 @@ if [ ! -d "$RBENV_ROOT" ]; then
   run_as_root git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
 fi
 
+if command -v sudo >/dev/null 2>&1; then
+  run_as_root chown -R "$(id -u)":"$(id -g)" "$RBENV_ROOT"
+fi
+
 if ! command -v rbenv >/dev/null 2>&1; then
   echo "ERROR: rbenv is not available on PATH after setup." >&2
   exit 1
