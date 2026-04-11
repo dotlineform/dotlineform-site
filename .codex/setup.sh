@@ -1,119 +1,173 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
-# Resolve repo root (supports being run from anywhere).
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+log()  { printf '[codex-setup] %s\n' "$*"; }
+warn() { printf '[codex-setup][warn] %s\n' "$*" >&2; }
+die()  { printf '[codex-setup][error] %s\n' "$*" >&2; exit 1; }
+
+trap 'die "Command failed at line ${LINENO}: ${BASH_COMMAND}"' ERR
+
+RUBY_VERSION="3.1.6"
+BUNDLER_VERSION="2.6.9"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "$REPO_ROOT"
 
-DEFAULT_RBENV_ROOT="/usr/local/rbenv"
-if [ -n "${RBENV_ROOT:-}" ]; then
-  export RBENV_ROOT
-elif [ "$(id -u)" -eq 0 ] || [ -w "/usr/local" ]; then
-  export RBENV_ROOT="$DEFAULT_RBENV_ROOT"
-else
-  export RBENV_ROOT="$HOME/.rbenv"
-fi
-export PATH="$RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH"
+export RBENV_ROOT="${RBENV_ROOT:-$HOME/.rbenv}"
+export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
 
-run_as_root() {
-  if [ "$(id -u)" -eq 0 ]; then
-    "$@"
-  elif command -v sudo >/dev/null 2>&1; then
-    sudo -n "$@"
-  else
-    return 1
-export RBENV_ROOT="${RBENV_ROOT:-/usr/local/rbenv}"
-export PATH="$RBENV_ROOT/shims:$RBENV_ROOT/bin:$PATH"
-
-run_as_root() {
-  if command -v sudo >/dev/null 2>&1; then
-    sudo "$@"
-  else
-    "$@"
-  fi
+append_line_if_missing() {
+  local file="$1"
+  local line="$2"
+  mkdir -p "$(dirname "$file")"
+  touch "$file"
+  grep -Fqx "$line" "$file" || printf '%s\n' "$line" >> "$file"
 }
 
-if command -v apt-get >/dev/null 2>&1; then
-  if run_as_root apt-get update; then
-    run_as_root apt-get install -y --no-install-recommends \
+have_sudo() {
+  command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
+}
+
+install_apt_packages() {
+  command -v apt-get >/dev/null 2>&1 || {
+    warn "apt-get not available; skipping OS package install."
+    return 0
+  }
+
+  if [[ "$(id -u)" -eq 0 ]]; then
+    apt-get update
+    apt-get install -y --no-install-recommends \
       build-essential \
-      libyaml-dev \
-      zlib1g-dev \
+      ca-certificates \
+      curl \
+      ffmpeg \
+      git \
       libffi-dev \
       libgdbm-dev \
+      libheif-examples \
       libreadline-dev \
       libssl-dev \
       libxml2-dev \
       libxslt1-dev \
-      libheif-examples \
-      ffmpeg \
+      libyaml-dev \
       pkg-config \
       python3 \
       python3-pip \
       python3-venv \
-      git
+      zlib1g-dev
+  elif have_sudo; then
+    sudo -n apt-get update
+    sudo -n apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      curl \
+      ffmpeg \
+      git \
+      libffi-dev \
+      libgdbm-dev \
+      libheif-examples \
+      libreadline-dev \
+      libssl-dev \
+      libxml2-dev \
+      libxslt1-dev \
+      libyaml-dev \
+      pkg-config \
+      python3 \
+      python3-pip \
+      python3-venv \
+      zlib1g-dev
   else
-    echo "WARN: skipping apt-get install (no non-interactive root access)." >&2
+    warn "No non-interactive sudo; skipping OS package install."
   fi
-fi
+}
 
-if [ ! -d "$RBENV_ROOT" ]; then
-  git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
-  git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
-  run_as_root apt-get update
-  run_as_root apt-get install -y --no-install-recommends \
-    build-essential \
-    libyaml-dev \
-    zlib1g-dev \
-    libffi-dev \
-    libgdbm-dev \
-    libreadline-dev \
-    libssl-dev \
-    libxml2-dev \
-    libxslt1-dev \
-    libheif-examples \
-    ffmpeg \
-    pkg-config \
-    python3 \
-    python3-pip \
-    python3-venv \
-    git
-fi
+ensure_rbenv() {
+  if [[ ! -d "$RBENV_ROOT" ]]; then
+    log "Installing rbenv"
+    git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
+  fi
 
-if [ ! -d "$RBENV_ROOT" ]; then
-  run_as_root git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
-  run_as_root git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
-fi
+  mkdir -p "$RBENV_ROOT/plugins"
 
-if command -v sudo >/dev/null 2>&1; then
-  run_as_root chown -R "$(id -u)":"$(id -g)" "$RBENV_ROOT"
-fi
+  if [[ ! -d "$RBENV_ROOT/plugins/ruby-build" ]]; then
+    log "Installing ruby-build"
+    git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
+  fi
 
-if ! command -v rbenv >/dev/null 2>&1; then
-  echo "ERROR: rbenv is not available on PATH after setup." >&2
-  exit 1
-fi
+  command -v rbenv >/dev/null 2>&1 || die "rbenv not on PATH."
+  eval "$(rbenv init - bash)"
+}
 
-if ! rbenv versions --bare | grep -qx "3.1.6"; then
-  rbenv install 3.1.6
-fi
-rbenv global 3.1.6
-rbenv rehash
+persist_rbenv_init() {
+  append_line_if_missing "$HOME/.bashrc" 'export RBENV_ROOT="$HOME/.rbenv"'
+  append_line_if_missing "$HOME/.bashrc" 'export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"'
+  append_line_if_missing "$HOME/.bashrc" 'if command -v rbenv >/dev/null 2>&1; then eval "$(rbenv init - bash)"; fi'
+}
 
-if ! gem list -i bundler -v 2.6.9 >/dev/null 2>&1; then
-  gem install bundler:2.6.9 --no-document
-fi
-rbenv rehash
+ensure_ruby() {
+  if ! rbenv versions --bare | grep -qx "$RUBY_VERSION"; then
+    log "Installing Ruby $RUBY_VERSION"
+    rbenv install "$RUBY_VERSION"
+  fi
 
-python3 -m pip install --upgrade pip
-python3 -m pip install -r requirements.txt
+  rbenv global "$RUBY_VERSION"
+  rbenv rehash
+}
 
-bundle config set --local path vendor/bundle
-bundle _2.6.9_ install
+ensure_bundler() {
+  if ! gem list -i bundler -v "$BUNDLER_VERSION" >/dev/null 2>&1; then
+    log "Installing Bundler $BUNDLER_VERSION"
+    gem install "bundler:$BUNDLER_VERSION" --no-document
+    rbenv rehash
+  fi
+}
 
-python3 -V
-python3 -c "import openpyxl; print('openpyxl', openpyxl.__version__)"
-ruby -v
-bundle -v
-bundle exec jekyll -v
-bundle _2.6.9_ exec ./scripts/build_docs.rb
+install_python_deps() {
+  command -v python3 >/dev/null 2>&1 || die "python3 not available."
+
+  python3 -m pip install --upgrade pip
+
+  if [[ -f requirements.txt ]]; then
+    log "Installing Python dependencies"
+    python3 -m pip install -r requirements.txt
+  else
+    warn "requirements.txt not found; skipping."
+  fi
+}
+
+install_ruby_deps() {
+  if [[ -f Gemfile ]]; then
+    log "Installing Ruby gems"
+    bundle config set --local path vendor/bundle
+    bundle _${BUNDLER_VERSION}_ install
+  else
+    warn "Gemfile not found; skipping."
+  fi
+}
+
+verify_environment() {
+  log "Versions"
+  python3 -V
+  ruby -v
+  bundle -v
+
+  if command -v ffmpeg >/dev/null 2>&1; then
+    ffmpeg -version | head -n 1
+  fi
+}
+
+main() {
+  log "Repo root: $REPO_ROOT"
+  install_apt_packages
+  ensure_rbenv
+  persist_rbenv_init
+  ensure_ruby
+  ensure_bundler
+  install_python_deps
+  install_ruby_deps
+  verify_environment
+  log "Setup complete"
+}
+
+main "$@"
