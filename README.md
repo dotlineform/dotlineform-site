@@ -19,10 +19,7 @@ Then open:
 
 ## Catalogue model for works
 
-Works are identified by a stable ID (e.g. `00361`). The site expects as a minimum:
-- a work record in `_works/<id>.md`
-- associated media files in the expected `assets/` location (including generated thumbnails)
-- primary images stored remotely (Cloudflare R2)
+Works are identified by a stable ID (e.g. `00361`). Page *.md files are mainly stubs used for URL routing, metadata is stored in JSON files and read by runtime JS. Thumbnail media files are saved in the expected repo `assets/` location, primary images are stored remotely (Cloudflare R2)
 
 ## Scripts
 
@@ -30,11 +27,11 @@ Scripts are run locally from the repo root. They are designed to keep the catalo
 
 For a centralized local install/setup guide covering Python, Ruby, external tools, env vars, and version checks, see [`_docs_src/local-setup.md`](_docs_src/local-setup.md).
 
-Before running media/generation scripts, set local environment variables:
+Before running media/generation scripts, set local environment variables, e.g.
 
 ```bash
-export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/dotlineform"
-export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/dotlineform-icloud"
+export DOTLINEFORM_PROJECTS_BASE_DIR="/path/to/projects"
+export DOTLINEFORM_MEDIA_BASE_DIR="/path/to/site-media"
 ```
 
 Shared pipeline defaults live in `_data/pipeline.json`. That file stores env var names and relative media subpaths, while absolute local paths stay in your shell environment.
