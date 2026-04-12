@@ -6,7 +6,7 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python3"
+        "python.defaultInterpreterPath": "/workspaces/dotlineform-site/.venv/bin/python"
       },
       "extensions": [
         "ms-python.python",
@@ -16,7 +16,7 @@
   },
   "containerEnv": {
     "RBENV_ROOT": "/usr/local/rbenv",
-    "PATH": "/usr/local/rbenv/shims:/usr/local/rbenv/bin:${containerEnv:PATH}",
+    "PATH": "/workspaces/dotlineform-site/.venv/bin:/usr/local/rbenv/shims:/usr/local/rbenv/bin:${containerEnv:PATH}",
     "BUNDLE_PATH": "/workspaces/dotlineform-site/vendor/bundle",
     "DOTLINEFORM_PROJECTS_BASE_DIR": "/workspaces",
     "DOTLINEFORM_MEDIA_BASE_DIR": "/workspaces/.dotlineform-media",
