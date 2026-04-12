@@ -29,11 +29,33 @@ have_sudo() {
   command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
 }
 
+toolchain_ready() {
+  local -a required_commands=(python3 ruby bundle git ffmpeg)
+  local -a missing_commands=()
+  local cmd
+
+  for cmd in "${required_commands[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || missing_commands+=("$cmd")
+  done
+
+  if [[ "${#missing_commands[@]}" -eq 0 ]]; then
+    return 0
+  fi
+
+  log "Missing commands: ${missing_commands[*]}"
+  return 1
+}
+
 install_apt_packages() {
   command -v apt-get >/dev/null 2>&1 || {
     warn "apt-get not available; skipping OS package install."
     return 0
   }
+
+  if [[ "${FORCE_APT_PACKAGES:-0}" != "1" ]] && toolchain_ready; then
+    log "Core toolchain already available; skipping apt package install."
+    return 0
+  fi
 
   if [[ "$(id -u)" -eq 0 ]]; then
     apt-get update
@@ -160,6 +182,9 @@ install_ruby_deps() {
 
 verify_environment() {
   log "Versions"
+  printf 'python3 path: %s\n' "$(command -v python3 || echo not-found)"
+  printf 'ruby path: %s\n' "$(command -v ruby || echo not-found)"
+  printf 'bundle path: %s\n' "$(command -v bundle || echo not-found)"
   python3 -V
   ruby -v
   bundle -v
