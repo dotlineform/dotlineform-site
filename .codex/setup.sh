@@ -47,6 +47,23 @@ can_skip_apt_packages() {
   return 0
 }
 
+toolchain_ready() {
+  local -a required_commands=(python3 ruby bundle git ffmpeg)
+  local -a missing_commands=()
+  local cmd
+
+  for cmd in "${required_commands[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || missing_commands+=("$cmd")
+  done
+
+  if [[ "${#missing_commands[@]}" -eq 0 ]]; then
+    return 0
+  fi
+
+  log "Missing commands: ${missing_commands[*]}"
+  return 1
+}
+
 install_apt_packages() {
   command -v apt-get >/dev/null 2>&1 || {
     log "apt-get not available; skipping system package installation."
@@ -155,9 +172,9 @@ ensure_bundler() {
 
 install_ruby_deps() {
   if [[ -f Gemfile ]]; then
-    log "Installing Ruby gems to ${BUNDLE_LOCAL_PATH}"
-    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ config set --local path "$BUNDLE_LOCAL_PATH"
-    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ install
+    log "Installing Ruby gems"
+    bundle _${BUNDLER_VERSION}_ config set --local path vendor/bundle
+    bundle _${BUNDLER_VERSION}_ install
   else
     warn "Gemfile not found; skipping Ruby dependency install."
   fi
@@ -166,12 +183,9 @@ install_ruby_deps() {
 verify_environment() {
   log "Versions"
   printf 'python3 path: %s\n' "$(command -v python3 || echo not-found)"
-  printf 'venv python path: %s\n' "$(cd "$REPO_ROOT" && pwd)/${VENV_PYTHON}"
-  printf 'venv pip path: %s\n' "$(cd "$REPO_ROOT" && pwd)/${VENV_PIP}"
   printf 'ruby path: %s\n' "$(command -v ruby || echo not-found)"
-  printf 'bundle path: %s\n' "$BUNDLE_EXE"
-
-  "$VENV_PYTHON" -V
+  printf 'bundle path: %s\n' "$(command -v bundle || echo not-found)"
+  python3 -V
   ruby -v
   "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v
 
