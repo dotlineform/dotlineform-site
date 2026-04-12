@@ -82,6 +82,18 @@ install_apt_packages() {
   fi
 }
 
+assert_ruby_version_consistency() {
+  local ruby_version_file="$REPO_ROOT/.ruby-version"
+  [[ -f "$ruby_version_file" ]] || return 0
+
+  local repo_ruby_version
+  repo_ruby_version="$(tr -d '[:space:]' < "$ruby_version_file")"
+
+  if [[ "$repo_ruby_version" != "$RUBY_VERSION" ]]; then
+    die ".ruby-version (${repo_ruby_version}) does not match setup RUBY_VERSION (${RUBY_VERSION})."
+  fi
+}
+
 ensure_rbenv() {
   if [[ ! -d "$RBENV_ROOT" ]]; then
     log "Installing rbenv"
@@ -139,7 +151,7 @@ install_python_deps() {
 install_ruby_deps() {
   if [[ -f Gemfile ]]; then
     log "Installing Ruby gems"
-    bundle config set --local path vendor/bundle
+    bundle _${BUNDLER_VERSION}_ config set --local path vendor/bundle
     bundle _${BUNDLER_VERSION}_ install
   else
     warn "Gemfile not found; skipping."
@@ -159,6 +171,7 @@ verify_environment() {
 
 main() {
   log "Repo root: $REPO_ROOT"
+  assert_ruby_version_consistency
   install_apt_packages
   ensure_rbenv
   persist_rbenv_init
