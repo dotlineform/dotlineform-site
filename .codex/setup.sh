@@ -23,14 +23,6 @@ have_sudo() {
   command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
 }
 
-append_line_if_missing() {
-  local file="$1"
-  local line="$2"
-  mkdir -p "$(dirname "$file")"
-  touch "$file"
-  grep -Fqx "$line" "$file" || printf '%s\n' "$line" >> "$file"
-}
-
 assert_ruby_version_consistency() {
   local ruby_version_file="$REPO_ROOT/.ruby-version"
   [[ -f "$ruby_version_file" ]] || return 0
@@ -53,6 +45,23 @@ can_skip_apt_packages() {
 
   python3 -m venv --help >/dev/null 2>&1 || return 1
   return 0
+}
+
+toolchain_ready() {
+  local -a required_commands=(python3 ruby bundle git ffmpeg)
+  local -a missing_commands=()
+  local cmd
+
+  for cmd in "${required_commands[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || missing_commands+=("$cmd")
+  done
+
+  if [[ "${#missing_commands[@]}" -eq 0 ]]; then
+    return 0
+  fi
+
+  log "Missing commands: ${missing_commands[*]}"
+  return 1
 }
 
 install_apt_packages() {
@@ -126,15 +135,6 @@ ensure_python_venv() {
   else
     warn "requirements.txt not found; skipping Python dependency install."
   fi
-
-  export PATH="$REPO_ROOT/$VENV_DIR/bin:$PATH"
-  log "Prepended virtualenv bin to PATH for current shell: $REPO_ROOT/$VENV_DIR/bin"
-}
-
-persist_python_venv_path() {
-  local venv_bin="$REPO_ROOT/$VENV_DIR/bin"
-  append_line_if_missing "$HOME/.bashrc" "if [[ -d \"$venv_bin\" ]]; then export PATH=\"$venv_bin:\$PATH\"; fi"
-  log "Persisted virtualenv PATH bootstrap in ~/.bashrc"
 }
 
 ensure_ruby_runtime() {
@@ -158,9 +158,15 @@ ensure_bundler() {
     return 0
   fi
 
-  log "Installing Bundler ${BUNDLER_VERSION} for current Ruby"
-  gem install "bundler:${BUNDLER_VERSION}" --no-document
-  hash -r
+  log "Installing Bundler ${BUNDLER_VERSION} to user gem home"
+  gem install --user-install "bundler:${BUNDLER_VERSION}" --no-document
+
+  local gem_user_bin
+  gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
+  export PATH="${gem_user_bin}:$PATH"
+  BUNDLE_EXE="${gem_user_bin}/bundle"
+
+  [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
   "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v >/dev/null 2>&1 || die "Bundler ${BUNDLER_VERSION} not available after installation."
 }
 
