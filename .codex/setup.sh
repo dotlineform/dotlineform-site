@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -euo pipefail
 
 log()  { printf '[codex-setup] %s\n' "$*"; }
 warn() { printf '[codex-setup][warn] %s\n' "$*" >&2; }
@@ -9,24 +9,42 @@ trap 'die "Command failed at line ${LINENO}: ${BASH_COMMAND}"' ERR
 
 RUBY_VERSION="3.1.6"
 BUNDLER_VERSION="2.6.9"
+VENV_DIR=".venv"
+VENV_PYTHON="${VENV_DIR}/bin/python"
+VENV_PIP="${VENV_DIR}/bin/pip"
+BUNDLE_LOCAL_PATH="vendor/bundle"
+BUNDLE_EXE="bundle"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "$REPO_ROOT"
 
-export RBENV_ROOT="${RBENV_ROOT:-$HOME/.rbenv}"
-export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"
-
-append_line_if_missing() {
-  local file="$1"
-  local line="$2"
-  mkdir -p "$(dirname "$file")"
-  touch "$file"
-  grep -Fqx "$line" "$file" || printf '%s\n' "$line" >> "$file"
-}
-
 have_sudo() {
   command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
+}
+
+assert_ruby_version_consistency() {
+  local ruby_version_file="$REPO_ROOT/.ruby-version"
+  [[ -f "$ruby_version_file" ]] || return 0
+
+  local repo_ruby_version
+  repo_ruby_version="$(tr -d '[:space:]' < "$ruby_version_file")"
+
+  if [[ "$repo_ruby_version" != "$RUBY_VERSION" ]]; then
+    warn ".ruby-version (${repo_ruby_version}) differs from setup preferred RUBY_VERSION (${RUBY_VERSION}); continuing with installed Ruby."
+  fi
+}
+
+can_skip_apt_packages() {
+  local -a required_commands=(python3 git ffmpeg ruby gem bundle gcc make pkg-config)
+  local cmd
+
+  for cmd in "${required_commands[@]}"; do
+    command -v "$cmd" >/dev/null 2>&1 || return 1
+  done
+
+  python3 -m venv --help >/dev/null 2>&1 || return 1
+  return 0
 }
 
 toolchain_ready() {
@@ -48,126 +66,108 @@ toolchain_ready() {
 
 install_apt_packages() {
   command -v apt-get >/dev/null 2>&1 || {
-    warn "apt-get not available; skipping OS package install."
+    log "apt-get not available; skipping system package installation."
     return 0
   }
 
-  if [[ "${FORCE_APT_PACKAGES:-0}" != "1" ]] && toolchain_ready; then
-    log "Core toolchain already available; skipping apt package install."
+  if [[ "${FORCE_APT_PACKAGES:-0}" != "1" ]] && can_skip_apt_packages; then
+    log "System packages already satisfied; skipping apt package installation."
     return 0
   fi
 
-  if [[ "$(id -u)" -eq 0 ]]; then
-    apt-get update
-    apt-get install -y --no-install-recommends \
-      build-essential \
-      ca-certificates \
-      curl \
-      ffmpeg \
-      git \
-      libffi-dev \
-      libgdbm-dev \
-      libheif-examples \
-      libreadline-dev \
-      libssl-dev \
-      libxml2-dev \
-      libxslt1-dev \
-      libyaml-dev \
-      pkg-config \
-      python3 \
-      python3-pip \
-      python3-venv \
-      zlib1g-dev
-  elif have_sudo; then
-    sudo -n apt-get update
-    sudo -n apt-get install -y --no-install-recommends \
-      build-essential \
-      ca-certificates \
-      curl \
-      ffmpeg \
-      git \
-      libffi-dev \
-      libgdbm-dev \
-      libheif-examples \
-      libreadline-dev \
-      libssl-dev \
-      libxml2-dev \
-      libxslt1-dev \
-      libyaml-dev \
-      pkg-config \
-      python3 \
-      python3-pip \
-      python3-venv \
-      zlib1g-dev
+  log "Installing required system packages via apt-get (FORCE_APT_PACKAGES=${FORCE_APT_PACKAGES:-0})."
+  warn "Third-party apt repository warnings can be non-fatal if apt completes successfully."
+
+  local -a apt_cmd=(apt-get)
+  if [[ "$(id -u)" -ne 0 ]]; then
+    if have_sudo; then
+      apt_cmd=(sudo -n apt-get)
+    else
+      warn "No non-interactive sudo; cannot install system packages."
+      return 0
+    fi
+  fi
+
+  "${apt_cmd[@]}" -o Acquire::Retries=3 update
+  "${apt_cmd[@]}" install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    curl \
+    ffmpeg \
+    git \
+    libffi-dev \
+    libgdbm-dev \
+    libheif-examples \
+    libreadline-dev \
+    libssl-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libyaml-dev \
+    pkg-config \
+    python3 \
+    python3-pip \
+    python3-venv \
+    zlib1g-dev
+}
+
+ensure_python_venv() {
+  command -v python3 >/dev/null 2>&1 || die "python3 not available."
+
+  if [[ -d "$VENV_DIR" ]]; then
+    log "Reusing existing virtualenv at ${VENV_DIR}."
   else
-    warn "No non-interactive sudo; skipping OS package install."
+    log "Creating virtualenv at ${VENV_DIR}."
+    python3 -m venv "$VENV_DIR"
+  fi
+
+  [[ -x "$VENV_PYTHON" ]] || die "Virtualenv python not found at ${VENV_PYTHON}."
+  [[ -x "$VENV_PIP" ]] || die "Virtualenv pip not found at ${VENV_PIP}."
+
+  log "Python executable: ${VENV_PYTHON}"
+  log "pip executable: ${VENV_PIP}"
+
+  log "Upgrading pip inside virtualenv"
+  "$VENV_PYTHON" -m pip install --upgrade pip
+
+  if [[ -f requirements.txt ]]; then
+    log "Installing Python dependencies into virtualenv"
+    "$VENV_PIP" install -r requirements.txt
+  else
+    warn "requirements.txt not found; skipping Python dependency install."
   fi
 }
 
-assert_ruby_version_consistency() {
-  local ruby_version_file="$REPO_ROOT/.ruby-version"
-  [[ -f "$ruby_version_file" ]] || return 0
+ensure_ruby_runtime() {
+  command -v ruby >/dev/null 2>&1 || die "ruby is required but not available on PATH."
+  command -v gem >/dev/null 2>&1 || die "gem is required but not available on PATH."
 
-  local repo_ruby_version
-  repo_ruby_version="$(tr -d '[:space:]' < "$ruby_version_file")"
+  local ruby_version_actual
+  ruby_version_actual="$(ruby -e 'print RUBY_VERSION')"
 
-  if [[ "$repo_ruby_version" != "$RUBY_VERSION" ]]; then
-    die ".ruby-version (${repo_ruby_version}) does not match setup RUBY_VERSION (${RUBY_VERSION})."
-  fi
-}
+  # Compatibility rule: require Ruby >= 3.1.0 for this repository setup.
+  # We intentionally allow newer patch/minor versions (for example 3.2.x).
+  ruby -e "exit(Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0') ? 0 : 1)" \
+    || die "Ruby ${ruby_version_actual} is incompatible; require Ruby >= 3.1.0."
 
-ensure_rbenv() {
-  if [[ ! -d "$RBENV_ROOT" ]]; then
-    log "Installing rbenv"
-    git clone https://github.com/rbenv/rbenv.git "$RBENV_ROOT"
-  fi
-
-  mkdir -p "$RBENV_ROOT/plugins"
-
-  if [[ ! -d "$RBENV_ROOT/plugins/ruby-build" ]]; then
-    log "Installing ruby-build"
-    git clone https://github.com/rbenv/ruby-build.git "$RBENV_ROOT/plugins/ruby-build"
-  fi
-
-  command -v rbenv >/dev/null 2>&1 || die "rbenv not on PATH."
-  eval "$(rbenv init - bash)"
-}
-
-persist_rbenv_init() {
-  append_line_if_missing "$HOME/.bashrc" 'export RBENV_ROOT="$HOME/.rbenv"'
-  append_line_if_missing "$HOME/.bashrc" 'export PATH="$RBENV_ROOT/bin:$RBENV_ROOT/shims:$PATH"'
-  append_line_if_missing "$HOME/.bashrc" 'if command -v rbenv >/dev/null 2>&1; then eval "$(rbenv init - bash)"; fi'
-}
-
-ensure_ruby() {
-  if ! rbenv versions --bare | grep -qx "$RUBY_VERSION"; then
-    log "Installing Ruby $RUBY_VERSION"
-    rbenv install "$RUBY_VERSION"
-  fi
-
-  rbenv global "$RUBY_VERSION"
-  rbenv rehash
+  log "Ruby version: ${ruby_version_actual} (preferred: ${RUBY_VERSION}, minimum supported: 3.1.0)"
 }
 
 ensure_bundler() {
-  if ! gem list -i bundler -v "$BUNDLER_VERSION" >/dev/null 2>&1; then
-    log "Installing Bundler $BUNDLER_VERSION"
-    gem install "bundler:$BUNDLER_VERSION" --no-document
-    rbenv rehash
+  if command -v "$BUNDLE_EXE" >/dev/null 2>&1 && "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v >/dev/null 2>&1; then
+    log "Bundler ${BUNDLER_VERSION} already available."
+    return 0
   fi
-}
 
-install_python_deps() {
-  command -v python3 >/dev/null 2>&1 || die "python3 not available."
+  log "Installing Bundler ${BUNDLER_VERSION} to user gem home"
+  gem install --user-install "bundler:${BUNDLER_VERSION}" --no-document
 
-  python3 -m pip install --upgrade pip
+  local gem_user_bin
+  gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
+  export PATH="${gem_user_bin}:$PATH"
+  BUNDLE_EXE="${gem_user_bin}/bundle"
 
-  if [[ -f requirements.txt ]]; then
-    log "Installing Python dependencies"
-    python3 -m pip install -r requirements.txt
-  else
-    warn "requirements.txt not found; skipping."
-  fi
+  [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
+  "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v >/dev/null 2>&1 || die "Bundler ${BUNDLER_VERSION} not available after installation."
 }
 
 install_ruby_deps() {
@@ -176,7 +176,7 @@ install_ruby_deps() {
     bundle _${BUNDLER_VERSION}_ config set --local path vendor/bundle
     bundle _${BUNDLER_VERSION}_ install
   else
-    warn "Gemfile not found; skipping."
+    warn "Gemfile not found; skipping Ruby dependency install."
   fi
 }
 
@@ -187,10 +187,15 @@ verify_environment() {
   printf 'bundle path: %s\n' "$(command -v bundle || echo not-found)"
   python3 -V
   ruby -v
-  bundle -v
+  "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v
 
   if command -v ffmpeg >/dev/null 2>&1; then
     ffmpeg -version | head -n 1
+  fi
+
+  if [[ -f .bundle/config ]]; then
+    log "Bundle local config"
+    sed -n '1,80p' .bundle/config
   fi
 }
 
@@ -198,11 +203,9 @@ main() {
   log "Repo root: $REPO_ROOT"
   assert_ruby_version_consistency
   install_apt_packages
-  ensure_rbenv
-  persist_rbenv_init
-  ensure_ruby
+  ensure_python_venv
+  ensure_ruby_runtime
   ensure_bundler
-  install_python_deps
   install_ruby_deps
   verify_environment
   log "Setup complete"
