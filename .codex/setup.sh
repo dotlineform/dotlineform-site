@@ -92,12 +92,14 @@ install_apt_packages() {
 
 ensure_python_venv() {
   command -v python3 >/dev/null 2>&1 || die "python3 not available."
+  local venv_created=0
 
   if [[ -d "$VENV_DIR" ]]; then
     log "Reusing existing virtualenv at ${VENV_DIR}."
   else
     log "Creating virtualenv at ${VENV_DIR}."
     python3 -m venv "$VENV_DIR"
+    venv_created=1
   fi
 
   [[ -x "$VENV_PYTHON" ]] || die "Virtualenv python not found at ${VENV_PYTHON}."
@@ -106,8 +108,12 @@ ensure_python_venv() {
   log "Python executable: ${VENV_PYTHON}"
   log "pip executable: ${VENV_PIP}"
 
-  log "Upgrading pip inside virtualenv"
-  "$VENV_PYTHON" -m pip install --upgrade pip
+  if [[ "$venv_created" == "1" ]]; then
+    log "Upgrading pip inside virtualenv (new virtualenv created)."
+    "$VENV_PYTHON" -m pip install --upgrade pip
+  else
+    log "Skipping pip upgrade (reusing existing virtualenv)."
+  fi
 
   if [[ -f requirements.txt ]]; then
     log "Installing Python dependencies into virtualenv"
