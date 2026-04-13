@@ -7,13 +7,11 @@ die()  { printf '[codex-setup][error] %s\n' "$*" >&2; exit 1; }
 
 trap 'die "Command failed at line ${LINENO}: ${BASH_COMMAND}"' ERR
 
-RUBY_VERSION="3.1.6"
-BUNDLER_VERSION="2.6.9"
 VENV_DIR=".venv"
 VENV_PYTHON="${VENV_DIR}/bin/python"
 VENV_PIP="${VENV_DIR}/bin/pip"
 BUNDLE_EXE="bundle"
-BUNDLE_USE_RUBY_S=0
+BUNDLE_BOOTSTRAP_ATTEMPTED=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -23,20 +21,8 @@ have_sudo() {
   command -v sudo >/dev/null 2>&1 && sudo -n true >/dev/null 2>&1
 }
 
-assert_ruby_version_consistency() {
-  local ruby_version_file="$REPO_ROOT/.ruby-version"
-  [[ -f "$ruby_version_file" ]] || return 0
-
-  local repo_ruby_version
-  repo_ruby_version="$(tr -d '[:space:]' < "$ruby_version_file")"
-
-  if [[ "$repo_ruby_version" != "$RUBY_VERSION" ]]; then
-    warn ".ruby-version (${repo_ruby_version}) differs from setup preferred RUBY_VERSION (${RUBY_VERSION}); continuing with installed Ruby."
-  fi
-}
-
 can_skip_apt_packages() {
-  local -a required_commands=(python3 git ffmpeg ruby gem bundle gcc make pkg-config)
+  local -a required_commands=(python3 git gcc make pkg-config)
   local cmd
 
   for cmd in "${required_commands[@]}"; do
@@ -48,6 +34,11 @@ can_skip_apt_packages() {
 }
 
 install_apt_packages() {
+  if [[ "${SETUP_SKIP_APT:-0}" == "1" ]]; then
+    log "SETUP_SKIP_APT=1; skipping apt package installation."
+    return 0
+  fi
+
   command -v apt-get >/dev/null 2>&1 || {
     log "apt-get not available; skipping system package installation."
     return 0
@@ -58,8 +49,7 @@ install_apt_packages() {
     return 0
   fi
 
-  log "Installing required system packages via apt-get (FORCE_APT_PACKAGES=${FORCE_APT_PACKAGES:-0})."
-  warn "Third-party apt repository warnings can be non-fatal if apt completes successfully."
+  log "Installing baseline system packages via apt-get (FORCE_APT_PACKAGES=${FORCE_APT_PACKAGES:-0}, SETUP_INSTALL_MEDIA_PACKAGES=${SETUP_INSTALL_MEDIA_PACKAGES:-0})."
 
   local -a apt_cmd=(apt-get)
   if [[ "$(id -u)" -ne 0 ]]; then
@@ -72,15 +62,13 @@ install_apt_packages() {
   fi
 
   "${apt_cmd[@]}" -o Acquire::Retries=3 update
-  "${apt_cmd[@]}" install -y --no-install-recommends \
+  local -a packages=(
     build-essential \
     ca-certificates \
     curl \
-    ffmpeg \
     git \
     libffi-dev \
     libgdbm-dev \
-    libheif-examples \
     libreadline-dev \
     libssl-dev \
     libxml2-dev \
@@ -91,6 +79,15 @@ install_apt_packages() {
     python3-pip \
     python3-venv \
     zlib1g-dev
+  )
+
+  if [[ "${SETUP_INSTALL_MEDIA_PACKAGES:-0}" == "1" ]]; then
+    packages+=(ffmpeg libheif-examples)
+  else
+    log "Skipping optional media packages (ffmpeg, libheif-examples). Set SETUP_INSTALL_MEDIA_PACKAGES=1 to include."
+  fi
+
+  "${apt_cmd[@]}" install -y --no-install-recommends "${packages[@]}"
 }
 
 ensure_python_venv() {
@@ -126,72 +123,77 @@ ensure_ruby_runtime() {
 
   local ruby_version_actual
   ruby_version_actual="$(ruby -e 'print RUBY_VERSION')"
-
-  # Compatibility rule: require Ruby >= 3.1.0 for this repository setup.
-  # We intentionally allow newer patch/minor versions (for example 3.2.x).
-  ruby -e "exit(Gem::Version.new('${ruby_version_actual}') >= Gem::Version.new('3.1.0') ? 0 : 1)" \
-    || die "Ruby ${ruby_version_actual} is incompatible; require Ruby >= 3.1.0."
-
-  log "Ruby version: ${ruby_version_actual} (preferred: ${RUBY_VERSION}, minimum supported: 3.1.0)"
+  log "Ruby version: ${ruby_version_actual} ($(command -v ruby))"
 }
 
 run_bundler() {
-  if [[ "$BUNDLE_USE_RUBY_S" == "1" ]]; then
-    ruby -S bundle "_${BUNDLER_VERSION}_" "$@"
-  else
-    "$BUNDLE_EXE" "_${BUNDLER_VERSION}_" "$@"
+  "$BUNDLE_EXE" "$@"
+}
+
+ensure_bundler_on_path() {
+  if command -v bundle >/dev/null 2>&1; then
+    BUNDLE_EXE="$(command -v bundle)"
+    local bundler_version
+    bundler_version="$(bundle -v 2>/dev/null || true)"
+    if [[ -n "$bundler_version" ]]; then
+      log "Bundler detected: ${bundler_version} (${BUNDLE_EXE})"
+    else
+      warn "bundle exists on PATH but could not report version; will attempt to use it."
+    fi
+    return 0
   fi
+
+  return 1
+}
+
+bootstrap_bundler() {
+  local fallback_version="${BUNDLER_FALLBACK_VERSION:-}"
+  local gem_install_args=(--user-install --no-document bundler)
+
+  if [[ -n "$fallback_version" ]]; then
+    gem_install_args=(--user-install --no-document "bundler:${fallback_version}")
+    log "Installing fallback Bundler ${fallback_version} with --user-install."
+  else
+    log "Installing fallback Bundler with --user-install."
+  fi
+
+  gem install "${gem_install_args[@]}"
+
+  local gem_user_bin
+  gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
+  export PATH="${gem_user_bin}:$PATH"
+
+  BUNDLE_EXE="${gem_user_bin}/bundle"
+  [[ -x "$BUNDLE_EXE" ]] || die "Bundler installation did not produce ${BUNDLE_EXE}."
+  BUNDLE_BOOTSTRAP_ATTEMPTED=1
+  log "Bundler detected: $("$BUNDLE_EXE" -v) (${BUNDLE_EXE})"
 }
 
 ensure_bundler() {
-  if command -v "$BUNDLE_EXE" >/dev/null 2>&1 && run_bundler -v >/dev/null 2>&1; then
-    log "Bundler ${BUNDLER_VERSION} already available."
+  if ensure_bundler_on_path; then
     return 0
   fi
 
-  local gem_dir
-  gem_dir="$(ruby -r rubygems -e 'print Gem.dir')"
-
-  if [[ -w "$gem_dir" ]]; then
-    log "Installing Bundler ${BUNDLER_VERSION} into Ruby gem directory (${gem_dir})"
-    gem install "bundler:${BUNDLER_VERSION}" --no-document
-  else
-    log "Ruby gem directory not writable (${gem_dir}); installing Bundler ${BUNDLER_VERSION} to user gem home"
-    gem install --user-install "bundler:${BUNDLER_VERSION}" --no-document
-
-    local gem_user_bin
-    gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
-    export PATH="${gem_user_bin}:$PATH"
-    BUNDLE_EXE="${gem_user_bin}/bundle"
-  fi
-
-  if [[ "$BUNDLE_EXE" == */* ]]; then
-    [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
-  else
-    local bundle_path
-    bundle_path="$(command -v "$BUNDLE_EXE" || true)"
-    [[ -n "$bundle_path" ]] || die "bundle not found on PATH after installing Bundler ${BUNDLER_VERSION}."
-    BUNDLE_EXE="$bundle_path"
-  fi
-
-  if run_bundler -v >/dev/null 2>&1; then
-    return 0
-  fi
-
-  if ruby -S bundle "_${BUNDLER_VERSION}_" -v >/dev/null 2>&1; then
-    warn "bundle wrapper at ${BUNDLE_EXE} is not directly runnable in this environment; falling back to 'ruby -S bundle'."
-    BUNDLE_USE_RUBY_S=1
-    return 0
-  fi
-
-  die "Bundler ${BUNDLER_VERSION} not available after installation."
+  warn "bundle is not available on PATH; installing fallback bundler."
+  bootstrap_bundler
 }
 
 install_ruby_deps() {
   if [[ -f Gemfile ]]; then
     log "Installing Ruby gems"
-    run_bundler config set --local path vendor/bundle
-    run_bundler install
+    if run_bundler config set --local path vendor/bundle && run_bundler install; then
+      return 0
+    fi
+
+    if [[ "$BUNDLE_BOOTSTRAP_ATTEMPTED" == "0" ]]; then
+      warn "Existing bundler failed for this Gemfile; installing fallback bundler and retrying once."
+      bootstrap_bundler
+      run_bundler config set --local path vendor/bundle
+      run_bundler install
+      return 0
+    fi
+
+    die "Bundler failed to install gems even after fallback install."
   else
     warn "Gemfile not found; skipping Ruby dependency install."
   fi
@@ -201,7 +203,7 @@ verify_environment() {
   log "Versions"
   printf 'python3 path: %s\n' "$(command -v python3 || echo not-found)"
   printf 'ruby path: %s\n' "$(command -v ruby || echo not-found)"
-  printf 'bundle path: %s\n' "$(command -v "$BUNDLE_EXE" || echo not-found)"
+  printf 'bundle path: %s\n' "$BUNDLE_EXE"
   python3 -V
   ruby -v
   run_bundler -v
@@ -216,15 +218,26 @@ verify_environment() {
   fi
 }
 
+run_phase() {
+  local phase="$1"
+  shift
+  local start_ts end_ts duration_s
+  start_ts="$(date +%s)"
+  log "Phase start: ${phase}"
+  "$@"
+  end_ts="$(date +%s)"
+  duration_s="$((end_ts - start_ts))"
+  log "Phase complete: ${phase} (${duration_s}s)"
+}
+
 main() {
   log "Repo root: $REPO_ROOT"
-  assert_ruby_version_consistency
-  install_apt_packages
-  ensure_python_venv
-  ensure_ruby_runtime
-  ensure_bundler
-  install_ruby_deps
-  verify_environment
+  run_phase "apt" install_apt_packages
+  run_phase "python" ensure_python_venv
+  run_phase "ruby-runtime" ensure_ruby_runtime
+  run_phase "bundler-detect" ensure_bundler
+  run_phase "ruby-deps" install_ruby_deps
+  run_phase "verify" verify_environment
   log "Setup complete"
 }
 
