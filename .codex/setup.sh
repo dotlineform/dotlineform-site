@@ -165,7 +165,15 @@ ensure_bundler() {
     BUNDLE_EXE="${gem_user_bin}/bundle"
   fi
 
-  [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
+  if [[ "$BUNDLE_EXE" == */* ]]; then
+    [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
+  else
+    local bundle_path
+    bundle_path="$(command -v "$BUNDLE_EXE" || true)"
+    [[ -n "$bundle_path" ]] || die "bundle not found on PATH after installing Bundler ${BUNDLER_VERSION}."
+    BUNDLE_EXE="$bundle_path"
+  fi
+
   if run_bundler -v >/dev/null 2>&1; then
     return 0
   fi
