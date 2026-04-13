@@ -12,7 +12,6 @@ BUNDLER_VERSION="2.6.9"
 VENV_DIR=".venv"
 VENV_PYTHON="${VENV_DIR}/bin/python"
 VENV_PIP="${VENV_DIR}/bin/pip"
-BUNDLE_LOCAL_PATH="vendor/bundle"
 BUNDLE_EXE="bundle"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -45,23 +44,6 @@ can_skip_apt_packages() {
 
   python3 -m venv --help >/dev/null 2>&1 || return 1
   return 0
-}
-
-toolchain_ready() {
-  local -a required_commands=(python3 ruby bundle git ffmpeg)
-  local -a missing_commands=()
-  local cmd
-
-  for cmd in "${required_commands[@]}"; do
-    command -v "$cmd" >/dev/null 2>&1 || missing_commands+=("$cmd")
-  done
-
-  if [[ "${#missing_commands[@]}" -eq 0 ]]; then
-    return 0
-  fi
-
-  log "Missing commands: ${missing_commands[*]}"
-  return 1
 }
 
 install_apt_packages() {
@@ -146,7 +128,7 @@ ensure_ruby_runtime() {
 
   # Compatibility rule: require Ruby >= 3.1.0 for this repository setup.
   # We intentionally allow newer patch/minor versions (for example 3.2.x).
-  ruby -e "exit(Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.1.0') ? 0 : 1)" \
+  ruby -e "exit(Gem::Version.new('${ruby_version_actual}') >= Gem::Version.new('3.1.0') ? 0 : 1)" \
     || die "Ruby ${ruby_version_actual} is incompatible; require Ruby >= 3.1.0."
 
   log "Ruby version: ${ruby_version_actual} (preferred: ${RUBY_VERSION}, minimum supported: 3.1.0)"
@@ -173,8 +155,8 @@ ensure_bundler() {
 install_ruby_deps() {
   if [[ -f Gemfile ]]; then
     log "Installing Ruby gems"
-    bundle _${BUNDLER_VERSION}_ config set --local path vendor/bundle
-    bundle _${BUNDLER_VERSION}_ install
+    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ config set --local path vendor/bundle
+    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ install
   else
     warn "Gemfile not found; skipping Ruby dependency install."
   fi
@@ -184,7 +166,7 @@ verify_environment() {
   log "Versions"
   printf 'python3 path: %s\n' "$(command -v python3 || echo not-found)"
   printf 'ruby path: %s\n' "$(command -v ruby || echo not-found)"
-  printf 'bundle path: %s\n' "$(command -v bundle || echo not-found)"
+  printf 'bundle path: %s\n' "$(command -v "$BUNDLE_EXE" || echo not-found)"
   python3 -V
   ruby -v
   "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v
