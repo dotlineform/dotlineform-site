@@ -13,6 +13,7 @@ VENV_DIR=".venv"
 VENV_PYTHON="${VENV_DIR}/bin/python"
 VENV_PIP="${VENV_DIR}/bin/pip"
 BUNDLE_EXE="bundle"
+BUNDLE_USE_RUBY_S=0
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
@@ -134,29 +135,55 @@ ensure_ruby_runtime() {
   log "Ruby version: ${ruby_version_actual} (preferred: ${RUBY_VERSION}, minimum supported: 3.1.0)"
 }
 
+run_bundler() {
+  if [[ "$BUNDLE_USE_RUBY_S" == "1" ]]; then
+    ruby -S bundle "_${BUNDLER_VERSION}_" "$@"
+  else
+    "$BUNDLE_EXE" "_${BUNDLER_VERSION}_" "$@"
+  fi
+}
+
 ensure_bundler() {
-  if command -v "$BUNDLE_EXE" >/dev/null 2>&1 && "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v >/dev/null 2>&1; then
+  if command -v "$BUNDLE_EXE" >/dev/null 2>&1 && run_bundler -v >/dev/null 2>&1; then
     log "Bundler ${BUNDLER_VERSION} already available."
     return 0
   fi
 
-  log "Installing Bundler ${BUNDLER_VERSION} to user gem home"
-  gem install --user-install "bundler:${BUNDLER_VERSION}" --no-document
+  local gem_dir
+  gem_dir="$(ruby -r rubygems -e 'print Gem.dir')"
 
-  local gem_user_bin
-  gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
-  export PATH="${gem_user_bin}:$PATH"
-  BUNDLE_EXE="${gem_user_bin}/bundle"
+  if [[ -w "$gem_dir" ]]; then
+    log "Installing Bundler ${BUNDLER_VERSION} into Ruby gem directory (${gem_dir})"
+    gem install "bundler:${BUNDLER_VERSION}" --no-document
+  else
+    log "Ruby gem directory not writable (${gem_dir}); installing Bundler ${BUNDLER_VERSION} to user gem home"
+    gem install --user-install "bundler:${BUNDLER_VERSION}" --no-document
+
+    local gem_user_bin
+    gem_user_bin="$(ruby -r rubygems -e 'print Gem.user_dir')/bin"
+    export PATH="${gem_user_bin}:$PATH"
+    BUNDLE_EXE="${gem_user_bin}/bundle"
+  fi
 
   [[ -x "$BUNDLE_EXE" ]] || die "bundle not found at ${BUNDLE_EXE} after installing Bundler ${BUNDLER_VERSION}."
-  "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v >/dev/null 2>&1 || die "Bundler ${BUNDLER_VERSION} not available after installation."
+  if run_bundler -v >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if ruby -S bundle "_${BUNDLER_VERSION}_" -v >/dev/null 2>&1; then
+    warn "bundle wrapper at ${BUNDLE_EXE} is not directly runnable in this environment; falling back to 'ruby -S bundle'."
+    BUNDLE_USE_RUBY_S=1
+    return 0
+  fi
+
+  die "Bundler ${BUNDLER_VERSION} not available after installation."
 }
 
 install_ruby_deps() {
   if [[ -f Gemfile ]]; then
     log "Installing Ruby gems"
-    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ config set --local path vendor/bundle
-    "$BUNDLE_EXE" _${BUNDLER_VERSION}_ install
+    run_bundler config set --local path vendor/bundle
+    run_bundler install
   else
     warn "Gemfile not found; skipping Ruby dependency install."
   fi
@@ -169,7 +196,7 @@ verify_environment() {
   printf 'bundle path: %s\n' "$(command -v "$BUNDLE_EXE" || echo not-found)"
   python3 -V
   ruby -v
-  "$BUNDLE_EXE" _${BUNDLER_VERSION}_ -v
+  run_bundler -v
 
   if command -v ffmpeg >/dev/null 2>&1; then
     ffmpeg -version | head -n 1
