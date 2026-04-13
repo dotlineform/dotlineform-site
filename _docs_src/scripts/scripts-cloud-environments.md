@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-cloud-environments
 title: Cloud Environments (Codex + Codespaces + R2)
-last_updated: 2026-04-07
+last_updated: 2026-04-13
 parent_id: scripts
 sort_order: 35
 ---
@@ -28,7 +28,7 @@ This page covers:
 
 ## Baseline Runtime Contract
 
-The current pinned runtime remains:
+The current parity baseline remains:
 
 - Python `3.12.7`
 - Python package `openpyxl 3.1.5`
@@ -37,7 +37,16 @@ The current pinned runtime remains:
 - Jekyll `3.10.0`
 - `github-pages` gem `232`
 
-Treat this as a shared baseline for local and cloud environments.
+Treat this as the compatibility target for local and cloud environments when you need predictable publish parity.
+
+### Runtime modes
+
+Cloud sessions can run in two practical modes:
+
+- **Fast script mode**: use the preinstalled cloud Ruby when it satisfies the script/runtime minimums.
+- **Parity mode**: use the pinned Ruby/Bundler/Jekyll stack to match local + GitHub Pages behavior.
+
+Use parity mode for publish-sensitive flows (for example `bundle exec jekyll build --quiet`, docs rendering through Jekyll converters, and final verification before committing generated artifacts).
 
 ## Implementation Steps
 
@@ -74,10 +83,15 @@ Use `.codex/setup.sh` as the single setup/bootstrap script for Codex cloud sessi
 
 Current intent:
 
-- install and verify the pinned Ruby/Bundler/Python runtime
+- install and verify Python plus a Ruby runtime compatible with repo minimums
 - install repo Python/Ruby dependencies
 - run a docs-builder smoke check (`./scripts/build_docs.rb`)
 - avoid interactive sudo prompts by using non-interactive elevation only and a user-local `RBENV_ROOT` fallback when root writes are unavailable
+
+Notes:
+
+- `.codex/setup.sh` currently treats Ruby `3.1.6` as preferred but accepts newer Ruby when compatible.
+- Keep Bundler/Jekyll checks pinned for parity verification runs.
 
 If Codex Cloud supports setup script paths in environment config, point that field to:
 
@@ -148,12 +162,13 @@ bundle exec jekyll build --quiet
 
 ## Benefits
 
-- one runtime contract across local and cloud
-- fewer false environment failures from mismatched Ruby/Bundler
-- predictable onboarding for non-local development sessions
+- faster cloud bootstrap for script-heavy work by reusing preinstalled runtimes
+- explicit parity fallback for publish-sensitive checks
+- predictable onboarding for non-local development sessions without forcing unnecessary runtime installs
 
 ## Risks
 
+- runtime drift can mask compatibility issues if parity checks are skipped
 - Linux cloud images may differ from macOS behavior for image conversion tooling
 - unavailable source media roots in cloud sessions can block generation commands
 - accidental credential handling in logs/docs if secret boundaries are not respected

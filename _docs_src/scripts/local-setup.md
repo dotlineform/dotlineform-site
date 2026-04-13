@@ -1,7 +1,7 @@
 ---
 doc_id: local-setup
 title: Local Setup
-last_updated: 2026-03-31
+last_updated: 2026-04-13
 parent_id: scripts
 sort_order: 30
 ---
@@ -417,6 +417,11 @@ Those are local-only requirements because the workbook-driven generators and med
 
 Another local-only difference is Ruby selection. On macOS, it is easy to accidentally use `/usr/bin/ruby`, which can break local Bundler resolution. Using `rbenv` avoids that problem and makes local verification match the pinned repo versions more reliably.
 
+For Codex/cloud sessions, keep this distinction explicit:
+
+- use preinstalled Ruby for fast iteration on simple Ruby scripts when compatibility checks pass
+- use pinned parity checks (Ruby/Bundler/Jekyll contract) before relying on publish-sensitive results
+
 ## Codex / AGENTS note
 
 `AGENTS.md` already contains pertinent local runtime guidance for Codex, including:
@@ -426,5 +431,6 @@ Another local-only difference is Ruby selection. On macOS, it is easy to acciden
 - prefer `./scripts/...` command forms
 - rely on `DOTLINEFORM_PROJECTS_BASE_DIR` by default for source lookups
 - pinned Ruby `3.1.6` and Bundler `2.6.9`
+- preference for parity verification runs via pinned Bundler/Jekyll commands
 
 This doc keeps the repo guidance generic and portable. Machine-specific interpreter paths should stay in `AGENTS.md`, not in user-facing repo docs.
