@@ -28,7 +28,7 @@ This page covers:
 
 ## Baseline Runtime Contract
 
-The current parity baseline remains:
+The target parity baseline for publish-sensitive checks remains:
 
 - Python `3.12.7`
 - Python package `openpyxl 3.1.5`
@@ -37,13 +37,14 @@ The current parity baseline remains:
 - Jekyll `3.10.0`
 - `github-pages` gem `232`
 
-Treat this as the compatibility target for local and cloud environments when you need predictable publish parity.
+Treat this as the compatibility target for local and cloud environments when you need predictable publish parity. Codex setup currently validates Ruby/Bundler availability but does **not** force Ruby `3.1.6` when a newer compatible Ruby is already active.
 
 ### Runtime modes
 
-Cloud sessions can run in two practical modes:
+Cloud sessions can run in three practical modes:
 
-- **Fast script mode**: use the preinstalled cloud Ruby when it satisfies the script/runtime minimums.
+- **Fast script mode**: use preinstalled cloud runtimes and skip optional media packages.
+- **Fast + media mode**: same as fast mode, but include media packages when source conversion is needed (`ffmpeg`, `libheif` tools).
 - **Parity mode**: use the pinned Ruby/Bundler/Jekyll stack to match local + GitHub Pages behavior.
 
 Use parity mode for publish-sensitive flows (for example `bundle exec jekyll build --quiet`, docs rendering through Jekyll converters, and final verification before committing generated artifacts).
@@ -81,19 +82,52 @@ Recommended bootstrap actions in `postCreateCommand`:
 
 Use `.codex/setup.sh` as the single setup/bootstrap script for Codex cloud sessions.
 
-Current intent:
+Current behavior:
 
-- install and verify Python plus a Ruby runtime compatible with repo minimums
-- install repo Python/Ruby dependencies
-- run a docs-builder smoke check (`./scripts/build_docs.rb`)
-- avoid interactive sudo prompts by using non-interactive elevation only and a user-local `RBENV_ROOT` fallback when root writes are unavailable
+- run an apt phase (skipped when required commands already exist, or when apt/sudo is unavailable)
+- create/reuse `.venv`, upgrade pip, and install `requirements.txt`
+- verify Ruby runtime exists, detect Bundler, then run `bundle config set --local path vendor/bundle` + `bundle install`
+- print version diagnostics (`python3`, `ruby`, `bundle`, optional `ffmpeg`) and local bundle config
+- avoid interactive sudo prompts (non-interactive only)
 
 Notes:
 
-- `.codex/setup.sh` currently treats Ruby `3.1.6` as preferred but accepts newer Ruby when compatible.
-- `.codex/setup.sh` prefers installing Bundler into the active Ruby gem directory when writable, and falls back to `--user-install` only when needed.
-- Some cloud runtimes generate a user-gem `bundle` wrapper that is not directly executable (it expects a sibling `ruby` binary); in those cases `.codex/setup.sh` uses `ruby -S bundle` for version checks/install flows.
+- `.codex/setup.sh` does not run docs/search/site builders by default; run those explicitly as follow-up verification.
+- Optional media packages are controlled by `SETUP_INSTALL_MEDIA_PACKAGES=1` during setup apt install.
+- apt package install can be skipped with `SETUP_SKIP_APT=1`; forced with `FORCE_APT_PACKAGES=1`.
+- If Bundler is missing or incompatible with the lockfile, setup installs a fallback user Bundler (optionally pinned via `BUNDLER_FALLBACK_VERSION`).
 - Keep Bundler/Jekyll checks pinned for parity verification runs.
+
+### Calling setup.sh by runtime mode
+
+Always run from repo root:
+
+```bash
+bash .codex/setup.sh
+```
+
+Fast script mode (default):
+
+```bash
+SETUP_SKIP_APT=1 bash .codex/setup.sh
+```
+
+Fast + media mode (install media dependencies where apt is available):
+
+```bash
+SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
+```
+
+Parity mode (force apt refresh and pin fallback Bundler when needed):
+
+```bash
+FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9 bash .codex/setup.sh
+```
+
+Codespaces post-create mode:
+
+- `.devcontainer/post-create.sh` calls `bash .codex/setup.sh` directly.
+- Ensure the image already contains system dependencies expected by setup, because post-create usually runs as non-root and setup will skip apt when sudo is unavailable.
 
 If Codex Cloud supports setup script paths in environment config, point that field to:
 
@@ -174,6 +208,34 @@ bundle exec jekyll build --quiet
 - Linux cloud images may differ from macOS behavior for image conversion tooling
 - unavailable source media roots in cloud sessions can block generation commands
 - accidental credential handling in logs/docs if secret boundaries are not respected
+
+## Version-Drift and Incompatibility Handling
+
+Potential future incompatibilities and how they surface:
+
+- **Ruby/Bundler lockfile mismatch**: setup output will show Bundler mismatch against `Gemfile.lock`; bundler install retries with fallback and surfaces hard failure if unresolved.
+- **Python dependency floor changes**: pip install errors in setup python phase will fail early before generator/build commands run.
+- **Jekyll/github-pages drift**: incompatibilities appear during explicit follow-up checks (`./scripts/build_docs.rb`, `bundle exec jekyll build --quiet`) even if setup itself passes.
+- **Media toolchain drift**: `ffmpeg`/`heif-convert` failures appear in media generation commands; setup only verifies `ffmpeg` when present.
+
+Recommended response loop:
+
+1. rerun setup with parity-oriented flags (`FORCE_APT_PACKAGES=1 BUNDLER_FALLBACK_VERSION=2.6.9`)
+2. run full parity checks (`./scripts/build_docs.rb`, `./scripts/build_search.rb`, `bundle exec jekyll build --quiet`)
+3. if mismatch persists, update pinned versions in `.ruby-version`, `Gemfile.lock`, and cloud runtime files together (plus docs) in one change set
+
+## Codespaces Consistency Notes
+
+Current Codespaces wiring is consistent:
+
+- `postCreateCommand` runs `.devcontainer/post-create.sh`
+- post-create delegates to `.codex/setup.sh`
+- Dockerfile preinstalls `ffmpeg` and `libheif-examples`, so media tooling is available even when setup apt is skipped
+
+Watch-outs:
+
+- if Dockerfile package/runtime pins change, re-run setup and parity checks in Codespaces to ensure post-create still succeeds without sudo
+- if setup begins requiring new system packages, add them to Dockerfile to avoid post-create apt-skip gaps
 
 ## Related References
 
