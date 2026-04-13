@@ -112,11 +112,17 @@ Fast script mode (default):
 SETUP_SKIP_APT=1 bash .codex/setup.sh
 ```
 
-Fast + media mode (install media dependencies where apt is available):
+Fast + media mode (force apt + install media dependencies where apt is available):
 
 ```bash
-SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
+FORCE_APT_PACKAGES=1 SETUP_INSTALL_MEDIA_PACKAGES=1 bash .codex/setup.sh
 ```
+
+Why force apt here:
+
+- `.codex/setup.sh` skips apt when baseline commands already exist (`can_skip_apt_packages`).
+- that baseline check currently does not validate `ffmpeg`/`libheif` tools.
+- in cloud images that already have Python/build tooling but not media tooling, using only `SETUP_INSTALL_MEDIA_PACKAGES=1` can still skip apt and leave media dependencies missing.
 
 Parity mode (force apt refresh and pin fallback Bundler when needed):
 
