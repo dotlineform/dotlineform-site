@@ -91,6 +91,8 @@ Current intent:
 Notes:
 
 - `.codex/setup.sh` currently treats Ruby `3.1.6` as preferred but accepts newer Ruby when compatible.
+- `.codex/setup.sh` prefers installing Bundler into the active Ruby gem directory when writable, and falls back to `--user-install` only when needed.
+- Some cloud runtimes generate a user-gem `bundle` wrapper that is not directly executable (it expects a sibling `ruby` binary); in those cases `.codex/setup.sh` uses `ruby -S bundle` for version checks/install flows.
 - Keep Bundler/Jekyll checks pinned for parity verification runs.
 
 If Codex Cloud supports setup script paths in environment config, point that field to:
