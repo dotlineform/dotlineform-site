@@ -41,4 +41,5 @@ ENV PATH=/usr/local/rbenv/bin:/usr/local/rbenv/shims:$PATH
 
 RUN /usr/local/rbenv/bin/rbenv install ${RUBY_VERSION} \
   && /usr/local/rbenv/bin/rbenv global ${RUBY_VERSION} \
-  && gem install bundler:${BUNDLER_VERSION}
+  && gem install bundler:${BUNDLER_VERSION} \
+  && gem install ruby-lsp
