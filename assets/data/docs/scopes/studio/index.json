@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T21:07:01Z",
+  "generated_at": "2026-04-14T14:20:57Z",
   "docs": [
     {
       "scope": "studio",
@@ -291,7 +291,7 @@
       "scope": "studio",
       "doc_id": "local-setup",
       "title": "Local Setup",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-13",
       "parent_id": "scripts",
       "sort_order": 30,
       "source_path": "scripts/local-setup.md",
@@ -374,6 +374,17 @@
       "source_path": "studio/build-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=build-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/build-activity.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-cloud-environments",
+      "title": "Cloud Environments (Codex + Codespaces + R2)",
+      "last_updated": "2026-04-13",
+      "parent_id": "scripts",
+      "sort_order": 35,
+      "source_path": "scripts/scripts-cloud-environments.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json"
     },
     {
       "scope": "studio",
