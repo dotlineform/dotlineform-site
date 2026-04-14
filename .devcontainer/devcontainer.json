@@ -10,7 +10,7 @@
       },
       "extensions": [
         "ms-python.python",
-        "rebornix.Ruby"
+        "Shopify.ruby-lsp"
       ]
     }
   },
