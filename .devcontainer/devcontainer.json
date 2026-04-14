@@ -21,7 +21,7 @@
   "DOTLINEFORM_PROJECTS_BASE_DIR": "/workspaces",
   "DOTLINEFORM_MEDIA_BASE_DIR": "/workspaces/.dotlineform-media",
   "MAKE_SRCSET_JOBS": "4"
-  }
+  },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "remoteUser": "vscode"
 }
