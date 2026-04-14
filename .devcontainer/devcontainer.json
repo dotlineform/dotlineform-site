@@ -6,7 +6,8 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/workspaces/dotlineform-site/.venv/bin/python"
+        "python.defaultInterpreterPath": "/workspaces/dotlineform-site/.venv/bin/python",
+        "python.terminal.shellIntegration.enabled": false
       },
       "extensions": [
         "ms-python.python",
