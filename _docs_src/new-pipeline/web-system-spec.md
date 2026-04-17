@@ -277,8 +277,10 @@ Required behavior:
 
 - create a new `series_id`
 - enter required metadata
-- optionally select member works
-- choose `primary_work_id`
+- save the new series as `draft` by default
+- allow initial create without member works or `primary_work_id`
+- optionally select member works in later increments
+- choose `primary_work_id` before publish/build
 - save to `series.json` and affected work `series_ids`
 
 Validation:
@@ -287,7 +289,9 @@ Validation:
 - `title` must be present
 - `status` must be allowed
 - `primary_work_id` must exist if provided
+- draft source saves may omit `primary_work_id`
 - `primary_work_id` must belong to the series when the series is publishable
+- scoped build/publish must be blocked while a draft series still lacks a valid `primary_work_id`
 
 Recommended ID behavior:
 

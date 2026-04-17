@@ -208,7 +208,7 @@ Primary map:
 Field notes:
 
 - `sort_fields` replaces the separate `SeriesSort` table for the JSON-first model.
-- `primary_work_id` must reference a work whose `series_ids` includes this series.
+- `primary_work_id` must reference a work whose `series_ids` includes this series when the series is publishable; draft source records may omit it temporarily.
 - `series_type` should remain explicit because Studio currently distinguishes primary series from other holdings/curated groups.
 
 ## `work_files.json`

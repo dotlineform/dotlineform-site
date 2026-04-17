@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T22:02:15Z",
+  "generated_at": "2026-04-17T22:29:08Z",
   "docs": [
     {
       "scope": "studio",
@@ -528,6 +528,17 @@
       "source_path": "studio/catalogue-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-new-series-editor",
+      "title": "New Catalogue Series",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 37,
+      "source_path": "studio/catalogue-new-series-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
     },
     {
       "scope": "studio",

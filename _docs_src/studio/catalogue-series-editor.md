@@ -33,6 +33,12 @@ The first implementation covers:
 - preview the scoped rebuild impact for the current series
 - run `Save + Rebuild` through the local catalogue service
 
+Draft/publish rule:
+
+- draft series may be saved without `primary_work_id`
+- published series must have a valid `primary_work_id` that belongs to the series
+- scoped rebuild is blocked until the series is publishable
+
 ## Membership Constraints
 
 Locked constraints for this phase:

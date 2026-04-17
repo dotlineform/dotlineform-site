@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Sequence
 
 from build_activity import append_build_activity
-from catalogue_source import DEFAULT_SOURCE_DIR, records_from_json_source, slug_id
+from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from series_ids import normalize_series_id
 
 
@@ -57,6 +57,39 @@ def normalize_series_ids(values: Iterable[Any]) -> list[str]:
     return out
 
 
+def validate_buildable_series_scope(records, series_ids: Sequence[str]) -> None:
+    work_series_ids_by_work_id: dict[str, list[str]] = {}
+    for work_id, work_record in records.works.items():
+        raw_series_ids = work_record.get("series_ids", [])
+        if isinstance(raw_series_ids, list):
+            work_series_ids_by_work_id[work_id] = normalize_series_ids(raw_series_ids)
+        else:
+            work_series_ids_by_work_id[work_id] = []
+
+    errors: list[str] = []
+    for series_id in series_ids:
+        series_record = records.series.get(series_id)
+        if not isinstance(series_record, dict):
+            errors.append(f"series {series_id}: not found in source records")
+            continue
+        status = normalize_status(series_record.get("status"))
+        if status not in {"draft", "published"}:
+            continue
+        raw_primary_work_id = str(series_record.get("primary_work_id") or "").strip()
+        if not raw_primary_work_id:
+            errors.append(f"series {series_id}: missing primary_work_id for runtime build")
+            continue
+        primary_work_id = slug_id(raw_primary_work_id)
+        if primary_work_id not in records.works:
+            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} not found in works")
+            continue
+        if series_id not in work_series_ids_by_work_id.get(primary_work_id, []):
+            errors.append(f"series {series_id}: primary_work_id {primary_work_id!r} is not in that work's series_ids")
+
+    if errors:
+        raise ValueError("series build precondition failed: " + "; ".join(errors[:20]))
+
+
 def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Sequence[Any] | None = None) -> Dict[str, Any]:
     normalized_work_id = slug_id(work_id)
     records = records_from_json_source(source_dir)
@@ -67,6 +100,7 @@ def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Seque
     current_series_ids = normalize_series_ids(work_record.get("series_ids", []))
     requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
     series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
+    validate_buildable_series_scope(records, series_ids)
     return {
         "work_ids": [normalized_work_id],
         "series_ids": series_ids,
@@ -112,6 +146,7 @@ def build_scope_for_series(source_dir: Path, series_id: str, extra_work_ids: Seq
             requested_extra_work_ids.append(work_id)
 
     work_ids = sorted({*current_work_ids, *requested_extra_work_ids})
+    validate_buildable_series_scope(records, [normalized_series_id])
     return {
         "work_ids": work_ids,
         "series_ids": [normalized_series_id],

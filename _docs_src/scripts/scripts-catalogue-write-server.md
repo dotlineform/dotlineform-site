@@ -27,11 +27,12 @@ Exposed endpoints:
 - `GET /health`
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/save`
+- `POST /catalogue/series/create`
 - `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation saves existing work records, work detail records, and series records in canonical catalogue source JSON and can run a scoped JSON-source rebuild for one work or one series scope. It does not create works, write prose files, or write media files.
+The current implementation saves existing work records, work detail records, and series records in canonical catalogue source JSON, can create draft series records, and can run a scoped JSON-source rebuild for one work or one series scope. It does not create works, write prose files, or write media files.
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 
@@ -122,8 +123,30 @@ Request behavior:
 - `series_id` must resolve to an existing canonical series record
 - `work_updates` is limited to changed membership rows for affected works
 - each changed work keeps the submitted `series_ids` order; the server does not sort it
-- `primary_work_id` must still be a member of the series after the proposed membership writes
+- draft source saves may omit `primary_work_id`
+- `primary_work_id`, when present, must still be a member of the series after the proposed membership writes
 - the server validates the full source set before writing `series.json` and `works.json`
+
+`POST /catalogue/series/create` expects:
+
+```json
+{
+  "series_id": "099",
+  "record": {
+    "title": "New draft series",
+    "series_type": "primary",
+    "status": "draft",
+    "sort_fields": "work_id"
+  }
+}
+```
+
+Request behavior:
+
+- `series_id` must not already exist
+- blank or missing `status` is normalized to `draft`
+- draft creates may omit `primary_work_id`
+- the server writes the new source record, refreshes derived lookup payloads, and returns the normalized saved record
 
 `POST /catalogue/build-preview` expects either a work-scoped or series-scoped request.
 
@@ -152,6 +175,11 @@ It returns the planned scoped build:
 - `generate_only`
 - `rebuild_search`
 - `summary`
+
+Scoped build preconditions:
+
+- any series included in the requested build scope must have a valid `primary_work_id`
+- draft series without `primary_work_id` can be saved in source JSON, but build preview/apply returns a validation error until they are publishable
 
 `POST /catalogue/build-apply` accepts the same shapes and then runs:
 

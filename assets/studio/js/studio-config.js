@@ -13,6 +13,7 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_work_editor: "/studio/catalogue-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",
       catalogue_series_editor: "/studio/catalogue-series/",
+      catalogue_new_series_editor: "/studio/catalogue-new-series/",
       tag_registry: "/studio/tag-registry/",
       tag_aliases: "/studio/tag-aliases/",
       tag_groups: "/studio/tag-groups/",

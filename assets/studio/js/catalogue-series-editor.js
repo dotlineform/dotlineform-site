@@ -300,8 +300,8 @@ function validateDraft(state) {
   }
   const primaryWorkId = normalizeWorkId(state.draft.primary_work_id);
   const currentMembers = new Set(getCurrentMemberEntries(state).map((entry) => entry.workId));
-  if ((status === "draft" || status === "published") && !primaryWorkId) {
-    errors.set("primary_work_id", t(state, "field_invalid_primary_work", "Primary work must be a current member of this series."));
+  if (status === "published" && !primaryWorkId) {
+    errors.set("primary_work_id", t(state, "field_required_primary_work_publish", "Published series must have a primary work that belongs to this series."));
   } else if (primaryWorkId && !currentMembers.has(primaryWorkId)) {
     errors.set("primary_work_id", t(state, "field_invalid_primary_work", "Primary work must be a current member of this series."));
   }

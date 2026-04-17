@@ -381,15 +381,20 @@ Work:
 - add new-series route
 - allow explicit `series_id`
 - validate uniqueness and required metadata
-- optionally add initial member works
+- save new series as `draft` by default
+- allow draft series to exist without `primary_work_id`
+- keep `primary_work_id` required before a series can be published to runtime
+- optionally add initial member works in later increments
 - save `series.json` plus affected `works.json`
-- add build preview for new series
+- add build preview for new series once the series is publishable
 
 Acceptance:
 
 - user can create a new series from Studio
+- draft series can be saved before member works and `primary_work_id` are complete
 - source JSON is valid
-- generation creates the expected series route and JSON after rebuild
+- scoped build is blocked until a publishable `primary_work_id` is set
+- generation creates the expected series route and JSON after rebuild once the series is publishable
 
 Benefits:
 
@@ -398,11 +403,13 @@ Benefits:
 Risks:
 
 - ID policy may be unclear for new series
+- users may forget to return and assign `primary_work_id` after draft creation
 
 Mitigation:
 
 - start with explicit user-entered IDs
 - add suggested ID helpers only after the JSON source is stable
+- surface draft series without `primary_work_id` in status review and keep rebuild blocked until the field is valid
 
 ## Phase 10: Add New Work And Work Detail Records
 

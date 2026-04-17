@@ -718,9 +718,11 @@ def validate_source_records(records: CatalogueSourceRecords) -> list[str]:
 
         if normalize_status(record.get("status")) not in ACTIONABLE_STATUSES:
             continue
+        status = normalize_status(record.get("status"))
         raw_primary_work_id = record.get("primary_work_id")
         if is_empty(raw_primary_work_id):
-            errors.append(f"series {series_id}: missing primary_work_id")
+            if status == "published":
+                errors.append(f"series {series_id}: missing primary_work_id")
             continue
         try:
             primary_work_id = slug_id(raw_primary_work_id)
