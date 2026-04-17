@@ -324,7 +324,43 @@ Mitigation:
 - use preview for multi-record membership edits
 - reuse catalogue list and pager patterns for large membership lists
 
-## Phase 8: Add New Series
+## Phase 8: Source Access Optimisation
+
+Goal:
+
+- replace full-source browser page loads with narrower read models before larger editors and bulk tools depend on them
+
+Work:
+
+- add lightweight search/index payloads for work and series lookup
+- add focused record fetches for work, detail, and series editors
+- keep canonical source JSON unchanged while adding browser-efficient read artifacts
+- avoid requiring editors to load full `works.json` or `series.json` to open one record
+- keep the new read path compatible with later bulk-edit and activity surfaces
+
+Acceptance:
+
+- the work editor no longer needs full `works.json` and `series.json` in the browser to open and edit one work
+- search/open remains fast and stable
+- canonical source JSON remains unchanged
+- new read artifacts stay explicitly non-canonical
+
+Benefits:
+
+- keeps the early editor implementation from becoming a structural constraint
+- reduces browser coupling to full source payloads before larger Studio features arrive
+
+Risks:
+
+- extra read artifacts can become shadow source if ownership is unclear
+
+Mitigation:
+
+- keep canonical source JSON as the only write target
+- label read artifacts as derived lookup payloads
+- keep search/index artifacts narrow and deterministic
+
+## Phase 9: Add New Series
 
 Goal:
 
@@ -358,7 +394,7 @@ Mitigation:
 - start with explicit user-entered IDs
 - add suggested ID helpers only after the JSON source is stable
 
-## Phase 9: Add New Work And Work Detail Records
+## Phase 10: Add New Work And Work Detail Records
 
 Goal:
 
@@ -373,6 +409,7 @@ Work:
 - validate required fields before saving
 - leave source media placement unchanged
 - show media filename/path expectations instead of uploading media
+- keep this phase scoped to single-record creation in Studio; do not assume bulk-add via web UI
 
 Acceptance:
 
@@ -387,13 +424,51 @@ Benefits:
 Risks:
 
 - creating metadata before media exists can generate warnings
+- pushing bulk-add into Studio too early would create a higher-complexity UI without clear day-to-day value
 
 Mitigation:
 
 - allow draft records with missing media
 - surface media warnings clearly in build preview
+- keep workbook import available for bulk-add workflows in a later phase
+- defer any multi-record create UI unless a clear use case appears
 
-## Phase 10: Bulk Edit
+## Phase 11: Workbook Import And Export
+
+Goal:
+
+- keep Excel useful for bulk adding without making it canonical again
+
+Work:
+
+- add import preview for `data/works.xlsx` or a selected workbook
+- support `add-new-only`
+- support `update-draft-only`
+- reject updates to published existing records by default
+- add export-to-workbook/report command if useful for offline review
+
+Acceptance:
+
+- new records can be staged from a workbook into source JSON
+- published existing JSON records are not overwritten in default import mode
+- preview reports all blocked rows and normalization decisions
+
+Benefits:
+
+- keeps the bulk-add workflow available
+- avoids forcing a complex bulk-create web UI before it proves necessary
+
+Risks:
+
+- workbook could become a shadow source again
+
+Mitigation:
+
+- make import one-way into JSON
+- block published-record overwrites by default
+- label exported workbooks as reports or import templates, not canonical source
+
+## Phase 12: Bulk Edit
 
 Goal:
 
@@ -422,6 +497,7 @@ Benefits:
 Risks:
 
 - bulk operations can damage many records quickly
+- bulk web UI can become more complex than the actual need if it tries to absorb bulk-add workflows that workbook import already covers
 
 Mitigation:
 
@@ -429,42 +505,9 @@ Mitigation:
 - include changed count and unchanged count
 - write one backup bundle per apply
 - keep initial operations narrow
+- keep initial bulk-edit scope focused on metadata changes to existing records, not bulk creation
 
-## Phase 11: Workbook Import And Export
-
-Goal:
-
-- keep Excel useful for bulk adding without making it canonical again
-
-Work:
-
-- add import preview for `data/works.xlsx` or a selected workbook
-- support `add-new-only`
-- support `update-draft-only`
-- reject updates to published existing records by default
-- add export-to-workbook/report command if useful for offline review
-
-Acceptance:
-
-- new records can be staged from a workbook into source JSON
-- published existing JSON records are not overwritten in default import mode
-- preview reports all blocked rows and normalization decisions
-
-Benefits:
-
-- keeps the bulk-add workflow available
-
-Risks:
-
-- workbook could become a shadow source again
-
-Mitigation:
-
-- make import one-way into JSON
-- block published-record overwrites by default
-- label exported workbooks as reports or import templates, not canonical source
-
-## Phase 12: Retire Workbook-Led Pipeline
+## Phase 13: Retire Workbook-Led Pipeline
 
 Goal:
 
