@@ -1068,6 +1068,44 @@ input.tagStudio__input {
   align-items: start;
 }
 
+.catalogueStatusPage__filters {
+  margin-bottom: var(--studio-shell-gap-md);
+}
+
+.catalogueStatusPage__searchWrap {
+  flex-basis: 16rem;
+}
+
+.catalogueStatusPage__meta {
+  margin: 0 0 var(--studio-shell-gap-sm);
+}
+
+.catalogueStatusPage__head,
+.catalogueStatusRow {
+  grid-template-columns: minmax(5rem, 7rem) minmax(6.5rem, 8rem) minmax(5.5rem, 7rem) minmax(0, 1.4fr) minmax(0, 0.9fr);
+}
+
+.catalogueStatusRow__id,
+.catalogueStatusRow__family,
+.catalogueStatusRow__status,
+.catalogueStatusRow__title,
+.catalogueStatusRow__reference {
+  min-width: 0;
+}
+
+.catalogueStatusRow__id {
+  font-variant-numeric: tabular-nums;
+}
+
+.catalogueStatusRow__family,
+.catalogueStatusRow__reference {
+  color: var(--muted, var(--studio-muted));
+}
+
+.catalogueStatusRow__status {
+  color: var(--studio-warn);
+}
+
 .tagRegistry__tagCol {
   min-width: 0;
 }
@@ -1506,6 +1544,21 @@ input.tagStudio__input {
 }
 
 @media (max-width: 900px) {
+  .catalogueStatusPage__head {
+    display: none;
+  }
+
+  .catalogueStatusRow {
+    grid-template-columns: 1fr;
+    gap: 0.22rem;
+  }
+
+  .catalogueStatusRow__family,
+  .catalogueStatusRow__status,
+  .catalogueStatusRow__reference {
+    font-size: var(--font-small);
+  }
+
   .seriesTags__head {
     grid-template-columns: 1fr;
     gap: 0.35rem;

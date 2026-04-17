@@ -146,6 +146,7 @@ Work:
 - write a small Studio-facing activity summary artifact such as `assets/studio/data/catalogue_activity.json`
 - surface local write events, validation failures, imports, and build runs as those capabilities become available
 - provide easy access to underlying log references even before a complete field-level change UI exists
+- implemented first increment as `/studio/catalogue-status/`, `/studio/catalogue-activity/`, `assets/studio/data/catalogue_activity.json`, and `scripts/catalogue_activity.py`
 
 Acceptance:
 

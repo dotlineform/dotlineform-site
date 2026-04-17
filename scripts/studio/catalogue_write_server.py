@@ -55,6 +55,7 @@ from catalogue_source import (  # noqa: E402
     sort_record_map,
     validate_source_records,
 )
+from catalogue_activity import append_catalogue_activity  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
@@ -71,6 +72,11 @@ def utc_now() -> str:
 
 def backup_stamp_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S-%f")
+
+
+def activity_id(now_utc: str, operation: str) -> str:
+    safe_operation = "".join(ch if ch.isalnum() else "-" for ch in operation.lower()).strip("-")
+    return f"{now_utc}-{safe_operation or 'catalogue-event'}"
 
 
 def find_repo_root(start: Path) -> Optional[Path]:
@@ -280,6 +286,12 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         except Exception:
             pass
 
+    def append_activity(self, entry: Dict[str, Any]) -> None:
+        try:
+            append_catalogue_activity(self.repo_root, entry)
+        except Exception:
+            pass
+
 
 class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
@@ -338,6 +350,20 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
             self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "validation"})
+            if not self.server.dry_run:
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "request.validation_failed"),
+                        "time_utc": now_utc,
+                        "kind": "validation",
+                        "operation": self.path.strip("/") or "request",
+                        "status": "failed",
+                        "summary": "Catalogue request failed validation.",
+                        "affected": {"works": [], "series": [], "work_details": []},
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
             self._send_json(HTTPStatus.BAD_REQUEST, {"ok": False, "error": str(exc)}, allowed)
         except Exception as exc:  # noqa: BLE001
             self.server.log_event("request_error", {"path": self.path, "error": str(exc), "kind": "internal"})
@@ -412,6 +438,20 @@ class Handler(BaseHTTPRequestHandler):
                 "dry_run": self.server.dry_run,
             },
         )
+        if changed and not self.server.dry_run:
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work.save",
+                    "status": "completed",
+                    "summary": "Saved 1 work source record.",
+                    "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _read_json_body(self) -> Dict[str, Any]:

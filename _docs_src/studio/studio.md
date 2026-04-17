@@ -24,6 +24,8 @@ Read this section in this order:
 2. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
 3. Page-specific docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
+   - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
+   - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
@@ -35,6 +37,8 @@ Current Studio pages:
 
 - `/studio/`
 - `/studio/build-activity/`
+- `/studio/catalogue-status/`
+- `/studio/catalogue-activity/`
 - `/studio/tag-groups/`
 - `/studio/tag-registry/`
 - `/studio/tag-aliases/`

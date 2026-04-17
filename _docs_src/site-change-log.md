@@ -8,6 +8,35 @@ sort_order: 110
 
 # Site Change Log
 
+## [2026-04-17] Added catalogue status and activity Studio pages
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added early Studio surfaces for JSON-led catalogue maintenance: Catalogue Status and Catalogue Activity.
+
+**Reason:**
+The new catalogue source workflow needs useful visibility before full editing UI exists. Non-published records should be discoverable without opening Excel, and local JSON-source saves or validation failures should be visible without reading raw server logs.
+
+**Effect:**
+`/studio/catalogue-status/` reads canonical catalogue source JSON and lists records where `status` is not `published`. `/studio/catalogue-activity/` reads `assets/studio/data/catalogue_activity.json`, a small feed updated by the Catalogue Write Server for source-save and validation-failure events. Studio config now exposes the source and activity data paths used by those pages.
+
+**Affected files/docs:**
+- `studio/catalogue-status/index.md`
+- `studio/catalogue-activity/index.md`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/js/catalogue-activity.js`
+- `assets/studio/data/catalogue_activity.json`
+- `scripts/catalogue_activity.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+
+**Notes:**
+The UI intentionally follows established Studio list and activity patterns. Refinement can happen after the first implementation is in use.
+
 ## [2026-04-17] Added the local catalogue source write service
 
 **Status:** implemented

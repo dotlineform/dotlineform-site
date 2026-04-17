@@ -75,6 +75,7 @@ The server validates the proposed update through the shared catalogue source loa
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
+- source-save and validation-failure events also update `assets/studio/data/catalogue_activity.json` for the Studio Catalogue Activity page
 
 ## Dev Studio
 
@@ -97,6 +98,10 @@ CATALOGUE_WRITE_PORT=8798 bin/dev-studio
 Source JSON:
 
 - `assets/studio/data/catalogue/works.json`
+
+Studio activity feed:
+
+- `assets/studio/data/catalogue_activity.json`
 
 Backup target:
 

@@ -1,7 +1,7 @@
 ---
 doc_id: data-models-studio
 title: Studio Scope
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: data-models
 sort_order: 30
 ---
@@ -25,6 +25,7 @@ Current checked-in Studio data artifacts:
   - `assets/studio/data/tag_assignments.json`
   - `assets/studio/data/tag_groups.json`
   - `assets/studio/data/build_activity.json`
+  - `assets/studio/data/catalogue_activity.json`
   - `assets/studio/data/work_storage_index.json`
 - Studio docs source:
   - `_docs_src/**/*.md`
@@ -88,6 +89,34 @@ Why it is separate:
 Current consumers:
 
 - `/studio/build-activity/`
+
+### `catalogue_activity.json`
+
+Purpose:
+
+- lightweight Studio-facing feed of recent catalogue source activity
+
+Current content families:
+
+- feed header metadata
+- recent entries with:
+  - time
+  - kind
+  - operation
+  - status
+  - short summary
+  - affected work, series, and work-detail id groups
+  - log reference
+
+Why it is separate:
+
+- the browser should not parse raw local JSONL logs
+- the activity surface should remain small while the JSON pipeline gains capabilities
+- canonical source JSON should avoid volatile activity timestamps
+
+Current consumers:
+
+- `/studio/catalogue-activity/`
 
 ### `tag_registry.json`
 

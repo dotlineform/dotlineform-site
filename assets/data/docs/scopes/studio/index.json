@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T17:12:11Z",
+  "generated_at": "2026-04-17T17:26:32Z",
   "docs": [
     {
       "scope": "studio",
@@ -390,7 +390,7 @@
       "scope": "studio",
       "doc_id": "config-studio-config-json",
       "title": "Studio Config JSON",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "config",
       "sort_order": 30,
       "source_path": "config/config-studio-config-json.md",
@@ -401,7 +401,7 @@
       "scope": "studio",
       "doc_id": "data-models-studio",
       "title": "Studio Scope",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "data-models",
       "sort_order": 30,
       "source_path": "data-models/data-models-studio.md",
@@ -432,6 +432,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-status",
+      "title": "Catalogue Status",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 33,
+      "source_path": "studio/catalogue-status.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-status.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "servers",
       "title": "Servers",
       "last_updated": "2026-04-17",
@@ -440,6 +451,17 @@
       "source_path": "servers/servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/assets/data/docs/scopes/studio/by-id/servers.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-activity",
+      "title": "Catalogue Activity",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 34,
+      "source_path": "studio/catalogue-activity.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-activity",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-activity.json"
     },
     {
       "scope": "studio",

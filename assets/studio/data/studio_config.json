@@ -1,6 +1,6 @@
 {
   "studio_config_version": "studio_config_v1",
-  "updated_at_utc": "2026-03-30T00:00:00Z",
+  "updated_at_utc": "2026-04-17T00:00:00Z",
   "paths": {
     "routes": {
       "studio_home": "/studio/",
@@ -8,6 +8,8 @@
       "series_tags": "/studio/series-tags/",
       "series_tag_editor": "/studio/series-tag-editor/",
       "build_activity": "/studio/build-activity/",
+      "catalogue_status": "/studio/catalogue-status/",
+      "catalogue_activity": "/studio/catalogue-activity/",
       "tag_registry": "/studio/tag-registry/",
       "tag_aliases": "/studio/tag-aliases/",
       "tag_groups": "/studio/tag-groups/",
@@ -23,7 +25,13 @@
         "tag_aliases": "/assets/studio/data/tag_aliases.json",
         "tag_assignments": "/assets/studio/data/tag_assignments.json",
         "tag_groups": "/assets/studio/data/tag_groups.json",
-        "build_activity": "/assets/studio/data/build_activity.json"
+        "build_activity": "/assets/studio/data/build_activity.json",
+        "catalogue_activity": "/assets/studio/data/catalogue_activity.json",
+        "catalogue_works": "/assets/studio/data/catalogue/works.json",
+        "catalogue_work_details": "/assets/studio/data/catalogue/work_details.json",
+        "catalogue_series": "/assets/studio/data/catalogue/series.json",
+        "catalogue_work_files": "/assets/studio/data/catalogue/work_files.json",
+        "catalogue_work_links": "/assets/studio/data/catalogue/work_links.json"
       },
       "site": {
         "series_index": "/assets/data/series_index.json",
@@ -434,6 +442,24 @@
       "detail_media": "media",
       "detail_actions": "actions",
       "detail_results": "results",
+      "none": "none"
+    },
+    "catalogue_status": {
+      "load_failed_error": "Failed to load catalogue status.",
+      "empty_state": "No non-published catalogue source records.",
+      "meta_summary": "{count} non-published source records",
+      "meta_summary_one": "1 non-published source record"
+    },
+    "catalogue_activity": {
+      "load_failed_error": "Failed to load catalogue activity.",
+      "empty_state": "No catalogue activity yet.",
+      "meta_summary": "{count} recent catalogue entries",
+      "meta_summary_one": "1 recent catalogue entry",
+      "status_completed": "completed",
+      "status_failed": "failed",
+      "status_other": "status unknown",
+      "detail_affected": "affected",
+      "detail_log": "log",
       "none": "none"
     },
     "search": {
