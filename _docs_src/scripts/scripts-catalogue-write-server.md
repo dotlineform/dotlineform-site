@@ -60,6 +60,8 @@ Successful responses include:
 - `changed`
 - `changed_fields`
 - `record_hash`
+- `record`
+- `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
 ## Validation

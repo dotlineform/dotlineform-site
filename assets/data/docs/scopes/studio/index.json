@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T17:26:32Z",
+  "generated_at": "2026-04-17T19:15:48Z",
   "docs": [
     {
       "scope": "studio",
@@ -137,7 +137,7 @@
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "studio",
       "sort_order": 10,
       "source_path": "studio/studio-runtime.md",
@@ -258,7 +258,7 @@
       "scope": "studio",
       "doc_id": "studio-config-and-save-flow",
       "title": "Studio Config and Save Flow",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-17",
       "parent_id": "studio",
       "sort_order": 20,
       "source_path": "studio/studio-config-and-save-flow.md",
@@ -462,6 +462,17 @@
       "source_path": "studio/catalogue-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-activity.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-editor",
+      "title": "Catalogue Work Editor",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 34,
+      "source_path": "studio/catalogue-work-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json"
     },
     {
       "scope": "studio",

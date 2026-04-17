@@ -422,12 +422,15 @@ class Handler(BaseHTTPRequestHandler):
             "changed": changed,
             "changed_fields": fields_changed,
             "record_hash": record_hash(updated_record),
+            "record": updated_record,
         }
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
-        elif backup_paths:
-            response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
 
         self.server.log_event(
             "catalogue_work_save",

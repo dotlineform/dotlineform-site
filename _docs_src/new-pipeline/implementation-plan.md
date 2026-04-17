@@ -204,11 +204,14 @@ Benefits:
 Risks:
 
 - users may expect save to update the public site immediately
+- the first editor loads full `works.json` and `series.json` into the browser, which is acceptable for the current catalogue size but should not become the long-term loading model
 
 Mitigation:
 
 - label source save and rebuild actions separately
 - show "source changed, rebuild needed" state after save
+- implemented first increment as `/studio/catalogue-work/` with work-id search, single-record metadata editing, and local source save
+- replace full-source page loads in a later phase with narrower lookup/query loading, such as focused record fetches plus lightweight search/index payloads
 
 ## Phase 5: Scoped Build From JSON Source
 

@@ -15,15 +15,29 @@ const STUDIO_WRITE_ENDPOINTS = Object.freeze({
   promoteTagAliasPreview: "http://127.0.0.1:8787/promote-tag-alias-preview"
 });
 
+const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
+  saveWork: "http://127.0.0.1:8788/catalogue/work/save",
+  health: "http://127.0.0.1:8788/health"
+});
+
 export {
-  STUDIO_WRITE_ENDPOINTS
+  STUDIO_WRITE_ENDPOINTS,
+  CATALOGUE_WRITE_ENDPOINTS
 };
 
 export async function probeStudioHealth(timeoutMs = 500) {
+  return probeHealth(STUDIO_WRITE_ENDPOINTS.health, timeoutMs);
+}
+
+export async function probeCatalogueHealth(timeoutMs = 500) {
+  return probeHealth(CATALOGUE_WRITE_ENDPOINTS.health, timeoutMs);
+}
+
+async function probeHealth(url, timeoutMs = 500) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(STUDIO_WRITE_ENDPOINTS.health, {
+    const response = await fetch(url, {
       cache: "no-store",
       signal: controller.signal
     });
@@ -54,7 +68,10 @@ export async function postJson(url, payload, options = {}) {
 
   if (!response.ok || !responsePayload || !responsePayload.ok) {
     const message = responsePayload && responsePayload.error ? responsePayload.error : `HTTP ${response.status}`;
-    throw new Error(message);
+    const error = new Error(message);
+    error.status = response.status;
+    error.payload = responsePayload;
+    throw error;
   }
 
   return responsePayload;

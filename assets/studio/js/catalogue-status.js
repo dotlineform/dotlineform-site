@@ -1,5 +1,6 @@
 import {
   getStudioDataPath,
+  getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
@@ -60,6 +61,7 @@ function makeEntry(family, key, record) {
     status,
     title,
     reference,
+    editorHref: "",
     searchText: normalizeSearch(`${family.label} ${id} ${status} ${title} ${reference}`)
   };
 }
@@ -107,7 +109,7 @@ function renderList(listNode, entries) {
   }
   const rows = entries.map((entry) => `
     <li class="tagStudioList__row catalogueStatusRow">
-      <span class="catalogueStatusRow__id">${escapeHtml(entry.id)}</span>
+      <span class="catalogueStatusRow__id">${entry.editorHref ? `<a href="${escapeHtml(entry.editorHref)}">${escapeHtml(entry.id)}</a>` : escapeHtml(entry.id)}</span>
       <span class="catalogueStatusRow__family">${escapeHtml(entry.familyLabel)}</span>
       <span class="catalogueStatusRow__status">${escapeHtml(entry.status)}</span>
       <span class="catalogueStatusRow__title">${escapeHtml(entry.title)}</span>
@@ -158,6 +160,12 @@ async function init() {
     const entries = groups.flat().sort((a, b) => {
       if (a.family !== b.family) return a.family.localeCompare(b.family);
       return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
+    });
+    const workEditorRoute = getStudioRoute(config, "catalogue_work_editor");
+    entries.forEach((entry) => {
+      if (entry.family === "works" && workEditorRoute) {
+        entry.editorHref = `${workEditorRoute}?work=${encodeURIComponent(entry.id)}`;
+      }
     });
     const state = {
       config,

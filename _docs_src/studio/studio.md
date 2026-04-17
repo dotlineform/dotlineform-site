@@ -26,6 +26,7 @@ Read this section in this order:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
+   - **[Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
    - **[Tag Aliases](/docs/?scope=studio&doc=tag-aliases)**
@@ -39,6 +40,7 @@ Current Studio pages:
 - `/studio/build-activity/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
+- `/studio/catalogue-work/?work=<work_id>`
 - `/studio/tag-groups/`
 - `/studio/tag-registry/`
 - `/studio/tag-aliases/`

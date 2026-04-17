@@ -1,7 +1,7 @@
 ---
 doc_id: studio-runtime
 title: Studio Runtime
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: studio
 sort_order: 10
 ---
@@ -37,6 +37,7 @@ Current route inventory:
 
 - `studio/index.md`
 - `studio/build-activity/index.md`
+- `studio/catalogue-work/index.md`
 - `studio/tag-groups/index.md`
 - `studio/tag-registry/index.md`
 - `studio/tag-aliases/index.md`
@@ -48,6 +49,7 @@ Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
+- Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
 - Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
@@ -68,6 +70,7 @@ Shared Studio runtime and wiring currently live in:
 Current page controllers:
 
 - `assets/studio/js/build-activity.js`
+- `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/tag-registry.js`
 - `assets/studio/js/tag-aliases.js`
@@ -124,5 +127,6 @@ What it does not start:
 Current local generated Studio feed surfaced through this runtime:
 
 - `assets/studio/data/build_activity.json`
+- `assets/studio/data/catalogue_activity.json`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.

@@ -1,7 +1,7 @@
 ---
 doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
-last_updated: 2026-03-31
+last_updated: 2026-04-17
 parent_id: studio
 sort_order: 20
 ---
@@ -37,6 +37,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, and `catalogue_work_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -59,8 +60,8 @@ Current shared responsibilities include:
 
 Current responsibilities include:
 
-- local endpoint definitions
-- health probing for local write availability
+- local endpoint definitions for both tag and catalogue services
+- health probing for local write availability by service
 - shared JSON POST transport
 
 Current write endpoints include:
@@ -79,6 +80,8 @@ Current write endpoints include:
 - `/mutate-tag-alias`
 - `/promote-tag-alias`
 - `/promote-tag-alias-preview`
+- `http://127.0.0.1:8788/health`
+- `http://127.0.0.1:8788/catalogue/work/save`
 
 ## Save Modes
 
@@ -107,6 +110,15 @@ Current write-service implementation notes:
 - server writes create timestamped backups in `var/studio/backups/`
 - write activity is logged to `var/studio/logs/tag_write_server.log`
 
+Catalogue editor local save behavior:
+
+- the work editor sends `POST /catalogue/work/save` to the catalogue local write service
+- the request includes `work_id`, a browser-computed record hash, and a normalized work record patch
+- the server validates the full catalogue source set before writing
+- writes are constrained to allowlisted canonical catalogue source JSON
+- backup bundles are written under `var/studio/catalogue/backups/`
+- activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
+
 ### Offline Session Mode
 
 Current offline behavior:
@@ -127,6 +139,7 @@ Current session management surface:
 Studio currently depends on four data families:
 
 - Studio-owned tag data
+- Studio-owned catalogue source data
 - shared catalogue index data
 - dedicated search policy/search-index data
 - Studio docs data rebuilt by the docs builder
