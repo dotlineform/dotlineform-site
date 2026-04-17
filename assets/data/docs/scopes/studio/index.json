@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-14T14:20:57Z",
+  "generated_at": "2026-04-17T10:47:04Z",
   "docs": [
     {
       "scope": "studio",
@@ -66,6 +66,17 @@
       "source_path": "config/config-jekyll-site-config.md",
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-jekyll-site-config.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "llm-dimension",
+      "title": "LLM-Assisted Dimension Recommendation",
+      "last_updated": "2026-04-16",
+      "parent_id": "llm",
+      "sort_order": 10,
+      "source_path": "llm/llm-dimension.md",
+      "viewer_url": "/docs/?scope=studio&doc=llm-dimension",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/llm-dimension.json"
     },
     {
       "scope": "studio",
@@ -289,6 +300,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "generic-llm-helper-pattern",
+      "title": "Generic LLM Helper Pattern",
+      "last_updated": "2026-04-16",
+      "parent_id": "llm",
+      "sort_order": 30,
+      "source_path": "llm/generic-llm-helper-pattern.md",
+      "viewer_url": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/generic-llm-helper-pattern.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "local-setup",
       "title": "Local Setup",
       "last_updated": "2026-04-13",
@@ -378,8 +400,8 @@
     {
       "scope": "studio",
       "doc_id": "scripts-cloud-environments",
-      "title": "Cloud Environments (Codex + Codespaces + R2)",
-      "last_updated": "2026-04-13",
+      "title": "Cloud Environments",
+      "last_updated": "2026-04-14",
       "parent_id": "scripts",
       "sort_order": 35,
       "source_path": "scripts/scripts-cloud-environments.md",
@@ -685,6 +707,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "llm",
+      "title": "LLM",
+      "last_updated": "2026-04-16",
+      "parent_id": "site-docs",
+      "sort_order": 100,
+      "source_path": "llm/llm.md",
+      "viewer_url": "/docs/?scope=studio&doc=llm",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "site-change-log-guidance",
       "title": "Site Change Log Guidance",
       "last_updated": "2026-03-31",
@@ -704,6 +737,50 @@
       "source_path": "site-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=site-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-change-log.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "registry-driven-scoring-architecture",
+      "title": "Registry-Driven Scoring Architecture",
+      "last_updated": "2026-04-16",
+      "parent_id": "studio",
+      "sort_order": 200,
+      "source_path": "studio/registry-driven-scoring-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=registry-driven-scoring-architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/registry-driven-scoring-architecture.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "experimental-dimension-framework",
+      "title": "Experimental Dimension Framework",
+      "last_updated": "2026-04-16",
+      "parent_id": "studio",
+      "sort_order": 210,
+      "source_path": "studio/experimental-dimension-framework.md",
+      "viewer_url": "/docs/?scope=studio&doc=experimental-dimension-framework",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/experimental-dimension-framework.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "dimension-visualisation-projection",
+      "title": "Dimension Visualisation Projection Table",
+      "last_updated": "2026-04-16",
+      "parent_id": "studio",
+      "sort_order": 250,
+      "source_path": "studio/dimension-visualisation-projection.md",
+      "viewer_url": "/docs/?scope=studio&doc=dimension-visualisation-projection",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/dimension-visualisation-projection.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "tiered-dimension-policy",
+      "title": "Tiered Dimension Policy",
+      "last_updated": "2026-04-16",
+      "parent_id": "studio",
+      "sort_order": 260,
+      "source_path": "studio/tiered-dimension-policy.md",
+      "viewer_url": "/docs/?scope=studio&doc=tiered-dimension-policy",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/tiered-dimension-policy.json"
     },
     {
       "scope": "studio",
