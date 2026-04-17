@@ -77,13 +77,59 @@ def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Seque
         "search_scope": "catalogue",
         "source_mode": "json",
         "source_dir": str(source_dir),
-        "summary": summarize_scope(normalized_work_id, series_ids),
+        "summary": summarize_scope([normalized_work_id], series_ids),
     }
 
 
-def summarize_scope(work_id: str, series_ids: Sequence[str]) -> str:
+def build_scope_for_series(source_dir: Path, series_id: str, extra_work_ids: Sequence[Any] | None = None) -> Dict[str, Any]:
+    normalized_series_id = normalize_series_id(series_id)
+    records = records_from_json_source(source_dir)
+    series_record = records.series.get(normalized_series_id)
+    if not isinstance(series_record, dict):
+        raise ValueError(f"series_id not found: {normalized_series_id}")
+
+    current_work_ids: list[str] = []
+    for work_id, work_record in records.works.items():
+        series_ids = work_record.get("series_ids", [])
+        if isinstance(series_ids, list) and normalized_series_id in normalize_series_ids(series_ids):
+            current_work_ids.append(work_id)
+    current_work_ids = sorted(current_work_ids)
+
+    requested_extra_work_ids: list[str] = []
+    seen_extra: set[str] = set()
+    for raw in extra_work_ids or []:
+        text = str(raw or "").strip()
+        if not text:
+            continue
+        for part in text.split(","):
+            token = str(part or "").strip()
+            if not token:
+                continue
+            work_id = slug_id(token)
+            if work_id in seen_extra:
+                continue
+            seen_extra.add(work_id)
+            requested_extra_work_ids.append(work_id)
+
+    work_ids = sorted({*current_work_ids, *requested_extra_work_ids})
+    return {
+        "work_ids": work_ids,
+        "series_ids": [normalized_series_id],
+        "current_work_ids": current_work_ids,
+        "extra_work_ids": [work_id for work_id in requested_extra_work_ids if work_id not in current_work_ids],
+        "generate_only": list(DEFAULT_ARTIFACTS),
+        "rebuild_search": True,
+        "search_scope": "catalogue",
+        "source_mode": "json",
+        "source_dir": str(source_dir),
+        "summary": summarize_scope(work_ids, [normalized_series_id]),
+    }
+
+
+def summarize_scope(work_ids: Sequence[str], series_ids: Sequence[str]) -> str:
+    work_text = ", ".join(work_ids) if work_ids else "none"
     series_text = ", ".join(series_ids) if series_ids else "none"
-    return f"Build work {work_id}, series [{series_text}], aggregate indexes, and catalogue search."
+    return f"Build works [{work_text}], series [{series_text}], aggregate indexes, and catalogue search."
 
 
 def resolve_bundle_bin(env: Dict[str, str] | None = None) -> str:
@@ -135,20 +181,17 @@ def build_search_command(repo_root: Path, *, write: bool, force: bool, env: Dict
     return cmd
 
 
-def run_scoped_build(
+def run_scoped_build_scope(
     repo_root: Path,
     *,
-    source_dir: Path,
-    work_id: str,
-    extra_series_ids: Sequence[Any] | None = None,
+    scope: Dict[str, Any],
     write: bool,
     force: bool = False,
     log_activity: bool = True,
 ) -> Dict[str, Any]:
-    scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids)
     env = os.environ.copy()
     commands = [
-        ("Generate Work Pages", build_generate_command(repo_root, source_dir, scope, write=write, force=force)),
+        ("Generate Work Pages", build_generate_command(repo_root, Path(scope["source_dir"]), scope, write=write, force=force)),
         ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=force, env=env)),
     ]
     steps: list[Dict[str, Any]] = []
@@ -196,7 +239,7 @@ def run_scoped_build(
             build_activity_entry_for_scoped_json_build(
                 time_utc=utc_now(),
                 status=status,
-                work_id=scope["work_ids"][0],
+                work_ids=scope["work_ids"],
                 series_ids=scope["series_ids"],
                 failed_step=failed_step,
                 force=force,
@@ -205,23 +248,52 @@ def run_scoped_build(
     return response
 
 
+def run_scoped_build(
+    repo_root: Path,
+    *,
+    source_dir: Path,
+    work_id: str,
+    extra_series_ids: Sequence[Any] | None = None,
+    write: bool,
+    force: bool = False,
+    log_activity: bool = True,
+) -> Dict[str, Any]:
+    scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
+
+
+def run_series_scoped_build(
+    repo_root: Path,
+    *,
+    source_dir: Path,
+    series_id: str,
+    extra_work_ids: Sequence[Any] | None = None,
+    write: bool,
+    force: bool = False,
+    log_activity: bool = True,
+) -> Dict[str, Any]:
+    scope = build_scope_for_series(source_dir, series_id, extra_work_ids=extra_work_ids)
+    return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
+
+
 def build_activity_entry_for_scoped_json_build(
     *,
     time_utc: str,
     status: str,
-    work_id: str,
+    work_ids: Sequence[str],
     series_ids: Sequence[str],
     failed_step: str = "",
     force: bool = False,
 ) -> Dict[str, Any]:
+    work_ids_list = list(work_ids)
     series_ids_list = list(series_ids)
     summary = (
-        f"Scoped JSON build updated work {work_id}, {len(series_ids_list)} series, and catalogue search."
+        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, and catalogue search."
         if status == "completed"
-        else f"Scoped JSON build failed for work {work_id}."
+        else f"Scoped JSON build failed for {len(work_ids_list)} work records."
     )
     return {
-        "id": f"{time_utc}-build_catalogue_json-{work_id}",
+        "id": f"{time_utc}-build_catalogue_json-{work_ids_list[0] if work_ids_list else 'none'}",
         "time_utc": time_utc,
         "script": "build_catalogue_json",
         "status": status,
@@ -230,7 +302,7 @@ def build_activity_entry_for_scoped_json_build(
         "summary": summary,
         "changes": {
             "source": {
-                "works": [work_id],
+                "works": sorted(work_ids_list),
                 "series": sorted(series_ids_list),
                 "work_details": [],
             },
@@ -247,14 +319,14 @@ def build_activity_entry_for_scoped_json_build(
             },
         },
         "actions": {
-            "generate_work_ids": 1,
+            "generate_work_ids": len(work_ids_list),
             "generate_series_ids": len(series_ids_list),
             "rebuild_search": True,
             "force_generate": bool(force),
         },
         "results": {
             "source_mode": "json",
-            "work_id": work_id,
+            "work_ids": sorted(work_ids_list),
             "failed_step": failed_step,
         },
     }
@@ -263,7 +335,7 @@ def build_activity_entry_for_scoped_json_build(
 def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, force: bool) -> None:
     print(scope["summary"])
     print(f"Source mode: {scope['source_mode']}")
-    print(f"Work IDs: {', '.join(scope['work_ids'])}")
+    print(f"Work IDs: {', '.join(scope['work_ids']) if scope['work_ids'] else 'none'}")
     print(f"Series IDs: {', '.join(scope['series_ids']) if scope['series_ids'] else 'none'}")
     print(f"Search rebuild: {'yes' if scope['rebuild_search'] else 'no'}")
     print("Commands:")

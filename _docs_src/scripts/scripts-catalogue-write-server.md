@@ -27,10 +27,11 @@ Exposed endpoints:
 - `GET /health`
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/save`
+- `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation saves existing work records and work detail records in canonical catalogue source JSON and can run a scoped JSON-source rebuild for one work. It does not create works, edit series, write prose files, or write media files.
+The current implementation saves existing work records, work detail records, and series records in canonical catalogue source JSON and can run a scoped JSON-source rebuild for one work or one series scope. It does not create works, write prose files, or write media files.
 
 `POST /catalogue/work/save` expects:
 
@@ -93,12 +94,52 @@ Request behavior:
 - the parent `work_id` must exist in canonical source JSON
 - `expected_record_hash`, when provided, must match the current stored detail hash or the server returns `409 Conflict`
 
-`POST /catalogue/build-preview` expects:
+`POST /catalogue/series/save` expects:
+
+```json
+{
+  "series_id": "009",
+  "expected_record_hash": "optional-current-record-sha256",
+  "record": {
+    "title": "Updated series title",
+    "primary_work_id": "00001",
+    "sort_fields": "work_id"
+  },
+  "work_updates": [
+    {
+      "work_id": "00001",
+      "series_ids": ["009", "031"],
+      "expected_record_hash": "optional-current-work-sha256"
+    }
+  ]
+}
+```
+
+Request behavior:
+
+- `series_id` must resolve to an existing canonical series record
+- `work_updates` is limited to changed membership rows for affected works
+- each changed work keeps the submitted `series_ids` order; the server does not sort it
+- `primary_work_id` must still be a member of the series after the proposed membership writes
+- the server validates the full source set before writing `series.json` and `works.json`
+
+`POST /catalogue/build-preview` expects either a work-scoped or series-scoped request.
+
+Work-scoped request:
 
 ```json
 {
   "work_id": "00001",
   "extra_series_ids": ["004"]
+}
+```
+
+Series-scoped request:
+
+```json
+{
+  "series_id": "009",
+  "extra_work_ids": ["00001"]
 }
 ```
 
@@ -110,9 +151,10 @@ It returns the planned scoped build:
 - `rebuild_search`
 - `summary`
 
-`POST /catalogue/build-apply` accepts the same shape and then runs:
+`POST /catalogue/build-apply` accepts the same shapes and then runs:
 
 - `generate_work_pages.py --source json` for the selected work and affected series ids
+- or `generate_work_pages.py --source json` for the selected series and affected works
 - `build_search.rb --scope catalogue --write`
 
 The apply endpoint updates:
@@ -129,7 +171,7 @@ The server validates the proposed update through the shared catalogue source loa
 - binds to `127.0.0.1` only
 - CORS allows loopback origins only
 - write target is allowlisted to canonical catalogue source JSON files under `assets/studio/data/catalogue/`
-- current save endpoints write only `assets/studio/data/catalogue/works.json` and `assets/studio/data/catalogue/work_details.json`
+- current save endpoints write only `assets/studio/data/catalogue/works.json`, `assets/studio/data/catalogue/work_details.json`, and `assets/studio/data/catalogue/series.json`
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
@@ -158,6 +200,7 @@ Source JSON:
 
 - `assets/studio/data/catalogue/works.json`
 - `assets/studio/data/catalogue/work_details.json`
+- `assets/studio/data/catalogue/series.json`
 
 Studio activity feed:
 

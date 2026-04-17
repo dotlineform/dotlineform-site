@@ -38,7 +38,7 @@ Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
 - catalogue route lookup such as `catalogue_status`, `catalogue_activity`, and `catalogue_work_editor`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, and `catalogue_work_detail_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -84,6 +84,7 @@ Current write endpoints include:
 - `http://127.0.0.1:8788/health`
 - `http://127.0.0.1:8788/catalogue/work/save`
 - `http://127.0.0.1:8788/catalogue/work-detail/save`
+- `http://127.0.0.1:8788/catalogue/series/save`
 - `http://127.0.0.1:8788/catalogue/build-preview`
 - `http://127.0.0.1:8788/catalogue/build-apply`
 
@@ -130,11 +131,19 @@ Catalogue work detail local save behavior:
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
 
+Catalogue series local save behavior:
+
+- the series editor sends `POST /catalogue/series/save` to the same local catalogue write service
+- the request includes the current `series_id`, a browser-computed series record hash, the normalized series patch, and only the changed work membership rows
+- work membership writes preserve the edited `series_ids` order for each changed work
+- the server validates `primary_work_id` membership and then writes `series.json` plus affected `works.json` atomically
+
 Catalogue scoped rebuild behavior:
 
 - the work editor requests a scoped preview from `POST /catalogue/build-preview`
 - the detail editor requests the same scoped preview for the parent work
-- `POST /catalogue/build-apply` runs JSON-source generation for one work plus the affected series ids
+- the series editor requests a series-scoped preview from the same endpoint, including any removed member works that still need rebuild
+- `POST /catalogue/build-apply` runs JSON-source generation for one work or one series scope plus the affected work/series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
 - Studio build activity now records these JSON-source scoped rebuilds alongside the older workbook-led pipeline runs
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T20:36:41Z",
+  "generated_at": "2026-04-17T21:15:52Z",
   "docs": [
     {
       "scope": "studio",
@@ -517,6 +517,17 @@
       "source_path": "llm/llm.md",
       "viewer_url": "/docs/?scope=studio&doc=llm",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-series-editor",
+      "title": "Catalogue Series Editor",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 36,
+      "source_path": "studio/catalogue-series-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json"
     },
     {
       "scope": "studio",

@@ -45,6 +45,8 @@ from catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     DETAIL_FIELDS,
     DETAIL_TEXT_FIELDS,
+    SERIES_FIELDS,
+    SERIES_TEXT_FIELDS,
     SOURCE_FILES,
     WORK_FIELDS,
     WORK_TEXT_FIELDS,
@@ -60,6 +62,7 @@ from catalogue_source import (  # noqa: E402
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_json_build import build_scope_for_work, run_scoped_build  # noqa: E402
+from catalogue_json_build import build_scope_for_series, run_series_scoped_build  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
@@ -69,6 +72,7 @@ LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 MAX_BODY_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
 DETAIL_SAVE_PATH = "/catalogue/work-detail/save"
+SERIES_SAVE_PATH = "/catalogue/series/save"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
 
@@ -175,6 +179,21 @@ def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool
     return work_id, extra_series_ids, force
 
 
+def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, list[str], list[str], bool]:
+    work_id = str(body.get("work_id") or "").strip()
+    series_id = str(body.get("series_id") or "").strip()
+    if bool(work_id) == bool(series_id):
+        raise ValueError("build request must include exactly one of work_id or series_id")
+    normalized_work_id = slug_id(work_id) if work_id else ""
+    normalized_series_id = normalize_series_id(series_id) if series_id else ""
+    extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
+    extra_work_ids: list[str] = []
+    for raw in body.get("extra_work_ids") or []:
+        extra_work_ids.append(slug_id(raw))
+    force = bool(body.get("force"))
+    return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, force
+
+
 def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     raw_record = body.get("record", body.get("work"))
     if raw_record is None:
@@ -203,6 +222,46 @@ def extract_work_detail_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     if not raw_record:
         raise ValueError("record must include at least one work detail field")
     return dict(raw_record)
+
+
+def extract_series_update(body: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_record = body.get("record", body.get("series"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in SERIES_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in SERIES_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one series field")
+    return dict(raw_record)
+
+
+def extract_series_work_updates(body: Mapping[str, Any]) -> list[Dict[str, Any]]:
+    raw_updates = body.get("work_updates") or []
+    if raw_updates == []:
+        return []
+    if not isinstance(raw_updates, list):
+        raise ValueError("work_updates must be an array")
+    updates: list[Dict[str, Any]] = []
+    for raw in raw_updates:
+        if not isinstance(raw, dict):
+            raise ValueError("work_updates entries must be objects")
+        unknown = sorted(str(key) for key in raw.keys() if str(key) not in {"work_id", "series_ids", "expected_record_hash"})
+        if unknown:
+            raise ValueError(f"work_updates entry contains unsupported fields: {', '.join(unknown)}")
+        work_id = slug_id(raw.get("work_id"))
+        series_ids = normalize_series_ids_value(raw.get("series_ids"))
+        updates.append(
+            {
+                "work_id": work_id,
+                "series_ids": series_ids,
+                "expected_record_hash": str(raw.get("expected_record_hash") or "").strip(),
+            }
+        )
+    return updates
 
 
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
@@ -245,6 +304,24 @@ def normalize_work_detail_update(
     return normalize_source_record(merged, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
 
 
+def normalize_series_update(
+    series_id: str,
+    current_record: Mapping[str, Any],
+    update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    merged = dict(current_record)
+    merged.update(update)
+    merged["series_id"] = normalize_series_id(merged.get("series_id") or series_id)
+    if merged["series_id"] != series_id:
+        raise ValueError("record.series_id must match series_id")
+    if "status" in update:
+        merged["status"] = normalize_status(update.get("status")) or None
+    if "primary_work_id" in update:
+        primary_work_id = update.get("primary_work_id")
+        merged["primary_work_id"] = slug_id(primary_work_id) if primary_work_id not in {None, ""} else None
+    return normalize_source_record(merged, SERIES_FIELDS, text_fields=SERIES_TEXT_FIELDS)
+
+
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
     return [field for field in after.keys() if before.get(field) != after.get(field)]
 
@@ -275,6 +352,26 @@ def validate_updated_detail_records(source_dir: Path, detail_uid: str, detail_re
     return validate_source_records(normalized_records)
 
 
+def validate_updated_series_records(
+    source_dir: Path,
+    series_id: str,
+    series_record: Dict[str, Any],
+    work_updates: Mapping[str, Dict[str, Any]],
+) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.series[series_id] = series_record
+    for work_id, work_record in work_updates.items():
+        source_records.works[work_id] = work_record
+    normalized_records = CatalogueSourceRecords(
+        works=sort_record_map(source_records.works),
+        work_details=source_records.work_details,
+        series=sort_record_map(source_records.series),
+        work_files=source_records.work_files,
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
 def load_works_payload(path: Path) -> Dict[str, Any]:
     payload = load_json_file(path)
     works = payload.get("works")
@@ -288,6 +385,14 @@ def load_work_details_payload(path: Path) -> Dict[str, Any]:
     work_details = payload.get("work_details")
     if not isinstance(work_details, dict):
         raise ValueError("work details source file must include a work_details object")
+    return payload
+
+
+def load_series_payload(path: Path) -> Dict[str, Any]:
+    payload = load_json_file(path)
+    series = payload.get("series")
+    if not isinstance(series, dict):
+        raise ValueError("series source file must include a series object")
     return payload
 
 
@@ -348,6 +453,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         source_dir: Path,
         works_path: Path,
         work_details_path: Path,
+        series_path: Path,
         allowed_write_paths: set[Path],
         backups_dir: Path,
         dry_run: bool,
@@ -357,6 +463,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.source_dir = source_dir.resolve()
         self.works_path = works_path.resolve()
         self.work_details_path = work_details_path.resolve()
+        self.series_path = series_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
@@ -390,7 +497,7 @@ class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {WORK_SAVE_PATH, DETAIL_SAVE_PATH, BUILD_PREVIEW_PATH, BUILD_APPLY_PATH}:
+        if self.path not in {WORK_SAVE_PATH, DETAIL_SAVE_PATH, SERIES_SAVE_PATH, BUILD_PREVIEW_PATH, BUILD_APPLY_PATH}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -442,6 +549,9 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == DETAIL_SAVE_PATH:
                 self._handle_work_detail_save(allowed)
+                return
+            if self.path == SERIES_SAVE_PATH:
+                self._handle_series_save(allowed)
                 return
             if self.path == BUILD_PREVIEW_PATH:
                 self._handle_build_preview(allowed)
@@ -657,6 +767,144 @@ class Handler(BaseHTTPRequestHandler):
             )
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
+    def _handle_series_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        requested_series_id = body.get("series_id")
+        series_update = extract_series_update(body)
+        if requested_series_id is None:
+            requested_series_id = series_update.get("series_id")
+        series_id = normalize_series_id(requested_series_id)
+        work_updates_request = extract_series_work_updates(body)
+
+        series_payload = load_series_payload(self.server.series_path)
+        series_map = series_payload["series"]
+        current_series_record = series_map.get(series_id)
+        if not isinstance(current_series_record, dict):
+            raise ValueError(f"series_id not found: {series_id}")
+
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_series_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(
+                HTTPStatus.CONFLICT,
+                {
+                    "ok": False,
+                    "error": "record changed since loaded",
+                    "series_id": series_id,
+                    "current_record_hash": current_hash,
+                },
+                allowed,
+            )
+            return
+
+        works_payload = load_works_payload(self.server.works_path)
+        works_map = works_payload["works"]
+        updated_series_record = normalize_series_update(series_id, current_series_record, series_update)
+        pending_work_updates: Dict[str, Dict[str, Any]] = {}
+        changed_work_ids: list[str] = []
+
+        for update in work_updates_request:
+            work_id = update["work_id"]
+            current_work_record = works_map.get(work_id)
+            if not isinstance(current_work_record, dict):
+                raise ValueError(f"work_id not found: {work_id}")
+            expected_work_hash = update.get("expected_record_hash") or ""
+            current_work_hash = record_hash(current_work_record)
+            if expected_work_hash and expected_work_hash != current_work_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {
+                        "ok": False,
+                        "error": "work record changed since loaded",
+                        "work_id": work_id,
+                        "current_record_hash": current_work_hash,
+                    },
+                    allowed,
+                )
+                return
+            updated_work_record = normalize_work_update(work_id, current_work_record, {"series_ids": update["series_ids"]})
+            pending_work_updates[work_id] = updated_work_record
+            if changed_fields(current_work_record, updated_work_record):
+                changed_work_ids.append(work_id)
+
+        validation_errors = validate_updated_series_records(
+            self.server.source_dir,
+            series_id,
+            updated_series_record,
+            pending_work_updates,
+        )
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+
+        series_changed_fields = changed_fields(current_series_record, updated_series_record)
+        changed = bool(series_changed_fields or changed_work_ids)
+        backup_paths: list[Path] = []
+        response_work_records = []
+
+        if changed:
+            target_payloads: Dict[Path, Dict[str, Any]] = {}
+            if series_changed_fields:
+                updated_series = dict(series_map)
+                updated_series[series_id] = updated_series_record
+                target_payloads[self.server.series_path.resolve()] = payload_for_map("series", updated_series)
+            if changed_work_ids:
+                updated_works = dict(works_map)
+                for work_id in changed_work_ids:
+                    updated_works[work_id] = pending_work_updates[work_id]
+                target_payloads[self.server.works_path.resolve()] = payload_for_map("works", updated_works)
+            for target_path in target_payloads:
+                if target_path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many(target_payloads, self.server.backups_dir)
+
+        for work_id in changed_work_ids:
+            response_work_records.append({"work_id": work_id, "record": pending_work_updates[work_id]})
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "series_id": series_id,
+            "changed": changed,
+            "changed_fields": series_changed_fields,
+            "changed_work_ids": changed_work_ids,
+            "record_hash": record_hash(updated_series_record),
+            "record": updated_series_record,
+            "work_records": response_work_records,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+        self.server.log_event(
+            "catalogue_series_save",
+            {
+                "series_id": series_id,
+                "changed": changed,
+                "changed_fields": series_changed_fields,
+                "changed_work_ids": changed_work_ids,
+                "dry_run": self.server.dry_run,
+            },
+        )
+        if changed and not self.server.dry_run:
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "series.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "series.save",
+                    "status": "completed",
+                    "summary": f"Saved series {series_id} and {len(changed_work_ids)} member work records.",
+                    "affected": {"works": changed_work_ids, "series": [series_id], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
     def _read_json_body(self) -> Dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0") or "0")
         if length < 0 or length > MAX_BODY_BYTES:
@@ -673,13 +921,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_build_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        work_id, extra_series_ids, force = extract_build_request(body)
-        scope = build_scope_for_work(self.server.source_dir, work_id, extra_series_ids=extra_series_ids)
+        work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        if work_id:
+            scope = build_scope_for_work(self.server.source_dir, work_id, extra_series_ids=extra_series_ids)
+        else:
+            scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
         self._send_json(
             HTTPStatus.OK,
             {
                 "ok": True,
                 "work_id": work_id,
+                "series_id": series_id,
                 "force": force,
                 "build": scope,
             },
@@ -688,19 +940,31 @@ class Handler(BaseHTTPRequestHandler):
 
     def _handle_build_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
-        work_id, extra_series_ids, force = extract_build_request(body)
-        result = run_scoped_build(
-            self.server.repo_root,
-            source_dir=self.server.source_dir,
-            work_id=work_id,
-            extra_series_ids=extra_series_ids,
-            write=not self.server.dry_run,
-            force=force,
-            log_activity=not self.server.dry_run,
-        )
+        work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        if work_id:
+            result = run_scoped_build(
+                self.server.repo_root,
+                source_dir=self.server.source_dir,
+                work_id=work_id,
+                extra_series_ids=extra_series_ids,
+                write=not self.server.dry_run,
+                force=force,
+                log_activity=not self.server.dry_run,
+            )
+        else:
+            result = run_series_scoped_build(
+                self.server.repo_root,
+                source_dir=self.server.source_dir,
+                series_id=series_id,
+                extra_work_ids=extra_work_ids,
+                write=not self.server.dry_run,
+                force=force,
+                log_activity=not self.server.dry_run,
+            )
         payload: Dict[str, Any] = {
             "ok": result.get("status") == "completed",
             "work_id": work_id,
+            "series_id": series_id,
             "force": force,
             "build": result.get("scope"),
             "steps": result.get("steps", []),
@@ -717,9 +981,9 @@ class Handler(BaseHTTPRequestHandler):
                         "kind": "build",
                         "operation": "build.apply",
                         "status": "failed",
-                        "summary": f"Scoped rebuild failed for work {work_id}.",
+                        "summary": f"Scoped rebuild failed for {'work ' + work_id if work_id else 'series ' + series_id}.",
                         "affected": {
-                            "works": [work_id],
+                            "works": list((result.get("scope") or {}).get("work_ids", [])),
                             "series": list((result.get("scope") or {}).get("series_ids", [])),
                             "work_details": [],
                         },
@@ -739,9 +1003,9 @@ class Handler(BaseHTTPRequestHandler):
                     "kind": "build",
                     "operation": "build.apply",
                     "status": "completed",
-                    "summary": f"Scoped rebuild completed for work {work_id}.",
+                    "summary": f"Scoped rebuild completed for {'work ' + work_id if work_id else 'series ' + series_id}.",
                     "affected": {
-                        "works": [work_id],
+                        "works": list((result.get("scope") or {}).get("work_ids", [])),
                         "series": list((result.get("scope") or {}).get("series_ids", [])),
                         "work_details": [],
                     },
@@ -784,6 +1048,7 @@ def main() -> None:
     source_dir = (repo_root / DEFAULT_SOURCE_DIR).resolve()
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
+    series_path = (source_dir / SOURCE_FILES["series"]).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {
         (source_dir / filename).resolve()
@@ -798,6 +1063,7 @@ def main() -> None:
         source_dir=source_dir,
         works_path=works_path,
         work_details_path=work_details_path,
+        series_path=series_path,
         allowed_write_paths=allowed_paths,
         backups_dir=backups_dir,
         dry_run=args.dry_run,

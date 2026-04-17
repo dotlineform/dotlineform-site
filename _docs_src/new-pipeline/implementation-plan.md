@@ -302,6 +302,7 @@ Work:
 - add series editor route
 - edit series scalar fields and `sort_fields`
 - display member works by scanning source `works.json`
+- preserve each work's `series_ids` order exactly as edited; do not sort membership lists during save
 - allow adding/removing works from a series by updating work `series_ids`
 - allow changing a work's primary series by reordering `series_ids`
 - validate `primary_work_id` membership
@@ -311,6 +312,7 @@ Acceptance:
 
 - user can edit series metadata
 - user can change a work's series
+- works that belong to multiple series keep their edited `series_ids` order
 - generated `series_index.json` remains equivalent to current behavior after rebuild
 - invalid `primary_work_id` states are blocked
 
@@ -329,7 +331,7 @@ Mitigation:
 - route and save by `series_id`
 - always show `series_id` in search results and editor headings
 - use preview for multi-record membership edits
-- reuse catalogue list and pager patterns for large membership lists
+- reuse the same capped list pattern used for work details, with member search for longer lists
 
 ## Phase 8: Source Access Optimisation
 

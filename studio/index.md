@@ -10,6 +10,7 @@ permalink: /studio/
 - [catalogue activity]({{ '/studio/catalogue-activity/' | relative_url }})
 - [catalogue work]({{ '/studio/catalogue-work/' | relative_url }})
 - [catalogue work detail]({{ '/studio/catalogue-work-detail/' | relative_url }})
+- [catalogue series]({{ '/studio/catalogue-series/' | relative_url }})
 - [series tags]({{ '/studio/series-tags/' | relative_url }})
 
 - [tag registry]({{ '/studio/tag-registry/' | relative_url }})

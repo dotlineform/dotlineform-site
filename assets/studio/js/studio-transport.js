@@ -18,6 +18,7 @@ const STUDIO_WRITE_ENDPOINTS = Object.freeze({
 const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveWork: "http://127.0.0.1:8788/catalogue/work/save",
   saveWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/save",
+  saveSeries: "http://127.0.0.1:8788/catalogue/series/save",
   buildPreview: "http://127.0.0.1:8788/catalogue/build-preview",
   buildApply: "http://127.0.0.1:8788/catalogue/build-apply",
   health: "http://127.0.0.1:8788/health"
