@@ -49,6 +49,7 @@ const STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SERIES_ID_RE = /^\d+$/;
 const SEARCH_LIMIT = 20;
+const DETAIL_LIST_LIMIT = 10;
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -73,6 +74,27 @@ function normalizeSeriesId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (!digits) return "";
   return digits.padStart(3, "0");
+}
+
+function normalizeDetailId(value) {
+  const digits = normalizeText(value).replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.padStart(3, "0");
+}
+
+function normalizeDetailUid(value, currentWorkId = "") {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const match = text.match(/^(\d{5})-(\d{3})$/);
+  if (match) return `${match[1]}-${match[2]}`;
+  const digits = text.replace(/\D/g, "");
+  if (digits.length === 8) {
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+  }
+  if (currentWorkId && digits && digits.length <= 3) {
+    return `${normalizeWorkId(currentWorkId)}-${digits.padStart(3, "0")}`;
+  }
+  return "";
 }
 
 async function computeRecordHash(record) {
@@ -155,6 +177,14 @@ function buildSearchToken(value) {
   if (!text) return "";
   const digits = text.replace(/\D/g, "");
   return digits || text.toLowerCase();
+}
+
+function compareDetailUid(a, b) {
+  return normalizeText(a).localeCompare(normalizeText(b), undefined, { numeric: true, sensitivity: "base" });
+}
+
+function detailSectionLabel(state, sectionKey) {
+  return normalizeText(sectionKey) || t(state, "details_section_blank", "root");
 }
 
 function renderField(field, fieldsNode, state) {
@@ -330,6 +360,123 @@ function buildSeriesSummaryHtml(state, seriesIds) {
   }).join("<br>");
 }
 
+function getWorkDetails(state, workId) {
+  const details = state.detailsByWorkId.get(workId);
+  if (!Array.isArray(details)) return [];
+  return details.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid));
+}
+
+function groupWorkDetailsBySection(state, details) {
+  const groups = new Map();
+  details.forEach((detail) => {
+    const key = normalizeText(detail && detail.project_subfolder);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(detail);
+  });
+  return Array.from(groups.entries())
+    .map(([sectionKey, items]) => ({
+      sectionKey,
+      items: items.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid))
+    }))
+    .sort((a, b) => a.sectionKey.localeCompare(b.sectionKey, undefined, { sensitivity: "base" }));
+}
+
+function getCurrentWorkDetailMatches(state, rawQuery) {
+  const details = getWorkDetails(state, state.currentWorkId);
+  const queryText = normalizeText(rawQuery).toLowerCase();
+  const normalizedUid = normalizeDetailUid(rawQuery, state.currentWorkId);
+  const normalizedDetailId = normalizeDetailId(rawQuery);
+  if (!queryText && !normalizedUid && !normalizedDetailId) return [];
+  return details.filter((detail) => {
+    const detailUid = normalizeText(detail && detail.detail_uid);
+    const detailId = normalizeText(detail && detail.detail_id);
+    const title = normalizeText(detail && detail.title).toLowerCase();
+    return (
+      (normalizedUid && detailUid.startsWith(normalizedUid)) ||
+      (normalizedDetailId && detailId.startsWith(normalizedDetailId)) ||
+      detailUid.toLowerCase().startsWith(queryText) ||
+      title.includes(queryText)
+    );
+  });
+}
+
+function buildDetailEditorHref(state, detailUid) {
+  const route = getStudioRoute(state.config, "catalogue_work_detail_editor");
+  return `${route}?detail=${encodeURIComponent(detailUid)}`;
+}
+
+function renderDetailRows(state, details) {
+  return details.map((detail) => {
+    const detailUid = normalizeText(detail && detail.detail_uid);
+    const title = displayValue(detail && detail.title);
+    const href = buildDetailEditorHref(state, detailUid);
+    return `
+      <div class="catalogueWorkDetails__row">
+        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(detailUid)}</a>
+        <span class="catalogueWorkDetails__title">${escapeHtml(title)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function updateDetailSections(state) {
+  if (!state.detailsResultsNode || !state.detailsMetaNode) return;
+  if (!state.currentWorkId) {
+    state.detailsMetaNode.textContent = "";
+    state.detailsResultsNode.innerHTML = "";
+    return;
+  }
+
+  const details = getWorkDetails(state, state.currentWorkId);
+  if (!details.length) {
+    state.detailsMetaNode.textContent = "";
+    state.detailsResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "details_empty", "No work details for this work."))}</p>`;
+    return;
+  }
+
+  const query = normalizeText(state.detailSearchNode && state.detailSearchNode.value);
+  const groups = groupWorkDetailsBySection(state, details);
+  const blocks = [];
+
+  if (query) {
+    const matches = getCurrentWorkDetailMatches(state, query);
+    if (matches.length) {
+      blocks.push(`
+        <section class="catalogueWorkDetails__section">
+          <div class="tagStudio__headingRow">
+            <h3 class="tagStudioForm__key">${escapeHtml(t(state, "details_search_results", "matching details"))}</h3>
+          </div>
+          <div class="catalogueWorkDetails__rows">${renderDetailRows(state, matches)}</div>
+        </section>
+      `);
+    } else {
+      blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(t(state, "details_search_no_match", "No matching detail ids for this work."))}</p>`);
+    }
+  }
+
+  groups.forEach((group) => {
+    const visible = group.items.slice(0, DETAIL_LIST_LIMIT);
+    const moreText = group.items.length > DETAIL_LIST_LIMIT
+      ? t(state, "details_more_count", "showing {visible} of {total}", {
+        visible: String(visible.length),
+        total: String(group.items.length)
+      })
+      : "";
+    blocks.push(`
+      <section class="catalogueWorkDetails__section">
+        <div class="tagStudio__headingRow">
+          <h3 class="tagStudioForm__key">${escapeHtml(detailSectionLabel(state, group.sectionKey))}</h3>
+          ${moreText ? `<span class="tagStudioForm__meta">${escapeHtml(moreText)}</span>` : ""}
+        </div>
+        <div class="catalogueWorkDetails__rows">${renderDetailRows(state, visible)}</div>
+      </section>
+    `);
+  });
+
+  state.detailsMetaNode.textContent = `${details.length} total`;
+  state.detailsResultsNode.innerHTML = blocks.join("");
+}
+
 function updateSummary(state) {
   const record = state.currentRecord;
   state.metaNode.textContent = record
@@ -355,6 +502,7 @@ function updateSummary(state) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+  updateDetailSections(state);
 }
 
 function formatBuildPreview(state, build) {
@@ -671,6 +819,7 @@ async function openWorkById(state, requestedWorkId) {
   }
 
   state.searchNode.value = workId;
+  state.detailSearchNode.value = "";
   setPopupVisibility(state, false);
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
@@ -688,6 +837,10 @@ async function init() {
   const summaryNode = document.getElementById("catalogueWorkSummary");
   const runtimeStateNode = document.getElementById("catalogueWorkRuntimeState");
   const buildImpactNode = document.getElementById("catalogueWorkBuildImpact");
+  const detailsHeadingNode = document.getElementById("catalogueWorkDetailsHeading");
+  const detailSearchNode = document.getElementById("catalogueWorkDetailSearch");
+  const detailsMetaNode = document.getElementById("catalogueWorkDetailsMeta");
+  const detailsResultsNode = document.getElementById("catalogueWorkDetailsResults");
   const searchNode = document.getElementById("catalogueWorkSearch");
   const popupNode = document.getElementById("catalogueWorkPopup");
   const popupListNode = document.getElementById("catalogueWorkPopupList");
@@ -700,13 +853,15 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
   const state = {
     config: null,
     worksById: new Map(),
+    detailsByUid: new Map(),
+    detailsByWorkId: new Map(),
     seriesById: new Map(),
     currentWorkId: "",
     currentRecord: null,
@@ -736,6 +891,9 @@ async function init() {
     summaryNode,
     runtimeStateNode,
     buildImpactNode,
+    detailSearchNode,
+    detailsMetaNode,
+    detailsResultsNode,
     metaNode
   };
 
@@ -746,12 +904,15 @@ async function init() {
     const config = await loadStudioConfig();
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find work by id");
+    detailsHeadingNode.textContent = t(state, "details_heading", "work details");
+    detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
 
-    const [worksPayload, seriesPayload, serverAvailable] = await Promise.all([
+    const [worksPayload, detailsPayload, seriesPayload, serverAvailable] = await Promise.all([
       fetchJson(getStudioDataPath(config, "catalogue_works"), { cache: "no-store" }),
+      fetchJson(getStudioDataPath(config, "catalogue_work_details"), { cache: "no-store" }),
       fetchJson(getStudioDataPath(config, "catalogue_series"), { cache: "no-store" }),
       probeCatalogueHealth()
     ]);
@@ -759,6 +920,14 @@ async function init() {
     Object.entries(worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {}).forEach(([workId, record]) => {
       if (!record || typeof record !== "object") return;
       state.worksById.set(normalizeWorkId(workId), record);
+    });
+    Object.entries(detailsPayload && detailsPayload.work_details && typeof detailsPayload.work_details === "object" ? detailsPayload.work_details : {}).forEach(([detailUid, record]) => {
+      if (!record || typeof record !== "object") return;
+      const normalizedUid = normalizeText(detailUid);
+      const workId = normalizeWorkId(record.work_id);
+      state.detailsByUid.set(normalizedUid, record);
+      if (!state.detailsByWorkId.has(workId)) state.detailsByWorkId.set(workId, []);
+      state.detailsByWorkId.get(workId).push(record);
     });
     Object.entries(seriesPayload && seriesPayload.series && typeof seriesPayload.series === "object" ? seriesPayload.series : {}).forEach(([seriesId, record]) => {
       if (!record || typeof record !== "object") return;
@@ -790,6 +959,10 @@ async function init() {
       openWorkById(state, searchNode.value).catch((error) => {
         console.warn("catalogue_work_editor: failed to open requested work", error);
       });
+    });
+
+    detailSearchNode.addEventListener("input", () => {
+      updateDetailSections(state);
     });
 
     popupListNode.addEventListener("click", (event) => {

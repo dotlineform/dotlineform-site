@@ -38,6 +38,7 @@ Current route inventory:
 - `studio/index.md`
 - `studio/build-activity/index.md`
 - `studio/catalogue-work/index.md`
+- `studio/catalogue-work-detail/index.md`
 - `studio/tag-groups/index.md`
 - `studio/tag-registry/index.md`
 - `studio/tag-aliases/index.md`
@@ -50,6 +51,7 @@ Current page-level doc links:
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
+- Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
 - Tag Aliases -> `/docs/?scope=studio&doc=tag-aliases`
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
@@ -71,6 +73,7 @@ Current page controllers:
 
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/tag-groups.js`
 - `assets/studio/js/tag-registry.js`
 - `assets/studio/js/tag-aliases.js`

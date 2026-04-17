@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T19:42:49Z",
+  "generated_at": "2026-04-17T20:36:41Z",
   "docs": [
     {
       "scope": "studio",
@@ -484,6 +484,17 @@
       "source_path": "studio/build-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=build-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/build-activity.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-detail-editor",
+      "title": "Catalogue Work Detail Editor",
+      "last_updated": "2026-04-17",
+      "parent_id": "studio",
+      "sort_order": 35,
+      "source_path": "studio/catalogue-work-detail-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json"
     },
     {
       "scope": "studio",

@@ -256,6 +256,10 @@ Goal:
 Work:
 
 - list a work's details on the work editor
+- group detail lists by `project_subfolder`
+- cap visible detail rows at 10 per section on the work editor
+- add per-work detail search by `detail_uid` so long sections remain navigable
+- keep the work editor detail area as navigation into the detail editor, not inline detail editing
 - add a detail editor route
 - implement search/open by `detail_uid`
 - implement save endpoint for one detail record
@@ -265,6 +269,8 @@ Work:
 Acceptance:
 
 - user can edit a work detail's title, status, project subfolder, and project filename
+- works with multiple detail sections render as multiple grouped lists on the work editor
+- sections with more than 10 details still remain reachable by per-work detail search
 - source JSON updates
 - parent work rebuild updates detail page stubs and work JSON sections
 
@@ -282,7 +288,7 @@ Mitigation:
 
 - keep dimensions read-only in the UI initially
 - rely on the generator/media probe to refresh dimensions
-- paginate or progressively load large detail lists from the start of this phase
+- keep the work page at 10 visible rows per section and use detail search instead of rendering full long lists
 
 ## Phase 7: Series Editor And Membership Changes
 

@@ -11,6 +11,7 @@ Run:
 Endpoints:
   GET /health
   POST /catalogue/work/save
+  POST /catalogue/work-detail/save
 
 Security constraints:
   - Binds to 127.0.0.1 only.
@@ -42,6 +43,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
+    DETAIL_FIELDS,
+    DETAIL_TEXT_FIELDS,
     SOURCE_FILES,
     WORK_FIELDS,
     WORK_TEXT_FIELDS,
@@ -65,6 +68,7 @@ BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 MAX_BODY_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
+DETAIL_SAVE_PATH = "/catalogue/work-detail/save"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
 
@@ -148,6 +152,22 @@ def normalize_series_ids_value(value: Any) -> list[str]:
     return parse_series_ids(value)
 
 
+def normalize_detail_uid_value(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        raise ValueError("detail_uid is required")
+    if "-" in text:
+        raw_work_id, raw_detail_id = text.split("-", 1)
+    else:
+        digits = "".join(ch for ch in text if ch.isdigit())
+        if len(digits) != 8:
+            raise ValueError(f"invalid detail_uid: {value!r}")
+        raw_work_id, raw_detail_id = digits[:5], digits[5:]
+    work_id = slug_id(raw_work_id)
+    detail_id = slug_id(raw_detail_id, width=3)
+    return f"{work_id}-{detail_id}"
+
+
 def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:
     work_id = slug_id(body.get("work_id"))
     extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
@@ -170,6 +190,21 @@ def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
     return dict(raw_record)
 
 
+def extract_work_detail_update(body: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_record = body.get("record", body.get("work_detail"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in DETAIL_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in DETAIL_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one work detail field")
+    return dict(raw_record)
+
+
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
     merged = dict(current_record)
     merged.update(update)
@@ -185,8 +220,33 @@ def normalize_work_update(work_id: str, current_record: Mapping[str, Any], updat
     return normalize_source_record(merged, WORK_FIELDS, text_fields=WORK_TEXT_FIELDS)
 
 
+def normalize_work_detail_update(
+    detail_uid: str,
+    current_record: Mapping[str, Any],
+    update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    merged = dict(current_record)
+    merged.update(update)
+    merged["detail_uid"] = str(merged.get("detail_uid") or detail_uid).strip()
+    if merged["detail_uid"] != detail_uid:
+        raise ValueError("record.detail_uid must match detail_uid")
+
+    work_id = slug_id(merged.get("work_id"))
+    detail_id = slug_id(merged.get("detail_id"), width=3)
+    normalized_uid = f"{work_id}-{detail_id}"
+    if normalized_uid != detail_uid:
+        raise ValueError("record.work_id/detail_id do not match detail_uid")
+
+    if "status" in update:
+        merged["status"] = normalize_status(update.get("status")) or None
+    merged["work_id"] = work_id
+    merged["detail_id"] = detail_id
+    merged["detail_uid"] = normalized_uid
+    return normalize_source_record(merged, DETAIL_FIELDS, text_fields=DETAIL_TEXT_FIELDS)
+
+
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
-    return [field for field in WORK_FIELDS if before.get(field) != after.get(field)]
+    return [field for field in after.keys() if before.get(field) != after.get(field)]
 
 
 def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
@@ -202,11 +262,32 @@ def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[s
     return validate_source_records(normalized_records)
 
 
+def validate_updated_detail_records(source_dir: Path, detail_uid: str, detail_record: Dict[str, Any]) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_details[detail_uid] = detail_record
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=sort_record_map(source_records.work_details),
+        series=source_records.series,
+        work_files=source_records.work_files,
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
 def load_works_payload(path: Path) -> Dict[str, Any]:
     payload = load_json_file(path)
     works = payload.get("works")
     if not isinstance(works, dict):
         raise ValueError("works source file must include a works object")
+    return payload
+
+
+def load_work_details_payload(path: Path) -> Dict[str, Any]:
+    payload = load_json_file(path)
+    work_details = payload.get("work_details")
+    if not isinstance(work_details, dict):
+        raise ValueError("work details source file must include a work_details object")
     return payload
 
 
@@ -266,6 +347,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         repo_root: Path,
         source_dir: Path,
         works_path: Path,
+        work_details_path: Path,
         allowed_write_paths: set[Path],
         backups_dir: Path,
         dry_run: bool,
@@ -274,6 +356,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.repo_root = repo_root.resolve()
         self.source_dir = source_dir.resolve()
         self.works_path = works_path.resolve()
+        self.work_details_path = work_details_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.backups_dir = backups_dir.resolve()
         self.dry_run = dry_run
@@ -307,7 +390,7 @@ class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path not in {WORK_SAVE_PATH, BUILD_PREVIEW_PATH, BUILD_APPLY_PATH}:
+        if self.path not in {WORK_SAVE_PATH, DETAIL_SAVE_PATH, BUILD_PREVIEW_PATH, BUILD_APPLY_PATH}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -356,6 +439,9 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self.path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
+                return
+            if self.path == DETAIL_SAVE_PATH:
+                self._handle_work_detail_save(allowed)
                 return
             if self.path == BUILD_PREVIEW_PATH:
                 self._handle_build_preview(allowed)
@@ -468,6 +554,104 @@ class Handler(BaseHTTPRequestHandler):
                     "status": "completed",
                     "summary": "Saved 1 work source record.",
                     "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_detail_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        requested_detail_uid = body.get("detail_uid")
+        detail_update = extract_work_detail_update(body)
+        if not requested_detail_uid:
+            requested_detail_uid = detail_update.get("detail_uid")
+        detail_uid = normalize_detail_uid_value(requested_detail_uid)
+
+        details_payload = load_work_details_payload(self.server.work_details_path)
+        work_details = details_payload["work_details"]
+        current_record = work_details.get(detail_uid)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"detail_uid not found: {detail_uid}")
+
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(
+                HTTPStatus.CONFLICT,
+                {
+                    "ok": False,
+                    "error": "record changed since loaded",
+                    "detail_uid": detail_uid,
+                    "current_record_hash": current_hash,
+                },
+                allowed,
+            )
+            return
+
+        updated_record = normalize_work_detail_update(detail_uid, current_record, detail_update)
+        work_id = str(updated_record.get("work_id") or "")
+        if not work_id:
+            raise ValueError("work detail missing work_id")
+
+        source_records = records_from_json_source(self.server.source_dir)
+        if work_id not in source_records.works:
+            raise ValueError(f"parent work_id not found: {work_id}")
+
+        fields_changed = changed_fields(current_record, updated_record)
+        validation_errors = validate_updated_detail_records(self.server.source_dir, detail_uid, updated_record)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+
+        changed = bool(fields_changed)
+        backup_paths: list[Path] = []
+        if changed:
+            updated_details = dict(work_details)
+            updated_details[detail_uid] = updated_record
+            updated_payload = payload_for_map("work_details", updated_details)
+            target_path = self.server.work_details_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many({target_path: updated_payload}, self.server.backups_dir)
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "detail_uid": detail_uid,
+            "work_id": work_id,
+            "changed": changed,
+            "changed_fields": fields_changed,
+            "record_hash": record_hash(updated_record),
+            "record": updated_record,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+        self.server.log_event(
+            "catalogue_work_detail_save",
+            {
+                "detail_uid": detail_uid,
+                "work_id": work_id,
+                "changed": changed,
+                "changed_fields": fields_changed,
+                "dry_run": self.server.dry_run,
+            },
+        )
+        if changed and not self.server.dry_run:
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-detail.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-detail.save",
+                    "status": "completed",
+                    "summary": "Saved 1 work detail source record.",
+                    "affected": {"works": [work_id], "series": [], "work_details": [detail_uid]},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -599,6 +783,7 @@ def main() -> None:
     repo_root = detect_repo_root(args.repo_root)
     source_dir = (repo_root / DEFAULT_SOURCE_DIR).resolve()
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
+    work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {
         (source_dir / filename).resolve()
@@ -612,6 +797,7 @@ def main() -> None:
         repo_root=repo_root,
         source_dir=source_dir,
         works_path=works_path,
+        work_details_path=work_details_path,
         allowed_write_paths=allowed_paths,
         backups_dir=backups_dir,
         dry_run=args.dry_run,

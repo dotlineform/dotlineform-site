@@ -55,6 +55,24 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
       <div class="tagStudioForm__fields" id="catalogueWorkSummary"></div>
     </aside>
   </div>
+
+  <section class="tagStudio__panel catalogueWorkDetails">
+    <div class="tagStudio__headingRow">
+      <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
+      <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">
+        <label class="visually-hidden" for="catalogueWorkDetailSearch">Find detail by id</label>
+        <input
+          type="text"
+          class="tagStudio__input"
+          id="catalogueWorkDetailSearch"
+          placeholder="find detail by id"
+          autocomplete="off"
+        >
+      </div>
+    </div>
+    <p class="tagStudioForm__meta" id="catalogueWorkDetailsMeta"></p>
+    <div class="catalogueWorkDetails__results" id="catalogueWorkDetailsResults"></div>
+  </section>
 </div>
 
 <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor…</p>

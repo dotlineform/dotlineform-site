@@ -24,6 +24,10 @@ The first implementation covers:
 - edit core scalar metadata fields
 - edit ordered `series_ids`
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
+- list the current work's detail records grouped by `project_subfolder`
+- cap visible detail rows at 10 per section
+- provide per-work detail search by `detail_uid`
+- link into the dedicated work detail editor
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
@@ -32,7 +36,7 @@ The first implementation covers:
 
 It does not yet:
 
-- edit work details
+- edit work details inline on the work page
 - edit series records directly
 - update prose or media files
 - paginate detail/member lists
@@ -41,7 +45,7 @@ It does not yet:
 
 Current save/rebuild flow:
 
-1. page loads `works.json` and `series.json`
+1. page loads `works.json`, `work_details.json`, and `series.json`
 2. browser computes a record hash for stale-write protection
 3. user edits form fields
 4. `POST /catalogue/work/save` sends the current work id, the expected record hash, and the normalized record patch
@@ -56,6 +60,18 @@ The current rebuild scope is intentionally narrow:
 - affected series pages
 - aggregate series/works/recent indexes
 - catalogue search
+
+## Detail Navigation Surface
+
+The work editor now includes a detail navigation section below the main editor.
+
+Locked constraints for this phase:
+
+- grouping follows `project_subfolder`
+- each section shows at most 10 rows by default
+- the detail search box searches within the current work by `detail_uid`
+- works with multiple detail sections render as multiple grouped lists
+- this area is navigation into the detail editor, not inline editing
 
 ## Current Editable Fields
 

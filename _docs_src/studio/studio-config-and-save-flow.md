@@ -38,6 +38,7 @@ Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
 - catalogue route lookup such as `catalogue_status`, `catalogue_activity`, and `catalogue_work_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, and `catalogue_work_detail_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -82,6 +83,7 @@ Current write endpoints include:
 - `/promote-tag-alias-preview`
 - `http://127.0.0.1:8788/health`
 - `http://127.0.0.1:8788/catalogue/work/save`
+- `http://127.0.0.1:8788/catalogue/work-detail/save`
 - `http://127.0.0.1:8788/catalogue/build-preview`
 - `http://127.0.0.1:8788/catalogue/build-apply`
 
@@ -121,9 +123,17 @@ Catalogue editor local save behavior:
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
 
+Catalogue work detail local save behavior:
+
+- the detail editor sends `POST /catalogue/work-detail/save` to the same local catalogue write service
+- the request includes `detail_uid`, a browser-computed record hash, and a normalized detail patch
+- the server validates the parent work reference before writing
+- the server writes `work_details.json` only after full-source validation succeeds
+
 Catalogue scoped rebuild behavior:
 
 - the work editor requests a scoped preview from `POST /catalogue/build-preview`
+- the detail editor requests the same scoped preview for the parent work
 - `POST /catalogue/build-apply` runs JSON-source generation for one work plus the affected series ids
 - the apply step then rebuilds `assets/data/search/catalogue/index.json`
 - Studio build activity now records these JSON-source scoped rebuilds alongside the older workbook-led pipeline runs

@@ -10,6 +10,8 @@ sort_order: 110
 
 ## 2026-04-17
 
+- added the Phase 6 work detail editor at `/studio/catalogue-work-detail/`, including canonical `work_details.json` save flow and parent-work scoped rebuild
+- added grouped work-detail navigation to `/studio/catalogue-work/`, capped at 10 visible rows per section with per-work detail search by id
 - added the Phase 5 scoped JSON-source rebuild path for work edits, including a local preview/apply flow and `Save + Rebuild` on `/studio/catalogue-work/`
 - added `/studio/catalogue-work/` as the first canonical catalogue source editor for single-work metadata
 - extended Studio transport/config wiring for the catalogue work editor and separate catalogue local-service health probing
