@@ -78,7 +78,6 @@ Each source file should use a common top-level shape:
 {
   "header": {
     "schema": "catalogue_source_works_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 0
   },
   "works": {}
@@ -88,8 +87,9 @@ Each source file should use a common top-level shape:
 Header requirements:
 
 - `schema`: stable schema identifier
-- `updated_at_utc`: UTC timestamp from the local write service
 - `count`: number of records in the primary map
+
+Source headers should avoid volatile timestamps so small source edits produce focused Git diffs. Write timestamps belong in activity artifacts and JSONL logs.
 
 Optional future header fields:
 
@@ -105,7 +105,6 @@ Primary map:
 {
   "header": {
     "schema": "catalogue_source_works_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },
   "works": {
@@ -153,7 +152,6 @@ Primary map:
 {
   "header": {
     "schema": "catalogue_source_work_details_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },
   "work_details": {
@@ -187,7 +185,6 @@ Primary map:
 {
   "header": {
     "schema": "catalogue_source_series_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },
   "series": {
@@ -222,7 +219,6 @@ Primary map:
 {
   "header": {
     "schema": "catalogue_source_work_files_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },
   "work_files": {
@@ -252,7 +248,6 @@ Primary map:
 {
   "header": {
     "schema": "catalogue_source_work_links_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z",
     "count": 1
   },
   "work_links": {
@@ -286,13 +281,11 @@ Recommended initial shape:
 ```json
 {
   "header": {
-    "schema": "catalogue_source_meta_v1",
-    "updated_at_utc": "2026-04-17T00:00:00Z"
+    "schema": "catalogue_source_meta_v1"
   },
   "source": {
     "canonical": "json",
-    "created_from": "data/works.xlsx",
-    "created_at_utc": "2026-04-17T00:00:00Z"
+    "created_from": "data/works.xlsx"
   },
   "id_policy": {
     "work_id_width": 5,
@@ -302,6 +295,56 @@ Recommended initial shape:
 ```
 
 Avoid storing mutable counters unless needed. For work IDs and detail IDs, deriving the next available ID from source records is less fragile than maintaining a counter.
+
+## Activity Artifacts
+
+Studio should have a small activity summary artifact for catalogue source and build events:
+
+```text
+assets/studio/data/catalogue_activity.json
+```
+
+Recommended shape:
+
+```json
+{
+  "header": {
+    "schema": "catalogue_activity_v1",
+    "updated_at_utc": "2026-04-17T00:00:00Z",
+    "count": 1
+  },
+  "entries": [
+    {
+      "id": "2026-04-17T00:00:00Z-catalogue-work-save",
+      "time_utc": "2026-04-17T00:00:00Z",
+      "kind": "source_save",
+      "operation": "work.save",
+      "status": "completed",
+      "summary": "Saved 1 work source record.",
+      "affected": {
+        "works": ["00456"],
+        "series": [],
+        "work_details": []
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    }
+  ]
+}
+```
+
+Purpose:
+
+- give Studio a fast read model for recent catalogue data changes
+- avoid parsing raw JSONL logs in the browser
+- let the activity UI start small while preserving links to fuller logs
+
+The local service should still keep append-only JSONL logs under:
+
+```text
+var/studio/catalogue/logs/
+```
+
+The summary artifact is a UI convenience. It is not canonical catalogue data.
 
 ## Canonical Versus Derived Fields
 

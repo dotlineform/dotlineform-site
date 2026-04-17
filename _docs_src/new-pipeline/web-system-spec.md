@@ -54,6 +54,14 @@ Recommended route progression:
   - search by work ID
   - search by series title
   - links to work, series, bulk edit, import, and build actions
+- `/studio/catalogue/status/`
+  - records needing attention
+  - lists source records where `status` is not `published`
+  - links each row to the relevant editor
+- `/studio/catalogue/activity/`
+  - catalogue source and build activity
+  - modelled on `/studio/build-activity/`
+  - provides quick access to data-change logs, validation results, imports, and build output summaries
 - `/studio/catalogue/work/?work=<work_id>`
   - work metadata editor
   - first implementation target
@@ -70,6 +78,27 @@ Recommended route progression:
   - optional workbook/CSV import preview/apply
 
 The exact route names can change during implementation, but route ownership should stay within the Studio section.
+
+## UI Scalability
+
+The UI must handle edge cases where a series has more than 100 works or a work has more than 100 details.
+
+Requirements:
+
+- do not render large editable lists as one unbounded form
+- paginate, progressively load, or group large member/detail lists
+- reuse existing catalogue page list and pager models where practical
+- keep search and jump-to-record available inside long lists
+- keep row actions lightweight and open full editing in focused editor views
+- preserve stable sort and filter state when moving between list pages and editor pages
+
+Initial thresholds:
+
+- paginate series-member lists when a series has more than 100 works
+- paginate work-detail lists when a work has more than 100 details
+- keep thresholds configurable in Studio config once the UI pattern is implemented
+
+The first single-work metadata editor does not need full pagination, but its detail summary area should be designed so pagination can be added without replacing the page model.
 
 ## Search And Selection
 
@@ -93,6 +122,44 @@ Data needed for search:
 - generated `assets/data/series_index.json` for current membership/work counts until source-side membership helpers exist
 
 Series titles are not guaranteed unique. The UI should display the `series_id` in results and route by `series_id`.
+
+## Status Review Page
+
+An early Studio page should list source records where `status` is not `published`.
+
+Purpose:
+
+- replace the quick status awareness currently provided by CLI messages and workbook filtering
+- make draft, blank, invalid, or otherwise non-published records easy to find
+- provide a practical starting point for daily catalogue maintenance
+
+Recommended route:
+
+- `/studio/catalogue/status/`
+
+Record families:
+
+- works
+- work details
+- series
+- work files
+- work links
+
+Initial behavior:
+
+- load canonical source JSON
+- group records by family
+- show ID, title/label, status, and short reason when available
+- link each record to its focused editor
+- include counts by family
+- keep the page read-only in the first implementation
+
+Useful filters:
+
+- all non-published records
+- draft records
+- blank status records
+- invalid or warning records once source validation summaries are available
 
 ## Work Metadata Editor
 
@@ -332,6 +399,7 @@ Recommended endpoints:
 - `POST /catalogue/import-apply`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
+- `GET /catalogue/activity`
 
 Build endpoints can be added later. The first editor can save source JSON without invoking generation.
 
@@ -454,3 +522,33 @@ Log event fields:
 - error class/message when failed
 
 Do not log full record payloads unless a temporary debug mode is explicitly enabled.
+
+## Catalogue Activity Page
+
+Studio should add a catalogue activity page modelled on `/studio/build-activity/`.
+
+Purpose:
+
+- make source JSON changes visible as the pipeline gains capability
+- replace the useful parts of CLI script output with an easy local UI entry point
+- provide links or summaries for logs without requiring a complete diff viewer in the first pass
+
+Recommended route:
+
+- `/studio/catalogue/activity/`
+
+Initial data sources:
+
+- `var/studio/catalogue/logs/catalogue_write_server.log`
+- `var/studio/catalogue/logs/catalogue_build.log`, if a separate build command/service is added
+- a Studio-facing summary JSON such as `assets/studio/data/catalogue_activity.json`
+
+Initial UI:
+
+- latest activity entries first
+- timestamp, operation, status, affected IDs, and short summary
+- links to source editors for affected records when possible
+- link or text pointer to the underlying log file path when full details are needed
+- filters for saves, imports, validation failures, and builds when those event types exist
+
+This page does not need to render every field-level change initially. The first useful version can be a readable index of operations and log summaries.

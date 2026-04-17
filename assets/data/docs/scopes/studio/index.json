@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T15:13:18Z",
+  "generated_at": "2026-04-17T16:24:00Z",
   "docs": [
     {
       "scope": "studio",
@@ -616,6 +616,17 @@
       "source_path": "studio/tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-catalogue-source",
+      "title": "Catalogue Source Export",
+      "last_updated": "2026-04-17",
+      "parent_id": "scripts",
+      "sort_order": 55,
+      "source_path": "scripts/scripts-catalogue-source.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-source.json"
     },
     {
       "scope": "studio",

@@ -18,12 +18,13 @@ Goal:
 
 Work:
 
-- add a source exporter that reads `data/works.xlsx` and writes proposed JSON source files under `assets/studio/data/catalogue/`
+- add `scripts/export_catalogue_source.py` to read `data/works.xlsx` and write proposed JSON source files under `assets/studio/data/catalogue/`
 - include `Works`, `Series`, `SeriesSort`, `WorkDetails`, `WorkFiles`, and `WorkLinks`
 - normalize IDs and field names during export
 - include migration metadata in `meta.json`
-- add a validator that reads the exported JSON source and reports the same classes of errors as the current workbook preflight
-- add comparison tooling that loads workbook source and JSON source into normalized records and reports differences
+- add `scripts/validate_catalogue_source.py` to read the exported JSON source and report the same classes of errors as the current workbook preflight
+- add `scripts/compare_catalogue_sources.py` to load workbook source and JSON source into normalized records and report differences
+- keep shared Phase 0 source loading and normalization logic in `scripts/catalogue_source.py`
 
 Acceptance:
 
@@ -31,6 +32,7 @@ Acceptance:
 - validation passes on exported JSON
 - comparison against workbook-normalized records is empty or only contains documented normalization differences
 - no runtime-critical JSON files are changed by this phase
+- source JSON headers are deterministic and avoid volatile timestamps
 
 Benefits:
 
@@ -128,7 +130,47 @@ Mitigation:
 - keep first implementation separate and narrow
 - extract shared utilities only after the catalogue service proves stable
 
-## Phase 3: Single Work Metadata Editor
+## Phase 3: Status Review And Activity Surfaces
+
+Goal:
+
+- make non-published records and local catalogue activity visible early in Studio
+
+Work:
+
+- add a status review page listing source records where `status` is not `published`
+- group status rows by works, work details, series, work files, and work links
+- link each status row to its focused editor when that editor exists
+- add counts by record family
+- add a catalogue activity page modelled on `/studio/build-activity/`
+- write a small Studio-facing activity summary artifact such as `assets/studio/data/catalogue_activity.json`
+- surface local write events, validation failures, imports, and build runs as those capabilities become available
+- provide easy access to underlying log references even before a complete field-level change UI exists
+
+Acceptance:
+
+- user can find all draft, blank, or otherwise non-published source records without opening Excel
+- user can see recent catalogue source saves and build/import events in Studio
+- the activity page can start as a compact log index and does not need to render every field-level change
+
+Benefits:
+
+- replaces useful CLI awareness early
+- creates a place to surface pipeline behavior as implementation scope grows
+- gives the user a daily maintenance entry point before all editors exist
+
+Risks:
+
+- activity UI can become too ambitious too early
+- status review may surface warnings before validators are fully mature
+
+Mitigation:
+
+- start with simple status grouping and operation summaries
+- link to logs for detail rather than building a full diff viewer first
+- add validation-warning filters only after shared validation summaries exist
+
+## Phase 4: Single Work Metadata Editor
 
 Goal:
 
@@ -167,7 +209,7 @@ Mitigation:
 - label source save and rebuild actions separately
 - show "source changed, rebuild needed" state after save
 
-## Phase 4: Scoped Build From JSON Source
+## Phase 5: Scoped Build From JSON Source
 
 Goal:
 
@@ -200,7 +242,7 @@ Mitigation:
 - reuse planner helper functions where possible
 - treat the old workbook planner as transitional
 
-## Phase 5: Work Detail Editor
+## Phase 6: Work Detail Editor
 
 Goal:
 
@@ -229,13 +271,15 @@ Risks:
 
 - detail section grouping depends on `project_subfolder`
 - dimension updates may need media source access
+- works with more than 100 details can create unwieldy editor pages
 
 Mitigation:
 
 - keep dimensions read-only in the UI initially
 - rely on the generator/media probe to refresh dimensions
+- paginate or progressively load large detail lists from the start of this phase
 
-## Phase 6: Series Editor And Membership Changes
+## Phase 7: Series Editor And Membership Changes
 
 Goal:
 
@@ -267,14 +311,16 @@ Risks:
 
 - membership edits touch both series behavior and work records
 - duplicate series titles can make search ambiguous
+- series with more than 100 works can create unwieldy membership editors
 
 Mitigation:
 
 - route and save by `series_id`
 - always show `series_id` in search results and editor headings
 - use preview for multi-record membership edits
+- reuse catalogue list and pager patterns for large membership lists
 
-## Phase 7: Add New Series
+## Phase 8: Add New Series
 
 Goal:
 
@@ -308,7 +354,7 @@ Mitigation:
 - start with explicit user-entered IDs
 - add suggested ID helpers only after the JSON source is stable
 
-## Phase 8: Add New Work And Work Detail Records
+## Phase 9: Add New Work And Work Detail Records
 
 Goal:
 
@@ -343,7 +389,7 @@ Mitigation:
 - allow draft records with missing media
 - surface media warnings clearly in build preview
 
-## Phase 9: Bulk Edit
+## Phase 10: Bulk Edit
 
 Goal:
 
@@ -380,7 +426,7 @@ Mitigation:
 - write one backup bundle per apply
 - keep initial operations narrow
 
-## Phase 10: Workbook Import And Export
+## Phase 11: Workbook Import And Export
 
 Goal:
 
@@ -414,7 +460,7 @@ Mitigation:
 - block published-record overwrites by default
 - label exported workbooks as reports or import templates, not canonical source
 
-## Phase 11: Retire Workbook-Led Pipeline
+## Phase 12: Retire Workbook-Led Pipeline
 
 Goal:
 
@@ -511,6 +557,19 @@ Mitigation:
 - server-side cross-file validation
 - series editor writes affected work records in the same operation
 - block invalid primary work references
+
+### Large Record Sets
+
+Risk:
+
+- a few series have more than 100 works and a few works have more than 100 details
+- naive editor pages could become slow, visually noisy, or hard to navigate
+
+Mitigation:
+
+- use pagination, progressive loading, or grouped lists for large memberships and detail sets
+- reuse existing catalogue page list and pager models where practical
+- keep focused editor pages separate from long summary lists
 
 ### Media Decoupling
 

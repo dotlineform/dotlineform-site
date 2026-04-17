@@ -1,0 +1,13 @@
+{
+  "header": {
+    "schema": "catalogue_source_meta_v1"
+  },
+  "source": {
+    "canonical": "json",
+    "created_from": "data/works.xlsx"
+  },
+  "id_policy": {
+    "work_id_width": 5,
+    "detail_id_width": 3
+  }
+}

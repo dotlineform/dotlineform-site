@@ -86,6 +86,12 @@ Catalogue/media builds:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
+- `./scripts/export_catalogue_source.py`
+  - exports Phase 0 catalogue source JSON from `data/works.xlsx` into `assets/studio/data/catalogue/`
+- `./scripts/validate_catalogue_source.py`
+  - validates the exported catalogue source JSON
+- `./scripts/compare_catalogue_sources.py`
+  - compares workbook-normalized source records with JSON-normalized source records
 - `./scripts/copy_draft_media_files.py`
   - stages source media into the srcset input folders
 - `bash scripts/make_srcset_images.sh`
@@ -103,6 +109,8 @@ Catalogue/media builds:
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, and aggregate catalogue indexes.
+- [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
+  Export, validate, and compare Phase 0 catalogue source JSON.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
   Remove one work from generated artifacts when workbook status is `delete`.
 - [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
