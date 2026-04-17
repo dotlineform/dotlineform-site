@@ -1,9 +1,67 @@
 {
   "header": {
     "schema": "catalogue_activity_v1",
-    "count": 1
+    "count": 3
   },
   "entries": [
+    {
+      "id": "2026-04-17T19:54:24Z-build-apply",
+      "time_utc": "2026-04-17T19:54:24Z",
+      "kind": "build",
+      "operation": "build.apply",
+      "status": "completed",
+      "summary": "Scoped rebuild completed for work 01941.",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "01941"
+          ],
+          "truncated": 0
+        },
+        "series": {
+          "count": 1,
+          "sample_ids": [
+            "143"
+          ],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
+    {
+      "id": "2026-04-17T19:54:12Z-work-save",
+      "time_utc": "2026-04-17T19:54:12Z",
+      "kind": "source_save",
+      "operation": "work.save",
+      "status": "completed",
+      "summary": "Saved 1 work source record.",
+      "affected": {
+        "works": {
+          "count": 1,
+          "sample_ids": [
+            "01941"
+          ],
+          "truncated": 0
+        },
+        "series": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        }
+      },
+      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
+    },
     {
       "id": "2026-04-17T19:13:10Z-work-save",
       "time_utc": "2026-04-17T19:13:10Z",
