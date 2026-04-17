@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T10:52:44Z",
+  "generated_at": "2026-04-17T15:01:23Z",
   "docs": [
     {
       "scope": "studio",
@@ -451,6 +451,17 @@
       "source_path": "data-models/data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline",
+      "title": "New Cat Pipeline",
+      "last_updated": "2026-04-17",
+      "parent_id": "",
+      "sort_order": 40,
+      "source_path": "new-pipeline/new-pipeline.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline.json"
     },
     {
       "scope": "studio",
