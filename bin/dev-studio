@@ -19,25 +19,32 @@ fi
 
 JEKYLL_HOST="${JEKYLL_HOST:-127.0.0.1}"
 JEKYLL_PORT="${JEKYLL_PORT:-4000}"
+CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 
 JEKYLL_PID=""
-WRITE_PID=""
+TAG_WRITE_PID=""
+CATALOGUE_WRITE_PID=""
 
 cleanup() {
   trap - EXIT INT TERM
   if [ -n "$JEKYLL_PID" ] && kill -0 "$JEKYLL_PID" 2>/dev/null; then
     kill "$JEKYLL_PID" 2>/dev/null || true
   fi
-  if [ -n "$WRITE_PID" ] && kill -0 "$WRITE_PID" 2>/dev/null; then
-    kill "$WRITE_PID" 2>/dev/null || true
+  if [ -n "$TAG_WRITE_PID" ] && kill -0 "$TAG_WRITE_PID" 2>/dev/null; then
+    kill "$TAG_WRITE_PID" 2>/dev/null || true
   fi
-  wait "$JEKYLL_PID" "$WRITE_PID" 2>/dev/null || true
+  if [ -n "$CATALOGUE_WRITE_PID" ] && kill -0 "$CATALOGUE_WRITE_PID" 2>/dev/null; then
+    kill "$CATALOGUE_WRITE_PID" 2>/dev/null || true
+  fi
+  wait "$JEKYLL_PID" "$TAG_WRITE_PID" "$CATALOGUE_WRITE_PID" 2>/dev/null || true
 }
 
 trap cleanup EXIT INT TERM
 
 echo "Starting Studio development services from $ROOT_DIR"
 echo "Jekyll: http://$JEKYLL_HOST:$JEKYLL_PORT"
+echo "Tag Write Server: http://127.0.0.1:8787"
+echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
 echo
 echo "Building docs viewer data"
@@ -50,15 +57,22 @@ echo
 JEKYLL_PID=$!
 
 "$PYTHON_BIN" scripts/studio/tag_write_server.py &
-WRITE_PID=$!
+TAG_WRITE_PID=$!
+
+"$PYTHON_BIN" scripts/studio/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &
+CATALOGUE_WRITE_PID=$!
 
 while true; do
   if ! kill -0 "$JEKYLL_PID" 2>/dev/null; then
     wait "$JEKYLL_PID"
     break
   fi
-  if ! kill -0 "$WRITE_PID" 2>/dev/null; then
-    wait "$WRITE_PID"
+  if ! kill -0 "$TAG_WRITE_PID" 2>/dev/null; then
+    wait "$TAG_WRITE_PID"
+    break
+  fi
+  if ! kill -0 "$CATALOGUE_WRITE_PID" 2>/dev/null; then
+    wait "$CATALOGUE_WRITE_PID"
     break
   fi
   sleep 1

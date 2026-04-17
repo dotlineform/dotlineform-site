@@ -119,6 +119,8 @@ Catalogue/media builds:
   Remove one moment from canonical source files and generated artifacts.
 - [Tag Write Server](/docs/?scope=studio&doc=scripts-tag-write-server)
   Run the local Studio tag-save/import service with explicit write allowlists.
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+  Run the local Studio catalogue source save service with explicit write allowlists.
 - [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit)
   Audit typography and color literals across CSS files.
 - [Site Consistency Audit](/docs/?scope=studio&doc=scripts-audit-site-consistency)

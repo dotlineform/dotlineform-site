@@ -8,9 +8,6 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
-import openpyxl
-from openpyxl import Workbook
-
 try:
     from series_ids import normalize_series_id, parse_series_ids
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
@@ -423,6 +420,8 @@ def records_from_workbook(
     work_files_sheet: str = "WorkFiles",
     work_links_sheet: str = "WorkLinks",
 ) -> CatalogueSourceRecords:
+    import openpyxl
+
     wb = openpyxl.load_workbook(workbook_path, read_only=True, data_only=True)
     works_rows, works_headers = require_sheet(wb, works_sheet)
     series_rows, series_headers = require_sheet(wb, series_sheet)
@@ -590,6 +589,8 @@ def append_sheet_rows(ws, headers: list[str], records: Iterable[Mapping[str, Any
 
 def write_records_to_workbook(records: CatalogueSourceRecords, workbook_path: Path) -> None:
     """Materialize JSON source records as a workbook compatible with generate_work_pages.py."""
+    from openpyxl import Workbook
+
     wb = Workbook()
     default_ws = wb.active
     wb.remove(default_ws)

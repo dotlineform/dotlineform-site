@@ -1,12 +1,36 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: ""
 sort_order: 110
 ---
 
 # Site Change Log
+
+## [2026-04-17] Added the local catalogue source write service
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added a localhost-only Catalogue Write Server for the JSON-led catalogue pipeline.
+
+**Reason:**
+Studio catalogue editors need a narrow local write boundary before the UI can replace workbook editing. The first service increment proves that canonical source JSON can be updated safely without writing media, prose, generated public JSON, or search artifacts.
+
+**Effect:**
+`scripts/studio/catalogue_write_server.py` exposes `GET /health` and `POST /catalogue/work/save`. The save endpoint updates existing work records in `assets/studio/data/catalogue/works.json`, validates the full catalogue source set before writing, supports optional stale-record hash checks, creates timestamped backup bundles, and writes minimal local event logs. `bin/dev-studio` now starts this service alongside Jekyll and the Tag Write Server.
+
+**Affected files/docs:**
+- `scripts/studio/catalogue_write_server.py`
+- `bin/dev-studio`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Scripts](/docs/?scope=studio&doc=scripts)
+
+**Notes:**
+This service is intentionally narrow. Work detail, series, create, delete, bulk edit, import, and build endpoints remain later pipeline phases.
 
 ## [2026-04-01] Migrated moments from workbook rows to source-file front matter
 

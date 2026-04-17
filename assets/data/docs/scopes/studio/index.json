@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T16:49:26Z",
+  "generated_at": "2026-04-17T16:59:40Z",
   "docs": [
     {
       "scope": "studio",
@@ -718,6 +718,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "scripts-catalogue-write-server",
+      "title": "Catalogue Write Server",
+      "last_updated": "2026-04-17",
+      "parent_id": "scripts",
+      "sort_order": 71,
+      "source_path": "scripts/scripts-catalogue-write-server.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-studio-v1-index-shape",
       "title": "Docs Scope Index Shape",
       "last_updated": "2026-03-31",
@@ -797,7 +808,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "",
       "sort_order": 110,
       "source_path": "site-change-log.md",
