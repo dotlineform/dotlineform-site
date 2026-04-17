@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 import openpyxl
+from openpyxl import Workbook
 
 try:
     from series_ids import normalize_series_id, parse_series_ids
@@ -109,6 +110,36 @@ LINK_FIELDS = [
     "status",
     "published_date",
 ]
+
+WORKBOOK_HEADERS = {
+    "Works": WORK_FIELDS,
+    "Series": [
+        "series_id",
+        "title",
+        "series_type",
+        "status",
+        "published_date",
+        "year",
+        "year_display",
+        "primary_work_id",
+        "series_prose_file",
+        "notes",
+    ],
+    "SeriesSort": ["series_id", "sort_fields"],
+    "WorkDetails": [
+        "work_id",
+        "detail_id",
+        "project_subfolder",
+        "project_filename",
+        "title",
+        "status",
+        "published_date",
+        "width_px",
+        "height_px",
+    ],
+    "WorkFiles": ["work_id", "filename", "label", "status", "published_date"],
+    "WorkLinks": ["work_id", "url", "label", "status", "published_date"],
+}
 
 WORK_TEXT_FIELDS = set(WORK_FIELDS) - {
     "series_ids",
@@ -492,6 +523,25 @@ def write_payloads(source_dir: Path, payloads: Mapping[str, Mapping[str, Any]]) 
     return written
 
 
+def write_source_record_payloads(
+    source_dir: Path,
+    records: CatalogueSourceRecords,
+    *,
+    kinds: Iterable[str] = ("works", "work_details", "series", "work_files", "work_links"),
+) -> list[Path]:
+    source_dir.mkdir(parents=True, exist_ok=True)
+    record_maps = records.as_maps()
+    written: list[Path] = []
+    for kind in kinds:
+        if kind not in record_maps:
+            raise ValueError(f"Unknown source record kind: {kind}")
+        path = source_dir / SOURCE_FILES[kind]
+        payload = payload_for_map(kind, record_maps[kind])
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        written.append(path)
+    return written
+
+
 def load_json_file(path: Path) -> Dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -524,6 +574,108 @@ def records_from_json_source(source_dir: Path) -> CatalogueSourceRecords:
         work_files=sort_record_map(maps["work_files"]),
         work_links=sort_record_map(maps["work_links"]),
     )
+
+
+def workbook_cell_value(value: Any) -> Any:
+    if isinstance(value, list):
+        return ",".join(str(item) for item in value if item is not None)
+    return value
+
+
+def append_sheet_rows(ws, headers: list[str], records: Iterable[Mapping[str, Any]]) -> None:
+    ws.append(headers)
+    for record in records:
+        ws.append([workbook_cell_value(record.get(header)) for header in headers])
+
+
+def write_records_to_workbook(records: CatalogueSourceRecords, workbook_path: Path) -> None:
+    """Materialize JSON source records as a workbook compatible with generate_work_pages.py."""
+    wb = Workbook()
+    default_ws = wb.active
+    wb.remove(default_ws)
+
+    append_sheet_rows(
+        wb.create_sheet("Works"),
+        WORKBOOK_HEADERS["Works"],
+        records.works.values(),
+    )
+    append_sheet_rows(
+        wb.create_sheet("Series"),
+        WORKBOOK_HEADERS["Series"],
+        records.series.values(),
+    )
+    append_sheet_rows(
+        wb.create_sheet("SeriesSort"),
+        WORKBOOK_HEADERS["SeriesSort"],
+        (
+            {
+                "series_id": record.get("series_id"),
+                "sort_fields": record.get("sort_fields") or "work_id",
+            }
+            for record in records.series.values()
+        ),
+    )
+    append_sheet_rows(
+        wb.create_sheet("WorkDetails"),
+        WORKBOOK_HEADERS["WorkDetails"],
+        records.work_details.values(),
+    )
+    append_sheet_rows(
+        wb.create_sheet("WorkFiles"),
+        WORKBOOK_HEADERS["WorkFiles"],
+        records.work_files.values(),
+    )
+    append_sheet_rows(
+        wb.create_sheet("WorkLinks"),
+        WORKBOOK_HEADERS["WorkLinks"],
+        records.work_links.values(),
+    )
+
+    workbook_path.parent.mkdir(parents=True, exist_ok=True)
+    wb.save(workbook_path)
+
+
+def sync_mutable_fields_from_workbook(source_dir: Path, workbook_path: Path) -> list[Path]:
+    """Copy generator-updated mutable fields from a materialized workbook back to JSON source."""
+    source_records = records_from_json_source(source_dir)
+    workbook_records = records_from_workbook(workbook_path)
+
+    for work_id, workbook_record in workbook_records.works.items():
+        source_record = source_records.works.get(work_id)
+        if source_record is None:
+            continue
+        for field in ["status", "published_date", "width_px", "height_px"]:
+            source_record[field] = workbook_record.get(field)
+
+    for detail_uid, workbook_record in workbook_records.work_details.items():
+        source_record = source_records.work_details.get(detail_uid)
+        if source_record is None:
+            continue
+        for field in ["status", "published_date", "width_px", "height_px"]:
+            source_record[field] = workbook_record.get(field)
+
+    for series_id, workbook_record in workbook_records.series.items():
+        source_record = source_records.series.get(series_id)
+        if source_record is None:
+            continue
+        for field in ["status", "published_date"]:
+            source_record[field] = workbook_record.get(field)
+
+    for file_uid, workbook_record in workbook_records.work_files.items():
+        source_record = source_records.work_files.get(file_uid)
+        if source_record is None:
+            continue
+        for field in ["status", "published_date"]:
+            source_record[field] = workbook_record.get(field)
+
+    for link_uid, workbook_record in workbook_records.work_links.items():
+        source_record = source_records.work_links.get(link_uid)
+        if source_record is None:
+            continue
+        for field in ["status", "published_date"]:
+            source_record[field] = workbook_record.get(field)
+
+    return write_source_record_payloads(source_dir, source_records)
 
 
 def validate_source_records(records: CatalogueSourceRecords) -> list[str]:

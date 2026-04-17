@@ -19,6 +19,7 @@ Common runs:
 ```bash
 ./scripts/generate_work_pages.py
 ./scripts/generate_work_pages.py --write
+./scripts/generate_work_pages.py --source json --work-ids 00456 --write
 ./scripts/generate_work_pages.py --work-ids 00456 --write
 ./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
 ./scripts/generate_work_pages.py --series-ids 001,002 --write
@@ -52,6 +53,12 @@ Moment canonical source model:
 ## Useful Flags
 
 - `--write`: persist generated file changes plus workbook-backed work/work-detail/link updates
+- `--source` with default `xlsx`
+  - `xlsx` reads `data/works.xlsx` or the positional workbook path
+  - `json` reads canonical source JSON from `assets/studio/data/catalogue/`
+  - JSON source mode materializes a temporary workbook adapter so the current artifact writer continues to produce the existing runtime contracts
+- `--source-dir` with default `assets/studio/data/catalogue`
+  - used only when `--source json`
 - `--force`: regenerate even when checksums match
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
@@ -173,6 +180,29 @@ Catalogue search note:
 
 - `generate_work_pages.py` no longer writes `assets/data/search/catalogue/index.json`
 - catalogue search is now rebuilt separately by [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) from the generated repo JSON artifacts above plus Studio tag metadata
+
+## JSON Source Mode
+
+`--source json` is the Phase 1 bridge from workbook-led generation to JSON-led generation.
+
+Current behavior:
+
+- reads canonical source JSON from `assets/studio/data/catalogue/`
+- materializes those records into a temporary workbook with the current worksheet names and columns
+- runs the existing generation logic against that temporary workbook
+- writes the same runtime artifacts as workbook mode
+- when `--write` is used, syncs generator-updated mutable fields back into source JSON:
+  - work `status`, `published_date`, `width_px`, `height_px`
+  - work-detail `status`, `published_date`, `width_px`, `height_px`
+  - series `status`, `published_date`
+  - work-file and work-link `status`, `published_date`
+
+This keeps the public runtime JSON contracts stable while the generator is being refactored toward a native JSON source adapter.
+
+Validation note:
+
+- JSON source mode still passes through the current workbook/source preflight after materialization
+- use [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source) for direct JSON source validation and workbook-vs-JSON comparison
 
 ## Works Download Files
 

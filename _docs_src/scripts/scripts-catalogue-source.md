@@ -83,7 +83,12 @@ Shared source loading, normalization, validation, and comparison logic lives in:
 scripts/catalogue_source.py
 ```
 
-This module is a migration fixture, not yet the runtime generator source adapter. Later phases can reuse or refactor it when `generate_work_pages.py` gains JSON source support.
+This module is a migration fixture and compatibility adapter. It is not yet the final native generator data layer.
+
+Phase 1 reuse:
+
+- `generate_work_pages.py --source json` now uses this module to materialize canonical source JSON into a temporary workbook adapter
+- direct source validation and workbook-vs-JSON comparison remain owned by the scripts on this page
 
 ## Related References
 

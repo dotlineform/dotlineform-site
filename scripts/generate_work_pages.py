@@ -71,6 +71,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -122,6 +123,21 @@ try:
     from catalogue_preflight import raise_if_invalid_catalogue_workbook
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
+
+try:
+    from catalogue_source import (
+        DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        records_from_json_source,
+        sync_mutable_fields_from_workbook,
+        write_records_to_workbook,
+    )
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.catalogue_source import (
+        DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        records_from_json_source,
+        sync_mutable_fields_from_workbook,
+        write_records_to_workbook,
+    )
 
 try:
     from series_ids import normalize_series_id
@@ -838,6 +854,17 @@ def main() -> None:
     # CLI arguments define how we map Excel columns to front matter fields, and where output files go.
     ap = argparse.ArgumentParser()
     ap.add_argument("xlsx", nargs="?", default="data/works.xlsx", help="Path to Excel workbook (.xlsx)")
+    ap.add_argument(
+        "--source",
+        choices=["xlsx", "json"],
+        default="xlsx",
+        help="Source backend for catalogue metadata. Default: xlsx.",
+    )
+    ap.add_argument(
+        "--source-dir",
+        default=str(DEFAULT_CATALOGUE_SOURCE_DIR),
+        help="Catalogue source JSON directory when --source=json.",
+    )
 
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
@@ -949,12 +976,27 @@ def main() -> None:
             media_base_dir=media_base_dir_display,
         )
 
+    json_source_dir: Optional[Path] = None
+    json_source_tempdir: Optional[tempfile.TemporaryDirectory[str]] = None
+    if args.source == "json":
+        json_source_dir = Path(args.source_dir).expanduser()
+        json_source_tempdir = tempfile.TemporaryDirectory(prefix="catalogue-source-")
+        materialized_workbook_path = Path(json_source_tempdir.name) / "works.xlsx"
+        source_records = records_from_json_source(json_source_dir)
+        write_records_to_workbook(source_records, materialized_workbook_path)
+        args.xlsx = str(materialized_workbook_path)
+        print(
+            "Catalogue source: JSON "
+            f"{display_path(json_source_dir)} -> {display_path(materialized_workbook_path)}"
+        )
+
     log_event(
         "generate_start",
         {
             "argv": sys.argv[1:],
             "write": bool(args.write),
             "force": bool(args.force),
+            "source": args.source,
         },
     )
 
@@ -3381,13 +3423,23 @@ def main() -> None:
                 f"Path: {display_path(moments_index_json_path)} (overwrite={exists})"
             )
 
+    if args.write and args.source == "json" and json_source_dir is not None:
+        synced_paths = sync_mutable_fields_from_workbook(json_source_dir, xlsx_path)
+        print("Catalogue source JSON sync done.")
+        for synced_path in synced_paths:
+            print(f"  - {display_path(synced_path)}")
+
     log_event(
         "generate_complete",
         {
             "write": bool(args.write),
             "force": bool(args.force),
+            "source": args.source,
         },
     )
+
+    if json_source_tempdir is not None:
+        json_source_tempdir.cleanup()
 
 if __name__ == "__main__":
     try:

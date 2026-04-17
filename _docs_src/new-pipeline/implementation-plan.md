@@ -58,18 +58,16 @@ Goal:
 
 Work:
 
-- extract workbook-reading logic into an `ExcelCatalogueSource` adapter
-- add a `JsonCatalogueSource` adapter
-- define shared normalized record structures for works, details, series, files, and links
-- move validation onto normalized source records where practical
-- add `--source json` and `--source xlsx`
-- keep `xlsx` behavior available during migration
-- update publication-state and dimension update logic so JSON source can be updated instead of workbook cells
-- run generator in dry-run against both source modes and compare outputs
+- add `--source json` and `--source-dir` to `generate_work_pages.py`
+- keep `xlsx` as the default source during migration
+- use `scripts/catalogue_source.py` to load canonical source JSON and materialize a temporary workbook adapter
+- run the existing artifact writer against the temporary workbook so current runtime contracts stay stable
+- sync generator-updated mutable fields back into canonical source JSON after JSON-source write runs
+- compare generated artifacts from workbook mode and JSON mode
 
 Acceptance:
 
-- JSON-source generation writes the same route stubs and runtime JSON payloads as workbook-source generation for the current catalogue
+- JSON-source generation writes the same route stubs and runtime JSON payloads as workbook-source generation for the current catalogue, aside from expected generated timestamp differences
 - existing public runtime JSON schemas remain unchanged
 - `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, and per-record JSON contracts remain stable
 - workbook mode still works as a fallback
@@ -83,12 +81,14 @@ Risks:
 
 - generator code currently interleaves workbook reads, workbook writes, and artifact writes
 - recent-index publish transitions depend on status changes
+- the temporary workbook bridge is transitional and should not become the final architecture
 
 Mitigation:
 
-- refactor in small adapter seams
+- refactor in small adapter seams, starting with a compatibility bridge
 - keep current artifact writer functions intact where possible
 - test draft-to-published transitions against fixture copies
+- move toward native normalized-record generation in later phases once JSON-source behavior is proven
 
 ## Phase 2: Local Catalogue Write Service
 
