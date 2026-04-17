@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T10:47:04Z",
+  "generated_at": "2026-04-17T10:51:19Z",
   "docs": [
     {
       "scope": "studio",
@@ -410,6 +410,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "llm",
+      "title": "LLM",
+      "last_updated": "2026-04-16",
+      "parent_id": "",
+      "sort_order": 35,
+      "source_path": "llm/llm.md",
+      "viewer_url": "/docs/?scope=studio&doc=llm",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "css-audit-spec",
       "title": "CSS Audit Spec (v1)",
       "last_updated": "2026-03-31",
@@ -704,17 +715,6 @@
       "source_path": "scripts/scripts-fix-missing-title-sort.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-fix-missing-title-sort.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "llm",
-      "title": "LLM",
-      "last_updated": "2026-04-16",
-      "parent_id": "site-docs",
-      "sort_order": 100,
-      "source_path": "llm/llm.md",
-      "viewer_url": "/docs/?scope=studio&doc=llm",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
     },
     {
       "scope": "studio",

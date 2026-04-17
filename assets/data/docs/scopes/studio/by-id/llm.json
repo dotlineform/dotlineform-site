@@ -3,8 +3,8 @@
   "doc_id": "llm",
   "title": "LLM",
   "last_updated": "2026-04-16",
-  "parent_id": "site-docs",
-  "sort_order": 100,
+  "parent_id": "",
+  "sort_order": 35,
   "source_path": "llm/llm.md",
   "viewer_url": "/docs/?scope=studio&doc=llm",
   "content_html": "<p>#LLM Integration</p>\n\n<p>This section describes calling LLM API to support tagging and scoring decisions.</p>\n"
