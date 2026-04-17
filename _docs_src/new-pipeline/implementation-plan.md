@@ -469,6 +469,9 @@ Goal:
 Work:
 
 - make JSON source the default for generation
+- refactor `generate_work_pages.py` so normal JSON-source generation reads normalized records directly from `JsonCatalogueSource`
+- remove the temporary workbook materialization bridge from normal `--source json` runs
+- keep the workbook reader only for legacy fallback, source comparison, and workbook import/export workflows
 - update pipeline docs and script docs
 - demote `build_catalogue.py` to legacy or replace it with JSON-source build commands
 - keep workbook import/export commands documented separately
@@ -478,6 +481,8 @@ Acceptance:
 
 - normal catalogue maintenance no longer requires opening or saving `data/works.xlsx`
 - `data/works.xlsx` is not used to edit currently published works
+- JSON-source generation no longer depends on creating a temporary workbook
+- generated artifacts remain equivalent to the Phase 1 bridge output, aside from expected timestamps or documented version metadata changes
 - public runtime artifacts remain stable
 - media scripts remain available but are not coupled to workbook orchestration
 
