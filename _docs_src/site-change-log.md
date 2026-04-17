@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-17
 
+- added the Phase 5 scoped JSON-source rebuild path for work edits, including a local preview/apply flow and `Save + Rebuild` on `/studio/catalogue-work/`
 - added `/studio/catalogue-work/` as the first canonical catalogue source editor for single-work metadata
 - extended Studio transport/config wiring for the catalogue work editor and separate catalogue local-service health probing
 - updated the catalogue write server response to return the normalized saved record and saved timestamp for editor baseline refresh

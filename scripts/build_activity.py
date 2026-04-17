@@ -78,6 +78,7 @@ def _compact_id_group(ids: List[str], limit: int = 12) -> Dict[str, Any]:
 
 def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
     changes = entry.get("changes", {}) if isinstance(entry.get("changes"), dict) else {}
+    source = changes.get("source", {}) if isinstance(changes.get("source"), dict) else {}
     workbook = changes.get("workbook", {}) if isinstance(changes.get("workbook"), dict) else {}
     media = changes.get("media", {}) if isinstance(changes.get("media"), dict) else {}
     actions = entry.get("actions", {}) if isinstance(entry.get("actions"), dict) else {}
@@ -90,6 +91,11 @@ def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
         "summary": entry.get("summary"),
         "planner_mode": entry.get("planner_mode"),
         "changes": {
+            "source": {
+                "works": _compact_id_group(list(source.get("works", []))),
+                "series": _compact_id_group(list(source.get("series", []))),
+                "work_details": _compact_id_group(list(source.get("work_details", []))),
+            },
             "workbook": {
                 "works": _compact_id_group(list(workbook.get("works", []))),
                 "series": _compact_id_group(list(workbook.get("series", []))),

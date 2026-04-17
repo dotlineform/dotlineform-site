@@ -26,19 +26,20 @@ The first implementation covers:
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
 - validate basic field format before save
 - save source JSON only
+- preview the scoped rebuild impact for the current work
+- run `Save + Rebuild` through the local catalogue service
 - show saved-state feedback and rebuild-needed state after save
 
 It does not yet:
 
 - edit work details
 - edit series records directly
-- rebuild public runtime artifacts
 - update prose or media files
 - paginate detail/member lists
 
 ## Save Boundary
 
-Current save flow:
+Current save/rebuild flow:
 
 1. page loads `works.json` and `series.json`
 2. browser computes a record hash for stale-write protection
@@ -46,8 +47,15 @@ Current save flow:
 4. `POST /catalogue/work/save` sends the current work id, the expected record hash, and the normalized record patch
 5. the local write server validates the full source set, writes `works.json`, creates backups, and returns the normalized saved record
 6. the page advances its baseline and marks runtime rebuild as still pending
+7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
+8. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild`
 
-Save does not regenerate public work JSON or route stubs. That remains a later phase.
+The current rebuild scope is intentionally narrow:
+
+- the current work page/json
+- affected series pages
+- aggregate series/works/recent indexes
+- catalogue search
 
 ## Current Editable Fields
 

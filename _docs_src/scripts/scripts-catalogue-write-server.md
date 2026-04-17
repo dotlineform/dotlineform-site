@@ -26,8 +26,10 @@ Exposed endpoints:
 
 - `GET /health`
 - `POST /catalogue/work/save`
+- `POST /catalogue/build-preview`
+- `POST /catalogue/build-apply`
 
-The first implementation only saves existing work records in canonical catalogue source JSON. It does not create works, edit work details, edit series, write prose files, write media files, generate public runtime artifacts, or rebuild search.
+The current implementation saves existing work records in canonical catalogue source JSON and can run a scoped JSON-source rebuild for one work. It does not create works, edit work details, edit series, write prose files, or write media files.
 
 `POST /catalogue/work/save` expects:
 
@@ -64,6 +66,33 @@ Successful responses include:
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
+`POST /catalogue/build-preview` expects:
+
+```json
+{
+  "work_id": "00001",
+  "extra_series_ids": ["004"]
+}
+```
+
+It returns the planned scoped build:
+
+- `work_ids`
+- `series_ids`
+- `generate_only`
+- `rebuild_search`
+- `summary`
+
+`POST /catalogue/build-apply` accepts the same shape and then runs:
+
+- `generate_work_pages.py --source json` for the selected work and affected series ids
+- `build_search.rb --scope catalogue --write`
+
+The apply endpoint updates:
+
+- `assets/studio/data/build_activity.json`
+- `assets/studio/data/catalogue_activity.json`
+
 ## Validation
 
 The server validates the proposed update through the shared catalogue source loader and validator before writing. Validation checks the full catalogue source set, not only the submitted work record, so invalid series references are blocked before `works.json` is replaced.
@@ -78,6 +107,7 @@ The server validates the proposed update through the shared catalogue source loa
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records
 - source-save and validation-failure events also update `assets/studio/data/catalogue_activity.json` for the Studio Catalogue Activity page
+- scoped rebuild apply events also update both Studio activity feeds
 
 ## Dev Studio
 

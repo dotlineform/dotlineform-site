@@ -1,7 +1,7 @@
 ---
 doc_id: build-activity
 title: Build Activity
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: studio
 sort_order: 35
 ---
@@ -27,7 +27,10 @@ The page reads:
 
 - `assets/studio/data/build_activity.json`
 
-That feed is generated from successful non-dry-run `build_catalogue.py` runs.
+That feed is generated from:
+
+- successful non-dry-run `build_catalogue.py` runs
+- scoped JSON-source rebuilds triggered by the Studio catalogue workflow
 
 The published feed is a capped summary view. The fuller local journal lives outside the published assets under:
 
@@ -41,6 +44,7 @@ Each entry currently includes:
 - run status
 - planner mode
 - short summary text
+- source change groups when the run came from a JSON-source scoped rebuild
 - workbook change groups
 - media change groups
 - planned action counts
@@ -62,6 +66,7 @@ What this page is for:
 
 - quick curator memory of recent build activity
 - checking that planner targeting looks plausible
+- checking what a scoped JSON-source rebuild touched after a Studio edit
 - spotting whether a run was a no-op, targeted rebuild, or larger rebuild
 
 What it is not for:

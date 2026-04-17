@@ -56,6 +56,7 @@ from catalogue_source import (  # noqa: E402
     validate_source_records,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
+from catalogue_json_build import build_scope_for_work, run_scoped_build  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
@@ -64,6 +65,8 @@ BACKUPS_REL_DIR = Path("var/studio/catalogue/backups")
 LOGS_REL_DIR = Path("var/studio/catalogue/logs")
 MAX_BODY_BYTES = 1024 * 1024
 WORK_SAVE_PATH = "/catalogue/work/save"
+BUILD_PREVIEW_PATH = "/catalogue/build-preview"
+BUILD_APPLY_PATH = "/catalogue/build-apply"
 
 
 def utc_now() -> str:
@@ -143,6 +146,13 @@ def normalize_series_ids_value(value: Any) -> list[str]:
             out.append(series_id)
         return out
     return parse_series_ids(value)
+
+
+def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:
+    work_id = slug_id(body.get("work_id"))
+    extra_series_ids = normalize_series_ids_value(body.get("extra_series_ids"))
+    force = bool(body.get("force"))
+    return work_id, extra_series_ids, force
 
 
 def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
@@ -297,7 +307,7 @@ class Handler(BaseHTTPRequestHandler):
     server: CatalogueWriteServer  # type: ignore[assignment]
 
     def do_OPTIONS(self) -> None:  # noqa: N802
-        if self.path != WORK_SAVE_PATH:
+        if self.path not in {WORK_SAVE_PATH, BUILD_PREVIEW_PATH, BUILD_APPLY_PATH}:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
         origin = self.headers.get("Origin", "")
@@ -346,6 +356,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self.path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
+                return
+            if self.path == BUILD_PREVIEW_PATH:
+                self._handle_build_preview(allowed)
+                return
+            if self.path == BUILD_APPLY_PATH:
+                self._handle_build_apply(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -470,6 +486,85 @@ class Handler(BaseHTTPRequestHandler):
         if not isinstance(data, dict):
             raise ValueError("JSON body must be an object")
         return data
+
+    def _handle_build_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        work_id, extra_series_ids, force = extract_build_request(body)
+        scope = build_scope_for_work(self.server.source_dir, work_id, extra_series_ids=extra_series_ids)
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "work_id": work_id,
+                "force": force,
+                "build": scope,
+            },
+            allowed,
+        )
+
+    def _handle_build_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        work_id, extra_series_ids, force = extract_build_request(body)
+        result = run_scoped_build(
+            self.server.repo_root,
+            source_dir=self.server.source_dir,
+            work_id=work_id,
+            extra_series_ids=extra_series_ids,
+            write=not self.server.dry_run,
+            force=force,
+            log_activity=not self.server.dry_run,
+        )
+        payload: Dict[str, Any] = {
+            "ok": result.get("status") == "completed",
+            "work_id": work_id,
+            "force": force,
+            "build": result.get("scope"),
+            "steps": result.get("steps", []),
+        }
+        if self.server.dry_run:
+            payload["dry_run"] = True
+        if result.get("status") != "completed":
+            if not self.server.dry_run:
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "build.apply_failed"),
+                        "time_utc": now_utc,
+                        "kind": "build",
+                        "operation": "build.apply",
+                        "status": "failed",
+                        "summary": f"Scoped rebuild failed for work {work_id}.",
+                        "affected": {
+                            "works": [work_id],
+                            "series": list((result.get("scope") or {}).get("series_ids", [])),
+                            "work_details": [],
+                        },
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+            payload["error"] = str(result.get("error") or "Scoped JSON build failed.")
+            payload["failed_step"] = result.get("failed_step")
+            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
+            return
+        if not self.server.dry_run:
+            payload["completed_at_utc"] = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(payload["completed_at_utc"], "build.apply"),
+                    "time_utc": payload["completed_at_utc"],
+                    "kind": "build",
+                    "operation": "build.apply",
+                    "status": "completed",
+                    "summary": f"Scoped rebuild completed for work {work_id}.",
+                    "affected": {
+                        "works": [work_id],
+                        "series": list((result.get("scope") or {}).get("series_ids", [])),
+                        "work_details": [],
+                    },
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, payload, allowed)
 
     def _send_json(self, status: HTTPStatus, payload: Dict[str, Any], allowed: Optional[str] = None) -> None:
         encoded = json.dumps(payload, ensure_ascii=False).encode("utf-8")

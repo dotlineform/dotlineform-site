@@ -1359,6 +1359,13 @@ input.tagStudio__input {
   min-width: 0;
 }
 
+.catalogueWorkPage__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: flex-end;
+}
+
 .catalogueWorkForm__fields {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem 1rem;

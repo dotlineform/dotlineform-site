@@ -76,6 +76,7 @@ Current content families:
   - time
   - status
   - short summary
+  - source change groups for JSON-source scoped rebuilds
   - workbook change groups
   - media change groups
   - action counts

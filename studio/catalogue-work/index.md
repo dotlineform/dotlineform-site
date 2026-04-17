@@ -38,7 +38,10 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
     <section class="tagStudio__panel tagStudio__panel--editor">
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">work metadata</h2>
-        <button type="button" class="tagStudio__button" id="catalogueWorkSave">Save Source</button>
+        <div class="catalogueWorkPage__actions">
+          <button type="button" class="tagStudio__button" id="catalogueWorkSave">Save Source</button>
+          <button type="button" class="tagStudio__button" id="catalogueWorkBuild">Save + Rebuild</button>
+        </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkMeta"></p>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkFields"></div>
@@ -48,6 +51,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
       <h2 class="tagStudio__heading">current record</h2>
       <div class="tagStudioForm__fields" id="catalogueWorkReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueWorkRuntimeState"></p>
+      <p class="tagStudioForm__impact" id="catalogueWorkBuildImpact"></p>
       <div class="tagStudioForm__fields" id="catalogueWorkSummary"></div>
     </aside>
   </div>

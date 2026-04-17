@@ -67,6 +67,11 @@ function renderActions(actions, noneLabel) {
 }
 
 function renderEntry(config, entry) {
+  const sourceLabels = {
+    works: "works",
+    series: "series",
+    work_details: "work details"
+  };
   const workbookLabels = {
     works: "works",
     series: "series",
@@ -83,6 +88,7 @@ function renderEntry(config, entry) {
   const summary = String((entry && entry.summary) || "").trim() || noneLabel;
   const statusText = textForStatus(config, entry && entry.status);
   const plannerMode = String((entry && entry.planner_mode) || "").trim();
+  const sourceSection = renderDetailList(entry && entry.changes && entry.changes.source, sourceLabels, noneLabel);
 
   return `
     <li class="buildActivityEntry">
@@ -94,6 +100,10 @@ function renderEntry(config, entry) {
         </summary>
         <div class="buildActivityEntry__body">
           ${plannerMode ? `<p class="buildActivityEntry__meta">planner: ${plannerMode}</p>` : ""}
+          <section class="buildActivityEntry__section">
+            <h3 class="buildActivityEntry__sectionTitle">${getStudioText(config, "build_activity.detail_source", "source")}</h3>
+            ${sourceSection}
+          </section>
           <section class="buildActivityEntry__section">
             <h3 class="buildActivityEntry__sectionTitle">${getStudioText(config, "build_activity.detail_workbook", "workbook")}</h3>
             ${renderDetailList(entry && entry.changes && entry.changes.workbook, workbookLabels, noneLabel)}

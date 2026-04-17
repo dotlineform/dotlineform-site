@@ -87,6 +87,8 @@ Catalogue/media builds:
     - `assets/data/series_index.json`
     - `assets/data/works_index.json`
     - `assets/data/moments_index.json`
+- `python3 ./scripts/catalogue_json_build.py`
+  - previews or runs a scoped JSON-source rebuild for a selected work id, including aggregate indexes and catalogue search
 - `./scripts/export_catalogue_source.py`
   - exports Phase 0 catalogue source JSON from `data/works.xlsx` into `assets/studio/data/catalogue/`
 - `./scripts/validate_catalogue_source.py`
@@ -110,6 +112,8 @@ Catalogue/media builds:
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
 - [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
   Generate collection stubs, per-record JSON, and aggregate catalogue indexes.
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+  Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
 - [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
   Export, validate, and compare Phase 0 catalogue source JSON.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)

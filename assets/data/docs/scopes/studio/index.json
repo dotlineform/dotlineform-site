@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T19:30:11Z",
+  "generated_at": "2026-04-17T19:42:49Z",
   "docs": [
     {
       "scope": "studio",
@@ -478,7 +478,7 @@
       "scope": "studio",
       "doc_id": "build-activity",
       "title": "Build Activity",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "studio",
       "sort_order": 35,
       "source_path": "studio/build-activity.md",
@@ -682,6 +682,17 @@
       "source_path": "scripts/scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-source.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-build-catalogue-json",
+      "title": "Scoped JSON Catalogue Build",
+      "last_updated": "2026-04-17",
+      "parent_id": "scripts",
+      "sort_order": 55,
+      "source_path": "scripts/scripts-build-catalogue-json.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json"
     },
     {
       "scope": "studio",

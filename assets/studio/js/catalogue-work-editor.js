@@ -357,6 +357,25 @@ function updateSummary(state) {
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
 }
 
+function formatBuildPreview(state, build) {
+  if (!build || typeof build !== "object") return "";
+  const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
+  const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
+  const workText = workIds.length ? workIds.join(", ") : "none";
+  const seriesText = seriesIds.length ? seriesIds.join(", ") : "none";
+  const searchText = build.rebuild_search ? t(state, "build_preview_search_yes", "yes") : t(state, "build_preview_search_no", "no");
+  return t(
+    state,
+    "build_preview_template",
+    "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
+    {
+      work_ids: workText,
+      series_ids: seriesText,
+      search_rebuild: searchText
+    }
+  );
+}
+
 function syncUrl(workId) {
   const url = new URL(window.location.href);
   if (workId) {
@@ -478,6 +497,9 @@ function updateEditorState(state) {
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
   updateSummary(state);
+  if (!hasRecord) {
+    setTextWithState(state.buildImpactNode, "");
+  }
 
   const dirty = hasRecord && draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
@@ -486,6 +508,7 @@ function updateEditorState(state) {
   }
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
+  state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
 }
 
 function onFieldInput(state, fieldKey) {
@@ -518,10 +541,13 @@ async function saveCurrentWork(state) {
 
   state.isSaving = true;
   state.saveButton.disabled = true;
+  state.buildButton.disabled = true;
   setTextWithState(state.statusNode, t(state, "save_status_saving", "Saving source record…"));
   setTextWithState(state.resultNode, "");
 
   try {
+    const previousSeriesIds = parseSeriesIds(state.baselineDraft && state.baselineDraft.series_ids);
+    const nextSeriesIds = parseSeriesIds(state.draft.series_ids);
     const payload = buildPayload(state);
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWork, payload);
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
@@ -530,10 +556,18 @@ async function saveCurrentWork(state) {
     }
     state.worksById.set(state.currentWorkId, record);
     state.rebuildPending = Boolean(response.changed);
+    if (response.changed) {
+      state.pendingBuildExtraSeriesIds = dedupeSeriesIds([
+        ...state.pendingBuildExtraSeriesIds,
+        ...previousSeriesIds,
+        ...nextSeriesIds
+      ]).filter((seriesId) => !nextSeriesIds.includes(seriesId));
+    }
     setLoadedRecord(state, state.currentWorkId, record, {
       recordHash: response.record_hash || "",
       keepResult: true
     });
+    await refreshBuildPreview(state);
     const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
     const resultText = response.changed
       ? t(state, "save_result_success", "Source saved at {saved_at}. Rebuild needed to update public catalogue.", { saved_at: savedAt })
@@ -550,6 +584,72 @@ async function saveCurrentWork(state) {
     state.isSaving = false;
     updateEditorState(state);
   }
+}
+
+async function refreshBuildPreview(state) {
+  if (!state.currentWorkId || !state.serverAvailable) {
+    setTextWithState(state.buildImpactNode, "");
+    state.buildPreview = null;
+    return;
+  }
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, {
+      work_id: state.currentWorkId,
+      extra_series_ids: state.pendingBuildExtraSeriesIds
+    });
+    state.buildPreview = response && response.build ? response.build : null;
+    setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+  } catch (error) {
+    state.buildPreview = null;
+    setTextWithState(
+      state.buildImpactNode,
+      `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  }
+}
+
+async function buildCurrentWork(state) {
+  if (!state.currentRecord || !state.serverAvailable) return;
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      work_id: state.currentWorkId,
+      extra_series_ids: state.pendingBuildExtraSeriesIds
+    });
+    state.rebuildPending = false;
+    state.pendingBuildExtraSeriesIds = [];
+    await refreshBuildPreview(state);
+    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
+    setTextWithState(
+      state.resultNode,
+      t(state, "build_result_success", "Runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      "success"
+    );
+    setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+  } catch (error) {
+    setTextWithState(
+      state.statusNode,
+      `${t(state, "build_status_failed", "Scoped rebuild failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
+  }
+}
+
+async function saveAndBuildCurrentWork(state) {
+  if (!state.currentRecord) return;
+  if (draftHasChanges(state)) {
+    await saveCurrentWork(state);
+    if (!state.currentRecord || draftHasChanges(state)) return;
+    if (state.statusNode.dataset.state === "error") return;
+  }
+  await buildCurrentWork(state);
 }
 
 async function openWorkById(state, requestedWorkId) {
@@ -572,8 +672,11 @@ async function openWorkById(state, requestedWorkId) {
 
   state.searchNode.value = workId;
   setPopupVisibility(state, false);
+  state.pendingBuildExtraSeriesIds = [];
+  state.rebuildPending = false;
   const recordHash = await computeRecordHash(record);
   setLoadedRecord(state, workId, record, { recordHash });
+  await refreshBuildPreview(state);
 }
 
 async function init() {
@@ -584,18 +687,20 @@ async function init() {
   const readonlyNode = document.getElementById("catalogueWorkReadonly");
   const summaryNode = document.getElementById("catalogueWorkSummary");
   const runtimeStateNode = document.getElementById("catalogueWorkRuntimeState");
+  const buildImpactNode = document.getElementById("catalogueWorkBuildImpact");
   const searchNode = document.getElementById("catalogueWorkSearch");
   const popupNode = document.getElementById("catalogueWorkPopup");
   const popupListNode = document.getElementById("catalogueWorkPopupList");
   const openButton = document.getElementById("catalogueWorkOpen");
   const saveButton = document.getElementById("catalogueWorkSave");
+  const buildButton = document.getElementById("catalogueWorkBuild");
   const saveModeNode = document.getElementById("catalogueWorkSaveMode");
   const contextNode = document.getElementById("catalogueWorkContext");
   const statusNode = document.getElementById("catalogueWorkStatus");
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -610,7 +715,10 @@ async function init() {
     draft: {},
     validationErrors: new Map(),
     rebuildPending: false,
+    pendingBuildExtraSeriesIds: [],
+    buildPreview: null,
     isSaving: false,
+    isBuilding: false,
     serverAvailable: false,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
@@ -619,6 +727,7 @@ async function init() {
     popupNode,
     popupListNode,
     saveButton,
+    buildButton,
     saveModeNode,
     contextNode,
     statusNode,
@@ -626,6 +735,7 @@ async function init() {
     resultNode,
     summaryNode,
     runtimeStateNode,
+    buildImpactNode,
     metaNode
   };
 
@@ -638,6 +748,7 @@ async function init() {
     searchNode.placeholder = t(state, "search_placeholder", "find work by id");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
+    buildButton.textContent = t(state, "build_button", "Save + Rebuild");
 
     const [worksPayload, seriesPayload, serverAvailable] = await Promise.all([
       fetchJson(getStudioDataPath(config, "catalogue_works"), { cache: "no-store" }),
@@ -696,6 +807,9 @@ async function init() {
     });
     saveButton.addEventListener("click", () => saveCurrentWork(state).catch((error) => {
       console.warn("catalogue_work_editor: unexpected save failure", error);
+    }));
+    buildButton.addEventListener("click", () => saveAndBuildCurrentWork(state).catch((error) => {
+      console.warn("catalogue_work_editor: unexpected save/build failure", error);
     }));
 
     document.addEventListener("click", (event) => {

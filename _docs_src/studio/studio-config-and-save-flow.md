@@ -82,6 +82,8 @@ Current write endpoints include:
 - `/promote-tag-alias-preview`
 - `http://127.0.0.1:8788/health`
 - `http://127.0.0.1:8788/catalogue/work/save`
+- `http://127.0.0.1:8788/catalogue/build-preview`
+- `http://127.0.0.1:8788/catalogue/build-apply`
 
 ## Save Modes
 
@@ -118,6 +120,13 @@ Catalogue editor local save behavior:
 - writes are constrained to allowlisted canonical catalogue source JSON
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
+
+Catalogue scoped rebuild behavior:
+
+- the work editor requests a scoped preview from `POST /catalogue/build-preview`
+- `POST /catalogue/build-apply` runs JSON-source generation for one work plus the affected series ids
+- the apply step then rebuilds `assets/data/search/catalogue/index.json`
+- Studio build activity now records these JSON-source scoped rebuilds alongside the older workbook-led pipeline runs
 
 ### Offline Session Mode
 

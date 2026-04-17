@@ -226,6 +226,7 @@ Work:
 - add a local endpoint or documented command for `Save and rebuild`
 - rebuild catalogue search after scoped generation
 - update build activity logging to support JSON-source builds
+- implemented first increment as `scripts/catalogue_json_build.py`, `POST /catalogue/build-preview`, `POST /catalogue/build-apply`, and `Save + Rebuild` on `/studio/catalogue-work/`
 
 Acceptance:
 
