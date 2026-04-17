@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T15:01:23Z",
+  "generated_at": "2026-04-17T15:13:18Z",
   "docs": [
     {
       "scope": "studio",
@@ -22,6 +22,17 @@
       "source_path": "studio/studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-current-pipeline-map",
+      "title": "Current Pipeline Map",
+      "last_updated": "2026-04-17",
+      "parent_id": "new-pipeline",
+      "sort_order": 10,
+      "source_path": "new-pipeline/current-pipeline-map.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-current-pipeline-map.json"
     },
     {
       "scope": "studio",
@@ -212,6 +223,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "new-pipeline-source-model",
+      "title": "Source Model",
+      "last_updated": "2026-04-17",
+      "parent_id": "new-pipeline",
+      "sort_order": 20,
+      "source_path": "new-pipeline/source-model.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-source-model",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-source-model.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "docs-viewer-source-organisation",
       "title": "Source Organisation",
       "last_updated": "2026-03-31",
@@ -388,6 +410,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "new-pipeline-web-system-spec",
+      "title": "Web System Specification",
+      "last_updated": "2026-04-17",
+      "parent_id": "new-pipeline",
+      "sort_order": 30,
+      "source_path": "new-pipeline/web-system-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-web-system-spec.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "build-activity",
       "title": "Build Activity",
       "last_updated": "2026-04-01",
@@ -440,6 +473,17 @@
       "source_path": "docs-viewer/docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-implementation-plan",
+      "title": "Implementation Plan",
+      "last_updated": "2026-04-17",
+      "parent_id": "new-pipeline",
+      "sort_order": 40,
+      "source_path": "new-pipeline/implementation-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-implementation-plan.json"
     },
     {
       "scope": "studio",

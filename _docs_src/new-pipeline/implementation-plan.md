@@ -1,0 +1,551 @@
+---
+doc_id: new-pipeline-implementation-plan
+title: Implementation Plan
+last_updated: 2026-04-17
+parent_id: new-pipeline
+sort_order: 40
+---
+
+# Implementation Plan
+
+This document defines a phased path from the current workbook-led catalogue pipeline to a JSON-led Studio workflow.
+
+## Phase 0: Baseline And Migration Fixture
+
+Goal:
+
+- establish a safe baseline before changing the generator or UI
+
+Work:
+
+- add a source exporter that reads `data/works.xlsx` and writes proposed JSON source files under `assets/studio/data/catalogue/`
+- include `Works`, `Series`, `SeriesSort`, `WorkDetails`, `WorkFiles`, and `WorkLinks`
+- normalize IDs and field names during export
+- include migration metadata in `meta.json`
+- add a validator that reads the exported JSON source and reports the same classes of errors as the current workbook preflight
+- add comparison tooling that loads workbook source and JSON source into normalized records and reports differences
+
+Acceptance:
+
+- exported JSON contains the same effective source data as `data/works.xlsx`
+- validation passes on exported JSON
+- comparison against workbook-normalized records is empty or only contains documented normalization differences
+- no runtime-critical JSON files are changed by this phase
+
+Benefits:
+
+- creates the canonical JSON candidate without changing runtime behavior
+- gives later phases test fixtures
+
+Risks:
+
+- hidden workbook quirks such as formula cache values, numeric ID coercion, or blank columns may export differently
+- field naming decisions made here become sticky
+
+Mitigation:
+
+- keep exporter repeatable
+- compare normalized records, not raw cell formatting
+- document every intentional difference
+
+## Phase 1: JSON Source Adapter For Generation
+
+Goal:
+
+- let `generate_work_pages.py` build existing runtime artifacts from JSON source instead of the workbook
+
+Work:
+
+- extract workbook-reading logic into an `ExcelCatalogueSource` adapter
+- add a `JsonCatalogueSource` adapter
+- define shared normalized record structures for works, details, series, files, and links
+- move validation onto normalized source records where practical
+- add `--source json` and `--source xlsx`
+- keep `xlsx` behavior available during migration
+- update publication-state and dimension update logic so JSON source can be updated instead of workbook cells
+- run generator in dry-run against both source modes and compare outputs
+
+Acceptance:
+
+- JSON-source generation writes the same route stubs and runtime JSON payloads as workbook-source generation for the current catalogue
+- existing public runtime JSON schemas remain unchanged
+- `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, and per-record JSON contracts remain stable
+- workbook mode still works as a fallback
+
+Benefits:
+
+- separates source truth from Excel before building UI
+- preserves public site behavior
+
+Risks:
+
+- generator code currently interleaves workbook reads, workbook writes, and artifact writes
+- recent-index publish transitions depend on status changes
+
+Mitigation:
+
+- refactor in small adapter seams
+- keep current artifact writer functions intact where possible
+- test draft-to-published transitions against fixture copies
+
+## Phase 2: Local Catalogue Write Service
+
+Goal:
+
+- add a localhost-only service that can safely write canonical catalogue source JSON
+
+Work:
+
+- create `scripts/studio/catalogue_write_server.py`
+- implement `GET /health`
+- implement `POST /catalogue/work/save`
+- enforce CORS and loopback binding
+- implement source file allowlist
+- implement backup bundle writes
+- implement minimal event logging
+- add shared request/response helpers or copy the smallest safe pattern from `tag_write_server.py`
+- update `bin/dev-studio` to start the catalogue write service after the first UI needs it
+
+Acceptance:
+
+- server can update one work record in `works.json`
+- writes create backups
+- invalid writes are rejected
+- only allowlisted source JSON and backup/log paths are writable
+- existing tag write service behavior is unchanged
+
+Benefits:
+
+- creates the write boundary needed for Studio catalogue pages
+
+Risks:
+
+- accidental broadening of local write scope
+- duplicate server code with tag write service
+
+Mitigation:
+
+- keep first implementation separate and narrow
+- extract shared utilities only after the catalogue service proves stable
+
+## Phase 3: Single Work Metadata Editor
+
+Goal:
+
+- deliver the first useful Studio UI increment: edit metadata for one work
+
+Work:
+
+- add a Studio route for work editing
+- add work search by `work_id`
+- load `works.json`, `series.json`, and current generated indexes as needed
+- render a form for core work metadata
+- implement dirty state, validation messages, save button, and saved-state feedback
+- save through `POST /catalogue/work/save`
+- add UI copy to `assets/studio/data/studio_config.json`
+- document the page under Studio docs after implementation
+
+Acceptance:
+
+- user can search for a work by ID
+- user can edit and save one work's metadata
+- canonical JSON source updates
+- backups are written
+- invalid values are rejected
+- no public runtime artifacts are changed until generation is explicitly run
+
+Benefits:
+
+- proves the end-to-end local edit path with low UI scope
+
+Risks:
+
+- users may expect save to update the public site immediately
+
+Mitigation:
+
+- label source save and rebuild actions separately
+- show "source changed, rebuild needed" state after save
+
+## Phase 4: Scoped Build From JSON Source
+
+Goal:
+
+- make edited JSON source flow into existing public runtime artifacts
+
+Work:
+
+- add a command path for JSON-source generation of selected work IDs
+- add a build preview that reports affected work IDs, series IDs, and search rebuild need
+- add a local endpoint or documented command for `Save and rebuild`
+- rebuild catalogue search after scoped generation
+- update build activity logging to support JSON-source builds
+
+Acceptance:
+
+- editing one work and running rebuild updates `_works/<work_id>.md`, `assets/works/index/<work_id>.json`, aggregate indexes as needed, and catalogue search
+- generated public JSON schemas remain unchanged
+- current Jekyll build still succeeds
+
+Benefits:
+
+- closes the loop from Studio edit to public site update
+
+Risks:
+
+- planner behavior may be duplicated between old `build_catalogue.py` and new JSON build preview
+
+Mitigation:
+
+- reuse planner helper functions where possible
+- treat the old workbook planner as transitional
+
+## Phase 5: Work Detail Editor
+
+Goal:
+
+- add detail metadata maintenance after the single-work editor is stable
+
+Work:
+
+- list a work's details on the work editor
+- add a detail editor route
+- implement search/open by `detail_uid`
+- implement save endpoint for one detail record
+- validate parent work references
+- support scoped rebuild for the parent work
+
+Acceptance:
+
+- user can edit a work detail's title, status, project subfolder, and project filename
+- source JSON updates
+- parent work rebuild updates detail page stubs and work JSON sections
+
+Benefits:
+
+- covers the second major editing family without changing series logic yet
+
+Risks:
+
+- detail section grouping depends on `project_subfolder`
+- dimension updates may need media source access
+
+Mitigation:
+
+- keep dimensions read-only in the UI initially
+- rely on the generator/media probe to refresh dimensions
+
+## Phase 6: Series Editor And Membership Changes
+
+Goal:
+
+- edit series metadata and change work-to-series relationships
+
+Work:
+
+- add series search by title
+- add series editor route
+- edit series scalar fields and `sort_fields`
+- display member works by scanning source `works.json`
+- allow adding/removing works from a series by updating work `series_ids`
+- allow changing a work's primary series by reordering `series_ids`
+- validate `primary_work_id` membership
+- implement save endpoint that can write both `series.json` and affected `works.json`
+
+Acceptance:
+
+- user can edit series metadata
+- user can change a work's series
+- generated `series_index.json` remains equivalent to current behavior after rebuild
+- invalid `primary_work_id` states are blocked
+
+Benefits:
+
+- moves the core relationship model out of Excel
+
+Risks:
+
+- membership edits touch both series behavior and work records
+- duplicate series titles can make search ambiguous
+
+Mitigation:
+
+- route and save by `series_id`
+- always show `series_id` in search results and editor headings
+- use preview for multi-record membership edits
+
+## Phase 7: Add New Series
+
+Goal:
+
+- support adding a series without opening Excel
+
+Work:
+
+- add new-series route
+- allow explicit `series_id`
+- validate uniqueness and required metadata
+- optionally add initial member works
+- save `series.json` plus affected `works.json`
+- add build preview for new series
+
+Acceptance:
+
+- user can create a new series from Studio
+- source JSON is valid
+- generation creates the expected series route and JSON after rebuild
+
+Benefits:
+
+- removes a common reason to return to the workbook
+
+Risks:
+
+- ID policy may be unclear for new series
+
+Mitigation:
+
+- start with explicit user-entered IDs
+- add suggested ID helpers only after the JSON source is stable
+
+## Phase 8: Add New Work And Work Detail Records
+
+Goal:
+
+- support creating catalogue records from Studio
+
+Work:
+
+- add create-work flow
+- derive or suggest next work ID
+- add create-detail flow under a work
+- derive next detail ID within the selected work
+- validate required fields before saving
+- leave source media placement unchanged
+- show media filename/path expectations instead of uploading media
+
+Acceptance:
+
+- user can create a draft work record
+- user can create draft detail records for a work
+- media scripts can still copy and derive images using the same source path conventions
+
+Benefits:
+
+- moves day-to-day additions into Studio
+
+Risks:
+
+- creating metadata before media exists can generate warnings
+
+Mitigation:
+
+- allow draft records with missing media
+- surface media warnings clearly in build preview
+
+## Phase 9: Bulk Edit
+
+Goal:
+
+- replace Excel filtering/fill-down use cases with safer preview/apply flows
+
+Work:
+
+- add bulk edit route
+- implement selectors for work ID range, explicit IDs, works in series, details under work, and explicit detail UIDs
+- implement scalar set/clear operations
+- implement series membership operations
+- implement preview endpoint
+- implement apply endpoint with backup bundle
+
+Acceptance:
+
+- user can apply one metadata field change to a range of works
+- preview lists old and new values before apply
+- invalid records block apply
+- affected IDs are returned for rebuild
+
+Benefits:
+
+- preserves the main productivity advantage of spreadsheets while reducing accidental edits
+
+Risks:
+
+- bulk operations can damage many records quickly
+
+Mitigation:
+
+- require preview before apply
+- include changed count and unchanged count
+- write one backup bundle per apply
+- keep initial operations narrow
+
+## Phase 10: Workbook Import And Export
+
+Goal:
+
+- keep Excel useful for bulk adding without making it canonical again
+
+Work:
+
+- add import preview for `data/works.xlsx` or a selected workbook
+- support `add-new-only`
+- support `update-draft-only`
+- reject updates to published existing records by default
+- add export-to-workbook/report command if useful for offline review
+
+Acceptance:
+
+- new records can be staged from a workbook into source JSON
+- published existing JSON records are not overwritten in default import mode
+- preview reports all blocked rows and normalization decisions
+
+Benefits:
+
+- keeps the bulk-add workflow available
+
+Risks:
+
+- workbook could become a shadow source again
+
+Mitigation:
+
+- make import one-way into JSON
+- block published-record overwrites by default
+- label exported workbooks as reports or import templates, not canonical source
+
+## Phase 11: Retire Workbook-Led Pipeline
+
+Goal:
+
+- make JSON source the default and workbook source optional
+
+Work:
+
+- make JSON source the default for generation
+- update pipeline docs and script docs
+- demote `build_catalogue.py` to legacy or replace it with JSON-source build commands
+- keep workbook import/export commands documented separately
+- remove workbook status/dimension writeback from normal runs
+
+Acceptance:
+
+- normal catalogue maintenance no longer requires opening or saving `data/works.xlsx`
+- `data/works.xlsx` is not used to edit currently published works
+- public runtime artifacts remain stable
+- media scripts remain available but are not coupled to workbook orchestration
+
+Benefits:
+
+- reaches the target operating model
+
+Risks:
+
+- old habits and old commands may still update the workbook
+
+Mitigation:
+
+- make command docs explicit
+- add warnings to legacy workbook commands
+- keep JSON-source validation and build commands simple
+
+## Cross-Phase Risks
+
+### Data Loss
+
+Risk:
+
+- local write endpoints overwrite source JSON incorrectly
+
+Mitigation:
+
+- backups before every write
+- atomic writes
+- stale version/hash checks
+- preview/apply for multi-record changes
+
+### Source Drift
+
+Risk:
+
+- source JSON and generated runtime JSON fall out of sync
+
+Mitigation:
+
+- show rebuild-needed state after source saves
+- build preview reports affected IDs
+- audit script checks source versus generated artifacts
+
+### Runtime Contract Regressions
+
+Risk:
+
+- refactoring generator source input changes public JSON payloads
+
+Mitigation:
+
+- compare generated artifacts from workbook and JSON source
+- preserve artifact writer functions first
+- run Jekyll build and catalogue audit after generator changes
+
+### Recent Index Semantics
+
+Risk:
+
+- publish transition detection changes when status is stored in JSON instead of Excel
+
+Mitigation:
+
+- isolate publish transition logic
+- test draft-to-published transitions
+- preserve snapshot behavior for `/recent/`
+
+### Series Membership Integrity
+
+Risk:
+
+- editing work `series_ids` and series `primary_work_id` independently creates invalid state
+
+Mitigation:
+
+- server-side cross-file validation
+- series editor writes affected work records in the same operation
+- block invalid primary work references
+
+### Media Decoupling
+
+Risk:
+
+- no longer orchestrating media from `build_catalogue.py` could leave source metadata published before media derivatives exist
+
+Mitigation:
+
+- build preview includes media readiness warnings
+- keep media copy/srcset commands visible in Studio
+- avoid changing media file conventions
+
+### Local Server Safety
+
+Risk:
+
+- adding more write endpoints broadens local write risk
+
+Mitigation:
+
+- separate catalogue write service
+- narrow allowlists
+- loopback-only binding
+- localhost-only CORS
+- minimal logs
+
+## Recommended First Implementation Slice
+
+The first implementation should include only:
+
+1. export workbook to canonical source JSON
+2. validate source JSON
+3. load one work in Studio by `work_id`
+4. edit and save one work's metadata to `works.json`
+5. keep generation manual until JSON-source generation is proven
+
+This slice is intentionally not a complete CMS. It proves the new source truth and write boundary with the smallest useful UI.
