@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: Studio
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: ""
 sort_order: 5
 ---
@@ -55,14 +55,16 @@ Current runner behavior:
 - rebuilds Docs Viewer data from `_docs_src/`
 - starts Jekyll on `127.0.0.1:4000`
 - starts `scripts/studio/tag_write_server.py`
-- keeps both processes attached to the current terminal
-- stops both processes on `Ctrl+C`
+- starts `scripts/studio/catalogue_write_server.py`
+- keeps all three processes attached to the current terminal
+- stops all three processes on `Ctrl+C`
 
 Current limits:
 
 - it does not enable `--livereload`
 - it does not rebuild docs-search artifacts
 - it does not replace the standalone scripts documented in **[Scripts](/docs/?scope=studio&doc=scripts)**
+- local server architecture and future consolidation strategy are documented in **[Servers](/docs/?scope=studio&doc=servers)**
 
 If you edit docs after the runner has started, rebuild the docs payloads manually:
 

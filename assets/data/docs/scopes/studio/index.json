@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T16:59:40Z",
+  "generated_at": "2026-04-17T17:12:11Z",
   "docs": [
     {
       "scope": "studio",
@@ -16,7 +16,7 @@
       "scope": "studio",
       "doc_id": "studio",
       "title": "Studio",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "",
       "sort_order": 5,
       "source_path": "studio/studio.md",
@@ -88,6 +88,17 @@
       "source_path": "llm/llm-dimension.md",
       "viewer_url": "/docs/?scope=studio&doc=llm-dimension",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm-dimension.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "local-studio-server-architecture",
+      "title": "Local Studio Server Architecture",
+      "last_updated": "2026-04-17",
+      "parent_id": "servers",
+      "sort_order": 10,
+      "source_path": "servers/local-studio-server-architecture.md",
+      "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json"
     },
     {
       "scope": "studio",
@@ -346,7 +357,7 @@
       "scope": "studio",
       "doc_id": "scripts",
       "title": "Scripts",
-      "last_updated": "2026-04-01",
+      "last_updated": "2026-04-17",
       "parent_id": "",
       "sort_order": 30,
       "source_path": "scripts/scripts.md",
@@ -418,6 +429,17 @@
       "source_path": "new-pipeline/web-system-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-web-system-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "servers",
+      "title": "Servers",
+      "last_updated": "2026-04-17",
+      "parent_id": "",
+      "sort_order": 33,
+      "source_path": "servers/servers.md",
+      "viewer_url": "/docs/?scope=studio&doc=servers",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/servers.json"
     },
     {
       "scope": "studio",

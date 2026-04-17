@@ -1,7 +1,7 @@
 ---
 doc_id: scripts
 title: Scripts
-last_updated: 2026-04-01
+last_updated: 2026-04-17
 parent_id: ""
 sort_order: 30
 ---
@@ -20,6 +20,7 @@ For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc
 
 This page is now the high-level entry point for repo scripts.
 Command-level usage, flags, output paths, and operational notes now live in the child docs below.
+Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
 
 The current script surface falls into four groups:
 
@@ -133,6 +134,7 @@ Catalogue/media builds:
 ## Related References
 
 - [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [Servers](/docs/?scope=studio&doc=servers)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)

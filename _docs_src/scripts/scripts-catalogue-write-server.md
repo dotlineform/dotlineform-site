@@ -109,6 +109,8 @@ Operational log target:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
+- [Servers](/docs/?scope=studio&doc=servers)
+- [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
 - [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

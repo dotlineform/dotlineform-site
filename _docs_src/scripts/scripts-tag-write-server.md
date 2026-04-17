@@ -147,6 +147,8 @@ Operational log target:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
+- [Servers](/docs/?scope=studio&doc=servers)
+- [Local Studio Server Architecture](/docs/?scope=studio&doc=local-studio-server-architecture)
 - [Studio](/docs/?scope=studio&doc=studio)
 - [Series Tags](/docs/?scope=studio&doc=series-tags)
 - [Tag Editor](/docs/?scope=studio&doc=tag-editor)
