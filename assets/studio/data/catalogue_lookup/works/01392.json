@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01392",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "080"
+    ],
+    "series_title": null,
+    "project_folder": "interior design",
+    "project_filename": "interior design 2.jpg",
+    "title": "interior design 2",
+    "width_cm": 60,
+    "height_cm": 30,
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "09ef25fcad1dcce25eee8ee4d5f43c81946097f4a3a3928ed9e1664881c9adc5",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "01392-001",
+          "detail_id": "001",
+          "title": "interior design 2 - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01392-002",
+          "detail_id": "002",
+          "title": "interior design 2 - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01392-003",
+          "detail_id": "003",
+          "title": "interior design 2 - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "080",
+      "title": "interior design"
+    }
+  ]
+}

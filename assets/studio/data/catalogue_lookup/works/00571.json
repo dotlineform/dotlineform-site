@@ -1,0 +1,54 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00571",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "129"
+    ],
+    "series_title": null,
+    "project_folder": "string theory",
+    "project_filename": "forms scan 5.jpg",
+    "title": "forms scan 5",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "digital composite",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "22acec671f668fc597bea566c73692617916893e25a94b754bdc87ebdfbfdf3a",
+  "detail_sections": [
+    {
+      "project_subfolder": "working",
+      "count": 1,
+      "details": [
+        {
+          "detail_uid": "00571-001",
+          "detail_id": "001",
+          "title": "2012-01-06 - 12-30-44",
+          "project_subfolder": "working",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "129",
+      "title": "string theory"
+    }
+  ]
+}

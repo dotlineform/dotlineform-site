@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00813-005",
+    "work_id": "00813",
+    "detail_id": "005",
+    "project_subfolder": "versions",
+    "project_filename": "colours 1958-2001.5.jpg",
+    "title": "colours 1958-2001.5",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "43fa6972a9951d190b86287e1fd06fde883d185db8ff29a9ce2b6d1f553f2eb9",
+  "work_summary": {
+    "work_id": "00813",
+    "title": "colours 1958-2001"
+  }
+}

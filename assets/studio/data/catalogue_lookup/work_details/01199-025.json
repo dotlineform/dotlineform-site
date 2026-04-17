@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-025",
+    "work_id": "01199",
+    "detail_id": "025",
+    "project_subfolder": "particles",
+    "project_filename": "particle (memory loss hope).jpg",
+    "title": "particle (memory loss hope)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "6de2400fc86249d583fa888948f0870e80160f0cc70df3b66a0b4cb9d8c12ab4",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

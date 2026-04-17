@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "069",
+    "title": "genetic (2020)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "primary_work_id": "01250",
+    "series_prose_file": null,
+    "notes": "put track listing in work_prose",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "ca37cc992a848ab307a49f6f3d6f0727f63ca01455eef4d47f687fa2fbac5718",
+  "member_works": [
+    {
+      "work_id": "01250",
+      "title": "genetic",
+      "year_display": "c. 2001-11",
+      "status": "published",
+      "series_ids": [
+        "069"
+      ],
+      "record_hash": "83c177159b1ebb9525df2609b7b1d51f6f30d5d01592b527dafe8f22efde1206"
+    }
+  ]
+}

@@ -1,0 +1,508 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01196",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "065"
+    ],
+    "series_title": null,
+    "project_folder": "forms",
+    "project_filename": "forms.jpg",
+    "title": "forms",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "9dfa578d4b8b88dcf124d1f43253522f472a1a0e9f1cfe3fcd06200038414048",
+  "detail_sections": [
+    {
+      "project_subfolder": "forms",
+      "count": 64,
+      "details": [
+        {
+          "detail_uid": "01196-002",
+          "detail_id": "002",
+          "title": "form 01",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-003",
+          "detail_id": "003",
+          "title": "form 02",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-004",
+          "detail_id": "004",
+          "title": "form 03",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-005",
+          "detail_id": "005",
+          "title": "form 04",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-006",
+          "detail_id": "006",
+          "title": "form 05",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-007",
+          "detail_id": "007",
+          "title": "form 06",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-008",
+          "detail_id": "008",
+          "title": "form 07",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-009",
+          "detail_id": "009",
+          "title": "form 08",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-010",
+          "detail_id": "010",
+          "title": "form 09",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-011",
+          "detail_id": "011",
+          "title": "form 10",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-012",
+          "detail_id": "012",
+          "title": "form 11",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-013",
+          "detail_id": "013",
+          "title": "form 12",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-014",
+          "detail_id": "014",
+          "title": "form 13",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-015",
+          "detail_id": "015",
+          "title": "form 14",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-016",
+          "detail_id": "016",
+          "title": "form 15",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-017",
+          "detail_id": "017",
+          "title": "form 16",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-018",
+          "detail_id": "018",
+          "title": "form 17",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-019",
+          "detail_id": "019",
+          "title": "form 18",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-020",
+          "detail_id": "020",
+          "title": "form 19",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-021",
+          "detail_id": "021",
+          "title": "form 20",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-022",
+          "detail_id": "022",
+          "title": "form 21",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-023",
+          "detail_id": "023",
+          "title": "form 22",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-024",
+          "detail_id": "024",
+          "title": "form 23",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-025",
+          "detail_id": "025",
+          "title": "form 24",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-026",
+          "detail_id": "026",
+          "title": "form 25",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-027",
+          "detail_id": "027",
+          "title": "form 26",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-028",
+          "detail_id": "028",
+          "title": "form 27",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-029",
+          "detail_id": "029",
+          "title": "form 28",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-030",
+          "detail_id": "030",
+          "title": "form 29",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-031",
+          "detail_id": "031",
+          "title": "form 30",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-032",
+          "detail_id": "032",
+          "title": "form 31",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-033",
+          "detail_id": "033",
+          "title": "form 32",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-034",
+          "detail_id": "034",
+          "title": "form 33",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-035",
+          "detail_id": "035",
+          "title": "form 34",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-036",
+          "detail_id": "036",
+          "title": "form 35",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-037",
+          "detail_id": "037",
+          "title": "form 36",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-038",
+          "detail_id": "038",
+          "title": "form 37",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-039",
+          "detail_id": "039",
+          "title": "form 38",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-040",
+          "detail_id": "040",
+          "title": "form 39",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-041",
+          "detail_id": "041",
+          "title": "form 40",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-042",
+          "detail_id": "042",
+          "title": "form 41",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-043",
+          "detail_id": "043",
+          "title": "form 42",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-044",
+          "detail_id": "044",
+          "title": "form 43",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-045",
+          "detail_id": "045",
+          "title": "form 44",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-046",
+          "detail_id": "046",
+          "title": "form 45",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-047",
+          "detail_id": "047",
+          "title": "form 46",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-048",
+          "detail_id": "048",
+          "title": "form 47",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-049",
+          "detail_id": "049",
+          "title": "form 48",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-050",
+          "detail_id": "050",
+          "title": "form 49",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-051",
+          "detail_id": "051",
+          "title": "form 50",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-052",
+          "detail_id": "052",
+          "title": "form 51",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-053",
+          "detail_id": "053",
+          "title": "form 52",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-054",
+          "detail_id": "054",
+          "title": "form 53",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-055",
+          "detail_id": "055",
+          "title": "form 54",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-056",
+          "detail_id": "056",
+          "title": "form 55",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-057",
+          "detail_id": "057",
+          "title": "form 56",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-058",
+          "detail_id": "058",
+          "title": "form 57",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-059",
+          "detail_id": "059",
+          "title": "form 58",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-060",
+          "detail_id": "060",
+          "title": "form 59",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-061",
+          "detail_id": "061",
+          "title": "form 60",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-062",
+          "detail_id": "062",
+          "title": "form 61",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-063",
+          "detail_id": "063",
+          "title": "form 62",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-064",
+          "detail_id": "064",
+          "title": "form 63",
+          "project_subfolder": "forms",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01196-065",
+          "detail_id": "065",
+          "title": "form 64",
+          "project_subfolder": "forms",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "source",
+      "count": 1,
+      "details": [
+        {
+          "detail_uid": "01196-001",
+          "detail_id": "001",
+          "title": "source - form 27",
+          "project_subfolder": "source",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "065",
+      "title": "forms"
+    }
+  ]
+}

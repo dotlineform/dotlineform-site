@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01171",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "057"
+    ],
+    "series_title": null,
+    "project_folder": "folding structure",
+    "project_filename": "folding structure - version 1.jpg",
+    "title": "folding structure - version 1",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2020,
+    "year_display": "2020",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "eab9bfd20660131c113e2edfa1703ff1c7d0d279f23fcf098e5b8968ec0585f1",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "057",
+      "title": "folding structure"
+    }
+  ]
+}

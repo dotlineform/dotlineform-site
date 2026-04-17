@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "080",
+    "title": "interior design",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2005,
+    "year_display": "2005",
+    "primary_work_id": "01393",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "cbe3aa031111959a9d0bc6b7af49c34ccc02bf7f93ebc4e43b9c6a82625a884f",
+  "member_works": [
+    {
+      "work_id": "01391",
+      "title": "interior design 1",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "080"
+      ],
+      "record_hash": "4a8134e4c5d64b3dac12ec23cacac445c3037202e86b3d865a3f897edf270cb1"
+    },
+    {
+      "work_id": "01392",
+      "title": "interior design 2",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "080"
+      ],
+      "record_hash": "09ef25fcad1dcce25eee8ee4d5f43c81946097f4a3a3928ed9e1664881c9adc5"
+    },
+    {
+      "work_id": "01393",
+      "title": "interior design 3",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "080"
+      ],
+      "record_hash": "2d9aa98b5f15469a59c81cda1e2805dfa710e51b5e1a924dd9b78294f33a3e5e"
+    }
+  ]
+}

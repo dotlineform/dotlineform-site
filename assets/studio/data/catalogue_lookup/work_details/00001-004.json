@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00001-004",
+    "work_id": "00001",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "a poem divided into 4 parts - end 4.jpg",
+    "title": "a poem divided into 4 parts - end 4",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 4032,
+    "height_px": 2268
+  },
+  "record_hash": "f8c4f048a145e0f8bfb8fb6e32f1985502ca13436c86d73f1ec517ca62ec0632",
+  "work_summary": {
+    "work_id": "00001",
+    "title": "a poem divided into 4 parts (\"our dreams are real\")"
+  }
+}

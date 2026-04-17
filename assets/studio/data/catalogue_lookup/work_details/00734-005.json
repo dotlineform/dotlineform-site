@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00734-005",
+    "work_id": "00734",
+    "detail_id": "005",
+    "project_subfolder": "layers",
+    "project_filename": "physics.jpg",
+    "title": "physics",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "record_hash": "ae31beafb34555b29a489a50951dbbef8cc98643f73d4f3ec4410a3dbf8e8795",
+  "work_summary": {
+    "work_id": "00734",
+    "title": "a theory of happiness is a theory of everything"
+  }
+}

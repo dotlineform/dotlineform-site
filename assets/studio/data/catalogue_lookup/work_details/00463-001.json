@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00463-001",
+    "work_id": "00463",
+    "detail_id": "001",
+    "project_subfolder": "original painting",
+    "project_filename": "living surface hand form (original painting, 1989).jpg",
+    "title": "living surface hand form (original painting, 1989)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 2169,
+    "height_px": 2830
+  },
+  "record_hash": "9dba53fc619dd375fbb3aa75a4822e294a4cfdfe38a5326cdb5955354b7ca841",
+  "work_summary": {
+    "work_id": "00463",
+    "title": "living surface hand form"
+  }
+}

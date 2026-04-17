@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "093",
+    "title": "maps",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2004,
+    "year_display": "2004, 2011",
+    "primary_work_id": "01417",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "88c034a0c0eee73941e7c7d3ff5f56475ca28cf4c0bdf46fd2396fc1ebeb3395",
+  "member_works": [
+    {
+      "work_id": "01417",
+      "title": "fur map",
+      "year_display": "2004, 2011",
+      "status": "published",
+      "series_ids": [
+        "093"
+      ],
+      "record_hash": "b3d2ae93137e178e52cfa19ad8ff50a2d04428af11adfa9a45739ca07888fba0"
+    },
+    {
+      "work_id": "01418",
+      "title": "hudf (black)",
+      "year_display": "2004, 2011",
+      "status": "published",
+      "series_ids": [
+        "093"
+      ],
+      "record_hash": "70f2cf3e02bca16b5d28da4e49f1455e57ea5fd2aaa6a7c892ae074ef26a7345"
+    },
+    {
+      "work_id": "01419",
+      "title": "hudf (white)",
+      "year_display": "2004, 2011",
+      "status": "published",
+      "series_ids": [
+        "093"
+      ],
+      "record_hash": "ab249e43e90a4516d8b054b5d9133c0353f6719dd9ac46f9a27d1393cc4ebb68"
+    },
+    {
+      "work_id": "01420",
+      "title": "kylie grid map",
+      "year_display": "2004, 2011",
+      "status": "published",
+      "series_ids": [
+        "093"
+      ],
+      "record_hash": "1c9143a889cf5fcc9b8c8860f05f7e3a129a45265325664c700b53187e0e0555"
+    },
+    {
+      "work_id": "01421",
+      "title": "kylie map",
+      "year_display": "2004, 2011",
+      "status": "published",
+      "series_ids": [
+        "093"
+      ],
+      "record_hash": "66f506b3686385d2493a680fc0882f49487482f3ead10400c78b065fc652a046"
+    }
+  ]
+}

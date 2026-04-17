@@ -1,0 +1,436 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00638",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "005"
+    ],
+    "series_title": null,
+    "project_folder": "3 symbols",
+    "project_filename": "3 symbols.jpg",
+    "title": "3 symbols",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "mixed media",
+    "medium_caption": "enamel paint on c-type print, aluminium mount",
+    "storage_location": "framed",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1804,
+    "height_px": 1804,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ffd08a10f7c678feaf8f21d3b667f6fd6d9d32f1ed9e509a289ec00d571d7bdc",
+  "detail_sections": [
+    {
+      "project_subfolder": "composites",
+      "count": 21,
+      "details": [
+        {
+          "detail_uid": "00638-033",
+          "detail_id": "033",
+          "title": "composite - bandage",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-034",
+          "detail_id": "034",
+          "title": "composite - before",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-035",
+          "detail_id": "035",
+          "title": "composite - blessing",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-036",
+          "detail_id": "036",
+          "title": "composite - blindness",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-037",
+          "detail_id": "037",
+          "title": "composite - bridge",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-038",
+          "detail_id": "038",
+          "title": "composite - burma",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-039",
+          "detail_id": "039",
+          "title": "composite - burn",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-040",
+          "detail_id": "040",
+          "title": "composite - genocide",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-041",
+          "detail_id": "041",
+          "title": "composite - gesture",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-042",
+          "detail_id": "042",
+          "title": "composite - give",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-043",
+          "detail_id": "043",
+          "title": "composite - grave",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-044",
+          "detail_id": "044",
+          "title": "composite - grieve",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-045",
+          "detail_id": "045",
+          "title": "composite - grow",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-046",
+          "detail_id": "046",
+          "title": "composite - guilt",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-047",
+          "detail_id": "047",
+          "title": "composite - radius",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-048",
+          "detail_id": "048",
+          "title": "composite - rarefied",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-049",
+          "detail_id": "049",
+          "title": "composite - reincarnation",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-050",
+          "detail_id": "050",
+          "title": "composite - replenish",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-051",
+          "detail_id": "051",
+          "title": "composite - restrict",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-052",
+          "detail_id": "052",
+          "title": "composite - ruin",
+          "project_subfolder": "composites",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-053",
+          "detail_id": "053",
+          "title": "composite - rwanda",
+          "project_subfolder": "composites",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "details",
+      "count": 8,
+      "details": [
+        {
+          "detail_uid": "00638-003",
+          "detail_id": "003",
+          "title": "3 symbols (detail 1)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-004",
+          "detail_id": "004",
+          "title": "3 symbols (detail 2)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-005",
+          "detail_id": "005",
+          "title": "3 symbols (detail 3)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-006",
+          "detail_id": "006",
+          "title": "3 symbols (detail 4)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-007",
+          "detail_id": "007",
+          "title": "3 symbols (detail 5)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-008",
+          "detail_id": "008",
+          "title": "3 symbols (detail 6)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-009",
+          "detail_id": "009",
+          "title": "3 symbols (detail 7)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-010",
+          "detail_id": "010",
+          "title": "3 symbols (detail 8)",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "source",
+      "count": 22,
+      "details": [
+        {
+          "detail_uid": "00638-011",
+          "detail_id": "011",
+          "title": "source - bandage",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-012",
+          "detail_id": "012",
+          "title": "source - before",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-013",
+          "detail_id": "013",
+          "title": "source - blessing",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-014",
+          "detail_id": "014",
+          "title": "source - blindness",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-015",
+          "detail_id": "015",
+          "title": "source - bridge",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-016",
+          "detail_id": "016",
+          "title": "source - burma",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-017",
+          "detail_id": "017",
+          "title": "source - burn",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-018",
+          "detail_id": "018",
+          "title": "source - genocide",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-019",
+          "detail_id": "019",
+          "title": "source - gesture",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-020",
+          "detail_id": "020",
+          "title": "source - give",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-021",
+          "detail_id": "021",
+          "title": "source - grave",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-022",
+          "detail_id": "022",
+          "title": "source - grieve",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-023",
+          "detail_id": "023",
+          "title": "source - grow",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-024",
+          "detail_id": "024",
+          "title": "source - guilt",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-025",
+          "detail_id": "025",
+          "title": "source - radius",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-026",
+          "detail_id": "026",
+          "title": "source - rarefied",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-027",
+          "detail_id": "027",
+          "title": "source - reincarnation",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-028",
+          "detail_id": "028",
+          "title": "source - replenish",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-029",
+          "detail_id": "029",
+          "title": "source - restrict",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-030",
+          "detail_id": "030",
+          "title": "source - ruin",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-031",
+          "detail_id": "031",
+          "title": "source - rwanda",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-032",
+          "detail_id": "032",
+          "title": "source grid",
+          "project_subfolder": "source",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "versions",
+      "count": 2,
+      "details": [
+        {
+          "detail_uid": "00638-001",
+          "detail_id": "001",
+          "title": "3 symbols (composite)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00638-002",
+          "detail_id": "002",
+          "title": "3 symbols (untreated)",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "005",
+      "title": "3 symbols"
+    }
+  ]
+}

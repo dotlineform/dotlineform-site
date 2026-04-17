@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00465",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "062"
+    ],
+    "series_title": null,
+    "project_folder": "forests (2023)",
+    "project_filename": "forest 1.jpg",
+    "title": "forest 1",
+    "width_cm": 120,
+    "height_cm": 50,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 14173,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "83710c92b28b2eef1ca5fb15aff9ff62a47311ca8c9f88b2753d14345136bbc8",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00465-001",
+          "detail_id": "001",
+          "title": "forest 1 - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00465-002",
+          "detail_id": "002",
+          "title": "forest 1 - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00465-003",
+          "detail_id": "003",
+          "title": "forest 1 - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "062",
+      "title": "forests (2023)"
+    }
+  ]
+}

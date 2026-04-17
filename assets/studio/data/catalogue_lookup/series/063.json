@@ -1,0 +1,211 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "063",
+    "title": "form mobile",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2021,
+    "year_display": "2021",
+    "primary_work_id": "00535",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "6e71264d02f83fd1c88d9f1679ffbbf2edad4e0e7b28dd88953e15ea93040410",
+  "member_works": [
+    {
+      "work_id": "00535",
+      "title": "form mobile",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "f45da24f4174fa66b55e897a8aaf7f9c7ad2d0d1459431961eca78906c42b37f"
+    },
+    {
+      "work_id": "00582",
+      "title": "form mobile 1",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "e089e0014db92e633adccdc4d023d10bc79a8acf6bf8fecc1be486e26e4b8afc"
+    },
+    {
+      "work_id": "00583",
+      "title": "form mobile 2",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "28c3d2280edd54f189d1e7d32add3efe6f48bdab0005e4413b70235849bffa10"
+    },
+    {
+      "work_id": "00584",
+      "title": "form mobile 3",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "285b7ec1c6ba3e47a4ee6ad6d125e6e1e8d6242a9fea4b19c4ff48fac82451bd"
+    },
+    {
+      "work_id": "00585",
+      "title": "form mobile 4",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "85b9370942052d6838a6804cf03687289cac82a6122262191ac12a7bd6d58d5b"
+    },
+    {
+      "work_id": "00586",
+      "title": "form mobile 5",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "b5b5b58c0e0fd724fd93f2b2b5dda568ab860b220d0098158b322a814ffd663b"
+    },
+    {
+      "work_id": "00587",
+      "title": "form mobile 6",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "6aa7392c2b5d9bda16e6a41ce4d1bae3bba6a225b957616b046247a15f0cf12c"
+    },
+    {
+      "work_id": "00588",
+      "title": "form mobile 7",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "9db03a44745ce3eccaa5f76b26134c80c13db57a70093c0dc155505923ea9e0f"
+    },
+    {
+      "work_id": "00589",
+      "title": "form mobile 8",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "9107b4025c9293617e01455382e49204e5281bdbb9b361610dce751b5a8e7618"
+    },
+    {
+      "work_id": "00590",
+      "title": "curve 1",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "ce6c3b9589516390a9e5e2b20b7625798bb9abe864dc1be957ef83c70944d603"
+    },
+    {
+      "work_id": "00591",
+      "title": "curve 1'",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "765a062b7c46df9b83f26a5a4e46ddb8e388b6d33b5a7dd25ad1172b6641672e"
+    },
+    {
+      "work_id": "00592",
+      "title": "curve 2",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "6eef0b4fbcc04d7d9ce012cddf03dadb15fa118c035f71c35f05a42bf1d8b103"
+    },
+    {
+      "work_id": "00593",
+      "title": "curve 2'",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "0e26ee776c49188ed5a333a958a04634b4d1695d00a59f7ba633ee68ca46090e"
+    },
+    {
+      "work_id": "00594",
+      "title": "curve 3",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "726358f695b268e56304c13dc43f248bb43836b6f655e357f68f0841867e4bda"
+    },
+    {
+      "work_id": "00595",
+      "title": "curve 3'",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "518a5643164d6ad1a7c699dcd7384000919155569fb7509d114c1197a6e15d9d"
+    },
+    {
+      "work_id": "00596",
+      "title": "curve 4",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "4916c9d3de4b936d64cee38b8da440b9d4dd734a966d64408b6cd44f64a61269"
+    },
+    {
+      "work_id": "00597",
+      "title": "curve 4'",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "43bc8ccabc04b98ad92cd8efd374f913a3b5da0135147f40cb175dc0ca78bf03"
+    },
+    {
+      "work_id": "00598",
+      "title": "curve 5",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "189e06033d1ab368bbe6fb0f173b6e7910b99c163473e13e65d65ebb725451d9"
+    },
+    {
+      "work_id": "00599",
+      "title": "curve 5'",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "063"
+      ],
+      "record_hash": "98860a3e96158a5c57f3e84429dbbd96f1aae3b351496bc51267bdad16e1e5b5"
+    }
+  ]
+}

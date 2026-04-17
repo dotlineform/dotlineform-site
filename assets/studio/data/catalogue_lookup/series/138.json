@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "138",
+    "title": "untitled composites",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01874",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "6ab22f42ec87cee0bc00c13f3668db78d3b65306309d0254c76d36ac93748ba6",
+  "member_works": [
+    {
+      "work_id": "01874",
+      "title": "untitled composites - source",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "914f13c92622e6aa7d14b9703c57e13639bcc915d2566b21cd5f233cc7b3eec6"
+    },
+    {
+      "work_id": "01875",
+      "title": "untitled composite 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "c1f2a55dbcb2d8f017058b93f8fc2ecb8a9ada9d4ae604ca92107afdf33d9144"
+    },
+    {
+      "work_id": "01876",
+      "title": "untitled composite 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "30461dd64746fb3552347acaabce70cb24a4c2769c13b5ec29e9b3b75738bf40"
+    },
+    {
+      "work_id": "01877",
+      "title": "untitled composite 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "b7d1b57b1a1372015b01b9ecad317188cc9a393d905a045e12bb5e30bfb6ebb2"
+    },
+    {
+      "work_id": "01878",
+      "title": "untitled composite 4",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "ce79dce1dc33392298535b5acef155709f29084e1336cf60062e49858862fb0d"
+    },
+    {
+      "work_id": "01879",
+      "title": "untitled composite 5",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "e389a0eaaedc02fb294fee0d724484164825d46743f6c8156b51f193c8707af6"
+    },
+    {
+      "work_id": "01880",
+      "title": "untitled composite 6",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "0edb6d96c66cd96dbe6c34dd5148b3f7fac6d9a8b22898c351094ed56750bd17"
+    },
+    {
+      "work_id": "01881",
+      "title": "untitled composites 1-3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "cbf99d9373601923b85a3aefddf258861850e6609714d8640e3416235195701e"
+    },
+    {
+      "work_id": "01882",
+      "title": "untitled composites 4-6",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "138"
+      ],
+      "record_hash": "eae3952949ca7e02279f92ebfb65d2c316196c80b77fb6c66b59803edeedf834"
+    }
+  ]
+}

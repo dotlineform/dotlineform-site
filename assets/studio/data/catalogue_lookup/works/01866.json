@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01866",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "135"
+    ],
+    "series_title": null,
+    "project_folder": "train moments",
+    "project_filename": "2018-08-22 11꞉37꞉56.jpg",
+    "title": "2018-08-22 11꞉37꞉56",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2018,
+    "year_display": "2018",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e87ecda09e8b32a60a975e3a3e7cfee8439ebf1b1e926e7e3548e1d7a0997a14",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "135",
+      "title": "train moments"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01050-232",
+    "work_id": "01050",
+    "detail_id": "232",
+    "project_subfolder": "particles",
+    "project_filename": "particle 226.jpg",
+    "title": "particle 226",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 1890,
+    "height_px": 1890
+  },
+  "record_hash": "ab6580ec47b4093091941c96f6f752b57e69cfbc7e9c9ccc867952a74fad50a4",
+  "work_summary": {
+    "work_id": "01050",
+    "title": "fireworks particles"
+  }
+}

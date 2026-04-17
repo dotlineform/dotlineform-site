@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "022",
+    "title": "book of curves",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2011,
+    "year_display": "2011",
+    "primary_work_id": "00806",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "bcb6757a02a1ea7208cf8098a45a0926e1f52022f021816d95ba5f5408c2cb3b",
+  "member_works": [
+    {
+      "work_id": "00806",
+      "title": "book of curves 0",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "022"
+      ],
+      "record_hash": "59370b7d35dde9f7f1966cb015bb59df09cbe99f6ee0e77cc3d25dd83cc23fe9"
+    },
+    {
+      "work_id": "00807",
+      "title": "book of curves 1 and 10",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "022"
+      ],
+      "record_hash": "2a9d23ce9a54a66783df38898a15d188461f3d19c67ad2fb1c5fa2ab87a79938"
+    },
+    {
+      "work_id": "00808",
+      "title": "book of curves 2-6",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "022"
+      ],
+      "record_hash": "11444e09373c14f9180521e57805f861415f7d74e5d10790a75d13f6d4595df7"
+    },
+    {
+      "work_id": "00809",
+      "title": "book of curves 7 and 8",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "022"
+      ],
+      "record_hash": "6716014ed98c42c359ce7b25e9c30a2b86db6d78fb3fbd2efc7c54737160e77a"
+    },
+    {
+      "work_id": "00810",
+      "title": "book of curves 9 and 11",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "022"
+      ],
+      "record_hash": "8328a63e5b40741f266c242516280b5b60130e57df344d3198fb0b1690a10e7f"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00460-013",
+    "work_id": "00460",
+    "detail_id": "013",
+    "project_subfolder": "details",
+    "project_filename": "molecules (detail 9).jpg",
+    "title": "molecules (detail 9)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "43bca89dccbc4e915f486b49b3972c3f1a7722f201445566a96a27b6f53128f2",
+  "work_summary": {
+    "work_id": "00460",
+    "title": "molecules"
+  }
+}

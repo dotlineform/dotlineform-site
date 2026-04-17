@@ -1,10 +1,9 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { fetchJson } from "./studio-data.js";
+import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   postJson,
@@ -184,7 +183,7 @@ function getSearchMatches(state, rawQuery) {
   const normalizedDetailId = normalizeDetailId(rawQuery);
   if (!query && !normalizedUid && !normalizedDetailId) return [];
   const matches = [];
-  for (const [detailUid, record] of state.detailsByUid.entries()) {
+  for (const [detailUid, record] of state.detailSearchByUid.entries()) {
     const detailId = normalizeText(record && record.detail_id);
     const title = normalizeText(record && record.title).toLowerCase();
     if (
@@ -221,6 +220,10 @@ function renderSearchMatches(state, matches, message = "") {
   `);
   state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
   setPopupVisibility(state, true);
+}
+
+async function loadDetailLookupRecord(state, detailUid) {
+  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_detail_base", detailUid, { cache: "no-store" });
 }
 
 function buildDraftFromRecord(record) {
@@ -352,6 +355,7 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   state.currentDetailUid = detailUid;
   state.currentWorkId = normalizeWorkId(record && record.work_id);
   state.currentRecord = record;
+  state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
@@ -441,11 +445,20 @@ async function saveCurrentDetail(state) {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetail, buildPayload(state));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
-    state.detailsByUid.set(state.currentDetailUid, record);
+    state.detailSearchByUid.set(state.currentDetailUid, {
+      detail_uid: state.currentDetailUid,
+      work_id: normalizeText(record.work_id),
+      detail_id: normalizeText(record.detail_id),
+      title: normalizeText(record.title),
+      status: normalizeText(record.status)
+    });
     state.rebuildPending = Boolean(response.changed);
-    setLoadedRecord(state, state.currentDetailUid, record, {
-      recordHash: response.record_hash || "",
-      keepResult: true
+    const lookup = await loadDetailLookupRecord(state, state.currentDetailUid);
+    const lookupRecord = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : record;
+    setLoadedRecord(state, state.currentDetailUid, lookupRecord, {
+      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
+      keepResult: true,
+      lookup
     });
     await refreshBuildPreview(state);
     const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
@@ -512,8 +525,8 @@ async function openDetailByUid(state, requestedDetailUid) {
     return;
   }
 
-  const record = state.detailsByUid.get(detailUid);
-  if (!record) {
+  const searchRecord = state.detailSearchByUid.get(detailUid);
+  if (!searchRecord) {
     const matches = getSearchMatches(state, requestedDetailUid);
     if (matches.length) renderSearchMatches(state, matches);
     else renderSearchMatches(state, [], t(state, "unknown_detail_error", "Unknown detail id: {detail_uid}.", { detail_uid: detailUid }));
@@ -523,8 +536,15 @@ async function openDetailByUid(state, requestedDetailUid) {
   state.searchNode.value = detailUid;
   setPopupVisibility(state, false);
   state.rebuildPending = false;
-  const recordHash = await computeRecordHash(record);
-  setLoadedRecord(state, detailUid, record, { recordHash });
+  const lookup = await loadDetailLookupRecord(state, detailUid);
+  const record = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : null;
+  if (!record) {
+    throw new Error(`detail lookup missing record for ${detailUid}`);
+  }
+  setLoadedRecord(state, detailUid, record, {
+    recordHash: normalizeText(lookup.record_hash) || await computeRecordHash(record),
+    lookup
+  });
   await refreshBuildPreview(state);
 }
 
@@ -555,8 +575,8 @@ async function init() {
 
   const state = {
     config: null,
-    worksById: new Map(),
-    detailsByUid: new Map(),
+    detailSearchByUid: new Map(),
+    currentLookup: null,
     currentDetailUid: "",
     currentWorkId: "",
     currentRecord: null,
@@ -599,19 +619,17 @@ async function init() {
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
 
-    const [worksPayload, detailsPayload, serverAvailable] = await Promise.all([
-      fetchJson(getStudioDataPath(config, "catalogue_works"), { cache: "no-store" }),
-      fetchJson(getStudioDataPath(config, "catalogue_work_details"), { cache: "no-store" }),
+    const [detailsPayload, serverAvailable] = await Promise.all([
+      loadStudioLookupJson(config, "catalogue_lookup_work_detail_search", { cache: "no-store" }),
       probeCatalogueHealth()
     ]);
 
-    Object.entries(worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {}).forEach(([workId, record]) => {
+    const detailItems = Array.isArray(detailsPayload && detailsPayload.items) ? detailsPayload.items : [];
+    detailItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
-      state.worksById.set(normalizeWorkId(workId), record);
-    });
-    Object.entries(detailsPayload && detailsPayload.work_details && typeof detailsPayload.work_details === "object" ? detailsPayload.work_details : {}).forEach(([detailUid, record]) => {
-      if (!record || typeof record !== "object") return;
-      state.detailsByUid.set(normalizeText(detailUid), record);
+      const detailUid = normalizeText(record.detail_uid);
+      if (!detailUid) return;
+      state.detailSearchByUid.set(detailUid, record);
     });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_detail_editor.${key}`, fallback, tokens));

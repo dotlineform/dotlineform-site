@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-047",
+    "work_id": "01720",
+    "detail_id": "047",
+    "project_subfolder": "symbols",
+    "project_filename": "messy small chatterbox.jpg",
+    "title": "messy small chatterbox",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1501
+  },
+  "record_hash": "4c472248bbea09d4049a2b36f0650ae3d675ffb042554b24657f2ef54b4e2d23",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

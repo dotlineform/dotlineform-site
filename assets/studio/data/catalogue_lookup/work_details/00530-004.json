@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00530-004",
+    "work_id": "00530",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "00530-004.jpg",
+    "title": "body detail",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 4000,
+    "height_px": 2667
+  },
+  "record_hash": "dc106b6a9bf2cd02b54d597810716dd290e06326fa8235927edc9983a1102aae",
+  "work_summary": {
+    "work_id": "00530",
+    "title": "body curves"
+  }
+}

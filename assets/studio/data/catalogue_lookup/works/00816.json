@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00816",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "029"
+    ],
+    "series_title": null,
+    "project_folder": "colours",
+    "project_filename": "colours kylie.jpg",
+    "title": "colours kylie",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e543dc67ff13254e55632a9e1173056e4d6517c7b0b59f1bb039f8c37f489619",
+  "detail_sections": [
+    {
+      "project_subfolder": "versions",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00816-001",
+          "detail_id": "001",
+          "title": "colours kylie.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00816-002",
+          "detail_id": "002",
+          "title": "colours kylie.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00816-003",
+          "detail_id": "003",
+          "title": "colours kylie.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00816-004",
+          "detail_id": "004",
+          "title": "colours kylie.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00816-005",
+          "detail_id": "005",
+          "title": "colours kylie.5",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "029",
+      "title": "colours"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01639",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "024"
+    ],
+    "series_title": null,
+    "project_folder": "changed photos",
+    "project_filename": "changed photo 6.jpg",
+    "title": "changed photo 6",
+    "width_cm": 20,
+    "height_cm": 35,
+    "year": 2023,
+    "year_display": "2022-23",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2362,
+    "height_px": 4134,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "8d8c77217b13aa74c00e4667388d054174206398b9591532134f04d02ce403e2",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "024",
+      "title": "changed photos"
+    }
+  ]
+}

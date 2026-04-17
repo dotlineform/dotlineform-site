@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01925",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "141"
+    ],
+    "series_title": null,
+    "project_folder": "water",
+    "project_filename": "2013-03-02 - 14-34-00.jpg",
+    "title": "2013-03-02 - 14-34-00",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "8f607fc4604a718c49182dc14809817f585d71e9da67b60d1b144d660722c79c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "141",
+      "title": "water"
+    }
+  ]
+}

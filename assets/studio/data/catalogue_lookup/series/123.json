@@ -1,0 +1,221 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "123",
+    "title": "snow",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2018,
+    "year_display": "2018",
+    "primary_work_id": "01655",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "beef97fd1d32033a9bbd36fff00e58ce94fcc89fe90cd7de47f8ea7ce590ae9c",
+  "member_works": [
+    {
+      "work_id": "01655",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "7558ac56b354d7c2f925a5341a1e219debc7ca1f35cb5fbf641ee0783498f527"
+    },
+    {
+      "work_id": "01656",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "917276af8bb2c84e50370478840d21b4c5fa83fb0f4ec1ea9ede5cc57f11c29b"
+    },
+    {
+      "work_id": "01657",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "b40b7636dc12eb5fe8706df4bbb920744bbfcae3b48fe89de28694b982cc8db0"
+    },
+    {
+      "work_id": "01658",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "5af99f7ce441ff4cf8cfa12858a0dd27da5a5a19ac5fb94fe80de456d641c848"
+    },
+    {
+      "work_id": "01659",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "b4b4b887bc8200ad998ab4e7d9bae8ed005df0c75a87f16b4c29a5385518e1f1"
+    },
+    {
+      "work_id": "01660",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "d2ff5354d52b14cdad564502af0916183e7dcf45e5b4303c8b4e0811736bc90f"
+    },
+    {
+      "work_id": "01661",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "225fff57931bbdb00aa0ab1d0d6a0592516efd29196227183287c39d588e1f8a"
+    },
+    {
+      "work_id": "01662",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "70f68decfcbcfc59f9e5f179c4851bfeac1c899f95b4c7cdbef7ffb2ca53d3b3"
+    },
+    {
+      "work_id": "01663",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "72c5521a5f880d1fbe15c8b8be20dcb429862de3a9a327ecec4c20aca8af4ed4"
+    },
+    {
+      "work_id": "01664",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "d569c42635781697baac11fc73ed1ab8a267f114c2d28b61a3bd08412048d697"
+    },
+    {
+      "work_id": "01665",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "e56036bbf1d199ee2c8aff631f8885137f5e6be26632ded83f7d4c9c79f49fa9"
+    },
+    {
+      "work_id": "01666",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "22ed3c282ce8990faed62278406a7f061ec6a0ea79866c62bba207201b092656"
+    },
+    {
+      "work_id": "01667",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "154fda5b437ad27e3543e56fc4973183a00a1e74dcc3ad87bafcbe00a7a39187"
+    },
+    {
+      "work_id": "01668",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "b48ee0b43e3f6c3a0c695b4726767c62457d241fd7c0ba348231dc3a0131aa0d"
+    },
+    {
+      "work_id": "01669",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "c6691d2e66165ce2e8e157739203f59c5858316229f7159f116b0d9d116c5d03"
+    },
+    {
+      "work_id": "01670",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "1c59c02cbbd111356c7967c848cdda89c24820ab3fe692b1f1f2d921128d210b"
+    },
+    {
+      "work_id": "01671",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "318ade5f8147c8aadc2a4b3f0bcdd3b56a3685110733212b110fe72d5f5810f3"
+    },
+    {
+      "work_id": "01672",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "80cf434e829f950a951a9f4b89e5ce6284f17d049cb3c78387d1ccb331b3e901"
+    },
+    {
+      "work_id": "01673",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "5774e5cede74c979f6e27ec930f03178afe24842bc01182311c5fc80c6691a36"
+    },
+    {
+      "work_id": "01674",
+      "title": "snow",
+      "year_display": "2018",
+      "status": "published",
+      "series_ids": [
+        "123"
+      ],
+      "record_hash": "168bca778b6291c24764661b58e5a096977f28fc684b291fcac89bfc41c53394"
+    }
+  ]
+}

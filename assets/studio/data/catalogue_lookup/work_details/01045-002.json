@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01045-002",
+    "work_id": "01045",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "entangled form' - spider (detail).jpg",
+    "title": "entangled form' - spider (detail)",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "abd13c348dc72b68920a53f0152392e53d0baa1b8a3e6a7193a18ebb0d950d5e",
+  "work_summary": {
+    "work_id": "01045",
+    "title": "entangled form'"
+  }
+}

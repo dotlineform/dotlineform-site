@@ -91,6 +91,8 @@ Catalogue/media builds:
   - previews or runs a scoped JSON-source rebuild for a selected work id, including aggregate indexes and catalogue search
 - `./scripts/export_catalogue_source.py`
   - exports Phase 0 catalogue source JSON from `data/works.xlsx` into `assets/studio/data/catalogue/`
+- `./scripts/export_catalogue_lookup.py`
+  - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
 - `./scripts/validate_catalogue_source.py`
   - validates the exported catalogue source JSON
 - `./scripts/compare_catalogue_sources.py`
@@ -116,6 +118,8 @@ Catalogue/media builds:
   Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
 - [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
   Export, validate, and compare Phase 0 catalogue source JSON.
+- [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
+  Export derived Studio lookup payloads for focused editor reads.
 - [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
   Remove one work from generated artifacts when workbook status is `delete`.
 - [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)

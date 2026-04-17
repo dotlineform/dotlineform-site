@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-063",
+    "work_id": "01720",
+    "detail_id": "063",
+    "project_subfolder": "symbols",
+    "project_filename": "strong clumsy nonsense.jpg",
+    "title": "strong clumsy nonsense",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "1c599e66ca96ecd1b2f13c2bf589a222d2bde5676b76056911fdaeb2b0c490b3",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

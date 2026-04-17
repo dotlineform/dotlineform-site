@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00535",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "063"
+    ],
+    "series_title": null,
+    "project_folder": "form mobile",
+    "project_filename": "form mobile.jpg",
+    "title": "form mobile",
+    "width_cm": 59.8,
+    "height_cm": 41.8,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "sculpture",
+    "medium_caption": "wire",
+    "storage_location": "extant",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7063,
+    "height_px": 4937,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f45da24f4174fa66b55e897a8aaf7f9c7ad2d0d1459431961eca78906c42b37f",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "063",
+      "title": "form mobile"
+    }
+  ]
+}

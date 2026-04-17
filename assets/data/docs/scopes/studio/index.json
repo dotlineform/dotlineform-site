@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T21:15:52Z",
+  "generated_at": "2026-04-17T21:42:09Z",
   "docs": [
     {
       "scope": "studio",
@@ -814,6 +814,17 @@
       "source_path": "scripts/scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-catalogue-lookup",
+      "title": "Catalogue Lookup Export",
+      "last_updated": "2026-04-17",
+      "parent_id": "scripts",
+      "sort_order": 72,
+      "source_path": "scripts/scripts-catalogue-lookup.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-lookup.json"
     },
     {
       "scope": "studio",

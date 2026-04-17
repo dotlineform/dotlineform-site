@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00529-001",
+    "work_id": "00529",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "00529-001.jpg",
+    "title": "body detail",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 4032,
+    "height_px": 3024
+  },
+  "record_hash": "0dd1a0cae0d5af86c2aaca3fa98b7bc0816edd314e5f3fcdc7ba0843806dca3f",
+  "work_summary": {
+    "work_id": "00529",
+    "title": "body residue"
+  }
+}

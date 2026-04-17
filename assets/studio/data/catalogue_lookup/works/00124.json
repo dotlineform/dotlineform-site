@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00124",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "089"
+    ],
+    "series_title": null,
+    "project_folder": "learning to draw landscapes",
+    "project_filename": "learning to draw landscapes 11.jpg",
+    "title": "learning to draw landscapes 11",
+    "width_cm": 20.5,
+    "height_cm": 29.7,
+    "year": 2010,
+    "year_display": "c. 2010?",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2480,
+    "height_px": 3507,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d730063b8f71653eda336885381ad2fc3f651938932cdc63eeebeb6785361830",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "089",
+      "title": "learning to draw landscapes"
+    }
+  ]
+}

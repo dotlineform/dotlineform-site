@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00141",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "119"
+    ],
+    "series_title": null,
+    "project_folder": "r",
+    "project_filename": "10.jpg",
+    "title": "r 10",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 2001,
+    "year_display": "2001",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2428,
+    "height_px": 3474,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5f336b06bd8120a7de277b30bd478feca48fcd69df939eee38afe07c60060f75",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "119",
+      "title": "r"
+    }
+  ]
+}

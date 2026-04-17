@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00550",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "110"
+    ],
+    "series_title": null,
+    "project_folder": "particle theory",
+    "project_filename": "particle theory (1 layer).jpg",
+    "title": "particle theory (1 layer)",
+    "width_cm": 41,
+    "height_cm": 29.7,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "paper collage",
+    "medium_caption": "paper collage",
+    "storage_location": "12",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4843,
+    "height_px": 3508,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a6bcb3d9611cb2bf7a84bf2e98df7c5b3715b83d13d28cdf9d962ae5ce0659ea",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "110",
+      "title": "particle theory"
+    }
+  ]
+}

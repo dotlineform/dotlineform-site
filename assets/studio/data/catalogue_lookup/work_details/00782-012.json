@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00782-012",
+    "work_id": "00782",
+    "detail_id": "012",
+    "project_subfolder": "versions",
+    "project_filename": "birth of healing forms - 1.04.jpg",
+    "title": "birth of healing forms - 1.04",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 1181,
+    "height_px": 1181
+  },
+  "record_hash": "e4359888098d928f87ee5bc04ef2a41766cf9d7cd1af666c09645d95ada992af",
+  "work_summary": {
+    "work_id": "00782",
+    "title": "birth of healing forms"
+  }
+}

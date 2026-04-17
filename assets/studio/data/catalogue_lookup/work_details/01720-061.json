@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-061",
+    "work_id": "01720",
+    "detail_id": "061",
+    "project_subfolder": "symbols",
+    "project_filename": "slow bump.jpg",
+    "title": "slow bump",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1507
+  },
+  "record_hash": "267fc606495faafdf1a30b44920c5f8b8c74daa86fb676d89162839be7e1e42a",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

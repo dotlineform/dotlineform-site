@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "076",
+    "title": "heaven and earth",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2011,
+    "year_display": "2011",
+    "primary_work_id": "00469",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "247242aa216438f7a5adf4f18a579aaf274b00792ef0a9ba73c6ebadb036faf8",
+  "member_works": [
+    {
+      "work_id": "00469",
+      "title": "heaven and earth",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "076"
+      ],
+      "record_hash": "d742da0d512aba9097e7c83e2fc673807ee6fd243a7027cdb0a2d5bbf517bd8c"
+    },
+    {
+      "work_id": "01365",
+      "title": "heaven and earth (grey series)",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "076"
+      ],
+      "record_hash": "f277b693eccd3243b1e2aa95c42694f18bf32312efc38a565d9511fdd8bb432a"
+    },
+    {
+      "work_id": "01366",
+      "title": "heaven and earth (colour series)",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "076"
+      ],
+      "record_hash": "50b092d19a1799a33f3efb19d43f4dda4d60264f86633b54103c8485e4588035"
+    }
+  ]
+}

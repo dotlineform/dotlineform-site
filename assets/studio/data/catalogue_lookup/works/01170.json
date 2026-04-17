@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01170",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "057"
+    ],
+    "series_title": null,
+    "project_folder": "folding structure",
+    "project_filename": "folding structure 9.jpg",
+    "title": "folding structure 9",
+    "width_cm": 24,
+    "height_cm": 40,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2834,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2e628fafa8020ed4ae5b65700888dfecee21a9f5821939d805d565324a304f69",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "057",
+      "title": "folding structure"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00109",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "joined forms 2.jpg",
+    "title": "joined forms 2",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 7016,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ee43feb4f31857bbb61f06048687b6dfd08eaec195550b0cb167b486f7ecc673",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

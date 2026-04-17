@@ -1,0 +1,151 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "071",
+    "title": "grey series",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2025",
+    "primary_work_id": "01258",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "ddbd27636f86c8b59b89eafd432d193dad294574a51b35be618e0283565f6ba9",
+  "member_works": [
+    {
+      "work_id": "01251",
+      "title": "grey series 1",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "40aca6b599616867faadd569ba823d2a1956bfd3d2058f6c0884d64969e2ed79"
+    },
+    {
+      "work_id": "01252",
+      "title": "grey series 2",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "1f95fd1e4ec48a2258f4678cb4e7b2aa4d87ee02f770469b37776d83839643c8"
+    },
+    {
+      "work_id": "01253",
+      "title": "grey series 3",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "4241d9ea8999b676bec5a2592167bbc0ee741a680886137d085ba35a06f747ed"
+    },
+    {
+      "work_id": "01254",
+      "title": "grey series 4",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "53127a0220819a770067c2738e6fd2736fc57e2a03089c617b85854df7e31771"
+    },
+    {
+      "work_id": "01255",
+      "title": "grey series 5",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "60057507f762bf5f25bb067a5777b835f70d9f62bd00521462bce03b63df9028"
+    },
+    {
+      "work_id": "01256",
+      "title": "grey series 6",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "b13c5b7358e741c9acb266e204fbdc00a3050197afcf92a5ef80f985afe0fd1d"
+    },
+    {
+      "work_id": "01257",
+      "title": "grey series 7",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "d83f5a25c8bd7e3b222fb643b21cb34edace34242a4cfe6396cc1791e10ac154"
+    },
+    {
+      "work_id": "01258",
+      "title": "grey series 8",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "985c8286937946cb355a02cea9feffd8aed9d8c80d4d0ac2d9ba41c9afe4c296"
+    },
+    {
+      "work_id": "01259",
+      "title": "grey series 9",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "ff9196a35f01962ab1d3757f02687f637064e4f1f60063ac6f27be7f7a99503d"
+    },
+    {
+      "work_id": "01260",
+      "title": "grey series 10",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "2191d402f2f38a78fe3df09c124bac695766c6dab0fc044ee04b9d842c2a44cf"
+    },
+    {
+      "work_id": "01261",
+      "title": "grey series 11",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "78dd9c224e9120bdef1fdd6bd98e04c30e1e14874f4b33710407535541e2c638"
+    },
+    {
+      "work_id": "01262",
+      "title": "grey series 12",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "5a227227351a95e2eb42d1bf9d8067bee758301e5b357af54a13ef8ee554d47d"
+    },
+    {
+      "work_id": "01263",
+      "title": "grey series 13",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "071"
+      ],
+      "record_hash": "5733158132edea9e2dfbcab7d6386261ccc73f1cd96e8d807e00d5b23fc183db"
+    }
+  ]
+}

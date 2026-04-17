@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "065",
+    "title": "forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2011,
+    "year_display": "2011",
+    "primary_work_id": "01199",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "514a7f4f6a19358f461f3975469d25f3a8f7ccc390df34aa20d3d3cb6396748b",
+  "member_works": [
+    {
+      "work_id": "01196",
+      "title": "forms",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "065"
+      ],
+      "record_hash": "9dfa578d4b8b88dcf124d1f43253522f472a1a0e9f1cfe3fcd06200038414048"
+    },
+    {
+      "work_id": "01197",
+      "title": "form paths",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "065"
+      ],
+      "record_hash": "4615934ed610f8e47e6b8d9ef1709cf1d9b2a4770b784b3dab905e74df414680"
+    },
+    {
+      "work_id": "01198",
+      "title": "4 form paths",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "065"
+      ],
+      "record_hash": "b1645f96133c5579356011bbd26312a2c2a3503c754720199a1c091115d24e47"
+    },
+    {
+      "work_id": "01199",
+      "title": "form particles",
+      "year_display": "2011",
+      "status": "published",
+      "series_ids": [
+        "065"
+      ],
+      "record_hash": "a1a9f63ec2325da1fd21a2bb4515a69d4c19c8619869ce8207be9a685cb7eada"
+    }
+  ]
+}

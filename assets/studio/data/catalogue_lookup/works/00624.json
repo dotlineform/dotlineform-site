@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00624",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "082"
+    ],
+    "series_title": null,
+    "project_folder": "k crystals",
+    "project_filename": "k crystals (squared transparent).jpg",
+    "title": "k crystals (squared transparent)",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b8e841a47cb3c6cee7f1e5698a1bdf918204e8293cb4c178c3ea13b13f9e69db",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00624-001",
+          "detail_id": "001",
+          "title": "k crystals (squared transparent) - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00624-002",
+          "detail_id": "002",
+          "title": "k crystals (squared transparent) - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00624-003",
+          "detail_id": "003",
+          "title": "k crystals (squared transparent) - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "082",
+      "title": "k crystals"
+    }
+  ]
+}

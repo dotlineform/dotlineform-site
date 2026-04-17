@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00389-010",
+    "work_id": "00389",
+    "detail_id": "010",
+    "project_subfolder": "photos",
+    "project_filename": "2005_nature_2_4.jpg",
+    "title": "2005_nature_2_4",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 2834,
+    "height_px": 1889
+  },
+  "record_hash": "c1d07cae8f889b6765a5c4d1ef62ddce9ab9bb00dac7472c329cca5870d114eb",
+  "work_summary": {
+    "work_id": "00389",
+    "title": "certainty"
+  }
+}

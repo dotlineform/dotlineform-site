@@ -1,0 +1,1839 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00459",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "100"
+    ],
+    "series_title": null,
+    "project_folder": "molecule forms",
+    "project_filename": "molecule forms.jpg",
+    "title": "molecule forms",
+    "width_cm": 81.3,
+    "height_cm": 81.3,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 9600,
+    "height_px": 9600,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d3d2c73b1372c2787503cbd1d2f9056609563d473ae4dc5871c590f74fb9638c",
+  "detail_sections": [
+    {
+      "project_subfolder": "molecules",
+      "count": 256,
+      "details": [
+        {
+          "detail_uid": "00459-001",
+          "detail_id": "001",
+          "title": "molecule form 1 (2004-06-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-002",
+          "detail_id": "002",
+          "title": "molecule form 2 (2004-06-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-003",
+          "detail_id": "003",
+          "title": "molecule form 3 (2004-06-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-004",
+          "detail_id": "004",
+          "title": "molecule form 4 (2006-05-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-005",
+          "detail_id": "005",
+          "title": "molecule form 5 (2006-05-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-006",
+          "detail_id": "006",
+          "title": "molecule form 6 (2006-05-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-007",
+          "detail_id": "007",
+          "title": "molecule form 7 (2006-05-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-008",
+          "detail_id": "008",
+          "title": "molecule form 8 (2006-06-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-009",
+          "detail_id": "009",
+          "title": "molecule form 9 (2006-08-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-010",
+          "detail_id": "010",
+          "title": "molecule form 10 (2006-08-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-011",
+          "detail_id": "011",
+          "title": "molecule form 11 (2006-09-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-012",
+          "detail_id": "012",
+          "title": "molecule form 12 (2006-10-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-013",
+          "detail_id": "013",
+          "title": "molecule form 13 (2006-10-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-014",
+          "detail_id": "014",
+          "title": "molecule form 14 (2006-11-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-015",
+          "detail_id": "015",
+          "title": "molecule form 15 (2006-11-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-016",
+          "detail_id": "016",
+          "title": "molecule form 16 (2006-11-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-017",
+          "detail_id": "017",
+          "title": "molecule form 17 (2006-11-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-018",
+          "detail_id": "018",
+          "title": "molecule form 18 (2006-11-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-019",
+          "detail_id": "019",
+          "title": "molecule form 19 (2006-11-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-020",
+          "detail_id": "020",
+          "title": "molecule form 20 (2006-11-09)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-021",
+          "detail_id": "021",
+          "title": "molecule form 21 (2006-12-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-022",
+          "detail_id": "022",
+          "title": "molecule form 22 (2006-12-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-023",
+          "detail_id": "023",
+          "title": "molecule form 23 (2006-12-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-024",
+          "detail_id": "024",
+          "title": "molecule form 24 (2006-12-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-025",
+          "detail_id": "025",
+          "title": "molecule form 25 (2006-12-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-026",
+          "detail_id": "026",
+          "title": "molecule form 26 (2006-12-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-027",
+          "detail_id": "027",
+          "title": "molecule form 27 (2007-01-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-028",
+          "detail_id": "028",
+          "title": "molecule form 28 (2007-03-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-029",
+          "detail_id": "029",
+          "title": "molecule form 29 (2007-03-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-030",
+          "detail_id": "030",
+          "title": "molecule form 30 (2007-04-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-031",
+          "detail_id": "031",
+          "title": "molecule form 31 (2007-04-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-032",
+          "detail_id": "032",
+          "title": "molecule form 32 (2007-04-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-033",
+          "detail_id": "033",
+          "title": "molecule form 33 (2007-04-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-034",
+          "detail_id": "034",
+          "title": "molecule form 34 (2007-04-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-035",
+          "detail_id": "035",
+          "title": "molecule form 35 (2007-04-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-036",
+          "detail_id": "036",
+          "title": "molecule form 36 (2007-04-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-037",
+          "detail_id": "037",
+          "title": "molecule form 37 (2007-05-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-038",
+          "detail_id": "038",
+          "title": "molecule form 38 (2007-05-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-039",
+          "detail_id": "039",
+          "title": "molecule form 39 (2007-05-19)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-040",
+          "detail_id": "040",
+          "title": "molecule form 40 (2007-05-24)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-041",
+          "detail_id": "041",
+          "title": "molecule form 41 (2007-05-24)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-042",
+          "detail_id": "042",
+          "title": "molecule form 42 (2007-06-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-043",
+          "detail_id": "043",
+          "title": "molecule form 43 (2007-07-16)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-044",
+          "detail_id": "044",
+          "title": "molecule form 44 (2007-07-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-045",
+          "detail_id": "045",
+          "title": "molecule form 45 (2007-09-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-046",
+          "detail_id": "046",
+          "title": "molecule form 46 (2007-09-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-047",
+          "detail_id": "047",
+          "title": "molecule form 47 (2007-09-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-048",
+          "detail_id": "048",
+          "title": "molecule form 48 (2007-09-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-049",
+          "detail_id": "049",
+          "title": "molecule form 49 (2007-09-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-050",
+          "detail_id": "050",
+          "title": "molecule form 50 (2008-05-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-051",
+          "detail_id": "051",
+          "title": "molecule form 51 (2008-06-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-052",
+          "detail_id": "052",
+          "title": "molecule form 52 (2008-07-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-053",
+          "detail_id": "053",
+          "title": "molecule form 53 (2008-07-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-054",
+          "detail_id": "054",
+          "title": "molecule form 54 (2008-07-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-055",
+          "detail_id": "055",
+          "title": "molecule form 55 (2008-10-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-056",
+          "detail_id": "056",
+          "title": "molecule form 56 (2009-02-03)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-057",
+          "detail_id": "057",
+          "title": "molecule form 57 (2009-06-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-058",
+          "detail_id": "058",
+          "title": "molecule form 58 (2009-07-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-059",
+          "detail_id": "059",
+          "title": "molecule form 59 (2009-07-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-060",
+          "detail_id": "060",
+          "title": "molecule form 60 (2009-09-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-061",
+          "detail_id": "061",
+          "title": "molecule form 61 (2010-01-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-062",
+          "detail_id": "062",
+          "title": "molecule form 62 (2010-01-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-063",
+          "detail_id": "063",
+          "title": "molecule form 63 (2010-02-09)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-064",
+          "detail_id": "064",
+          "title": "molecule form 64 (2010-02-09)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-065",
+          "detail_id": "065",
+          "title": "molecule form 65 (2010-03-01)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-066",
+          "detail_id": "066",
+          "title": "molecule form 66 (2010-04-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-067",
+          "detail_id": "067",
+          "title": "molecule form 67 (2010-05-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-068",
+          "detail_id": "068",
+          "title": "molecule form 68 (2010-05-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-069",
+          "detail_id": "069",
+          "title": "molecule form 69 (2010-05-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-070",
+          "detail_id": "070",
+          "title": "molecule form 70 (2010-06-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-071",
+          "detail_id": "071",
+          "title": "molecule form 71 (2010-07-20)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-072",
+          "detail_id": "072",
+          "title": "molecule form 72 (2010-07-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-073",
+          "detail_id": "073",
+          "title": "molecule form 73 (2010-08-14)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-074",
+          "detail_id": "074",
+          "title": "molecule form 74 (2010-10-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-075",
+          "detail_id": "075",
+          "title": "molecule form 75 (2010-11-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-076",
+          "detail_id": "076",
+          "title": "molecule form 76 (2010-12-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-077",
+          "detail_id": "077",
+          "title": "molecule form 77 (2011-01-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-078",
+          "detail_id": "078",
+          "title": "molecule form 78 (2011-02-19)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-079",
+          "detail_id": "079",
+          "title": "molecule form 79 (2011-03-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-080",
+          "detail_id": "080",
+          "title": "molecule form 80 (2011-04-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-081",
+          "detail_id": "081",
+          "title": "molecule form 81 (2011-04-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-082",
+          "detail_id": "082",
+          "title": "molecule form 82 (2011-04-24)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-083",
+          "detail_id": "083",
+          "title": "molecule form 83 (2011-05-01)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-084",
+          "detail_id": "084",
+          "title": "molecule form 84 (2011-05-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-085",
+          "detail_id": "085",
+          "title": "molecule form 85 (2011-08-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-086",
+          "detail_id": "086",
+          "title": "molecule form 86 (2011-12-14)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-087",
+          "detail_id": "087",
+          "title": "molecule form 87 (2011-12-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-088",
+          "detail_id": "088",
+          "title": "molecule form 88 (2011-12-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-089",
+          "detail_id": "089",
+          "title": "molecule form 89 (2011-12-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-090",
+          "detail_id": "090",
+          "title": "molecule form 90 (2011-12-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-091",
+          "detail_id": "091",
+          "title": "molecule form 91 (2011-12-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-092",
+          "detail_id": "092",
+          "title": "molecule form 92 (2012-01-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-093",
+          "detail_id": "093",
+          "title": "molecule form 93 (2012-01-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-094",
+          "detail_id": "094",
+          "title": "molecule form 94 (2012-01-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-095",
+          "detail_id": "095",
+          "title": "molecule form 95 (2012-01-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-096",
+          "detail_id": "096",
+          "title": "molecule form 96 (2012-01-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-097",
+          "detail_id": "097",
+          "title": "molecule form 97 (2012-02-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-098",
+          "detail_id": "098",
+          "title": "molecule form 98 (2012-02-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-099",
+          "detail_id": "099",
+          "title": "molecule form 99 (2012-02-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-100",
+          "detail_id": "100",
+          "title": "molecule form 100 (2012-03-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-101",
+          "detail_id": "101",
+          "title": "molecule form 101 (2012-03-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-102",
+          "detail_id": "102",
+          "title": "molecule form 102 (2012-03-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-103",
+          "detail_id": "103",
+          "title": "molecule form 103 (2012-03-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-104",
+          "detail_id": "104",
+          "title": "molecule form 104 (2012-03-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-105",
+          "detail_id": "105",
+          "title": "molecule form 105 (2012-04-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-106",
+          "detail_id": "106",
+          "title": "molecule form 106 (2012-05-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-107",
+          "detail_id": "107",
+          "title": "molecule form 107 (2012-05-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-108",
+          "detail_id": "108",
+          "title": "molecule form 108 (2012-05-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-109",
+          "detail_id": "109",
+          "title": "molecule form 109 (2012-05-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-110",
+          "detail_id": "110",
+          "title": "molecule form 110 (2012-05-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-111",
+          "detail_id": "111",
+          "title": "molecule form 111 (2012-05-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-112",
+          "detail_id": "112",
+          "title": "molecule form 112 (2012-05-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-113",
+          "detail_id": "113",
+          "title": "molecule form 113 (2012-05-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-114",
+          "detail_id": "114",
+          "title": "molecule form 114 (2012-06-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-115",
+          "detail_id": "115",
+          "title": "molecule form 115 (2012-06-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-116",
+          "detail_id": "116",
+          "title": "molecule form 116 (2012-06-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-117",
+          "detail_id": "117",
+          "title": "molecule form 117 (2012-07-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-118",
+          "detail_id": "118",
+          "title": "molecule form 118 (2012-07-14)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-119",
+          "detail_id": "119",
+          "title": "molecule form 119 (2012-07-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-120",
+          "detail_id": "120",
+          "title": "molecule form 120 (2012-07-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-121",
+          "detail_id": "121",
+          "title": "molecule form 121 (2012-07-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-122",
+          "detail_id": "122",
+          "title": "molecule form 122 (2012-08-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-123",
+          "detail_id": "123",
+          "title": "molecule form 123 (2012-08-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-124",
+          "detail_id": "124",
+          "title": "molecule form 124 (2012-08-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-125",
+          "detail_id": "125",
+          "title": "molecule form 125 (2012-09-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-126",
+          "detail_id": "126",
+          "title": "molecule form 126 (2012-09-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-127",
+          "detail_id": "127",
+          "title": "molecule form 127 (2012-09-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-128",
+          "detail_id": "128",
+          "title": "molecule form 128 (2012-09-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-129",
+          "detail_id": "129",
+          "title": "molecule form 129 (2012-09-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-130",
+          "detail_id": "130",
+          "title": "molecule form 130 (2012-09-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-131",
+          "detail_id": "131",
+          "title": "molecule form 131 (2012-09-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-132",
+          "detail_id": "132",
+          "title": "molecule form 132 (2012-09-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-133",
+          "detail_id": "133",
+          "title": "molecule form 133 (2012-10-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-134",
+          "detail_id": "134",
+          "title": "molecule form 134 (2012-10-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-135",
+          "detail_id": "135",
+          "title": "molecule form 135 (2012-10-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-136",
+          "detail_id": "136",
+          "title": "molecule form 136 (2012-10-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-137",
+          "detail_id": "137",
+          "title": "molecule form 137 (2012-10-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-138",
+          "detail_id": "138",
+          "title": "molecule form 138 (2012-10-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-139",
+          "detail_id": "139",
+          "title": "molecule form 139 (2012-10-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-140",
+          "detail_id": "140",
+          "title": "molecule form 140 (2012-10-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-141",
+          "detail_id": "141",
+          "title": "molecule form 141 (2012-10-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-142",
+          "detail_id": "142",
+          "title": "molecule form 142 (2012-10-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-143",
+          "detail_id": "143",
+          "title": "molecule form 143 (2012-11-03)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-144",
+          "detail_id": "144",
+          "title": "molecule form 144 (2012-11-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-145",
+          "detail_id": "145",
+          "title": "molecule form 145 (2012-11-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-146",
+          "detail_id": "146",
+          "title": "molecule form 146 (2012-12-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-147",
+          "detail_id": "147",
+          "title": "molecule form 147 (2012-12-13)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-148",
+          "detail_id": "148",
+          "title": "molecule form 148 (2012-12-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-149",
+          "detail_id": "149",
+          "title": "molecule form 149 (2012-12-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-150",
+          "detail_id": "150",
+          "title": "molecule form 150 (2012-12-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-151",
+          "detail_id": "151",
+          "title": "molecule form 151 (2012-12-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-152",
+          "detail_id": "152",
+          "title": "molecule form 152 (2012-12-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-153",
+          "detail_id": "153",
+          "title": "molecule form 153 (2012-12-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-154",
+          "detail_id": "154",
+          "title": "molecule form 154 (2012-12-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-155",
+          "detail_id": "155",
+          "title": "molecule form 155 (2012-12-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-156",
+          "detail_id": "156",
+          "title": "molecule form 156 (2012-12-27)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-157",
+          "detail_id": "157",
+          "title": "molecule form 157 (2012-12-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-158",
+          "detail_id": "158",
+          "title": "molecule form 158 (2012-12-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-159",
+          "detail_id": "159",
+          "title": "molecule form 159 (2012-12-31)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-160",
+          "detail_id": "160",
+          "title": "molecule form 160 (2013-01-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-161",
+          "detail_id": "161",
+          "title": "molecule form 161 (2013-01-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-162",
+          "detail_id": "162",
+          "title": "molecule form 162 (2013-01-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-163",
+          "detail_id": "163",
+          "title": "molecule form 163 (2013-01-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-164",
+          "detail_id": "164",
+          "title": "molecule form 164 (2013-01-16)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-165",
+          "detail_id": "165",
+          "title": "molecule form 165 (2013-01-20)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-166",
+          "detail_id": "166",
+          "title": "molecule form 166 (2013-01-25)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-167",
+          "detail_id": "167",
+          "title": "molecule form 167 (2013-01-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-168",
+          "detail_id": "168",
+          "title": "molecule form 168 (2013-01-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-169",
+          "detail_id": "169",
+          "title": "molecule form 169 (2013-01-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-170",
+          "detail_id": "170",
+          "title": "molecule form 170 (2013-02-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-171",
+          "detail_id": "171",
+          "title": "molecule form 171 (2013-02-16)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-172",
+          "detail_id": "172",
+          "title": "molecule form 172 (2013-02-21)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-173",
+          "detail_id": "173",
+          "title": "molecule form 173 (2013-02-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-174",
+          "detail_id": "174",
+          "title": "molecule form 174 (2013-02-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-175",
+          "detail_id": "175",
+          "title": "molecule form 175 (2013-03-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-176",
+          "detail_id": "176",
+          "title": "molecule form 176 (2013-03-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-177",
+          "detail_id": "177",
+          "title": "molecule form 177 (2013-03-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-178",
+          "detail_id": "178",
+          "title": "molecule form 178 (2013-03-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-179",
+          "detail_id": "179",
+          "title": "molecule form 179 (2013-03-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-180",
+          "detail_id": "180",
+          "title": "molecule form 180 (2013-03-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-181",
+          "detail_id": "181",
+          "title": "molecule form 181 (2013-03-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-182",
+          "detail_id": "182",
+          "title": "molecule form 182 (2013-03-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-183",
+          "detail_id": "183",
+          "title": "molecule form 183 (2013-03-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-184",
+          "detail_id": "184",
+          "title": "molecule form 184 (2013-03-16)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-185",
+          "detail_id": "185",
+          "title": "molecule form 185 (2013-03-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-186",
+          "detail_id": "186",
+          "title": "molecule form 186 (2013-03-17)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-187",
+          "detail_id": "187",
+          "title": "molecule form 187 (2013-03-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-188",
+          "detail_id": "188",
+          "title": "molecule form 188 (2013-03-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-189",
+          "detail_id": "189",
+          "title": "molecule form 189 (2013-03-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-190",
+          "detail_id": "190",
+          "title": "molecule form 190 (2013-04-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-191",
+          "detail_id": "191",
+          "title": "molecule form 191 (2013-04-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-192",
+          "detail_id": "192",
+          "title": "molecule form 192 (2013-04-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-193",
+          "detail_id": "193",
+          "title": "molecule form 193 (2013-04-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-194",
+          "detail_id": "194",
+          "title": "molecule form 194 (2013-04-02)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-195",
+          "detail_id": "195",
+          "title": "molecule form 195 (2013-04-04)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-196",
+          "detail_id": "196",
+          "title": "molecule form 196 (2013-04-06)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-197",
+          "detail_id": "197",
+          "title": "molecule form 197 (2013-04-12)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-198",
+          "detail_id": "198",
+          "title": "molecule form 198 (2013-04-12)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-199",
+          "detail_id": "199",
+          "title": "molecule form 199 (2013-04-12)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-200",
+          "detail_id": "200",
+          "title": "molecule form 200 (2013-04-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-201",
+          "detail_id": "201",
+          "title": "molecule form 201 (2013-04-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-202",
+          "detail_id": "202",
+          "title": "molecule form 202 (2013-04-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-203",
+          "detail_id": "203",
+          "title": "molecule form 203 (2013-04-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-204",
+          "detail_id": "204",
+          "title": "molecule form 204 (2013-04-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-205",
+          "detail_id": "205",
+          "title": "molecule form 205 (2013-04-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-206",
+          "detail_id": "206",
+          "title": "molecule form 206 (2013-04-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-207",
+          "detail_id": "207",
+          "title": "molecule form 207 (2013-04-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-208",
+          "detail_id": "208",
+          "title": "molecule form 208 (2013-04-30)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-209",
+          "detail_id": "209",
+          "title": "molecule form 209 (2013-05-03)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-210",
+          "detail_id": "210",
+          "title": "molecule form 210 (2013-05-03)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-211",
+          "detail_id": "211",
+          "title": "molecule form 211 (2013-05-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-212",
+          "detail_id": "212",
+          "title": "molecule form 212 (2013-05-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-213",
+          "detail_id": "213",
+          "title": "molecule form 213 (2013-05-09)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-214",
+          "detail_id": "214",
+          "title": "molecule form 214 (2013-05-09)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-215",
+          "detail_id": "215",
+          "title": "molecule form 215 (2013-05-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-216",
+          "detail_id": "216",
+          "title": "molecule form 216 (2013-05-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-217",
+          "detail_id": "217",
+          "title": "molecule form 217 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-218",
+          "detail_id": "218",
+          "title": "molecule form 218 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-219",
+          "detail_id": "219",
+          "title": "molecule form 219 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-220",
+          "detail_id": "220",
+          "title": "molecule form 220 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-221",
+          "detail_id": "221",
+          "title": "molecule form 221 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-222",
+          "detail_id": "222",
+          "title": "molecule form 222 (2013-05-11)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-223",
+          "detail_id": "223",
+          "title": "molecule form 223 (2013-05-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-224",
+          "detail_id": "224",
+          "title": "molecule form 224 (2013-05-15)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-225",
+          "detail_id": "225",
+          "title": "molecule form 225 (2013-06-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-226",
+          "detail_id": "226",
+          "title": "molecule form 226 (2013-06-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-227",
+          "detail_id": "227",
+          "title": "molecule form 227 (2013-06-07)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-228",
+          "detail_id": "228",
+          "title": "molecule form 228 (2013-06-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-229",
+          "detail_id": "229",
+          "title": "molecule form 229 (2013-06-10)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-230",
+          "detail_id": "230",
+          "title": "molecule form 230 (2013-06-12)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-231",
+          "detail_id": "231",
+          "title": "molecule form 231 (2013-06-20)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-232",
+          "detail_id": "232",
+          "title": "molecule form 232 (2013-06-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-233",
+          "detail_id": "233",
+          "title": "molecule form 233 (2013-06-28)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-234",
+          "detail_id": "234",
+          "title": "molecule form 234 (2013-07-22)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-235",
+          "detail_id": "235",
+          "title": "molecule form 235 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-236",
+          "detail_id": "236",
+          "title": "molecule form 236 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-237",
+          "detail_id": "237",
+          "title": "molecule form 237 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-238",
+          "detail_id": "238",
+          "title": "molecule form 238 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-239",
+          "detail_id": "239",
+          "title": "molecule form 239 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-240",
+          "detail_id": "240",
+          "title": "molecule form 240 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-241",
+          "detail_id": "241",
+          "title": "molecule form 241 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-242",
+          "detail_id": "242",
+          "title": "molecule form 242 (2013-07-23)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-243",
+          "detail_id": "243",
+          "title": "molecule form 243 (2013-07-26)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-244",
+          "detail_id": "244",
+          "title": "molecule form 244 (2013-07-29)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-245",
+          "detail_id": "245",
+          "title": "molecule form 245 (2013-08-01)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-246",
+          "detail_id": "246",
+          "title": "molecule form 246 (2013-08-01)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-247",
+          "detail_id": "247",
+          "title": "molecule form 247 (2013-08-03)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-248",
+          "detail_id": "248",
+          "title": "molecule form 248 (2013-08-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-249",
+          "detail_id": "249",
+          "title": "molecule form 249 (2013-08-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-250",
+          "detail_id": "250",
+          "title": "molecule form 250 (2013-08-05)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-251",
+          "detail_id": "251",
+          "title": "molecule form 251 (2013-08-08)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-252",
+          "detail_id": "252",
+          "title": "molecule form 252 (2013-08-16)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-253",
+          "detail_id": "253",
+          "title": "molecule form 253 (2013-08-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-254",
+          "detail_id": "254",
+          "title": "molecule form 254 (2013-08-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-255",
+          "detail_id": "255",
+          "title": "molecule form 255 (2013-08-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00459-256",
+          "detail_id": "256",
+          "title": "molecule form 256 (2013-08-18)",
+          "project_subfolder": "molecules",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "100",
+      "title": "molecule forms"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00954",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "042"
+    ],
+    "series_title": null,
+    "project_folder": "dotlineform (2021)",
+    "project_filename": "dotlineform surface (5).jpg",
+    "title": "dotlineform surface (5)",
+    "width_cm": 48,
+    "height_cm": 27,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5669,
+    "height_px": 3189,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "6123970e6cddfd817bb22b380513be1d5ba303f136d73a0e78fd14fb0807d35a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "042",
+      "title": "dotlineform (2021)"
+    }
+  ]
+}

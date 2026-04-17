@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00531-002",
+    "work_id": "00531",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "00531-002.jpg",
+    "title": "body detail",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3024,
+    "height_px": 4032
+  },
+  "record_hash": "3e40874508d97ef10dec4bd3cd90a8a5ea420ee829634a775cd80967185235e4",
+  "work_summary": {
+    "work_id": "00531",
+    "title": "body monoprint"
+  }
+}

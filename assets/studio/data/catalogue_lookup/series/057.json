@@ -1,0 +1,151 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "057",
+    "title": "folding structure",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2013,
+    "year_display": "2013-20",
+    "primary_work_id": "01161",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "87da3c903b13169d438d60648be88fa298c06eff94f05b6588e7e939910ae8f2",
+  "member_works": [
+    {
+      "work_id": "01161",
+      "title": "folding structure 1",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "78828f98b88a0383d58ed4eb6a88c883ef893cbe6003ce5760d432e57f7480bb"
+    },
+    {
+      "work_id": "01162",
+      "title": "folding structure 2",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "d4c383f2f6d42e208661ca68ac77268e1f600a530860baa66426393375be600c"
+    },
+    {
+      "work_id": "01163",
+      "title": "folding structure 3",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "97ff3f4593ad4c2e1ad79892a093d0760550b9c07667605618a72c072c7cfcca"
+    },
+    {
+      "work_id": "01164",
+      "title": "folding structure 4",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "a20fe1cbf958b8234196baf04c998ffd79f062ce3396595e08e78aed8fa9ef04"
+    },
+    {
+      "work_id": "01165",
+      "title": "folding structure 5",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "de16b13bfa16af86163ce67d2e138ad6354556e8bc5dc7c1f3293139ce0cb8c6"
+    },
+    {
+      "work_id": "01166",
+      "title": "folding structure 6",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "14af2185f658055a8d20a3c243cace050e540a94dff98f0c2b60986d5e298d69"
+    },
+    {
+      "work_id": "01167",
+      "title": "folding structure 7",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "5eed2981e77295dcf6362798c27bd2e5b36c8f5af85a89793fa8db10abfb8694"
+    },
+    {
+      "work_id": "01169",
+      "title": "folding structure 8",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "1f9029beea54ad1b0623a3260e8484b50724a6ec10460863c275113c366b87cb"
+    },
+    {
+      "work_id": "01170",
+      "title": "folding structure 9",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "2e628fafa8020ed4ae5b65700888dfecee21a9f5821939d805d565324a304f69"
+    },
+    {
+      "work_id": "01171",
+      "title": "folding structure - version 1",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "eab9bfd20660131c113e2edfa1703ff1c7d0d279f23fcf098e5b8968ec0585f1"
+    },
+    {
+      "work_id": "01172",
+      "title": "folding structure - version 2",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "edab53c8cb9bc3f8e983d06fea7f3a0d3a8d93bcd056411bfe462f467f72a676"
+    },
+    {
+      "work_id": "01173",
+      "title": "folding structure - version 2 (detail)",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "538978757971df677ba250884bc37ad44e8e77b86f03badf73a2a4ddd1f7ce3c"
+    },
+    {
+      "work_id": "01174",
+      "title": "folding structure - version 3",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "057"
+      ],
+      "record_hash": "2f49f412385c7ecf091e35dda7ab493cc7c1bd857680b26d385efa0937842a1f"
+    }
+  ]
+}

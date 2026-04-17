@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-043",
+    "work_id": "01720",
+    "detail_id": "043",
+    "project_subfolder": "symbols",
+    "project_filename": "mean quiet busy mischief.jpg",
+    "title": "mean quiet busy mischief",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "8aec0f1df8ba4f8ae2217e7c633761f60bfbfd7b7cb2ec6a6929f86dbb623034",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

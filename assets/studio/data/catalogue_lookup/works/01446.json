@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01446",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "097"
+    ],
+    "series_title": null,
+    "project_folder": "memory loss vessels",
+    "project_filename": "memory loss.jpg",
+    "title": "memory loss",
+    "width_cm": 73,
+    "height_cm": 73,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8622,
+    "height_px": 8622,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ba07a3ea9d4080951429d0bb57b9a9cec0e621d8cf8af7ef429216acdfa07351",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "097",
+      "title": "memory loss vessels"
+    }
+  ]
+}

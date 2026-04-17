@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00940",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (dots splash).jpg",
+    "title": "dot theory (dots splash)",
+    "width_cm": 75,
+    "height_cm": 50,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d9c1c6d45abe920d5248c59e7e52b1a371bc6af0068c934c442b13ce2e41e3d6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

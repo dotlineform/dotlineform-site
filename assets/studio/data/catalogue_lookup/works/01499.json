@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01499",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "083"
+    ],
+    "series_title": null,
+    "project_folder": "k particles",
+    "project_filename": "k particle.jpg",
+    "title": "k particle",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f9135ea22cbbf96f798196371379b9a726591dbddb76658820b9f72d47653cc0",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "083",
+      "title": "k particles"
+    }
+  ]
+}

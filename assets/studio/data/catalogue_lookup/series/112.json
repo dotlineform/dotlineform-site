@@ -1,0 +1,241 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "112",
+    "title": "petri",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2004,
+    "year_display": "2004",
+    "primary_work_id": "01501",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "57de8bcca14d138332d1f99755480dbad5e59ab5ddf7740a2aed3e3cca72c77d",
+  "member_works": [
+    {
+      "work_id": "01501",
+      "title": "petri 1",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "e1499142244bca6565159e28df45f32df798bdecf3994158c31cf8f209b71a4d"
+    },
+    {
+      "work_id": "01502",
+      "title": "petri 2",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "c850d49b3cb4fc66bb823dce5ac5fb18f17c800a8a94edb7c5b0395b34b24121"
+    },
+    {
+      "work_id": "01503",
+      "title": "petri 3",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "5b6fa0c15d7528db63d7a54f91955b5ecfa7134a7c425bc928fd89f090c6fa68"
+    },
+    {
+      "work_id": "01504",
+      "title": "petri 4",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "08aba48ebed8938c9a18e60934e39f512813f9765bd363f531feac24c74b5028"
+    },
+    {
+      "work_id": "01505",
+      "title": "petri 5",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "5a925dc14a1336f736ea7948164786eb482fc31beb49c4b3ca6f8101c6b00713"
+    },
+    {
+      "work_id": "01506",
+      "title": "petri 6",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "b505efc69e2bfe5b7f8f2734621de2c5d946e3101e1d20540724e53804a65cf8"
+    },
+    {
+      "work_id": "01507",
+      "title": "petri 7",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "dff5dd6ef6f900f187640201f10ec91b23d1a7d46f2c9a71daf71aca4663ffcc"
+    },
+    {
+      "work_id": "01508",
+      "title": "petri 8",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "39d50e5b07bcd0e4c68bb83081c1a6b6e735e6787953b07c2e23aa180a37a194"
+    },
+    {
+      "work_id": "01509",
+      "title": "petri 9",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "840fa606242f7edf53ff08434f991adcbbd6eb2e3cf8961942c03b03a3cd6578"
+    },
+    {
+      "work_id": "01510",
+      "title": "petri 10",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "ec05ec070cc55562e90a93b0fa2ee71c913eadcea3d44d4df6bd73f874b8cb5a"
+    },
+    {
+      "work_id": "01511",
+      "title": "petri 11",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "3532078c4ce37b7af4e859929d1f4d454d3fe5249da8babc01ad6bc362253892"
+    },
+    {
+      "work_id": "01512",
+      "title": "petri 12",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "5eff87c28238472bed4b049bdb4ce0bcc38fce9585e235617406f104fd75ba5e"
+    },
+    {
+      "work_id": "01513",
+      "title": "petri 13",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "7db276235330abc423d4a30588dd18dfd725a1fe50b57a74295e878a58e4aedf"
+    },
+    {
+      "work_id": "01514",
+      "title": "petri 14",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "4bb810714c02d2c960aa8ec67c5423d82054d441c87503a8abc0184f8095923b"
+    },
+    {
+      "work_id": "01515",
+      "title": "petri 15",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "ee39fd1b74b38ffee66aa9605a28845ff29e74a497a8ea3e0ce445ec8cae2f43"
+    },
+    {
+      "work_id": "01516",
+      "title": "petri 16",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "fc72287ef2fea1aedacf93e162ea22e3f325389721a925a1bcc3531ff89283e8"
+    },
+    {
+      "work_id": "01517",
+      "title": "petri 17",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "ee3d58f8b37c2c626d08f87bb1e52d719bbdbebc15a1add67105c913ec609c89"
+    },
+    {
+      "work_id": "01518",
+      "title": "petri 18",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "7971079913f75ed187a1f5034f649beab5faac8ef54f229c0104a28aeda75296"
+    },
+    {
+      "work_id": "01519",
+      "title": "petri 19",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "cb27d7a2fcecf4cbaac59e739cbee97b7ea6a679c236798c4f254a52e51a0f2f"
+    },
+    {
+      "work_id": "01520",
+      "title": "petri 20",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "3ed9a57f8facab8e692e022236ac86e1a3f329936aeb0b22e6f0f4c3cd6cdced"
+    },
+    {
+      "work_id": "01521",
+      "title": "petri 21",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "7de9a6df9dee7acf99a0458ae4b266e0f3874abafa6e0eed77830eb8062d9e16"
+    },
+    {
+      "work_id": "01522",
+      "title": "petri 22",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "112"
+      ],
+      "record_hash": "1c9ab52f9eba3a8ebae7db3d8dab1ad034067b183635e6b01db0a1d3ab1c35eb"
+    }
+  ]
+}

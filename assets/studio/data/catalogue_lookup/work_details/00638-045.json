@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-045",
+    "work_id": "00638",
+    "detail_id": "045",
+    "project_subfolder": "composites",
+    "project_filename": "composite - grow.jpg",
+    "title": "composite - grow",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "36d764737b5e8b760300119947fc127e9f778f2951a6289ec37bfd573266b7b3",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

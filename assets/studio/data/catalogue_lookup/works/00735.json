@@ -1,0 +1,495 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00735",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "010"
+    ],
+    "series_title": null,
+    "project_folder": "a theory of happiness.._",
+    "project_filename": "a theory of happiness is a theory of everything (64).jpg",
+    "title": "a theory of happiness is a theory of everything (64°)",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "7cb8e67698d5e60be9a287cceb58c40c38ab427aab2f6b12f2248ea277f07dda",
+  "detail_sections": [
+    {
+      "project_subfolder": "64 degrees",
+      "count": 64,
+      "details": [
+        {
+          "detail_uid": "00735-001",
+          "detail_id": "001",
+          "title": "happiness 1°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-002",
+          "detail_id": "002",
+          "title": "happiness 2°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-003",
+          "detail_id": "003",
+          "title": "happiness 3°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-004",
+          "detail_id": "004",
+          "title": "happiness 4°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-005",
+          "detail_id": "005",
+          "title": "happiness 5°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-006",
+          "detail_id": "006",
+          "title": "happiness 6°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-007",
+          "detail_id": "007",
+          "title": "happiness 7°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-008",
+          "detail_id": "008",
+          "title": "happiness 8°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-009",
+          "detail_id": "009",
+          "title": "happiness 9°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-010",
+          "detail_id": "010",
+          "title": "happiness 10°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-011",
+          "detail_id": "011",
+          "title": "happiness 11°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-012",
+          "detail_id": "012",
+          "title": "happiness 12°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-013",
+          "detail_id": "013",
+          "title": "happiness 13°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-014",
+          "detail_id": "014",
+          "title": "happiness 14°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-015",
+          "detail_id": "015",
+          "title": "happiness 15°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-016",
+          "detail_id": "016",
+          "title": "happiness 16°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-017",
+          "detail_id": "017",
+          "title": "happiness 17°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-018",
+          "detail_id": "018",
+          "title": "happiness 18°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-019",
+          "detail_id": "019",
+          "title": "happiness 19°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-020",
+          "detail_id": "020",
+          "title": "happiness 20°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-021",
+          "detail_id": "021",
+          "title": "happiness 21°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-022",
+          "detail_id": "022",
+          "title": "happiness 22°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-023",
+          "detail_id": "023",
+          "title": "happiness 23°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-024",
+          "detail_id": "024",
+          "title": "happiness 24°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-025",
+          "detail_id": "025",
+          "title": "happiness 25°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-026",
+          "detail_id": "026",
+          "title": "happiness 26°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-027",
+          "detail_id": "027",
+          "title": "happiness 27°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-028",
+          "detail_id": "028",
+          "title": "happiness 28°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-029",
+          "detail_id": "029",
+          "title": "happiness 29°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-030",
+          "detail_id": "030",
+          "title": "happiness 30°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-031",
+          "detail_id": "031",
+          "title": "happiness 31°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-032",
+          "detail_id": "032",
+          "title": "happiness 32°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-033",
+          "detail_id": "033",
+          "title": "happiness 33°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-034",
+          "detail_id": "034",
+          "title": "happiness 34°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-035",
+          "detail_id": "035",
+          "title": "happiness 35°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-036",
+          "detail_id": "036",
+          "title": "happiness 36°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-037",
+          "detail_id": "037",
+          "title": "happiness 37°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-038",
+          "detail_id": "038",
+          "title": "happiness 38°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-039",
+          "detail_id": "039",
+          "title": "happiness 39°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-040",
+          "detail_id": "040",
+          "title": "happiness 40°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-041",
+          "detail_id": "041",
+          "title": "happiness 41°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-042",
+          "detail_id": "042",
+          "title": "happiness 42°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-043",
+          "detail_id": "043",
+          "title": "happiness 43°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-044",
+          "detail_id": "044",
+          "title": "happiness 44°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-045",
+          "detail_id": "045",
+          "title": "happiness 45°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-046",
+          "detail_id": "046",
+          "title": "happiness 46°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-047",
+          "detail_id": "047",
+          "title": "happiness 47°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-048",
+          "detail_id": "048",
+          "title": "happiness 48°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-049",
+          "detail_id": "049",
+          "title": "happiness 49°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-050",
+          "detail_id": "050",
+          "title": "happiness 50°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-051",
+          "detail_id": "051",
+          "title": "happiness 51°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-052",
+          "detail_id": "052",
+          "title": "happiness 52°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-053",
+          "detail_id": "053",
+          "title": "happiness 53°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-054",
+          "detail_id": "054",
+          "title": "happiness 54°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-055",
+          "detail_id": "055",
+          "title": "happiness 55°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-056",
+          "detail_id": "056",
+          "title": "happiness 56°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-057",
+          "detail_id": "057",
+          "title": "happiness 57°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-058",
+          "detail_id": "058",
+          "title": "happiness 58°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-059",
+          "detail_id": "059",
+          "title": "happiness 59°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-060",
+          "detail_id": "060",
+          "title": "happiness 60°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-061",
+          "detail_id": "061",
+          "title": "happiness 61°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-062",
+          "detail_id": "062",
+          "title": "happiness 62°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-063",
+          "detail_id": "063",
+          "title": "happiness 63°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00735-064",
+          "detail_id": "064",
+          "title": "happiness 64°",
+          "project_subfolder": "64 degrees",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "010",
+      "title": "a theory of happiness is a theory of everything"
+    }
+  ]
+}

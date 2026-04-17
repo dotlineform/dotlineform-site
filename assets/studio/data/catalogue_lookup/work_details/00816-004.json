@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00816-004",
+    "work_id": "00816",
+    "detail_id": "004",
+    "project_subfolder": "versions",
+    "project_filename": "colours kylie.4.jpg",
+    "title": "colours kylie.4",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "96a3644f4b763fa7cbee376e46e93904dfb5ae49053c60b76e184da7317d44c6",
+  "work_summary": {
+    "work_id": "00816",
+    "title": "colours kylie"
+  }
+}

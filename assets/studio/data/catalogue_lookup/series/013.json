@@ -1,0 +1,171 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "013",
+    "title": "an act of kindness",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2024,
+    "year_display": "2024",
+    "primary_work_id": "00748",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "4d209d9f127f8e78fa84604eeca1ddc03849365ecdae377fb0a37eace010ad36",
+  "member_works": [
+    {
+      "work_id": "00736",
+      "title": "an act of kindness [1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "1455b4461a9ac589ae983b9dd2ef22256a5c8894af3422aba20d3ac886c5514e"
+    },
+    {
+      "work_id": "00737",
+      "title": "an act of kindness [2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "575da9d29cf2db5dc1738fd88d41e8b8e4bd8b6e870d616e03e215816c18c982"
+    },
+    {
+      "work_id": "00738",
+      "title": "an act of kindness [3]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "c6168d067cd3a393713cbc313a2ea3e161b8bfbe9e66ad203cdd7ac39498a5ee"
+    },
+    {
+      "work_id": "00739",
+      "title": "an act of kindness [4]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "daf10c80132750cce2636d438c427593023da8eaa132ddb17479b1481e4e5fef"
+    },
+    {
+      "work_id": "00740",
+      "title": "an act of kindness [5]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "c021ddaf0bb178eaa6d79f0d7efb6463784458f4b68a7bf23f4f17a4c1ef1c9e"
+    },
+    {
+      "work_id": "00741",
+      "title": "a partial act of kindness [1.1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "f114d2d2b97f7acf5a35caced511b24d0a162d52ab27ca44550664646be71411"
+    },
+    {
+      "work_id": "00742",
+      "title": "a partial act of kindness [1.2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "47d3895e1a0bacc3dfe1fcbc91163e46622bcdf416f2dcf72115e31855a107c6"
+    },
+    {
+      "work_id": "00743",
+      "title": "a partial act of kindness [2.1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "221bfc008a699ec16b2007d65a189795aebc37a90e583f0bc9e950585d434584"
+    },
+    {
+      "work_id": "00744",
+      "title": "a partial act of kindness [2.2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "a6993811d1dc960b5ea24ec3d642ca7806f06b2e9329e52b62025a20e372f938"
+    },
+    {
+      "work_id": "00745",
+      "title": "a partial act of kindness [3.1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "cdc84238c5cbbbf414a1cf659c3626463f756f7166444b0bae8d5d4f8f7e91af"
+    },
+    {
+      "work_id": "00746",
+      "title": "a partial act of kindness [3.2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "994d1f835390c22f99f85056ffc8e2adeea054fc86f26036dc6c58ab99d2e066"
+    },
+    {
+      "work_id": "00747",
+      "title": "a partial act of kindness [4.1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "0826b15b4c23fc90fbbc264d2a66f11ef057458195a83e88e3308fd8b927dd75"
+    },
+    {
+      "work_id": "00748",
+      "title": "a partial act of kindness [4.2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "59fef5da158197457384ced9e648b306d756ca0eb6e92470fcf5848beaa077c7"
+    },
+    {
+      "work_id": "00749",
+      "title": "a partial act of kindness [5.1]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "16b2cd6ae600168db2027ff5346c02ba369cf614d3b0e6303da3def1766d2aa5"
+    },
+    {
+      "work_id": "00750",
+      "title": "a partial act of kindness [5.2]",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "013"
+      ],
+      "record_hash": "a8b37fffd8ecfe51315330676af62e27b89027b8c9c5ab277a794130dd9c1936"
+    }
+  ]
+}

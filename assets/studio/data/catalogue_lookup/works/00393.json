@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00393",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "059"
+    ],
+    "series_title": null,
+    "project_folder": "forest",
+    "project_filename": "model 500.jpg",
+    "title": "model 500",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2003,
+    "year_display": "2003",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": "4",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d988e97aeba39af11441580f0b94ed3784ed27df4f1ad16316edd430fa3b0bca",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "059",
+      "title": "forest"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00412",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "067"
+    ],
+    "series_title": null,
+    "project_folder": "found forms",
+    "project_filename": "found form (2025-07-15 II).jpg",
+    "title": "found form (2025-07-15 II)",
+    "width_cm": 30,
+    "height_cm": 40,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4e2d8c01089c2da025db138d4c3ee3462f640539e6d5d412e23959b7f1b4dc0d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "067",
+      "title": "found forms"
+    }
+  ]
+}

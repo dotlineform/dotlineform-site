@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00388",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "091"
+    ],
+    "series_title": null,
+    "project_folder": "lipseyes",
+    "project_filename": "lipseyes.jpg",
+    "title": "lipseyes",
+    "width_cm": 30.5,
+    "height_cm": 30.5,
+    "year": 2003,
+    "year_display": "2003",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": "4",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3602,
+    "height_px": 3602,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "624e22ebb7d0504d545e5e756bb4924adccc7c40cd382b3ce651ce2ac2045350",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "091",
+      "title": "lipseyes"
+    }
+  ]
+}

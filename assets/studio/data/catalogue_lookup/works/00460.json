@@ -1,0 +1,193 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00460",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "101"
+    ],
+    "series_title": null,
+    "project_folder": "molecules",
+    "project_filename": "molecules.jpg",
+    "title": "molecules",
+    "width_cm": 81.3,
+    "height_cm": 81.3,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 9000,
+    "height_px": 9000,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "8f347ef7d7a9ba77f9b0b00cd28d3706f8873dd424255d866073625da59eb388",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 16,
+      "details": [
+        {
+          "detail_uid": "00460-005",
+          "detail_id": "005",
+          "title": "molecules (detail 1)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-006",
+          "detail_id": "006",
+          "title": "molecules (detail 2)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-007",
+          "detail_id": "007",
+          "title": "molecules (detail 3)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-008",
+          "detail_id": "008",
+          "title": "molecules (detail 4)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-009",
+          "detail_id": "009",
+          "title": "molecules (detail 5)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-010",
+          "detail_id": "010",
+          "title": "molecules (detail 6)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-011",
+          "detail_id": "011",
+          "title": "molecules (detail 7)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-012",
+          "detail_id": "012",
+          "title": "molecules (detail 8)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-013",
+          "detail_id": "013",
+          "title": "molecules (detail 9)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-014",
+          "detail_id": "014",
+          "title": "molecules (detail 10)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-015",
+          "detail_id": "015",
+          "title": "molecules (detail 11)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-016",
+          "detail_id": "016",
+          "title": "molecules (detail 12)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-017",
+          "detail_id": "017",
+          "title": "molecules (detail 13)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-018",
+          "detail_id": "018",
+          "title": "molecules (detail 14)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-019",
+          "detail_id": "019",
+          "title": "molecules (detail 15)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-020",
+          "detail_id": "020",
+          "title": "molecules (detail 16)",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "versions",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00460-001",
+          "detail_id": "001",
+          "title": "molecules (positive)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-002",
+          "detail_id": "002",
+          "title": "molecules (negative)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-003",
+          "detail_id": "003",
+          "title": "molecules mist (positive)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00460-004",
+          "detail_id": "004",
+          "title": "molecules mist (negative)",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "101",
+      "title": "molecules"
+    }
+  ]
+}

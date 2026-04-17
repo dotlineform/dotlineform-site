@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00797",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "020"
+    ],
+    "series_title": null,
+    "project_folder": "body space (reclining state)",
+    "project_filename": "body space (reclining state) 6.jpg",
+    "title": "body space (reclining state) 6",
+    "width_cm": 20,
+    "height_cm": 20,
+    "year": 2019,
+    "year_display": "2019",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2362,
+    "height_px": 2362,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "08ee16dd1169121003c0d98961259dc5fc4a46461b2c9119dce2db744bb66b6f",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "020",
+      "title": "body space (reclining state)"
+    }
+  ]
+}

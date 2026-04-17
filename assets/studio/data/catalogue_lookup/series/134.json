@@ -1,0 +1,91 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "134",
+    "title": "through a glass clearly",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01768",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "8bf7842089de82fbabcae3222ee6705d0773d0fb8231879d601e0207d114b9d8",
+  "member_works": [
+    {
+      "work_id": "01763",
+      "title": "through a glass clearly (1)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "bc1ff55f47a16f7941cb868f4a385aa1c063b791db451f0e3f3b2aee3127fdc1"
+    },
+    {
+      "work_id": "01764",
+      "title": "through a glass clearly (2)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "15756a0ed3b69e3e8ddd5696a6dc0fae5d5a490d1756929bd34c90ec9702065b"
+    },
+    {
+      "work_id": "01765",
+      "title": "through a glass clearly (3)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "e07d9c69446cc383dc36849f0d9bcb55f072cc564ca454c878d16c48d1fd7f1f"
+    },
+    {
+      "work_id": "01766",
+      "title": "through a glass clearly (4)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "80d3ed3ebf4bca629194a47c0b85611e649154ac0a26691b351cd49a6b8c1492"
+    },
+    {
+      "work_id": "01767",
+      "title": "through a glass clearly (5)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "809dae82ac115617869736c5d94b1f7c0a98742a84a0a720143303eaeb378887"
+    },
+    {
+      "work_id": "01768",
+      "title": "through a glass clearly (6)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "5984a9c83c783531d6eff2a04d4444f819f45f4c662897256d4716770dd74e9b"
+    },
+    {
+      "work_id": "01769",
+      "title": "through a glass clearly (7)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "134"
+      ],
+      "record_hash": "471764b459a45e12883091d26b99be87a216e6e07bb6247ccfc54b399f880ff0"
+    }
+  ]
+}

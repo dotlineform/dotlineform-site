@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-041",
+    "work_id": "00638",
+    "detail_id": "041",
+    "project_subfolder": "composites",
+    "project_filename": "composite - gesture.jpg",
+    "title": "composite - gesture",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "1f22b5cd0c358a4edcaa0d1934e0ffee5c73c2ae6a41be5ec2ca576120eef7b6",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

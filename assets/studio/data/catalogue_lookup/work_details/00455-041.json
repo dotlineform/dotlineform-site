@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00455-041",
+    "work_id": "00455",
+    "detail_id": "041",
+    "project_subfolder": "work in progress",
+    "project_filename": "2023-10-09 22꞉33.jpg",
+    "title": "2023-10-09 22꞉33",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "record_hash": "d879574104769d54c63485d945d5336380fa8c95c31d51a94afa37ee587b74df",
+  "work_summary": {
+    "work_id": "00455",
+    "title": "dotlineform"
+  }
+}

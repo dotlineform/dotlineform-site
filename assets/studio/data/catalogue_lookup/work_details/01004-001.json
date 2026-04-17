@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01004-001",
+    "work_id": "01004",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "dots (equations) [detail 1].jpg",
+    "title": "dots (equations) [detail 1]",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "e79a95d2d5316942dbc7ccb4b349bd13dac630c8548763aca254f21e8f95de6d",
+  "work_summary": {
+    "work_id": "01004",
+    "title": "dots (equations)"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "103",
+    "title": "mother and child",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1995,
+    "year_display": "1995",
+    "primary_work_id": "01447",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "7293dc92a2d2c6951d2dd3a1dc29eb88c1ddee119444bd27938b58a1274aca11",
+  "member_works": [
+    {
+      "work_id": "00214",
+      "title": "mother and child",
+      "year_display": "c. 1995?",
+      "status": "published",
+      "series_ids": [
+        "103",
+        "026"
+      ],
+      "record_hash": "7d466045dcf327e4e10931d9bb449bdd1e8c727358c557ebe0edabc4dd867e08"
+    },
+    {
+      "work_id": "01447",
+      "title": "mother and child",
+      "year_display": "1995",
+      "status": "published",
+      "series_ids": [
+        "103"
+      ],
+      "record_hash": "4e24e9295551b4f854587209b34f2b9fb6e237dd1d773d10f956ec231841990b"
+    }
+  ]
+}

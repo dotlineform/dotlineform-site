@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-041",
+    "work_id": "01720",
+    "detail_id": "041",
+    "project_subfolder": "symbols",
+    "project_filename": "lazy.jpg",
+    "title": "lazy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "bba4ad1d36ae8a80ee7d5963ad01d1d675bf4f0fcd32e373e40c1aea400e8eeb",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

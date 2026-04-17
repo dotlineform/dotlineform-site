@@ -1,0 +1,371 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "042",
+    "title": "dotlineform (2021)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2021,
+    "year_display": "2021",
+    "primary_work_id": "00949",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "b0e90f74ecaf4950779709cebb0129c5abbc2368b95aaaa3f78c13e135751681",
+  "member_works": [
+    {
+      "work_id": "00949",
+      "title": "dotlineform",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "2065a0172c32d53960d4037d37ef1e665c4c70f45f17113eee8452066678f491"
+    },
+    {
+      "work_id": "00950",
+      "title": "dotlineform surface (1)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "18199d791177da9d541335e7249d392b205fd826355b9efc0fedd44f41ddb1e8"
+    },
+    {
+      "work_id": "00951",
+      "title": "dotlineform surface (2)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "472eca7dcfb3ae3c8e4156985f0813dfbbdbfcd5151f3025f4e907ba4fcb7b09"
+    },
+    {
+      "work_id": "00952",
+      "title": "dotlineform surface (3)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "df5f8dfe1d8931725157e123de9f4c51239a80683cf9fbe1ce294840b8b2accd"
+    },
+    {
+      "work_id": "00953",
+      "title": "dotlineform surface (4)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "e38acd9ccc9ebd10ab983020f6996709e28cf3a2704763d4f79d662eb68a02fd"
+    },
+    {
+      "work_id": "00954",
+      "title": "dotlineform surface (5)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "6123970e6cddfd817bb22b380513be1d5ba303f136d73a0e78fd14fb0807d35a"
+    },
+    {
+      "work_id": "00955",
+      "title": "dotlineform surface (6)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "9fb9960f0aad4e7243904cbe3cb245e6cb15f76e2e231f86c9af7e30e4efb17a"
+    },
+    {
+      "work_id": "00956",
+      "title": "dotlineform surface (7)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "95f3ab8cf41b199094f6da45a65be678237726ce3ddce55f520446d2a021938c"
+    },
+    {
+      "work_id": "00957",
+      "title": "dotlineform surface (8)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "f9cb04f590ebd74bd1ba7c1fd6a41a43d85f2ac4338939033d9de8b8deba39d8"
+    },
+    {
+      "work_id": "00958",
+      "title": "dotlineform surface (9)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "6dc3b07ece83284cbdf80d6d1718d364497e59aefb4f264e7024eed2a695a0b3"
+    },
+    {
+      "work_id": "00959",
+      "title": "dotlineform surface (10)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "bc6068596b2a547246f8c99b3c6b12a313e46787cc37ac5f643c8aa6fcb7b094"
+    },
+    {
+      "work_id": "00960",
+      "title": "dotlineform surface (11)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "8f27732b5b9599d0a4c728709c8469daf7145b6e000efc3cb0d3300a6ed4a06a"
+    },
+    {
+      "work_id": "00961",
+      "title": "dotlineform surface (12)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "e9b4dd020aef0327f4f1bb2ba7436692b5e33678b2eef9350479a314a8e04c38"
+    },
+    {
+      "work_id": "00962",
+      "title": "dotlineform surface (13)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "2794ee5472357bff072aa04d27e40ec0453102ee0370c56dfafd257acaab2fe1"
+    },
+    {
+      "work_id": "00963",
+      "title": "dotlineform surface (14)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "74bb2dae61d008fc98e33402a00d6e784bb44e236388b5c61631e07ba44aec70"
+    },
+    {
+      "work_id": "00964",
+      "title": "dotlineform surface (15)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "a59fd1d46dbe66ccee64d76be8ef39e49125f2b0ea3b367c30b455ef181b51e5"
+    },
+    {
+      "work_id": "00965",
+      "title": "dotlineform surface (16)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "4f74ee2f154f715801e7a6a884bc80785d4117673832f6fb2dccd95765cb3dca"
+    },
+    {
+      "work_id": "00966",
+      "title": "dotlineform surface (17)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "0c4a1eb7c83fda9d3643cb7e085565916f01d848b8406c9bacfeb42f523192a6"
+    },
+    {
+      "work_id": "00967",
+      "title": "dotlineform surface (18)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "274bc5b06d61874250788343483a69d4e1882214646fc6cdb1f8b829aa4dd193"
+    },
+    {
+      "work_id": "00968",
+      "title": "dotlineform surface (19)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "41f67cf45e554e1789e19e83b593ab955db37a7aa8528b5dbbaa7cc61088d4cf"
+    },
+    {
+      "work_id": "00969",
+      "title": "dotlineform surface (20)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "3bc4e8d472d0ace84664cd6dab096cf63bc3ceb86033d0579c7d1f9cb9e1e6ab"
+    },
+    {
+      "work_id": "00970",
+      "title": "dotlineform surface (21)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "e2eba24b58b761b3012e0615061eedbc07cbba46513ca5b2aecd7d4a46282a10"
+    },
+    {
+      "work_id": "00971",
+      "title": "dotlineform surface (22)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "aabf989c1ba7c136a25f4ee8850fffcd3f130992cacf0edccd56b962d0767855"
+    },
+    {
+      "work_id": "00972",
+      "title": "dotlineform surface (23)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "5ebdb2858152dd80c8951dc102ab954dfd1f295608bf3d65856df99c04c11cfc"
+    },
+    {
+      "work_id": "00973",
+      "title": "dotlineform surface (24)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "f5e0b3e268ab6f0ca811144223ef37a64d95dd244fb96d5bdad87db533de3311"
+    },
+    {
+      "work_id": "00974",
+      "title": "dotlineform surface (25)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "fd6addf96d35c5caa0e3cad07d500903812ef4e879d4b77928fa980c548fd795"
+    },
+    {
+      "work_id": "00975",
+      "title": "dotlineform surface (26)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "06a666a5f6be5c8b178afc120b10fda47469fc0d041696b98e008c5f20510f48"
+    },
+    {
+      "work_id": "00976",
+      "title": "dotlineform surface (27)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "d7534a67968fe9a86211d622d54fb88cb678b4de73bc467296fb59f451cb34b6"
+    },
+    {
+      "work_id": "00977",
+      "title": "dotlineform surface (28)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "5042cea2e2b8f9ef6a4978a510b3ff5a0b453a07de515c7b00cc780155336f34"
+    },
+    {
+      "work_id": "00978",
+      "title": "dotlineform surface (29)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "e50f15b1373f2ca6c2f7ea0c8231810320fdc0967fb08d00ed09d9da897e1641"
+    },
+    {
+      "work_id": "00979",
+      "title": "dotlineform surface (30)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "d2c684859febebc508c3ab8420ac2d70c46648c40ae78a50d0d4e463d77d8bde"
+    },
+    {
+      "work_id": "00980",
+      "title": "dotlineform surface (31)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "1817c35bf1731574cf393762489d7982fbe5b8bedfc20162dc0f90a8a8f484ed"
+    },
+    {
+      "work_id": "00981",
+      "title": "dotlineform surface (32)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "0d900f961801457226703261938ccb33edc6af749d12594f7de9dbc5f9dba4da"
+    },
+    {
+      "work_id": "00982",
+      "title": "dotlineform surface (33)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "f17181f053ab6337eb6bf44abad145f0197345904256e85e170d428dd6c9d891"
+    },
+    {
+      "work_id": "00983",
+      "title": "dotlineform surface (34)",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "042"
+      ],
+      "record_hash": "9062152e704c3fafcba484e569dff06ba98170208aebe9f5d9e33a903d960062"
+    }
+  ]
+}

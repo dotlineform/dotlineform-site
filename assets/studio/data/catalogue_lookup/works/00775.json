@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00775",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "016"
+    ],
+    "series_title": null,
+    "project_folder": "birds",
+    "project_filename": "birds [2].jpg",
+    "title": "birds [2]",
+    "width_cm": 100,
+    "height_cm": 56,
+    "year": 2020,
+    "year_display": "2020",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 11811,
+    "height_px": 6644,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4716e5817c68710b438abd3e8a5f1b8d2309dfe847a565a6c7cc2df9eb048aab",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "016",
+      "title": "birds"
+    }
+  ]
+}

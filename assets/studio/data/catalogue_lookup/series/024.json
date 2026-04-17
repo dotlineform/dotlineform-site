@@ -1,0 +1,231 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "024",
+    "title": "changed photos",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2022-23",
+    "primary_work_id": "01634",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "28cc7d43193b5d9c4d12b6f46032136c4db66041a206a3f4b34a1add5f34468e",
+  "member_works": [
+    {
+      "work_id": "01634",
+      "title": "changed photo 1",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "034569c031247957eb82ebb1c8c1fade26e5d8d9a6a1fe031e48f4ab318897af"
+    },
+    {
+      "work_id": "01635",
+      "title": "changed photo 2",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "46fae8ff72d7dc64c07de305fb89b3f84f5123c6a81daed2a0b914104ff4ae5e"
+    },
+    {
+      "work_id": "01636",
+      "title": "changed photo 3",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "a1bf9a6aa28db336a0c549434b0cee59918d3f68d2801f134b98f2b0b7f98449"
+    },
+    {
+      "work_id": "01637",
+      "title": "changed photo 4",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "42a8289751b3ed74d16f68dedb22c2e6d466ccc699b4dce1cad09c96b7ab4d16"
+    },
+    {
+      "work_id": "01638",
+      "title": "changed photo 5",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "40c61cc36175f161838efc6e2cd441b6253f68c8879baa23f52d5ccce47173c1"
+    },
+    {
+      "work_id": "01639",
+      "title": "changed photo 6",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "8d8c77217b13aa74c00e4667388d054174206398b9591532134f04d02ce403e2"
+    },
+    {
+      "work_id": "01640",
+      "title": "changed photo 7",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "3fefe257adfe66ed4b79a1bbca91728b304a6395c0015079ad6bdf0960521613"
+    },
+    {
+      "work_id": "01641",
+      "title": "changed photo 8",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "bee5ad18e1e1f9e606df22da46e3f8a9c38c798123f121dbe7068f5284be0518"
+    },
+    {
+      "work_id": "01642",
+      "title": "changed photo 9",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "9a96269e7337bfa8f26334f34611aa0fbb0c5c15be57d2f788cba139130ff3da"
+    },
+    {
+      "work_id": "01643",
+      "title": "changed photo 10",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "8446ff9ceb2b0c2f4d228cc0b9fbbffc91c85b8316161d1b7d3a267188af0672"
+    },
+    {
+      "work_id": "01644",
+      "title": "changed photo 11",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "9e1685671b49876886b76a25e91dab626dddf2a2dc1003ae94405bb872c5496e"
+    },
+    {
+      "work_id": "01645",
+      "title": "changed photo 12",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "3c099cfd8a97c858519878243324a2bdb283d9e2026ac37d9e0de2109d5b80ae"
+    },
+    {
+      "work_id": "01646",
+      "title": "changed photo 13",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "bdfc762de574c1024fe288c04495d81424bee2d3da82410057a260c34f2c50f3"
+    },
+    {
+      "work_id": "01647",
+      "title": "changed photo 14",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "bc9bf6d4542f140c27bf40a3ee4b6ee28d7bd483b40953acf9342964f4e7d3a4"
+    },
+    {
+      "work_id": "01648",
+      "title": "changed photo 15",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "388b9d11a991600e7e6cbc7be8fcc3c6dc23e189f625a499a6e3cf8cc7eebd5e"
+    },
+    {
+      "work_id": "01649",
+      "title": "changed photo 16",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "c46e18e600e08a1c4dc41d2f63869edcc8f7e379ba7dde70c69798d6f7c4a93e"
+    },
+    {
+      "work_id": "01650",
+      "title": "changed photo 17",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "2079ec76e830d162a37d15c0a215af52decba0abe927180817e73edfe8f4bd50"
+    },
+    {
+      "work_id": "01651",
+      "title": "changed photo 18",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "45d8cb3cd1a23f308c49060e1ee11e208f7eb3d01ee59d2463f6a94968f50622"
+    },
+    {
+      "work_id": "01652",
+      "title": "changed photo 19",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "44c11c5cf6835d05e97b29d1fcbe3231da762247689de5780aa9de7ad6425eae"
+    },
+    {
+      "work_id": "01653",
+      "title": "changed photo 20",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "28218944c16fc2a46c3c03c2a68da344df652f18c538abe6bca7ca58426cd52c"
+    },
+    {
+      "work_id": "01654",
+      "title": "changed photo 21",
+      "year_display": "2022-23",
+      "status": "published",
+      "series_ids": [
+        "024"
+      ],
+      "record_hash": "723b05c2747220134675cdb1a582fe25b61d9417add16af4639f6223a48142bf"
+    }
+  ]
+}

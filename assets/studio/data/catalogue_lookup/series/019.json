@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "019",
+    "title": "body space",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2007,
+    "year_display": "2007",
+    "primary_work_id": "00783",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "306cb7be87c5acdce068e2febcb355470edf4e12daeef16ef4d77421fc75e2fa",
+  "member_works": [
+    {
+      "work_id": "00783",
+      "title": "body space 1",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "ad9dd1bd379b08fb2847afc2c3d16590659e2796a209c24c86f53625d5b6d950"
+    },
+    {
+      "work_id": "00784",
+      "title": "body space 2",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "a6afb626ef99b2bb92d6aa13f42d2aed9a74813dd86d268dca06064f19eb08e8"
+    },
+    {
+      "work_id": "00785",
+      "title": "body space 3",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "c38778fb4f646816053c7e40ac33eec36b94fd2a38559a6f6201d9737c76d5cc"
+    },
+    {
+      "work_id": "00786",
+      "title": "body space 4",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "41267938a0c569f4db972b8b444dd77097a8092e53b29b34d52ec16da194972a"
+    },
+    {
+      "work_id": "00787",
+      "title": "body space 5",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "f371969531039c3083c1ced738c60d420af16335494d36551337775a4cc1816a"
+    },
+    {
+      "work_id": "00788",
+      "title": "body space (boundary condition 1)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "e7db5f00154f3d5a022f3535f875e6218fb9215dd88c8386cf5a2546d1317ee5"
+    },
+    {
+      "work_id": "00789",
+      "title": "body space (boundary condition 2)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "90daae0906296553e460f8a4fe51ee679fb1119e003ac8a1803750078ff7ae7f"
+    },
+    {
+      "work_id": "00790",
+      "title": "body space (empty cell)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "89bacf57d1353c756cee35af235aac18dc8dc06705e1afbcb4807f9fe957bb8f"
+    },
+    {
+      "work_id": "00791",
+      "title": "body space (joined cells)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "019"
+      ],
+      "record_hash": "2795128093320efb7ad465fe2402323d04ff487e36e0ddf2ad21b3ef58f0c2a4"
+    }
+  ]
+}

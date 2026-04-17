@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01047-002",
+    "work_id": "01047",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "field I - detail 2.jpeg",
+    "title": "field I - detail 2",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 2000,
+    "height_px": 1125
+  },
+  "record_hash": "14ed2f2c13df9ce022c13bac2b256310ac0bc2f9f97fc52ada90863d26baf12d",
+  "work_summary": {
+    "work_id": "01047",
+    "title": "field I"
+  }
+}

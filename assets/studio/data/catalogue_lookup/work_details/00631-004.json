@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00631-004",
+    "work_id": "00631",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "qrnt form (2015-06-06) detail 3.jpg",
+    "title": "qrnt form (2015-06-06) detail 3",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "7ab152e54dfcdbeac1a5150e1ac7b9cc42013f188a02361fd47b202460702562",
+  "work_summary": {
+    "work_id": "00631",
+    "title": "quantum random number theory (form)"
+  }
+}

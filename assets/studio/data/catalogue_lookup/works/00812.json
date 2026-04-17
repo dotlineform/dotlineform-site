@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00812",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "025"
+    ],
+    "series_title": null,
+    "project_folder": "closeness",
+    "project_filename": "closer.jpg",
+    "title": "closer",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "549968e6c91d8cfc4ddc8811a615b62d7724f5b81fae5560f0f9c7bf250ade4a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "025",
+      "title": "closeness"
+    }
+  ]
+}

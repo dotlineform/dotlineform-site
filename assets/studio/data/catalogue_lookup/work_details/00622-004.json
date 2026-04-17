@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00622-004",
+    "work_id": "00622",
+    "detail_id": "004",
+    "project_subfolder": "derivation",
+    "project_filename": "k crystals bits - screenshot.jpg",
+    "title": "k crystals bits - screenshot",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 5802,
+    "height_px": 4148
+  },
+  "record_hash": "97f646c5a2df3f0dcf1ba49b6991baf9d93710b979eeab8f73e9c39a220d4424",
+  "work_summary": {
+    "work_id": "00622",
+    "title": "k crystals"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-030",
+    "work_id": "01199",
+    "detail_id": "030",
+    "project_subfolder": "particles",
+    "project_filename": "particle (particle theory).jpg",
+    "title": "particle (particle theory)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "cbb621190eab34e626d5561700a324d8d9fa8ad59aaff25271fb996a69cb0618",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

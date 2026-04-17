@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00175",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "all chemical 2.jpg",
+    "title": "all chemical 2",
+    "width_cm": 29.7,
+    "height_cm": 21,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "mixed media",
+    "medium_caption": "cigarette fragments mounted on paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 2362,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "97d7d901af4f435eb586c21b808f2a9ffb47f4d47001ed5c7b36dcfeb4f69b72",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

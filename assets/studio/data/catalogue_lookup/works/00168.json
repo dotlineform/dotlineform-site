@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00168",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "hand life 2.jpg",
+    "title": "hand life 2",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1989,
+    "year_display": "1989",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3504,
+    "height_px": 3918,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f2aa7d2fa4dbfce8f0724419568bb7b765ec2e8efee189841684cf10e1e980e8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00456",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "044"
+    ],
+    "series_title": null,
+    "project_folder": "dots",
+    "project_filename": "dots.jpg",
+    "title": "dots",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a11d2b2e78047c13d8c5ab5182dfaaa64b4116897d415d49c3d195cd930ebeb7",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00456-001",
+          "detail_id": "001",
+          "title": "dots [detail 1]",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00456-002",
+          "detail_id": "002",
+          "title": "dots [detail 2]",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00456-003",
+          "detail_id": "003",
+          "title": "dots [detail 3]",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00456-004",
+          "detail_id": "004",
+          "title": "dots [detail 4]",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00456-005",
+          "detail_id": "005",
+          "title": "dots [detail 5]",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "044",
+      "title": "dots"
+    }
+  ]
+}

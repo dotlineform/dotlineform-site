@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01054",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "052"
+    ],
+    "series_title": null,
+    "project_folder": "flowers",
+    "project_filename": "flowers 3.jpg",
+    "title": "flowers 3.jpg",
+    "width_cm": 120,
+    "height_cm": 50,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 14173,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0056587280690be48e43c30c2f8d107dc4b621a37c7983d31b09443d39411c4a",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "01054-001",
+          "detail_id": "001",
+          "title": "flowers 3 - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01054-002",
+          "detail_id": "002",
+          "title": "flowers 3 - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01054-003",
+          "detail_id": "003",
+          "title": "flowers 3 - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "052",
+      "title": "flowers"
+    }
+  ]
+}

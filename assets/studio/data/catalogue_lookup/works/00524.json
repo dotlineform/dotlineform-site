@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00524",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "119"
+    ],
+    "series_title": null,
+    "project_folder": "r",
+    "project_filename": "r grid.jpg",
+    "title": "r grid",
+    "width_cm": 42,
+    "height_cm": 34,
+    "year": 2001,
+    "year_display": "2001",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 4016,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "319f539e9f80b7a3b275f704eb3196e3c8f5346df507eb58dbab4f02c05e2f5d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "119",
+      "title": "r"
+    }
+  ]
+}

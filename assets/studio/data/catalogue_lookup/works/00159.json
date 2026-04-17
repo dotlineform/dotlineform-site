@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00159",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "Michelle Pfeiffer.jpg",
+    "title": "Michelle Pfeiffer",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "photograph",
+    "medium_caption": "colour photographs mounted in A4 booklet",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4038,
+    "height_px": 5712,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "13665c7f0751bbded705b80f608a6eec84668832012440cd8b56ea44c3e34b66",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 2,
+      "details": [
+        {
+          "detail_uid": "00159-001",
+          "detail_id": "001",
+          "title": "Michelle Pfeiffer - page 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00159-002",
+          "detail_id": "002",
+          "title": "Michelle Pfeiffer - pages 2-3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

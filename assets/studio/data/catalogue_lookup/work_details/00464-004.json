@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00464-004",
+    "work_id": "00464",
+    "detail_id": "004",
+    "project_subfolder": "moments",
+    "project_filename": "3 moments.jpg",
+    "title": "3 moments",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 4000,
+    "height_px": 4000
+  },
+  "record_hash": "9eaa482055826e2687fc1b6ecf3516bdf5b1f93495a911cdf9c67ae8834b9ce3",
+  "work_summary": {
+    "work_id": "00464",
+    "title": "forest memories 1-48"
+  }
+}

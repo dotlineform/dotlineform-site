@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00734-002",
+    "work_id": "00734",
+    "detail_id": "002",
+    "project_subfolder": "layers",
+    "project_filename": "chemicals.jpg",
+    "title": "chemicals",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "record_hash": "ee024ef367665c2693fb91186f49e997ba60776923c8192dcbe9cc758e0bc4d3",
+  "work_summary": {
+    "work_id": "00734",
+    "title": "a theory of happiness is a theory of everything"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01095",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "055"
+    ],
+    "series_title": null,
+    "project_folder": "fog",
+    "project_filename": "fog 25.jpg",
+    "title": "fog 25",
+    "width_cm": 60,
+    "height_cm": 45,
+    "year": 2014,
+    "year_display": "2014",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 5315,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2bd6c20b7a0cb76f41818d30f668af4139dbe244cff712ef68e121ce17ba50b2",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "055",
+      "title": "fog"
+    }
+  ]
+}

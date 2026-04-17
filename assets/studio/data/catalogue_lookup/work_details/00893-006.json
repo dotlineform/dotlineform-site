@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00893-006",
+    "work_id": "00893",
+    "detail_id": "006",
+    "project_subfolder": "versions (2022)",
+    "project_filename": "doll moiré (version 4.2).jpg",
+    "title": "doll moiré (version 4.2)",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "3ec84acc1681b812ef0fc5f38023863dabf2eda37456e9d0cafbb990b2e08be5",
+  "work_summary": {
+    "work_id": "00893",
+    "title": "doll moiré"
+  }
+}

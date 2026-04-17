@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01442",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "096"
+    ],
+    "series_title": null,
+    "project_folder": "memory loss hope",
+    "project_filename": "memory loss hope (set theory).jpg",
+    "title": "memory loss hope (set theory)",
+    "width_cm": 32,
+    "height_cm": 32,
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3780,
+    "height_px": 3780,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ebd7bc771b0a71620c4c54dc6713455a89d791d8029351e982a78948f2970d8e",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "096",
+      "title": "memory loss hope"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00517-003",
+    "work_id": "00517",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "landscape 2 - detail 3.jpg",
+    "title": "landscape 2 - detail 3",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 2362,
+    "height_px": 2362
+  },
+  "record_hash": "e8cd08ee62b9a266f121bc3d911a547c3a8e1364ebe57be874175998fdb4f002",
+  "work_summary": {
+    "work_id": "00517",
+    "title": "landscape 2"
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01880",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "138"
+    ],
+    "series_title": null,
+    "project_folder": "untitled composites",
+    "project_filename": "untitled composite 6.jpg",
+    "title": "untitled composite 6",
+    "width_cm": 70,
+    "height_cm": 70,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8267,
+    "height_px": 8268,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0edb6d96c66cd96dbe6c34dd5148b3f7fac6d9a8b22898c351094ed56750bd17",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "01880-001",
+          "detail_id": "001",
+          "title": "untitled composite 6 - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01880-002",
+          "detail_id": "002",
+          "title": "untitled composite 6 - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01880-003",
+          "detail_id": "003",
+          "title": "untitled composite 6 - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01880-004",
+          "detail_id": "004",
+          "title": "untitled composite 6 - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "138",
+      "title": "untitled composites"
+    }
+  ]
+}

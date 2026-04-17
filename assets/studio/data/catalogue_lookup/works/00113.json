@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00113",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "gesture in grey 1.jpg",
+    "title": "gesture in grey 1",
+    "width_cm": 17,
+    "height_cm": 12.7,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4129,
+    "height_px": 3071,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0997faf174f841003960dd5f3f7789b64abf4fdb55cc2a43966af2e992c4b6fc",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

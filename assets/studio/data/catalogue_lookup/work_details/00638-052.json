@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-052",
+    "work_id": "00638",
+    "detail_id": "052",
+    "project_subfolder": "composites",
+    "project_filename": "composite - ruin.jpg",
+    "title": "composite - ruin",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "d92ff479f3823ce5699a0b1871ca73b45147d4b61c9de296bb7b573af133c6a8",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

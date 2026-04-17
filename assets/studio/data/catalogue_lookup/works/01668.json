@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01668",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "123"
+    ],
+    "series_title": null,
+    "project_folder": "snow",
+    "project_filename": "snow (2018-03-03 15꞉36꞉13).jpg",
+    "title": "snow",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2018,
+    "year_display": "2018",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b48ee0b43e3f6c3a0c695b4726767c62457d241fd7c0ba348231dc3a0131aa0d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "123",
+      "title": "snow"
+    }
+  ]
+}

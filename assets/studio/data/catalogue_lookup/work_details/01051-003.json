@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01051-003",
+    "work_id": "01051",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "fireworks particles version - detail 3.jpg",
+    "title": "fireworks particles version - detail 3",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "0d57eca7277b4ce325404e669b5f60254958f9c9edd06acf4da7b792be6ca96a",
+  "work_summary": {
+    "work_id": "01051",
+    "title": "fireworks particles version"
+  }
+}

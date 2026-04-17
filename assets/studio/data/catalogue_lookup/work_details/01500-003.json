@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01500-003",
+    "work_id": "01500",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "k particles grid - detail 3.jpg",
+    "title": "k particles grid - detail 3",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "ca202f4810c486977bb02613785e2173ff3eae8a53a3fbafe5f8872c1b1afd83",
+  "work_summary": {
+    "work_id": "01500",
+    "title": "k particles grid"
+  }
+}

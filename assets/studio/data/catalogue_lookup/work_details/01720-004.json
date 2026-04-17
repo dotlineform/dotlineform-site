@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-004",
+    "work_id": "01720",
+    "detail_id": "004",
+    "project_subfolder": "symbols",
+    "project_filename": "bounce.jpg",
+    "title": "bounce",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "50409b441115b765a6fd9be3ae724a142faea0bdee37e78b4a8bfd45a5f1af5c",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

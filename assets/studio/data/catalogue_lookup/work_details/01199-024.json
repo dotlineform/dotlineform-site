@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-024",
+    "work_id": "01199",
+    "detail_id": "024",
+    "project_subfolder": "particles",
+    "project_filename": "particle (lipseyes).jpg",
+    "title": "particle (lipseyes)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "f917c09fa710b8b3abbd3f98388784ae73f7f26e03c834721180a8527fc8dd14",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

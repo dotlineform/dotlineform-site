@@ -1,0 +1,9 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_meta_v1"
+  },
+  "derived_from": "assets/studio/data/catalogue",
+  "work_count": 1941,
+  "detail_count": 2681,
+  "series_count": 143
+}

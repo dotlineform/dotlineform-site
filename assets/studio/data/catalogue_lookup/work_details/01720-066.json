@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-066",
+    "work_id": "01720",
+    "detail_id": "066",
+    "project_subfolder": "symbols",
+    "project_filename": "strong clumsy'.jpg",
+    "title": "strong clumsy'",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1556
+  },
+  "record_hash": "80a404e5e243596c850c42512c6a4b27951561534be6a20cd767b2a09a6cf363",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

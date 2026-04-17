@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00717",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "007"
+    ],
+    "series_title": null,
+    "project_folder": "a feeling that we are part of a structure",
+    "project_filename": "a feeling that we are part of a structure - 02.jpg",
+    "title": "a feeling that we are part of a structure - 02",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "3e6fa948c9d6a2bc1593c7aa67e5a169f15c85b0563bf3bfe48744e687b5840c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "007",
+      "title": "a feeling that we are part of a structure"
+    }
+  ]
+}

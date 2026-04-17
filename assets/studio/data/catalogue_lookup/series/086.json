@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "086",
+    "title": "landscape for symbols",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2021,
+    "year_display": "2021",
+    "primary_work_id": "01400",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "abc444bbc6c04f99b5e5126bb24fd2d02f686537d4bb955c50d7f3e93a2e6938",
+  "member_works": [
+    {
+      "work_id": "01400",
+      "title": "landscape for symbols",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "086"
+      ],
+      "record_hash": "cf2eaffb833e1a4ea27ad9b0d96c493dffd36ac074734ce9af9d7369c530f5e4"
+    }
+  ]
+}

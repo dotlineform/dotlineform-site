@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-031",
+    "work_id": "01720",
+    "detail_id": "031",
+    "project_subfolder": "symbols",
+    "project_filename": "half-bounce silly nosey messy.jpg",
+    "title": "half-bounce silly nosey messy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "1e44f55adeb3468be1f6b9c13921212750bd98d9ad96785526090cf2f5b91bf6",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

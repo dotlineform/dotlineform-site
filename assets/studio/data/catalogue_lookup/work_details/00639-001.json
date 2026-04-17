@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00639-001",
+    "work_id": "00639",
+    "detail_id": "001",
+    "project_subfolder": "source",
+    "project_filename": "16 forms - source photo.jpg",
+    "title": "16 forms - source photo",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 4453,
+    "height_px": 4453
+  },
+  "record_hash": "5b81771971753a41a00f48dd702728d24f2db0ad89612ff9268a5906d7ad7af3",
+  "work_summary": {
+    "work_id": "00639",
+    "title": "16 forms"
+  }
+}

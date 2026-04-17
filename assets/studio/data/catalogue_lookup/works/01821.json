@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01821",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "135"
+    ],
+    "series_title": null,
+    "project_folder": "train moments",
+    "project_filename": "2012-12-22 15꞉40꞉00.jpg",
+    "title": "2012-12-22 15꞉40꞉00",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "23ab6873371c961e24d5393bb974efbad8a4a31c72b1bc64e94161a15771967f",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "135",
+      "title": "train moments"
+    }
+  ]
+}

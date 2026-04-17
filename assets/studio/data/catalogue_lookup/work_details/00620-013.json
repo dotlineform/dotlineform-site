@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00620-013",
+    "work_id": "00620",
+    "detail_id": "013",
+    "project_subfolder": "details",
+    "project_filename": "harmony 3.13.jpg",
+    "title": "harmony 3.13",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "2fb40221c9a47cbcdad57d2093eb1192faaf23e6674676c66232ba4c5f9246e7",
+  "work_summary": {
+    "work_id": "00620",
+    "title": "harmony 3 (version)"
+  }
+}

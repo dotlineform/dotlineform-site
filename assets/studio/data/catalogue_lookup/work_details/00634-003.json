@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00634-003",
+    "work_id": "00634",
+    "detail_id": "003",
+    "project_subfolder": "versions",
+    "project_filename": "bits symbols 3.jpg",
+    "title": "bits symbols 3",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 11811,
+    "height_px": 11811
+  },
+  "record_hash": "ab9b62c6173b7cb0e7c18a22c4eb6d166c3fb6d891d40ba512fc7fbf888a45b1",
+  "work_summary": {
+    "work_id": "00634",
+    "title": "bits symbols 1"
+  }
+}

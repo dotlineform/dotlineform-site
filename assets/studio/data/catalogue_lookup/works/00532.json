@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00532",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "004"
+    ],
+    "series_title": null,
+    "project_folder": "2 bodies",
+    "project_filename": "00532 - body monoprint petals.jpg",
+    "title": "body monoprint petals",
+    "width_cm": 50,
+    "height_cm": 64,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "mixed media",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 7559,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2d5f0eff5cd78e509f7677d66ca9c0c4189f7027b0bc2e9e15366c65c2401e9b",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00532-001",
+          "detail_id": "001",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00532-002",
+          "detail_id": "002",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00532-003",
+          "detail_id": "003",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00532-004",
+          "detail_id": "004",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "004",
+      "title": "2 bodies"
+    }
+  ]
+}

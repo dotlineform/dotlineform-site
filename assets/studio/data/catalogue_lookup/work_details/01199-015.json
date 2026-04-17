@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-015",
+    "work_id": "01199",
+    "detail_id": "015",
+    "project_subfolder": "particles",
+    "project_filename": "particle (doll still life).jpg",
+    "title": "particle (doll still life)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "b7d9dd482ebbe84e99976652f4e089e41758f2b209617c4d6dfc0dafec908e8d",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

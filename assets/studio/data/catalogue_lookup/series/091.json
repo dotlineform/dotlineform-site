@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "091",
+    "title": "lipseyes",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2003,
+    "year_display": "2003",
+    "primary_work_id": "00388",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "dca7a54d5a5436a841170d618fa3be9f2f02b4c955c541e584e2f58c1d0357dd",
+  "member_works": [
+    {
+      "work_id": "00388",
+      "title": "lipseyes",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "091"
+      ],
+      "record_hash": "624e22ebb7d0504d545e5e756bb4924adccc7c40cd382b3ce651ce2ac2045350"
+    }
+  ]
+}

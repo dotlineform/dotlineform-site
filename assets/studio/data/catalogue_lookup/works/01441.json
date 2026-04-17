@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01441",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "096"
+    ],
+    "series_title": null,
+    "project_folder": "memory loss hope",
+    "project_filename": "memory loss hope.jpg",
+    "title": "memory loss hope",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "279b96953fecf0a0488695d1abff16e08583d95fdac8568d63d1cb2ccfd7a79d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "096",
+      "title": "memory loss hope"
+    }
+  ]
+}

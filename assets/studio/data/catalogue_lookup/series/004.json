@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "004",
+    "title": "2 bodies",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2025",
+    "primary_work_id": "00533",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "0072ce9fd49288a01ab50616123a92fb2c8a6775799d773853a52f3eee40c014",
+  "member_works": [
+    {
+      "work_id": "00526",
+      "title": "body",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "4d2e597b9c6841c456a6c29d3dce2f1bb6ba7da18f1fcd17648e0e3326c5ba4f"
+    },
+    {
+      "work_id": "00527",
+      "title": "body",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "618ef966930d73b75aca5192773b48cc402593074ec4eed2c71669b3bfb8acab"
+    },
+    {
+      "work_id": "00528",
+      "title": "body",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "3c76d29141815b8279a81e11bf6519554b9e51af53a87c4d229588d4bec43bac"
+    },
+    {
+      "work_id": "00529",
+      "title": "body residue",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "3f62baf6b82d117d5cc0a9eb832ce8a3f5b46b848de4ebeeafb96c21a8a9f800"
+    },
+    {
+      "work_id": "00530",
+      "title": "body curves",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "6544958697e2cbd4f46d645ec90200601989e77dba7e0f703f923f4147ef003b"
+    },
+    {
+      "work_id": "00531",
+      "title": "body monoprint",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "f2acb6ed4fb2713e40cf235d555622733d0165c22d541862e048f923babb6b96"
+    },
+    {
+      "work_id": "00532",
+      "title": "body monoprint petals",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "2d5f0eff5cd78e509f7677d66ca9c0c4189f7027b0bc2e9e15366c65c2401e9b"
+    },
+    {
+      "work_id": "00533",
+      "title": "2 bodies monoprint",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "d7fba993aa63900d6ac06dab449fd74b9e67c529bc900ab2125397b6fd2a9690"
+    },
+    {
+      "work_id": "00534",
+      "title": "2 bodies monoprint",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "004"
+      ],
+      "record_hash": "bf18d42903e9652226530c6b372c08bc633fecc71ff20dc11e7e5ea21f6a8ad0"
+    }
+  ]
+}

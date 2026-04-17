@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "104",
+    "title": "mouse story",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1993,
+    "year_display": "1991-93",
+    "primary_work_id": "00160",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "55c539e5d3065c10038aa7f8c0d07b3abccfb40903e9282a3a078729876b4bc9",
+  "member_works": [
+    {
+      "work_id": "00160",
+      "title": "mouse story",
+      "year_display": "1991",
+      "status": "published",
+      "series_ids": [
+        "104"
+      ],
+      "record_hash": "e18e9a31ba9960423ed785c33cc0c2b6f6cd322dbe531a73c3cd8ee74daf946f"
+    },
+    {
+      "work_id": "00161",
+      "title": "mouse story (extended version)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "104"
+      ],
+      "record_hash": "5a0bbbc6ad307bd29d66b7355846561d8771b4c26e6b01030a3d7e1a8f045b82"
+    },
+    {
+      "work_id": "00162",
+      "title": "mouse story (fragment)",
+      "year_display": "c. 1993?",
+      "status": "published",
+      "series_ids": [
+        "104"
+      ],
+      "record_hash": "66128c6b78e977e599043cd652d585d11273737923807f5e0c39676b68c09950"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "084",
+    "title": "kylie structures",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00520",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "c2d176477069eac3bcb336a3cc92063014e8d9f3de5686c6e6c73b3ec7b91bcb",
+  "member_works": [
+    {
+      "work_id": "00520",
+      "title": "kylie structure 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "084"
+      ],
+      "record_hash": "1715bf299b37f3998f1ac279698f0fbe722d7afdadd09b79db94d10beeac2855"
+    },
+    {
+      "work_id": "00521",
+      "title": "kylie structure 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "084"
+      ],
+      "record_hash": "6ca4e99296dc86328472daf63c1fe2e1e520df07a790fa04ad69ad06ebc5087c"
+    },
+    {
+      "work_id": "00522",
+      "title": "kylie structure 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "084"
+      ],
+      "record_hash": "5d97200861ab86963ba3444446a1bd948af2e25cef936e0e14e20f10fd3fdd72"
+    },
+    {
+      "work_id": "00523",
+      "title": "kylie structure 4",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "084"
+      ],
+      "record_hash": "50e614b78c15ba718b8810a03a629a563463977c568a84dc327500a937f28e6e"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01051",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "051"
+    ],
+    "series_title": null,
+    "project_folder": "fireworks form",
+    "project_filename": "fireworks particles version.jpg",
+    "title": "fireworks particles version",
+    "width_cm": 76,
+    "height_cm": 76,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8976,
+    "height_px": 8976,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4b307d8517f12d561e9dfb782795e3b8b667e19b64a9e79cd35e72c9047e6b09",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 6,
+      "details": [
+        {
+          "detail_uid": "01051-001",
+          "detail_id": "001",
+          "title": "fireworks particles version - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01051-002",
+          "detail_id": "002",
+          "title": "fireworks particles version - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01051-003",
+          "detail_id": "003",
+          "title": "fireworks particles version - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01051-004",
+          "detail_id": "004",
+          "title": "fireworks particles version - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01051-005",
+          "detail_id": "005",
+          "title": "fireworks particles version - detail 5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01051-006",
+          "detail_id": "006",
+          "title": "fireworks particles version - detail 6",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "051",
+      "title": "fireworks form"
+    }
+  ]
+}

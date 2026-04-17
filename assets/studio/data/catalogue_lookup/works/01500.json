@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01500",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "083"
+    ],
+    "series_title": null,
+    "project_folder": "k particles",
+    "project_filename": "k particles grid.jpg",
+    "title": "k particles grid",
+    "width_cm": 42,
+    "height_cm": 60,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4960,
+    "height_px": 7087,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d87b81a06685530d1ed88b60c51ae74c30555c0628c929d1e5fbe38aef5506c1",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "01500-001",
+          "detail_id": "001",
+          "title": "k particles grid - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01500-002",
+          "detail_id": "002",
+          "title": "k particles grid - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01500-003",
+          "detail_id": "003",
+          "title": "k particles grid - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01500-004",
+          "detail_id": "004",
+          "title": "k particles grid - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "083",
+      "title": "k particles"
+    }
+  ]
+}

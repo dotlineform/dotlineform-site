@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01771",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "135"
+    ],
+    "series_title": null,
+    "project_folder": "train moments",
+    "project_filename": "2006-05-21 21꞉33꞉39.jpg",
+    "title": "2006-05-21 21꞉33꞉39",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2006,
+    "year_display": "2006",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "80f1629feb57d939d0115aabe5df493aaa15edecfa161ca8f9e163d7f87dbe7c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "135",
+      "title": "train moments"
+    }
+  ]
+}

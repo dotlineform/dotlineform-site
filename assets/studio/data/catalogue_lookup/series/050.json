@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "050",
+    "title": "field",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2025",
+    "primary_work_id": "01047",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "37e5cda0932f3c297790945532787a4e2998b7dd6da3b9f5a601744eec9ae844",
+  "member_works": [
+    {
+      "work_id": "01047",
+      "title": "field I",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "050"
+      ],
+      "record_hash": "7b41f7970f99dc6074e6d0143446eafc964c319449af7d0382f9da779c75d915"
+    },
+    {
+      "work_id": "01048",
+      "title": "field II",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "050"
+      ],
+      "record_hash": "edee8fa26d61aab56983330e15bcebc024ec351a65cf9a83e49fa79446922d8d"
+    }
+  ]
+}

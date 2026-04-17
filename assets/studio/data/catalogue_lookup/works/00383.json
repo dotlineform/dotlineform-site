@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00383",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "118"
+    ],
+    "series_title": null,
+    "project_folder": "qrnt",
+    "project_filename": "qrnt.jpg",
+    "title": "qrnt",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "inkjet print",
+    "storage_location": "14",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2480,
+    "height_px": 3508,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "720809342ae1e5cd00b0996a71b6c5a3b44b31c2384937d00de64cc3341eb402",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "118",
+      "title": "quantum random number theory"
+    }
+  ]
+}

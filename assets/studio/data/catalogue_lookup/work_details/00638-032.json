@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-032",
+    "work_id": "00638",
+    "detail_id": "032",
+    "project_subfolder": "source",
+    "project_filename": "source grid.jpg",
+    "title": "source grid",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 14056,
+    "height_px": 7029
+  },
+  "record_hash": "9fbb96aa4890a6fc5787fa23770e9db43a76b2109c0114b096c604580baa52c0",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

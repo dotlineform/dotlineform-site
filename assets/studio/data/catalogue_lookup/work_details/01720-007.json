@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-007",
+    "work_id": "01720",
+    "detail_id": "007",
+    "project_subfolder": "symbols",
+    "project_filename": "chatterbox greedy.jpg",
+    "title": "chatterbox greedy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "917bd81eb6f3d85dabbcadb2197e93200975932ad4ade2b079ff20f64aadb82b",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

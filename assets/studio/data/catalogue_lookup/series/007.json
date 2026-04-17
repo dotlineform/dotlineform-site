@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "007",
+    "title": "a feeling that we are part of a structure",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2024,
+    "year_display": "2024",
+    "primary_work_id": "00717",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "b53cbd486f451154a655a84488418470dcf9e5707d3adbbb0aa53cc5392848cb",
+  "member_works": [
+    {
+      "work_id": "00716",
+      "title": "a feeling that we are part of a structure - 01",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "88282ead2856e41a8078432e3d6c9f68aae6ee0805eb4011f48ca963bc166d06"
+    },
+    {
+      "work_id": "00717",
+      "title": "a feeling that we are part of a structure - 02",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "3e6fa948c9d6a2bc1593c7aa67e5a169f15c85b0563bf3bfe48744e687b5840c"
+    },
+    {
+      "work_id": "00718",
+      "title": "a feeling that we are part of a structure - 03",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "faa190c9c64c1a676b01c057181a07780c3d537a1de98748ab66ce06c793ec2d"
+    },
+    {
+      "work_id": "00719",
+      "title": "a feeling that we are part of a structure - 04",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "686dd39c912567fb321a6b53da60c47543a28c92cc94b6b920bc910dd8ab1e98"
+    },
+    {
+      "work_id": "00720",
+      "title": "a feeling that we are part of a structure - 05",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "d1337502fcc251c4be6747b409692b6336659c79c80dc03cb6dc355c195a7080"
+    },
+    {
+      "work_id": "00721",
+      "title": "a feeling that we are part of a structure - 06",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "007"
+      ],
+      "record_hash": "a461c7c6699cb86a2b4da49916604d0620024bf7ca42bbafd4ad84cd0dd78bc5"
+    }
+  ]
+}

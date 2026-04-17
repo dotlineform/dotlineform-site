@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00895",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll moiré structures.jpg",
+    "title": "doll moiré structures",
+    "width_cm": 59.4,
+    "height_cm": 42,
+    "year": 2008,
+    "year_display": "c. 2008",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1200,
+    "height_px": 1685,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5c6e02c2eece10927192ad2b056905cee822d6f031e9e56a07c5b66c59ed217a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

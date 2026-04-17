@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "143",
+    "title": "simultaneous equations",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2026,
+    "year_display": "2026",
+    "primary_work_id": "01941",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "9987ca0fb47c17c653a6e6eeafd5917c7384a820710b32b8aa34adf02c7f02b3",
+  "member_works": [
+    {
+      "work_id": "01941",
+      "title": "se1",
+      "year_display": "2026",
+      "status": "published",
+      "series_ids": [
+        "143"
+      ],
+      "record_hash": "674cb7e553b4f83187d9085a4859b90f06da892eb7ca483cd6473ded48dcc7f0"
+    },
+    {
+      "work_id": "01942",
+      "title": "se2",
+      "year_display": "2026",
+      "status": "published",
+      "series_ids": [
+        "143"
+      ],
+      "record_hash": "b986bc01412e7066f9b5d8cf0a7e255285eb3f3d1a96af93b6a04c73b2b09b9c"
+    }
+  ]
+}

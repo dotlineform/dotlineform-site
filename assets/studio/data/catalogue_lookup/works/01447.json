@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01447",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "103"
+    ],
+    "series_title": null,
+    "project_folder": "mother and child",
+    "project_filename": "mother and child (painting).jpg",
+    "title": "mother and child",
+    "width_cm": 48,
+    "height_cm": 60,
+    "year": 1995,
+    "year_display": "1995",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5669,
+    "height_px": 7087,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4e24e9295551b4f854587209b34f2b9fb6e237dd1d773d10f956ec231841990b",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "103",
+      "title": "mother and child"
+    }
+  ]
+}

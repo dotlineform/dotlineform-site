@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "102",
+    "title": "monoprints and residues",
+    "series_type": "primary",
+    "status": null,
+    "published_date": null,
+    "year": null,
+    "year_display": null,
+    "primary_work_id": "00373",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "83d054f94508d6ae100681a4c0adfe032a39481bd8e48e40a417a434dfeeea40",
+  "member_works": [
+    {
+      "work_id": "00373",
+      "title": "00373 - monoprint",
+      "year_display": "",
+      "status": "",
+      "series_ids": [
+        "102"
+      ],
+      "record_hash": "ce8d6ae38e6a1286e158dc8830924c2a9d987d277a7fb718ae1610367112c495"
+    },
+    {
+      "work_id": "00374",
+      "title": "00374 - monoprint",
+      "year_display": "",
+      "status": "",
+      "series_ids": [
+        "102"
+      ],
+      "record_hash": "553459ad1921b6b620cb94edb64b79d283a213c18aef4e5af60a146633735e4e"
+    },
+    {
+      "work_id": "00376",
+      "title": "00376 - residues",
+      "year_display": "",
+      "status": "",
+      "series_ids": [
+        "102"
+      ],
+      "record_hash": "6e5cc0598de20c26db30ad99a1bc16af02813fbe7f1d09ac8f3fda36d3f23b63"
+    },
+    {
+      "work_id": "00377",
+      "title": "00377 - residue - monoprint",
+      "year_display": "",
+      "status": "",
+      "series_ids": [
+        "102"
+      ],
+      "record_hash": "5a0cd0413b64b460c7837ba9135cea791483e37f16b02a726608adbf8ac4c27e"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01398-002",
+    "work_id": "01398",
+    "detail_id": "002",
+    "project_subfolder": "iterations",
+    "project_filename": "kylie wax model - iteration 5.1.jpg",
+    "title": "kylie wax model - iteration 5.1",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "record_hash": "5f78942310b67dae7a988b4d51f3f7c856bc5c9b5c20d8f9bef72ceea847429e",
+  "work_summary": {
+    "work_id": "01398",
+    "title": "kylie wax model 5.0"
+  }
+}

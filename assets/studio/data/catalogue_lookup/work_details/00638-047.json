@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-047",
+    "work_id": "00638",
+    "detail_id": "047",
+    "project_subfolder": "composites",
+    "project_filename": "composite - radius.jpg",
+    "title": "composite - radius",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "2009ee5ce1acb96f51c135591f66935e6c2ae87127ec1430a87bc750222a2de7",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

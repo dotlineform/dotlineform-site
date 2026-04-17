@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00754",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "014"
+    ],
+    "series_title": null,
+    "project_folder": "assembly codes",
+    "project_filename": "assembly code 2.jpg",
+    "title": "assembly code 2",
+    "width_cm": 120,
+    "height_cm": 50,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 14173,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0e619e63bb4015ec5065907fa1fbc04ff7402d8fff54b34956501dd419bdede3",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00754-004",
+          "detail_id": "004",
+          "title": "assembly code 2 (detail 1)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00754-005",
+          "detail_id": "005",
+          "title": "assembly code 2 (detail 2)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00754-006",
+          "detail_id": "006",
+          "title": "assembly code 2 (detail 3)",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "014",
+      "title": "assembly codes"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00004",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "009"
+    ],
+    "series_title": null,
+    "project_folder": "a poem divided into 4 parts",
+    "project_filename": "a poem divided into 4 parts - 4.jpg",
+    "title": "a poem divided into 4 parts (\"we only feel love\")",
+    "width_cm": 29.7,
+    "height_cm": 21,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on tracing paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3508,
+    "height_px": 2480,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d89109fce718da91e23c2c767c2f34ba834103141bb2cc5430d2202e165eeefc",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "009",
+      "title": "a poem divided into 4 parts"
+    }
+  ]
+}

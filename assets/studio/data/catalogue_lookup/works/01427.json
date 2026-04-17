@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01427",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "095"
+    ],
+    "series_title": null,
+    "project_folder": "melancholy hope cell",
+    "project_filename": "melancholy hope cell (2017-01-02 12-33-42).jpg",
+    "title": "melancholy hope cell (2017-01-02 12-33-42)",
+    "width_cm": 70,
+    "height_cm": 70,
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 8268,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "68e72d16d964d20d8e17aa9df872bd4e1a14ac3ed7a658a7589e5f2db5a0f501",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "095",
+      "title": "melancholy hope cell"
+    }
+  ]
+}

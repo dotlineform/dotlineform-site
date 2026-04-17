@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-034",
+    "work_id": "01720",
+    "detail_id": "034",
+    "project_subfolder": "symbols",
+    "project_filename": "impossible sneeze fussy.jpg",
+    "title": "impossible sneeze fussy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "2434c7da0bb991bf02604aa1f97e97b91158af201531e5c932bbdd92cdfd331d",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

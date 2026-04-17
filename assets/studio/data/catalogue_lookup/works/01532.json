@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01532",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "114"
+    ],
+    "series_title": null,
+    "project_folder": "plant forms",
+    "project_filename": "plant form 6.jpg",
+    "title": "plant form 6",
+    "width_cm": 32,
+    "height_cm": 18,
+    "year": 2022,
+    "year_display": "2022",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3780,
+    "height_px": 2125,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a4b96b65f77f755ee428a8c12e6d50bdfc5bb3a7d3847cf505ca5e98e664b980",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "114",
+      "title": "plant forms"
+    }
+  ]
+}

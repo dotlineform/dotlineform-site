@@ -1,0 +1,144 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00629",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "118"
+    ],
+    "series_title": null,
+    "project_folder": "qrnt",
+    "project_filename": "quantum random number theory.jpg",
+    "title": "quantum random number theory",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": "framed",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 11811,
+    "height_px": 11811,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "09cedf8795f0cebeb7beb718df53c4def0e305620fe0cba58718d922e59e5593",
+  "detail_sections": [
+    {
+      "project_subfolder": "install",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00629-011",
+          "detail_id": "011",
+          "title": "qrnt - Searching for God exhibition - install 1",
+          "project_subfolder": "install",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-012",
+          "detail_id": "012",
+          "title": "qrnt - Searching for God exhibition - install 2",
+          "project_subfolder": "install",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-013",
+          "detail_id": "013",
+          "title": "qrnt - Searching for God exhibition - install 3",
+          "project_subfolder": "install",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "versions",
+      "count": 10,
+      "details": [
+        {
+          "detail_uid": "00629-001",
+          "detail_id": "001",
+          "title": "quantum random number theory (10,000) 1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-002",
+          "detail_id": "002",
+          "title": "quantum random number theory (10,000) 2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-003",
+          "detail_id": "003",
+          "title": "quantum random number theory (10,000) 3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-004",
+          "detail_id": "004",
+          "title": "quantum random number theory (10,000) 4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-005",
+          "detail_id": "005",
+          "title": "quantum random number theory (10,000) 5",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-006",
+          "detail_id": "006",
+          "title": "quantum random number theory (10,000) 6",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-007",
+          "detail_id": "007",
+          "title": "quantum random number theory (10,000) 7",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-008",
+          "detail_id": "008",
+          "title": "quantum random number theory (10,000) 8",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-009",
+          "detail_id": "009",
+          "title": "quantum random number theory (10,000) 9",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00629-010",
+          "detail_id": "010",
+          "title": "quantum random number theory (10,000) 10",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "118",
+      "title": "quantum random number theory"
+    }
+  ]
+}

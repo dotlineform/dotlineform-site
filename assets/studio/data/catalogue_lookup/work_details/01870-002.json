@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01870-002",
+    "work_id": "01870",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "tulips 2 - detail 2.jpg",
+    "title": "tulips 2 - detail 2",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "44b138f8cf094fb3eee9cad004261466192457e2c5092c0d4b124925ce271acf",
+  "work_summary": {
+    "work_id": "01870",
+    "title": "tulips 2"
+  }
+}

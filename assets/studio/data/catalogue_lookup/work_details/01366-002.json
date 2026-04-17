@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01366-002",
+    "work_id": "01366",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "heaven and earth (cyan).jpg",
+    "title": "heaven and earth (cyan)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 5906,
+    "height_px": 4429
+  },
+  "record_hash": "5a596adfbe585b9760187c2ac0f2951fa6bd3e8777488a859360367f3d1d0ce5",
+  "work_summary": {
+    "work_id": "01366",
+    "title": "heaven and earth (colour series)"
+  }
+}

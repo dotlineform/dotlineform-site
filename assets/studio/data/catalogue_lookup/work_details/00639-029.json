@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00639-029",
+    "work_id": "00639",
+    "detail_id": "029",
+    "project_subfolder": "forms",
+    "project_filename": "form 28.jpg",
+    "title": "form 28",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 2362,
+    "height_px": 2362
+  },
+  "record_hash": "74fe8ee6844a58e7b97c71bd73624d46ec85eacf0d02e9d29e9c285a6af2a4ee",
+  "work_summary": {
+    "work_id": "00639",
+    "title": "16 forms"
+  }
+}

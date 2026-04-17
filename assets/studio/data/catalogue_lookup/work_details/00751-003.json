@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00751-003",
+    "work_id": "00751",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "all the little cracks - detail 3.jpg",
+    "title": "all the little cracks - detail 3",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "39a126ec62f1f65f0d7ff24426264e9b1c897538ccf6e884d2083ca56348a95b",
+  "work_summary": {
+    "work_id": "00751",
+    "title": "all the little cracks"
+  }
+}

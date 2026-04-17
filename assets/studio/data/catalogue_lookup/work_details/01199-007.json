@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-007",
+    "work_id": "01199",
+    "detail_id": "007",
+    "project_subfolder": "particles",
+    "project_filename": "particle (bird nature).jpg",
+    "title": "particle (bird nature)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "737c511a2563661f6f07b8ecf74dd34f9d5f15488e81eeb904fa1e3cd44464ce",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

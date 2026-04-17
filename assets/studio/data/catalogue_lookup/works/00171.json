@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00171",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "hand life 7.jpg",
+    "title": "hand life 7",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1989,
+    "year_display": "1989",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3504,
+    "height_px": 4380,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "9f57a491ee190e1d17f65ee268b1a5f4205f1c6f240bbfcfb265b1c546d972cf",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

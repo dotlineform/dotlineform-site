@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01769",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "134"
+    ],
+    "series_title": null,
+    "project_folder": "through a glass clearly",
+    "project_filename": "through a glass clearly (7).jpg",
+    "title": "through a glass clearly (7)",
+    "width_cm": 56,
+    "height_cm": 32,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6614,
+    "height_px": 3779,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "471764b459a45e12883091d26b99be87a216e6e07bb6247ccfc54b399f880ff0",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "134",
+      "title": "through a glass clearly"
+    }
+  ]
+}

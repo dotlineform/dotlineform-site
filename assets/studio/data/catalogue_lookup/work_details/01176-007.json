@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01176-007",
+    "work_id": "01176",
+    "detail_id": "007",
+    "project_subfolder": "noise particles",
+    "project_filename": "form space noise 7.jpg",
+    "title": "form space noise 7",
+    "status": "published",
+    "published_date": "2026-03-22",
+    "width_px": 4880,
+    "height_px": 3660
+  },
+  "record_hash": "22b0b9f3775e36e2a383f085ff42a4a7edbb01fa536b4a40692d38803bc25c7a",
+  "work_summary": {
+    "work_id": "01176",
+    "title": "form space 1"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "118",
+    "title": "quantum random number theory",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2015,
+    "year_display": "2009, 2015",
+    "primary_work_id": "00630",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "d03998c581a6b7f06dce5ad19ddc96d1f94f5bce0da21286a5df1b50e21bd307",
+  "member_works": [
+    {
+      "work_id": "00383",
+      "title": "qrnt",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "720809342ae1e5cd00b0996a71b6c5a3b44b31c2384937d00de64cc3341eb402"
+    },
+    {
+      "work_id": "00629",
+      "title": "quantum random number theory",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "09cedf8795f0cebeb7beb718df53c4def0e305620fe0cba58718d922e59e5593"
+    },
+    {
+      "work_id": "00630",
+      "title": "quantum random number theory (version)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "86be632588dd46633064c635d5c6727e4b5984d23ede2b23d9d2731e595d9907"
+    },
+    {
+      "work_id": "00631",
+      "title": "quantum random number theory (form)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "c9a6c39f310d96400fce997e7924c6c82049d3a4268754bc2828d0cb5125f011"
+    },
+    {
+      "work_id": "00632",
+      "title": "quantum random number theory (circle)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "f809d226ef5bfc9283f7f4ba6fd9b766b4513519cca0bceeff7c9df2e4b2c7bd"
+    },
+    {
+      "work_id": "00633",
+      "title": "quantum random number theory (4 circles)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "b75e63c66ee76cc31f75a581d64771ca0e4dc7e109ba30158103e513fbf8a1e0"
+    },
+    {
+      "work_id": "00634",
+      "title": "bits symbols 1",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "118"
+      ],
+      "record_hash": "48964c0885759b58d0cc9929dc4d2db315c9f62d9e474a301c4db6c2bf0cf902"
+    }
+  ]
+}

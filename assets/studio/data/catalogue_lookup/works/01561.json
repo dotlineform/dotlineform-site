@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01561",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "115"
+    ],
+    "series_title": null,
+    "project_folder": "poa",
+    "project_filename": "poa 3.4.2.jpg",
+    "title": "poa 3.4.2",
+    "width_cm": 70,
+    "height_cm": 50,
+    "year": 2004,
+    "year_display": "2001-04",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "80d28147acff2b88d13e44a55070161cc00c3ff4e9ce97b4eb6a6b43e9bbabe0",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "115",
+      "title": "poa"
+    }
+  ]
+}

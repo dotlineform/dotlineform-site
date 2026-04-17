@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-031",
+    "work_id": "00638",
+    "detail_id": "031",
+    "project_subfolder": "source",
+    "project_filename": "source - rwanda.jpg",
+    "title": "source - rwanda",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "8996303e6955ca2b7807ec2f9310c6dfa7e26ff5be16890fdcd2cf62d8a11bcb",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

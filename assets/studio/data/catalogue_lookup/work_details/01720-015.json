@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-015",
+    "work_id": "01720",
+    "detail_id": "015",
+    "project_subfolder": "symbols",
+    "project_filename": "daydream.jpg",
+    "title": "daydream",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1454
+  },
+  "record_hash": "9e0df4909507871472a104924229c61d7ab0da63508d19199265f847fbb3bb46",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

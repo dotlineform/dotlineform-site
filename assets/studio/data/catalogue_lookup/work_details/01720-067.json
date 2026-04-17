@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-067",
+    "work_id": "01720",
+    "detail_id": "067",
+    "project_subfolder": "symbols",
+    "project_filename": "tickle quiet busy mischief.jpg",
+    "title": "tickle quiet busy mischief",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "760ade237e7b83e036c6361b5233ca3432815e398247797ddbefaca4dd5a5658",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

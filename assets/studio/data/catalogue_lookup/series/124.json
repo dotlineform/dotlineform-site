@@ -1,0 +1,471 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "124",
+    "title": "spider webs",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023-24",
+    "primary_work_id": "01710",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "6becb93afb67154e399af0ef4d70fad99960fc648437ddffc3c39c61a74a519f",
+  "member_works": [
+    {
+      "work_id": "01675",
+      "title": "spider webs 1",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "bd8563895c33fc01f2c54513e7cccc3d8efe850ad48c5edfb52f66ebff01d9f8"
+    },
+    {
+      "work_id": "01676",
+      "title": "spider webs 2",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "1103792e574dc300796caa90e259f9f39c2635ec126d0a372848cabc7741e05b"
+    },
+    {
+      "work_id": "01677",
+      "title": "spider webs 3",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "49196821b9ced542c2bc88b6b22c6caa144d6b5a175052993b06b347151233b7"
+    },
+    {
+      "work_id": "01678",
+      "title": "spider webs 4",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "a10d2ff65e55aec5e7347a52b7b5e1616586260fab16f9fba6723b1799a65198"
+    },
+    {
+      "work_id": "01679",
+      "title": "spider webs 5",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "2ac8f791a533d57cf42d845bc9b584e85bc7ad1c06fa0b5219aa9a0cdd58b2c9"
+    },
+    {
+      "work_id": "01680",
+      "title": "spider webs 6",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "72421ed41e9fb6322804dd1e0f5126dc47d5300a89a4f11edbe92a0aad129de2"
+    },
+    {
+      "work_id": "01681",
+      "title": "spider webs 7",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "46b20deb348923138def588ea9ea5f89126d94cdc60f427b4fea4406e0147313"
+    },
+    {
+      "work_id": "01682",
+      "title": "spider webs 8",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "522b96b7695a369e59217254e0f6f535642f02f1e308d06ffcb22d687ad9d87f"
+    },
+    {
+      "work_id": "01683",
+      "title": "spider webs 9",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "b6d811f668d650266994e93a301977dca0dc8d38094a33cc3e51bb05b768face"
+    },
+    {
+      "work_id": "01684",
+      "title": "spider webs 10",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "f018ad548bd47cf18f4935855baa968592e8971e4d2aa397fbca8fed5e89e3e8"
+    },
+    {
+      "work_id": "01685",
+      "title": "spider webs 11",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "32e12c6b0facffa06c333bd059e72afeb4d8db4726c1b935ecd40655b3f1f7cd"
+    },
+    {
+      "work_id": "01686",
+      "title": "spider webs 12",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "9368ab7f2808adf514673ca0e345a7cf32b54584b2ff8426523810c8aabdca56"
+    },
+    {
+      "work_id": "01687",
+      "title": "spider webs 13",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "1369f940e12c931c4dbef3171b0f6f547e55631d47cfb2bad8c76f215a7d284c"
+    },
+    {
+      "work_id": "01688",
+      "title": "spider webs 14",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "686ed0f5a08533fdc309c562d57b894cb24c06af66f0787a517aab7c4496f584"
+    },
+    {
+      "work_id": "01689",
+      "title": "spider webs 15",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "58d9ceede751665914cd2968078dcbe3f337c39db2209284c1093f639e327787"
+    },
+    {
+      "work_id": "01690",
+      "title": "spider webs 16",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "78414adf2656b8fb45de076d75e5e626ee11514fbac1041d161daa3371068b5d"
+    },
+    {
+      "work_id": "01691",
+      "title": "spider webs 17",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "833c3f4c82799fc4099604d308d00c363f55b12f03a7865ac5d6c4ff797ba935"
+    },
+    {
+      "work_id": "01692",
+      "title": "spider webs 18",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "32e3c9de55c43800bcfdafa93a7bb97d48a55ad43730a15a41aac557493eaeb1"
+    },
+    {
+      "work_id": "01693",
+      "title": "spider webs 19",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "376d2e5e6e9dc0384aa09b1cfe68a35548327246132c56298e846db32c48439e"
+    },
+    {
+      "work_id": "01694",
+      "title": "spider webs 20",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "259a3c9f88a4012605d9f12793444e9eca06c24b4b230e754f632d0d5b562bdd"
+    },
+    {
+      "work_id": "01695",
+      "title": "spider webs 21",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "f06975ca46d5d6d9df2f70c3614cbace3ec8ffec9f82d7af89cc5a413fe43202"
+    },
+    {
+      "work_id": "01696",
+      "title": "spider webs 22",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "3127870e377d8a155c6a1f04eb558e6716f5dfddea6a115a62da1feb7c5b036b"
+    },
+    {
+      "work_id": "01697",
+      "title": "spider webs 23",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "5be11ec06b112a8bd38cd411d3d0cd00c403361ab34c67591ff6e7483984effb"
+    },
+    {
+      "work_id": "01698",
+      "title": "spider webs 24",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "b748647158b8407669f20f90c023e7ad5008fc5de1d1b60fba526a04357bbaed"
+    },
+    {
+      "work_id": "01699",
+      "title": "spider webs 25",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "d3e4226058b02829d86ec51f37b9093d48660c54e35d5cbe418c2240c244afbc"
+    },
+    {
+      "work_id": "01700",
+      "title": "spider webs 26",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "110fcc8a708d2a2ff21bd7be063d534ccc15aee7dc5251563edb59693c078b2d"
+    },
+    {
+      "work_id": "01701",
+      "title": "spider webs 27",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "33ee09388f4205150b4ae06824a8c32d92fada0f65947d0f64c9bf7ce83fe9a2"
+    },
+    {
+      "work_id": "01702",
+      "title": "spider webs distillation 1",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "88ab0385565226dbb4d81167a3317fa75b88f74ec27c5463889cd5c018050c95"
+    },
+    {
+      "work_id": "01703",
+      "title": "spider webs distillation 2",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "47c0355d1ae632a3ac79fc7e547ded8c3b1def34a6eaf487a1c4a5c039f363b3"
+    },
+    {
+      "work_id": "01704",
+      "title": "spider webs distillation 3",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "7ac88da1f282f8229e07e547180bec40dcebd0c3c4d372a5fd10004f51e945c7"
+    },
+    {
+      "work_id": "01705",
+      "title": "spider webs distillation 4",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "86c3c0fe79ed4a02e15e902d2fad9067eb8a19aa7cbeedadfbce288c13e787ba"
+    },
+    {
+      "work_id": "01706",
+      "title": "spider webs distillation 5",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "c90f2e69e71d07a8d31b31179e7511742563cf042080e189977b6332307999b2"
+    },
+    {
+      "work_id": "01707",
+      "title": "spider webs distillation 6",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "bbf1070f482b10be524a8c61ddcad210fe05abe94990a99d52e0c1324a17dd27"
+    },
+    {
+      "work_id": "01708",
+      "title": "spider webs distillation 7",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "dbf7ffcbaf472b57bcd8eee794f27c45d0f744d64448386d5f314b1a0410e885"
+    },
+    {
+      "work_id": "01709",
+      "title": "spider webs distillation 8",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "51c48a86f66c6de43e8f381235adf7d7847fbb17d027bcace3a56be1dd6f4303"
+    },
+    {
+      "work_id": "01710",
+      "title": "spider webs distillation 9",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "25169cf9f869c44b6d7f38849ed757042f49660a924bdb71f28719628436c1b8"
+    },
+    {
+      "work_id": "01711",
+      "title": "spider webs distillation 10",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "fd506d3ca8e9be6a419382047890d302a6ba8a8fde0e79eab03118281c88720a"
+    },
+    {
+      "work_id": "01712",
+      "title": "spider webs distillation 11",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "4d00e81ed3ecd276fb5dc3462edab87df59a2ade984fb8bfa53cef6668f17597"
+    },
+    {
+      "work_id": "01713",
+      "title": "spider webs distillation 12",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "4343fca204cab48aec1d5562cbb510083d49c6377220f6e1fcd161e0c6c6f844"
+    },
+    {
+      "work_id": "01714",
+      "title": "spider webs distillation 13",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "4c8fce601ef52c09330088123e16578caa3bf3caf09194e249c3d8e89f6a5900"
+    },
+    {
+      "work_id": "01715",
+      "title": "spider webs distillation 14",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "6825950f6c66b8bb89ffea640d4efc08a85c7d3e5c752b9714c14960ac9d4f8f"
+    },
+    {
+      "work_id": "01716",
+      "title": "spider webs distillation 15",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "108cfc0c9d79cc18142db4b3665502c2e106d4983ea74cfa1da4288d7786e6e3"
+    },
+    {
+      "work_id": "01717",
+      "title": "spider webs distillation 16",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "2b0dd31dca145d35b645905df9379d0247a521c2296edba8aa3e35f01eb9725c"
+    },
+    {
+      "work_id": "01718",
+      "title": "spider webs distillation 17",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "6c66b8c1548829d698d838e3692b4243b612d81e7becb95046382f1a1ea9a8ce"
+    },
+    {
+      "work_id": "01719",
+      "title": "spider webs distillation 18",
+      "year_display": "2023-24",
+      "status": "published",
+      "series_ids": [
+        "124"
+      ],
+      "record_hash": "9322b0cf65fb4b3a93c94ace8f4cb8cdda2c33d2065bb13a4ef8a26707a60886"
+    }
+  ]
+}

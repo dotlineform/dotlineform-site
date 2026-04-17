@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-034",
+    "work_id": "01199",
+    "detail_id": "034",
+    "project_subfolder": "particles",
+    "project_filename": "particle (qrnt).jpg",
+    "title": "particle (qrnt)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "4144c3255e639f1abb28bad6063d0d47bbd5c5c20577fe437f25c3ce88201cd0",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

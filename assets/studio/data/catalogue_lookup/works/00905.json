@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00905",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "038"
+    ],
+    "series_title": null,
+    "project_folder": "doll faces",
+    "project_filename": "doll face 5.jpg",
+    "title": "doll face 5",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "157842c11db9742fa9ad45bf2643b22ccb075ed52fb9168676ff90f0a3181693",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "038",
+      "title": "doll faces"
+    }
+  ]
+}

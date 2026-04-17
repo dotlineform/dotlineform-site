@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-019",
+    "work_id": "01720",
+    "detail_id": "019",
+    "project_subfolder": "symbols",
+    "project_filename": "funny (wrong rude) impossible.jpg",
+    "title": "funny (wrong rude) impossible",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "a6d99fe5c9d8742e99a7755eead36d1756b799632a08238b892b536ee7123438",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00008",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "105",
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "nerve",
+    "project_filename": "nerve.jpg",
+    "title": "nerve",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1995,
+    "year_display": "July 1990 – January 1995",
+    "medium_type": "writing",
+    "medium_caption": "loose bound book, 48p",
+    "storage_location": "1",
+    "work_prose_file": "00008.md",
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1600,
+    "height_px": 2263,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f2665165e1c3fc836ecb9c515ad05091746787cd2d6ce9233e604e5a796b9d6e",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "105",
+      "title": "nerve"
+    },
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

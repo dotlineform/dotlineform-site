@@ -1,10 +1,9 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { fetchJson } from "./studio-data.js";
+import { loadStudioLookupJson, loadStudioLookupRecordJson } from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   postJson,
@@ -212,6 +211,10 @@ function renderSearchMatches(state, matches, message = "") {
   setPopupVisibility(state, true);
 }
 
+async function loadSeriesLookupRecord(state, seriesId) {
+  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_series_base", seriesId, { cache: "no-store" });
+}
+
 function buildDraftFromRecord(record) {
   const draft = {};
   EDITABLE_FIELDS.forEach((field) => {
@@ -237,7 +240,7 @@ function applyReadonly(state) {
 }
 
 function getStoredWorkSeriesIds(state, workId) {
-  const record = state.worksById.get(workId);
+  const record = state.workSearchById.get(workId);
   const values = record && Array.isArray(record.series_ids) ? record.series_ids : [];
   return values.map((seriesId) => normalizeSeriesId(seriesId)).filter(Boolean);
 }
@@ -252,7 +255,7 @@ function getCurrentMemberEntries(state) {
   return getEditableMembershipEntries(state)
     .filter(({ seriesIds }) => seriesIds.includes(state.currentSeriesId))
     .map(({ workId, seriesIds }) => {
-      const record = state.worksById.get(workId) || {};
+      const record = state.workSearchById.get(workId) || {};
       const position = seriesIds.indexOf(state.currentSeriesId);
       return {
         workId,
@@ -340,12 +343,12 @@ async function buildChangedWorkUpdates(state) {
   for (const [workId, seriesIds] of state.memberSeriesIdsByWorkId.entries()) {
     const baseline = state.baselineMemberSeriesIdsByWorkId.get(workId) || [];
     if (stableStringify(seriesIds) === stableStringify(baseline)) continue;
-    const currentRecord = state.worksById.get(workId);
+    const currentRecord = state.workSearchById.get(workId);
     if (!currentRecord) continue;
     updates.push({
       work_id: workId,
       series_ids: seriesIds,
-      expected_record_hash: await computeRecordHash(currentRecord)
+      expected_record_hash: normalizeText(currentRecord.record_hash) || await computeRecordHash(currentRecord)
     });
   }
   return updates;
@@ -487,8 +490,13 @@ function onFieldInput(state, fieldKey) {
 function initializeMembershipState(state, seriesId) {
   state.memberSeriesIdsByWorkId = new Map();
   state.baselineMemberSeriesIdsByWorkId = new Map();
-  for (const [workId, workRecord] of state.worksById.entries()) {
-    const seriesIds = getStoredWorkSeriesIds(state, workId);
+  const members = state.currentLookup && Array.isArray(state.currentLookup.member_works) ? state.currentLookup.member_works : [];
+  for (const member of members) {
+    const workId = normalizeWorkId(member && member.work_id);
+    if (!workId) continue;
+    const seriesIds = Array.isArray(member && member.series_ids)
+      ? member.series_ids.map((seriesId) => normalizeSeriesId(seriesId)).filter(Boolean)
+      : getStoredWorkSeriesIds(state, workId);
     if (!seriesIds.includes(seriesId)) continue;
     state.memberSeriesIdsByWorkId.set(workId, seriesIds.slice());
     state.baselineMemberSeriesIdsByWorkId.set(workId, seriesIds.slice());
@@ -498,6 +506,7 @@ function initializeMembershipState(state, seriesId) {
 function setLoadedSeries(state, seriesId, record, options = {}) {
   state.currentSeriesId = seriesId;
   state.currentRecord = record;
+  state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
@@ -542,7 +551,7 @@ function addWorkToSeries(state) {
     setTextWithState(state.membersStatusNode, t(state, "members_add_missing", "Enter a work id to add."), "error");
     return;
   }
-  const workRecord = state.worksById.get(workId);
+  const workRecord = state.workSearchById.get(workId);
   if (!workRecord) {
     setTextWithState(state.membersStatusNode, t(state, "members_add_unknown", "Unknown work id: {work_id}.", { work_id }), "error");
     return;
@@ -606,22 +615,38 @@ async function saveCurrentSeries(state) {
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveSeries, buildPayload(state, await buildChangedWorkUpdates(state)));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
-    state.seriesById.set(state.currentSeriesId, record);
+    state.seriesById.set(state.currentSeriesId, {
+      series_id: state.currentSeriesId,
+      title: normalizeText(record.title),
+      status: normalizeText(record.status),
+      primary_work_id: normalizeText(record.primary_work_id),
+      record_hash: normalizeText(response.record_hash)
+    });
     const workRecords = Array.isArray(response.work_records) ? response.work_records : [];
     workRecords.forEach((entry) => {
       if (!entry || typeof entry !== "object") return;
       const workId = normalizeWorkId(entry.work_id);
       const workRecord = entry.record;
       if (!workId || !workRecord || typeof workRecord !== "object") return;
-      state.worksById.set(workId, workRecord);
+      state.workSearchById.set(workId, {
+        work_id: workId,
+        title: normalizeText(workRecord.title),
+        year_display: normalizeText(workRecord.year_display),
+        status: normalizeText(workRecord.status),
+        series_ids: Array.isArray(workRecord.series_ids) ? workRecord.series_ids.slice() : [],
+        record_hash: entry.record_hash || state.workSearchById.get(workId)?.record_hash || ""
+      });
     });
     state.rebuildPending = Boolean(response.changed);
     if (response.changed) {
       state.pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
     }
-    setLoadedSeries(state, state.currentSeriesId, record, {
-      recordHash: response.record_hash || "",
-      keepResult: true
+    const lookup = await loadSeriesLookupRecord(state, state.currentSeriesId);
+    const lookupRecord = lookup && lookup.series && typeof lookup.series === "object" ? lookup.series : record;
+    setLoadedSeries(state, state.currentSeriesId, lookupRecord, {
+      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
+      keepResult: true,
+      lookup
     });
     state.rebuildPending = Boolean(response.changed);
     state.pendingBuildExtraWorkIds = Array.from(previousMembers).filter((workId) => !currentMembers.has(workId));
@@ -685,18 +710,25 @@ async function openSeriesById(state, requestedSeriesId) {
     renderSearchMatches(state, [], t(state, "search_empty", "Enter a series title or id."));
     return;
   }
-  const record = state.seriesById.get(seriesId);
-  if (!record) {
+  const searchRecord = state.seriesById.get(seriesId);
+  if (!searchRecord) {
     const matches = getSearchMatches(state, requestedSeriesId);
     if (matches.length) renderSearchMatches(state, matches);
     else renderSearchMatches(state, [], t(state, "unknown_series_error", "Unknown series id: {series_id}.", { series_id }));
     return;
   }
-  state.searchNode.value = `${seriesId} ${normalizeText(record.title)}`.trim();
+  state.searchNode.value = `${seriesId} ${normalizeText(searchRecord.title)}`.trim();
   setPopupVisibility(state, false);
   state.rebuildPending = false;
-  const recordHash = await computeRecordHash(record);
-  setLoadedSeries(state, seriesId, record, { recordHash });
+  const lookup = await loadSeriesLookupRecord(state, seriesId);
+  const record = lookup && lookup.series && typeof lookup.series === "object" ? lookup.series : null;
+  if (!record) {
+    throw new Error(`series lookup missing record for ${seriesId}`);
+  }
+  setLoadedSeries(state, seriesId, record, {
+    recordHash: normalizeText(lookup.record_hash) || normalizeText(searchRecord.record_hash) || await computeRecordHash(record),
+    lookup
+  });
   await refreshBuildPreview(state);
 }
 
@@ -735,7 +767,8 @@ async function init() {
   const state = {
     config: null,
     seriesById: new Map(),
-    worksById: new Map(),
+    workSearchById: new Map(),
+    currentLookup: null,
     currentSeriesId: "",
     currentRecord: null,
     currentRecordHash: "",
@@ -790,18 +823,24 @@ async function init() {
     memberAddButton.textContent = t(state, "members_add_button", "Add Work");
 
     const [seriesPayload, worksPayload, serverAvailable] = await Promise.all([
-      fetchJson(getStudioDataPath(config, "catalogue_series"), { cache: "no-store" }),
-      fetchJson(getStudioDataPath(config, "catalogue_works"), { cache: "no-store" }),
+      loadStudioLookupJson(config, "catalogue_lookup_series_search", { cache: "no-store" }),
+      loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),
       probeCatalogueHealth()
     ]);
 
-    Object.entries(seriesPayload && seriesPayload.series && typeof seriesPayload.series === "object" ? seriesPayload.series : {}).forEach(([seriesId, record]) => {
+    const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
+    seriesItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
-      state.seriesById.set(normalizeSeriesId(seriesId), record);
+      const seriesId = normalizeSeriesId(record.series_id);
+      if (!seriesId) return;
+      state.seriesById.set(seriesId, record);
     });
-    Object.entries(worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {}).forEach(([workId, record]) => {
+    const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
+    workItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
-      state.worksById.set(normalizeWorkId(workId), record);
+      const workId = normalizeWorkId(record.work_id);
+      if (!workId) return;
+      state.workSearchById.set(workId, record);
     });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_series_editor.${key}`, fallback, tokens));

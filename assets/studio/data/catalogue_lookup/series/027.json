@@ -1,0 +1,591 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "027",
+    "title": "collected digital c. 1998",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1998,
+    "year_display": "c. 1998",
+    "primary_work_id": "00226",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "04a58892ee94d1919a5dd0815e911f042966c14a17c88e50bc6808747eef8e6c",
+  "member_works": [
+    {
+      "work_id": "00226",
+      "title": "untitled [226]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "05153d58d74bfda925e3f80a67837b6d6c9a751fcfc8579a445e82bf1066806b"
+    },
+    {
+      "work_id": "00227",
+      "title": "untitled [227]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "c0423aeff1d61ffd324014fabeaf5b0337fd0b7bcea11db0b514ffd180813e7b"
+    },
+    {
+      "work_id": "00228",
+      "title": "untitled [228]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "9e58c39ed4bdf273c60d48a6b5cd73a434bfb99ca43dd7aa06b3090bfd572bff"
+    },
+    {
+      "work_id": "00229",
+      "title": "untitled [229]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "bdcdcab464f6f93b275089265573ae98ddca7689763be81dd332cb1f64aebda1"
+    },
+    {
+      "work_id": "00230",
+      "title": "untitled [230]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "711f3082172d17679a7829e66f65f1377ac57d1d41f9d0e869fb7c92eafeed04"
+    },
+    {
+      "work_id": "00231",
+      "title": "untitled [231]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "561910721ec89eaa446e7c4c846905a37ff55051a982c6fbc1c3b056264d1ab9"
+    },
+    {
+      "work_id": "00232",
+      "title": "untitled [232]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "46c328ae015763226f6a0a38eb8eff61d37c8a7a4b878a131a06c2fe4c7e8b09"
+    },
+    {
+      "work_id": "00235",
+      "title": "untitled [235]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "cbe9529ea2d9b815248137e35cd2a905db5811dcf8747949d3ca9ba194e29cf9"
+    },
+    {
+      "work_id": "00236",
+      "title": "untitled [236]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "bf7cde0e62cf364c37f0f1d0260ad892b90ec08263c30476bdee4d2de260ad9c"
+    },
+    {
+      "work_id": "00237",
+      "title": "untitled [237]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "03646251b76604e0407fd0426123d8731ea2cadd39f8bec7af9169443fdb2436"
+    },
+    {
+      "work_id": "00238",
+      "title": "untitled [238]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "b64cd1e25ca15c022026b1872a85217af1b757176454fe1444e6d4cac4dd039a"
+    },
+    {
+      "work_id": "00239",
+      "title": "untitled [239]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "183421e2f771243536ec4a9bdbefc560287a133553e2a71769662c1d3ceecbd3"
+    },
+    {
+      "work_id": "00240",
+      "title": "untitled [240]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "3a3e764934d6962467bd18a2c2bf57d4fcd942b7bdd83322296f40385041f55c"
+    },
+    {
+      "work_id": "00241",
+      "title": "untitled [241]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "542eddc54b3c1de8b564cacbc1212cfabd98da542318f74d98353c0d3b0f03fc"
+    },
+    {
+      "work_id": "00242",
+      "title": "untitled [242]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "d16566ee33da4003fa81367bbb87dd2967c515809705669202b91f767ffb138c"
+    },
+    {
+      "work_id": "00243",
+      "title": "untitled [243]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "2b3caa1fe7f56f82780b84fefef4bab021fa1916bffdf8e351d51560ef5e145f"
+    },
+    {
+      "work_id": "00244",
+      "title": "untitled [244]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "489e3d3d5fc7b6716aa7614873cbb128f9557579276713101c5d9172fceee54c"
+    },
+    {
+      "work_id": "00245",
+      "title": "untitled [245]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "bd95a7ec758fd1e07f48328314058ea79c501c829ba5eef5f9f8e996c189c195"
+    },
+    {
+      "work_id": "00246",
+      "title": "untitled [246]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "1e7464546da9d09a4af9b798b48901cf45491c0676608d96414de537bc72675e"
+    },
+    {
+      "work_id": "00248",
+      "title": "untitled [248]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "b8b3c0f79f6e79c8a0daf554abde05ccf938f10b2ad65c350b449c0f90c6eaad"
+    },
+    {
+      "work_id": "00249",
+      "title": "untitled [249]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "ca0a745434b7f31c7356048bf89cf4956889f460e1a72f8e1dc40d9753f7a945"
+    },
+    {
+      "work_id": "00250",
+      "title": "untitled [250]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "524847ee8e556b01c1023a3a341ff6e4455969c295f5fdc9bdc7cd74141400e2"
+    },
+    {
+      "work_id": "00251",
+      "title": "untitled [251]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "cca7de5b428d08ebcde823c20b25bfdde4ee55dae0733a62f65605fff2f05905"
+    },
+    {
+      "work_id": "00252",
+      "title": "untitled [252]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "299a0174774067d2750c6014dc236e506cf07beab71ca1133e85cffa18f46959"
+    },
+    {
+      "work_id": "00253",
+      "title": "untitled [253]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "875f933ee3363bf669aefeb517a58f86f137ec57c6789ae91aa04e626befdd70"
+    },
+    {
+      "work_id": "00254",
+      "title": "untitled [254]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "f8a7eae69dee7e34f7255783f1887031f896a9212647b2b74fec5deaed51797d"
+    },
+    {
+      "work_id": "00255",
+      "title": "untitled [255]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "5f14a09c5a80476b8a8598b5b9d3df7eab051c4384e00d042466a984691ae2aa"
+    },
+    {
+      "work_id": "00256",
+      "title": "untitled [256]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "7784a4cb259301dbd9c7822a0c71f6c559534ab9d07f9f25301c7d99ee8568b3"
+    },
+    {
+      "work_id": "00257",
+      "title": "untitled [257]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "f7d9322dd9a9d31ab997a2c9aa75f0922f113e750a76d493e082712476ba1a70"
+    },
+    {
+      "work_id": "00258",
+      "title": "untitled [258]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "0dfb409df026b6b965792efa94603b6a0fac780e2b3b614ce874443f7b2637e7"
+    },
+    {
+      "work_id": "00259",
+      "title": "untitled [259]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "7083ba60bc6fbe716ba3229fe7dc1c0705ee942a5b0912def785fae31dbec703"
+    },
+    {
+      "work_id": "00260",
+      "title": "untitled [260]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "7f34ed88234a43f55e98d55b5d83b545b0dec994f51fa395a6453490c22488db"
+    },
+    {
+      "work_id": "00261",
+      "title": "untitled [261]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "4f07628e49e1aafa6ea5deb4278fa79c28e5444ea9a27daec4c69d54b2223bc6"
+    },
+    {
+      "work_id": "00262",
+      "title": "untitled [262]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "815c2ca82c19e72f2746f8de9de57f7db7e6a9ab1701b8bb1126ecb5fc64ef9b"
+    },
+    {
+      "work_id": "00263",
+      "title": "untitled [263]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "14fb1f28f38ebe58deb859ddeeb56e61e748b00aff35b78ddf5f59727bbdf535"
+    },
+    {
+      "work_id": "00264",
+      "title": "untitled [264]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "a8c51aa28da739e19aa1e4bcbdd4fc3586ea8d8cb59e02d0969d32c0a44cd91a"
+    },
+    {
+      "work_id": "00265",
+      "title": "untitled [265]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "23b62f74da311311ec9803cab7077bc32996355215ab10e49a5d45cda04ff932"
+    },
+    {
+      "work_id": "00266",
+      "title": "untitled [266]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "e1f865f95755974e735988988383bf8a6fce9aee0c6917acfa87fadb81400545"
+    },
+    {
+      "work_id": "00267",
+      "title": "untitled [267]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "76abda60845db92be1d4e218bdb28edf58278021fc6cd95e69821a3e409030c2"
+    },
+    {
+      "work_id": "00268",
+      "title": "untitled [268]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "cda6fadc1630cebd8c5672ef4c8a2e6aa9a8ff660314da953f7249ed5e851718"
+    },
+    {
+      "work_id": "00269",
+      "title": "untitled [269]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "2d231f191d69614f5018bfd0d8777cdad79989e4bda32a29e208adcd28f70f79"
+    },
+    {
+      "work_id": "00270",
+      "title": "untitled [270]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "15c78bf0c5c80b71d6a80357819f6f137e48fca7f6acb8898e2dd17a30ba535b"
+    },
+    {
+      "work_id": "00271",
+      "title": "untitled [271]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "98c9ced64f17689e8c71aa20e1361d76ec98bebb7055d4c75e9ebc002b8d31e4"
+    },
+    {
+      "work_id": "00272",
+      "title": "untitled [272]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "5ba043e8d52d343d1b92c7f6e555bff5dd0fee736c39a60d04766f3bd978d8ee"
+    },
+    {
+      "work_id": "00273",
+      "title": "untitled [273]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "0984761e3487a03d2f6f2c006131561e8d1a561147f78decb8341350e1ca6625"
+    },
+    {
+      "work_id": "00274",
+      "title": "untitled [274]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "34b5830ce60035c66b42d3f1894d068f30b250c24cc6c678f2caa457600e7b77"
+    },
+    {
+      "work_id": "00275",
+      "title": "untitled [275]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "85f6dfdeecbb325e1aa9ca334612b0f48d4908a9948e1609f400a8a6ca0c6acf"
+    },
+    {
+      "work_id": "00276",
+      "title": "untitled [276]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "8d98fd6cd90d1698b8540e11b5a9eae487887d00a71eba174a2b428c0e59e9dc"
+    },
+    {
+      "work_id": "00277",
+      "title": "untitled [277]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "c43b348813eb044b81d4c15a88b3308e568644ea58488b4633e888adc47f0827"
+    },
+    {
+      "work_id": "00278",
+      "title": "untitled [278]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "dce2b47bee23ee4d0f9a32a0286f9c75a90c9a52e95e421411fdfdfc67379c59"
+    },
+    {
+      "work_id": "00279",
+      "title": "untitled [279]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "04f12771588a4916b53b2a1b34c5ab6d443f9fb99a6652587a29b306d79668c6"
+    },
+    {
+      "work_id": "00280",
+      "title": "untitled [280]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "f423efcdec1e7cf1c7774e7b9264f6d7b16f69e089bc5ead8bb0b4275271f9c9"
+    },
+    {
+      "work_id": "00281",
+      "title": "untitled [281]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "04833f3df378d52cf82d45cfdaf70fb03f6cf4da98a02869c4b936b71e01845d"
+    },
+    {
+      "work_id": "00282",
+      "title": "untitled [282]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "c74276ba9b0742f5e8909cae43db3ab2a6c5bb2877e869bdfe9bb90bd2235b55"
+    },
+    {
+      "work_id": "00283",
+      "title": "untitled [283]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "28fc1e962d745e98831566541b9afbbc227ffb22c175c465e162a64648626ae9"
+    },
+    {
+      "work_id": "00284",
+      "title": "untitled [284]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "2748bb90da83f80d98bbb5e6c3d3b9f3fa69e0441e076304dd9dfed5b205572d"
+    },
+    {
+      "work_id": "00285",
+      "title": "untitled [285]",
+      "year_display": "c. 1998",
+      "status": "published",
+      "series_ids": [
+        "027"
+      ],
+      "record_hash": "e96870e11490cbaf2f7cdb87324e91af80f4dd599ea19bddb445ac5b67725631"
+    }
+  ]
+}

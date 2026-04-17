@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "113",
+    "title": "pi particles",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01525",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "170b35b0022422e2d092c357c4bc66765fe7ef29628b1bbeebcb9ff319784f63",
+  "member_works": [
+    {
+      "work_id": "01523",
+      "title": "pi",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "113"
+      ],
+      "record_hash": "eff10514c2f3edc109ed243b81939371653dfcb756be972eae19c0bae83580d2"
+    },
+    {
+      "work_id": "01524",
+      "title": "pi molecule grid",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "113"
+      ],
+      "record_hash": "3c681e124ad9520ebec528cb34aae1abfc0ff8802bca4fe56e1ec1194508b2de"
+    },
+    {
+      "work_id": "01525",
+      "title": "pi circle",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "113"
+      ],
+      "record_hash": "5b434f68822aa510f012dc7693eeeecc5fe8f7e273db4fc79c98af0061059679"
+    },
+    {
+      "work_id": "01526",
+      "title": "all the particles are connected",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "113"
+      ],
+      "record_hash": "d0ecc16754aadc714bcf061594d1fc2994dc846ecbaf17d6fd183b4d67d60d7f"
+    }
+  ]
+}

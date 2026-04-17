@@ -1,0 +1,251 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "121",
+    "title": "residues",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012, 2021",
+    "primary_work_id": "01608",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "1fcaf8a50c051e5b37ccc908c287abc753ad7e44d38a3f2c040766696d96845c",
+  "member_works": [
+    {
+      "work_id": "01606",
+      "title": "residues 1.1",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "d3aca173e4d12f408bcf456d5040ce70c974daebbc4e30b737736ec5ce680129"
+    },
+    {
+      "work_id": "01607",
+      "title": "residues 1.2",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "70e3beba06ce9f7d9612f693239ce603c872d865698a0d5242d8da148a0995ce"
+    },
+    {
+      "work_id": "01608",
+      "title": "residues 1.3",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "aeafabfb2fd9387d08078421e1da1372f84eb708c7827cf952828e0b4e2431fa"
+    },
+    {
+      "work_id": "01609",
+      "title": "residues 1.4",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "9321926a13207e98d47e27a3bcf00af2733895df45d4a4bb5aaaccb251c3eea3"
+    },
+    {
+      "work_id": "01610",
+      "title": "residues 1.5",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "acd12c9350bbd4b45f15782d274d7d4243a7ccb388ca8947c6c794e8a3af4d75"
+    },
+    {
+      "work_id": "01611",
+      "title": "residues 1.6",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "6616117d68929a82e690b735be61d8c984e0883374fda5cac33c53003adf899c"
+    },
+    {
+      "work_id": "01612",
+      "title": "residues 1.7",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "fb106d0d95bdee4731665c10d9578a21be5e0be69a70ae2c059c27e0d0d81f37"
+    },
+    {
+      "work_id": "01613",
+      "title": "residues 1.8",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "1d8e008e1dd7c7fdcee5c2936ec39b10de714b04fe49bee6a61c07e51798fb6b"
+    },
+    {
+      "work_id": "01614",
+      "title": "residues 1.9",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "4cbb5667ec77c21aff47441d20b2a225f98df70c676fc4be95cf3a601dc8ce49"
+    },
+    {
+      "work_id": "01615",
+      "title": "residues 1.10",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "11ce93c6c5fb9a26dc12ca8e9e1d3407a64f1d7217a4b0a2b34755d3beb2f5a8"
+    },
+    {
+      "work_id": "01616",
+      "title": "residues 2.1",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "89c71f4e0a8529748ac93268c280a6f8f6e8a4990bb3b136000400fc08696755"
+    },
+    {
+      "work_id": "01617",
+      "title": "residues 2.2",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "0bb3c45fefbeccb60ee9c33ebe3c97cfa0f5b544a05f24b5c2c1bdd19456157b"
+    },
+    {
+      "work_id": "01618",
+      "title": "residues 2.3",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "76184997701f21f0c81f3e9386f995ffec0fd7d2476a4536ade4e27e36dff98f"
+    },
+    {
+      "work_id": "01619",
+      "title": "residues 2.4",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "d72f62bf3ca3812ab953ba5665e584ef0f37a4f9d5cdc537ab670642e8409a44"
+    },
+    {
+      "work_id": "01620",
+      "title": "residues 2.5",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "369c16ab22698672df6798e3ade5cfef38208d7621a91029801a2561472286d1"
+    },
+    {
+      "work_id": "01621",
+      "title": "residues 2.6",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "2e7938b6473ad1cc801c5b07579679416134bc117bcf9f88719d21d86fbf8fe7"
+    },
+    {
+      "work_id": "01622",
+      "title": "residues 2.7",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "6482c53c4535f30717e929a83de38a2e444b355616f292ea03044f68552dbc0c"
+    },
+    {
+      "work_id": "01623",
+      "title": "residues 2.8",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "0e2c375910b6222f088ea0494cc849bc6e92aadd4b2e8b8de8306f6bfcea7227"
+    },
+    {
+      "work_id": "01624",
+      "title": "residues 2.9",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "0797a851db9348980b6e0cff09490824b35b6cceeb9191793daf521e767efb3b"
+    },
+    {
+      "work_id": "01625",
+      "title": "residues 2.10",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "18f697dca6f761169edc17fd5fc66c5070d52b1da2a415585545ae2df32e9649"
+    },
+    {
+      "work_id": "01626",
+      "title": "residues 2.11",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "274ba42e3671e7a54a32712e263df4870a0d59b1981224f9d782cf47e257d754"
+    },
+    {
+      "work_id": "01627",
+      "title": "residues 2.12",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "a798c8b2cfeb710b35657b00df70534ab03e42767b350f463b4e5b4e3c6e41cd"
+    },
+    {
+      "work_id": "01628",
+      "title": "residues 2.13",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "121"
+      ],
+      "record_hash": "379f824821b677a9c4840275a18317ef3b3b38b735170d7697dfefab242b53d4"
+    }
+  ]
+}

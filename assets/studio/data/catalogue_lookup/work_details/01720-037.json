@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-037",
+    "work_id": "01720",
+    "detail_id": "037",
+    "project_subfolder": "symbols",
+    "project_filename": "lazy forgetful.jpg",
+    "title": "lazy forgetful",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "f4ee03a4d52aa7acba6bfb7b04e5a66ec54b783a06e1c302c0cfdc37006c812d",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

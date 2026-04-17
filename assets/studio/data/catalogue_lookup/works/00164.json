@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00164",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "3 commentaries.jpg",
+    "title": "unrelated commentaries",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1997,
+    "year_display": "1997",
+    "medium_type": "writing",
+    "medium_caption": "printed 3 pages",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3815,
+    "height_px": 5411,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "eba2d935ebab87c11fdfaf8df71feab0c4881c2442b3d62f956ff154122bb315",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

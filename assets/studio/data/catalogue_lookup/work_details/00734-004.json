@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00734-004",
+    "work_id": "00734",
+    "detail_id": "004",
+    "project_subfolder": "layers",
+    "project_filename": "music.jpg",
+    "title": "music",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "record_hash": "a610c2f07b6c0d0b93889985bbf69fd6f879db18019680f9da4eeac3df316fdc",
+  "work_summary": {
+    "work_id": "00734",
+    "title": "a theory of happiness is a theory of everything"
+  }
+}

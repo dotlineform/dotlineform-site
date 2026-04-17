@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-027",
+    "work_id": "01199",
+    "detail_id": "027",
+    "project_subfolder": "particles",
+    "project_filename": "particle (nerve text).jpg",
+    "title": "particle (nerve text)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "62fa35d3a0b0d3afc8c915add70e671213fd80b46fe9f9c9996a90090d479cda",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

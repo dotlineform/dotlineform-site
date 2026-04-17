@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01393",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "080"
+    ],
+    "series_title": null,
+    "project_folder": "interior design",
+    "project_filename": "interior design 3.jpg",
+    "title": "interior design 3",
+    "width_cm": 60,
+    "height_cm": 30,
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2d9aa98b5f15469a59c81cda1e2805dfa710e51b5e1a924dd9b78294f33a3e5e",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "01393-001",
+          "detail_id": "001",
+          "title": "interior design 3 - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01393-002",
+          "detail_id": "002",
+          "title": "interior design 3 - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01393-003",
+          "detail_id": "003",
+          "title": "interior design 3 - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "080",
+      "title": "interior design"
+    }
+  ]
+}

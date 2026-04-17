@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00384-002",
+    "work_id": "00384",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "glass forms 002.jpg",
+    "title": "glass forms 002",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 4032,
+    "height_px": 3024
+  },
+  "record_hash": "3634ad735c385421c59e43cc51156ac518bfaaf68a490b7c5f903f2d4e47c62b",
+  "work_summary": {
+    "work_id": "00384",
+    "title": "glass forms"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00571-001",
+    "work_id": "00571",
+    "detail_id": "001",
+    "project_subfolder": "working",
+    "project_filename": "2012-01-06 - 12-30-44.jpg",
+    "title": "2012-01-06 - 12-30-44",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3264,
+    "height_px": 2448
+  },
+  "record_hash": "6f3e9b0f0d07fad6fb21aaa5464511ef63eebf1e875f3b12e792bc6b6a6d826e",
+  "work_summary": {
+    "work_id": "00571",
+    "title": "forms scan 5"
+  }
+}

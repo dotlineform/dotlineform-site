@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "059",
+    "title": "forest",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2003,
+    "year_display": "2003",
+    "primary_work_id": "00392",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "title,work_id"
+  },
+  "record_hash": "c7f7d944705b78caeeab9afc9ce51e97dba77c2d824c754c6ac8270fadfcde90",
+  "member_works": [
+    {
+      "work_id": "00390",
+      "title": "forest 3",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "059"
+      ],
+      "record_hash": "177deed00a45e9e788541818db41b8d33af6679c3955edc95b3a7db97fc0ed99"
+    },
+    {
+      "work_id": "00392",
+      "title": "forest 1",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "059"
+      ],
+      "record_hash": "6953d8ea45e8ff2e2be02bf4fae89c0584bdc1c373217629bbab7fe974e1d6c6"
+    },
+    {
+      "work_id": "00393",
+      "title": "model 500",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "059"
+      ],
+      "record_hash": "d988e97aeba39af11441580f0b94ed3784ed27df4f1ad16316edd430fa3b0bca"
+    },
+    {
+      "work_id": "00618",
+      "title": "forest 2",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "059"
+      ],
+      "record_hash": "7c08cf52c49ac5d658110e570620600f60a94821e95c94b84e6ce303fef23365"
+    },
+    {
+      "work_id": "00619",
+      "title": "body 1",
+      "year_display": "2003",
+      "status": "published",
+      "series_ids": [
+        "059"
+      ],
+      "record_hash": "7d5017c0cd8c2e97a7eb0e884c499bcdd84361133e87ab020a1fb885ac04e949"
+    }
+  ]
+}

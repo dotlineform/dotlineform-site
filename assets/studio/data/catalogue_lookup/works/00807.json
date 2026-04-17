@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00807",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "022"
+    ],
+    "series_title": null,
+    "project_folder": "book of curves",
+    "project_filename": "book of curves 1 and 10.jpg",
+    "title": "book of curves 1 and 10",
+    "width_cm": 60,
+    "height_cm": 60,
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 7087,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2a9d23ce9a54a66783df38898a15d188461f3d19c67ad2fb1c5fa2ab87a79938",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "022",
+      "title": "book of curves"
+    }
+  ]
+}

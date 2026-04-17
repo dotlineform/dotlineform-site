@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00947",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (lines concentric).jpg",
+    "title": "dot theory (lines concentric)",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5bf8db235a283eb46f8120836f73e8e99851a841fd0ec222cc22d37584b8d6ee",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

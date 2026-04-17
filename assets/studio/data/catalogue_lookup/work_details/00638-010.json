@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-010",
+    "work_id": "00638",
+    "detail_id": "010",
+    "project_subfolder": "details",
+    "project_filename": "3 symbols (detail 8).jpg",
+    "title": "3 symbols (detail 8)",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 2816,
+    "height_px": 2112
+  },
+  "record_hash": "b544531eb81558587aec062bb4fdd2c051f95f925fbd4c597668e4dcd5336dbd",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00770",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "015"
+    ],
+    "series_title": null,
+    "project_folder": "base series",
+    "project_filename": "base nerve (3).jpg",
+    "title": "base nerve (3)",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "cea4f8de826eda5b596b4a4f3dc71e3e4d12bc0a4c01d5fe5081f1f32c9e8705",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "015",
+      "title": "base series"
+    }
+  ]
+}

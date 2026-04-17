@@ -1,0 +1,141 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "008",
+    "title": "a humid home full of light",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2013,
+    "year_display": "2013",
+    "primary_work_id": "00729",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "7a93ce58ebc95202b5a418858aad8968778c089d298b8d83b60a4b210f9f3874",
+  "member_works": [
+    {
+      "work_id": "00722",
+      "title": "a humid home full of light [1]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "49783844fc143670adeb3a220f9c9b2f758f62c6ee9bcb4051254e7cbd78d730"
+    },
+    {
+      "work_id": "00723",
+      "title": "a humid home full of light [2]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "33a8053ef762087d06087f8ece1d1309ca829ca3202c1ef9dd15158ed991ba60"
+    },
+    {
+      "work_id": "00724",
+      "title": "a humid home full of light [3]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "8f450536d14018511e6253453c132f9c86218420fcb468fc6e98770d3724f246"
+    },
+    {
+      "work_id": "00725",
+      "title": "a humid home full of light [4]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "14d70140c033a143d1f8bc5fcebd5bcccff157a01ddc24c18b700c80d5f65dc9"
+    },
+    {
+      "work_id": "00726",
+      "title": "a humid home full of light [5]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "3701db1fad46bde11766b78cec8eb2690af75ec2e523d88c495bbe4cdd8d181a"
+    },
+    {
+      "work_id": "00727",
+      "title": "a humid home full of light [6]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "92e61f3b8ad911e335b4a78b8f3849bbcce19937d3ab1ed9e55228a9119902ff"
+    },
+    {
+      "work_id": "00728",
+      "title": "a humid home full of light [7]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "420052d705f3ee755448c123fcf124e400d579cbde6c61d97f05598654c4198c"
+    },
+    {
+      "work_id": "00729",
+      "title": "a humid home full of light [8]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "9c1cf29fa51d00e8b248b20ba66fe9c320f304dcfe23800be36349b74165d2c6"
+    },
+    {
+      "work_id": "00730",
+      "title": "a humid home full of light [9]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "69a77617d1092a2de34cc43f3439ad96e06793a15e15973c4c828552cd188ea6"
+    },
+    {
+      "work_id": "00731",
+      "title": "a humid home full of light [10]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "92013de19092748c470adc580238ee78ec3038d73203f164d55e4792f30c7bae"
+    },
+    {
+      "work_id": "00732",
+      "title": "a humid home full of light [11]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "d95512827d68d6320d78685c2657051e9d8c0555c1a05e00526fb53f2e881df1"
+    },
+    {
+      "work_id": "00733",
+      "title": "a humid home full of light [12]",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "008"
+      ],
+      "record_hash": "832bd7bb5870d73c560c9f0a3efffa0c9ffacb542afcdaa146bc48de482fa102"
+    }
+  ]
+}

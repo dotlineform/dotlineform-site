@@ -44,6 +44,17 @@ export async function loadSearchIndexJson(config, scope, options) {
   return fetchJson(getSearchScopeDataPath(config, scope, "index"), options);
 }
 
+export async function loadStudioLookupJson(config, key, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
+  return fetchJson(getStudioDataPath(config, key), options);
+}
+
+export async function loadStudioLookupRecordJson(config, baseKey, recordId, options) {
+  const { getStudioDataPath } = await loadStudioConfigModule();
+  const basePath = getStudioDataPath(config, baseKey);
+  return fetchJson(buildLookupRecordPath(basePath, recordId), options);
+}
+
 export function buildStudioRegistryLookup(registryJson, studioGroups = [], options = {}) {
   const tags = Array.isArray(registryJson && registryJson.tags) ? registryJson.tags : [];
   const allowedGroups = sanitizeGroupSet(studioGroups);
@@ -164,6 +175,15 @@ function sanitizeGroupSet(studioGroups) {
     ? studioGroups.map((group) => normalizeStudioValue(group)).filter(Boolean)
     : [];
   return groups.length ? new Set(groups) : null;
+}
+
+function buildLookupRecordPath(basePath, recordId) {
+  const rawBase = String(basePath || "");
+  const [beforeHash, hash = ""] = rawBase.split("#", 2);
+  const [beforeQuery, query = ""] = beforeHash.split("?", 2);
+  const normalizedBase = beforeQuery.endsWith("/") ? beforeQuery : `${beforeQuery}/`;
+  const encodedId = encodeURIComponent(String(recordId || ""));
+  return `${normalizedBase}${encodedId}.json${query ? `?${query}` : ""}${hash ? `#${hash}` : ""}`;
 }
 
 async function loadStudioConfigModule() {

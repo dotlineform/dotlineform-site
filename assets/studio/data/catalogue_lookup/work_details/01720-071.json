@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-071",
+    "work_id": "01720",
+    "detail_id": "071",
+    "project_subfolder": "symbols",
+    "project_filename": "worry topsy-turvy'.jpg",
+    "title": "worry topsy-turvy'",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1510
+  },
+  "record_hash": "7a5651b3a64f2315961918ad1e9afa2b1bf06f3ed120e0a88c8320483e2f0ed6",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

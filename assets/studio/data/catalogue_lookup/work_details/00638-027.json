@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-027",
+    "work_id": "00638",
+    "detail_id": "027",
+    "project_subfolder": "source",
+    "project_filename": "source - reincarnation.jpg",
+    "title": "source - reincarnation",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "03888b3350767a83b115e38802fc40a21da36260137fba110fb1ee6cd14216a2",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

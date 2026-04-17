@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00466-003",
+    "work_id": "00466",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "forest 2 - detail 3.jpg",
+    "title": "forest 2 - detail 3",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 4000,
+    "height_px": 4000
+  },
+  "record_hash": "f0e5203ea9e60f745787c4abf77e16cc3a0c0fe405adaa89f1d0fa77cbd585ff",
+  "work_summary": {
+    "work_id": "00466",
+    "title": "forest 2"
+  }
+}

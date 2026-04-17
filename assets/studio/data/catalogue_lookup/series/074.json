@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "074",
+    "title": "grid theory",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2008,
+    "year_display": "2008",
+    "primary_work_id": "01359",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "ff9a2841841d211122aeca542c3492e4c63f1b708c28e1ae4e6ae9d037df4665",
+  "member_works": [
+    {
+      "work_id": "01359",
+      "title": "grid theory 1.1",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "074"
+      ],
+      "record_hash": "37bccf976ac59b11f8536b7dbf38e854d2e4a37aef766b5cfa77ca3ed5454acd"
+    },
+    {
+      "work_id": "01360",
+      "title": "grid theory 1.2",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "074"
+      ],
+      "record_hash": "4a5a46192173bf45ca4119a4d2397e64ffc78d26d0815533b3ee9bf0b0fbbc8c"
+    },
+    {
+      "work_id": "01361",
+      "title": "grid theory 1.3",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "074"
+      ],
+      "record_hash": "28d0dafd1ee5fbd9fa60eca86563b295d57a31746280a85464944a119dc8206a"
+    },
+    {
+      "work_id": "01362",
+      "title": "grid theory 1.3 version",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "074"
+      ],
+      "record_hash": "a42abd278c99cbdb33e9ea950dd165607f47eed9913df5fd83e0ed7491fb3a4c"
+    }
+  ]
+}

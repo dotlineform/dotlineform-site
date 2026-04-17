@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "078",
+    "title": "home land loss",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2021,
+    "year_display": "2021",
+    "primary_work_id": "01372",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "5376fad71c8d1d9774a36d7e0eab8dc9498d79f5b9fb02c62763c4ba55d79043",
+  "member_works": [
+    {
+      "work_id": "01372",
+      "title": "home",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "078"
+      ],
+      "record_hash": "0dceb32b7c9ae632e23c69e77388077961e57950817854617ce040a949c64c09"
+    },
+    {
+      "work_id": "01373",
+      "title": "land",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "078"
+      ],
+      "record_hash": "e90456b3c44952c6557a223087db593e7b518a03e20b0b9731af76c0351610b3"
+    },
+    {
+      "work_id": "01374",
+      "title": "loss",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "078"
+      ],
+      "record_hash": "e1f6dad400931c0b2a4e982b95a94043da7dad07ed8c183cdac63bd0b282d0b7"
+    }
+  ]
+}

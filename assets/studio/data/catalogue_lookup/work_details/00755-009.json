@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00755-009",
+    "work_id": "00755",
+    "detail_id": "009",
+    "project_subfolder": "details",
+    "project_filename": "assembly code 3 (detail 3).jpg",
+    "title": "assembly code 3 (detail 3)",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "ee25e54af577318be278915fcb0bfb4b0312d9e219e17c88cb6f6147eb54b88c",
+  "work_summary": {
+    "work_id": "00755",
+    "title": "assembly code 3"
+  }
+}

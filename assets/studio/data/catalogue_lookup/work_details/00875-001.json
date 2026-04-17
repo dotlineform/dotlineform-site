@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00875-001",
+    "work_id": "00875",
+    "detail_id": "001",
+    "project_subfolder": "cell",
+    "project_filename": "doll cell - 2007-04-03 - 14-17-59.jpg",
+    "title": "doll cell - 2007-04-03 - 14-17-59",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "width_px": 3780,
+    "height_px": 2835
+  },
+  "record_hash": "bedbfc34664ec4e712516bb62fb6f69615ea4a4ebd4429e6d13e1a7f04efa8f1",
+  "work_summary": {
+    "work_id": "00875",
+    "title": "doll cell"
+  }
+}

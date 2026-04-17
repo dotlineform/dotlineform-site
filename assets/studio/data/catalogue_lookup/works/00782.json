@@ -1,0 +1,375 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00782",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "017"
+    ],
+    "series_title": null,
+    "project_folder": "birth of healing forms",
+    "project_filename": "birth of healing forms.jpg",
+    "title": "birth of healing forms",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1d5297d423dedab42d353e7a45c1ff557cf49161246e2dc5e818a180834b4bc7",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00782-001",
+          "detail_id": "001",
+          "title": "birth of forms - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-002",
+          "detail_id": "002",
+          "title": "birth of forms - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-003",
+          "detail_id": "003",
+          "title": "birth of forms - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-004",
+          "detail_id": "004",
+          "title": "birth of forms - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "versions",
+      "count": 42,
+      "details": [
+        {
+          "detail_uid": "00782-005",
+          "detail_id": "005",
+          "title": "birth of forms (generation 3 version 1)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-006",
+          "detail_id": "006",
+          "title": "birth of forms (generation 3 version 2)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-007",
+          "detail_id": "007",
+          "title": "birth of forms (generation 3 version 3)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-008",
+          "detail_id": "008",
+          "title": "birth of forms (generation 3 version 4)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-009",
+          "detail_id": "009",
+          "title": "birth of healing forms - 1.01",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-010",
+          "detail_id": "010",
+          "title": "birth of healing forms - 1.02",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-011",
+          "detail_id": "011",
+          "title": "birth of healing forms - 1.03",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-012",
+          "detail_id": "012",
+          "title": "birth of healing forms - 1.04",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-013",
+          "detail_id": "013",
+          "title": "birth of healing forms - 2.01",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-014",
+          "detail_id": "014",
+          "title": "birth of healing forms - 2.02",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-015",
+          "detail_id": "015",
+          "title": "birth of healing forms - 2.03",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-016",
+          "detail_id": "016",
+          "title": "birth of healing forms - 2.04",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-017",
+          "detail_id": "017",
+          "title": "birth of healing forms - 2.05",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-018",
+          "detail_id": "018",
+          "title": "birth of healing forms - 2.06",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-019",
+          "detail_id": "019",
+          "title": "birth of healing forms - 2.07",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-020",
+          "detail_id": "020",
+          "title": "birth of healing forms - 2.09",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-021",
+          "detail_id": "021",
+          "title": "birth of healing forms - 2.10",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-022",
+          "detail_id": "022",
+          "title": "birth of healing forms - 2.11",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-023",
+          "detail_id": "023",
+          "title": "birth of healing forms - 2.12",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-024",
+          "detail_id": "024",
+          "title": "birth of healing forms - 2.13",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-025",
+          "detail_id": "025",
+          "title": "birth of healing forms - 2.14",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-026",
+          "detail_id": "026",
+          "title": "birth of healing forms - 2.15",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-027",
+          "detail_id": "027",
+          "title": "birth of healing forms - 2.16",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-028",
+          "detail_id": "028",
+          "title": "birth of healing forms - 2.17",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-029",
+          "detail_id": "029",
+          "title": "birth of healing forms - 2.18",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-030",
+          "detail_id": "030",
+          "title": "birth of healing forms - 2.19",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-031",
+          "detail_id": "031",
+          "title": "birth of healing forms - 2.20",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-032",
+          "detail_id": "032",
+          "title": "birth of healing forms - 2.25",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-033",
+          "detail_id": "033",
+          "title": "birth of healing forms - 2.26",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-034",
+          "detail_id": "034",
+          "title": "birth of healing forms - 2.27",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-035",
+          "detail_id": "035",
+          "title": "birth of healing forms - 2.28",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-036",
+          "detail_id": "036",
+          "title": "birth of healing forms - 2.29",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-037",
+          "detail_id": "037",
+          "title": "birth of healing forms - 2.30",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-038",
+          "detail_id": "038",
+          "title": "birth of healing forms - 2.31",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-039",
+          "detail_id": "039",
+          "title": "birth of healing forms - 2.32",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-040",
+          "detail_id": "040",
+          "title": "birth of healing forms - 3.01",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-041",
+          "detail_id": "041",
+          "title": "birth of healing forms - 3.02",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-042",
+          "detail_id": "042",
+          "title": "birth of healing forms - 3.04",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-043",
+          "detail_id": "043",
+          "title": "birth of healing forms - 3.05",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-044",
+          "detail_id": "044",
+          "title": "birth of healing forms - 3.06",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-045",
+          "detail_id": "045",
+          "title": "birth of healing forms - 3.07",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00782-046",
+          "detail_id": "046",
+          "title": "birth of healing forms - 3.08",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "017",
+      "title": "birth of healing forms"
+    }
+  ]
+}

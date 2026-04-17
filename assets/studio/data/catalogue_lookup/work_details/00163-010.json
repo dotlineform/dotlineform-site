@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00163-010",
+    "work_id": "00163",
+    "detail_id": "010",
+    "project_subfolder": "pages",
+    "project_filename": "nerve (abattoir) - back cover.jpg",
+    "title": "nerve (abattoir) - back cover",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 1985,
+    "height_px": 1985
+  },
+  "record_hash": "70e7693a0205be71455e105920ef9b2ed92d6964ab856e16b6c45a97058db517",
+  "work_summary": {
+    "work_id": "00163",
+    "title": "nerve (abattoir)"
+  }
+}

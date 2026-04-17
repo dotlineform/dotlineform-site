@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00805-005",
+    "work_id": "00805",
+    "detail_id": "005",
+    "project_subfolder": "dna",
+    "project_filename": "book dna 5.jpg",
+    "title": "book dna 5",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 1200,
+    "height_px": 1200
+  },
+  "record_hash": "2c494dcd2a45d30a0dd6ea46bcc089e142d2e48b0b1a7ac38dd19c059540b48e",
+  "work_summary": {
+    "work_id": "00805",
+    "title": "book dna sequence"
+  }
+}

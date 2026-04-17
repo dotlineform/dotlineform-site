@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00512",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "098"
+    ],
+    "series_title": null,
+    "project_folder": "mm",
+    "project_filename": "mm quantum 2.10.jpg",
+    "title": "mm quantum 2.10",
+    "width_cm": 50,
+    "height_cm": 30,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "25c6ecf3440a48fa0a5886b6a6f2c36f1e1fcf4c2b2dcb16375fb9e8260f4a8c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "098",
+      "title": "mm"
+    }
+  ]
+}

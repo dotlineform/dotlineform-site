@@ -1,0 +1,103 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01398",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "085"
+    ],
+    "series_title": null,
+    "project_folder": "kylie wax model",
+    "project_filename": "kylie wax model 5.0.jpg",
+    "title": "kylie wax model 5.0",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1f1f84d2b0e3bdeabb6c9674e405b39f7c720dd492b0aff187c1705f5a239d73",
+  "detail_sections": [
+    {
+      "project_subfolder": "iterations",
+      "count": 8,
+      "details": [
+        {
+          "detail_uid": "01398-001",
+          "detail_id": "001",
+          "title": "kylie wax model - iteration 5.0",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-002",
+          "detail_id": "002",
+          "title": "kylie wax model - iteration 5.1",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-003",
+          "detail_id": "003",
+          "title": "kylie wax model - iteration 5.2",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-004",
+          "detail_id": "004",
+          "title": "kylie wax model - iteration 5.3",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-005",
+          "detail_id": "005",
+          "title": "kylie wax model - iteration 5.4",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-006",
+          "detail_id": "006",
+          "title": "kylie wax model - iteration 5.5",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-007",
+          "detail_id": "007",
+          "title": "kylie wax model - iteration 5.6",
+          "project_subfolder": "iterations",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01398-008",
+          "detail_id": "008",
+          "title": "kylie wax model - iteration 5.7",
+          "project_subfolder": "iterations",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "085",
+      "title": "kylie wax model"
+    }
+  ]
+}

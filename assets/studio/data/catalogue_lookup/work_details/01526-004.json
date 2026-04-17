@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01526-004",
+    "work_id": "01526",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "all the particles are connected - detail 4.jpg",
+    "title": "all the particles are connected - detail 4",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "739f0aa369f91013460b4e7f89d0f1af414457924dbc7b1799a67461b4d442cf",
+  "work_summary": {
+    "work_id": "01526",
+    "title": "all the particles are connected"
+  }
+}

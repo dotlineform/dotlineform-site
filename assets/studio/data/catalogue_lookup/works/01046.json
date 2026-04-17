@@ -1,0 +1,222 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01046",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "049"
+    ],
+    "series_title": null,
+    "project_folder": "espresso",
+    "project_filename": "espresso.jpg",
+    "title": "espresso",
+    "width_cm": 46,
+    "height_cm": 46,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5433,
+    "height_px": 5433,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b391d8e80128ab66d25f300e1561d86eb43fbdbfc74bc989686a4709aad701ee",
+  "detail_sections": [
+    {
+      "project_subfolder": "espressos",
+      "count": 25,
+      "details": [
+        {
+          "detail_uid": "01046-001",
+          "detail_id": "001",
+          "title": "espresso 1",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-002",
+          "detail_id": "002",
+          "title": "espresso 2",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-003",
+          "detail_id": "003",
+          "title": "espresso 3",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-004",
+          "detail_id": "004",
+          "title": "espresso 4",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-005",
+          "detail_id": "005",
+          "title": "espresso 5",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-006",
+          "detail_id": "006",
+          "title": "espresso 6",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-007",
+          "detail_id": "007",
+          "title": "espresso 7",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-008",
+          "detail_id": "008",
+          "title": "espresso 8",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-009",
+          "detail_id": "009",
+          "title": "espresso 9",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-010",
+          "detail_id": "010",
+          "title": "espresso 10",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-011",
+          "detail_id": "011",
+          "title": "espresso 11",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-012",
+          "detail_id": "012",
+          "title": "espresso 12",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-013",
+          "detail_id": "013",
+          "title": "espresso 13",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-014",
+          "detail_id": "014",
+          "title": "espresso 14",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-015",
+          "detail_id": "015",
+          "title": "espresso 15",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-016",
+          "detail_id": "016",
+          "title": "espresso 16",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-017",
+          "detail_id": "017",
+          "title": "espresso 17",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-018",
+          "detail_id": "018",
+          "title": "espresso 18",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-019",
+          "detail_id": "019",
+          "title": "espresso 19",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-020",
+          "detail_id": "020",
+          "title": "espresso 20",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-021",
+          "detail_id": "021",
+          "title": "espresso 21",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-022",
+          "detail_id": "022",
+          "title": "espresso 22",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-023",
+          "detail_id": "023",
+          "title": "espresso 23",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-024",
+          "detail_id": "024",
+          "title": "espresso 24",
+          "project_subfolder": "espressos",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01046-025",
+          "detail_id": "025",
+          "title": "espresso 25",
+          "project_subfolder": "espressos",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "049",
+      "title": "espresso"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "017",
+    "title": "birth of healing forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00782",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "8f4d3ee84c0a860184816eb72c9596c38ae4cd47e9c4ec4a7403423a12c51adb",
+  "member_works": [
+    {
+      "work_id": "00782",
+      "title": "birth of healing forms",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "017"
+      ],
+      "record_hash": "1d5297d423dedab42d353e7a45c1ff557cf49161246e2dc5e818a180834b4bc7"
+    }
+  ]
+}

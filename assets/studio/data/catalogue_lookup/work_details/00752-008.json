@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00752-008",
+    "work_id": "00752",
+    "detail_id": "008",
+    "project_subfolder": "details",
+    "project_filename": "all the little cracks again - detail 4.jpg",
+    "title": "all the little cracks again - detail 4",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "f419eb06de1438cdc9489bb77a5431fc9f901a15770b6ff8dcc2ea3482ae677b",
+  "work_summary": {
+    "work_id": "00752",
+    "title": "all the little cracks again"
+  }
+}

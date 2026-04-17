@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01523-001",
+    "work_id": "01523",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "pi - detail 1.jpg",
+    "title": "pi - detail 1",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "52645312086c0b10ff99a0fc1f5e4fc3adf899681711800ff501711c79abcec6",
+  "work_summary": {
+    "work_id": "01523",
+    "title": "pi"
+  }
+}

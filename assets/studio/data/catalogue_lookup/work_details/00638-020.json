@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-020",
+    "work_id": "00638",
+    "detail_id": "020",
+    "project_subfolder": "source",
+    "project_filename": "source - give.jpg",
+    "title": "source - give",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "5273fe1424850a5607e48b7ec6eeb39a4d1121f61e37ae4a69f11adc13d33698",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

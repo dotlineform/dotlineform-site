@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "085",
+    "title": "kylie wax model",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2024,
+    "year_display": "2024",
+    "primary_work_id": "01394",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "27b475aa9ee15e372e42393994447811e0dd3062f752b44c27373bf0316c00e6",
+  "member_works": [
+    {
+      "work_id": "01394",
+      "title": "kylie wax model 1.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "b97bcbb9f859ff0bcbd8472d7646154a330bd3ae62a3b2718ee4f83aad0eed67"
+    },
+    {
+      "work_id": "01395",
+      "title": "kylie wax model 2.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "a0a217aed3d64d4f724015550cdd03cff25962715e527da6eb1259b5f257b0a6"
+    },
+    {
+      "work_id": "01396",
+      "title": "kylie wax model 3.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "b8dcba6c85598047c30e42cdc422fd2a653cbd82cb32610f306c6f8cd3d0630e"
+    },
+    {
+      "work_id": "01397",
+      "title": "kylie wax model 4.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "159d30bfa0baf055a8d635af94058065cf6e8c23e7df41d6eafa64a3cd42b9f5"
+    },
+    {
+      "work_id": "01398",
+      "title": "kylie wax model 5.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "1f1f84d2b0e3bdeabb6c9674e405b39f7c720dd492b0aff187c1705f5a239d73"
+    },
+    {
+      "work_id": "01399",
+      "title": "kylie wax model 6.0",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "085"
+      ],
+      "record_hash": "870a31c18e8f4121fc1f686bd519c95347aaf31dc2ad83c5968b9817d7cf559d"
+    }
+  ]
+}

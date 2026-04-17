@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00366",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "036"
+    ],
+    "series_title": null,
+    "project_folder": "curve poems (2025)",
+    "project_filename": "00366.jpg",
+    "title": "untitled",
+    "width_cm": 42,
+    "height_cm": 29.7,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": "2",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4960,
+    "height_px": 3508,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "6e00e957ac4328944819d9ef5cf47ec282f31f1f56d73c8091f19c5bd0c2ee95",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "036",
+      "title": "curve poems"
+    }
+  ]
+}

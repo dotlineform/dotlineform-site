@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00637",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "001"
+    ],
+    "series_title": null,
+    "project_folder": "10000",
+    "project_filename": "10000 (3).jpg",
+    "title": "10,000 (3)",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b65a55f43b4f2592a5e830baffb3fbeb7649b24da574afcc4bef316abd1b1c57",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00637-001",
+          "detail_id": "001",
+          "title": "10,000 (3.1)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00637-002",
+          "detail_id": "002",
+          "title": "10,000 (3.2)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00637-003",
+          "detail_id": "003",
+          "title": "10,000 (3.3)",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "001",
+      "title": "10,000"
+    }
+  ]
+}

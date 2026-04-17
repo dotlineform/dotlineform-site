@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01196-014",
+    "work_id": "01196",
+    "detail_id": "014",
+    "project_subfolder": "forms",
+    "project_filename": "form 13.jpg",
+    "title": "form 13",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "0e4eaa3d0adcb230cef75ea5bf647944838b7ecea1f7b45630e558fc2a6afb7f",
+  "work_summary": {
+    "work_id": "01196",
+    "title": "forms"
+  }
+}

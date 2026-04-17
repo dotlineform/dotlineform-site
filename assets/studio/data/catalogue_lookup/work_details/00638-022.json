@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-022",
+    "work_id": "00638",
+    "detail_id": "022",
+    "project_subfolder": "source",
+    "project_filename": "source - grieve.jpg",
+    "title": "source - grieve",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "f28aa2afe2c0871691e60e93baeb4783d06339d9ca0d4e91ba85b969a0982cb0",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

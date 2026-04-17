@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01534-012",
+    "work_id": "01534",
+    "detail_id": "012",
+    "project_subfolder": "selected source",
+    "project_filename": "poa 1 - 1700.jpg",
+    "title": "poa 1 - 1700",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 2398
+  },
+  "record_hash": "c24ccfe9ee9a9c93c6e15d5b089650bd588e9b8c78d98889e9bb820124c51318",
+  "work_summary": {
+    "work_id": "01534",
+    "title": "poa 1 (map 1-500)"
+  }
+}

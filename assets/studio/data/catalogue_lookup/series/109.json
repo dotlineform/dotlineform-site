@@ -1,0 +1,131 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "109",
+    "title": "particle machine",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2020,
+    "year_display": "2020",
+    "primary_work_id": "01480",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "c6226848ecbcc58002be0e239cd282271fdafdceb987783d7a9f336b58cee61f",
+  "member_works": [
+    {
+      "work_id": "01480",
+      "title": "particle path 1",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "9dac8f0b80033c9f07a5ec83e957a7bb72a6726bda0172f1d417ebf3133364c9"
+    },
+    {
+      "work_id": "01481",
+      "title": "particle path 2",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "fb0b3152a37b3573794744be7b991a804aabe9c2a786624d3ce54db340091b6e"
+    },
+    {
+      "work_id": "01482",
+      "title": "particle path 3",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "4cf5128aae7ca4b01e064cadad36c0c2ca1228ec1fc14d57db302641d4da700d"
+    },
+    {
+      "work_id": "01483",
+      "title": "particle path 4",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "96794169d5500ba6062c117874e9a78e993e949ebf582d14e2f03f7922cc126c"
+    },
+    {
+      "work_id": "01484",
+      "title": "particle path 5",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "04cd2906d441466b204246a1567d0646709a81053382586e990e7f6505a04313"
+    },
+    {
+      "work_id": "01485",
+      "title": "surface 1",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "4170fc645ccf69de2ad82050ca9d8d908931a17780ed6a34d03c33bba98143f3"
+    },
+    {
+      "work_id": "01486",
+      "title": "surface 2",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "dbb8978647881f922e0d0fa6e169c7452ebacc0f9c2111cdbfdaac6edd7c9c3d"
+    },
+    {
+      "work_id": "01487",
+      "title": "surface 3",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "e309b4f01f40c3dac95ebab5bb336e6421be30b85c92b07be36f10cfa920af2f"
+    },
+    {
+      "work_id": "01488",
+      "title": "surface 4",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "0609bfc2419ffb0a245d56bddd6eb58b09536a1c2413c9846550efed9d97effb"
+    },
+    {
+      "work_id": "01489",
+      "title": "surface 5",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "a4f38570ed883c0115c0ae8abc4b56385c8447a9206c1023b84fdaf65f1f3d15"
+    },
+    {
+      "work_id": "01490",
+      "title": "surface 6",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "109"
+      ],
+      "record_hash": "6e8af71a7fd28ee2a011498999171d479d307f0c7441524692a257a72b3d3c75"
+    }
+  ]
+}

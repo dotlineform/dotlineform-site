@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01875-003",
+    "work_id": "01875",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "untitled composite 1 - detail 3.jpg",
+    "title": "untitled composite 1 - detail 3",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "82bb60b442dc8098cca7b924cd315eb862dc223eff2edb15067e4cdec67b0880",
+  "work_summary": {
+    "work_id": "01875",
+    "title": "untitled composite 1"
+  }
+}

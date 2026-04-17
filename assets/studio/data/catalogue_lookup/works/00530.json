@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00530",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "004"
+    ],
+    "series_title": null,
+    "project_folder": "2 bodies",
+    "project_filename": "00530 - body curves.jpg",
+    "title": "body curves",
+    "width_cm": 50,
+    "height_cm": 64,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 7559,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "6544958697e2cbd4f46d645ec90200601989e77dba7e0f703f923f4147ef003b",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00530-001",
+          "detail_id": "001",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00530-002",
+          "detail_id": "002",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00530-003",
+          "detail_id": "003",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00530-004",
+          "detail_id": "004",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "004",
+      "title": "2 bodies"
+    }
+  ]
+}

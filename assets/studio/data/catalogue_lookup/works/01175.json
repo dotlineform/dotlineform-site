@@ -1,0 +1,159 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01175",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "060"
+    ],
+    "series_title": null,
+    "project_folder": "forest (2024)",
+    "project_filename": "forest.jpg",
+    "title": "forest",
+    "width_cm": 91,
+    "height_cm": 61,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "painting",
+    "medium_caption": "mixed media on board",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 5560,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e77cc1093a656c97545093dee31ead90d632fc74fe0cf9781e509e32808efad3",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 16,
+      "details": [
+        {
+          "detail_uid": "01175-001",
+          "detail_id": "001",
+          "title": "forest detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-002",
+          "detail_id": "002",
+          "title": "forest detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-003",
+          "detail_id": "003",
+          "title": "forest detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-004",
+          "detail_id": "004",
+          "title": "forest detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-005",
+          "detail_id": "005",
+          "title": "forest detail 5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-006",
+          "detail_id": "006",
+          "title": "forest detail 6",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-007",
+          "detail_id": "007",
+          "title": "forest detail 7",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-008",
+          "detail_id": "008",
+          "title": "forest detail 8",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-009",
+          "detail_id": "009",
+          "title": "forest detail 9",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-010",
+          "detail_id": "010",
+          "title": "forest detail 10",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-011",
+          "detail_id": "011",
+          "title": "forest detail 11",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-012",
+          "detail_id": "012",
+          "title": "forest detail 12",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-013",
+          "detail_id": "013",
+          "title": "forest detail 13",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-014",
+          "detail_id": "014",
+          "title": "forest detail 14",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-015",
+          "detail_id": "015",
+          "title": "forest detail 15",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01175-016",
+          "detail_id": "016",
+          "title": "forest detail 16",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "060",
+      "title": "forest (2024)"
+    }
+  ]
+}

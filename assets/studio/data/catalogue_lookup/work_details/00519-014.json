@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00519-014",
+    "work_id": "00519",
+    "detail_id": "014",
+    "project_subfolder": "versions",
+    "project_filename": "version dall-e - 3.3.jpg",
+    "title": "version dall-e - 3.3",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "4726e54f2adcc0a2e60b69a09fd11a86cca9dc0af52ff0406785f6717ba0f279",
+  "work_summary": {
+    "work_id": "00519",
+    "title": "learning to draw landscapes (versions)"
+  }
+}

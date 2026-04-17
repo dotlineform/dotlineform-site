@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00829",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "031"
+    ],
+    "series_title": null,
+    "project_folder": "concrete",
+    "project_filename": "concrete [12].jpg",
+    "title": "concrete [12]",
+    "width_cm": 42,
+    "height_cm": 30,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "368adb735b5526ebc9617d2be4cdb782872a5c4fdd9f227562e47e2e177ad01d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "031",
+      "title": "concrete"
+    }
+  ]
+}

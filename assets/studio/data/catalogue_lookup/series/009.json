@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "009",
+    "title": "a poem divided into 4 parts",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2025",
+    "primary_work_id": "00001",
+    "series_prose_file": null,
+    "notes": "details attached to 00001",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "a659e3ca66ae3c8de1d567e66ddadee8be46983c7938f3f8739a3a758a4bb2fa",
+  "member_works": [
+    {
+      "work_id": "00001",
+      "title": "a poem divided into 4 parts (\"our dreams are real\")",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "009"
+      ],
+      "record_hash": "304a27ff0149bbb5ed1afbe07ab503ee5037e269ce69d9a6752e5d9a56f7e3e6"
+    },
+    {
+      "work_id": "00002",
+      "title": "a poem divided into 4 parts (\"there must be hope\")",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "009"
+      ],
+      "record_hash": "95ba71d8f7f8dbd2c36ba635b04ba91e13fb786f8be6b46a103329d98222ec2f"
+    },
+    {
+      "work_id": "00003",
+      "title": "a poem divided into 4 parts (\"we are not lost\")",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "009"
+      ],
+      "record_hash": "2dcf77946fdb0dd03bcd18304f81b11460df747005d4a7c3ae9620ac6575d289"
+    },
+    {
+      "work_id": "00004",
+      "title": "a poem divided into 4 parts (\"we only feel love\")",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "009"
+      ],
+      "record_hash": "d89109fce718da91e23c2c767c2f34ba834103141bb2cc5430d2202e165eeefc"
+    }
+  ]
+}

@@ -45,14 +45,15 @@ It does not yet:
 
 Current save/rebuild flow:
 
-1. page loads `works.json`, `work_details.json`, and `series.json`
-2. browser computes a record hash for stale-write protection
-3. user edits form fields
-4. `POST /catalogue/work/save` sends the current work id, the expected record hash, and the normalized record patch
-5. the local write server validates the full source set, writes `works.json`, creates backups, and returns the normalized saved record
-6. the page advances its baseline and marks runtime rebuild as still pending
-7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
-8. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild`
+1. page loads derived lookup payloads for work search and series lookup, not full canonical source maps
+2. opening a work fetches one focused work lookup record from `assets/studio/data/catalogue_lookup/works/<work_id>.json`
+3. browser uses the lookup-provided record hash for stale-write protection
+4. user edits form fields
+5. `POST /catalogue/work/save` sends the current work id, the expected record hash, and the normalized record patch
+6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record
+7. the page reloads its focused work lookup payload and marks runtime rebuild as still pending
+8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
+9. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild`
 
 The current rebuild scope is intentionally narrow:
 

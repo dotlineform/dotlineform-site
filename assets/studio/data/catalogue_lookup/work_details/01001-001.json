@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01001-001",
+    "work_id": "01001",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "dots (inside) [detail 1].jpg",
+    "title": "dots (inside) [detail 1]",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "cd5743e4a16850dbcf4dea62b1696c957e370151c819a088d733020e4b835411",
+  "work_summary": {
+    "work_id": "01001",
+    "title": "dots (inside)"
+  }
+}

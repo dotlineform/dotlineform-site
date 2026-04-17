@@ -1,0 +1,561 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "056",
+    "title": "folding forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012, 2022",
+    "primary_work_id": "01107",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "81f81a042daa5636a2b374fafd13cf79569e31a0fd0d940ada92b915d773040a",
+  "member_works": [
+    {
+      "work_id": "01107",
+      "title": "folding forms 1",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "752b3333220b8040594f41aece97a96974c83aaab90391163c8b3fe3b7e6b3fb"
+    },
+    {
+      "work_id": "01108",
+      "title": "folding forms 1'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "757cf70f2cf758cce5331a5ef99a14a1d3f34d82dfaa6e89c90d0fe2e5600c80"
+    },
+    {
+      "work_id": "01109",
+      "title": "folding forms 2",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "8491620de50718b0b7d30240ccff655092a0536253450cf2ecf1ca8f8e6abdc6"
+    },
+    {
+      "work_id": "01110",
+      "title": "folding forms 2'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "48907fdef14a713d2b32450e9e19a2921e1ed9c71f5f420bb10b49aae41f5fc5"
+    },
+    {
+      "work_id": "01111",
+      "title": "folding forms 3",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "13c8067ce65f0c26e514ad55e8dcba3650e09d4d5f8ce6bf9025bb0815c41bd0"
+    },
+    {
+      "work_id": "01112",
+      "title": "folding forms 3'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "67c7fcb890491f21c69c44296a198f097ab303b13168f3287d83af33cf29df1c"
+    },
+    {
+      "work_id": "01113",
+      "title": "folding forms 4",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "966fb3ebfbca3d96d8d78bd3699de6c10332dbf2dfe77663edf843b1ebbb0be1"
+    },
+    {
+      "work_id": "01114",
+      "title": "folding forms 4'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "6c7dafb1357822c5a458bf03dc360d7627c884a9108a5ab4a655ede047b76bc8"
+    },
+    {
+      "work_id": "01115",
+      "title": "folding forms 5",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "668eb099bba019e9f35b87b7cbcc80bf24dc6d86fc4526fb30aa0e6e411f4c4e"
+    },
+    {
+      "work_id": "01116",
+      "title": "folding forms 5'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "0dd5ac8212f1413c284724dc58b802b4b240e59c8b7bed3f4f1f9f4768d71c92"
+    },
+    {
+      "work_id": "01117",
+      "title": "folding forms 6",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "f2eabc1f0172c56289790ca330396809c739154a60c1a49214e5e18e387b073b"
+    },
+    {
+      "work_id": "01118",
+      "title": "folding forms 6'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "3264d7bce6b2eddfab9f27d119f3773e5aacd1a0472c7ec86a5faedfe9a61829"
+    },
+    {
+      "work_id": "01119",
+      "title": "folding forms 7",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "ca2f9ed432bd1a7c87d6fca2de55d50bdc8a961b68144aea4cae783bb8aad09a"
+    },
+    {
+      "work_id": "01120",
+      "title": "folding forms 7' reverse",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "6698364b0ec8fe7f8256b6bf103f850560f5b80c49b4b2894e4fd492c375c939"
+    },
+    {
+      "work_id": "01121",
+      "title": "folding forms 7'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "db1c9d95052bd3c428dc7f69dedeae787280c55e7e276b756c77fcdc9b0f2113"
+    },
+    {
+      "work_id": "01122",
+      "title": "folding forms 8",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "e45852cb7db100b3f5a0fd8ae2cdbf76baf13164ad98f02731240280ddec77b0"
+    },
+    {
+      "work_id": "01123",
+      "title": "folding forms 8'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "c32908b467bfca8b5ff50a3bd27a1a8c02a44b3aa309d44e3025cc00dc125467"
+    },
+    {
+      "work_id": "01124",
+      "title": "folding forms 9 open (1)",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "8d914ffc0f1f99ae3e47dddde36ec3a56c9e595c383e1d137937acc60fc1cd16"
+    },
+    {
+      "work_id": "01125",
+      "title": "folding forms 9 open (2)",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "03450b7f898dbd20fe262c687947293300d65397349aec4229d266df5a91b731"
+    },
+    {
+      "work_id": "01126",
+      "title": "folding forms 9",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "0db2ab9863902a54744145a27325dc1e01a629f8f5e25bf6e719452a25a2df62"
+    },
+    {
+      "work_id": "01127",
+      "title": "folding forms 9'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "3f15d1b4f1ccb06c2b1a46938f850b6fa81649285459fb8b9cc71b556fe72f43"
+    },
+    {
+      "work_id": "01128",
+      "title": "folding forms 10",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "8ca28dd44b1298fc41b9f3d69ebaec9e2fd9b899bef972fa09ef44450ec4c46b"
+    },
+    {
+      "work_id": "01129",
+      "title": "folding forms 10'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "6cb4e5545ac3ccd8551cd917e2ec2205ce8e170cef36e8f7ced1ea6f2c07662d"
+    },
+    {
+      "work_id": "01130",
+      "title": "folding forms 11",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "01ccf94667fa258ebe16a1bcb9e45d4486691d9f4e27098876ce2f2c2cc9712d"
+    },
+    {
+      "work_id": "01131",
+      "title": "folding forms 11'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "9fccaebbe5b9b52ed2fe29a7b2cff47eceee06cc0f4315b5f3f4d0b21b2d6b2d"
+    },
+    {
+      "work_id": "01132",
+      "title": "folding forms 12",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "fab9a80e8d77e59acab2ef9107fde6d6fad0fa7ebb2ab642ad76f179873b42da"
+    },
+    {
+      "work_id": "01133",
+      "title": "folding forms 12'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "25eb1d988959c424aa465143178ff5acb5337ca8bcef0f57c7d0e8d56a3643d5"
+    },
+    {
+      "work_id": "01134",
+      "title": "folding forms 13",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "e708b97b507edcdb6239f72cc12fca182868a00bbadcb8ab86ee171c324234da"
+    },
+    {
+      "work_id": "01135",
+      "title": "folding forms 13'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "768eb7a4dcab1ed95d216a23f599f03096d35a7308a4d450ac112407b90237f7"
+    },
+    {
+      "work_id": "01136",
+      "title": "folding forms 14",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "23a80189e94e7359dc1ba2ad64285e3c823d05c6b10d4ed50e2c1665499df18a"
+    },
+    {
+      "work_id": "01137",
+      "title": "folding forms 14' reverse",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "e446b85ebf13bd9ebe7b3df981dc586403aac08462688d09fd457ca4e96380d3"
+    },
+    {
+      "work_id": "01138",
+      "title": "folding forms 14'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "20365ddcbb97eab52fb49e71cef309e65de4a4777f054a07a4119d21a7a6a43e"
+    },
+    {
+      "work_id": "01139",
+      "title": "folding forms 15",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "ae713f47ba35d6e653d9d726adb45d8401126612ce77b1b7bad8193db78fd6c2"
+    },
+    {
+      "work_id": "01140",
+      "title": "folding forms 15'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "b1c5516143f8b292e62c7267358d53796e8162c042e67d8d39e2debdc0a2128d"
+    },
+    {
+      "work_id": "01141",
+      "title": "folding forms 16",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "273859fdebf49f6d9e662f6ca8578ee290264fce3ff4ea244890f68cb01ec9ab"
+    },
+    {
+      "work_id": "01142",
+      "title": "folding forms 16'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "497452759047618f3b0e2ae9b718df8abf983bf5f38d8d12c663d5be9a218da7"
+    },
+    {
+      "work_id": "01143",
+      "title": "folding forms 17",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "fe7d3895ba51134f8d304c42cb13ae725d7bd9520b38424dc4a4d60f8d71f698"
+    },
+    {
+      "work_id": "01144",
+      "title": "folding forms 17'",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "03b3908a797667ef8b7573b4e9a4c4e99cb88458ffc7f0ecc5d26727ac3ab22d"
+    },
+    {
+      "work_id": "01145",
+      "title": "folding version 1",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "5ce22ead526740d715177441f917bf2d6ccd597913ab29d78a2be6b17f1b0015"
+    },
+    {
+      "work_id": "01146",
+      "title": "folding version 2",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "7b06505010b2d657b89d9b40e580d4f35b379697780f0ddca4ea66e4b5612827"
+    },
+    {
+      "work_id": "01147",
+      "title": "folding version 3",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "4f574b4d3bce2d38337d7048b544ef7a43012ab06dfda44456927fce5a496dc5"
+    },
+    {
+      "work_id": "01148",
+      "title": "folding version 4",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "c5f7fde11ea8b68256aaf49b5f756a96b56349eacd793b39c464242469564185"
+    },
+    {
+      "work_id": "01149",
+      "title": "folding version 5",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "b5dfa4df3159dc9ecaada81f7231485407b8436dc008b1d85cdeada6b866de7e"
+    },
+    {
+      "work_id": "01150",
+      "title": "folding version 6",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "5300083f8639db89e928a26b574f5a28875e3f22a3239ddb699979a2fe1f82c1"
+    },
+    {
+      "work_id": "01151",
+      "title": "folding version 7",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "96aac18608f3f1bc8d6c22f4a651a004bc3425b1b160d39e8b82be92ee5e6246"
+    },
+    {
+      "work_id": "01152",
+      "title": "folding version 8",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "8f7d2c8432062f2aca1dead72a71c2852243e54c30fa94800bc22ccde5d46fcf"
+    },
+    {
+      "work_id": "01153",
+      "title": "folding version 9",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "e389c46ce6618913d2af760eb85c7b3d5544f607a5a359790638e5836f0e24e9"
+    },
+    {
+      "work_id": "01154",
+      "title": "folding version 10",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "e28e695aceefe72f979078027e37f9407e5d99a11609cfc43e0fffbfd472d6bd"
+    },
+    {
+      "work_id": "01155",
+      "title": "folding version 11",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "02b11bb660a3e3b1dda11e6d97299fb2e34c945be7f7bb9bdd739f509128f535"
+    },
+    {
+      "work_id": "01156",
+      "title": "folding version 12",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "0cf96bb9a0d73b7c6d5572918124a2d3cd417b5efe392d5ef48e7735ed42b377"
+    },
+    {
+      "work_id": "01157",
+      "title": "folding version 13",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "fe53d30a3d431aedf0a7bd0ec83bf56d40f7431ea678ecbeb2997cd8d58f6ea3"
+    },
+    {
+      "work_id": "01158",
+      "title": "folding version 14",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "221f7738822dfd1d5f9a5fcfcab792a678865484fc38c79b7718da5f496f6d06"
+    },
+    {
+      "work_id": "01159",
+      "title": "folding version 15",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "9f5fcdd93ba0a3a2f77044744b80e70916f57b3bdf278e6b617e006458532b4d"
+    },
+    {
+      "work_id": "01160",
+      "title": "folding version 16",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "056"
+      ],
+      "record_hash": "6ba3eaafd894334d8476aeeb3d2b842a72802014ed82c39817f0e301493c2ba8"
+    }
+  ]
+}

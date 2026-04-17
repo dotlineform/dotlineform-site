@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00402-001",
+    "work_id": "00402",
+    "detail_id": "001",
+    "project_subfolder": "photos",
+    "project_filename": "2006-06-08 - 21-26-10.jpg",
+    "title": "spiders (2006-06-08 - 21-26-10)",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 2816,
+    "height_px": 2112
+  },
+  "record_hash": "3c026754c08e87fa8f574d59971d0b4ac53cecbd853b4f20343611e3f06e5df7",
+  "work_summary": {
+    "work_id": "00402",
+    "title": "spiders"
+  }
+}

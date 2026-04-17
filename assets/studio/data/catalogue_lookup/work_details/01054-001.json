@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01054-001",
+    "work_id": "01054",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "flowers 3 - detail 1.jpg",
+    "title": "flowers 3 - detail 1",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "ca2883322edf90193fd0cccceead9963e15e3c1e9295d9f2337e8293502c4fa1",
+  "work_summary": {
+    "work_id": "01054",
+    "title": "flowers 3.jpg"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01498-002",
+    "work_id": "01498",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "k particles - detail 2.jpg",
+    "title": "k particles - detail 2",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "3c3d27d790949f717713a6c6069495f9253479810fc9eda8237506647b9156f1",
+  "work_summary": {
+    "work_id": "01498",
+    "title": "k particles"
+  }
+}

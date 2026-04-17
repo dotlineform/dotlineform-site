@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-060",
+    "work_id": "01720",
+    "detail_id": "060",
+    "project_subfolder": "symbols",
+    "project_filename": "rush (cheerful) slow.jpg",
+    "title": "rush (cheerful) slow",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "585e3d1b983145aabd4b7a93ec5023cdd4d6df2e15a529782422fee9563fb839",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

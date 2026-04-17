@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00869-009",
+    "work_id": "00869",
+    "detail_id": "009",
+    "project_subfolder": "versions",
+    "project_filename": "curve machine [9].jpg",
+    "title": "curve machine [9]",
+    "status": "published",
+    "published_date": "2026-03-16",
+    "width_px": 3024,
+    "height_px": 4032
+  },
+  "record_hash": "06d8564672bc860a9d4282adcd809e5d647a335aab490d61a927caf2bf671664",
+  "work_summary": {
+    "work_id": "00869",
+    "title": "curves"
+  }
+}

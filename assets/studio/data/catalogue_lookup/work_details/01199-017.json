@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-017",
+    "work_id": "01199",
+    "detail_id": "017",
+    "project_subfolder": "particles",
+    "project_filename": "particle (forest).jpg",
+    "title": "particle (forest)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "162813467bd6a6275ff2208a64282c06bf982fa9fb432bbe4c8c562c05d6b0e9",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

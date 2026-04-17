@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01039",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "047"
+    ],
+    "series_title": null,
+    "project_folder": "egg prints",
+    "project_filename": "egg print 2.jpg",
+    "title": "egg print 2",
+    "width_cm": 29.7,
+    "height_cm": 42,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "monoprint",
+    "medium_caption": "ink on paper",
+    "storage_location": "5",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 4974,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e692e04443b42b882207a51864b1515eb08257268aeb2784670c60099833664a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "047",
+      "title": "egg prints"
+    }
+  ]
+}

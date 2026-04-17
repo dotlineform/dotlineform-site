@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00534-001",
+    "work_id": "00534",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "00534-001.jpg",
+    "title": "body detail",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 4032,
+    "height_px": 3024
+  },
+  "record_hash": "4fae701bd6de33d26112f2f7864ca529c940ae428d5f9df953abc8d807419d02",
+  "work_summary": {
+    "work_id": "00534",
+    "title": "2 bodies monoprint"
+  }
+}

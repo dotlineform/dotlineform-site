@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00706",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "006"
+    ],
+    "series_title": null,
+    "project_folder": "a doll story",
+    "project_filename": "a doll story - glass 9.jpg",
+    "title": "a doll story - glass 9",
+    "width_cm": 24,
+    "height_cm": 24,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2835,
+    "height_px": 2835,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a085824f7c4c234add85f652b350a97b17d98971e227f9da0aa60f8197f71c95",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "006",
+      "title": "a doll story"
+    }
+  ]
+}

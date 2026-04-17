@@ -1,0 +1,81 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "047",
+    "title": "egg prints",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01038",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "1bfc47bccfb896182c932138ae4bda56c82fa3133b2a2f27a59d75e2480d5dee",
+  "member_works": [
+    {
+      "work_id": "01038",
+      "title": "egg print 1",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "b1f3ca27b764343fb278fdb843d501a20c06ee5c7f7f20b417bda56045ef2cbc"
+    },
+    {
+      "work_id": "01039",
+      "title": "egg print 2",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "e692e04443b42b882207a51864b1515eb08257268aeb2784670c60099833664a"
+    },
+    {
+      "work_id": "01040",
+      "title": "egg print 2 (reverse)",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "9af7bdff0b4fd2f8f8670c9d96b001d854d35fa5d66b4103cee47f5d5be52ef5"
+    },
+    {
+      "work_id": "01041",
+      "title": "egg print 3",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "47f5db1d9d030daffc8c4267a4f915eff27593a49628267e28b629936f7fa2d9"
+    },
+    {
+      "work_id": "01042",
+      "title": "egg print 4",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "2248b8cb8e6ec09eb496b41346a602caa66e9d7aee687fc11426e9c57e98dfaf"
+    },
+    {
+      "work_id": "01043",
+      "title": "egg print 5",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "047"
+      ],
+      "record_hash": "162db550f0f563ad209cfe23ca7c9f23c9a7e92bf9383bdff35bb323a4cc13c6"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00346",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "058"
+    ],
+    "series_title": null,
+    "project_folder": "for David Lynch",
+    "project_filename": "for David Lynch.jpg",
+    "title": "for David Lynch",
+    "width_cm": 59.4,
+    "height_cm": 42,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": "2",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6972,
+    "height_px": 4930,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "abe45235ba05245186522619f4961337de7274a1407fcc150f933c708be5a40c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "058",
+      "title": "for David Lynch (2025)"
+    }
+  ]
+}

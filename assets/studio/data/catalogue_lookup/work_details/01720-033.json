@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-033",
+    "work_id": "01720",
+    "detail_id": "033",
+    "project_subfolder": "symbols",
+    "project_filename": "happy snow'.jpg",
+    "title": "happy snow'",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "53873d50b18f54691d013b285ee65c98e1b44be9aba3d8a5df28db490355d14b",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

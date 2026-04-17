@@ -1,0 +1,181 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "053",
+    "title": "fluid forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01055",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "2a1dc0e1bf1664e62d38139fa12c8ef686716b5c65a1d5101cb7e5598c93791e",
+  "member_works": [
+    {
+      "work_id": "01055",
+      "title": "fluid form 1",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "e44c489ee69eb461ce12f8ca62eaa6402c960ff80d3a4f114e639277686a3eb3"
+    },
+    {
+      "work_id": "01056",
+      "title": "fluid form 2",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "0373996aa2ac9079c9517b03a492e0c82d8be17308b73e12785d165281a1eb05"
+    },
+    {
+      "work_id": "01057",
+      "title": "fluid form 3",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "c2d59f52e13dd9d55602d07209bbce35d13dc719ee20e4d43e9382e09c02e164"
+    },
+    {
+      "work_id": "01058",
+      "title": "fluid form 4",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "418624bfb0146339e59058369f310a1ca2441cf7f4cf55b7135a01df89df57dd"
+    },
+    {
+      "work_id": "01059",
+      "title": "fluid form 5",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "a47cd006920c9f14adc1f3a5e7d6bf0155ff8697554a00296bb67d0260a7ae2d"
+    },
+    {
+      "work_id": "01060",
+      "title": "fluid form 6",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "a2ce39d6574755ea6afe8776905927a0a872525a0035ab33e5ce157203da4d17"
+    },
+    {
+      "work_id": "01061",
+      "title": "fluid form 7",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "7d0a6bc7695926f0dd9570ba0d6501af56f14f411aba99c5b17e1de22dd348aa"
+    },
+    {
+      "work_id": "01062",
+      "title": "fluid form 8",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "ccff70eac046320568357899183b982d470367a1f182a31f6e5f0da3c32b0afb"
+    },
+    {
+      "work_id": "01063",
+      "title": "fluid form 9",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "11601d39671f323625d2b546136c2c37183ca6ee1985ffb8ffeaab5888be513c"
+    },
+    {
+      "work_id": "01064",
+      "title": "fluid form 10",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "5c1b235014c9f12e5cbfc5220b00ef5ead5d047bdf640186a88c68a933f24d70"
+    },
+    {
+      "work_id": "01065",
+      "title": "fluid form 11",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "4b6fe6e67adfffec31c8daf37cc5885406ac80cf628fc2ac3e86ac28c1e95c4c"
+    },
+    {
+      "work_id": "01066",
+      "title": "fluid form 12",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "11fb5ab581bc1057ec7d3bcfb5e81026a461c234ef2f365433a4f6112fda6796"
+    },
+    {
+      "work_id": "01067",
+      "title": "fluid form 13",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "fe81be7fc39d436690c968513c79e28e14c82ca2a88e5814bea2e39405d4c583"
+    },
+    {
+      "work_id": "01068",
+      "title": "fluid form 14",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "f14a27f82ba9178f6183e61fb8c3d2aa1a10535ca704b3a5228a71802488d4f7"
+    },
+    {
+      "work_id": "01069",
+      "title": "fluid form 15",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "d833cf5db07562733928f4377369e6c2408b842cebb680ff691d5bab808efc55"
+    },
+    {
+      "work_id": "01070",
+      "title": "fluid form 16",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "053"
+      ],
+      "record_hash": "88d40b6736978079af262b20119ecc7f4ccd8a5d7347f35a7b6f0015853c2802"
+    }
+  ]
+}

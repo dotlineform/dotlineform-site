@@ -1,0 +1,572 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00519",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "089"
+    ],
+    "series_title": null,
+    "project_folder": "learning to draw landscapes",
+    "project_filename": "learning to draw landscapes (versions).jpg",
+    "title": "learning to draw landscapes (versions)",
+    "width_cm": 30,
+    "height_cm": 90,
+    "year": 2022,
+    "year_display": "c. 2022?",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 10636,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "258088c10b316a3870b3b7d1b398e05475d3515ee1ad2125ef1d245c3db197a7",
+  "detail_sections": [
+    {
+      "project_subfolder": "versions",
+      "count": 75,
+      "details": [
+        {
+          "detail_uid": "00519-001",
+          "detail_id": "001",
+          "title": "version dall-e - 1.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-002",
+          "detail_id": "002",
+          "title": "version dall-e - 1.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-003",
+          "detail_id": "003",
+          "title": "version dall-e - 1.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-004",
+          "detail_id": "004",
+          "title": "version dall-e - 1.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-005",
+          "detail_id": "005",
+          "title": "version dall-e - 1.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-006",
+          "detail_id": "006",
+          "title": "version dall-e - 2.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-007",
+          "detail_id": "007",
+          "title": "version dall-e - 2.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-008",
+          "detail_id": "008",
+          "title": "version dall-e - 2.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-009",
+          "detail_id": "009",
+          "title": "version dall-e - 2.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-010",
+          "detail_id": "010",
+          "title": "version dall-e - 2.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-011",
+          "detail_id": "011",
+          "title": "version dall-e - 3.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-012",
+          "detail_id": "012",
+          "title": "version dall-e - 3.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-013",
+          "detail_id": "013",
+          "title": "version dall-e - 3.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-014",
+          "detail_id": "014",
+          "title": "version dall-e - 3.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-015",
+          "detail_id": "015",
+          "title": "version dall-e - 3.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-016",
+          "detail_id": "016",
+          "title": "version dall-e - 4.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-017",
+          "detail_id": "017",
+          "title": "version dall-e - 4.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-018",
+          "detail_id": "018",
+          "title": "version dall-e - 4.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-019",
+          "detail_id": "019",
+          "title": "version dall-e - 4.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-020",
+          "detail_id": "020",
+          "title": "version dall-e - 4.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-021",
+          "detail_id": "021",
+          "title": "version dall-e - 5.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-022",
+          "detail_id": "022",
+          "title": "version dall-e - 5.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-023",
+          "detail_id": "023",
+          "title": "version dall-e - 5.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-024",
+          "detail_id": "024",
+          "title": "version dall-e - 5.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-025",
+          "detail_id": "025",
+          "title": "version dall-e - 5.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-026",
+          "detail_id": "026",
+          "title": "version dall-e - 6.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-027",
+          "detail_id": "027",
+          "title": "version dall-e - 6.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-028",
+          "detail_id": "028",
+          "title": "version dall-e - 6.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-029",
+          "detail_id": "029",
+          "title": "version dall-e - 6.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-030",
+          "detail_id": "030",
+          "title": "version dall-e - 6.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-031",
+          "detail_id": "031",
+          "title": "version dall-e - 7.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-032",
+          "detail_id": "032",
+          "title": "version dall-e - 7.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-033",
+          "detail_id": "033",
+          "title": "version dall-e - 7.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-034",
+          "detail_id": "034",
+          "title": "version dall-e - 7.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-035",
+          "detail_id": "035",
+          "title": "version dall-e - 7.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-036",
+          "detail_id": "036",
+          "title": "version dall-e - 8.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-037",
+          "detail_id": "037",
+          "title": "version dall-e - 8.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-038",
+          "detail_id": "038",
+          "title": "version dall-e - 8.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-039",
+          "detail_id": "039",
+          "title": "version dall-e - 8.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-040",
+          "detail_id": "040",
+          "title": "version dall-e - 8.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-041",
+          "detail_id": "041",
+          "title": "version dall-e - 9.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-042",
+          "detail_id": "042",
+          "title": "version dall-e - 9.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-043",
+          "detail_id": "043",
+          "title": "version dall-e - 9.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-044",
+          "detail_id": "044",
+          "title": "version dall-e - 9.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-045",
+          "detail_id": "045",
+          "title": "version dall-e - 9.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-046",
+          "detail_id": "046",
+          "title": "version dall-e - 10.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-047",
+          "detail_id": "047",
+          "title": "version dall-e - 10.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-048",
+          "detail_id": "048",
+          "title": "version dall-e - 10.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-049",
+          "detail_id": "049",
+          "title": "version dall-e - 10.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-050",
+          "detail_id": "050",
+          "title": "version dall-e - 10.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-051",
+          "detail_id": "051",
+          "title": "version dall-e - 11.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-052",
+          "detail_id": "052",
+          "title": "version dall-e - 11.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-053",
+          "detail_id": "053",
+          "title": "version dall-e - 11.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-054",
+          "detail_id": "054",
+          "title": "version dall-e - 11.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-055",
+          "detail_id": "055",
+          "title": "version dall-e - 11.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-056",
+          "detail_id": "056",
+          "title": "version dall-e - 12.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-057",
+          "detail_id": "057",
+          "title": "version dall-e - 12.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-058",
+          "detail_id": "058",
+          "title": "version dall-e - 12.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-059",
+          "detail_id": "059",
+          "title": "version dall-e - 12.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-060",
+          "detail_id": "060",
+          "title": "version dall-e - 12.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-061",
+          "detail_id": "061",
+          "title": "version dall-e - 13.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-062",
+          "detail_id": "062",
+          "title": "version dall-e - 13.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-063",
+          "detail_id": "063",
+          "title": "version dall-e - 13.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-064",
+          "detail_id": "064",
+          "title": "version dall-e - 13.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-065",
+          "detail_id": "065",
+          "title": "version dall-e - 13.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-066",
+          "detail_id": "066",
+          "title": "version dall-e - 14.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-067",
+          "detail_id": "067",
+          "title": "version dall-e - 14.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-068",
+          "detail_id": "068",
+          "title": "version dall-e - 14.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-069",
+          "detail_id": "069",
+          "title": "version dall-e - 14.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-070",
+          "detail_id": "070",
+          "title": "version dall-e - 14.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-071",
+          "detail_id": "071",
+          "title": "version dall-e - 15.0 (run source)",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-072",
+          "detail_id": "072",
+          "title": "version dall-e - 15.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-073",
+          "detail_id": "073",
+          "title": "version dall-e - 15.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-074",
+          "detail_id": "074",
+          "title": "version dall-e - 15.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00519-075",
+          "detail_id": "075",
+          "title": "version dall-e - 15.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "089",
+      "title": "learning to draw landscapes"
+    }
+  ]
+}

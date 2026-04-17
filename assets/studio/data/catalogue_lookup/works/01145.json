@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01145",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "056"
+    ],
+    "series_title": null,
+    "project_folder": "folding forms",
+    "project_filename": "folding version 1.jpg",
+    "title": "folding version 1",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2022,
+    "year_display": "2022",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5ce22ead526740d715177441f917bf2d6ccd597913ab29d78a2be6b17f1b0015",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "056",
+      "title": "folding forms"
+    }
+  ]
+}

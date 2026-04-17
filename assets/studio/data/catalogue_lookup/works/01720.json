@@ -1,0 +1,564 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01720",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "126"
+    ],
+    "series_title": null,
+    "project_folder": "spine symbols",
+    "project_filename": "spine symbols.jpg",
+    "title": "spine symbols",
+    "width_cm": 60,
+    "height_cm": 30,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e6f23c07673a900ff3504d44f4fa4ef21dc815ccf44983ce88c4617cf8f6302c",
+  "detail_sections": [
+    {
+      "project_subfolder": "source",
+      "count": 2,
+      "details": [
+        {
+          "detail_uid": "01720-072",
+          "detail_id": "072",
+          "title": "spine names",
+          "project_subfolder": "source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-073",
+          "detail_id": "073",
+          "title": "symbols decoded",
+          "project_subfolder": "source",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "symbols",
+      "count": 71,
+      "details": [
+        {
+          "detail_uid": "01720-001",
+          "detail_id": "001",
+          "title": "bounce silly nosey messy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-002",
+          "detail_id": "002",
+          "title": "bounce silly",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-003",
+          "detail_id": "003",
+          "title": "bounce silly'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-004",
+          "detail_id": "004",
+          "title": "bounce",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-005",
+          "detail_id": "005",
+          "title": "chatterbox (lower)",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-006",
+          "detail_id": "006",
+          "title": "chatterbox (upper)",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-007",
+          "detail_id": "007",
+          "title": "chatterbox greedy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-008",
+          "detail_id": "008",
+          "title": "chatterbox greedy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-009",
+          "detail_id": "009",
+          "title": "chatterbox",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-010",
+          "detail_id": "010",
+          "title": "chatterbox'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-011",
+          "detail_id": "011",
+          "title": "clever funny wrong",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-012",
+          "detail_id": "012",
+          "title": "clever funny wrong'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-013",
+          "detail_id": "013",
+          "title": "daydream skinny forgetful",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-014",
+          "detail_id": "014",
+          "title": "daydream skinny",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-015",
+          "detail_id": "015",
+          "title": "daydream",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-016",
+          "detail_id": "016",
+          "title": "dizzy (clever) funny",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-017",
+          "detail_id": "017",
+          "title": "dizzy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-018",
+          "detail_id": "018",
+          "title": "forgetful",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-019",
+          "detail_id": "019",
+          "title": "funny (wrong rude) impossible",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-020",
+          "detail_id": "020",
+          "title": "funny",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-021",
+          "detail_id": "021",
+          "title": "funny'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-022",
+          "detail_id": "022",
+          "title": "fussy (lower)",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-023",
+          "detail_id": "023",
+          "title": "fussy (unknown)",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-024",
+          "detail_id": "024",
+          "title": "fussy (upper)",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-025",
+          "detail_id": "025",
+          "title": "fussy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-026",
+          "detail_id": "026",
+          "title": "fussy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-027",
+          "detail_id": "027",
+          "title": "grumpy bump",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-028",
+          "detail_id": "028",
+          "title": "grumpy half-bounce",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-029",
+          "detail_id": "029",
+          "title": "grumpy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-030",
+          "detail_id": "030",
+          "title": "grumpy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-031",
+          "detail_id": "031",
+          "title": "half-bounce silly nosey messy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-032",
+          "detail_id": "032",
+          "title": "happy snow",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-033",
+          "detail_id": "033",
+          "title": "happy snow'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-034",
+          "detail_id": "034",
+          "title": "impossible sneeze fussy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-035",
+          "detail_id": "035",
+          "title": "impossible sneeze fussy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-036",
+          "detail_id": "036",
+          "title": "impossible",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-037",
+          "detail_id": "037",
+          "title": "lazy forgetful",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-038",
+          "detail_id": "038",
+          "title": "lazy forgetful'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-039",
+          "detail_id": "039",
+          "title": "lazy rush (cheerful) slow",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-040",
+          "detail_id": "040",
+          "title": "lazy rush",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-041",
+          "detail_id": "041",
+          "title": "lazy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-042",
+          "detail_id": "042",
+          "title": "mean lazy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-043",
+          "detail_id": "043",
+          "title": "mean quiet busy mischief",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-044",
+          "detail_id": "044",
+          "title": "mean rush",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-045",
+          "detail_id": "045",
+          "title": "mean",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-046",
+          "detail_id": "046",
+          "title": "messy daydream",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-047",
+          "detail_id": "047",
+          "title": "messy small chatterbox",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-048",
+          "detail_id": "048",
+          "title": "muddle [1]",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-049",
+          "detail_id": "049",
+          "title": "muddle [2]",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-050",
+          "detail_id": "050",
+          "title": "muddle [3]",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-051",
+          "detail_id": "051",
+          "title": "muddle tickle",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-052",
+          "detail_id": "052",
+          "title": "muddle",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-053",
+          "detail_id": "053",
+          "title": "muddle'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-054",
+          "detail_id": "054",
+          "title": "noisy jelly mean [version]",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-055",
+          "detail_id": "055",
+          "title": "noisy jelly mean rush",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-056",
+          "detail_id": "056",
+          "title": "noisy jelly mean",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-057",
+          "detail_id": "057",
+          "title": "noisy jelly mean'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-058",
+          "detail_id": "058",
+          "title": "quiet",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-059",
+          "detail_id": "059",
+          "title": "quiet'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-060",
+          "detail_id": "060",
+          "title": "rush (cheerful) slow",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-061",
+          "detail_id": "061",
+          "title": "slow bump",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-062",
+          "detail_id": "062",
+          "title": "small chatterbox",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-063",
+          "detail_id": "063",
+          "title": "strong clumsy nonsense",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-064",
+          "detail_id": "064",
+          "title": "strong clumsy nonsense'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-065",
+          "detail_id": "065",
+          "title": "strong clumsy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-066",
+          "detail_id": "066",
+          "title": "strong clumsy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-067",
+          "detail_id": "067",
+          "title": "tickle quiet busy mischief",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-068",
+          "detail_id": "068",
+          "title": "worry topsy-turvy [1']",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-069",
+          "detail_id": "069",
+          "title": "worry topsy-turvy [1]",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-070",
+          "detail_id": "070",
+          "title": "worry topsy-turvy",
+          "project_subfolder": "symbols",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01720-071",
+          "detail_id": "071",
+          "title": "worry topsy-turvy'",
+          "project_subfolder": "symbols",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "126",
+      "title": "spine symbols"
+    }
+  ]
+}

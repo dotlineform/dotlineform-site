@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00461",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "101"
+    ],
+    "series_title": null,
+    "project_folder": "molecules",
+    "project_filename": "molecules symbols.jpg",
+    "title": "molecules symbols",
+    "width_cm": 50,
+    "height_cm": 31,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 3671,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "450c62773c19b059b498dd3fc1f56e34951b85bc1dcec480cbfdfc7ac3f0d7f6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "101",
+      "title": "molecules"
+    }
+  ]
+}

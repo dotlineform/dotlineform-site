@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-042",
+    "work_id": "01720",
+    "detail_id": "042",
+    "project_subfolder": "symbols",
+    "project_filename": "mean lazy.jpg",
+    "title": "mean lazy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "c5101914853c882fb687b061d8e77977574c712c8281da79954eaf179f2e78b2",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

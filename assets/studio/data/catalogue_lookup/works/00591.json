@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00591",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "063"
+    ],
+    "series_title": null,
+    "project_folder": "form mobile",
+    "project_filename": "curve 1'.jpg",
+    "title": "curve 1'",
+    "width_cm": 42,
+    "height_cm": 29.7,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "storage_location": "7",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 3508,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "765a062b7c46df9b83f26a5a4e46ddb8e388b6d33b5a7dd25ad1172b6641672e",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "063",
+      "title": "form mobile"
+    }
+  ]
+}

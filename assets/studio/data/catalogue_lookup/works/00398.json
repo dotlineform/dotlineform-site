@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00398",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "140"
+    ],
+    "series_title": null,
+    "project_folder": "wa",
+    "project_filename": "ink/wa (7).jpg",
+    "title": "wa (7)",
+    "width_cm": 24.3,
+    "height_cm": 33.2,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": "5",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2870,
+    "height_px": 3921,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "64c25d72f83500dfcff6e2168835a7629abd2beba46cf6c23dc3e16fe5fb2232",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "140",
+      "title": "wa"
+    }
+  ]
+}

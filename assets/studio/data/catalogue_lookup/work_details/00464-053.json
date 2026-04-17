@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00464-053",
+    "work_id": "00464",
+    "detail_id": "053",
+    "project_subfolder": "composite memories",
+    "project_filename": "memories 1-6.jpg",
+    "title": "memories 1-6",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "2ebd2fc4bed505c3afa181df33ff6b501f7572d2499298ef8b1de62187d534ad",
+  "work_summary": {
+    "work_id": "00464",
+    "title": "forest memories 1-48"
+  }
+}

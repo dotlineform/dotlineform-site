@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00464-002",
+    "work_id": "00464",
+    "detail_id": "002",
+    "project_subfolder": "moments",
+    "project_filename": "memories of the forest 2.jpg",
+    "title": "memories of the forest 2",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 8268,
+    "height_px": 8268
+  },
+  "record_hash": "fd94910dd8b6a11af3f91953de7e1522289a1e6f8320efacb0a4e5c2ec88b581",
+  "work_summary": {
+    "work_id": "00464",
+    "title": "forest memories 1-48"
+  }
+}

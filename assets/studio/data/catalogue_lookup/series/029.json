@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "029",
+    "title": "colours",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2008,
+    "year_display": "2008",
+    "primary_work_id": "00813",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "6f3625deae8c7b4600c584ce20b1d02dab0cd4f31f319f83b103cb66d51a6dbb",
+  "member_works": [
+    {
+      "work_id": "00813",
+      "title": "colours 1958-2001",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "029"
+      ],
+      "record_hash": "0dab91b4b62a4ebee30ef61aeb18bb1badc0020e821477d3599785b928edd517"
+    },
+    {
+      "work_id": "00814",
+      "title": "colours belsen",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "029"
+      ],
+      "record_hash": "1c21234546a5b1c3054825244ee7aea0d2688474de217780f76471aa98768f6f"
+    },
+    {
+      "work_id": "00815",
+      "title": "colours dachau",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "029"
+      ],
+      "record_hash": "3ec21e6abd0952ec3524e2110b2e9c9ae07f113ede60dc524ac3e2085bd1ec25"
+    },
+    {
+      "work_id": "00816",
+      "title": "colours kylie",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "029"
+      ],
+      "record_hash": "e543dc67ff13254e55632a9e1173056e4d6517c7b0b59f1bb039f8c37f489619"
+    },
+    {
+      "work_id": "00817",
+      "title": "colours marilyn",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "029"
+      ],
+      "record_hash": "fcd3e9d46563828cf208159bc11c042089a12c593b4d2ffdd9b3dc64841bf4e1"
+    }
+  ]
+}

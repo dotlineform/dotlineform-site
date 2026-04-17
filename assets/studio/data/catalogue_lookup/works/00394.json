@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00394",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "140"
+    ],
+    "series_title": null,
+    "project_folder": "wa",
+    "project_filename": "ink/wa (yoko takenami).jpg",
+    "title": "wa (yoko takenami)",
+    "width_cm": 33.5,
+    "height_cm": 35,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": "5",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3957,
+    "height_px": 4134,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "feffe0c84298299126d950e1ac11a7f7fbc84364d42dd9911ca7e2d1fb8cb814",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "140",
+      "title": "wa"
+    }
+  ]
+}

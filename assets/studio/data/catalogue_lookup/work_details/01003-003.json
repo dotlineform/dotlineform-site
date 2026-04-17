@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01003-003",
+    "work_id": "01003",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "dots (second normal form) [detail 3].jpg",
+    "title": "dots (second normal form) [detail 3]",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "a94acd4313c2f77b5b7f0d8a28ce46c13a5c95902221f7b7e8bf9810ce657a94",
+  "work_summary": {
+    "work_id": "01003",
+    "title": "dots (second normal form)"
+  }
+}

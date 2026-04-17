@@ -1,0 +1,531 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "067",
+    "title": "found forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2017-25",
+    "primary_work_id": "00403",
+    "series_prose_file": "found-forms.md",
+    "notes": "more works to publish",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "9c701d94c395b90e5392d07e6cbbdb8c5d6c8cfd20d9a0c027c36120291ccfff",
+  "member_works": [
+    {
+      "work_id": "00403",
+      "title": "found form (2017-06-29)",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "8ff17ad00cadd7a5a91c41ca8948c03cced842feca9cc4c2401edc96ba446695"
+    },
+    {
+      "work_id": "00404",
+      "title": "found form (2017-07-09)",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "3d89c809a270195d942186e0b977eb90f077846f5d82b04226a48ae9983db090"
+    },
+    {
+      "work_id": "00405",
+      "title": "found form (2017-07-22)",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "f06b141cbaa84e262f76ba09fe614ecc4301aaba707fd486c68b3b2701541966"
+    },
+    {
+      "work_id": "00406",
+      "title": "found form (2017-07-29)",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "10230187e89f030a58972ecf29c9acd9ec7032325cf67e7de3f7399a9210738f"
+    },
+    {
+      "work_id": "00407",
+      "title": "found form (2024-11-18 I)",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "446a713c23c70aa07db5b5160a9555ec7bec0af5ffdf374900f7f2fee49d06e6"
+    },
+    {
+      "work_id": "00408",
+      "title": "found form (2024-11-18 II)",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "3b229333ae34d57cf06ad7db6f7a9cb211b858b4c9719df49295a348716c21c9"
+    },
+    {
+      "work_id": "00409",
+      "title": "found form (2024-11-18 III)",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "f013c080489bb171b7a03f5630d8c2a8f866a6035f74c97140cb859740cc0092"
+    },
+    {
+      "work_id": "00410",
+      "title": "found form (2025-07-02)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "989e6824619d46a646b1d87d547e8dc064fc9d83eea16b929e8c049745691516"
+    },
+    {
+      "work_id": "00411",
+      "title": "found form (2025-07-15 I)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "a72c9149b2c3bfdfe3a80234fc8b8917e125e8704fed783a695f7a8324da258c"
+    },
+    {
+      "work_id": "00412",
+      "title": "found form (2025-07-15 II)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "4e2d8c01089c2da025db138d4c3ee3462f640539e6d5d412e23959b7f1b4dc0d"
+    },
+    {
+      "work_id": "00413",
+      "title": "found form (2025-07-26)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "fb78defa265acf9394bc3ed7b93aa77817a0c1a275021528314707629c03f8c2"
+    },
+    {
+      "work_id": "00414",
+      "title": "found form (2025-11-01 I)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "33b51cbd713728f2b79bfc2f7c993fc2eef7fe3f3828df18ee93487158b6288a"
+    },
+    {
+      "work_id": "00415",
+      "title": "found form (2025-11-01 II)",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "66c23428a7ee2f9726a495afd2cff1b73b1eae175816381a95b2191baa6a4ac4"
+    },
+    {
+      "work_id": "00416",
+      "title": "found form 01",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "854a20d6738687b3c85d4b70904e3e7b956e38ed834295a882a16f38472ed045"
+    },
+    {
+      "work_id": "00417",
+      "title": "found form 02",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "8ab31ce624b2c5c78e3c6bdd286eb7a7884b985bebd45681209fde4986ca1370"
+    },
+    {
+      "work_id": "00418",
+      "title": "found form 03",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "8479217437c54fa0621d836bf6430aa4d5b60d042d648272b691c8f6d405af56"
+    },
+    {
+      "work_id": "00419",
+      "title": "found form 04",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "9e1d39debfdf766dfb1bb156cbab89ef5d0ae5493e38d2962de8fb1286a960b4"
+    },
+    {
+      "work_id": "00420",
+      "title": "found form 05",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "2c4ff78187b0327eb1449e3ac5f773b4139255129c1aacb37c96855c6a05691f"
+    },
+    {
+      "work_id": "00421",
+      "title": "found form 06",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "d27c89c4b256e2dd2cf92db93ae2f9bc9f325fb46c6a904b5d2d88be187c1917"
+    },
+    {
+      "work_id": "00422",
+      "title": "found form 07",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "ca3f0a632731cc1cec9657882d3b93354d49d7ab808283a95099fe2da675c576"
+    },
+    {
+      "work_id": "00423",
+      "title": "found form 08",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "3cc33b0e3d43500cea471c09bb31b522e8816065681f279fd564dc417c5807ec"
+    },
+    {
+      "work_id": "00424",
+      "title": "found form 09",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "7f191cbac192ea00c77ccaeaa37d0455211ece8db95ad45579adc762dd42a545"
+    },
+    {
+      "work_id": "00425",
+      "title": "found form 10",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "493f65465496fa7cfae5ee80c307bdafac6e5d342af6723a6d745ea89ec4eee3"
+    },
+    {
+      "work_id": "00426",
+      "title": "found form 11",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "ae8bed4ea5aed488a02661c16ee6c2b964e5d5dd552cbd2c378aadb22e3f22ae"
+    },
+    {
+      "work_id": "00427",
+      "title": "found form 12",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "48c6aa4e708fcf24301411419aa8e1889db0b7a13caa797f0fd47b01e1997f38"
+    },
+    {
+      "work_id": "00428",
+      "title": "found form 13 (mother and child)",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "1e1062199acc27eeeb66c5f31058c4f6b2ab36c8d8521539fcc477350f7705fb"
+    },
+    {
+      "work_id": "00429",
+      "title": "found form 14",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "e1ec3d0e32d91d2dd1f9b9a2d50d34ba04ffafef2f6c15edc159ca9fb90b6772"
+    },
+    {
+      "work_id": "00430",
+      "title": "found form 15",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "49666527fc5beea9e864342a1a308e0567e61e7494f5d394ba0dfd2c04f9bf8f"
+    },
+    {
+      "work_id": "00431",
+      "title": "found form 16",
+      "year_display": "2021",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "8a99ab3b4489455f24962422df57a779ae59529811d7ebc11f3f289e95e43951"
+    },
+    {
+      "work_id": "00432",
+      "title": "found form 17",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "047852c0ce565eb782f3af9cea93658b049438c0d89b758399435ad42b6f639f"
+    },
+    {
+      "work_id": "00433",
+      "title": "found form 18",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "9c1ddbfd87a4e04767ab53eb101dc5ed417604bcc6420016d57c22f10d65ec45"
+    },
+    {
+      "work_id": "00434",
+      "title": "found form 19",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "58493c3e2dfbab248fdd896c7e35723a3a55b9c4aa8b4650129495ca94adb5c7"
+    },
+    {
+      "work_id": "00435",
+      "title": "found form 20",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "255814d0d10cb8ab554752bc75b4d8126cb3cfce0ad9c726592e48eb8c5063da"
+    },
+    {
+      "work_id": "00436",
+      "title": "found form 21",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "a06e67112484ce2282fa459491dc850febcbbba4dc0e5a21ec96462000edf939"
+    },
+    {
+      "work_id": "00437",
+      "title": "found form 22",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "5472b266478238dafc7f4d1deead7040a61507cff9849fcfd754d530b43ec58e"
+    },
+    {
+      "work_id": "00438",
+      "title": "found form 23",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "8e6b4b3b9a737f340cc11b39bbb28e3d31fb979e6b75bcecb6bee0e158b35b80"
+    },
+    {
+      "work_id": "00439",
+      "title": "found form 24",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "50435e6cd58ee82add6a093e928ee2b3d610f685b0142b615c73f577557e2557"
+    },
+    {
+      "work_id": "00440",
+      "title": "found form 25",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "cd36997799dc3bd233eabd3f9112bd4225d1d25d7751b8d1cde17002ef77a9ef"
+    },
+    {
+      "work_id": "00441",
+      "title": "found form 26",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "e1abdd1a20189b653bcf71319023fd4991c97f007c795cad6b1b4bc1774b8268"
+    },
+    {
+      "work_id": "00442",
+      "title": "found form 27",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "c8b5ccbb02459d9ab7e9b94e26a1bf0ee32b4ce15bbca123dea355b198075b3e"
+    },
+    {
+      "work_id": "00443",
+      "title": "found form 28",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "7b694acb3aa4fdc11a7bbe9cd0962ed025fa004194953b41ed4fcca7544031e3"
+    },
+    {
+      "work_id": "00444",
+      "title": "found form 29",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "929cd622ed827a11a252c1cb1a4a13cd2331f7a5a7a2b37816de8a8609ffe1cc"
+    },
+    {
+      "work_id": "00445",
+      "title": "found form 30",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "4555a3d0fcff47943a7391cf824bdf94e271f92f926355d447715366b9e9f34f"
+    },
+    {
+      "work_id": "00446",
+      "title": "found form 31",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "29f8a48c0010d679dd6743dfb0a8b93d9b35749666b0735b4516af4eecc6ad14"
+    },
+    {
+      "work_id": "00447",
+      "title": "found form 32",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "2f56d7792732c4cb5945190d048b2c2b723ed74af007676bde08199eadf9b08b"
+    },
+    {
+      "work_id": "00448",
+      "title": "found form 33",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "3e85299db32658e251dd9057b90436ed345152e1be61487c3cf41047f75ec7ac"
+    },
+    {
+      "work_id": "00449",
+      "title": "found form 34",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "a32a0dcf8b3b3b1c028eef1142734b2aa2ee209aee64e5c6508bcb4c904df98a"
+    },
+    {
+      "work_id": "00450",
+      "title": "found form 35",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "5f38cb457b18ba5bc63595a39cb59391c908551399995af91193062312333dda"
+    },
+    {
+      "work_id": "00451",
+      "title": "found form 36",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "c18c0487afb3de75aab8989965e289463740bd1aaa08c8341b565477628d5989"
+    },
+    {
+      "work_id": "00452",
+      "title": "found form 37",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "9ef80a23ae18a3ad24c1402bed10ec1d4eba05e7576e0cf8f5e8baa847cff169"
+    },
+    {
+      "work_id": "00453",
+      "title": "found form 38",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "067"
+      ],
+      "record_hash": "cbcc5025265a303cecd95affd2d989eb0d5b45ff133975d34c33b11527d777f6"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-028",
+    "work_id": "01720",
+    "detail_id": "028",
+    "project_subfolder": "symbols",
+    "project_filename": "grumpy half-bounce.jpg",
+    "title": "grumpy half-bounce",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "0e9b8ad6563d30c7afa0b73a9a58a276473f37b452f24979823d990992055f5c",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "023",
+    "title": "certainty",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2026,
+    "year_display": "2001-26",
+    "primary_work_id": "00389",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "2c84b57f6606a3c973d54645dc181dca7d62064929509ebad42dcf5a15fdceee",
+  "member_works": [
+    {
+      "work_id": "00389",
+      "title": "certainty",
+      "year_display": "2001-26",
+      "status": "published",
+      "series_ids": [
+        "023"
+      ],
+      "record_hash": "f6f660da541f877e5bfd96f7ba48acbbe21745e3909a04478ecfafce84e73b6f"
+    }
+  ]
+}

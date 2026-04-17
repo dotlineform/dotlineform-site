@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01198",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "065"
+    ],
+    "series_title": null,
+    "project_folder": "forms",
+    "project_filename": "4 form paths.jpg",
+    "title": "4 form paths",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b1645f96133c5579356011bbd26312a2c2a3503c754720199a1c091115d24e47",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "065",
+      "title": "forms"
+    }
+  ]
+}

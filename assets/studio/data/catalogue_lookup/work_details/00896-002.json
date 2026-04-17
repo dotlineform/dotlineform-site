@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00896-002",
+    "work_id": "00896",
+    "detail_id": "002",
+    "project_subfolder": "versions (2022)",
+    "project_filename": "doll still life 1 (version 2).jpg",
+    "title": "doll still life 1 (version 2)",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "ad6034a1af00aedbfac83a3254490e954ef3a29114eb8cd2fa9bf5261a736247",
+  "work_summary": {
+    "work_id": "00896",
+    "title": "doll still life 1"
+  }
+}

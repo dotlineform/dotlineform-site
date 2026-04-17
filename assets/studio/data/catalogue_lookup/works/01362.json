@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01362",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "074"
+    ],
+    "series_title": null,
+    "project_folder": "grid theory",
+    "project_filename": "grid theory 1.3 version.jpg",
+    "title": "grid theory 1.3 version",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a42abd278c99cbdb33e9ea950dd165607f47eed9913df5fd83e0ed7491fb3a4c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "074",
+      "title": "grid theory"
+    }
+  ]
+}

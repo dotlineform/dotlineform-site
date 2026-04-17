@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00544",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "099"
+    ],
+    "series_title": null,
+    "project_folder": "models",
+    "project_filename": "model 10.jpg",
+    "title": "model 10",
+    "width_cm": 24,
+    "height_cm": 19.7,
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "ink on paper",
+    "medium_caption": "ink on photo",
+    "storage_location": "9",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2835,
+    "height_px": 2327,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e2bfc1d61d9b7bea4a0584d122c0301d991142735158bcca7f89590d95e4f8b2",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "099",
+      "title": "models"
+    }
+  ]
+}

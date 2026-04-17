@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00460-001",
+    "work_id": "00460",
+    "detail_id": "001",
+    "project_subfolder": "versions",
+    "project_filename": "molecules (positive).jpg",
+    "title": "molecules (positive)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 9000,
+    "height_px": 9000
+  },
+  "record_hash": "a5c1b0eb5b76e4278425ff18f622175f5dafb6e54afab7743df97b94fba558b8",
+  "work_summary": {
+    "work_id": "00460",
+    "title": "molecules"
+  }
+}

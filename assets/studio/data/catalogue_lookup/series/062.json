@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "062",
+    "title": "forests (2023)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00468",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "5dd0f63a82a3f4aa2da2f2e616319eee27a9406cd63ed38af36d43ab81cc8887",
+  "member_works": [
+    {
+      "work_id": "00465",
+      "title": "forest 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "062"
+      ],
+      "record_hash": "83710c92b28b2eef1ca5fb15aff9ff62a47311ca8c9f88b2753d14345136bbc8"
+    },
+    {
+      "work_id": "00466",
+      "title": "forest 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "062"
+      ],
+      "record_hash": "1ff004c217f50c1c54bd3d4049e88462c106a536d0fdd8147b21912db1ab6108"
+    },
+    {
+      "work_id": "00467",
+      "title": "forest 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "062"
+      ],
+      "record_hash": "574c7657d20b1fb83fa47641c3f4e7da20541bb6f715ba7bf6d6b462c5786937"
+    },
+    {
+      "work_id": "00468",
+      "title": "forest 4",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "062"
+      ],
+      "record_hash": "5dd1166746875ffe777a46b82ecf3618e48f9162582d25cf5d52510833260094"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-019",
+    "work_id": "01199",
+    "detail_id": "019",
+    "project_subfolder": "particles",
+    "project_filename": "particle (fur map).jpg",
+    "title": "particle (fur map)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "3659374e6c46733e1951559f744564d4722ce008205c44c963a8c5752d6921b9",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

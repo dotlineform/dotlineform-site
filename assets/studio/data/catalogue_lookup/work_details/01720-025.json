@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-025",
+    "work_id": "01720",
+    "detail_id": "025",
+    "project_subfolder": "symbols",
+    "project_filename": "fussy.jpg",
+    "title": "fussy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1448
+  },
+  "record_hash": "f2fb4f1fcb83b9680b621e6239ebaad5fd55b0c11b0258f0f1bdb3abc1740c02",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

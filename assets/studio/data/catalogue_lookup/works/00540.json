@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00540",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "099"
+    ],
+    "series_title": null,
+    "project_folder": "models",
+    "project_filename": "model 6.jpg",
+    "title": "model 6",
+    "width_cm": 27.9,
+    "height_cm": 40.2,
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "photocopy",
+    "medium_caption": "magazine collage",
+    "storage_location": "9",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2906,
+    "height_px": 4187,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "162c6ef73b86f2a40be8d5768778c387a8b1280872effe47f3dcafb5a6c6ebe7",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "099",
+      "title": "models"
+    }
+  ]
+}

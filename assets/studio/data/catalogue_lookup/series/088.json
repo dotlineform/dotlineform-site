@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "088",
+    "title": "leaf",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2016,
+    "year_display": "2016",
+    "primary_work_id": "00458",
+    "series_prose_file": null,
+    "notes": "add details",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "7f3eba0e0336e92460758701a6d562a0f518953d0e23b6d34446999c39be40d4",
+  "member_works": [
+    {
+      "work_id": "00458",
+      "title": "leaf",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "088"
+      ],
+      "record_hash": "03742e63d64ed1fcc486105f27cb9c0140b23f276ae210ce1043605e8c62f320"
+    }
+  ]
+}

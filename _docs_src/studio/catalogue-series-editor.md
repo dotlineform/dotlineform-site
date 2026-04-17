@@ -46,13 +46,14 @@ Locked constraints for this phase:
 
 Current save/rebuild flow:
 
-1. page loads `series.json` and `works.json`
-2. browser computes a record hash for the current series record
-3. membership edits operate on affected work `series_ids` arrays in the browser
+1. page loads derived series-search and work-search lookup payloads, not full canonical source maps
+2. opening a series fetches one focused lookup record from `assets/studio/data/catalogue_lookup/series/<series_id>.json`
+3. membership edits operate on affected work `series_ids` arrays in the browser, using lookup-provided work hashes for stale-write checks
 4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows
-5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, and returns the normalized saved records
-6. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works
-7. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON
+5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records
+6. the page reloads its focused series lookup payload
+7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works
+8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON
 
 ## Related References
 

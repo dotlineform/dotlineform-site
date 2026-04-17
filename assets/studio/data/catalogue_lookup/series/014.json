@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "014",
+    "title": "assembly codes",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00753",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "7084a178bb2ac7dfe07663bb41512f2fa706165c6d4ac0a6e205398a60c78cf3",
+  "member_works": [
+    {
+      "work_id": "00753",
+      "title": "assembly code 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "014"
+      ],
+      "record_hash": "536f09506ca5ebe80e6c531da0325acfe48b66c05f64fd38e5398adbad790348"
+    },
+    {
+      "work_id": "00754",
+      "title": "assembly code 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "014"
+      ],
+      "record_hash": "0e619e63bb4015ec5065907fa1fbc04ff7402d8fff54b34956501dd419bdede3"
+    },
+    {
+      "work_id": "00755",
+      "title": "assembly code 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "014"
+      ],
+      "record_hash": "4e23bfaec95accc55d29e97ad03b4892af6db223b0e8f9531f771ca8861cd9ba"
+    }
+  ]
+}

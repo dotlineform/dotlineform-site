@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00159-001",
+    "work_id": "00159",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "Michelle Pfeiffer - page 1.jpg",
+    "title": "Michelle Pfeiffer - page 1",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 4038,
+    "height_px": 5712
+  },
+  "record_hash": "d7684c748984b139d31450a87125123f3fcc34f9811347833c022319be39e135",
+  "work_summary": {
+    "work_id": "00159",
+    "title": "Michelle Pfeiffer"
+  }
+}

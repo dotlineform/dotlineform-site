@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-056",
+    "work_id": "01720",
+    "detail_id": "056",
+    "project_subfolder": "symbols",
+    "project_filename": "noisy jelly mean.jpg",
+    "title": "noisy jelly mean",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "214cd5cc9ad846593a63df4aa83d9a34f8ff56828d62a32af71c6d4d5c86ae45",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

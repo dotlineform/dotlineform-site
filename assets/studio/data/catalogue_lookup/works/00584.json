@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00584",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "063"
+    ],
+    "series_title": null,
+    "project_folder": "form mobile",
+    "project_filename": "form mobile 3.jpg",
+    "title": "form mobile 3",
+    "width_cm": 30,
+    "height_cm": 40,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "285b7ec1c6ba3e47a4ee6ad6d125e6e1e8d6242a9fea4b19c4ff48fac82451bd",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "063",
+      "title": "form mobile"
+    }
+  ]
+}

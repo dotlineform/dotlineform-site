@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00873",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll cell [framed version].jpg",
+    "title": "doll cell [framed version]",
+    "width_cm": 29.7,
+    "height_cm": 21,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "mixed media",
+    "medium_caption": "framed print with painted forms on glass",
+    "storage_location": "extant",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3508,
+    "height_px": 2480,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "44b74dbe9b0d16cffdd02a62d234115e1b5f476ad0055d824ddfbeba5c822e41",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

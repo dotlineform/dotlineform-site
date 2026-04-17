@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01721-003",
+    "work_id": "01721",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "state of mind - detail (thorns).jpg",
+    "title": "state of mind - detail (thorns)",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "ae46320b0f592a2e43f7eea2a2a38d6d7fbc64be103f8ff6f9892a9b26a8ac00",
+  "work_summary": {
+    "work_id": "01721",
+    "title": "state of mind"
+  }
+}

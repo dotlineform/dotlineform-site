@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00639-040",
+    "work_id": "00639",
+    "detail_id": "040",
+    "project_subfolder": "transformed forms",
+    "project_filename": "transformed form 8.jpg",
+    "title": "transformed form 8",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1600,
+    "height_px": 1600
+  },
+  "record_hash": "849096d82b04945964d03b0e861b57a540b15a8fc8b4c0d6e870e4362f077b95",
+  "work_summary": {
+    "work_id": "00639",
+    "title": "16 forms"
+  }
+}

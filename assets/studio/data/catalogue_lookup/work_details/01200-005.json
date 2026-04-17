@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01200-005",
+    "work_id": "01200",
+    "detail_id": "005",
+    "project_subfolder": "details",
+    "project_filename": "forms painting - detail 5.jpg",
+    "title": "forms painting - detail 5",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "record_hash": "2c4e7a202d8399f094303caff8d5b90581fe265f9e50d45f7fd1c57e10e65b3a",
+  "work_summary": {
+    "work_id": "01200",
+    "title": "forms painting"
+  }
+}

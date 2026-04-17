@@ -33,6 +33,8 @@ Exposed endpoints:
 
 The current implementation saves existing work records, work detail records, and series records in canonical catalogue source JSON and can run a scoped JSON-source rebuild for one work or one series scope. It does not create works, write prose files, or write media files.
 
+After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
+
 `POST /catalogue/work/save` expects:
 
 ```json
@@ -209,6 +211,10 @@ Studio activity feed:
 Backup target:
 
 - `var/studio/catalogue/backups/`
+
+Derived lookup target:
+
+- `assets/studio/data/catalogue_lookup/`
 
 Operational log target:
 

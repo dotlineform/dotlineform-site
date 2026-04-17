@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "011",
+    "title": "all the colours",
+    "series_type": "primary",
+    "status": null,
+    "published_date": null,
+    "year": null,
+    "year_display": null,
+    "primary_work_id": "00375",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "52a1fb393e78c6803465d472507d7589b4da7f5a891d0a673b07e01ce4b0abdd",
+  "member_works": [
+    {
+      "work_id": "00375",
+      "title": "00375 - colours",
+      "year_display": "",
+      "status": "",
+      "series_ids": [
+        "011"
+      ],
+      "record_hash": "0b7a525f639e7272e2c7e18fba159815db9975f9764035446722aa2e3605b4b3"
+    }
+  ]
+}

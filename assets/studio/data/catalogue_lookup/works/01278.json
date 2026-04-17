@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01278",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "073"
+    ],
+    "series_title": null,
+    "project_folder": "grid fields",
+    "project_filename": "grid field 15.jpg",
+    "title": "grid field 15",
+    "width_cm": 80,
+    "height_cm": 80,
+    "year": 2018,
+    "year_display": "2018",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 9449,
+    "height_px": 9449,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "402502ff0394f9e1ee10a6d94e6a76a62e5ded8d0c100ab8f884534a91d3f544",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "073",
+      "title": "grid fields"
+    }
+  ]
+}

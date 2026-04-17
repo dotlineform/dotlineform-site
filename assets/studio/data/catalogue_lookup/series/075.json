@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "075",
+    "title": "harmony",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2009,
+    "year_display": "2009",
+    "primary_work_id": "00379",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "title,work_id"
+  },
+  "record_hash": "734fce91094f574951ec0f9deecffc810dca00bcc9b02ac3202e34666ab0578f",
+  "member_works": [
+    {
+      "work_id": "00379",
+      "title": "harmony 3",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "075"
+      ],
+      "record_hash": "414f37d1b77004d2433826d9959dd1ee33363334c3a890f23d4eb6e28f719a57"
+    },
+    {
+      "work_id": "00380",
+      "title": "harmony 1",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "075"
+      ],
+      "record_hash": "2d67a5b826263c44be894de170872a76af9ff5ac7606b52f7837fbcbe0d1c7eb"
+    },
+    {
+      "work_id": "00381",
+      "title": "harmony 2",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "075"
+      ],
+      "record_hash": "964e547b03bdb75e1cc69cad40c4a623400cf677f348f965bf3f7b54338704d4"
+    },
+    {
+      "work_id": "00382",
+      "title": "harmony 2 residue",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "075"
+      ],
+      "record_hash": "68f6c4504c28a599101bec2a45b805f388b3463d980a12a370c2dd675faa7264"
+    },
+    {
+      "work_id": "00620",
+      "title": "harmony 3 (version)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "075"
+      ],
+      "record_hash": "b75d5f0720791d5fab8bbd3b0e60e4da0d1a1e717458d5942b27e292ec148f5b"
+    }
+  ]
+}

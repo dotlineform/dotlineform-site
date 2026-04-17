@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00375",
+    "status": null,
+    "published_date": null,
+    "series_ids": [
+      "011"
+    ],
+    "series_title": null,
+    "project_folder": "all the colours",
+    "project_filename": "00375 - colours.jpg",
+    "title": "00375 - colours",
+    "width_cm": 40.5,
+    "height_cm": 30.5,
+    "year": null,
+    "year_display": null,
+    "medium_type": null,
+    "medium_caption": null,
+    "storage_location": "13",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": null,
+    "height_px": null,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0b7a525f639e7272e2c7e18fba159815db9975f9764035446722aa2e3605b4b3",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "011",
+      "title": "all the colours"
+    }
+  ]
+}

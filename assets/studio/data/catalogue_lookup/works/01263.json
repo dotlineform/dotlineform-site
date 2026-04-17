@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01263",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "071"
+    ],
+    "series_title": null,
+    "project_folder": "grey series",
+    "project_filename": "grey series 13.jpeg",
+    "title": "grey series 13",
+    "width_cm": 60,
+    "height_cm": 40,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5733158132edea9e2dfbcab7d6386261ccc73f1cd96e8d807e00d5b23fc183db",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "071",
+      "title": "grey series"
+    }
+  ]
+}

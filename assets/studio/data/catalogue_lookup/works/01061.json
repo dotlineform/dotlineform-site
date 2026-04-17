@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01061",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "053"
+    ],
+    "series_title": null,
+    "project_folder": "fluid forms",
+    "project_filename": "fluid form 7.jpg",
+    "title": "fluid form 7",
+    "width_cm": 30,
+    "height_cm": 20,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 2362,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "7d0a6bc7695926f0dd9570ba0d6501af56f14f411aba99c5b17e1de22dd348aa",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "053",
+      "title": "fluid forms"
+    }
+  ]
+}

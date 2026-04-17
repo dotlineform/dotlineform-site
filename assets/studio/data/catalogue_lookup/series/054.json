@@ -1,0 +1,20 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "054",
+    "title": "fluid forms (2020)",
+    "series_type": "primary",
+    "status": null,
+    "published_date": null,
+    "year": 2021,
+    "year_display": "2001-02, 2021",
+    "primary_work_id": null,
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "af3e5f35425127852d8e251424600c02f43f09a5bdfd979ec81591950ae06eeb",
+  "member_works": []
+}

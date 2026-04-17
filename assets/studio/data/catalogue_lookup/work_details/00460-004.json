@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00460-004",
+    "work_id": "00460",
+    "detail_id": "004",
+    "project_subfolder": "versions",
+    "project_filename": "molecules mist (negative).jpg",
+    "title": "molecules mist (negative)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 9000,
+    "height_px": 9000
+  },
+  "record_hash": "bc11543b7c7ca824689d29e5131fc32ca590b0d4c35e3ae992d8381a95ed10dc",
+  "work_summary": {
+    "work_id": "00460",
+    "title": "molecules"
+  }
+}

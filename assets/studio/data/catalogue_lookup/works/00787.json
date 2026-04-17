@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00787",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "019"
+    ],
+    "series_title": null,
+    "project_folder": "body space",
+    "project_filename": "body space 5.jpg",
+    "title": "body space 5",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f371969531039c3083c1ced738c60d420af16335494d36551337775a4cc1816a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "019",
+      "title": "body space"
+    }
+  ]
+}

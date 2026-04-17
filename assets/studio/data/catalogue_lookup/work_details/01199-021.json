@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-021",
+    "work_id": "01199",
+    "detail_id": "021",
+    "project_subfolder": "particles",
+    "project_filename": "particle (harmony).jpg",
+    "title": "particle (harmony)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "a6b3279c0e3af3ff7ce0c19664336812bf417b184f9fd20d53ed7a8dabf9db32",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

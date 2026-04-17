@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-036",
+    "work_id": "01199",
+    "detail_id": "036",
+    "project_subfolder": "particles",
+    "project_filename": "particle (reduce and return).jpg",
+    "title": "particle (reduce and return)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "d99f892f73dba54bddf88ae02921dd4bdfc4f6b2e8194e9e5f6ecdc626588eed",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

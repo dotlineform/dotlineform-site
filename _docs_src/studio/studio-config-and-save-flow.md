@@ -53,6 +53,7 @@ The exact key inventory belongs in the [Config](/docs/?scope=studio&doc=config) 
 Current shared responsibilities include:
 
 - fetching Studio and site JSON payloads from config-derived paths
+- fetching derived Studio catalogue lookup payloads plus focused per-record lookup JSON
 - registry lookup building
 - group-description normalization
 - assignment and series data shaping used across Studio pages
@@ -121,6 +122,7 @@ Catalogue editor local save behavior:
 - the request includes `work_id`, a browser-computed record hash, and a normalized work record patch
 - the server validates the full catalogue source set before writing
 - writes are constrained to allowlisted canonical catalogue source JSON
+- derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
 
@@ -175,6 +177,7 @@ Studio currently depends on four data families:
 Current ownership boundary:
 
 - Studio reads both Studio-owned JSON and shared site/search artifacts
+- editor routes now prefer derived lookup JSON under `assets/studio/data/catalogue_lookup/` instead of loading full canonical source maps into the browser
 - Studio writes only through the local save service
 - detailed payload shape belongs in [Data Models](/docs/?scope=studio&doc=data-models), not here
 
@@ -188,7 +191,7 @@ Use these references for the contracts:
 
 Current operational constraints:
 
-- `bin/dev-studio` rebuilds Docs Viewer data, but not docs-search artifacts
+- `bin/dev-studio` rebuilds Docs Viewer data and derived catalogue lookup artifacts, but not docs-search artifacts
 - Studio route behavior depends on the current site build being present under Jekyll
 - `scripts/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 

@@ -1,0 +1,181 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "090",
+    "title": "lights",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012-13",
+    "primary_work_id": "01401",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "d3a83ffdbead33cef795df9ec9409cec86ac915e1917b802ca5a34620c567b9f",
+  "member_works": [
+    {
+      "work_id": "01401",
+      "title": "lights 1",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "4d35d3aa2746387a61844f1db79c3ea526c164aa2efc260f240e0320b5214fa4"
+    },
+    {
+      "work_id": "01402",
+      "title": "lights 2",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "e6ffde0c96b64c27a0fbb3b39a88e6ebff451394a980f160117e72ee44096e0d"
+    },
+    {
+      "work_id": "01403",
+      "title": "lights 3",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "e60e83beb2f92b99ca92f5a9b4e278a7b06cb6921f805aab84843a824198e36f"
+    },
+    {
+      "work_id": "01404",
+      "title": "lights 4",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "3881700bd2ddba7c53641d2752bfa1e5125883984fa713d4b99546a672d817a1"
+    },
+    {
+      "work_id": "01405",
+      "title": "lights 5",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "b385c7cb17aa5038a0ce16c95b8aa807bf6e50aec252773e371dacd73551aba9"
+    },
+    {
+      "work_id": "01406",
+      "title": "lights 6",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "14ca81017a8c6b3fff95907a02f429a8201972667f4f8c05dffbc3b705ed9b31"
+    },
+    {
+      "work_id": "01407",
+      "title": "lights 7",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "0d5887263a2899a9900e3ab588b7fb18e298fdd88a99caa1bdc19d3de1cc11d9"
+    },
+    {
+      "work_id": "01408",
+      "title": "lights 8",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "a3a49b93a588131e5e36f1cfa647a76a2efe014e1392f6b698d5b48e2f71f2c4"
+    },
+    {
+      "work_id": "01409",
+      "title": "lights 9",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "82378a4781e25718c6c9a351725f2bb3952ee22747777f6ebf8ca1ef44b8e0e2"
+    },
+    {
+      "work_id": "01410",
+      "title": "lights 10",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "8af061c2d64de39c89f95d0fc485dfb2965142fe02a0514ff598fc356ab67a17"
+    },
+    {
+      "work_id": "01411",
+      "title": "lights 11",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "e9a5afdaf75208788c2d5c95e50b4bd1a0529f377e37bd06f515f5ae4b12d8f8"
+    },
+    {
+      "work_id": "01412",
+      "title": "lights 12",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "94a1cfe4c4d3081f8253f5d75c8e72e63cfe3af1d2383dac70be228ffcc3ac76"
+    },
+    {
+      "work_id": "01413",
+      "title": "lights 13",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "5536a55af2e3d3c5082d892756b383883e8717d10462b3f6760e6bbce94744f9"
+    },
+    {
+      "work_id": "01414",
+      "title": "lights 14",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "b3b1c10c4ab7a8a7955461e8afac2b9d9b2dda85c9977f02d0d5537e3e9cff09"
+    },
+    {
+      "work_id": "01415",
+      "title": "lights 15",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "89c774027a1f369a2ef75936203e034eb328a0b62ca0a403acb2a74eaec50778"
+    },
+    {
+      "work_id": "01416",
+      "title": "lights 16",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "090"
+      ],
+      "record_hash": "f833838eff5204ca8c3dc6f3b96f33040ee3e8aed4c1488536c330033874f91d"
+    }
+  ]
+}

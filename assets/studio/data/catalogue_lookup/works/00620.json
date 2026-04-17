@@ -1,0 +1,138 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00620",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "075"
+    ],
+    "series_title": null,
+    "project_folder": "harmony",
+    "project_filename": "harmony 3 (version).jpg",
+    "title": "harmony 3 (version)",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b75d5f0720791d5fab8bbd3b0e60e4da0d1a1e717458d5942b27e292ec148f5b",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 13,
+      "details": [
+        {
+          "detail_uid": "00620-001",
+          "detail_id": "001",
+          "title": "harmony 3.1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-002",
+          "detail_id": "002",
+          "title": "harmony 3.2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-003",
+          "detail_id": "003",
+          "title": "harmony 3.3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-004",
+          "detail_id": "004",
+          "title": "harmony 3.4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-005",
+          "detail_id": "005",
+          "title": "harmony 3.5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-006",
+          "detail_id": "006",
+          "title": "harmony 3.6",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-007",
+          "detail_id": "007",
+          "title": "harmony 3.7",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-008",
+          "detail_id": "008",
+          "title": "harmony 3.8",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-009",
+          "detail_id": "009",
+          "title": "harmony 3.9",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-010",
+          "detail_id": "010",
+          "title": "harmony 3.10",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-011",
+          "detail_id": "011",
+          "title": "harmony 3.11",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-012",
+          "detail_id": "012",
+          "title": "harmony 3.12",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00620-013",
+          "detail_id": "013",
+          "title": "harmony 3.13",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "075",
+      "title": "harmony"
+    }
+  ]
+}

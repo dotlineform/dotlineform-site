@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00929",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "040"
+    ],
+    "series_title": null,
+    "project_folder": "dot",
+    "project_filename": "dot (2012-12-03 - 12-54-08).jpg",
+    "title": "dot (2012-12-03 - 12-54-08)",
+    "width_cm": 30,
+    "height_cm": 40,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "f4cadec13ab1c62e5a2c9e37259072b17a430dffa61ac4e394810f53d4032e21",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "040",
+      "title": "dot"
+    }
+  ]
+}

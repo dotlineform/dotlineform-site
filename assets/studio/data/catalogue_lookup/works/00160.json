@@ -1,0 +1,123 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00160",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "104"
+    ],
+    "series_title": null,
+    "project_folder": "mouse story",
+    "project_filename": "mouse story.jpg",
+    "title": "mouse story",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1991,
+    "year_display": "1991",
+    "medium_type": "writing",
+    "medium_caption": "typed text, 5 pages",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2472,
+    "height_px": 3498,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e18e9a31ba9960423ed785c33cc0c2b6f6cd322dbe531a73c3cd8ee74daf946f",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00160-006",
+          "detail_id": "006",
+          "title": "mouse story - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-007",
+          "detail_id": "007",
+          "title": "mouse story - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-008",
+          "detail_id": "008",
+          "title": "mouse story - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-009",
+          "detail_id": "009",
+          "title": "mouse story - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-010",
+          "detail_id": "010",
+          "title": "mouse story - detail 5",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "pages",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00160-001",
+          "detail_id": "001",
+          "title": "mouse story - 1",
+          "project_subfolder": "pages",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-002",
+          "detail_id": "002",
+          "title": "mouse story - 2",
+          "project_subfolder": "pages",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-003",
+          "detail_id": "003",
+          "title": "mouse story - 3",
+          "project_subfolder": "pages",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-004",
+          "detail_id": "004",
+          "title": "mouse story - 4",
+          "project_subfolder": "pages",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00160-005",
+          "detail_id": "005",
+          "title": "mouse story - 5",
+          "project_subfolder": "pages",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "104",
+      "title": "mouse story"
+    }
+  ]
+}

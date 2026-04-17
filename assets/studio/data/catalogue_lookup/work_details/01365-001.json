@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01365-001",
+    "work_id": "01365",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "heaven and earth (grey 1).jpg",
+    "title": "heaven and earth (grey 1)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 5906,
+    "height_px": 4429
+  },
+  "record_hash": "be2f86e0d64c4e6e0f894c1fa48b1eb49c5e0049282c557218d4ac6d6f1ca117",
+  "work_summary": {
+    "work_id": "01365",
+    "title": "heaven and earth (grey series)"
+  }
+}

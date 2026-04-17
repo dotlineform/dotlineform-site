@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00948",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (strings).jpg",
+    "title": "dot theory (strings)",
+    "width_cm": 100,
+    "height_cm": 30,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 11811,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4b0d2ab31156ba19fc144b89e46e14cd0abde677b141f1d9f0a7a3ab7af69314",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

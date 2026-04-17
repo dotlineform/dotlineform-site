@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01744-004",
+    "work_id": "01744",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "tabula rasa - detail 4.jpg",
+    "title": "tabula rasa - detail 1",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 3600,
+    "height_px": 3600
+  },
+  "record_hash": "3fda5094087c23b748aaf286bbf268ff2af3bb4b5dd01c5ef578e6e0d6b48186",
+  "work_summary": {
+    "work_id": "01744",
+    "title": "tabula rasa"
+  }
+}

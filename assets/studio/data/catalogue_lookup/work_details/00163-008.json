@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00163-008",
+    "work_id": "00163",
+    "detail_id": "008",
+    "project_subfolder": "pages",
+    "project_filename": "nerve (abattoir) - 6.jpg",
+    "title": "nerve (abattoir) - 6",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 2896,
+    "height_px": 2027
+  },
+  "record_hash": "d4e55e1e0eeb610f0aabf4fdf34dbcae4d6ddc14a2c58802c02ad64258ad6d8d",
+  "work_summary": {
+    "work_id": "00163",
+    "title": "nerve (abattoir)"
+  }
+}

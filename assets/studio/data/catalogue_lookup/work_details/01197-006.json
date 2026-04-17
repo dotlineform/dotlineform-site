@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01197-006",
+    "work_id": "01197",
+    "detail_id": "006",
+    "project_subfolder": "paths",
+    "project_filename": "form paths 41-48.jpg",
+    "title": "form paths 41-48",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "c3d19544f4d600e319fca406483b0a17bc92d91863fd4c3701d40c7ae51123f0",
+  "work_summary": {
+    "work_id": "01197",
+    "title": "form paths"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00893",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll moiré.jpg",
+    "title": "doll moiré",
+    "width_cm": 59.4,
+    "height_cm": 42,
+    "year": 2008,
+    "year_display": "c. 2008",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1240,
+    "height_px": 1909,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "6157f65146c9d19d6111dc689199bc9bd716994bade89bb42403752f754f2711",
+  "detail_sections": [
+    {
+      "project_subfolder": "versions (2022)",
+      "count": 8,
+      "details": [
+        {
+          "detail_uid": "00893-001",
+          "detail_id": "001",
+          "title": "doll moiré (version 1)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-002",
+          "detail_id": "002",
+          "title": "doll moiré (version 2)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-003",
+          "detail_id": "003",
+          "title": "doll moiré (version 3)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-004",
+          "detail_id": "004",
+          "title": "doll moiré (version 4)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-005",
+          "detail_id": "005",
+          "title": "doll moiré (version 4.1)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-006",
+          "detail_id": "006",
+          "title": "doll moiré (version 4.2)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-007",
+          "detail_id": "007",
+          "title": "doll moiré (version 4.3)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00893-008",
+          "detail_id": "008",
+          "title": "doll moiré (version 4.4)",
+          "project_subfolder": "versions (2022)",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

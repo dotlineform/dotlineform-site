@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-040",
+    "work_id": "01199",
+    "detail_id": "040",
+    "project_subfolder": "particles",
+    "project_filename": "particle (train moments).jpg",
+    "title": "particle (train moments)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "45207648dfe9b199c6f6a036a90193d6944002beecd669bf037f0f20ae53d629",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

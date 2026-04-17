@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00813",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "029"
+    ],
+    "series_title": null,
+    "project_folder": "colours",
+    "project_filename": "colours 1958-2001.jpg",
+    "title": "colours 1958-2001",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0dab91b4b62a4ebee30ef61aeb18bb1badc0020e821477d3599785b928edd517",
+  "detail_sections": [
+    {
+      "project_subfolder": "versions",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00813-001",
+          "detail_id": "001",
+          "title": "colours 1958-2001.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00813-002",
+          "detail_id": "002",
+          "title": "colours 1958-2001.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00813-003",
+          "detail_id": "003",
+          "title": "colours 1958-2001.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00813-004",
+          "detail_id": "004",
+          "title": "colours 1958-2001.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00813-005",
+          "detail_id": "005",
+          "title": "colours 1958-2001.5",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "029",
+      "title": "colours"
+    }
+  ]
+}

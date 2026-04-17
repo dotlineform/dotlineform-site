@@ -1,0 +1,355 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01176",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "064"
+    ],
+    "series_title": null,
+    "project_folder": "form space",
+    "project_filename": "form space 1.jpg",
+    "title": "form space 1",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "49e3c40081d659f6b64cbfa985964586e5ad0f97b075153e7e741ee863aa04e1",
+  "detail_sections": [
+    {
+      "project_subfolder": "noise particles",
+      "count": 44,
+      "details": [
+        {
+          "detail_uid": "01176-001",
+          "detail_id": "001",
+          "title": "form space noise 1",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-002",
+          "detail_id": "002",
+          "title": "form space noise 2",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-003",
+          "detail_id": "003",
+          "title": "form space noise 3",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-004",
+          "detail_id": "004",
+          "title": "form space noise 4",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-005",
+          "detail_id": "005",
+          "title": "form space noise 5",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-006",
+          "detail_id": "006",
+          "title": "form space noise 6",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-007",
+          "detail_id": "007",
+          "title": "form space noise 7",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-008",
+          "detail_id": "008",
+          "title": "form space noise 8",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-009",
+          "detail_id": "009",
+          "title": "form space noise 9",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-010",
+          "detail_id": "010",
+          "title": "form space noise 10",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-011",
+          "detail_id": "011",
+          "title": "form space noise 11",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-012",
+          "detail_id": "012",
+          "title": "form space noise 12",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-013",
+          "detail_id": "013",
+          "title": "form space noise 13",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-014",
+          "detail_id": "014",
+          "title": "form space noise 14",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-015",
+          "detail_id": "015",
+          "title": "form space noise 15",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-016",
+          "detail_id": "016",
+          "title": "form space noise 16",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-017",
+          "detail_id": "017",
+          "title": "form space noise 17",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-018",
+          "detail_id": "018",
+          "title": "form space noise 18",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-019",
+          "detail_id": "019",
+          "title": "form space noise 19",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-020",
+          "detail_id": "020",
+          "title": "form space noise 20",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-021",
+          "detail_id": "021",
+          "title": "form space noise 21",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-022",
+          "detail_id": "022",
+          "title": "form space noise 22",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-023",
+          "detail_id": "023",
+          "title": "form space noise 23",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-024",
+          "detail_id": "024",
+          "title": "form space noise 24",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-025",
+          "detail_id": "025",
+          "title": "form space noise 25",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-026",
+          "detail_id": "026",
+          "title": "form space noise 26",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-027",
+          "detail_id": "027",
+          "title": "form space noise 27",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-028",
+          "detail_id": "028",
+          "title": "form space noise 28",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-029",
+          "detail_id": "029",
+          "title": "form space noise 29",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-030",
+          "detail_id": "030",
+          "title": "form space noise 30",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-031",
+          "detail_id": "031",
+          "title": "form space noise 31",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-032",
+          "detail_id": "032",
+          "title": "form space noise 32",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-033",
+          "detail_id": "033",
+          "title": "form space noise 33",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-034",
+          "detail_id": "034",
+          "title": "form space noise 34",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-035",
+          "detail_id": "035",
+          "title": "form space noise 35",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-036",
+          "detail_id": "036",
+          "title": "form space noise 36",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-037",
+          "detail_id": "037",
+          "title": "form space noise 37",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-038",
+          "detail_id": "038",
+          "title": "form space noise 38",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-039",
+          "detail_id": "039",
+          "title": "form space noise 39",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-040",
+          "detail_id": "040",
+          "title": "form space noise 40",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-041",
+          "detail_id": "041",
+          "title": "form space noise 41",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-042",
+          "detail_id": "042",
+          "title": "form space noise 42",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-043",
+          "detail_id": "043",
+          "title": "form space noise 43",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01176-044",
+          "detail_id": "044",
+          "title": "form space noise 44",
+          "project_subfolder": "noise particles",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "064",
+      "title": "form space"
+    }
+  ]
+}

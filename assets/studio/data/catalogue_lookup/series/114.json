@@ -1,0 +1,91 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "114",
+    "title": "plant forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2022,
+    "year_display": "2022",
+    "primary_work_id": "01530",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "4ec9fb6f4f6f42f7524b1a307fd6c71dd99ba4fd0cc125f73dddeedc972bd5ab",
+  "member_works": [
+    {
+      "work_id": "01527",
+      "title": "plant form 1",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "4202ca406c295f9e7b6c9855f61530ca0578915a0456525702f49bdd4e71708a"
+    },
+    {
+      "work_id": "01528",
+      "title": "plant form 2",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "c25e47cef99bb06a61e4e73f36eb6c7c430ce4ba3c5ba1b5cc6f18656cbb97d4"
+    },
+    {
+      "work_id": "01529",
+      "title": "plant form 3",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "12ad629182a81df3b009c73df44845924d4c1b8b18f00aaa151303bd0152c368"
+    },
+    {
+      "work_id": "01530",
+      "title": "plant form 4",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "8488e4ad0d0db88f358d465555b6b3b931ae4ece15f24ef58225df6b9ecdcc2b"
+    },
+    {
+      "work_id": "01531",
+      "title": "plant form 5",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "2909fa18d068b8f2212603a6fb19e721acd9db898ce8a9706b0c77136c6f8edf"
+    },
+    {
+      "work_id": "01532",
+      "title": "plant form 6",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "a4b96b65f77f755ee428a8c12e6d50bdfc5bb3a7d3847cf505ca5e98e664b980"
+    },
+    {
+      "work_id": "01533",
+      "title": "plant form 7",
+      "year_display": "2022",
+      "status": "published",
+      "series_ids": [
+        "114"
+      ],
+      "record_hash": "4b7d31c03ad27e7a4cf887fea1755d3606d2203c0d699290c779b001530c5faf"
+    }
+  ]
+}

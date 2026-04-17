@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "072",
+    "title": "grid cells",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2013,
+    "year_display": "2013",
+    "primary_work_id": "01363",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "3dc247443b0d497d564e7868b1fc94e3cb8c67acb25576d2327315d5a71869de",
+  "member_works": [
+    {
+      "work_id": "01363",
+      "title": "grid cells",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "072"
+      ],
+      "record_hash": "98f384fc9e1e96529a7db9db4ffe29b8a220af44296ae4e9ca0a8847131b1f8a"
+    },
+    {
+      "work_id": "01364",
+      "title": "grid",
+      "year_display": "2013",
+      "status": "published",
+      "series_ids": [
+        "072"
+      ],
+      "record_hash": "2dcc90f10852e4f2ace0f974bb4be91269cc6bab5326eaa3e8d2b5f7d7b4eab6"
+    }
+  ]
+}

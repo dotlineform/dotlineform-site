@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00545",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "099"
+    ],
+    "series_title": null,
+    "project_folder": "models",
+    "project_filename": "model 11.jpg",
+    "title": "model 11",
+    "width_cm": 24.7,
+    "height_cm": 30.3,
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "collage",
+    "medium_caption": "photo collage",
+    "storage_location": "9",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2917,
+    "height_px": 3579,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "475b0626e66b25426f7200419711fd64a97d7f9d2d78f263cf5adbf8d5f09a67",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "099",
+      "title": "models"
+    }
+  ]
+}

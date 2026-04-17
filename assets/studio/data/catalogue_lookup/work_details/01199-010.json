@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-010",
+    "work_id": "01199",
+    "detail_id": "010",
+    "project_subfolder": "particles",
+    "project_filename": "particle (composit red blue smoke).jpg",
+    "title": "particle (composit red blue smoke)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "f772b7d9fe2d47931c270c92889b8e61c9501f27f86aa005387ddbaf41e3b219",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

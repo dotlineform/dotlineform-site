@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "005",
+    "title": "3 symbols",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2007,
+    "year_display": "2007",
+    "primary_work_id": "00638",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "e75c05541c64d66e741d7a2b98b9d1bc16a13f2e2c150e320b0a47c6a0efd7db",
+  "member_works": [
+    {
+      "work_id": "00638",
+      "title": "3 symbols",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "005"
+      ],
+      "record_hash": "ffd08a10f7c678feaf8f21d3b667f6fd6d9d32f1ed9e509a289ec00d571d7bdc"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00626",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "082"
+    ],
+    "series_title": null,
+    "project_folder": "k crystals",
+    "project_filename": "k-crystals source.jpg",
+    "title": "k-crystals source",
+    "width_cm": 60,
+    "height_cm": 60,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 7087,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1b0eefd8b43b9216d675c5ff21e5fcbaec2bd7e596a27693c502650cad533921",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "082",
+      "title": "k crystals"
+    }
+  ]
+}

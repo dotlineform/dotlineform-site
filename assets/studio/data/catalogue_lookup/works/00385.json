@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00385",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "106"
+    ],
+    "series_title": null,
+    "project_folder": "nerve forms",
+    "project_filename": "nerve 1.jpg",
+    "title": "nerve 1",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2004,
+    "year_display": "2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": "4",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4800,
+    "height_px": 3600,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "a33f36b5a51f2ce23037302c25ce569f32411df1ab0e192d314820baad74ea2e",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "106",
+      "title": "nerve forms"
+    }
+  ]
+}

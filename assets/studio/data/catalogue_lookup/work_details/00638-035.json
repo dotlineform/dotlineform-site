@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-035",
+    "work_id": "00638",
+    "detail_id": "035",
+    "project_subfolder": "composites",
+    "project_filename": "composite - blessing.jpg",
+    "title": "composite - blessing",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "5021f20119e8679439c8ab8abf9f6340d0bbad5ca38ee7794d030f3b64d9cf0f",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

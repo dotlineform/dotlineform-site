@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00484",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "098"
+    ],
+    "series_title": null,
+    "project_folder": "mm",
+    "project_filename": "mm particles 3.jpg",
+    "title": "mm particles 3",
+    "width_cm": 30,
+    "height_cm": 40,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1422edaee29fbb80de90b436e3a80030f06f9e82e779fceb2967d3fcc77aed99",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "098",
+      "title": "mm"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-030",
+    "work_id": "00638",
+    "detail_id": "030",
+    "project_subfolder": "source",
+    "project_filename": "source - ruin.jpg",
+    "title": "source - ruin",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "c0ef2bbf82a846b453a6c15418447a0b09f98c59f9f3a11e91ddf6c9669e5473",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

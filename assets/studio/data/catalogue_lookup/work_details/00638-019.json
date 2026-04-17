@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-019",
+    "work_id": "00638",
+    "detail_id": "019",
+    "project_subfolder": "source",
+    "project_filename": "source - gesture.jpg",
+    "title": "source - gesture",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "4ec21c5e11d05aa90df76748abe0df2016df4f77f532376cf80f5c0c2d06d317",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

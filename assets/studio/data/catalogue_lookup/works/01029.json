@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01029",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "045"
+    ],
+    "series_title": null,
+    "project_folder": "droplets",
+    "project_filename": "droplets (2015-07-20 - 17-42-37).jpg",
+    "title": "droplets (2015-07-20 - 17-42-37)",
+    "width_cm": 60,
+    "height_cm": 30,
+    "year": 2015,
+    "year_display": "2015",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7087,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "41f4addb20a67022a666408099569421edda3304fe4eb8fbe829a3869ec4da72",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "045",
+      "title": "droplets"
+    }
+  ]
+}

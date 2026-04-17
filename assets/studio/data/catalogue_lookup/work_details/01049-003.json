@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01049-003",
+    "work_id": "01049",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "fireworks form - detail 3.jpg",
+    "title": "fireworks form - detail 3",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "7122d6fa8c86b70de8c161b2d71897d6345430264898411b017f69c7b00e2714",
+  "work_summary": {
+    "work_id": "01049",
+    "title": "fireworks form"
+  }
+}

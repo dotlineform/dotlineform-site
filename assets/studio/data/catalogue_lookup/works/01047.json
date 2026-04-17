@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01047",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "050"
+    ],
+    "series_title": null,
+    "project_folder": "field",
+    "project_filename": "field I.jpg",
+    "title": "field I",
+    "width_cm": 76,
+    "height_cm": 51,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8976,
+    "height_px": 6024,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "7b41f7970f99dc6074e6d0143446eafc964c319449af7d0382f9da779c75d915",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "01047-001",
+          "detail_id": "001",
+          "title": "field I - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01047-002",
+          "detail_id": "002",
+          "title": "field I - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01047-003",
+          "detail_id": "003",
+          "title": "field I - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "050",
+      "title": "field"
+    }
+  ]
+}

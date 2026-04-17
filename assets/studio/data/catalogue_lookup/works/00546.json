@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00546",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "136"
+    ],
+    "series_title": null,
+    "project_folder": "tree",
+    "project_filename": "tree.jpg",
+    "title": "tree.jpg",
+    "width_cm": 30.2,
+    "height_cm": 20.9,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "photograph",
+    "medium_caption": "platinum palladium print",
+    "storage_location": "framed",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3570,
+    "height_px": 2472,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "674f8e704c23190bde70ce078515902d213f5e21996dc913e17dc600df388ebb",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "136",
+      "title": "tree"
+    }
+  ]
+}

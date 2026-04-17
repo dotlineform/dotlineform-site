@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00734-001",
+    "work_id": "00734",
+    "detail_id": "001",
+    "project_subfolder": "layers",
+    "project_filename": "buddhism.jpg",
+    "title": "buddhism",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 8858,
+    "height_px": 8858
+  },
+  "record_hash": "c6c51de7f0fb45fef68030c98c5a2a9085f66e46d38d2e1577859b3ce3a58ce6",
+  "work_summary": {
+    "work_id": "00734",
+    "title": "a theory of happiness is a theory of everything"
+  }
+}

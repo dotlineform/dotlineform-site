@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01360",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "074"
+    ],
+    "series_title": null,
+    "project_folder": "grid theory",
+    "project_filename": "grid theory 1.2.jpg",
+    "title": "grid theory 1.2",
+    "width_cm": 42,
+    "height_cm": 29.7,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "drawing",
+    "medium_caption": "pencil, dots on paper",
+    "storage_location": "7",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 3509,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4a5a46192173bf45ca4119a4d2397e64ffc78d26d0815533b3ee9bf0b0fbbc8c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "074",
+      "title": "grid theory"
+    }
+  ]
+}

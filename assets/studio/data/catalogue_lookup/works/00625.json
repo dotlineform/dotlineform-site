@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00625",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "082"
+    ],
+    "series_title": null,
+    "project_folder": "k crystals",
+    "project_filename": "k crystals (squared solid).jpg",
+    "title": "k crystals (squared solid)",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "40fc5954867e16f02ebd974c190a9de6e7fcf04f005b3d7e642d6fa0ab84b39d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "082",
+      "title": "k crystals"
+    }
+  ]
+}

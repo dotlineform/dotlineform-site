@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00942",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (dots composite).jpg",
+    "title": "dot theory (dots composite)",
+    "width_cm": 40,
+    "height_cm": 25,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 2953,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e2ed566ac294a1435f0fbb07f8f53f3b28d8bedc113d8313eefaf89a8309d240",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

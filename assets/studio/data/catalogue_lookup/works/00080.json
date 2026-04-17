@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00080",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "body forms 7.jpg",
+    "title": "body forms 7",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4961,
+    "height_px": 7016,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "52b0ffa8403305a0543f4de136e6e493cf8a067a5977837230830ac248c7c854",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

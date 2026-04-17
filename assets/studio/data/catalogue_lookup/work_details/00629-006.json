@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00629-006",
+    "work_id": "00629",
+    "detail_id": "006",
+    "project_subfolder": "versions",
+    "project_filename": "quantum random number theory (10,000) 6.jpg",
+    "title": "quantum random number theory (10,000) 6",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 4800,
+    "height_px": 4800
+  },
+  "record_hash": "e79a3bae263cd0223c01363f58e12b2f01fa93b4387d59bfe15252cc7e3d0b9b",
+  "work_summary": {
+    "work_id": "00629",
+    "title": "quantum random number theory"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00815-001",
+    "work_id": "00815",
+    "detail_id": "001",
+    "project_subfolder": "versions",
+    "project_filename": "colours dachau.1.jpg",
+    "title": "colours dachau.1",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "a1dd45e6742a5830b804e7776b6c1f98056177cd05e382361230f045828f12de",
+  "work_summary": {
+    "work_id": "00815",
+    "title": "colours dachau"
+  }
+}

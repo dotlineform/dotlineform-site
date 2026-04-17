@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00523",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "084"
+    ],
+    "series_title": null,
+    "project_folder": "kylie structures",
+    "project_filename": "kylie structure 4.jpg",
+    "title": "kylie structure 4",
+    "width_cm": 80,
+    "height_cm": 45,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 9449,
+    "height_px": 5315,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "50e614b78c15ba718b8810a03a629a563463977c568a84dc327500a937f28e6e",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 2,
+      "details": [
+        {
+          "detail_uid": "00523-015",
+          "detail_id": "015",
+          "title": "kylie structure 4.1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00523-016",
+          "detail_id": "016",
+          "title": "kylie structure 4.2",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "084",
+      "title": "kylie structures"
+    }
+  ]
+}

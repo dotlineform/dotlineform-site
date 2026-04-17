@@ -61,6 +61,7 @@ from catalogue_source import (  # noqa: E402
     validate_source_records,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
+from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # noqa: E402
 from catalogue_json_build import build_scope_for_work, run_scoped_build  # noqa: E402
 from catalogue_json_build import build_scope_for_series, run_series_scoped_build  # noqa: E402
 from script_logging import append_script_log  # noqa: E402
@@ -451,6 +452,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         handler_cls,
         repo_root: Path,
         source_dir: Path,
+        lookup_dir: Path,
         works_path: Path,
         work_details_path: Path,
         series_path: Path,
@@ -461,6 +463,7 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         super().__init__(server_address, handler_cls)
         self.repo_root = repo_root.resolve()
         self.source_dir = source_dir.resolve()
+        self.lookup_dir = lookup_dir.resolve()
         self.works_path = works_path.resolve()
         self.work_details_path = work_details_path.resolve()
         self.series_path = series_path.resolve()
@@ -528,6 +531,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "service": "catalogue_write_server",
                 "source_dir": self.server.rel_path(self.server.source_dir),
+                "lookup_dir": self.server.rel_path(self.server.lookup_dir),
                 "works_path": self.server.rel_path(self.server.works_path),
                 "backups_dir": self.server.rel_path(self.server.backups_dir),
                 "dry_run": self.server.dry_run,
@@ -654,6 +658,7 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
             now_utc = utc_now()
             self.server.append_activity(
                 {
@@ -752,6 +757,7 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
             now_utc = utc_now()
             self.server.append_activity(
                 {
@@ -890,6 +896,7 @@ class Handler(BaseHTTPRequestHandler):
             },
         )
         if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
             now_utc = utc_now()
             self.server.append_activity(
                 {
@@ -1033,6 +1040,16 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003
         print(f"[catalogue_write_server] {self.address_string()} - {fmt % args}")
 
+    def _refresh_lookup_payloads(self) -> None:
+        written = build_and_write_catalogue_lookup(self.server.source_dir, self.server.lookup_dir)
+        self.server.log_event(
+            "catalogue_lookup_refresh",
+            {
+                "lookup_dir": self.server.rel_path(self.server.lookup_dir),
+                "written_count": len(written),
+            },
+        )
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Localhost-only catalogue source write service.")
@@ -1046,6 +1063,7 @@ def main() -> None:
     args = parse_args()
     repo_root = detect_repo_root(args.repo_root)
     source_dir = (repo_root / DEFAULT_SOURCE_DIR).resolve()
+    lookup_dir = (repo_root / DEFAULT_LOOKUP_DIR).resolve()
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
@@ -1061,6 +1079,7 @@ def main() -> None:
         Handler,
         repo_root=repo_root,
         source_dir=source_dir,
+        lookup_dir=lookup_dir,
         works_path=works_path,
         work_details_path=work_details_path,
         series_path=series_path,

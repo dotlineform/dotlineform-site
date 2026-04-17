@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01939-003",
+    "work_id": "01939",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "sea - detail 3.jpg",
+    "title": "sea - detail 3",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "f08b1335504e9c28b894ebd12b6e274ce13c1e09eebdf24b6db0bd72a2fc4d0b",
+  "work_summary": {
+    "work_id": "01939",
+    "title": "sea"
+  }
+}

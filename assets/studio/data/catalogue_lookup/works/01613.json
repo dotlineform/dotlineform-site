@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01613",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "121"
+    ],
+    "series_title": null,
+    "project_folder": "residues",
+    "project_filename": "residues 1.8.jpg",
+    "title": "residues 1.8",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1d8e008e1dd7c7fdcee5c2936ec39b10de714b04fe49bee6a61c07e51798fb6b",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "121",
+      "title": "residues"
+    }
+  ]
+}

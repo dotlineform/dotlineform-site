@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "106",
+    "title": "nerve forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2004,
+    "year_display": "2004",
+    "primary_work_id": "00581",
+    "series_prose_file": null,
+    "notes": "add videos",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "de17805f012035e2cf2f65e6a9ef2c807b270cc73dbed38fce5f19c79e96606d",
+  "member_works": [
+    {
+      "work_id": "00385",
+      "title": "nerve 1",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "106"
+      ],
+      "record_hash": "a33f36b5a51f2ce23037302c25ce569f32411df1ab0e192d314820baad74ea2e"
+    },
+    {
+      "work_id": "00386",
+      "title": "nerve 3",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "106"
+      ],
+      "record_hash": "e7a973494bdee33a1acb45353cd5b6d229000f8110ecd5ffa1537c1179e2f61b"
+    },
+    {
+      "work_id": "00387",
+      "title": "nerve 3",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "106"
+      ],
+      "record_hash": "3f4bf93f8ddaf82e505fce199630461d0ecf03ed1070a503a68984179ebd5ce7"
+    },
+    {
+      "work_id": "00525",
+      "title": "nerve 2",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "106"
+      ],
+      "record_hash": "b5712e5664002c2f777d33dbdaa7332ee6698120734533dbe3ef55f437b96a5f"
+    },
+    {
+      "work_id": "00581",
+      "title": "nerve forms",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "106"
+      ],
+      "record_hash": "d4ce1b3226e0b8eff9c7abc20717d36a3c6dbdb34715a4c6018eb86f915271a6"
+    }
+  ]
+}

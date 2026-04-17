@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00814-001",
+    "work_id": "00814",
+    "detail_id": "001",
+    "project_subfolder": "versions",
+    "project_filename": "colours belsen.1.jpg",
+    "title": "colours belsen.1",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "96c7210ca625cf6476ac3e9ce88af327bb6afbd4784d8e49a0928fa46c5bdc8a",
+  "work_summary": {
+    "work_id": "00814",
+    "title": "colours belsen"
+  }
+}

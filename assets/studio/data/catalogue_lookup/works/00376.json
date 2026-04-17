@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00376",
+    "status": null,
+    "published_date": null,
+    "series_ids": [
+      "102"
+    ],
+    "series_title": null,
+    "project_folder": "monoprints and residues",
+    "project_filename": "00376 - residues.jpg",
+    "title": "00376 - residues",
+    "width_cm": 40.5,
+    "height_cm": 30.5,
+    "year": null,
+    "year_display": null,
+    "medium_type": null,
+    "medium_caption": null,
+    "storage_location": "13",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": null,
+    "height_px": null,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "6e5cc0598de20c26db30ad99a1bc16af02813fbe7f1d09ac8f3fda36d3f23b63",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "102",
+      "title": "monoprints and residues"
+    }
+  ]
+}

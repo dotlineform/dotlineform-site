@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00727",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "008"
+    ],
+    "series_title": null,
+    "project_folder": "a humid home full of light",
+    "project_filename": "a humid home full of light [6].jpg",
+    "title": "a humid home full of light [6]",
+    "width_cm": 48,
+    "height_cm": 36,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5669,
+    "height_px": 4252,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "92e61f3b8ad911e335b4a78b8f3849bbcce19937d3ab1ed9e55228a9119902ff",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "008",
+      "title": "a humid home full of light"
+    }
+  ]
+}

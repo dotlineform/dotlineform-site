@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01940-003",
+    "work_id": "01940",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "pond - detail 3.jpg",
+    "title": "pond - detail 3",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "d07303a395fe1a53e37223cf1f98d6e23058dff397ab16eab282cc9fc4d7a440",
+  "work_summary": {
+    "work_id": "01940",
+    "title": "pond"
+  }
+}

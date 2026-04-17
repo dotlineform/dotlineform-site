@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01688",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "124"
+    ],
+    "series_title": null,
+    "project_folder": "spider webs",
+    "project_filename": "spider webs 14.jpg",
+    "title": "spider webs 14",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2023,
+    "year_display": "2023-24",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "686ed0f5a08533fdc309c562d57b894cb24c06af66f0787a517aab7c4496f584",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "124",
+      "title": "spider webs"
+    }
+  ]
+}

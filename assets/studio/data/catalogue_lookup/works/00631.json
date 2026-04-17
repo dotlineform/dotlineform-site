@@ -1,0 +1,75 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00631",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "118"
+    ],
+    "series_title": null,
+    "project_folder": "qrnt",
+    "project_filename": "quantum random number theory (form).jpg",
+    "title": "quantum random number theory (form)",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2015,
+    "year_display": "2015",
+    "medium_type": "digital print",
+    "medium_caption": "pencil on giclée print",
+    "storage_location": "framed",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3088,
+    "height_px": 3088,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "c9a6c39f310d96400fce997e7924c6c82049d3a4268754bc2828d0cb5125f011",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 4,
+      "details": [
+        {
+          "detail_uid": "00631-001",
+          "detail_id": "001",
+          "title": "qrnt form (2015-06-06)",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00631-002",
+          "detail_id": "002",
+          "title": "qrnt form (2015-06-06) detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00631-003",
+          "detail_id": "003",
+          "title": "qrnt form (2015-06-06) detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00631-004",
+          "detail_id": "004",
+          "title": "qrnt form (2015-06-06) detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "118",
+      "title": "quantum random number theory"
+    }
+  ]
+}

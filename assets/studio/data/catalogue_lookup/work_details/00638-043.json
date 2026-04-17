@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-043",
+    "work_id": "00638",
+    "detail_id": "043",
+    "project_subfolder": "composites",
+    "project_filename": "composite - grave.jpg",
+    "title": "composite - grave",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "1892aa097a6d1a25131d0b71cbe77afff2c5da10000f52df582d93f8248b92b5",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

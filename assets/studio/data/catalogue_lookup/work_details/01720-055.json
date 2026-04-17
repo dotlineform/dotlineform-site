@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-055",
+    "work_id": "01720",
+    "detail_id": "055",
+    "project_subfolder": "symbols",
+    "project_filename": "noisy jelly mean rush.jpg",
+    "title": "noisy jelly mean rush",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1383
+  },
+  "record_hash": "4141e2f2f3501a61e5dd546bb6db288fddf487cec2d025487ecdb13b489991f2",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00811",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "025"
+    ],
+    "series_title": null,
+    "project_folder": "closeness",
+    "project_filename": "close.jpg",
+    "title": "close",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "47c85c3f640b060734c5094f143434bd45692b7cb363773b4d3c7db5303d2cb4",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "025",
+      "title": "closeness"
+    }
+  ]
+}

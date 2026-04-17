@@ -35,13 +35,15 @@ The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the 
 
 Current save/rebuild flow:
 
-1. page loads `works.json` and `work_details.json`
-2. browser computes a record hash for stale-write protection
-3. user edits the current detail form
-4. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, and the normalized detail patch
-5. the local write server validates the full source set, writes `work_details.json`, creates backups, and returns the normalized saved record
-6. `POST /catalogue/build-preview` reports the parent-work rebuild impact
-7. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
+1. page loads the derived detail-search lookup, not the full canonical detail map
+2. opening a detail fetches one focused lookup record from `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`
+3. browser uses the lookup-provided record hash for stale-write protection
+4. user edits the current detail form
+5. `POST /catalogue/work-detail/save` sends the current `detail_uid`, the expected record hash, and the normalized detail patch
+6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record
+7. the page reloads its focused detail lookup payload
+8. `POST /catalogue/build-preview` reports the parent-work rebuild impact
+9. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
 
 ## Current Editable Fields
 

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00242",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "027"
+    ],
+    "series_title": null,
+    "project_folder": "collected digital c. 1998",
+    "project_filename": "untitled 242.jpg",
+    "title": "untitled [242]",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1998,
+    "year_display": "c. 1998",
+    "medium_type": "digital print",
+    "medium_caption": "laserjet print",
+    "storage_location": "3",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3508,
+    "height_px": 2480,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d16566ee33da4003fa81367bbb87dd2967c515809705669202b91f767ffb138c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "027",
+      "title": "collected digital c. 1998"
+    }
+  ]
+}

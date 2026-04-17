@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00817-002",
+    "work_id": "00817",
+    "detail_id": "002",
+    "project_subfolder": "versions",
+    "project_filename": "colours marilyn.2.jpg",
+    "title": "colours marilyn.2",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "a2131f6d9a6a645d27edc75ddaaaa3905fbb921019e4cf1448e8c6972976fe5d",
+  "work_summary": {
+    "work_id": "00817",
+    "title": "colours marilyn"
+  }
+}

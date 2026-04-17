@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01401",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "090"
+    ],
+    "series_title": null,
+    "project_folder": "lights",
+    "project_filename": "lights 1.jpg",
+    "title": "lights 1",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4d35d3aa2746387a61844f1db79c3ea526c164aa2efc260f240e0320b5214fa4",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "090",
+      "title": "lights"
+    }
+  ]
+}

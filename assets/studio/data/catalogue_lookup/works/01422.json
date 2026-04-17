@@ -1,0 +1,110 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01422",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "094"
+    ],
+    "series_title": null,
+    "project_folder": "matter",
+    "project_filename": "matter.jpg",
+    "title": "matter",
+    "width_cm": 96,
+    "height_cm": 54,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 11339,
+    "height_px": 6378,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4bd6f09506d8598799f1fb62077d0b36eb816a87eb9527a7bf32956b8248bc14",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 9,
+      "details": [
+        {
+          "detail_uid": "01422-001",
+          "detail_id": "001",
+          "title": "matter - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-002",
+          "detail_id": "002",
+          "title": "matter - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-003",
+          "detail_id": "003",
+          "title": "matter - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-004",
+          "detail_id": "004",
+          "title": "matter - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-005",
+          "detail_id": "005",
+          "title": "matter - detail 5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-006",
+          "detail_id": "006",
+          "title": "matter - detail 6",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-007",
+          "detail_id": "007",
+          "title": "matter - detail 7",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-008",
+          "detail_id": "008",
+          "title": "matter - detail 8",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01422-009",
+          "detail_id": "009",
+          "title": "matter - detail 9",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "094",
+      "title": "matter"
+    }
+  ]
+}

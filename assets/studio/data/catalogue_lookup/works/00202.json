@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00202",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "book of curves 5.jpg",
+    "title": "book of curves 5",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2432,
+    "height_px": 3436,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "df5a760ac36bd361987d1e17a3eb8a2453f009a75bfdc3974d560850c8c1c405",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

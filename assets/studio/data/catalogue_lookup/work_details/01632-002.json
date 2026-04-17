@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01632-002",
+    "work_id": "01632",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "room 4 - detail 2.jpg",
+    "title": "room 4 - detail 2",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "6f2b57f89f1ddec9cf5b1999d07d3c3086b5431a46d3a5410f1d9e22ce30af33",
+  "work_summary": {
+    "work_id": "01632",
+    "title": "room 4"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00622-006",
+    "work_id": "00622",
+    "detail_id": "006",
+    "project_subfolder": "derivation",
+    "project_filename": "k crystals colours.jpg",
+    "title": "k crystals colours",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 4341,
+    "height_px": 3150
+  },
+  "record_hash": "6f54f38fc6ec8517d1328b247096102a930a91b4abfbd7a1e6b32a88c17c2d62",
+  "work_summary": {
+    "work_id": "00622",
+    "title": "k crystals"
+  }
+}

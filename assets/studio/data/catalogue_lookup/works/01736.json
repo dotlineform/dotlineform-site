@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01736",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "130"
+    ],
+    "series_title": null,
+    "project_folder": "sunflower",
+    "project_filename": "sunflower forms grid.jpg",
+    "title": "sunflower forms grid",
+    "width_cm": 52,
+    "height_cm": 52,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6142,
+    "height_px": 6142,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "94b54b233f427ab6015769099a3b5b3121f42357c32d70890c363a8b29b63777",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "130",
+      "title": "sunflower"
+    }
+  ]
+}

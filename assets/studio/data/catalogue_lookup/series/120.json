@@ -1,0 +1,121 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "120",
+    "title": "reduce and return",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2005,
+    "year_display": "2005-07",
+    "primary_work_id": "01596",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "d1003c27cad185f3a170b8f64219623dd4d14f0876a4c3e4015124d044477aa5",
+  "member_works": [
+    {
+      "work_id": "01596",
+      "title": "reduce 1",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "8093b5b9f86d9ce560c544513fd6bf1220e8676a6fff693458acdee38c13c8a7"
+    },
+    {
+      "work_id": "01597",
+      "title": "reduce 2",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "7fd2a03bc4da9c4918405624bdcad63a97f4ed69ddd7a52964d149a5152e58ac"
+    },
+    {
+      "work_id": "01598",
+      "title": "reduce 3",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "682dab85f1ebf583bd478a29d11a18067d24e13f3f26010be47d7301cbb6e746"
+    },
+    {
+      "work_id": "01599",
+      "title": "reduce 4",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "76cc7d1fbd76d0e693dca99f9e0949175dfda15db5f9eab19a03721c019e62f1"
+    },
+    {
+      "work_id": "01600",
+      "title": "reduce 5",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "d144e653f968243abd73158fa86dfada19270adeb733f2da4b9cf8f769efcc5d"
+    },
+    {
+      "work_id": "01601",
+      "title": "return 1",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "501330e908dbfe5cbb7f1f90aaa0d5365b8142bf99218adfcea4a9f89243e42a"
+    },
+    {
+      "work_id": "01602",
+      "title": "return 2",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "ac90f5303797bed3d3656fce93e6dfd9b0cb5aa11cb1a82c504be1285af19de2"
+    },
+    {
+      "work_id": "01603",
+      "title": "return 3",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "ef785f902dc4d53954de6dc138f8f0bff1b7d26e80914370ce144bddafc5581e"
+    },
+    {
+      "work_id": "01604",
+      "title": "return 4",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "939c21ba1ad6eeddf100aa290cf477a658624d3070b2bf67d41cb54119064da2"
+    },
+    {
+      "work_id": "01605",
+      "title": "return 5",
+      "year_display": "2005-07",
+      "status": "published",
+      "series_ids": [
+        "120"
+      ],
+      "record_hash": "420ee4c4858f445556927dbf00b78b6ee7117cf7f49bcbaeba2b56f733b46bcb"
+    }
+  ]
+}

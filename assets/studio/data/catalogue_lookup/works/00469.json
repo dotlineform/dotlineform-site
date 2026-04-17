@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00469",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "076"
+    ],
+    "series_title": null,
+    "project_folder": "heaven and earth",
+    "project_filename": "heaven and earth.jpg",
+    "title": "heaven and earth",
+    "width_cm": 50,
+    "height_cm": 75,
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "photograph",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 8859,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d742da0d512aba9097e7c83e2fc673807ee6fd243a7027cdb0a2d5bbf517bd8c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "076",
+      "title": "heaven and earth"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00221",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "028"
+    ],
+    "series_title": null,
+    "project_folder": "colouring book",
+    "project_filename": "colouring book 5.jpg",
+    "title": "colouring book 5",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1996,
+    "year_display": "1996",
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1200,
+    "height_px": 1707,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "435384af072a0db581f4c474fa3fe27881dfad4b45e67842f4884426e8d47375",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "028",
+      "title": "colouring book"
+    }
+  ]
+}

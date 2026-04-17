@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01633",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "018"
+    ],
+    "series_title": null,
+    "project_folder": "body form",
+    "project_filename": "body form.jpg",
+    "title": "body form",
+    "width_cm": 50.8,
+    "height_cm": 76.2,
+    "year": 2008,
+    "year_display": "2008",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print (reverse perspex mount)",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6000,
+    "height_px": 9000,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e449acd0e0b0cf579e02f499224e4e18a1a3589d2cb711a90d40a5e8b7f02e9d",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "018",
+      "title": "body form"
+    }
+  ]
+}

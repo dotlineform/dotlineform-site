@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "020",
+    "title": "body space (reclining state)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2019,
+    "year_display": "2019",
+    "primary_work_id": "00792",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "b045c5fcb42ecc5d39c8fc78f2072aa55cabe65a668848d7ae87604ff9589293",
+  "member_works": [
+    {
+      "work_id": "00792",
+      "title": "body space (reclining state) 1",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "a23545b1da72a3636b975acf8dd6eef5d51f91f2299e0a9a7fbeb83a926386a3"
+    },
+    {
+      "work_id": "00793",
+      "title": "body space (reclining state) 2",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "2e3ed7aa6e65d13f76ffc434b764286191f74bf6d44df7847bf01a6f4d3629ee"
+    },
+    {
+      "work_id": "00794",
+      "title": "body space (reclining state) 3",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "1d0944f897d336652e5fc1070cce204577bf8327d2935491878256303f46cd24"
+    },
+    {
+      "work_id": "00795",
+      "title": "body space (reclining state) 4",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "eaab50da0aaee62456f2494e7fb57711a0e06de7df916042efaa337a93b2b1e0"
+    },
+    {
+      "work_id": "00796",
+      "title": "body space (reclining state) 5",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "b1a0ba4844f07cd0df7ac886778420a39a6dfba147f6093c85dff0d6859fe5f3"
+    },
+    {
+      "work_id": "00797",
+      "title": "body space (reclining state) 6",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "08ee16dd1169121003c0d98961259dc5fc4a46461b2c9119dce2db744bb66b6f"
+    },
+    {
+      "work_id": "00798",
+      "title": "body space (reclining state) 7",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "923a6e93c10e2567de697221e9b13ba8364dc3f3a6bb09aa0d5d0547eb1d7cd6"
+    },
+    {
+      "work_id": "00799",
+      "title": "body space (reclining state) 8",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "90e03c9f5e24943fec4e99d4e529e7bb3b9c749c68db41a6411f8b646617a08b"
+    },
+    {
+      "work_id": "00800",
+      "title": "body space (reclining state) 9",
+      "year_display": "2019",
+      "status": "published",
+      "series_ids": [
+        "020"
+      ],
+      "record_hash": "d94853b5df73d86a3ed62deedf6c62d9f62bafc8a23e34861a850269f3213c0b"
+    }
+  ]
+}

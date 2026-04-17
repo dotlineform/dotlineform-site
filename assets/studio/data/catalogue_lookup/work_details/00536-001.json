@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00536-001",
+    "work_id": "00536",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "model 2 - 001.jpg",
+    "title": "model 2 - 001",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3031,
+    "height_px": 4629
+  },
+  "record_hash": "b9527db48eaeb0c5bf771f7588338037838320d325a22592377b391289810a5e",
+  "work_summary": {
+    "work_id": "00536",
+    "title": "model 2"
+  }
+}

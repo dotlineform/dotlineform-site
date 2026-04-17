@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00897",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll still life 2.jpg",
+    "title": "doll still life 2",
+    "width_cm": 30,
+    "height_cm": 50,
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "742441bf26ec835e2703c350133704147d21581a3c1900d880b1b1543d84db22",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

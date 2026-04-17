@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-045",
+    "work_id": "01720",
+    "detail_id": "045",
+    "project_subfolder": "symbols",
+    "project_filename": "mean.jpg",
+    "title": "mean",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1556
+  },
+  "record_hash": "c5ff008dc933808682e9540e1e5ee4f1452de9b05ac0c083a7462710f26f59b5",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01479-003",
+    "work_id": "01479",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "olive tree - detail 3.jpg",
+    "title": "olive tree - detail 3",
+    "status": "published",
+    "published_date": "2026-03-24",
+    "width_px": 4000,
+    "height_px": 4000
+  },
+  "record_hash": "3630db83c9f24188aad8f6d39f33f12fa660fe549ae420dd02e5013a0d327ab5",
+  "work_summary": {
+    "work_id": "01479",
+    "title": "olive tree"
+  }
+}

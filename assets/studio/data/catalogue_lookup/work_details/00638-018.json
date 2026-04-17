@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-018",
+    "work_id": "00638",
+    "detail_id": "018",
+    "project_subfolder": "source",
+    "project_filename": "source - genocide.jpg",
+    "title": "source - genocide",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "c03cb5fa26d29356a3504835695b7be4a269ebc323db317e713a92ea2150b0b7",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

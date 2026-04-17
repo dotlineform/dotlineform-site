@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00070",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "nude frame 5.jpg",
+    "title": "nude frame 5",
+    "width_cm": 29.7,
+    "height_cm": 21,
+    "year": 1989,
+    "year_display": "c. 1989-98",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7016,
+    "height_px": 4961,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2d4518858bf562eed5f0bcd2df4b682a8ad2116b8a1e73e1c4a1db6c35d5a655",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

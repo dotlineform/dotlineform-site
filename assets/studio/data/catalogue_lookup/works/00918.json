@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00918",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "039"
+    ],
+    "series_title": null,
+    "project_folder": "doll sees everything",
+    "project_filename": "doll sees everything (10).jpg",
+    "title": "doll sees everything (10)",
+    "width_cm": 32,
+    "height_cm": 32,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3780,
+    "height_px": 3780,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ab69271503e0e318db0f9aa5e7b06084a90ebdd643c05bfc9bdedbfb27d6acff",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "039",
+      "title": "doll sees everything"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00879",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll face 3.jpg",
+    "title": "doll face 3",
+    "width_cm": 28,
+    "height_cm": 40,
+    "year": 1989,
+    "year_display": "c. 1989",
+    "medium_type": "mixed media",
+    "medium_caption": "photocopy",
+    "storage_location": "8",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3387,
+    "height_px": 4609,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "5f712ac8736a3d412ab29d3e51aa2c6ab572ae823c5257b181612691cc5290c8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

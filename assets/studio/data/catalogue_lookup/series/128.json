@@ -1,0 +1,151 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "128",
+    "title": "still life",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2014,
+    "year_display": "2014",
+    "primary_work_id": "01732",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "21aa48aecfd39c5ffe022af5a629ec0f55461ec5fd06b469645e721565f7c935",
+  "member_works": [
+    {
+      "work_id": "01722",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "73e98ff294784fc6fcf9dd0c7614995a3ee3687ef4e40cc15a884a535df4108b"
+    },
+    {
+      "work_id": "01723",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "fcf860f11612fccb8802709d5c5df98895ee7d182878138ab9356f8f4ba0ede6"
+    },
+    {
+      "work_id": "01724",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "0ce04b86a1fc305b467ce6d092850e656a7fdedcc75152a4c141b43eac8a7b3b"
+    },
+    {
+      "work_id": "01725",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "5fba88c3d69adda2a0e771d8043e133a7e508c252cff5352c4f7297db1f553c7"
+    },
+    {
+      "work_id": "01726",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "a9ab9361918c7f4cedb410ade15011add313e8653e36b07f1cfb4963974eb828"
+    },
+    {
+      "work_id": "01727",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "e4fe07e7c7284d4f6d80f7a2f77cb2c5ccfb20c58af2c3dc67df455525c1d00c"
+    },
+    {
+      "work_id": "01728",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "851785cac62f48d3a780faecb20086398f02892b67208ea432ccf0e2ede36045"
+    },
+    {
+      "work_id": "01729",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "b990b5887287921831b40ab1add8a2f7b3b83f31e5b2e4fd85f11aaa290d7e06"
+    },
+    {
+      "work_id": "01730",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "af991b0de13c343841a7afd6fdb78a4ff04ce0f9089fe911c8a24d6f3510e483"
+    },
+    {
+      "work_id": "01731",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "3c8f763cddb0bf5db76be740bd3d4476cbf3bde5b9b7cacb08e5c81c970bbe48"
+    },
+    {
+      "work_id": "01732",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "0d6574b6305d9091072e24a30af04bea6b048f97914538efa7520e9452258b70"
+    },
+    {
+      "work_id": "01733",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "65b7f77a399db3842b2250aedcc2acb42fe2d1c29e2038eff0bc094842e428e1"
+    },
+    {
+      "work_id": "01734",
+      "title": "still life",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "128"
+      ],
+      "record_hash": "b48dba685853b01d2e99b3aac98cb7d1cee993e4b54f5144239a073cd6ab99ca"
+    }
+  ]
+}

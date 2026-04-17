@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00846",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "033"
+    ],
+    "series_title": null,
+    "project_folder": "cube structure",
+    "project_filename": "structure iv.jpg",
+    "title": "structure iv",
+    "width_cm": 75,
+    "height_cm": 75,
+    "year": 2011,
+    "year_display": "2011",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 8858,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b6cdefd8f28ae18c0cf654b571d7466acab4a8b02070043503972ed11ece8b30",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "033",
+      "title": "cube structure"
+    }
+  ]
+}

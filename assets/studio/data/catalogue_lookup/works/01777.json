@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01777",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "135"
+    ],
+    "series_title": null,
+    "project_folder": "train moments",
+    "project_filename": "2009-07-06 19꞉53꞉35.jpg",
+    "title": "2009-07-06 19꞉53꞉35",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1b0ae7a900104b24430cc1e8cb5f3f2f3b8a2a5d2511e33f41364708e552f490",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "135",
+      "title": "train moments"
+    }
+  ]
+}

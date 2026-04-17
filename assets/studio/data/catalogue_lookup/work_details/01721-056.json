@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01721-056",
+    "work_id": "01721",
+    "detail_id": "056",
+    "project_subfolder": "source",
+    "project_filename": "state of mind - source 50.jpg",
+    "title": "state of mind - source 50",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 2816,
+    "height_px": 2112
+  },
+  "record_hash": "58fb8856a01f7ce36b44b734b621e51d707befb5f83e9a54114c8fcc9b5d9336",
+  "work_summary": {
+    "work_id": "01721",
+    "title": "state of mind"
+  }
+}

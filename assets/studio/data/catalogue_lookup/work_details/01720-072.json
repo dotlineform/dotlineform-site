@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-072",
+    "work_id": "01720",
+    "detail_id": "072",
+    "project_subfolder": "source",
+    "project_filename": "spine names.jpg",
+    "title": "spine names",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 3000,
+    "height_px": 1637
+  },
+  "record_hash": "2cf215ea2be1d2bd66344e623a595c2152d92d38b3fbc3c8eb00b8a73e0e5452",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

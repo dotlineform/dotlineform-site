@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "021",
+    "title": "book dna",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2010,
+    "year_display": "2010",
+    "primary_work_id": "00801",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "73d59ae20fe4668836676583b066dd3d3aeb915394624eca05e1b1a47f67cd82",
+  "member_works": [
+    {
+      "work_id": "00801",
+      "title": "book dna",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "021"
+      ],
+      "record_hash": "58b078620c829398d2061cc236be4044b114d3e4414b7041313d52ac0993205b"
+    },
+    {
+      "work_id": "00802",
+      "title": "book atomic",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "021"
+      ],
+      "record_hash": "379457ecb8f2f34d2db970bd3f110c69f702a3fe8e6b56fefd3a09335dcdd736"
+    },
+    {
+      "work_id": "00803",
+      "title": "book diagrams 1",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "021"
+      ],
+      "record_hash": "e8378688e22953caab3c9d24a0f1ad6034f6dc8463cf1ee45b1ef2c1b73edb4e"
+    },
+    {
+      "work_id": "00804",
+      "title": "book diagrams 2",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "021"
+      ],
+      "record_hash": "0e15e0b11abd7428e8f1e530af6b0c803d41bf7e30bb0802c39c391f3946e767"
+    },
+    {
+      "work_id": "00805",
+      "title": "book dna sequence",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "021"
+      ],
+      "record_hash": "a82f6c9fba92038291901f4ca497788f392ae661915747f05c9ddb2a75806c50"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00944-002",
+    "work_id": "00944",
+    "detail_id": "002",
+    "project_subfolder": "edges",
+    "project_filename": "edges 1.2.jpg",
+    "title": "edges 1.2",
+    "status": "published",
+    "published_date": "2026-03-17",
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "record_hash": "67b4ac17d11549d2ab8d198ba39c165f385c508345b7f7dc4751705c6c3f9a69",
+  "work_summary": {
+    "work_id": "00944",
+    "title": "dot theory (dots edges)"
+  }
+}

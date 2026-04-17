@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-049",
+    "work_id": "00638",
+    "detail_id": "049",
+    "project_subfolder": "composites",
+    "project_filename": "composite - reincarnation.jpg",
+    "title": "composite - reincarnation",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "32d5c8ff2cf3a5520d1a7225044a783bb35c72ff01611797499a61f60d5519e3",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

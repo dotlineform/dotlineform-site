@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00944",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (dots edges).jpg",
+    "title": "dot theory (dots edges)",
+    "width_cm": 75,
+    "height_cm": 50,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8858,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "71cbe0b418665d4d584c31a7d002ca1b01be120c5ca7f9a962f646ee79bfa922",
+  "detail_sections": [
+    {
+      "project_subfolder": "edges",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "00944-001",
+          "detail_id": "001",
+          "title": "edges 1.1",
+          "project_subfolder": "edges",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00944-002",
+          "detail_id": "002",
+          "title": "edges 1.2",
+          "project_subfolder": "edges",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00944-003",
+          "detail_id": "003",
+          "title": "edges 1.3",
+          "project_subfolder": "edges",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

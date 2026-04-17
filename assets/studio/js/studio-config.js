@@ -35,7 +35,14 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_work_details: "/assets/studio/data/catalogue/work_details.json",
         catalogue_series: "/assets/studio/data/catalogue/series.json",
         catalogue_work_files: "/assets/studio/data/catalogue/work_files.json",
-        catalogue_work_links: "/assets/studio/data/catalogue/work_links.json"
+        catalogue_work_links: "/assets/studio/data/catalogue/work_links.json",
+        catalogue_lookup_work_search: "/assets/studio/data/catalogue_lookup/work_search.json",
+        catalogue_lookup_series_search: "/assets/studio/data/catalogue_lookup/series_search.json",
+        catalogue_lookup_work_detail_search: "/assets/studio/data/catalogue_lookup/work_detail_search.json",
+        catalogue_lookup_meta: "/assets/studio/data/catalogue_lookup/meta.json",
+        catalogue_lookup_work_base: "/assets/studio/data/catalogue_lookup/works/",
+        catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
+        catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/"
       },
       site: {
         series_index: "/assets/data/series_index.json",

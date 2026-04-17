@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01037-038",
+    "work_id": "01037",
+    "detail_id": "038",
+    "project_subfolder": "work in progress",
+    "project_filename": "2024-06-02 23-30 3.jpg",
+    "title": "2024-06-02 23-30 3",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 4032,
+    "height_px": 2268
+  },
+  "record_hash": "bb29da66ab3369c925d80aafbac58b542f12fd5a84e27e56433bb9b8cd6873bf",
+  "work_summary": {
+    "work_id": "01037",
+    "title": "egg forms"
+  }
+}

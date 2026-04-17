@@ -49,6 +49,8 @@ echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-edit
 echo
 echo "Building docs viewer data"
 "$BUNDLE_BIN" exec ruby scripts/build_docs.rb --write
+echo "Building catalogue lookup data"
+"$PYTHON_BIN" scripts/export_catalogue_lookup.py --write
 echo
 echo "Press Ctrl+C to stop both processes."
 echo

@@ -1,0 +1,101 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "082",
+    "title": "k crystals",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2009,
+    "year_display": "2009",
+    "primary_work_id": "00625",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "8327656151791e93738e69fbe7e576a48d8a7443e6a1a0d1e107fcfc6e14d814",
+  "member_works": [
+    {
+      "work_id": "00621",
+      "title": "crystal",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "9058d842ded3267f8753039c09a9b0f6214ee661b68ab1b252999eb2c395193c"
+    },
+    {
+      "work_id": "00622",
+      "title": "k crystals",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "751cd3098b3443deb0c501a6283a674f7c708672c47b1f5253994c3a9d025b63"
+    },
+    {
+      "work_id": "00623",
+      "title": "k crystals (transparent)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "2280cc0a6fce41105ac5f76009cdecba285f77cd97df21794785018d77162bac"
+    },
+    {
+      "work_id": "00624",
+      "title": "k crystals (squared transparent)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "b8e841a47cb3c6cee7f1e5698a1bdf918204e8293cb4c178c3ea13b13f9e69db"
+    },
+    {
+      "work_id": "00625",
+      "title": "k crystals (squared solid)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "40fc5954867e16f02ebd974c190a9de6e7fcf04f005b3d7e642d6fa0ab84b39d"
+    },
+    {
+      "work_id": "00626",
+      "title": "k-crystals source",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "1b0eefd8b43b9216d675c5ff21e5fcbaec2bd7e596a27693c502650cad533921"
+    },
+    {
+      "work_id": "00627",
+      "title": "k-crystals squared source",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "6a4ba692abf8feb8ba628d4f89ced2dc1d9c3ae31a118ea06c6a951f54079cd3"
+    },
+    {
+      "work_id": "00628",
+      "title": "group theory",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "082"
+      ],
+      "record_hash": "4e36481b654a0108574a1d8970adfc29400f077570fcd25a08959474556ef9e5"
+    }
+  ]
+}

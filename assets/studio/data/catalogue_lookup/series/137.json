@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "137",
+    "title": "tulips",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01869",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "8ed1f37122025856708ee19b5865242055d9b4a61794d0258640e23c3cd51678",
+  "member_works": [
+    {
+      "work_id": "01869",
+      "title": "tulips 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "137"
+      ],
+      "record_hash": "7cc65f63559ac57d0cbb1d4924a0fd7c1adf580cbf2c24531f727c8016f3045d"
+    },
+    {
+      "work_id": "01870",
+      "title": "tulips 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "137"
+      ],
+      "record_hash": "a84161db7436b50e526b08baeaa97cd66e45120806e609a0648cab8606b3445d"
+    },
+    {
+      "work_id": "01871",
+      "title": "tulips 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "137"
+      ],
+      "record_hash": "6f2748329c2d3d26d0c2b7b4e865893e5ca088be999673a5ecb2c3256aca2b04"
+    },
+    {
+      "work_id": "01872",
+      "title": "tulips 4",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "137"
+      ],
+      "record_hash": "00ca75ba6c5098b8c84f3e6e4bc086b277e31efe1e2b7f974d24eefcab5093a1"
+    },
+    {
+      "work_id": "01873",
+      "title": "tulips 5",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "137"
+      ],
+      "record_hash": "aaad71ffcc06d58c356dc29ba71f4e400e599e4bf890cabd0b950ce2885acc99"
+    }
+  ]
+}

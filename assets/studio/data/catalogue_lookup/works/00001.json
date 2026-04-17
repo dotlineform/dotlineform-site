@@ -1,0 +1,166 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00001",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "009"
+    ],
+    "series_title": null,
+    "project_folder": "a poem divided into 4 parts",
+    "project_filename": "a poem divided into 4 parts - 1.jpg",
+    "title": "a poem divided into 4 parts (\"our dreams are real\")",
+    "width_cm": 29.7,
+    "height_cm": 21,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on tracing paper",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3508,
+    "height_px": 2480,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "304a27ff0149bbb5ed1afbe07ab503ee5037e269ce69d9a6752e5d9a56f7e3e6",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 17,
+      "details": [
+        {
+          "detail_uid": "00001-001",
+          "detail_id": "001",
+          "title": "a poem divided into 4 parts - end 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-002",
+          "detail_id": "002",
+          "title": "a poem divided into 4 parts - end 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-003",
+          "detail_id": "003",
+          "title": "a poem divided into 4 parts - end 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-004",
+          "detail_id": "004",
+          "title": "a poem divided into 4 parts - end 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-005",
+          "detail_id": "005",
+          "title": "a poem divided into 4 parts - end 5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-006",
+          "detail_id": "006",
+          "title": "a poem divided into 4 parts - end 6",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-007",
+          "detail_id": "007",
+          "title": "a poem divided into 4 parts - end 7",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-008",
+          "detail_id": "008",
+          "title": "a poem divided into 4 parts - end 8",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-009",
+          "detail_id": "009",
+          "title": "a poem divided into 4 parts - end 9",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-010",
+          "detail_id": "010",
+          "title": "a poem divided into 4 parts - end 10",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-011",
+          "detail_id": "011",
+          "title": "a poem divided into 4 parts - end 11",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-012",
+          "detail_id": "012",
+          "title": "a poem divided into 4 parts - end 12",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-013",
+          "detail_id": "013",
+          "title": "a poem divided into 4 parts - end 13",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-014",
+          "detail_id": "014",
+          "title": "a poem divided into 4 parts - end 14",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-015",
+          "detail_id": "015",
+          "title": "a poem divided into 4 parts - end 15",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-016",
+          "detail_id": "016",
+          "title": "a poem divided into 4 parts - end 16",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00001-017",
+          "detail_id": "017",
+          "title": "a poem divided into 4 parts - end 17",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "009",
+      "title": "a poem divided into 4 parts"
+    }
+  ]
+}

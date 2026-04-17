@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-013",
+    "work_id": "01720",
+    "detail_id": "013",
+    "project_subfolder": "symbols",
+    "project_filename": "daydream skinny forgetful.jpg",
+    "title": "daydream skinny forgetful",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "c5dac1912190353775e37527142609a6691b57910e94cab6a5644f87a3bffc46",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

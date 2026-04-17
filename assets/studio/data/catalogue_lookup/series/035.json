@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "035",
+    "title": "curve machine",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2020,
+    "year_display": "2020",
+    "primary_work_id": "00867",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "183d83234532bc891ab8aeb7ce396fc6a469de5b4f5b7c620b3e63fd3e65f333",
+  "member_works": [
+    {
+      "work_id": "00867",
+      "title": "curve machine",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "035"
+      ],
+      "record_hash": "f46180e99118d297ae5b2441b8c1877bd94c87c10a13f8ed14b6882cc26ca0f7"
+    },
+    {
+      "work_id": "00868",
+      "title": "curve machine (off)",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "035"
+      ],
+      "record_hash": "779794cdbd317f6ba66afa33e9e443477a93e00c7fedc91b0f5754fc367c4908"
+    },
+    {
+      "work_id": "00869",
+      "title": "curves",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "035"
+      ],
+      "record_hash": "7ee1604145842695bdae69db1103b5168aba841abb46a7d387b855d856b3bdb8"
+    },
+    {
+      "work_id": "00870",
+      "title": "holes",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "035"
+      ],
+      "record_hash": "477a3a8e0dd74b6d70cc80232524a2c9d696a8906fdf1f252624eaca8c81bbbe"
+    },
+    {
+      "work_id": "00871",
+      "title": "loops",
+      "year_display": "2020",
+      "status": "published",
+      "series_ids": [
+        "035"
+      ],
+      "record_hash": "bb2408bb2f46214efbb1288429623beba148424cee7b29b46a314bec6ce6aec2"
+    }
+  ]
+}

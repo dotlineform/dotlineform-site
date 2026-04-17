@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-027",
+    "work_id": "01720",
+    "detail_id": "027",
+    "project_subfolder": "symbols",
+    "project_filename": "grumpy bump.jpg",
+    "title": "grumpy bump",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "e9a32c1d6c259b472c7080374da8ccd006a2fd9c09e7a0049ad4ca3e9bf07747",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01046-021",
+    "work_id": "01046",
+    "detail_id": "021",
+    "project_subfolder": "espressos",
+    "project_filename": "espresso 21.jpg",
+    "title": "espresso 21",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "fd603e02303441e698a536b853d2b0fdf05e3cbe355fb76b74cc46a7b404ba01",
+  "work_summary": {
+    "work_id": "01046",
+    "title": "espresso"
+  }
+}

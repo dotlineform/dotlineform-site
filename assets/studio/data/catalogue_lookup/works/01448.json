@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01448",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "107"
+    ],
+    "series_title": null,
+    "project_folder": "nothing is missing",
+    "project_filename": "nothing is missing - I - 1 (2023-10-08 19꞉09).jpg",
+    "title": "nothing is missing - I - 1 (2023-10-08 19꞉09)",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "180934a404b84b553cdcb268250ca3fd8477435c1da27ee3b83861fa7652b5d9",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "107",
+      "title": "nothing is missing"
+    }
+  ]
+}

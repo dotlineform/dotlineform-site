@@ -343,6 +343,7 @@ Work:
 
 - add lightweight search/index payloads for work and series lookup
 - add focused record fetches for work, detail, and series editors
+- place the new read artifacts under `assets/studio/data/catalogue_lookup/`
 - keep canonical source JSON unchanged while adding browser-efficient read artifacts
 - avoid requiring editors to load full `works.json` or `series.json` to open one record
 - keep the new read path compatible with later bulk-edit and activity surfaces

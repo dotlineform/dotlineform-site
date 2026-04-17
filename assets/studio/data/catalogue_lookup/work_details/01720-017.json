@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-017",
+    "work_id": "01720",
+    "detail_id": "017",
+    "project_subfolder": "symbols",
+    "project_filename": "dizzy.jpg",
+    "title": "dizzy",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "8955c0a0a3ae6740673340c83bd1ac2aae115dd77196633e8f74b6da6825b3f3",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

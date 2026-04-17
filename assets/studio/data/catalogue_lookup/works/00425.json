@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00425",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "067"
+    ],
+    "series_title": null,
+    "project_folder": "found forms",
+    "project_filename": "found form 10.jpg",
+    "title": "found form 10",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "493f65465496fa7cfae5ee80c307bdafac6e5d342af6723a6d745ea89ec4eee3",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "067",
+      "title": "found forms"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-048",
+    "work_id": "00638",
+    "detail_id": "048",
+    "project_subfolder": "composites",
+    "project_filename": "composite - rarefied.jpg",
+    "title": "composite - rarefied",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "59b7344a490f6231e56d2db6ea279e15774b702cb1e3939f29b1942a66408fcc",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

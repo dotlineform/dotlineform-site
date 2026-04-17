@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00938",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "041"
+    ],
+    "series_title": null,
+    "project_folder": "dot theory",
+    "project_filename": "dot theory (dots) I.jpg",
+    "title": "dot theory (dots) I",
+    "width_cm": 41,
+    "height_cm": 29,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "drawing",
+    "medium_caption": "ink on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ca0776cb1de4207ed3a9b6673abd91080b62a5941892a4e08d7934bbbedd4881",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "041",
+      "title": "dot theory"
+    }
+  ]
+}

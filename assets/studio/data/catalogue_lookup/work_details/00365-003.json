@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00365-003",
+    "work_id": "00365",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "00365 - the eye - detail 3.jpeg",
+    "title": "the eye - detail 3",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "record_hash": "af664ae07c4c66f8ca8c8c5749419e0c3416c441fd7e6678c3458c190e0c1fec",
+  "work_summary": {
+    "work_id": "00365",
+    "title": "the eye"
+  }
+}

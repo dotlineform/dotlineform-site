@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-022",
+    "work_id": "01199",
+    "detail_id": "022",
+    "project_subfolder": "particles",
+    "project_filename": "particle (interior design).jpg",
+    "title": "particle (interior design)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "707df4a97c81c1f0dd9df37f60b47337b3de58e5ed0b62c5c8de555418ba7898",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

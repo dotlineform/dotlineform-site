@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00460-003",
+    "work_id": "00460",
+    "detail_id": "003",
+    "project_subfolder": "versions",
+    "project_filename": "molecules mist (positive).jpg",
+    "title": "molecules mist (positive)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 9000,
+    "height_px": 9000
+  },
+  "record_hash": "793f0a7ab3a930267e30893a3abfdefeaf420aee39b1b36a811402e582e1d537",
+  "work_summary": {
+    "work_id": "00460",
+    "title": "molecules"
+  }
+}

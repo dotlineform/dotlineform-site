@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01524-002",
+    "work_id": "01524",
+    "detail_id": "002",
+    "project_subfolder": "details",
+    "project_filename": "pi molecule grid - detail 2.jpg",
+    "title": "pi molecule grid - detail 2",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "e1ba3b55a349cafdb1255caebf9d8f350b33e6df0310cff1bcc92d8cbed3feb8",
+  "work_summary": {
+    "work_id": "01524",
+    "title": "pi molecule grid"
+  }
+}

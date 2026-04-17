@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00166-006",
+    "work_id": "00166",
+    "detail_id": "006",
+    "project_subfolder": "pages",
+    "project_filename": "nerve (formaldehyde form) - 5.jpg",
+    "title": "nerve (formaldehyde form) - 5",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 3566,
+    "height_px": 2594
+  },
+  "record_hash": "e47cf2133836a178000083b0868a9fc45b3e718608fd8a6d4709e0438349b37d",
+  "work_summary": {
+    "work_id": "00166",
+    "title": "nerve (formaldehyde form)"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01422-003",
+    "work_id": "01422",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "matter - detail 3.jpg",
+    "title": "matter - detail 3",
+    "status": "published",
+    "published_date": "2026-03-24",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "918b2e9842fef01bab116f7f1e4bbcd08853b8470e14d0998baef117a2c9ac2c",
+  "work_summary": {
+    "work_id": "01422",
+    "title": "matter"
+  }
+}

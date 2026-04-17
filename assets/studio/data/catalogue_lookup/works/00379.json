@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00379",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "075"
+    ],
+    "series_title": null,
+    "project_folder": "harmony",
+    "project_filename": "harmony 3.jpg",
+    "title": "harmony 3",
+    "width_cm": 27.5,
+    "height_cm": 20,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "drawing",
+    "medium_caption": "pen on paper",
+    "storage_location": "6",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3248,
+    "height_px": 2362,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "414f37d1b77004d2433826d9959dd1ee33363334c3a890f23d4eb6e28f719a57",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "075",
+      "title": "harmony"
+    }
+  ]
+}

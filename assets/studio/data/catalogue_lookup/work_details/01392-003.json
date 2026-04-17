@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01392-003",
+    "work_id": "01392",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "interior design 2 - detail 3.jpg",
+    "title": "interior design 2 - detail 3",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "2d43212f8ec4df136cdbb91529528d0bfdb51bc5bf06f46cd131bc170eb96524",
+  "work_summary": {
+    "work_id": "01392",
+    "title": "interior design 2"
+  }
+}

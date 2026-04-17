@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01735",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "130"
+    ],
+    "series_title": null,
+    "project_folder": "sunflower",
+    "project_filename": "sunflower forms.jpg",
+    "title": "sunflower forms",
+    "width_cm": 50,
+    "height_cm": 50,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "257036626e71527b9951232e0d41f186e954681f078c54d3bc35b1664ac9b6f0",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "130",
+      "title": "sunflower"
+    }
+  ]
+}

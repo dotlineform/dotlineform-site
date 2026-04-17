@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-005",
+    "work_id": "01199",
+    "detail_id": "005",
+    "project_subfolder": "particles",
+    "project_filename": "particle (balance machine).jpg",
+    "title": "particle (balance machine)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "e02798221e62dd0de13f71570142b2aa6a7ceb7335f5f58f7fbbc44bb1619855",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

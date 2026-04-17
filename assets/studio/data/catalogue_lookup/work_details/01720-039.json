@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-039",
+    "work_id": "01720",
+    "detail_id": "039",
+    "project_subfolder": "symbols",
+    "project_filename": "lazy rush (cheerful) slow.jpg",
+    "title": "lazy rush (cheerful) slow",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "e7a8d54453b245f582e97c9ff74191b41c96d82c51d37ca2214aac5361401dbe",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

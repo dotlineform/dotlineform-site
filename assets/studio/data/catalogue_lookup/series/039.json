@@ -1,0 +1,191 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "039",
+    "title": "doll sees everything",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00919",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "a3bebccb0a7ae53e8f4231e9678d812534351e0a0d054e6e399402f6743032f4",
+  "member_works": [
+    {
+      "work_id": "00909",
+      "title": "doll sees everything (1)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "ec154c2fa3176e3b5421d50a93b9c060bf443f6d2f25e2b941c229de8dd551a9"
+    },
+    {
+      "work_id": "00910",
+      "title": "doll sees everything (2)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "576f833ad40a82e961b93608f85dc9643654f6426974cafafbce7b6f8c9d4d65"
+    },
+    {
+      "work_id": "00911",
+      "title": "doll sees everything (3)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "0504923f1d76c05e1bbaac71eaf05623aa05a1e0dde3105867b567310b133dad"
+    },
+    {
+      "work_id": "00912",
+      "title": "doll sees everything (4)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "4515df022a33f4ed00cf6d5018407699a2d69213e5fed2d350846f8ef651a4aa"
+    },
+    {
+      "work_id": "00913",
+      "title": "doll sees everything (5)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "302c8a5b7391292346a9b5f0f00a8431c7d8341cc0294744d86a3e0b1deb54eb"
+    },
+    {
+      "work_id": "00914",
+      "title": "doll sees everything (6)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "2eea7df7c884dad6cc00e02332d6eb2f1e03eda9e1fa2afbfbd0e41431c4eacd"
+    },
+    {
+      "work_id": "00915",
+      "title": "doll sees everything (7)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "b475b7e68bb786550bc929fb88b396bcdb7c89b66744ca8b4ea29578db4457c4"
+    },
+    {
+      "work_id": "00916",
+      "title": "doll sees everything (8)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "0158cdc5e7d9ff97f3ec0917ac44bb16ba6bad89c71eb1b7529f3e0418b4f682"
+    },
+    {
+      "work_id": "00917",
+      "title": "doll sees everything (9)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "7d760c3e85337541b2de51eea17ff5dfdf980cfcf72d11bf6bc5b15aa5218011"
+    },
+    {
+      "work_id": "00918",
+      "title": "doll sees everything (10)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "ab69271503e0e318db0f9aa5e7b06084a90ebdd643c05bfc9bdedbfb27d6acff"
+    },
+    {
+      "work_id": "00919",
+      "title": "doll sees everything (11)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "859fe79904fc015c6f380d352d864ca86165e5a3b971dfa143eaae011731ac5e"
+    },
+    {
+      "work_id": "00920",
+      "title": "doll sees everything (12)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "18a28c4f006162e32a3cced1b2d91a7b38c6ab9eccc58029b2ab8a1a7fc1b49e"
+    },
+    {
+      "work_id": "00921",
+      "title": "doll sees everything (13)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "01b0789bdb288fd1d8552fe480f5cb4ce1dfed97b2cf1763afa794256cc74f06"
+    },
+    {
+      "work_id": "00922",
+      "title": "doll sees everything (14)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "0f2e02e2a409bfcb9ef64c9f30ecc9b10366efa97713bbaf256ea339961fb18f"
+    },
+    {
+      "work_id": "00923",
+      "title": "doll sees everything (15)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "9bb38080b7ed0351f34ce9d35baeb4e954adaf9094b0c534829f92d838436c5e"
+    },
+    {
+      "work_id": "00924",
+      "title": "doll sees everything (16)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "4d6991939ff62c0718750c0835ddc68d4654185986a30320bc09b873a13dbadf"
+    },
+    {
+      "work_id": "00925",
+      "title": "doll sees everything (17)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "039"
+      ],
+      "record_hash": "1b6a62979ee10245c2826092aebe314e9050a25160d40af0c99f607bb68546f4"
+    }
+  ]
+}

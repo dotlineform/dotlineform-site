@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00462",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "101"
+    ],
+    "series_title": null,
+    "project_folder": "molecules",
+    "project_filename": "equilibrium.jpg",
+    "title": "equilibrium",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "photograph",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "738b00c870b7fe097ba5f960224d58607a4f66b0b12a09998a9e490813567dd6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "101",
+      "title": "molecules"
+    }
+  ]
+}

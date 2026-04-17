@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01525-003",
+    "work_id": "01525",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "pi circle - detail 3.jpg",
+    "title": "pi circle - detail 3",
+    "status": "published",
+    "published_date": "2026-03-25",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "14396f46a737e1f7cd3bced7ae5feaedae433403118e4e2a91ea75e945df77d7",
+  "work_summary": {
+    "work_id": "01525",
+    "title": "pi circle"
+  }
+}

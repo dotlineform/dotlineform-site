@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00463-003",
+    "work_id": "00463",
+    "detail_id": "003",
+    "project_subfolder": "versions",
+    "project_filename": "living surface version 2.jpg",
+    "title": "living surface (version 2)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 7087,
+    "height_px": 7087
+  },
+  "record_hash": "cc7ec42b6de43f7dbdc308a1288ef2b509c41a8fe706c86dd468e8a0a441f421",
+  "work_summary": {
+    "work_id": "00463",
+    "title": "living surface hand form"
+  }
+}

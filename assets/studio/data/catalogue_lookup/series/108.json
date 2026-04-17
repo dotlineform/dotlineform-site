@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "108",
+    "title": "olive tree",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01479",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "f4f0655cc43284005a6fe2614cf31a2f876736c88ed3ef36ba022d8656ac48b6",
+  "member_works": [
+    {
+      "work_id": "01479",
+      "title": "olive tree",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "108"
+      ],
+      "record_hash": "683e7a9f1eb21ed41aead7447598e58c740d96a035ccd86d961a42e65c86ea1c"
+    }
+  ]
+}

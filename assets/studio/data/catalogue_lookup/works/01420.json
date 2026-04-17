@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01420",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "093"
+    ],
+    "series_title": null,
+    "project_folder": "maps",
+    "project_filename": "kylie grid map.jpg",
+    "title": "kylie grid map",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2004,
+    "year_display": "2004, 2011",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "1c9143a889cf5fcc9b8c8860f05f7e3a129a45265325664c700b53187e0e0555",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "093",
+      "title": "maps"
+    }
+  ]
+}

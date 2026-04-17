@@ -1,0 +1,403 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00455",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "043"
+    ],
+    "series_title": null,
+    "project_folder": "dotlineform (2023)",
+    "project_filename": "dotlineform.jpg",
+    "title": "dotlineform",
+    "width_cm": 55,
+    "height_cm": 111,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "mixed media",
+    "medium_caption": "mixed media on board",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6496,
+    "height_px": 13110,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "885e9d5d53982792989526e55871ca16c78eb2178e2045822d9a140917b18885",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 6,
+      "details": [
+        {
+          "detail_uid": "00455-001",
+          "detail_id": "001",
+          "title": "dotlineform - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-002",
+          "detail_id": "002",
+          "title": "dotlineform - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-003",
+          "detail_id": "003",
+          "title": "dotlineform - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-004",
+          "detail_id": "004",
+          "title": "dotlineform - detail 4",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-005",
+          "detail_id": "005",
+          "title": "dotlineform - detail 5",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-006",
+          "detail_id": "006",
+          "title": "dotlineform - detail 6",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    },
+    {
+      "project_subfolder": "work in progress",
+      "count": 44,
+      "details": [
+        {
+          "detail_uid": "00455-007",
+          "detail_id": "007",
+          "title": "2023-10-01 17꞉53",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-008",
+          "detail_id": "008",
+          "title": "2015-01-21 13꞉21",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-009",
+          "detail_id": "009",
+          "title": "2015-06-13 02꞉30",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-010",
+          "detail_id": "010",
+          "title": "2023-10-01 17꞉53 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-011",
+          "detail_id": "011",
+          "title": "2023-10-01 18꞉07 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-012",
+          "detail_id": "012",
+          "title": "2023-10-01 18꞉07 3",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-013",
+          "detail_id": "013",
+          "title": "2023-10-01 18꞉07",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-014",
+          "detail_id": "014",
+          "title": "2023-10-01 19꞉18",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-015",
+          "detail_id": "015",
+          "title": "2023-10-02 00꞉03 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-016",
+          "detail_id": "016",
+          "title": "2023-10-02 00꞉03",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-017",
+          "detail_id": "017",
+          "title": "2023-10-02 19꞉13 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-018",
+          "detail_id": "018",
+          "title": "2023-10-02 19꞉13 3",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-019",
+          "detail_id": "019",
+          "title": "2023-10-02 19꞉13",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-020",
+          "detail_id": "020",
+          "title": "2023-10-02 20꞉44",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-021",
+          "detail_id": "021",
+          "title": "2023-10-02 20꞉45",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-022",
+          "detail_id": "022",
+          "title": "2023-10-03 20꞉59 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-023",
+          "detail_id": "023",
+          "title": "2023-10-03 20꞉59 3",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-024",
+          "detail_id": "024",
+          "title": "2023-10-03 20꞉59",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-025",
+          "detail_id": "025",
+          "title": "2023-10-03 22꞉12 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-026",
+          "detail_id": "026",
+          "title": "2023-10-03 22꞉12",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-027",
+          "detail_id": "027",
+          "title": "2023-10-05 01꞉17",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-028",
+          "detail_id": "028",
+          "title": "2023-10-05 01꞉18",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-029",
+          "detail_id": "029",
+          "title": "2023-10-05 01꞉19",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-030",
+          "detail_id": "030",
+          "title": "2023-10-05 20꞉23",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-031",
+          "detail_id": "031",
+          "title": "2023-10-05 21꞉35",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-032",
+          "detail_id": "032",
+          "title": "2023-10-06 00꞉43 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-033",
+          "detail_id": "033",
+          "title": "2023-10-06 00꞉43",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-034",
+          "detail_id": "034",
+          "title": "2023-10-06 19꞉26",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-035",
+          "detail_id": "035",
+          "title": "2023-10-06 19꞉35",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-036",
+          "detail_id": "036",
+          "title": "2023-10-06 20꞉39",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-037",
+          "detail_id": "037",
+          "title": "2023-10-06 23꞉49",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-038",
+          "detail_id": "038",
+          "title": "2023-10-08 00꞉22",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-039",
+          "detail_id": "039",
+          "title": "2023-10-09 22꞉32",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-040",
+          "detail_id": "040",
+          "title": "2023-10-09 22꞉33 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-041",
+          "detail_id": "041",
+          "title": "2023-10-09 22꞉33",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-042",
+          "detail_id": "042",
+          "title": "2023-10-09 22꞉34",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-043",
+          "detail_id": "043",
+          "title": "2023-10-09 23꞉13",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-044",
+          "detail_id": "044",
+          "title": "2023-10-09 23꞉43",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-045",
+          "detail_id": "045",
+          "title": "2023-11-13 18꞉51 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-046",
+          "detail_id": "046",
+          "title": "2023-11-13 18꞉51 3",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-047",
+          "detail_id": "047",
+          "title": "2023-11-13 18꞉51",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-048",
+          "detail_id": "048",
+          "title": "2023-11-13 18꞉52",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-049",
+          "detail_id": "049",
+          "title": "2023-11-13 18꞉54 2",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00455-050",
+          "detail_id": "050",
+          "title": "2023-11-13 18꞉54",
+          "project_subfolder": "work in progress",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "043",
+      "title": "dotlineform (2023)"
+    }
+  ]
+}

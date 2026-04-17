@@ -1,11 +1,11 @@
 import {
-  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
 import {
-  fetchJson
+  loadStudioLookupJson,
+  loadStudioLookupRecordJson
 } from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
@@ -282,7 +282,7 @@ function getSearchMatches(state, rawQuery) {
   const query = buildSearchToken(rawQuery);
   if (!query) return [];
   const matches = [];
-  for (const [workId, record] of state.worksById.entries()) {
+  for (const [workId, record] of state.workSearchById.entries()) {
     if (workId.includes(query)) {
       matches.push({ workId, record });
       continue;
@@ -361,9 +361,14 @@ function buildSeriesSummaryHtml(state, seriesIds) {
 }
 
 function getWorkDetails(state, workId) {
-  const details = state.detailsByWorkId.get(workId);
-  if (!Array.isArray(details)) return [];
-  return details.slice().sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid));
+  if (!state.currentLookup || state.currentWorkId !== workId) return [];
+  const sections = Array.isArray(state.currentLookup.detail_sections) ? state.currentLookup.detail_sections : [];
+  const details = [];
+  sections.forEach((section) => {
+    const items = Array.isArray(section && section.details) ? section.details : [];
+    items.forEach((item) => details.push(item));
+  });
+  return details.sort((a, b) => compareDetailUid(a.detail_uid, b.detail_uid));
 }
 
 function groupWorkDetailsBySection(state, details) {
@@ -403,6 +408,10 @@ function getCurrentWorkDetailMatches(state, rawQuery) {
 function buildDetailEditorHref(state, detailUid) {
   const route = getStudioRoute(state.config, "catalogue_work_detail_editor");
   return `${route}?detail=${encodeURIComponent(detailUid)}`;
+}
+
+async function loadWorkLookupRecord(state, workId) {
+  return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, { cache: "no-store" });
 }
 
 function renderDetailRows(state, details) {
@@ -624,6 +633,7 @@ function buildPayload(state) {
 function setLoadedRecord(state, workId, record, options = {}) {
   state.currentWorkId = workId;
   state.currentRecord = record;
+  state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
@@ -702,7 +712,14 @@ async function saveCurrentWork(state) {
     if (!record) {
       throw new Error("save response missing record");
     }
-    state.worksById.set(state.currentWorkId, record);
+    state.workSearchById.set(state.currentWorkId, {
+      work_id: state.currentWorkId,
+      title: normalizeText(record.title),
+      year_display: normalizeText(record.year_display),
+      status: normalizeText(record.status),
+      series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
+      record_hash: normalizeText(response.record_hash)
+    });
     state.rebuildPending = Boolean(response.changed);
     if (response.changed) {
       state.pendingBuildExtraSeriesIds = dedupeSeriesIds([
@@ -711,9 +728,12 @@ async function saveCurrentWork(state) {
         ...nextSeriesIds
       ]).filter((seriesId) => !nextSeriesIds.includes(seriesId));
     }
-    setLoadedRecord(state, state.currentWorkId, record, {
-      recordHash: response.record_hash || "",
-      keepResult: true
+    const lookup = await loadWorkLookupRecord(state, state.currentWorkId);
+    const lookupRecord = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : record;
+    setLoadedRecord(state, state.currentWorkId, lookupRecord, {
+      recordHash: response.record_hash || normalizeText(lookup && lookup.record_hash) || "",
+      keepResult: true,
+      lookup
     });
     await refreshBuildPreview(state);
     const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
@@ -807,8 +827,8 @@ async function openWorkById(state, requestedWorkId) {
     return;
   }
 
-  const record = state.worksById.get(workId);
-  if (!record) {
+  const searchRecord = state.workSearchById.get(workId);
+  if (!searchRecord) {
     const matches = getSearchMatches(state, requestedWorkId);
     if (matches.length) {
       renderSearchMatches(state, matches);
@@ -823,8 +843,15 @@ async function openWorkById(state, requestedWorkId) {
   setPopupVisibility(state, false);
   state.pendingBuildExtraSeriesIds = [];
   state.rebuildPending = false;
-  const recordHash = await computeRecordHash(record);
-  setLoadedRecord(state, workId, record, { recordHash });
+  const lookup = await loadWorkLookupRecord(state, workId);
+  const record = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
+  if (!record) {
+    throw new Error(`work lookup missing record for ${workId}`);
+  }
+  setLoadedRecord(state, workId, record, {
+    recordHash: normalizeText(lookup.record_hash) || await computeRecordHash(record),
+    lookup
+  });
   await refreshBuildPreview(state);
 }
 
@@ -859,10 +886,9 @@ async function init() {
 
   const state = {
     config: null,
-    worksById: new Map(),
-    detailsByUid: new Map(),
-    detailsByWorkId: new Map(),
+    workSearchById: new Map(),
     seriesById: new Map(),
+    currentLookup: null,
     currentWorkId: "",
     currentRecord: null,
     currentRecordHash: "",
@@ -910,28 +936,25 @@ async function init() {
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
 
-    const [worksPayload, detailsPayload, seriesPayload, serverAvailable] = await Promise.all([
-      fetchJson(getStudioDataPath(config, "catalogue_works"), { cache: "no-store" }),
-      fetchJson(getStudioDataPath(config, "catalogue_work_details"), { cache: "no-store" }),
-      fetchJson(getStudioDataPath(config, "catalogue_series"), { cache: "no-store" }),
+    const [worksPayload, seriesPayload, serverAvailable] = await Promise.all([
+      loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),
+      loadStudioLookupJson(config, "catalogue_lookup_series_search", { cache: "no-store" }),
       probeCatalogueHealth()
     ]);
 
-    Object.entries(worksPayload && worksPayload.works && typeof worksPayload.works === "object" ? worksPayload.works : {}).forEach(([workId, record]) => {
+    const workItems = Array.isArray(worksPayload && worksPayload.items) ? worksPayload.items : [];
+    workItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
-      state.worksById.set(normalizeWorkId(workId), record);
-    });
-    Object.entries(detailsPayload && detailsPayload.work_details && typeof detailsPayload.work_details === "object" ? detailsPayload.work_details : {}).forEach(([detailUid, record]) => {
-      if (!record || typeof record !== "object") return;
-      const normalizedUid = normalizeText(detailUid);
       const workId = normalizeWorkId(record.work_id);
-      state.detailsByUid.set(normalizedUid, record);
-      if (!state.detailsByWorkId.has(workId)) state.detailsByWorkId.set(workId, []);
-      state.detailsByWorkId.get(workId).push(record);
+      if (!workId) return;
+      state.workSearchById.set(workId, record);
     });
-    Object.entries(seriesPayload && seriesPayload.series && typeof seriesPayload.series === "object" ? seriesPayload.series : {}).forEach(([seriesId, record]) => {
+    const seriesItems = Array.isArray(seriesPayload && seriesPayload.items) ? seriesPayload.items : [];
+    seriesItems.forEach((record) => {
       if (!record || typeof record !== "object") return;
-      state.seriesById.set(normalizeSeriesId(seriesId), record);
+      const seriesId = normalizeSeriesId(record.series_id);
+      if (!seriesId) return;
+      state.seriesById.set(seriesId, record);
     });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_editor.${key}`, fallback, tokens));

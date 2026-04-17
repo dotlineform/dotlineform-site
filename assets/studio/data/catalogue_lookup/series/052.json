@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "052",
+    "title": "flowers",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01052",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "2d63b4897f737d63f32dc091195f4e90efd146b621c30a22f8a825d43ba5aff7",
+  "member_works": [
+    {
+      "work_id": "01052",
+      "title": "flowers 1.jpg",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "052"
+      ],
+      "record_hash": "7d1eea386deeb3fe1831619c6e39cd434b64792793e7d529e4d947f97e80a44b"
+    },
+    {
+      "work_id": "01053",
+      "title": "flowers 2.jpg",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "052"
+      ],
+      "record_hash": "4fee15072cf5210a39a9aaa294b9e342102d329a423ceff3bdcee8b5e21fc0f8"
+    },
+    {
+      "work_id": "01054",
+      "title": "flowers 3.jpg",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "052"
+      ],
+      "record_hash": "0056587280690be48e43c30c2f8d107dc4b621a37c7983d31b09443d39411c4a"
+    }
+  ]
+}

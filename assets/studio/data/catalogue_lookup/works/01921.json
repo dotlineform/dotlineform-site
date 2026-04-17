@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01921",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "141"
+    ],
+    "series_title": null,
+    "project_folder": "water",
+    "project_filename": "2006-05-03 - 19-01-09.jpg",
+    "title": "2006-05-03 - 19-01-09",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2006,
+    "year_display": "2006",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "3c74550af4306fcb794cfb7ff485c01d8efc0a7a52dceaecbcb5fdf0888bad8f",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "141",
+      "title": "water"
+    }
+  ]
+}

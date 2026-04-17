@@ -1,0 +1,331 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "107",
+    "title": "nothing is missing",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01448",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "86ce3877c7ba27382b842231b257d46a03a524158041d88fe9d499bd6bf6d40a",
+  "member_works": [
+    {
+      "work_id": "01448",
+      "title": "nothing is missing - I - 1 (2023-10-08 19꞉09)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "180934a404b84b553cdcb268250ca3fd8477435c1da27ee3b83861fa7652b5d9"
+    },
+    {
+      "work_id": "01449",
+      "title": "nothing is missing - I - 2 (2023-10-08 19꞉10)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "b5fe472004ac1378e7cdd30bb775bbe804e692f000f3838927ae8e3d36cecbc5"
+    },
+    {
+      "work_id": "01450",
+      "title": "nothing is missing - I - 3 (2023-10-08 19꞉10)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "5c192754fb60713ea8669e232563164842ead45b204cb84f0cda00fe7b447717"
+    },
+    {
+      "work_id": "01451",
+      "title": "nothing is missing - I - 4 (2023-10-08 19꞉11)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "a231098d0bc5980cced95ee02157004bc19c86df881b251cd6a2591c710a466a"
+    },
+    {
+      "work_id": "01452",
+      "title": "nothing is missing - I - 5 (2023-10-08 19꞉11)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "f165d4659d6a814f7fa4aa3e06cb3dd7179aaa150e7d45ea90ca2af244c4c37a"
+    },
+    {
+      "work_id": "01453",
+      "title": "nothing is missing - I - 6 (2023-10-09 21꞉01)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "fa64d4844da026ae3d23578607ee36d45b73e69fbd0432f3bcc05a7fb605ee85"
+    },
+    {
+      "work_id": "01454",
+      "title": "nothing is missing - I - 7 (2023-10-09 21꞉03)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "3155c21d940262846d954f187b30f7beb5c920db233432ee0890f1f772d09313"
+    },
+    {
+      "work_id": "01455",
+      "title": "nothing is missing - I - 8 (2023-10-11 18꞉43)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "c9cf23b8ac89a0106927990ca9e5220d7d85c4ffc730caa6eced7e2650231a03"
+    },
+    {
+      "work_id": "01456",
+      "title": "nothing is missing - I - 9 (2023-10-11 18꞉45)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "1754b26cbea25c1156a3eb561e9e3e91dbd8a66edd71b7a4c299c5d97dec0843"
+    },
+    {
+      "work_id": "01457",
+      "title": "nothing is missing - I - 10 (2023-10-11 18꞉46)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "b86ac75a490fefb72a2a1f69eba6212d037734f372e2a1893397a977766813c0"
+    },
+    {
+      "work_id": "01458",
+      "title": "nothing is missing - I - 11 (2023-10-11 18꞉46)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "5a8fbad2ce54630b9d4d9206a767596ace59873ef79431d57ba2d3fdb4361ee5"
+    },
+    {
+      "work_id": "01459",
+      "title": "nothing is missing - I - 12 (2023-10-11 18꞉47)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "afc73f87deb2668ff79538d4d519e8a6722895aad94ca1d13cd2cae0d47978d7"
+    },
+    {
+      "work_id": "01460",
+      "title": "nothing is missing - I - 13 (2023-10-11 18꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "1ebd49a70b957dc1d58dbe8d65cb0eb020b5f63f5d0e189bd28b2ced700e79a6"
+    },
+    {
+      "work_id": "01461",
+      "title": "nothing is missing - II - 1 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "a775e3863b7f1c45b97e07ec078f6de2b4a6cafab3a194aa5487fc5db471418a"
+    },
+    {
+      "work_id": "01462",
+      "title": "nothing is missing - II - 1 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "71a8b19dc652cb4b7d4a726a5b8461773863b3701bc812c6d2cb2b7b61cfd14d"
+    },
+    {
+      "work_id": "01463",
+      "title": "nothing is missing - II - 2 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "d4a202df72e141e25d383d6b451208abeb326d4bb75d532d6f3356d7252d5aa3"
+    },
+    {
+      "work_id": "01464",
+      "title": "nothing is missing - II - 2 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "13997e792b9e5a97fc9c4cf52b86211f38dd04748a1d63e1b6dfb7cfb7ed736a"
+    },
+    {
+      "work_id": "01465",
+      "title": "nothing is missing - II - 2 - 3 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "d8826870abaa32845639d06f3a24e9cfef2fc6e8e0d7d6ad17bf5835482378bc"
+    },
+    {
+      "work_id": "01466",
+      "title": "nothing is missing - II - 2 - 4 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "784c097a34de040be75ec96dc255173c3ad56a38928b36db292c70028ecc57c6"
+    },
+    {
+      "work_id": "01467",
+      "title": "nothing is missing - II - 3 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "a0f8ea984ba2b2ad646988e2f17a361187621babc32b2688f1268d92937cddf8"
+    },
+    {
+      "work_id": "01468",
+      "title": "nothing is missing - II - 3 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "9b9bc732f426df229f9c63c83aada67f7e8eed707b0b7d13a9836b7ab2a71806"
+    },
+    {
+      "work_id": "01469",
+      "title": "nothing is missing - II - 4 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "b0e36be51beaab208d86446e3581b6febbcb23cb3df0d7be258f72114df93aaf"
+    },
+    {
+      "work_id": "01470",
+      "title": "nothing is missing - II - 4 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "764d3532e8511e63bbbec6700b8cd4c7b60a150de6efbf301a5c42e5a80dd649"
+    },
+    {
+      "work_id": "01471",
+      "title": "nothing is missing - II - 4 - 3 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "f338c8c77cc17744ab090d836ce13f5d93ea0dc5f30abe3cccade2fd19ba4eda"
+    },
+    {
+      "work_id": "01472",
+      "title": "nothing is missing - II - 5 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "0cc40e0d89356be4d67df21f46c74d8a60f470c47d14ccf0a4aff83ddee11573"
+    },
+    {
+      "work_id": "01473",
+      "title": "nothing is missing - II - 5 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "f4ed200edf214935b59a64981c9cd37939e6d40189b68f732c731719ec613470"
+    },
+    {
+      "work_id": "01474",
+      "title": "nothing is missing - II - 6 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "211d64bf280419c16c04856a3f72fbdcf87a16bcd5ba8b33b3bca0b13997115c"
+    },
+    {
+      "work_id": "01475",
+      "title": "nothing is missing - II - 6 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "c5a0c97eea88efd182330f4a6ffcb7af14c60715e873d9b10b858e57f0526343"
+    },
+    {
+      "work_id": "01476",
+      "title": "nothing is missing - II - 6 - 3 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "131e338ca7fe4a07d46fd8146cdc996a2f69d145f919db58c089f3da24914cad"
+    },
+    {
+      "work_id": "01477",
+      "title": "nothing is missing - II - 7 - 1 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "6805df02000c8a4f4a8bdbc04abc5aece04fd9a3757b8be773f9a0d475135281"
+    },
+    {
+      "work_id": "01478",
+      "title": "nothing is missing - II - 7 - 2 (2023-10-12 19꞉48)",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "107"
+      ],
+      "record_hash": "f97dbd001fbf3312c3a8c8014eee56281b566c9f222184805c7edcf7a361fb79"
+    }
+  ]
+}

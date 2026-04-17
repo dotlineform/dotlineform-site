@@ -1,0 +1,311 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "037",
+    "title": "doll",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1989,
+    "year_display": "1989-2008",
+    "primary_work_id": "00872",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "year,work_id"
+  },
+  "record_hash": "35974820538863e255b6f6e96c9006d38bfdf313898bf4eb60313560db2c9406",
+  "member_works": [
+    {
+      "work_id": "00872",
+      "title": "doll bandage",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "273addeff743579e06799d79b3cdf73e8eddb1f5a00cf6f29a6c034deecdf25b"
+    },
+    {
+      "work_id": "00873",
+      "title": "doll cell [framed version]",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "44b74dbe9b0d16cffdd02a62d234115e1b5f476ad0055d824ddfbeba5c822e41"
+    },
+    {
+      "work_id": "00874",
+      "title": "doll cell (stairs)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "a7e02bdfbc92a46d1a0665c47aecb01e2985e1a8b71bb9be344db80e5c0518b4"
+    },
+    {
+      "work_id": "00875",
+      "title": "doll cell",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "d3177ddeadf66612a12df6afab3b06d2b5be7a6d9eb9971f2166613e38cdbc44"
+    },
+    {
+      "work_id": "00876",
+      "title": "doll components",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "2cbda9121d314c9be59e2ea2a74f4946a62260acf5b3a91ef34ca2c94c72c62a"
+    },
+    {
+      "work_id": "00877",
+      "title": "doll face 1",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "ffedcd70e9ae7ef442ba4d37d1737affef8e520dd819bc62da4fbf9dbe46b83d"
+    },
+    {
+      "work_id": "00878",
+      "title": "doll face 2",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "074679fc604ae6a33308d3199fbb10b006c3c3fd3d2ec9cd5d777a41a5a0ba5c"
+    },
+    {
+      "work_id": "00879",
+      "title": "doll face 3",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "5f712ac8736a3d412ab29d3e51aa2c6ab572ae823c5257b181612691cc5290c8"
+    },
+    {
+      "work_id": "00880",
+      "title": "doll face 4",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "f8c8249fa5aa9e0a3dafce113cf6f8859b9a1413554de4058b394a7f24a0990b"
+    },
+    {
+      "work_id": "00881",
+      "title": "doll face and hair",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "550391059f87eebe4e5f118fc5df1991fccfebe716ed02d9c4ace1e26dc5daf7"
+    },
+    {
+      "work_id": "00882",
+      "title": "doll forest (cell)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "0cc805d00b3ce95bbb16c03a1a02c03909340cce7f164dab2cf566214c55d844"
+    },
+    {
+      "work_id": "00883",
+      "title": "doll forest (green)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "95db0f9c0d48a7c0187c22eba33cfd1d881d12c54fdf62b7b4addb5141f0a631"
+    },
+    {
+      "work_id": "00884",
+      "title": "doll forest (dissolve)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "0c79c4d003733241c18187dee424c2a2eb5c81837f0ea22bf0dafab180534f73"
+    },
+    {
+      "work_id": "00885",
+      "title": "doll forest (transform)",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "0c94e3ae733e8f9302d83c3ed3e5020afec6c4961419f744b36220ea83f297fa"
+    },
+    {
+      "work_id": "00886",
+      "title": "doll forest",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "edaaaa83e085f62698b64f9c4f85314dde4a05e2ef3912e473979ab8ae2e0527"
+    },
+    {
+      "work_id": "00887",
+      "title": "doll formaldehyde form [1]",
+      "year_display": "c. 1990",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "eee7f6923f572d12eb0f5008007ef504e02389a8b5f28cd444e6cd35ea2478d0"
+    },
+    {
+      "work_id": "00888",
+      "title": "doll formaldehyde form [2]",
+      "year_display": "c. 1990",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "01e68837d783a0c4d4a8985c2f215cbff29f6dcb4c5571c395e1f01813203ad2"
+    },
+    {
+      "work_id": "00889",
+      "title": "doll frame [1]",
+      "year_display": "c. 1990",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "d284053ff296a9991159760a932fa08c2ce826dd3ff3351b60e26d23872e7580"
+    },
+    {
+      "work_id": "00890",
+      "title": "doll frame [2]",
+      "year_display": "c. 1990",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "90f66afa11019233bc06f43de25e5edfd08f6d1be343e39f0a0f455ad185425a"
+    },
+    {
+      "work_id": "00891",
+      "title": "doll frame [3]",
+      "year_display": "c. 1990",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "d9cafaf0189eecee8dc9d30df5b021eda9792fcd7f76a64b25cf85137d4094c2"
+    },
+    {
+      "work_id": "00892",
+      "title": "doll hand",
+      "year_display": "c. 1989",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "0cd7299fe45379b98cc0d4fc9726fd8c6d7af665057a819704d988e04a930dd0"
+    },
+    {
+      "work_id": "00893",
+      "title": "doll moiré",
+      "year_display": "c. 2008",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "6157f65146c9d19d6111dc689199bc9bd716994bade89bb42403752f754f2711"
+    },
+    {
+      "work_id": "00894",
+      "title": "doll moiré reduced",
+      "year_display": "c. 2008",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "ff8d365237bc52955c5d7d0d295f38eb2eb95b487d083f657e1214bb8ddc8a03"
+    },
+    {
+      "work_id": "00895",
+      "title": "doll moiré structures",
+      "year_display": "c. 2008",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "5c6e02c2eece10927192ad2b056905cee822d6f031e9e56a07c5b66c59ed217a"
+    },
+    {
+      "work_id": "00896",
+      "title": "doll still life 1",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "dcca5a1aea8d856fceac5703a5c9dc721a5ceb4094d6d5df44355d7fb49b03bc"
+    },
+    {
+      "work_id": "00897",
+      "title": "doll still life 2",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "742441bf26ec835e2703c350133704147d21581a3c1900d880b1b1543d84db22"
+    },
+    {
+      "work_id": "00898",
+      "title": "doll still life 3",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "c1e8ac5f41f5cb9ae5a0350a9ddbf5c7f3acb3786884b1b16b9199ec92b86323"
+    },
+    {
+      "work_id": "00899",
+      "title": "doll still life 4",
+      "year_display": "2005",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "6be32b3ef1830be1770dead5c332056da2b45b2f264655ff71d7745511ed534c"
+    },
+    {
+      "work_id": "00900",
+      "title": "doll still life 5",
+      "year_display": "2007",
+      "status": "published",
+      "series_ids": [
+        "037"
+      ],
+      "record_hash": "9412ade999636e44131a13f5bc154e2e28fe50c11dd369cbafbd4adf7c7fed15"
+    }
+  ]
+}

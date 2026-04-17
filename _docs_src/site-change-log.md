@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-17
 
+- added the Phase 8 derived catalogue lookup payloads and switched the catalogue editors from full-source browser loads to lightweight search indexes plus focused per-record lookup JSON
 - added the Phase 7 series editor at `/studio/catalogue-series/`, including canonical `series.json` save flow plus atomic membership writes into `works.json`
 - added series-scoped JSON rebuild support so series edits rebuild the current series, affected works, aggregate indexes, and catalogue search
 - added the Phase 6 work detail editor at `/studio/catalogue-work-detail/`, including canonical `work_details.json` save flow and parent-work scoped rebuild

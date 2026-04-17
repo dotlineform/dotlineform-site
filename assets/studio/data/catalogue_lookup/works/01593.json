@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01593",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "117"
+    ],
+    "series_title": null,
+    "project_folder": "porto santo",
+    "project_filename": "untitled 11.jpg",
+    "title": "untitled",
+    "width_cm": 27,
+    "height_cm": 27,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3189,
+    "height_px": 3189,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "606a5f69053588d770d1120ce96d17e7ae1d5d54ec7d7ba40237cc3142a175f3",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "117",
+      "title": "porto santo"
+    }
+  ]
+}

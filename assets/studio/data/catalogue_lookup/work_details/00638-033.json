@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-033",
+    "work_id": "00638",
+    "detail_id": "033",
+    "project_subfolder": "composites",
+    "project_filename": "composite - bandage.jpg",
+    "title": "composite - bandage",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "87b1549822dc8dd0546519d787207b1098ebf3c2bd0d3578e8aa4210c267ab14",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

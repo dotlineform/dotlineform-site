@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-014",
+    "work_id": "01199",
+    "detail_id": "014",
+    "project_subfolder": "particles",
+    "project_filename": "particle (doll internal).jpg",
+    "title": "particle (doll internal)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "f35af37cab0da7eeb30f82d682d3aa6f9b54687060352349ff88b791fdbfb2f2",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

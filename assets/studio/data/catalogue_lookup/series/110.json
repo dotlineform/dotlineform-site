@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "110",
+    "title": "particle theory",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2008,
+    "year_display": "2008",
+    "primary_work_id": "00553",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "9d4fcb34aaa2a580b69b78ace310b6951d7fc2474afff9403d014bb57c5b1739",
+  "member_works": [
+    {
+      "work_id": "00549",
+      "title": "particle theory (1 layer - partial)",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "110"
+      ],
+      "record_hash": "293947dbe4d262debda8e6f075b314e2adf37c7aef9e35f0b5df64e610028cea"
+    },
+    {
+      "work_id": "00550",
+      "title": "particle theory (1 layer)",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "110"
+      ],
+      "record_hash": "a6bcb3d9611cb2bf7a84bf2e98df7c5b3715b83d13d28cdf9d962ae5ce0659ea"
+    },
+    {
+      "work_id": "00551",
+      "title": "particle theory (3 layers)",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "110"
+      ],
+      "record_hash": "7c91af9e92c7c374f5fcee5c75dba11bbdb646bd04044585c04360eb929d8e93"
+    },
+    {
+      "work_id": "00552",
+      "title": "particle theory (2 layers)",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "110"
+      ],
+      "record_hash": "6ca4e9ebd50288b4026fa6998e8726b9748edf56ecef7e6aaced74b992e5a7a3"
+    },
+    {
+      "work_id": "00553",
+      "title": "particle theory (4 layers)",
+      "year_display": "2008",
+      "status": "published",
+      "series_ids": [
+        "110"
+      ],
+      "record_hash": "12a5d82a82b5bfde3b4bef30b46271e3dafa5a347bd2007eb151ba9f294a5a74"
+    }
+  ]
+}

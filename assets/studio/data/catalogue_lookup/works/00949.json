@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00949",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "042"
+    ],
+    "series_title": null,
+    "project_folder": "dotlineform (2021)",
+    "project_filename": "dotlineform.jpg",
+    "title": "dotlineform",
+    "width_cm": 120,
+    "height_cm": 50,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on canvas",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 3401,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2065a0172c32d53960d4037d37ef1e665c4c70f45f17113eee8452066678f491",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00949-001",
+          "detail_id": "001",
+          "title": "001 - 2021-08-27 20꞉06",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00949-002",
+          "detail_id": "002",
+          "title": "002 - 2021-08-27 20꞉07",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00949-003",
+          "detail_id": "003",
+          "title": "003 - 2021-08-27 20꞉07",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00949-004",
+          "detail_id": "004",
+          "title": "004 - 2021-08-27 20꞉07",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00949-005",
+          "detail_id": "005",
+          "title": "005 - 2024-05-10 18꞉52",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "042",
+      "title": "dotlineform (2021)"
+    }
+  ]
+}

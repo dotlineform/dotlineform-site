@@ -1,0 +1,101 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "038",
+    "title": "doll faces",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2024,
+    "year_display": "2024",
+    "primary_work_id": "00901",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "9e162456442f6c425cb2e1a867dbbf729e5b64aa6fcc8130142b7c15f0713026",
+  "member_works": [
+    {
+      "work_id": "00901",
+      "title": "doll face 1",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "28a5ac76c7b1e7f6c5af2a9b62c376de1157e11fc23e1f9fb2c06588c00244b3"
+    },
+    {
+      "work_id": "00902",
+      "title": "doll face 2",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "ba94cfdab601ec1a6839450a512a75a9a37987b837eb3d7f2114da69b639f321"
+    },
+    {
+      "work_id": "00903",
+      "title": "doll face 3",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "37c693902b05f7c2dd47c15b56c7faff372453da88d258343d6cadf3403b8887"
+    },
+    {
+      "work_id": "00904",
+      "title": "doll face 4",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "c915f7a6d53ef017323d84e882b28578b1d60663d328fa0395f6b0664fee546e"
+    },
+    {
+      "work_id": "00905",
+      "title": "doll face 5",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "157842c11db9742fa9ad45bf2643b22ccb075ed52fb9168676ff90f0a3181693"
+    },
+    {
+      "work_id": "00906",
+      "title": "doll face 6",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "73b0fc50a79aadf55a9f536e107c54e8f66590138dc56cffe0dc8c1ad6461aa4"
+    },
+    {
+      "work_id": "00907",
+      "title": "doll face 7",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "6762f7baea5bd94ed4d7e265d1e636a207088a1e6c5851e879c868f1074835a3"
+    },
+    {
+      "work_id": "00908",
+      "title": "doll face 8",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "038"
+      ],
+      "record_hash": "b5d426766ea9b481ef8c647e241302ef3c53fdf2955a2d8e41752d1d19739455"
+    }
+  ]
+}

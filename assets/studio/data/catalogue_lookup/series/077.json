@@ -1,0 +1,71 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "077",
+    "title": "home",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01367",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "5ac7a397bf51f96b332658c4794eec4ba47c155246a385b812c9012d30e0cb65",
+  "member_works": [
+    {
+      "work_id": "01367",
+      "title": "home 1",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "077"
+      ],
+      "record_hash": "f5ab0235eebcef2739629f26cd7c5602ac48cad67688a4ef45c841903efa144f"
+    },
+    {
+      "work_id": "01368",
+      "title": "home 2",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "077"
+      ],
+      "record_hash": "a3d5797571bc00834f33b96d50e76525205678c1784321d0bb940de7783b56a8"
+    },
+    {
+      "work_id": "01369",
+      "title": "home 3",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "077"
+      ],
+      "record_hash": "e6719022d8584785aba3437bdfc4575883a3b6f38a33e8542a1fec56d48552ff"
+    },
+    {
+      "work_id": "01370",
+      "title": "home 4",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "077"
+      ],
+      "record_hash": "4fa6cdc7d179979cb45190d53b025fcefb3add227e5c0e2c119959a1bc42ec9e"
+    },
+    {
+      "work_id": "01371",
+      "title": "home 5",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "077"
+      ],
+      "record_hash": "6df42cf2e703c12f9b95ff06bc1f4128e609d52a3d17d6a9608cadbba4a4db43"
+    }
+  ]
+}

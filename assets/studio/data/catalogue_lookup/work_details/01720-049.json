@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-049",
+    "work_id": "01720",
+    "detail_id": "049",
+    "project_subfolder": "symbols",
+    "project_filename": "muddle [2].jpg",
+    "title": "muddle [2]",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1442
+  },
+  "record_hash": "992f1e1ae9a7d107c86637a145107e275145ecc509efab56d05ad69be62c0c6f",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

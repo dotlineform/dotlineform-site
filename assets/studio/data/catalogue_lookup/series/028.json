@@ -1,0 +1,111 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "028",
+    "title": "colouring book",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1996,
+    "year_display": "1996",
+    "primary_work_id": "00219",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "eae03f444362b56a06162a26edc21f18a4e8913509fa713c1f865847ec3eca1a",
+  "member_works": [
+    {
+      "work_id": "00217",
+      "title": "colouring book 1",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "d411a85a31c57d5c1e8e4fa68d7b2877be3c997e2d2bd33908224312746d9676"
+    },
+    {
+      "work_id": "00218",
+      "title": "colouring book 2",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "93641630038d91b4e9c0f31810cf73108bda9d6c569e5a4d3254e1401bbcf4c5"
+    },
+    {
+      "work_id": "00219",
+      "title": "colouring book 3",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "1e41a6d039f073324bc771d62284a8f180bd5a350898646f4a5b7313ec454fd4"
+    },
+    {
+      "work_id": "00220",
+      "title": "colouring book 4",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "f51cf8e6791f55f696a49cd2ce556a62ac4ea581b0df94175ba46927752ffe66"
+    },
+    {
+      "work_id": "00221",
+      "title": "colouring book 5",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "435384af072a0db581f4c474fa3fe27881dfad4b45e67842f4884426e8d47375"
+    },
+    {
+      "work_id": "00222",
+      "title": "colouring book 6",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "454338c184aa0c0e1e16decf39cef46ca0aa6f883a34bdda856f04af8656f9e2"
+    },
+    {
+      "work_id": "00223",
+      "title": "colouring book 7",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "41db1b5d127af78582fe8b51a34742807d327e2bbacaf05882cb515438ed825b"
+    },
+    {
+      "work_id": "00224",
+      "title": "colouring book 8",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "230284af468b2246314f702dbbd9750e7db263f8ad42e818334d576cc0b723fb"
+    },
+    {
+      "work_id": "00225",
+      "title": "colouring book 9",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "028"
+      ],
+      "record_hash": "c76ab610abf256a6dbc013be40d9ff168979bb34effff8df7ae73df7df25af74"
+    }
+  ]
+}

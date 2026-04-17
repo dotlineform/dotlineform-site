@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00870-001",
+    "work_id": "00870",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "dots 1.jpg",
+    "title": "dots 1",
+    "status": "published",
+    "published_date": "2026-03-16",
+    "width_px": 2354,
+    "height_px": 2354
+  },
+  "record_hash": "32d33d4ce44060aa204dec16e9b7a10ee64c743168e8686889fe107592db87ae",
+  "work_summary": {
+    "work_id": "00870",
+    "title": "holes"
+  }
+}

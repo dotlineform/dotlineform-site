@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "081",
+    "title": "intuition (2020)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "primary_work_id": "00457",
+    "series_prose_file": null,
+    "notes": "put track listing in work_prose",
+    "sort_fields": "work_id"
+  },
+  "record_hash": "1cb813c4c3d0cb1e65529ac3d8780ad34356678d222dee2fba80bf5f507ad25d",
+  "member_works": [
+    {
+      "work_id": "00457",
+      "title": "intuition (2020)",
+      "year_display": "c. 2001-11",
+      "status": "published",
+      "series_ids": [
+        "081"
+      ],
+      "record_hash": "62c5795be6804ecdfdb4dd4453074002181d9d09e8f0bcae86e3936f7e6a4823"
+    }
+  ]
+}

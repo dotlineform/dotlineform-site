@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00481-002",
+    "work_id": "00481",
+    "detail_id": "002",
+    "project_subfolder": "versions",
+    "project_filename": "mm negative future .2.jpg",
+    "title": "mm negative future .2",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "5b1121c0ab91c02372000ad27acdd0dff54d33cf48f58d33ca95e8d07e44babd",
+  "work_summary": {
+    "work_id": "00481",
+    "title": "mm negative future"
+  }
+}

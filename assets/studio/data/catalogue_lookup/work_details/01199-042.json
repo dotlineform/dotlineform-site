@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-042",
+    "work_id": "01199",
+    "detail_id": "042",
+    "project_subfolder": "particles",
+    "project_filename": "particle (water).jpg",
+    "title": "particle (water)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "40f5f1452d41f49b94b5d44eb3558433c574b4e08454d233c54840048d7d7695",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

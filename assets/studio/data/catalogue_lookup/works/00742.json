@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00742",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "013"
+    ],
+    "series_title": null,
+    "project_folder": "an act of kindness",
+    "project_filename": "a partial act of kindness 1.2.jpg",
+    "title": "a partial act of kindness [1.2]",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2024,
+    "year_display": "2024",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "47d3895e1a0bacc3dfe1fcbc91163e46622bcdf416f2dcf72115e31855a107c6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "013",
+      "title": "an act of kindness"
+    }
+  ]
+}

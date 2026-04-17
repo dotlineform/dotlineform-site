@@ -1,0 +1,191 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "116",
+    "title": "pole vault",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2004,
+    "year_display": "2004",
+    "primary_work_id": "01580",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "5c2bef59a4ef4d355f643dc1fe9722cd413d65d51173fca63830f931a970df45",
+  "member_works": [
+    {
+      "work_id": "01566",
+      "title": "pole vault (1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "e5bb487d37bb9812d35bfe8f77c7bfbf62fa4802fe124ed9622fbfd845bb4a52"
+    },
+    {
+      "work_id": "01567",
+      "title": "pole vault (2)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "117fa4ac0e3e5b0e71f3d62e62d941190cdbb58dcd51736f7dc01c0096702126"
+    },
+    {
+      "work_id": "01568",
+      "title": "pole vault (3)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "062e21de6cce65dc37528a28d3e27591bddc825e79fd94082e5f6f5e55a5829b"
+    },
+    {
+      "work_id": "01569",
+      "title": "pole vault (4)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "026c0578b82315ccb122474cd3280a85207d9bf011d28a4c965c5886e323348c"
+    },
+    {
+      "work_id": "01570",
+      "title": "pole vault (5)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "ad01b65d9dc7150454b6b904e6fe0423363644a937e136ad0810bdff80556bca"
+    },
+    {
+      "work_id": "01571",
+      "title": "pole vault (becker)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "c3974deb4f79b530531c41e1a3e1ac7443707faf3fa570a763ceda5e53c66fa2"
+    },
+    {
+      "work_id": "01572",
+      "title": "pole vault (elisdottir 1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "b3b9fe7538a8a91e3c45402d77f4c0872d8f729e35dc30a0ddb89b175adfc3ed"
+    },
+    {
+      "work_id": "01573",
+      "title": "pole vault (elisdottir 2)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "b614b1dd2031364d61583b53a110b94be20f00fdd40bcf0e89fc3e7052825460"
+    },
+    {
+      "work_id": "01574",
+      "title": "pole vault (feofanova 1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "80e2b831aed7673f42dedbcb66c847cf9bba91ec88f4a8f048f63c1094240d97"
+    },
+    {
+      "work_id": "01575",
+      "title": "pole vault (grigorieva 1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "46f256ffae5f398cdddb03475066ff59bd7125e4ab6a3f5ae7229214182fd649"
+    },
+    {
+      "work_id": "01576",
+      "title": "pole vault (grigorieva 2)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "f2411c360a95cecbcbf67d408625f15c28769fe1127654fd03cf9f0e07e98f1d"
+    },
+    {
+      "work_id": "01577",
+      "title": "pole vault (grigorieva 3)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "0e3d8e8a69f9442c930c13db287ffc77c493bc2b76725ea6a0659b3e725e3ada"
+    },
+    {
+      "work_id": "01578",
+      "title": "pole vault (isinbajeva 1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "3481a93f0490c4bb1a00ee2fb8a53747b4b933ab65ec6021c1793302e8abbda8"
+    },
+    {
+      "work_id": "01579",
+      "title": "pole vault (pyrek 1)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "acf0a4eacafc1fed8e49292c010b367dba5d0afddceb6e5cd09d5a799947d58c"
+    },
+    {
+      "work_id": "01580",
+      "title": "pole vault (pyrek 2)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "5615016f9d939e51a68bbf2bdf0a35190bb82455199e4d4808a0cdb739749a3f"
+    },
+    {
+      "work_id": "01581",
+      "title": "pole vault (pyrek 3)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "76aedad7975fe4c778b125c0ccb9455e76364f13e99e61007ce9c159aa15f360"
+    },
+    {
+      "work_id": "01582",
+      "title": "pole vault (pyrek 4)",
+      "year_display": "2004",
+      "status": "published",
+      "series_ids": [
+        "116"
+      ],
+      "record_hash": "8a6b423ac691f502e6af5d5e4cc19fc3a99d2898473b2a96b63b9a86f7eb42b8"
+    }
+  ]
+}

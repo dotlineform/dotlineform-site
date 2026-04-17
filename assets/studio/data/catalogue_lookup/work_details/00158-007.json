@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00158-007",
+    "work_id": "00158",
+    "detail_id": "007",
+    "project_subfolder": "details",
+    "project_filename": "grid dissection - detail 6.jpg",
+    "title": "grid dissection - detail 6",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 4038,
+    "height_px": 5712
+  },
+  "record_hash": "bace30b2b644757874a55a4421fc5020b7bbb6a758508dc0594230996ae77508",
+  "work_summary": {
+    "work_id": "00158",
+    "title": "grid dissection"
+  }
+}

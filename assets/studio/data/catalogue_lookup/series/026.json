@@ -1,0 +1,1693 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "026",
+    "title": "collected 1989-1998",
+    "series_type": "holding",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1998,
+    "year_display": "c. 1989-98",
+    "primary_work_id": "00049",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "title,work_id"
+  },
+  "record_hash": "45753ddc771ab82f59047313219c88fdbdb1e0a2de3b53f7e3410400ceb1bd8c",
+  "member_works": [
+    {
+      "work_id": "00005",
+      "title": "untitled forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "bcc50c9abfdbefcc898bb02c55c8d73423f065daf55426dcba7987ce31267ee9"
+    },
+    {
+      "work_id": "00006",
+      "title": "gesture in grey 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5f97dc8193c472fc4fcd0b368f7638c5098d5ea7cf0716525b55cd4ab77bcbe8"
+    },
+    {
+      "work_id": "00007",
+      "title": "skeletal",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "707bf801e83fa036025db2d93cd4e83dcab2821721a6b93f7fc3a97a59c569c3"
+    },
+    {
+      "work_id": "00008",
+      "title": "nerve",
+      "year_display": "July 1990 – January 1995",
+      "status": "published",
+      "series_ids": [
+        "105",
+        "026"
+      ],
+      "record_hash": "f2665165e1c3fc836ecb9c515ad05091746787cd2d6ce9233e604e5a796b9d6e"
+    },
+    {
+      "work_id": "00009",
+      "title": "internal organs (wireframe)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "df0582ad3698c1786106f8ade82c6d86481f80bb00be673e07ab8b38ac431666"
+    },
+    {
+      "work_id": "00010",
+      "title": "slaughter (composite)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "9a170bdf1f8794eb71bafb36b2516ca84cb841c0b10c3341e4df601e526950e0"
+    },
+    {
+      "work_id": "00011",
+      "title": "prototype for repeating pattern",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "92ff911ec15fc7cae29f5bda987f2f7c2c32ad5dbb72e8d4f65c8af0f5f1deb0"
+    },
+    {
+      "work_id": "00012",
+      "title": "frame (positive)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0dd67f0d431238606449c3b105133d2eed4a10734b000e6aa6a2032bbbd938d9"
+    },
+    {
+      "work_id": "00013",
+      "title": "frame (negative)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6970202040e6077b162fa7ada41df9699c5bb59911b4c89358d8cb7589d727af"
+    },
+    {
+      "work_id": "00014",
+      "title": "forms (ink and water 1)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "943b483b8deba6f0e4106a539c4a50ef4d0457cef283166a405318882250af82"
+    },
+    {
+      "work_id": "00015",
+      "title": "forms (ink and water 2)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "774d16851246551a721ae28797d968690ce45d6524397b6849e2eaf289b953d8"
+    },
+    {
+      "work_id": "00016",
+      "title": "forms (ink and water 3)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "663dcb2cc03236814b395839f3089930fdcb9d3d3aadcc659b6635c71987466d"
+    },
+    {
+      "work_id": "00017",
+      "title": "forms (ink and water 4)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4deef094306f4d219a0fe8cf00bb90f53ad324543a841260cf63689e8a852088"
+    },
+    {
+      "work_id": "00018",
+      "title": "forms (ink and water 5)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "52c8240fa34d6fa757fea814857aac9b972157913b234eca7bd5563dd7aa6113"
+    },
+    {
+      "work_id": "00019",
+      "title": "forms (ink and water 6)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f255ab314e7f1c436322fae6b6841e14b93921e684c9209a2e02ce9eaa4ccd5e"
+    },
+    {
+      "work_id": "00020",
+      "title": "forms (internal 1)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6fb97100aac0ea5847bcb3c732766bda80d18ab4f7a0d8d8ba36a964b756ef23"
+    },
+    {
+      "work_id": "00021",
+      "title": "forms (internal 2)",
+      "year_display": "1993",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "e153c7afd40ec5ec3482eb173f14b2d0e4bd326305a5537272c19782339cdd3a"
+    },
+    {
+      "work_id": "00022",
+      "title": "collage 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "813c064827d7658a88ca520b36d6d965067afbcd482bc4ff08d0e4445d57d894"
+    },
+    {
+      "work_id": "00023",
+      "title": "collage 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "23b8834c41fa91796cc50eb799439aed56bfa241f25dffc93e256d68a02c3248"
+    },
+    {
+      "work_id": "00024",
+      "title": "collage 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1cf5c1f505b165a57c57dc1a0b70cb9f3bd602d7c7e04d7c754320b1bd91275d"
+    },
+    {
+      "work_id": "00025",
+      "title": "collage 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4dbc27e030a7b0a85dff1e7075ecd4d7e53f47d93561fce0692ad14bb00cdf44"
+    },
+    {
+      "work_id": "00026",
+      "title": "collage 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "9812a812809512bdc870198afbb67bc7f4d423dbd7ccadd8be04a9904ef2963a"
+    },
+    {
+      "work_id": "00027",
+      "title": "doll forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "3485c56f2e9703280f3c98792f5123d977b2bafcca92ab119658278d301256b3"
+    },
+    {
+      "work_id": "00028",
+      "title": "forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1c46a7a6fa07943e8e0f1554c6f45427d2fce228fedfa40d4504684e9572708b"
+    },
+    {
+      "work_id": "00029",
+      "title": "forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "43240eabef8b7c2c0ac95d32659715c58cdca0c07e09f0d6e99e10936ad784fb"
+    },
+    {
+      "work_id": "00030",
+      "title": "forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "55b68ed0a7a6be6c304035010f44e1be9f5cfb303ac73c07099fd90a757ddc26"
+    },
+    {
+      "work_id": "00031",
+      "title": "slaughter 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "be7e0d69962d58945464c3ade3586ce2ff6f3f0ea1162f20efa83957682087f2"
+    },
+    {
+      "work_id": "00032",
+      "title": "slaughter 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "2c6c4a5fe0c961a287d188fba31dbb6c05fa634d26907c1f0b85b346432113f5"
+    },
+    {
+      "work_id": "00033",
+      "title": "slaughter 6",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "68ffb3c7488391ec166196917526dc0905fa523a9498ccd061d3b3be26186821"
+    },
+    {
+      "work_id": "00034",
+      "title": "slaughter 7",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "e1a0c9a90e1e5a3ed91b860351bb9f490e1b2a2b3c1a3215b49a5e96146184ef"
+    },
+    {
+      "work_id": "00035",
+      "title": "slaughter (nerve 1)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "05f0573696634cbbd5e1557e67e9de523be1d2656013bb838512f566c722bd84"
+    },
+    {
+      "work_id": "00036",
+      "title": "slaughter (nerve 2)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4f8a5130348ab887ef475eab651996a4aa68bd31d1f8a3c4c5b323e397a9da0b"
+    },
+    {
+      "work_id": "00037",
+      "title": "slaughter (nerve 3)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1613969391ee7989986f6ce5ac444bc9fa2cf8837b4093a6122bad8b92e66644"
+    },
+    {
+      "work_id": "00038",
+      "title": "nude frame 10 (surface)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d1653f32e7ebaa241f4559a474038e282be8970f0c3292102166c8f7556800a6"
+    },
+    {
+      "work_id": "00039",
+      "title": "nude frame 11 (surface)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f4853bfa29a8cd168b8c7bb3071dd63d8286130e1339031542d2a1afdb6778e7"
+    },
+    {
+      "work_id": "00040",
+      "title": "nude frame 12",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "91ec0ce7ebe5090b6058460de2603707c8dd9671ed8795e36888ebc347fb6a2f"
+    },
+    {
+      "work_id": "00041",
+      "title": "hair",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6b79270da73318575c58a95bda91eaa0d8928b5aab366b1622df369e24b61a87"
+    },
+    {
+      "work_id": "00042",
+      "title": "model face",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "617d1325853dd83733ded42242ad910d5cb237350995146426347e5e9c7824df"
+    },
+    {
+      "work_id": "00043",
+      "title": "form symbol (superimposed) 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0b077ea63344292275c8fe52072d2a849e26e00c3f6002ff0596f378a95da357"
+    },
+    {
+      "work_id": "00044",
+      "title": "form symbol (superimposed) 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "2437ec07a0b1e7ff05398aff6d7a53d67b6b46f92601847e047d9a8242f94e0e"
+    },
+    {
+      "work_id": "00045",
+      "title": "outline form",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "e60163b51fc00d45e0869f8cb2a4ae76022e154b3572b2d1f39d47f7bf7f1f43"
+    },
+    {
+      "work_id": "00046",
+      "title": "ink legs",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cf9e5f9ab35c4a8aaeca790f91edd61894423258e7a6298b07c4bc135b6630d8"
+    },
+    {
+      "work_id": "00047",
+      "title": "slaughter 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "83b9230ed32eab7a51c28fc06bfbb2751c35113df41d646308f77416266d286b"
+    },
+    {
+      "work_id": "00048",
+      "title": "slaughter 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "b117a7f74cfa33ee7956de165ba639d144f5ab7d2a4b5a592af7110409b3dc42"
+    },
+    {
+      "work_id": "00049",
+      "title": "slaughter 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c4d82f7395345f5d041616fdb9d3b7a332ae21c5688a7e671ca4a2bedced121f"
+    },
+    {
+      "work_id": "00050",
+      "title": "perspective 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "ecac5b243cffda8ecb282b0dacb2ca57ff83173d02e3734c9594cde0fb4eb167"
+    },
+    {
+      "work_id": "00051",
+      "title": "perspective 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0a4d38961f4260bf616f306a629986e33465dd129cec23f819d26f0c2a46a14b"
+    },
+    {
+      "work_id": "00052",
+      "title": "perspective 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c772f75fe15283bcccc6f8d3eb3c41bcb5c9420302aa2b000a58fae39b7a282c"
+    },
+    {
+      "work_id": "00053",
+      "title": "internal organs of doll",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8585befbea4fb776d78883d992b1170209719555226422713086e738977a3700"
+    },
+    {
+      "work_id": "00054",
+      "title": "preparation for mannequin",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "06372b76c102a3a30f404596c4f66a9910b54087da62e73147d3fb19a253c9cf"
+    },
+    {
+      "work_id": "00055",
+      "title": "mannequin (legs)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c1b24330c6077e36226179cf4fa86dc61930797eb7223c409eafeedda610c622"
+    },
+    {
+      "work_id": "00056",
+      "title": "open form",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "ba9da44162905cf1881d96edeb821b0c87987beb08d64a267dd489d4e747584e"
+    },
+    {
+      "work_id": "00057",
+      "title": "joining forms 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "717815c5809c2cf84b64983eec743f150f12c8f5fb1b39e8e50a6340e6430ef8"
+    },
+    {
+      "work_id": "00058",
+      "title": "joining forms 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "ce2babbcea144ab95be702211a224e7f3135a85f4f17756361735488991111b9"
+    },
+    {
+      "work_id": "00059",
+      "title": "joining forms 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8b085468f3547437386c9a95004074a975f9d3c852ce70f1e68b77df21372aef"
+    },
+    {
+      "work_id": "00060",
+      "title": "mesh forms 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5a0e5990721cb4ef0855b4eaeb5b6eaa7ca57a3f1668f616236b86dd68a0b923"
+    },
+    {
+      "work_id": "00061",
+      "title": "mesh forms 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cf6ea394dae4572e772e05fd5e6be5c7ec356cf64ae95e6e879074de86d4e324"
+    },
+    {
+      "work_id": "00062",
+      "title": "dissecting forms 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c9fb430e45f76e0b4e3e709c05174d3e7ca1f23f76155b3067b2fad6a43b3df4"
+    },
+    {
+      "work_id": "00063",
+      "title": "dissecting forms 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "56110888a0c11b52400d7ac20849e7779b42cae8caf9c9fcd4503644ca43997c"
+    },
+    {
+      "work_id": "00064",
+      "title": "fly",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d8edad56c8223a39cd2d4a7116c341c31372952e6ca4e50eadd15cefb8f0aabc"
+    },
+    {
+      "work_id": "00065",
+      "title": "fly (broken)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1fc9cca18ba5a9e8053a2ac10e303acffa2e3ecd4585e51d542fa378b0ab0659"
+    },
+    {
+      "work_id": "00066",
+      "title": "nude frame 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f80310fa804439cdcded6cc738f08af4b9558380b145252a41a4c788d8d6e10a"
+    },
+    {
+      "work_id": "00067",
+      "title": "nude frame 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4d60acb5a4931e0ed92e91c4f8ed613ee6fedf0047404b5f5cf63e341917dca6"
+    },
+    {
+      "work_id": "00068",
+      "title": "nude frame 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "80705b189e9e92541a096b4c2f03679bd032962bd30b4e1a332950d83ed52da3"
+    },
+    {
+      "work_id": "00069",
+      "title": "nude frame 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f5500248e1469f88321ce781c4d8aba2781f2bfcf0d7b45030831303eda27c7d"
+    },
+    {
+      "work_id": "00070",
+      "title": "nude frame 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "2d4518858bf562eed5f0bcd2df4b682a8ad2116b8a1e73e1c4a1db6c35d5a655"
+    },
+    {
+      "work_id": "00071",
+      "title": "nude frame 6",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "fa6608390bfc7e51043589d3f5f85b7d48ec8aa0d8059e89ff5a67ee3f971c4d"
+    },
+    {
+      "work_id": "00072",
+      "title": "nude frame 7",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "97c808cb1b1cc4fd513820252536a0f7070955fcca335586c0cba4997ac5f5e5"
+    },
+    {
+      "work_id": "00073",
+      "title": "nude frame 8 (internal frame)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0931bfdc74282d6a33ddbcb728b3efd63990f41e282809e3a9666f96fc3ec0f6"
+    },
+    {
+      "work_id": "00074",
+      "title": "nude frame 9",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8cc95e3f9a0c363e7ef5a9dd848f5f140266a8acea1e41bc32e5aea16b089e82"
+    },
+    {
+      "work_id": "00075",
+      "title": "body forms 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "30e4de651a1761c7af7573896d7a71f3dc96c1bc0602cfe4f5b492ca15661258"
+    },
+    {
+      "work_id": "00076",
+      "title": "body forms 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8272e0014a96935f992343094dde4d7454494c5318d2bee0377b5c3334913b71"
+    },
+    {
+      "work_id": "00077",
+      "title": "body forms 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "db018d4e4a493fea8644231d0efa15adfd5ada1f9afd243b5ffb870a1c42e890"
+    },
+    {
+      "work_id": "00078",
+      "title": "body forms 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "42b02c2129f874f04853191fcc12ab6091b168c3b7db8fddb8db4f4e77c10303"
+    },
+    {
+      "work_id": "00079",
+      "title": "body forms 6",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "00a958b6a0aef1c78b71ca67d0bf3c80fb0283c9767b0f57c93832c683a433e9"
+    },
+    {
+      "work_id": "00080",
+      "title": "body forms 7",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "52b0ffa8403305a0543f4de136e6e493cf8a067a5977837230830ac248c7c854"
+    },
+    {
+      "work_id": "00081",
+      "title": "body forms 8",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "25022aab03d4033f7dc1a3ba3c0435a5bc12734c37b38f126865b75c95351e96"
+    },
+    {
+      "work_id": "00082",
+      "title": "body series dissected 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "27ff8b9cce445bb622111103ca3f84d1244a00e41d60b57291157c0950daeb5f"
+    },
+    {
+      "work_id": "00083",
+      "title": "body series dissected 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d72df3542dcf989e85911648ef36454cb17f9b1c53d990b446b27a5e6c967df2"
+    },
+    {
+      "work_id": "00084",
+      "title": "body series dissected 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "79da42c54b69bb5f33f0fa643bbbc03fc6b5c63b349593f16ad15469127fc7e1"
+    },
+    {
+      "work_id": "00085",
+      "title": "body series dissected 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "3d6b9d171cce114e37627c1bcdb3479383a5b79ad176ad08c8ebd45b0551ffae"
+    },
+    {
+      "work_id": "00086",
+      "title": "body series opened 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "2fbbffb2642a3f8785b5437269110e1be715e9d9fcc5a0f31e0df74241457ace"
+    },
+    {
+      "work_id": "00087",
+      "title": "body series opened 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "a26985d00a232d3b1aee36edfe685d0c0e890468f0952670ab7b2afe4b207ec9"
+    },
+    {
+      "work_id": "00088",
+      "title": "body series opened 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "75b0f5672a9ab18cd07f2ed79715acf18fcf080931b82a33f523cde9de4d5413"
+    },
+    {
+      "work_id": "00089",
+      "title": "body series opened 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "fa049d6829a3b8bcdb1540268c491bedc43707d8b2d06896c07caa31d402d488"
+    },
+    {
+      "work_id": "00090",
+      "title": "dissection (identification of points on a surface)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "57648e7a8d51bdb92639a2234891028da0695c0a0a31407aaa8bf6e1f32d373e"
+    },
+    {
+      "work_id": "00091",
+      "title": "dissection",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6091721c449365d4ccf3e3eeedd0e495f84571510f343665e3742081420b0fab"
+    },
+    {
+      "work_id": "00092",
+      "title": "healing dissection",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "2b50d12f483d1e5292e8af778d55e27fcedc3a510fb275c7e7864daf2bfa93c4"
+    },
+    {
+      "work_id": "00093",
+      "title": "3 elements of a body",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f49bb43a26a72e0cfc1625f385c6a7efa3af9ae52cf2f692306b27288b6d193a"
+    },
+    {
+      "work_id": "00094",
+      "title": "body forms 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "65831e515ba6656b22e062c7a71e8827997c13df6fb7aa27a9693a3699ee3e52"
+    },
+    {
+      "work_id": "00095",
+      "title": "death",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0c5bceab8a7c1b227ef69a0b50602b8fbfb6e68f42fb13d67f34aaa5b77ffe58"
+    },
+    {
+      "work_id": "00096",
+      "title": "dissection (prepared body 1)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6bd004d8ffa74e9a0989be7b8d4a3a34c900f51a54c6a7f984101233eee62efd"
+    },
+    {
+      "work_id": "00097",
+      "title": "dissection (prepared body 2)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "953247c3a31d05268412c8111be65f18e123e42f408c9ff9c695fb4829e5d575"
+    },
+    {
+      "work_id": "00098",
+      "title": "dissected body 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "61e1ad6329ee8f24f6e42725ad34436f637274c80f67d0ff72367d4482641e49"
+    },
+    {
+      "work_id": "00099",
+      "title": "dissected body 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1c44693a9db8c67060d3a8892a13fd860699049b38c3bdcd0618c50c154e4cb6"
+    },
+    {
+      "work_id": "00100",
+      "title": "preparation for dissection",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "33c7f9bd720c7d4212fbe0e72c3d02fd73a52aebe642722fe2d0123e098fdccd"
+    },
+    {
+      "work_id": "00101",
+      "title": "dissection in progress",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5d73e54cb742dacec55357754d7a695b58a2992d1aa6bb86e08dace114f2764d"
+    },
+    {
+      "work_id": "00102",
+      "title": "ink (front)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "98a5208f9e56c9b734abe6dee8ec79e073d133bf9cdabf7621e3b4401848c66e"
+    },
+    {
+      "work_id": "00103",
+      "title": "ink (back)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cda807ae7894d200f2b7cf748cec93b05eb71c558a270aaa261bf9e7204a99c5"
+    },
+    {
+      "work_id": "00104",
+      "title": "healing symbol",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "62a89ae78e1b26b932eacfc675397cbd1097db1db1febe64b66be62f30fdad02"
+    },
+    {
+      "work_id": "00105",
+      "title": "symbol frame",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d1bb45f0130fff9ad4b8e621d3a071f278869544486598f95ad2dd08afb3b572"
+    },
+    {
+      "work_id": "00106",
+      "title": "form 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5e445ec41ea1465bc89f6e1b0f5192e93a6227e0c3d7b8d1aa6cb1a5fcdf78a5"
+    },
+    {
+      "work_id": "00107",
+      "title": "form 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "e9f0f5abd543c0013b12a690c811a2321eb3ac3ae8196860694ccd3bd2d82196"
+    },
+    {
+      "work_id": "00108",
+      "title": "joined forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f2af63b5e4450f055e342685db2c70aa578162e34c02d97c6bfcabe3eaab777f"
+    },
+    {
+      "work_id": "00109",
+      "title": "joined forms 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "ee43feb4f31857bbb61f06048687b6dfd08eaec195550b0cb167b486f7ecc673"
+    },
+    {
+      "work_id": "00110",
+      "title": "healing symbol joined",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8b80981e84ede3b7a554d2bc042bb7bae435cdfef3f14acf92a57cfd3db8750a"
+    },
+    {
+      "work_id": "00111",
+      "title": "response to standing nude",
+      "year_display": "1990",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6bec61171335d9fafe9cc20f8551b172d9e66f05a0cec1bdd801a97d7b1bfdc3"
+    },
+    {
+      "work_id": "00112",
+      "title": "life",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "285f27107f950000a9e7451265c1041acaab85725295337b8a01a2f9cd26d76d"
+    },
+    {
+      "work_id": "00113",
+      "title": "gesture in grey 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0997faf174f841003960dd5f3f7789b64abf4fdb55cc2a43966af2e992c4b6fc"
+    },
+    {
+      "work_id": "00131",
+      "title": "internal forms",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "68899c82e314c1f414f44f037399cfe7ccb04ab9807c17c0bc8aa6f5ebcf812d"
+    },
+    {
+      "work_id": "00158",
+      "title": "grid dissection",
+      "year_display": "1990",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cdb248bcd85d40596d518d6fad80354ad2a3f300e43b97cd8f19af5a42328990"
+    },
+    {
+      "work_id": "00159",
+      "title": "Michelle Pfeiffer",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "13665c7f0751bbded705b80f608a6eec84668832012440cd8b56ea44c3e34b66"
+    },
+    {
+      "work_id": "00164",
+      "title": "unrelated commentaries",
+      "year_display": "1997",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "eba2d935ebab87c11fdfaf8df71feab0c4881c2442b3d62f956ff154122bb315"
+    },
+    {
+      "work_id": "00165",
+      "title": "angels",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d5f699135e12d619eb6bc44a811fd4c8581820545808232cef416ab91167c10e"
+    },
+    {
+      "work_id": "00167",
+      "title": "hand life 1",
+      "year_display": "1989",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "04e380ea792b04e0b7d4bb1950a5797225442604f3b7b2751917ae92109a716f"
+    },
+    {
+      "work_id": "00168",
+      "title": "hand life 2",
+      "year_display": "1989",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f2aa7d2fa4dbfce8f0724419568bb7b765ec2e8efee189841684cf10e1e980e8"
+    },
+    {
+      "work_id": "00169",
+      "title": "hand life 3",
+      "year_display": "1989",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f0454da3b84bc96b5758d6959e675eb4882954f94ab71a9d3c0915651efd2133"
+    },
+    {
+      "work_id": "00170",
+      "title": "hand life 5",
+      "year_display": "1989",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "b3ae376268482ca9c1635a59c6511f8f702622cdf871cccb8fd6340c6fdc879f"
+    },
+    {
+      "work_id": "00171",
+      "title": "hand life 7",
+      "year_display": "1989",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "9f57a491ee190e1d17f65ee268b1a5f4205f1c6f240bbfcfb265b1c546d972cf"
+    },
+    {
+      "work_id": "00172",
+      "title": "orange mesh",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "8eea91a6aabf842a49644d3dd643e801a07647f49035c9ecdf78892841545579"
+    },
+    {
+      "work_id": "00173",
+      "title": "orange mesh compact",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "46abbe7ad20284d3ef6cfed1ae8b17eedf09eb083375a2d768d53b3fd66a0120"
+    },
+    {
+      "work_id": "00174",
+      "title": "all chemical 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "f694ac239c1ddc6fd64142835fbfd427e95ecacc169cfce47987a9cb720ad17b"
+    },
+    {
+      "work_id": "00175",
+      "title": "all chemical 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "97d7d901af4f435eb586c21b808f2a9ffb47f4d47001ed5c7b36dcfeb4f69b72"
+    },
+    {
+      "work_id": "00176",
+      "title": "all chemical 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "dd190303b75a37567dc7aa2de478be2e0be3ee481e7431501b9bdfe9655be929"
+    },
+    {
+      "work_id": "00177",
+      "title": "all chemical 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "6df33310c7a1d7e219910f4e948ababd86661e213a9033835df7958f2fcc0003"
+    },
+    {
+      "work_id": "00178",
+      "title": "carpet pattern",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "02a2645cbbbe01da6816c0c2af4be4fb261aae8538aaf02d11da4c4888272f4f"
+    },
+    {
+      "work_id": "00179",
+      "title": "body cast 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "340388ae7d79014105114620e3995a164fc1176e9562382f0edd63a60f04e9d8"
+    },
+    {
+      "work_id": "00180",
+      "title": "body cast 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "79914d7dc625e5ced3c94f3fefaf8cd20009bbfa972b7bb007122c017120d51c"
+    },
+    {
+      "work_id": "00181",
+      "title": "body cast 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d0a519ba1be05fc2a3a68d50bc5a2c40cf665b3bf863380981e8c7381f2abf3f"
+    },
+    {
+      "work_id": "00182",
+      "title": "drunken vultures",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cde84851215f5228fa8f61fee24135654b38fe3bee0c7f91d0c84886081323e5"
+    },
+    {
+      "work_id": "00183",
+      "title": "little clear vessel",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1243c30d1f9fe905a2689d432efe0a9ee3d7664a7f0bed0861b4b06b4c9d85bd"
+    },
+    {
+      "work_id": "00184",
+      "title": "heal us",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "46e4234d5f1b521b90d24faad5b5e0ad864fb5818d5562e8d8c20093ba8c428f"
+    },
+    {
+      "work_id": "00185",
+      "title": "cell 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "7f02fbc46faf9008b8f55c37bed7904321374728cfa5c7ba16997949ca13ae10"
+    },
+    {
+      "work_id": "00186",
+      "title": "cell 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "0da8af35a2a9e123843368f095e0e12a17c150a3c60d2db8d4877a911812441f"
+    },
+    {
+      "work_id": "00187",
+      "title": "cell 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "3feb6702d2945cfde37d59374f6711baf9adb7aca96788c21b9c951821ab4964"
+    },
+    {
+      "work_id": "00188",
+      "title": "cell 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c1e404e20dd92c72edda022c29d258c89e40c559c3d3bdf7159f2eb0a9caa6a5"
+    },
+    {
+      "work_id": "00189",
+      "title": "cell 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "e6a3df4b5672eddd59d70dc7562a35a31ce53f39f79a3e33e6b1c096fc59751d"
+    },
+    {
+      "work_id": "00190",
+      "title": "cell 6",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5c7c6738960724252cab4e0a5f0e457f52f889eba8646fdc122c01d44fa6e434"
+    },
+    {
+      "work_id": "00191",
+      "title": "nude frame",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "420324b09572c28cdaf5d7d096d0547ef9235fc8fbb797f1403cfb49e20f3e48"
+    },
+    {
+      "work_id": "00192",
+      "title": "nude frame a",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "b800957dfbe0fc06d0947d78cbc1c99118fb50381324435316c7331969707804"
+    },
+    {
+      "work_id": "00193",
+      "title": "nude frame b",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "fcd7f5ad4bd87bba6acaf91c1e76c02c73f3177069f99850f9ac3cb8b07dd26f"
+    },
+    {
+      "work_id": "00194",
+      "title": "nude frame c",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "3f5279699a938f1c58096ebb95e67208ccbd34f32cc8f24edc1e70bc15fb79e7"
+    },
+    {
+      "work_id": "00195",
+      "title": "nude frame d",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "810961f321892d3d576d4e83631d2eb57aabf4a68310255babb4d8fb2b2fc8de"
+    },
+    {
+      "work_id": "00196",
+      "title": "nude frame e",
+      "year_display": "1992",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "82bfda812fc708c46b922dcc986897b62e5af119f72556aa97683611e94a308c"
+    },
+    {
+      "work_id": "00197",
+      "title": "book of curves 0",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "b9ba7c0c0687b658f5a627c09059d8feef6d7e9c66b8be5b392aac3cbee0ce43"
+    },
+    {
+      "work_id": "00198",
+      "title": "book of curves 1",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4f1d24ea63a7d7700bf3454c02ca39f0a7fa61136b06813c5a046887ab270fb2"
+    },
+    {
+      "work_id": "00199",
+      "title": "book of curves 2",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "65ff50a92a0940189382c8da641fa6fc1e5f7254ac3ca0be5c23cf14e967a715"
+    },
+    {
+      "work_id": "00200",
+      "title": "book of curves 3",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "c4145c84c8de2616e86a455c1815eb4f38654c428b9da588e362df388e2d47ff"
+    },
+    {
+      "work_id": "00201",
+      "title": "book of curves 4",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "02856d4712d2b5bbba3570a7377535bafeb793f8850806997a45834443f7a0aa"
+    },
+    {
+      "work_id": "00202",
+      "title": "book of curves 5",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "df5a760ac36bd361987d1e17a3eb8a2453f009a75bfdc3974d560850c8c1c405"
+    },
+    {
+      "work_id": "00203",
+      "title": "book of curves 6",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "1630e89cf686e57acd45f3dfb74e5ae9a20349dbaf475a634055f56c75faaf85"
+    },
+    {
+      "work_id": "00204",
+      "title": "book of curves 7",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "120e0a9e4446b3b40b3e9257ce68181c7c396d18c71a36e6f22a413d8c32027f"
+    },
+    {
+      "work_id": "00205",
+      "title": "book of curves 8",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "4897f51869e68e66ee2f855fb4cae41f892a1e87a6ab673890d3998a686a0bc9"
+    },
+    {
+      "work_id": "00206",
+      "title": "book of curves 9",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d2c9f848ec765e4b96c8f1a263139cf92f09f88c828557c66d6d5483a795dc42"
+    },
+    {
+      "work_id": "00207",
+      "title": "book of curves 10",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "5b9da7120628556c8ca5dd56c79f3968e1ca3e239e8b4b3a6ca34f6e1abd76c3"
+    },
+    {
+      "work_id": "00208",
+      "title": "book of curves 11",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "11682ff263a4921aa24a38e37c9f2f36b3c3907a2a9fd9613255214d4e048572"
+    },
+    {
+      "work_id": "00209",
+      "title": "internal form 1",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "88013d4b7b7de844a600e745fcbc85bbf6100b8eb14bb8e6bfef829f20719534"
+    },
+    {
+      "work_id": "00210",
+      "title": "internal form 2",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "d0b978c345b352ea0811ed15849b82baa62e289837d12340cef20911a39f2a53"
+    },
+    {
+      "work_id": "00211",
+      "title": "internal form 3",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "dda61dad4a40d369adc2841b90e540a6ec871fc509020dbfaac59b7cf3adb073"
+    },
+    {
+      "work_id": "00212",
+      "title": "internal form 4",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "9cb7b21bd2f859533e0649a06b1181ef481c9b850811f9905d07543fffeb0d1f"
+    },
+    {
+      "work_id": "00213",
+      "title": "internal form 5",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "06480edf56fdfb7b56fc6f5ffcdee9caa745493def3df71b53b1080739877fe2"
+    },
+    {
+      "work_id": "00214",
+      "title": "mother and child",
+      "year_display": "c. 1995?",
+      "status": "published",
+      "series_ids": [
+        "103",
+        "026"
+      ],
+      "record_hash": "7d466045dcf327e4e10931d9bb449bdd1e8c727358c557ebe0edabc4dd867e08"
+    },
+    {
+      "work_id": "00215",
+      "title": "internal forms (body)",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "cf75f455bf4c84e2d37eb2546b9e5f01855891aa733af056017e97ba5ea093b2"
+    },
+    {
+      "work_id": "00216",
+      "title": "nature 1",
+      "year_display": "1996",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "dbcafc9b3119aed825e4576d81fc7d93bb5b099d8076f7a6b5fb594d08fd1f2f"
+    },
+    {
+      "work_id": "00233",
+      "title": "untitled [0233]",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "a3540ba17631197dca3cf7db69a0123bd490aaf041a3510abe3ea49b4154e371"
+    },
+    {
+      "work_id": "00234",
+      "title": "untitled [0234]",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "258a02b2cb703c1cbcf7aeb7ab0a1e1c5030a825e256db9fcd39783988322afe"
+    },
+    {
+      "work_id": "00247",
+      "title": "untitled [0247]",
+      "year_display": "c. 1989-98",
+      "status": "published",
+      "series_ids": [
+        "026"
+      ],
+      "record_hash": "782dfd932f00c911e1d71efba73d82b744832719b9eeb0ee04a168206eb224af"
+    }
+  ]
+}

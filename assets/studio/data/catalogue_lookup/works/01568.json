@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01568",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "116"
+    ],
+    "series_title": null,
+    "project_folder": "pole vault",
+    "project_filename": "pole vault (3).jpg",
+    "title": "pole vault (3)",
+    "width_cm": 50,
+    "height_cm": 30,
+    "year": 2004,
+    "year_display": "2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "062e21de6cce65dc37528a28d3e27591bddc825e79fd94082e5f6f5e55a5829b",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "116",
+      "title": "pole vault"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00890",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll frame [2].jpg",
+    "title": "doll frame [2]",
+    "width_cm": "9.7 cm",
+    "height_cm": "14.4 cm",
+    "year": 1990,
+    "year_display": "c. 1990",
+    "medium_type": "digital print",
+    "medium_caption": "c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1150,
+    "height_px": 1700,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "90f66afa11019233bc06f43de25e5edfd08f6d1be343e39f0a0f455ad185425a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

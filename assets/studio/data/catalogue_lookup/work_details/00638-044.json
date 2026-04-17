@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-044",
+    "work_id": "00638",
+    "detail_id": "044",
+    "project_subfolder": "composites",
+    "project_filename": "composite - grieve.jpg",
+    "title": "composite - grieve",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "b8716de677b2a242423a21d3da0b83d300db11e05fed46ed95d8d3fa2ab34239",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

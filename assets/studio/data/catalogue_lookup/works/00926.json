@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00926",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "040"
+    ],
+    "series_title": null,
+    "project_folder": "dot",
+    "project_filename": "dot (2010-10-25 - 13-20-30).jpg",
+    "title": "dot (2010-10-25 - 13-20-30)",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2010,
+    "year_display": "2010",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "3a0deba9307aa069de543395540bd3e94f46b7bfd36a6d820dace5588f333d0a",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "040",
+      "title": "dot"
+    }
+  ]
+}

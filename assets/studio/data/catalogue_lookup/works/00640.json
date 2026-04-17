@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00640",
+    "status": null,
+    "published_date": null,
+    "series_ids": [
+      "002"
+    ],
+    "series_title": null,
+    "project_folder": "100 grasping hands",
+    "project_filename": "100 grasping hands.jpg",
+    "title": "100 grasping hands",
+    "width_cm": null,
+    "height_cm": null,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "drawing",
+    "medium_caption": "pencil on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": null,
+    "height_px": null,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "97adf8bdd8a798804f099ea8771240bed0eefd4344432ff52459ddc397a74f60",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "002",
+      "title": "100 grasping hands"
+    }
+  ]
+}

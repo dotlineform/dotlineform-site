@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00507",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "098"
+    ],
+    "series_title": null,
+    "project_folder": "mm",
+    "project_filename": "mm quantum 2.5.jpg",
+    "title": "mm quantum 2.5",
+    "width_cm": 50,
+    "height_cm": 30,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d3b255a2989b763fe34a75f2f22492625f6b3c1cfebee2f4ce6ca4c837bcf7e8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "098",
+      "title": "mm"
+    }
+  ]
+}

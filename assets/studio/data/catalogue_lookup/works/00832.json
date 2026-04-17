@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00832",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "032"
+    ],
+    "series_title": null,
+    "project_folder": "creases",
+    "project_filename": "creases 1.jpg",
+    "title": "creases 1",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2016,
+    "year_display": "2016",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "c947efc730a0d22793f0c9ec8f658f8e01c359d70e174b476b2a8f6f3ad68907",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "032",
+      "title": "creases"
+    }
+  ]
+}

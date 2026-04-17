@@ -1,0 +1,166 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01534",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "115"
+    ],
+    "series_title": null,
+    "project_folder": "poa",
+    "project_filename": "poa 1 (map 1-500).jpg",
+    "title": "poa 1 (map 1-500)",
+    "width_cm": 50,
+    "height_cm": 40,
+    "year": 2001,
+    "year_display": "2001-04",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 5906,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "72f640e2b302ecdfa2bb2c59e0fa8b01edde8ff9a16347696cfab6591ee90b97",
+  "detail_sections": [
+    {
+      "project_subfolder": "selected source",
+      "count": 17,
+      "details": [
+        {
+          "detail_uid": "01534-001",
+          "detail_id": "001",
+          "title": "poa 1 - 0001",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-002",
+          "detail_id": "002",
+          "title": "poa 1 - 0043",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-003",
+          "detail_id": "003",
+          "title": "poa 1 - 0446",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-004",
+          "detail_id": "004",
+          "title": "poa 1 - 0519",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-005",
+          "detail_id": "005",
+          "title": "poa 1 - 0684",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-006",
+          "detail_id": "006",
+          "title": "poa 1 - 0757",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-007",
+          "detail_id": "007",
+          "title": "poa 1 - 0877",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-008",
+          "detail_id": "008",
+          "title": "poa 1 - 1076",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-009",
+          "detail_id": "009",
+          "title": "poa 1 - 1297",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-010",
+          "detail_id": "010",
+          "title": "poa 1 - 1457",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-011",
+          "detail_id": "011",
+          "title": "poa 1 - 1527",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-012",
+          "detail_id": "012",
+          "title": "poa 1 - 1700",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-013",
+          "detail_id": "013",
+          "title": "poa 1 - 1803",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-014",
+          "detail_id": "014",
+          "title": "poa 1 - 1814",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-015",
+          "detail_id": "015",
+          "title": "poa 1 - 1862",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-016",
+          "detail_id": "016",
+          "title": "poa 1 - 1935",
+          "project_subfolder": "selected source",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01534-017",
+          "detail_id": "017",
+          "title": "poa 1 - 1975",
+          "project_subfolder": "selected source",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "115",
+      "title": "poa"
+    }
+  ]
+}

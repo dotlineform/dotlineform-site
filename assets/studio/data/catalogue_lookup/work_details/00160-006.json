@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00160-006",
+    "work_id": "00160",
+    "detail_id": "006",
+    "project_subfolder": "details",
+    "project_filename": "mouse story - detail 1.jpg",
+    "title": "mouse story - detail 1",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 5192,
+    "height_px": 2921
+  },
+  "record_hash": "5f27dfa1a6f046c1bbc80f6da6c590fdb4748969383e71e70150079d63268fae",
+  "work_summary": {
+    "work_id": "00160",
+    "title": "mouse story"
+  }
+}

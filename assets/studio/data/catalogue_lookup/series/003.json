@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "003",
+    "title": "16 forms",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "00639",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "0f96b7d154dc1364513f5544519db8311419e2e76e375bc02344d68ea55daaeb",
+  "member_works": [
+    {
+      "work_id": "00639",
+      "title": "16 forms",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "003"
+      ],
+      "record_hash": "89093192b3b4ad8d86728d29bea4ebe95b9f1927b0ee49e5932c944beed97760"
+    }
+  ]
+}

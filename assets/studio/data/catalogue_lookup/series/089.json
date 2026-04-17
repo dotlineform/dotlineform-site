@@ -1,0 +1,191 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "089",
+    "title": "learning to draw landscapes",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2010,
+    "year_display": "c. 2010?, 2022",
+    "primary_work_id": "00127",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "b72c184a44c257f867cb19ac552f53105e75b754f33abab7c0b253aa14cf9388",
+  "member_works": [
+    {
+      "work_id": "00114",
+      "title": "learning to draw landscapes 1",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "e97c4b4f33bdbc40915b7f8e4605030fec48f1526dc9caf014add7985b318e55"
+    },
+    {
+      "work_id": "00115",
+      "title": "learning to draw landscapes 2",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "1234b5d61f1d5464ba7f9f779c8a67ce0b64f7b8f4a5c8262f812856512da840"
+    },
+    {
+      "work_id": "00116",
+      "title": "learning to draw landscapes 3",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "5b056a82d33b0e5bcd3fecf6afc97df7a2e0954da6b5dbd6186cdd0ecc5d672c"
+    },
+    {
+      "work_id": "00117",
+      "title": "learning to draw landscapes 4",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "5c8c6f61170ece633c11a0a4908820647ee9bbc9dbbc70eb514d40f81776080a"
+    },
+    {
+      "work_id": "00118",
+      "title": "learning to draw landscapes 5",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "ba676d50a5c7b7deba29892919dc182c02802e52b7c479b20bb328fd38cfabc8"
+    },
+    {
+      "work_id": "00119",
+      "title": "learning to draw landscapes 6",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "818f485c8f84c911e48247fd82e05835cd5531d7b3cfca178332ad842a088b55"
+    },
+    {
+      "work_id": "00120",
+      "title": "learning to draw landscapes 7",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "5495bd45e95bd98ab20d0131c95e6fe69e5babddde6ebec87f9dbee723c39426"
+    },
+    {
+      "work_id": "00121",
+      "title": "learning to draw landscapes 8",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "172632b74ed273b3be7f8e99ad006fa99e1c29d35303124da33ae84bc257dd66"
+    },
+    {
+      "work_id": "00122",
+      "title": "learning to draw landscapes 9",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "dee6981d9e84d8974aae6cd2e3baf61ada6cd1b1ed5ecb2e0f61e0a5a5c7b818"
+    },
+    {
+      "work_id": "00123",
+      "title": "learning to draw landscapes 10",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "28ad3fbe084e8df2aec625bd79226f43ba522347521b2edaa1eba9a5099686b8"
+    },
+    {
+      "work_id": "00124",
+      "title": "learning to draw landscapes 11",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "d730063b8f71653eda336885381ad2fc3f651938932cdc63eeebeb6785361830"
+    },
+    {
+      "work_id": "00125",
+      "title": "learning to draw landscapes 12",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "17499e7471d5df39c5162c915fe75b76a4c998139eb9d90fdc2b1ddc7c1b550b"
+    },
+    {
+      "work_id": "00126",
+      "title": "learning to draw landscapes 13",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "4444e658587189d0518a257da9a20cb34be4fa41e89ca74ae887791f4cd3b741"
+    },
+    {
+      "work_id": "00127",
+      "title": "learning to draw landscapes 14",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "552334dc1806aa50517f7b4d3a64876166a835073d69490b337034c2f0a22081"
+    },
+    {
+      "work_id": "00128",
+      "title": "learning to draw landscapes 15",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "a7bb94bc075762d5f2022b56898ccf18c182915ee0d9cb68d6b99353a7e5ba91"
+    },
+    {
+      "work_id": "00129",
+      "title": "learning to draw landscapes 16",
+      "year_display": "c. 2010?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "1e0e6539612bf77334e48df099bf72d8030df8833ea58b269eaa928d565b2ac5"
+    },
+    {
+      "work_id": "00519",
+      "title": "learning to draw landscapes (versions)",
+      "year_display": "c. 2022?",
+      "status": "published",
+      "series_ids": [
+        "089"
+      ],
+      "record_hash": "258088c10b316a3870b3b7d1b398e05475d3515ee1ad2125ef1d245c3db197a7"
+    }
+  ]
+}

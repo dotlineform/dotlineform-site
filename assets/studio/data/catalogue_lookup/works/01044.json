@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01044",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "048"
+    ],
+    "series_title": null,
+    "project_folder": "entangled form",
+    "project_filename": "entangled form.jpg",
+    "title": "entangled form",
+    "width_cm": 42,
+    "height_cm": 60,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "monoprint",
+    "medium_caption": "ink and paint on paper",
+    "storage_location": "framed",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 1855,
+    "height_px": 1855,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b38184e1c3aa66c81d2ef1f7cd0a906e1d464a82345eba79330be3f2665177ce",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "048",
+      "title": "entangled form"
+    }
+  ]
+}

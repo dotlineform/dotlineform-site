@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00389-427",
+    "work_id": "00389",
+    "detail_id": "427",
+    "project_subfolder": "photos",
+    "project_filename": "2018-08-20 15꞉44 2.jpg",
+    "title": "2018-08-20 15꞉44 2",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3024,
+    "height_px": 3024
+  },
+  "record_hash": "0728bc4a2e0a09cc929ee755c78970ea77c8a8c03b23bed3c560ccae5a0f775a",
+  "work_summary": {
+    "work_id": "00389",
+    "title": "certainty"
+  }
+}

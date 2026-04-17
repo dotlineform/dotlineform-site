@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "060",
+    "title": "forest (2024)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2024,
+    "year_display": "2024",
+    "primary_work_id": "01175",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "d9df5e150bb012464fca6287f2788fc056a18ee2db0bd25cbef18cb129355a02",
+  "member_works": [
+    {
+      "work_id": "01175",
+      "title": "forest",
+      "year_display": "2024",
+      "status": "published",
+      "series_ids": [
+        "060"
+      ],
+      "record_hash": "e77cc1093a656c97545093dee31ead90d632fc74fe0cf9781e509e32808efad3"
+    }
+  ]
+}

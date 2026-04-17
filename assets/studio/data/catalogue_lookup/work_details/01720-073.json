@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-073",
+    "work_id": "01720",
+    "detail_id": "073",
+    "project_subfolder": "source",
+    "project_filename": "symbols decoded.jpg",
+    "title": "symbols decoded",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 3000,
+    "height_px": 1687
+  },
+  "record_hash": "11a1e2838bd0180f4e7974396c7654707baf1d9e8414a1acb059270f2c0cebdc",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

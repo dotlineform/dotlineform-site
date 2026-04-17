@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00735-060",
+    "work_id": "00735",
+    "detail_id": "060",
+    "project_subfolder": "64 degrees",
+    "project_filename": "happiness 60.jpg",
+    "title": "happiness 60°",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 2362,
+    "height_px": 2362
+  },
+  "record_hash": "c4e95e14f7e124edd7d1df39942bc54d7765ea2b5d997311ed22b36fdd26ec29",
+  "work_summary": {
+    "work_id": "00735",
+    "title": "a theory of happiness is a theory of everything (64°)"
+  }
+}

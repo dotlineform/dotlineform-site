@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-024",
+    "work_id": "00638",
+    "detail_id": "024",
+    "project_subfolder": "source",
+    "project_filename": "source - guilt.jpg",
+    "title": "source - guilt",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1681,
+    "height_px": 1393
+  },
+  "record_hash": "2730a02476ffc7a9452a3e37ff505ebab985aac30f8b20c5cb96ada2780d885f",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01046-009",
+    "work_id": "01046",
+    "detail_id": "009",
+    "project_subfolder": "espressos",
+    "project_filename": "espresso 9.jpg",
+    "title": "espresso 9",
+    "status": "published",
+    "published_date": "2026-03-19",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "50183111bc013c3a23901053d4003143e6e73fa5beb5350fe92d79aec65ceb80",
+  "work_summary": {
+    "work_id": "01046",
+    "title": "espresso"
+  }
+}

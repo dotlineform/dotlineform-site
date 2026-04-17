@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-037",
+    "work_id": "00638",
+    "detail_id": "037",
+    "project_subfolder": "composites",
+    "project_filename": "composite - bridge.jpg",
+    "title": "composite - bridge",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "37a3698b01c18f7738713b1d1f697fe428db7451665478eec7f9433daf7140a1",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

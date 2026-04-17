@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "025",
+    "title": "closeness",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2017,
+    "year_display": "2017",
+    "primary_work_id": "00811",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "9546d071840fbef71c0538b4174862bc997fadc258c45d16f18cca881d4ebd69",
+  "member_works": [
+    {
+      "work_id": "00811",
+      "title": "close",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "025"
+      ],
+      "record_hash": "47c85c3f640b060734c5094f143434bd45692b7cb363773b4d3c7db5303d2cb4"
+    },
+    {
+      "work_id": "00812",
+      "title": "closer",
+      "year_display": "2017",
+      "status": "published",
+      "series_ids": [
+        "025"
+      ],
+      "record_hash": "549968e6c91d8cfc4ddc8811a615b62d7724f5b81fae5560f0f9c7bf250ade4a"
+    }
+  ]
+}

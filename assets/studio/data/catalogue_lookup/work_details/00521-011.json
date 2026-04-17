@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00521-011",
+    "work_id": "00521",
+    "detail_id": "011",
+    "project_subfolder": "details",
+    "project_filename": "kylie structure 2.5.jpg",
+    "title": "kylie structure 2.5",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "be61ed596b74e12cbaa56bb5842739fcfab4e09d955bb605114122c2c8251877",
+  "work_summary": {
+    "work_id": "00521",
+    "title": "kylie structure 2"
+  }
+}

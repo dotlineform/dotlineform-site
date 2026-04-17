@@ -1,0 +1,141 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "041",
+    "title": "dot theory",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2009,
+    "year_display": "2009",
+    "primary_work_id": "00937",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "ac96566b888ee480ee9c1a018d9144a47663f73c090519fe1780660efaf784a4",
+  "member_works": [
+    {
+      "work_id": "00937",
+      "title": "dot theory (dot)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "9ffb5898e27f8475a383e7464d558ae1bb5e697478b7657f1e4019f22a6650c5"
+    },
+    {
+      "work_id": "00938",
+      "title": "dot theory (dots) I",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "ca0776cb1de4207ed3a9b6673abd91080b62a5941892a4e08d7934bbbedd4881"
+    },
+    {
+      "work_id": "00939",
+      "title": "dot theory (dots) version",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "cb77b35057174f931657cccf4a34f5096008de3e70387d2a66c40c6e46e9eb81"
+    },
+    {
+      "work_id": "00940",
+      "title": "dot theory (dots splash)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "d9c1c6d45abe920d5248c59e7e52b1a371bc6af0068c934c442b13ce2e41e3d6"
+    },
+    {
+      "work_id": "00941",
+      "title": "dot theory (dots) grid",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "4cb5e6d4ebccb31fbddadaf12a403d6cdb3300c38d3bf68f64e98679d0f6da14"
+    },
+    {
+      "work_id": "00942",
+      "title": "dot theory (dots composite)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "e2ed566ac294a1435f0fbb07f8f53f3b28d8bedc113d8313eefaf89a8309d240"
+    },
+    {
+      "work_id": "00943",
+      "title": "dot theory (dots composite) grid",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "164588be33c4071e9f7c53b22b2962d73bbbb12db72251695871bfa4f17b6995"
+    },
+    {
+      "work_id": "00944",
+      "title": "dot theory (dots edges)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "71cbe0b418665d4d584c31a7d002ca1b01be120c5ca7f9a962f646ee79bfa922"
+    },
+    {
+      "work_id": "00945",
+      "title": "dot theory (edge line)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "a40e76691efc6647f0e7fb091c71c0e0024538d295f664e06bf99f388b552148"
+    },
+    {
+      "work_id": "00946",
+      "title": "dot theory (lines)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "71b892746c0266944b0b36b916f547ce11f2739a67bfba81dec6659925659751"
+    },
+    {
+      "work_id": "00947",
+      "title": "dot theory (lines concentric)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "5bf8db235a283eb46f8120836f73e8e99851a841fd0ec222cc22d37584b8d6ee"
+    },
+    {
+      "work_id": "00948",
+      "title": "dot theory (strings)",
+      "year_display": "2009",
+      "status": "published",
+      "series_ids": [
+        "041"
+      ],
+      "record_hash": "4b0d2ab31156ba19fc144b89e46e14cd0abde677b141f1d9f0a7a3ab7af69314"
+    }
+  ]
+}

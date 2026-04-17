@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-044",
+    "work_id": "01720",
+    "detail_id": "044",
+    "project_subfolder": "symbols",
+    "project_filename": "mean rush.jpg",
+    "title": "mean rush",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "7172fd960a78d5e5d08831059fa490c63d6a3056b529349575face16ad3667c1",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01411",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "090"
+    ],
+    "series_title": null,
+    "project_folder": "lights",
+    "project_filename": "lights 11.jpg",
+    "title": "lights 11",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "e9a5afdaf75208788c2d5c95e50b4bd1a0529f377e37bd06f515f5ae4b12d8f8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "090",
+      "title": "lights"
+    }
+  ]
+}

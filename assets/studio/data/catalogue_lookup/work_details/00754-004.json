@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00754-004",
+    "work_id": "00754",
+    "detail_id": "004",
+    "project_subfolder": "details",
+    "project_filename": "assembly code 2 (detail 1).jpg",
+    "title": "assembly code 2 (detail 1)",
+    "status": "published",
+    "published_date": "2026-03-15",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "a6a8e8e167f8e6313243ed575e759d911d2b4fe0220c912b83fa29189fc1ab91",
+  "work_summary": {
+    "work_id": "00754",
+    "title": "assembly code 2"
+  }
+}

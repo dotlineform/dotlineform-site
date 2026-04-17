@@ -1,0 +1,41 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "048",
+    "title": "entangled form",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01044",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "90ac72f4004b5870270e73d353a8717f51d27fde2674622a843c5e7e3abb83ee",
+  "member_works": [
+    {
+      "work_id": "01044",
+      "title": "entangled form",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "048"
+      ],
+      "record_hash": "b38184e1c3aa66c81d2ef1f7cd0a906e1d464a82345eba79330be3f2665177ce"
+    },
+    {
+      "work_id": "01045",
+      "title": "entangled form'",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "048"
+      ],
+      "record_hash": "341acf4aa340d261c81e103e36892abd92ab458a40722ae338db6029013a8b44"
+    }
+  ]
+}

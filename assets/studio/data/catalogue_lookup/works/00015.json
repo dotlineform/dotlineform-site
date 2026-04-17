@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00015",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "forms (ink and water 2).jpg",
+    "title": "forms (ink and water 2)",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1993,
+    "year_display": "1993",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4904,
+    "height_px": 6936,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "774d16851246551a721ae28797d968690ce45d6524397b6849e2eaf289b953d8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

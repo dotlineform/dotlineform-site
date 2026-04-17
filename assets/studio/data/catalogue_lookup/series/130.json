@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "130",
+    "title": "sunflower",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01735",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "5b7e87d9c2acf5bc32906f5cdd954b07546ce3b73217fbbddcd10597dd9e27b4",
+  "member_works": [
+    {
+      "work_id": "01735",
+      "title": "sunflower forms",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "130"
+      ],
+      "record_hash": "257036626e71527b9951232e0d41f186e954681f078c54d3bc35b1664ac9b6f0"
+    },
+    {
+      "work_id": "01736",
+      "title": "sunflower forms grid",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "130"
+      ],
+      "record_hash": "94b54b233f427ab6015769099a3b5b3121f42357c32d70890c363a8b29b63777"
+    },
+    {
+      "work_id": "01737",
+      "title": "sunflower path",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "130"
+      ],
+      "record_hash": "67a8c1fba1b6d6e09c8bfdaba5b628eaef576096459a4da5839043a4000206de"
+    }
+  ]
+}

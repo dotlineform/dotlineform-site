@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00166-001",
+    "work_id": "00166",
+    "detail_id": "001",
+    "project_subfolder": "pages",
+    "project_filename": "nerve (formaldehyde form) - front cover.jpg",
+    "title": "nerve (formaldehyde form) - front cover",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 1859,
+    "height_px": 2676
+  },
+  "record_hash": "87e3361f4332b6f2f75ed6f54da37a95d28b65bfa54811b7ea65023d28488e95",
+  "work_summary": {
+    "work_id": "00166",
+    "title": "nerve (formaldehyde form)"
+  }
+}

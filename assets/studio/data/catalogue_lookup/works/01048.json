@@ -1,0 +1,68 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01048",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "050"
+    ],
+    "series_title": null,
+    "project_folder": "field",
+    "project_filename": "field II.jpg",
+    "title": "field II",
+    "width_cm": 59,
+    "height_cm": 50,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "painting",
+    "medium_caption": "acrylic on board",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 6969,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "edee8fa26d61aab56983330e15bcebc024ec351a65cf9a83e49fa79446922d8d",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 3,
+      "details": [
+        {
+          "detail_uid": "01048-001",
+          "detail_id": "001",
+          "title": "field II - detail 1",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01048-002",
+          "detail_id": "002",
+          "title": "field II - detail 2",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "01048-003",
+          "detail_id": "003",
+          "title": "field II - detail 3",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "050",
+      "title": "field"
+    }
+  ]
+}

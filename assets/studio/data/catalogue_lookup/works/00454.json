@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00454",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "036"
+    ],
+    "series_title": null,
+    "project_folder": "curve poems (2025)",
+    "project_filename": "I bet you look good on the dancefloor.jpeg",
+    "title": "I bet you look good on the dancefloor",
+    "width_cm": 42,
+    "height_cm": 29.7,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "pencil and ink on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3966,
+    "height_px": 2818,
+    "provenance": "Nicky",
+    "artist": null
+  },
+  "record_hash": "c160de1f05286f33443f21b065fe3d31a806d54f2b54f55c2dd1c98d56d5497f",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "036",
+      "title": "curve poems"
+    }
+  ]
+}

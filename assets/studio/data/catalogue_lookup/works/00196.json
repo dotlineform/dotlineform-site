@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00196",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "026"
+    ],
+    "series_title": null,
+    "project_folder": "collected 1989-1998",
+    "project_filename": "nude frame e.jpg",
+    "title": "nude frame e",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 1992,
+    "year_display": "1992",
+    "medium_type": "photocopy",
+    "medium_caption": "photocopy",
+    "storage_location": "1",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2380,
+    "height_px": 3396,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "82bfda812fc708c46b922dcc986897b62e5af119f72556aa97683611e94a308c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "026",
+      "title": "collected 1989-1998"
+    }
+  ]
+}

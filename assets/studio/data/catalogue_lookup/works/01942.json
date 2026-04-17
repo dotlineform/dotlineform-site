@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01942",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "143"
+    ],
+    "series_title": null,
+    "project_folder": "simultaneous equations",
+    "project_filename": "2006-12-16 - 14-54-06.jpg",
+    "title": "se2",
+    "width_cm": 40,
+    "height_cm": 30,
+    "year": 2026,
+    "year_display": "2026",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b986bc01412e7066f9b5d8cf0a7e255285eb3f3d1a96af93b6a04c73b2b09b9c",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "143",
+      "title": "simultaneous equations"
+    }
+  ]
+}

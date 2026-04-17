@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00457",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "081"
+    ],
+    "series_title": null,
+    "project_folder": "intuition (2020)",
+    "project_filename": "intuition.jpg",
+    "title": "intuition (2020)",
+    "width_cm": 11.8,
+    "height_cm": 11.8,
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "medium_type": "music",
+    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "62c5795be6804ecdfdb4dd4453074002181d9d09e8f0bcae86e3936f7e6a4823",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "081",
+      "title": "intuition (2020)"
+    }
+  ]
+}

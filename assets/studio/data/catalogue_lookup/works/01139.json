@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01139",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "056"
+    ],
+    "series_title": null,
+    "project_folder": "folding forms",
+    "project_filename": "folding forms 15.jpg",
+    "title": "folding forms 15",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 2012,
+    "year_display": "2012",
+    "medium_type": "digital print",
+    "medium_caption": "giclée print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2480,
+    "height_px": 3507,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ae713f47ba35d6e653d9d726adb45d8401126612ce77b1b7bad8193db78fd6c2",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "056",
+      "title": "folding forms"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-036",
+    "work_id": "01720",
+    "detail_id": "036",
+    "project_subfolder": "symbols",
+    "project_filename": "impossible.jpg",
+    "title": "impossible",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1507
+  },
+  "record_hash": "4e6dd42e7de95d3639273ff442b69f12dc2db65d7b2c01f4daa99cbb3ddfa408",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

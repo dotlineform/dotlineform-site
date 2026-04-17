@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01250",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "069"
+    ],
+    "series_title": null,
+    "project_folder": "genetic (2020)",
+    "project_filename": "genetic.jpg",
+    "title": "genetic",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2020,
+    "year_display": "c. 2001-11",
+    "medium_type": "music",
+    "medium_caption": "audio files (mp3/FLAC/wav)",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "83c177159b1ebb9525df2609b7b1d51f6f30d5d01592b527dafe8f22efde1206",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "069",
+      "title": "genetic (2020)"
+    }
+  ]
+}

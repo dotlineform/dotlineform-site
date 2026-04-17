@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00464-018",
+    "work_id": "00464",
+    "detail_id": "018",
+    "project_subfolder": "memories",
+    "project_filename": "memory - 5.2.jpg",
+    "title": "memory - 5.2",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 2362,
+    "height_px": 2362
+  },
+  "record_hash": "733998855acf886dd60c418c74fecb5c2e11e7dc4cfa30f34d378486ba2b508a",
+  "work_summary": {
+    "work_id": "00464",
+    "title": "forest memories 1-48"
+  }
+}

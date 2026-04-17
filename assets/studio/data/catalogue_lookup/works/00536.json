@@ -1,0 +1,54 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00536",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "099"
+    ],
+    "series_title": null,
+    "project_folder": "models",
+    "project_filename": "model 2.jpg",
+    "title": "model 2",
+    "width_cm": 25.4,
+    "height_cm": 38.8,
+    "year": 1994,
+    "year_display": "1994",
+    "medium_type": "collage",
+    "medium_caption": "magazine collage, tracing paper",
+    "storage_location": "9",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3234,
+    "height_px": 4940,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "214bcab6549ccf72f1527e22074e50987a80416926d20fa5fc4354e040ab67e2",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 1,
+      "details": [
+        {
+          "detail_uid": "00536-001",
+          "detail_id": "001",
+          "title": "model 2 - 001",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "099",
+      "title": "models"
+    }
+  ]
+}

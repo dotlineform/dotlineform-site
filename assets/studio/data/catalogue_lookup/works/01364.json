@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01364",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "072"
+    ],
+    "series_title": null,
+    "project_folder": "grid cells",
+    "project_filename": "grid.jpg",
+    "title": "grid",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2013,
+    "year_display": "2013",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "2dcc90f10852e4f2ace0f974bb4be91269cc6bab5326eaa3e8d2b5f7d7b4eab6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "072",
+      "title": "grid cells"
+    }
+  ]
+}

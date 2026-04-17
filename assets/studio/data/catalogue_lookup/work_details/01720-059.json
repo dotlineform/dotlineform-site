@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-059",
+    "work_id": "01720",
+    "detail_id": "059",
+    "project_subfolder": "symbols",
+    "project_filename": "quiet'.jpg",
+    "title": "quiet'",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1451
+  },
+  "record_hash": "73cfbb15eca9d8b9fc4c81d53add33df5df57bc6206271be78e0137abfdb79a3",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

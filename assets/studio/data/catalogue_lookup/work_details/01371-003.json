@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01371-003",
+    "work_id": "01371",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "home 5 - detail 3.jpg",
+    "title": "home 5 - detail 3",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "46d83edbe9739bf62118ca5ac2efb5d1425e03211d26cac62e4584b9f9bb27ba",
+  "work_summary": {
+    "work_id": "01371",
+    "title": "home 5"
+  }
+}

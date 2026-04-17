@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-014",
+    "work_id": "01720",
+    "detail_id": "014",
+    "project_subfolder": "symbols",
+    "project_filename": "daydream skinny.jpg",
+    "title": "daydream skinny",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1553
+  },
+  "record_hash": "4b832153733b9f20910add1040065450cd6dd11b5f17f7908561919b3103e66e",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

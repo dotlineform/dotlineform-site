@@ -1,0 +1,321 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "045",
+    "title": "droplets",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2016,
+    "year_display": "2014-16",
+    "primary_work_id": "01017",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "19f8de4eb610a865030323603798b5da90628f59fe7abe39c1268da5af8e48da",
+  "member_works": [
+    {
+      "work_id": "01007",
+      "title": "droplets (2014-04-21 - 18-43-56)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "22bfe8e955d89bdb0b233e2ddc9c324742875321cc56ddd0a8ad1aceba140fac"
+    },
+    {
+      "work_id": "01008",
+      "title": "droplets (2014-04-29 - 10-46-33)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "cdb91665d806622a3fe90bfc4489c4a95ad55366f15b86cbe5af1b527bf8c1ee"
+    },
+    {
+      "work_id": "01009",
+      "title": "droplets (2014-06-14 - 21-11-55)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "f099f84842099a38bd2a83fede2d5e7ab95520b4e2a0551a5b4f6ee2e23f3a71"
+    },
+    {
+      "work_id": "01010",
+      "title": "droplets (2014-06-22 - 11-16-46)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "8886f05c22b813ddeff7966e6d19deef3ce21ed5d1fc894fd125241651442191"
+    },
+    {
+      "work_id": "01011",
+      "title": "droplets (2014-06-22 - 13-57-44)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "64071a84e698d9a83fa87e7f81cb822e4ff52f17e71d43a30a1964701fe7b7b7"
+    },
+    {
+      "work_id": "01012",
+      "title": "droplets (2014-12-18 - 09-36-41)",
+      "year_display": "2014",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "bcf8be8e79c5557b143e6823c88307ff83ffa075b6111327eebb6356e8c16b8c"
+    },
+    {
+      "work_id": "01013",
+      "title": "droplets (2015-02-10 - 14-57-00)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "a431232486817872f0963fb88223bfeca84fe4998bd38c13172cbd15aa758e27"
+    },
+    {
+      "work_id": "01014",
+      "title": "droplets (2015-06-08 - 10-25-53)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "a0ac2ab01227939b0a61a77a45b3ab07bc660a549b446377d976af45bf48f07a"
+    },
+    {
+      "work_id": "01015",
+      "title": "droplets (2015-06-11 - 20-28-37)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "0374ca37b690ce1c47f622364d1cda7d01be71c0d36d6b43cef7116833af3ef1"
+    },
+    {
+      "work_id": "01016",
+      "title": "droplets (2015-06-14 - 16-49-51)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "c2db05faf696f0bd54b78c821dad6be6c88aff0d997be95a2571eefee8b6489b"
+    },
+    {
+      "work_id": "01017",
+      "title": "droplets (2015-06-16 - 11-28-38)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "87950105f1d96f81c406f42918bff8c32139d3e57c27ec33c49edb14b34cc436"
+    },
+    {
+      "work_id": "01018",
+      "title": "droplets (2015-06-21 - 18-03-26)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "7aa6997570a1427e6ec77566c4061b3ea9480407250617a54c16a62062a53a11"
+    },
+    {
+      "work_id": "01019",
+      "title": "droplets (2015-06-25 - 15-54-18)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "0211869982f187552f70a93d834ba7526e61c5fbbcc647380de443deb5f359f2"
+    },
+    {
+      "work_id": "01020",
+      "title": "droplets (2015-07-05 - 13-04-54)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "702f6fc6847f27369a418aa84aad6c7bba055f92dc872c6719a633a0a2bf5774"
+    },
+    {
+      "work_id": "01021",
+      "title": "droplets (2015-07-13 - 09-43-57)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "4cfb4e3c19dd1bd980fe293bf22ec83eef3851d5620ebe27a77ffe959ceddd8f"
+    },
+    {
+      "work_id": "01022",
+      "title": "droplets (2015-07-13 - 09-44-01)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "3bf911e71fa22e044ad30e3e8371bec4cd6e7bca8ae99623965a72954c97dd4e"
+    },
+    {
+      "work_id": "01023",
+      "title": "droplets (2015-07-13 - 09-44-08)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "c883f8e436730e3d4b4661955e1f450098edf0c97d52a7dad0983f597eafa148"
+    },
+    {
+      "work_id": "01024",
+      "title": "droplets (2015-07-13 - 10-41-46)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "85b87ea6cea3dcba4a6b4cf9d7c430833068cec52183974f644a85ecde9232c0"
+    },
+    {
+      "work_id": "01025",
+      "title": "droplets (2015-07-13 - 12-45-05)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "1ba1efd91646fab76dc260bd762c58506e9e0af81e2c82405d9800edfc4a7133"
+    },
+    {
+      "work_id": "01026",
+      "title": "droplets (2015-07-13 - 12-46-24)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "8aae5c56fcd43e2bcb9665567733e1e6f7f5f15883c7f4f91c4b5e7394f56c24"
+    },
+    {
+      "work_id": "01027",
+      "title": "droplets (2015-07-15 - 11-11-16)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "ad0c5e322defc7289783d38791519866013fcb141b147237ad014c3afe583107"
+    },
+    {
+      "work_id": "01028",
+      "title": "droplets (2015-07-20 - 13-14-34)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "20fb6f69c3d3249be25eab3ba3ba0daf55d924e4230268a9af96c1865b1957b7"
+    },
+    {
+      "work_id": "01029",
+      "title": "droplets (2015-07-20 - 17-42-37)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "41f4addb20a67022a666408099569421edda3304fe4eb8fbe829a3869ec4da72"
+    },
+    {
+      "work_id": "01030",
+      "title": "droplets (2015-07-20 - 17-42-49)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "27e664209cb242dfee5d9374010aaf6f63904bb7cab8c8d92e0082595275978f"
+    },
+    {
+      "work_id": "01031",
+      "title": "droplets (2015-07-27 - 13-27-17)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "26bb4aef9cdddd5e3069ff6acd5635639ff567b3ebc3e7c6fc9671d878eeeada"
+    },
+    {
+      "work_id": "01032",
+      "title": "droplets (2015-08-03 - 09-31-45)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "c405254e56dca299a1bbaa30168cd0b73ddbcb4317e4f5ea533ea4bf2c55c91b"
+    },
+    {
+      "work_id": "01033",
+      "title": "droplets (2015-08-03 - 10-38-26)",
+      "year_display": "2015",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "9572c508d766a65ad963511935347f2daa0e5b6d7373e6017b03cc0d6754e5cc"
+    },
+    {
+      "work_id": "01034",
+      "title": "droplets (2016-04-02 - 19-17-11)",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "5ed389bcf6b6cf132841eab8f9cabca1fd72bbb5839e2f2bf34a1fd804a9e9f7"
+    },
+    {
+      "work_id": "01035",
+      "title": "droplets (2016-05-23 - 17-59-55)",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "ff510f26ecf7504038663bd81c634e5de13a04b9aaf98019839368f4677114ad"
+    },
+    {
+      "work_id": "01036",
+      "title": "droplets (2016-05-23 - 17-59-58)",
+      "year_display": "2016",
+      "status": "published",
+      "series_ids": [
+        "045"
+      ],
+      "record_hash": "a81f8e7a9ea81e049fb85353e32fbbd619cbd897a9041b4617a4566ee2893d31"
+    }
+  ]
+}

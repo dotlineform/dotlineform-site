@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-038",
+    "work_id": "00638",
+    "detail_id": "038",
+    "project_subfolder": "composites",
+    "project_filename": "composite - burma.jpg",
+    "title": "composite - burma",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "40074061f153143444bffd44d5df1838ca076e6411db0a5ae34351196bfe09cf",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

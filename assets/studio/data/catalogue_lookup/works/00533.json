@@ -1,0 +1,82 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00533",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "004"
+    ],
+    "series_title": null,
+    "project_folder": "2 bodies",
+    "project_filename": "00533 - 2 bodies monoprint.jpg",
+    "title": "2 bodies monoprint",
+    "width_cm": 64,
+    "height_cm": 50,
+    "year": 2025,
+    "year_display": "2025",
+    "medium_type": "drawing",
+    "medium_caption": "ink and acrylic on paper",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 7559,
+    "height_px": 5906,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "d7fba993aa63900d6ac06dab449fd74b9e67c529bc900ab2125397b6fd2a9690",
+  "detail_sections": [
+    {
+      "project_subfolder": "details",
+      "count": 5,
+      "details": [
+        {
+          "detail_uid": "00533-001",
+          "detail_id": "001",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00533-002",
+          "detail_id": "002",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00533-003",
+          "detail_id": "003",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00533-004",
+          "detail_id": "004",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00533-005",
+          "detail_id": "005",
+          "title": "body detail",
+          "project_subfolder": "details",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "004",
+      "title": "2 bodies"
+    }
+  ]
+}

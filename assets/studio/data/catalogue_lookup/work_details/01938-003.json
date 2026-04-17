@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01938-003",
+    "work_id": "01938",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "water - detail 3.jpg",
+    "title": "water - detail 3",
+    "status": "published",
+    "published_date": "2026-03-27",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "13717de42b7ee797fe887f19a1693357f44fe49ff4c27f4ed0060ea33708fd24",
+  "work_summary": {
+    "work_id": "01938",
+    "title": "water"
+  }
+}

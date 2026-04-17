@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00638-039",
+    "work_id": "00638",
+    "detail_id": "039",
+    "project_subfolder": "composites",
+    "project_filename": "composite - burn.jpg",
+    "title": "composite - burn",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 3000,
+    "height_px": 3000
+  },
+  "record_hash": "0cb17ca9ecc58ae54b913c4056c6f37f21d182568e235ecbb7bfe65b031fedd3",
+  "work_summary": {
+    "work_id": "00638",
+    "title": "3 symbols"
+  }
+}

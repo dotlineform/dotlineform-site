@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00557",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "129"
+    ],
+    "series_title": null,
+    "project_folder": "string theory",
+    "project_filename": "string theory 4.jpg",
+    "title": "string theory 4",
+    "width_cm": 25.3,
+    "height_cm": 34.7,
+    "year": 2005,
+    "year_display": "2005",
+    "medium_type": "paper collage",
+    "medium_caption": "paper collage",
+    "storage_location": "12",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2931,
+    "height_px": 4020,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "cf2f735a10c24f83385e47c80eeb00c3f76e62497ecdcb5b0d29de307bed82f0",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "129",
+      "title": "string theory"
+    }
+  ]
+}

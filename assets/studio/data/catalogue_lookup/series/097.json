@@ -1,0 +1,61 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "097",
+    "title": "memory loss vessels",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01443",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "a450c17f557ee40e3e2ecd34dc2e0f992227c513f1499e0c56a406cf04ee1ebd",
+  "member_works": [
+    {
+      "work_id": "01443",
+      "title": "memory loss vessels I",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "097"
+      ],
+      "record_hash": "fa78f502d41a1897e9023ff2b79fd3e95bec0cea3ad78dfcc58c483b70465d3f"
+    },
+    {
+      "work_id": "01444",
+      "title": "memory loss vessels II",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "097"
+      ],
+      "record_hash": "1cd344c85e4dda75e53beb9a682d2e4aa6364f465511f12168073cab8caacf2e"
+    },
+    {
+      "work_id": "01445",
+      "title": "memory loss vessels III",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "097"
+      ],
+      "record_hash": "02cba617d8605f42a620877c7594b623032141de1ef7ebd23dff162eda9a8d97"
+    },
+    {
+      "work_id": "01446",
+      "title": "memory loss",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "097"
+      ],
+      "record_hash": "ba07a3ea9d4080951429d0bb57b9a9cec0e621d8cf8af7ef429216acdfa07351"
+    }
+  ]
+}

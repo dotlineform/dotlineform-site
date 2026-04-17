@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00850",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "034"
+    ],
+    "series_title": null,
+    "project_folder": "curl",
+    "project_filename": "curl (2017-04-26 - 18-27-05).jpg",
+    "title": "curl",
+    "width_cm": 28,
+    "height_cm": 21,
+    "year": 2017,
+    "year_display": "2017",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3308,
+    "height_px": 2480,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "9b6d96f15c5bc7fcc404a28ff0db87d6caa550c6bc86b65868fd26e1a74a22ce",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "034",
+      "title": "curl"
+    }
+  ]
+}

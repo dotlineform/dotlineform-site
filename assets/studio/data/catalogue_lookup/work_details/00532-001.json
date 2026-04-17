@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00532-001",
+    "work_id": "00532",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "00532-001.jpg",
+    "title": "body detail",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 3024,
+    "height_px": 4032
+  },
+  "record_hash": "6bc81c9fd82659e37dc5cd602a4bce8f3dd1370cba6987314d854a46083c6bb3",
+  "work_summary": {
+    "work_id": "00532",
+    "title": "body monoprint petals"
+  }
+}

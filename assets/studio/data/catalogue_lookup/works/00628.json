@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00628",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "082"
+    ],
+    "series_title": null,
+    "project_folder": "k crystals",
+    "project_filename": "group theory.jpg",
+    "title": "group theory",
+    "width_cm": 40,
+    "height_cm": 40,
+    "year": 2009,
+    "year_display": "2009",
+    "medium_type": "digital print",
+    "medium_caption": "digital print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 4724,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "4e36481b654a0108574a1d8970adfc29400f077570fcd25a08959474556ef9e5",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "082",
+      "title": "k crystals"
+    }
+  ]
+}

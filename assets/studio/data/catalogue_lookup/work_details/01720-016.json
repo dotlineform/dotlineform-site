@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-016",
+    "work_id": "01720",
+    "detail_id": "016",
+    "project_subfolder": "symbols",
+    "project_filename": "dizzy (clever) funny.jpg",
+    "title": "dizzy (clever) funny",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1448
+  },
+  "record_hash": "db613fbc34d41cf9d9c06a91038075907c8bbbb6d88e909ae61b3353dbda8b1c",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

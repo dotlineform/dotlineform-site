@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-020",
+    "work_id": "01199",
+    "detail_id": "020",
+    "project_subfolder": "particles",
+    "project_filename": "particle (gesture).jpg",
+    "title": "particle (gesture)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "8e7ee2187b9c5684368853c8edcc822cf37f1423f7fae7a2dba18d60682caf7d",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

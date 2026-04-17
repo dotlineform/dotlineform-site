@@ -1,0 +1,91 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "044",
+    "title": "dots",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2010,
+    "year_display": "2010",
+    "primary_work_id": "00456",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "bc1a89deec60df93fad09fecbca13bd036e320516c0871e6efaaae181b8daf0b",
+  "member_works": [
+    {
+      "work_id": "00456",
+      "title": "dots",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "a11d2b2e78047c13d8c5ab5182dfaaa64b4116897d415d49c3d195cd930ebeb7"
+    },
+    {
+      "work_id": "01001",
+      "title": "dots (inside)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "9e0f8e7d808c25d9e7397bab1c431333d25619f7c4115ec8a9699840aafd1355"
+    },
+    {
+      "work_id": "01002",
+      "title": "dots (first normal form)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "0d9225d38f58c0a37362ff5eb857cf7ce9231403c254cbac980febd54fc951cf"
+    },
+    {
+      "work_id": "01003",
+      "title": "dots (second normal form)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "0a6f11c5910ec81ded3c2fc3f3a474cee608d8f80dbe31957c6ab59454dbb8fd"
+    },
+    {
+      "work_id": "01004",
+      "title": "dots (equations)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "6df1820d5388621c2ea3a5fedb998cfb73dcf04749e4ab00f36b1d89b77b8d80"
+    },
+    {
+      "work_id": "01005",
+      "title": "dots (equations particles)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "ba0fb85496a79f7b03d8b89b9c33bb3c06fc3fb3cb3d01a40c7fea6f17c5ff97"
+    },
+    {
+      "work_id": "01006",
+      "title": "dots (equations sample grid)",
+      "year_display": "2010",
+      "status": "published",
+      "series_ids": [
+        "044"
+      ],
+      "record_hash": "0ee8f5b8a1860c0826521290d0e2f7b5f13a51f84aa78fe6b0f627dc1244ca94"
+    }
+  ]
+}

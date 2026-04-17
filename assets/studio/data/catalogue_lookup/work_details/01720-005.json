@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01720-005",
+    "work_id": "01720",
+    "detail_id": "005",
+    "project_subfolder": "symbols",
+    "project_filename": "chatterbox (lower).jpg",
+    "title": "chatterbox (lower)",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 1600,
+    "height_px": 1377
+  },
+  "record_hash": "bc3c9266005c8c36a54b5e0b2f969a3d5d027a2b5d6d3e4994772c0793a48886",
+  "work_summary": {
+    "work_id": "01720",
+    "title": "spine symbols"
+  }
+}

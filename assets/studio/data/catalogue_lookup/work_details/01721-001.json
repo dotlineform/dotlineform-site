@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01721-001",
+    "work_id": "01721",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "state of mind - detail (jewels).jpg",
+    "title": "state of mind - detail (jewels)",
+    "status": "published",
+    "published_date": "2026-03-26",
+    "width_px": 2000,
+    "height_px": 2000
+  },
+  "record_hash": "d572340bab0a7010f9ee0018b15d7c3f72d77b016fc9deaf762f04f0b12cdfc8",
+  "work_summary": {
+    "work_id": "01721",
+    "title": "state of mind"
+  }
+}

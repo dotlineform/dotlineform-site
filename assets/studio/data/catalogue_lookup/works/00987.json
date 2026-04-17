@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00987",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "043"
+    ],
+    "series_title": null,
+    "project_folder": "dotlineform (2023)",
+    "project_filename": "dotlineform - monoprint 4.jpg",
+    "title": "dotlineform - monoprint 4",
+    "width_cm": 21,
+    "height_cm": 29.7,
+    "year": 2023,
+    "year_display": "2023",
+    "medium_type": "painting",
+    "medium_caption": "paint on paper",
+    "storage_location": "6",
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 2480,
+    "height_px": 3508,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b46479859d6e3e221db67d2e696cf80a2f0c6aa4c1bdb942440e571cc30638f6",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "043",
+      "title": "dotlineform (2023)"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01005-003",
+    "work_id": "01005",
+    "detail_id": "003",
+    "project_subfolder": "details",
+    "project_filename": "dots (equations particles) [detail 3].jpg",
+    "title": "dots (equations particles) [detail 3]",
+    "status": "published",
+    "published_date": "2026-03-18",
+    "width_px": 5906,
+    "height_px": 5906
+  },
+  "record_hash": "3d2daa0a4ff808f48865976d8f6a374c6fe649b4333c096ba17bbf2c09e10c84",
+  "work_summary": {
+    "work_id": "01005",
+    "title": "dots (equations particles)"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "142",
+    "title": "water sea pond",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2023,
+    "year_display": "2023",
+    "primary_work_id": "01938",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "c39e75e70c31d504182e170b5b85f0031fe6cabc5381d003dbe11092ee917731",
+  "member_works": [
+    {
+      "work_id": "01938",
+      "title": "water",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "142"
+      ],
+      "record_hash": "327dca673cc417057d3ebb232bf35a8c40cabe58addcf9694cb28a325d3862d6"
+    },
+    {
+      "work_id": "01939",
+      "title": "sea",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "142"
+      ],
+      "record_hash": "ca7887a1554e29a3a28a7122b8a9c5471cb89f46a96f3dcaebd2be1a7e6a4e2a"
+    },
+    {
+      "work_id": "01940",
+      "title": "pond",
+      "year_display": "2023",
+      "status": "published",
+      "series_ids": [
+        "142"
+      ],
+      "record_hash": "33989d098e56cc7b84427c6f6c2460c47f173068803b38218661295867bdffe0"
+    }
+  ]
+}

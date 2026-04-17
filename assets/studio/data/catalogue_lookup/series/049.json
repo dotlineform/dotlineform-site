@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "049",
+    "title": "espresso",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2012,
+    "year_display": "2012",
+    "primary_work_id": "01046",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "e24e8a6955bca9c3896fc27984bbf12c6d62b8bec71f661ff66c73cff6f2d83b",
+  "member_works": [
+    {
+      "work_id": "01046",
+      "title": "espresso",
+      "year_display": "2012",
+      "status": "published",
+      "series_ids": [
+        "049"
+      ],
+      "record_hash": "b391d8e80128ab66d25f300e1561d86eb43fbdbfc74bc989686a4709aad701ee"
+    }
+  ]
+}

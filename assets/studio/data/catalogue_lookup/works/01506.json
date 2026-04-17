@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01506",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "112"
+    ],
+    "series_title": null,
+    "project_folder": "petri",
+    "project_filename": "petri 6.jpg",
+    "title": "petri 6",
+    "width_cm": 30,
+    "height_cm": 30,
+    "year": 2004,
+    "year_display": "2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3543,
+    "height_px": 3543,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "b505efc69e2bfe5b7f8f2734621de2c5d946e3101e1d20540724e53804a65cf8",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "112",
+      "title": "petri"
+    }
+  ]
+}

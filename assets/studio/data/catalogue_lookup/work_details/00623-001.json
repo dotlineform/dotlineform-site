@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00623-001",
+    "work_id": "00623",
+    "detail_id": "001",
+    "project_subfolder": "details",
+    "project_filename": "k crystals (transparent) - detail 1.jpg",
+    "title": "k crystals (transparent) - detail 1",
+    "status": "published",
+    "published_date": "2026-03-13",
+    "width_px": 5906,
+    "height_px": 4134
+  },
+  "record_hash": "d6b51b046a0235bbb614818f924336956bd2201336a4847973b1c03c89c49125",
+  "work_summary": {
+    "work_id": "00623",
+    "title": "k crystals (transparent)"
+  }
+}

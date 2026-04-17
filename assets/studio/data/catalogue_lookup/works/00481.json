@@ -1,0 +1,138 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00481",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "098"
+    ],
+    "series_title": null,
+    "project_folder": "mm",
+    "project_filename": "mm negative future.jpg",
+    "title": "mm negative future",
+    "width_cm": 70,
+    "height_cm": 60,
+    "year": 2004,
+    "year_display": "2004",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 8268,
+    "height_px": 7087,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "ce6d73988aac937999465997c3f04e1f626a34f78b45224765429f64a9e81c27",
+  "detail_sections": [
+    {
+      "project_subfolder": "versions",
+      "count": 13,
+      "details": [
+        {
+          "detail_uid": "00481-001",
+          "detail_id": "001",
+          "title": "mm negative future .1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-002",
+          "detail_id": "002",
+          "title": "mm negative future .2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-003",
+          "detail_id": "003",
+          "title": "mm negative future .3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-004",
+          "detail_id": "004",
+          "title": "mm negative future .4.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-005",
+          "detail_id": "005",
+          "title": "mm negative future .4.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-006",
+          "detail_id": "006",
+          "title": "mm negative future .4.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-007",
+          "detail_id": "007",
+          "title": "mm negative future .4.4.1",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-008",
+          "detail_id": "008",
+          "title": "mm negative future .4.4.2",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-009",
+          "detail_id": "009",
+          "title": "mm negative future .4.4.3",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-010",
+          "detail_id": "010",
+          "title": "mm negative future .4.4.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-011",
+          "detail_id": "011",
+          "title": "mm negative future .4.4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-012",
+          "detail_id": "012",
+          "title": "mm negative future .4",
+          "project_subfolder": "versions",
+          "status": "published"
+        },
+        {
+          "detail_uid": "00481-013",
+          "detail_id": "013",
+          "title": "versions II (mm)",
+          "project_subfolder": "versions",
+          "status": "published"
+        }
+      ]
+    }
+  ],
+  "series_summary": [
+    {
+      "series_id": "098",
+      "title": "mm"
+    }
+  ]
+}

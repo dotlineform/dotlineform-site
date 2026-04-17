@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00629-013",
+    "work_id": "00629",
+    "detail_id": "013",
+    "project_subfolder": "install",
+    "project_filename": "qrnt - Searching for God exhibition - install 3.jpg",
+    "title": "qrnt - Searching for God exhibition - install 3",
+    "status": "published",
+    "published_date": "2026-03-14",
+    "width_px": 1296,
+    "height_px": 1304
+  },
+  "record_hash": "b33b93c2aba0258ead052bcf2249f33401c8d7fae958737861c6eb4299e1137c",
+  "work_summary": {
+    "work_id": "00629",
+    "title": "quantum random number theory"
+  }
+}

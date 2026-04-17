@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "01400",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "086"
+    ],
+    "series_title": null,
+    "project_folder": "landscape for symbols",
+    "project_filename": "landscape for symbols.jpg",
+    "title": "landscape for symbols",
+    "width_cm": 70,
+    "height_cm": 50,
+    "year": 2021,
+    "year_display": "2021",
+    "medium_type": "painting",
+    "medium_caption": "mixed media on board",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 3869,
+    "height_px": 2964,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "cf2eaffb833e1a4ea27ad9b0d96c493dffd36ac074734ce9af9d7369c530f5e4",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "086",
+      "title": "landscape for symbols"
+    }
+  ]
+}

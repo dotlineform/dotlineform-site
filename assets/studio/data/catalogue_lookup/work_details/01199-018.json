@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "01199-018",
+    "work_id": "01199",
+    "detail_id": "018",
+    "project_subfolder": "particles",
+    "project_filename": "particle (form space).jpg",
+    "title": "particle (form space)",
+    "status": "published",
+    "published_date": "2026-03-23",
+    "width_px": 3543,
+    "height_px": 3543
+  },
+  "record_hash": "73ec61a34cca4df167343e015162e45218a71abb692248591a57da21eb90b030",
+  "work_summary": {
+    "work_id": "01199",
+    "title": "form particles"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_detail_record_v1"
+  },
+  "work_detail": {
+    "detail_uid": "00459-139",
+    "work_id": "00459",
+    "detail_id": "139",
+    "project_subfolder": "molecules",
+    "project_filename": "molecule form 139 (2012-10-21).jpg",
+    "title": "molecule form 139 (2012-10-21)",
+    "status": "published",
+    "published_date": "2026-03-05",
+    "width_px": 4724,
+    "height_px": 4724
+  },
+  "record_hash": "30fe037444b4e1f12026c80dbfdef6d554fb95de6927c93ee8cc0661c7be5998",
+  "work_summary": {
+    "work_id": "00459",
+    "title": "molecule forms"
+  }
+}

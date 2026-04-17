@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_record_v1"
+  },
+  "work": {
+    "work_id": "00885",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "series_ids": [
+      "037"
+    ],
+    "series_title": null,
+    "project_folder": "doll",
+    "project_filename": "doll forest - transform.jpg",
+    "title": "doll forest (transform)",
+    "width_cm": 40,
+    "height_cm": 56,
+    "year": 2007,
+    "year_display": "2007",
+    "medium_type": "digital print",
+    "medium_caption": "digital c-type print",
+    "storage_location": null,
+    "work_prose_file": null,
+    "notes": null,
+    "duration": null,
+    "depth_cm": null,
+    "width_px": 4724,
+    "height_px": 6614,
+    "provenance": null,
+    "artist": null
+  },
+  "record_hash": "0c94e3ae733e8f9302d83c3ed3e5020afec6c4961419f744b36220ea83f297fa",
+  "detail_sections": [],
+  "series_summary": [
+    {
+      "series_id": "037",
+      "title": "doll"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "099",
+    "title": "models",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 1994,
+    "year_display": "1994",
+    "primary_work_id": "00540",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "d702f80c69ad1192b3dc359c91367d318ff4e2fbcd49b894cc2fb816e88eb544",
+  "member_works": [
+    {
+      "work_id": "00130",
+      "title": "model 1",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "9b9fa4444df4cf2269ef4b16db756f8e9f0c29d47a439a899b2738159419aeae"
+    },
+    {
+      "work_id": "00536",
+      "title": "model 2",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "214bcab6549ccf72f1527e22074e50987a80416926d20fa5fc4354e040ab67e2"
+    },
+    {
+      "work_id": "00537",
+      "title": "model 3",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "6f8816733363067565357b12edad4ed66d12cc286ccb1f9323f190015bdbb284"
+    },
+    {
+      "work_id": "00538",
+      "title": "model 4",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "5cba8fbfeeabc279e62d34d19aaa85122cc3f2c72382e9d5efbac5b09dbdf77d"
+    },
+    {
+      "work_id": "00539",
+      "title": "model 5",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "7147bf51f995e6b3743f895248a1fd8251188f49324c0c67fdd23172968e6918"
+    },
+    {
+      "work_id": "00540",
+      "title": "model 6",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "162c6ef73b86f2a40be8d5768778c387a8b1280872effe47f3dcafb5a6c6ebe7"
+    },
+    {
+      "work_id": "00541",
+      "title": "model 7",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "543d4fbeae0a36e36f3b0e23bb915c002d7b3d57f6d7999230995d72d4ea9f71"
+    },
+    {
+      "work_id": "00542",
+      "title": "model 8",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "ea9d3ff7ced1d8dff3ecb27838ebba4c1b7955b50090b733fe4e6842a079050e"
+    },
+    {
+      "work_id": "00543",
+      "title": "model 9",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "89e45c1e703395b2044c36c300d073dc62798651c23826dc86da3962ac26df0a"
+    },
+    {
+      "work_id": "00544",
+      "title": "model 10",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "e2bfc1d61d9b7bea4a0584d122c0301d991142735158bcca7f89590d95e4f8b2"
+    },
+    {
+      "work_id": "00545",
+      "title": "model 11",
+      "year_display": "1994",
+      "status": "published",
+      "series_ids": [
+        "099"
+      ],
+      "record_hash": "475b0626e66b25426f7200419711fd64a97d7f9d2d78f263cf5adbf8d5f09a67"
+    }
+  ]
+}

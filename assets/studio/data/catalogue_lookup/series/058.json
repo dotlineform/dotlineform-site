@@ -1,0 +1,31 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_series_record_v1"
+  },
+  "series": {
+    "series_id": "058",
+    "title": "for David Lynch (2025)",
+    "series_type": "primary",
+    "status": "published",
+    "published_date": "2026-04-01",
+    "year": 2025,
+    "year_display": "2025",
+    "primary_work_id": "00346",
+    "series_prose_file": null,
+    "notes": null,
+    "sort_fields": "work_id"
+  },
+  "record_hash": "b91a199c99574790b3bac2a111e9911de31a83b9c36e6bcff682bf1cc781265d",
+  "member_works": [
+    {
+      "work_id": "00346",
+      "title": "for David Lynch",
+      "year_display": "2025",
+      "status": "published",
+      "series_ids": [
+        "058"
+      ],
+      "record_hash": "abe45235ba05245186522619f4961337de7274a1407fcc150f933c708be5a40c"
+    }
+  ]
+}
