@@ -443,7 +443,46 @@ Mitigation:
 - keep workbook import available for bulk-add workflows in a later phase
 - defer any multi-record create UI unless a clear use case appears
 
-## Phase 11: Workbook Import And Export
+## Phase 11: Work Files And Work Links
+
+Goal:
+
+- replace the remaining `WorkFiles` and `WorkLinks` workbook editing workflows in Studio
+
+Work:
+
+- add work-files summary to the work editor
+- add work-links summary to the work editor
+- add focused add/edit/delete flows for work-file records
+- add focused add/edit/delete flows for work-link records
+- validate parent `work_id` on save
+- preserve existing work-page metadata contracts fed by files and links
+- add local write endpoints for work-file and work-link saves and deletes
+- include affected parent work IDs in rebuild preview/apply responses
+
+Acceptance:
+
+- user can maintain `WorkFiles` records for a work without opening Excel
+- user can maintain `WorkLinks` records for a work without opening Excel
+- source JSON remains valid after file/link updates
+- scoped rebuild of the parent work updates the expected work-page metadata
+
+Benefits:
+
+- closes a real workbook dependency that still feeds published work-page metadata
+- keeps the work editor as the operational hub for work-attached child records
+
+Risks:
+
+- files and links are easy to treat as secondary, even though they affect public metadata
+- adding too much inline editing to the work page could turn it into an unbounded editor
+
+Mitigation:
+
+- keep files and links as focused work-attached child editors, similar to work details
+- keep the initial UI narrow: list current records on the work editor and open focused add/edit flows for changes
+
+## Phase 12: Workbook Import And Export
 
 Goal:
 
@@ -478,7 +517,7 @@ Mitigation:
 - block published-record overwrites by default
 - label exported workbooks as reports or import templates, not canonical source
 
-## Phase 12: Bulk Edit
+## Phase 13: Bulk Edit
 
 Goal:
 
@@ -517,7 +556,7 @@ Mitigation:
 - keep initial operations narrow
 - keep initial bulk-edit scope focused on metadata changes to existing records, not bulk creation
 
-## Phase 13: Retire Workbook-Led Pipeline
+## Phase 14: Retire Workbook-Led Pipeline
 
 Goal:
 
