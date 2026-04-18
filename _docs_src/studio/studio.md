@@ -10,7 +10,17 @@ sort_order: 5
 
 This section documents the Studio routes used to review and edit site data, catalogue records, and related operational workflows.
 
-Studio is a site-owned toolset, not a separate app. Each page is rendered by Jekyll under `/studio/`, uses the shared Studio layout, and links its implementation notes into the scoped Docs Viewer.
+Studio is a site-owned admin toolset, not a separate app. Each page is rendered by Jekyll under `/studio/`, uses the shared Studio layout, and links its implementation notes into the scoped Docs Viewer.
+
+The current Studio shell is organized around domain dashboards:
+
+- `Catalogue`
+- `Library`
+- `Analytics`
+- `Search`
+- `Docs`
+
+The public site nav remains user-facing and separate from this admin layer. Public `Works` and public `Library` routes do not become Studio routes.
 
 Related references:
 
@@ -35,9 +45,17 @@ Read this section in this order:
    - **[Tag Editor](/docs/?scope=studio&doc=tag-editor)**
    - **[Studio Works](/docs/?scope=studio&doc=studio-works)**
 
-Current Studio pages:
+Current Studio landing routes:
 
 - `/studio/`
+- `/studio/catalogue/`
+- `/studio/library/`
+- `/studio/analytics/`
+- `/studio/search/`
+- `/docs/`
+
+Current workflow/detail routes:
+
 - `/studio/build-activity/`
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`

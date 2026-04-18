@@ -119,6 +119,7 @@ Flags:
 
 - `bin/dev-studio` runs this builder once before starting Jekyll
 - if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs.rb --write`
+- the Studio docs viewer also exposes a local `Rebuild docs` button beside the Studio docs search field; that button calls the localhost Studio service, which runs the same builder command from the repo root
 - changing only the docs data does not require any separate asset pipeline
 
 Jekyll verification builds:

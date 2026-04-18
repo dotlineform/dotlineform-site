@@ -2,26 +2,24 @@
 layout: studio
 title: Studio
 permalink: /studio/
+studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 ---
 
-- [studio works]({{ '/studio/studio-works/' | relative_url }})
-- [build activity]({{ '/studio/build-activity/' | relative_url }})
-- [catalogue status]({{ '/studio/catalogue-status/' | relative_url }})
-- [catalogue activity]({{ '/studio/catalogue-activity/' | relative_url }})
-- [bulk add work]({{ '/studio/bulk-add-work/' | relative_url }})
-- [new catalogue work]({{ '/studio/catalogue-new-work/' | relative_url }})
-- [catalogue work]({{ '/studio/catalogue-work/' | relative_url }})
-- [catalogue work detail]({{ '/studio/catalogue-work-detail/' | relative_url }})
-- [new catalogue work detail]({{ '/studio/catalogue-new-work-detail/' | relative_url }})
-- [catalogue series]({{ '/studio/catalogue-series/' | relative_url }})
-- [new catalogue series]({{ '/studio/catalogue-new-series/' | relative_url }})
-- [series tags]({{ '/studio/series-tags/' | relative_url }})
-
-- [tag registry]({{ '/studio/tag-registry/' | relative_url }})
-- [tag aliases]({{ '/studio/tag-aliases/' | relative_url }})
-- [tag groups]({{ '/studio/tag-groups/' | relative_url }})
-
-## Documentation
-
-- [studio]({{ '/docs/?scope=studio&doc=studio' | relative_url }})
-- [scripts]({{ '/docs/?scope=studio&doc=scripts' | relative_url }})
+<section class="studioHome" aria-label="Studio domains">
+  <a class="studioHome__panel" href="{{ '/studio/catalogue/' | relative_url }}">
+    <h3>Catalogue</h3>
+    <p>Publish and maintain the works portfolio.</p>
+  </a>
+  <a class="studioHome__panel" href="{{ '/studio/library/' | relative_url }}">
+    <h3>Library</h3>
+    <p>Publish reference and research documents.</p>
+  </a>
+  <a class="studioHome__panel" href="{{ '/studio/analytics/' | relative_url }}">
+    <h3>Analytics</h3>
+    <p>Tools to support the analysis and contextualisation of the portfolio.</p>
+  </a>
+  <a class="studioHome__panel" href="{{ '/studio/search/' | relative_url }}">
+    <h3>Search</h3>
+    <p>Configure and manage site search.</p>
+  </a>
+</section>

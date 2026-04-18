@@ -1,0 +1,37 @@
+{%- assign studio_domain = page.studio_domain | default: '' -%}
+{%- assign studio_url = page.url | default: '' -%}
+{%- assign is_docs_page = false -%}
+{%- if page.section == 'studio-docs' or studio_url == '/docs/' -%}
+  {%- assign is_docs_page = true -%}
+{%- endif -%}
+
+{%- if studio_domain == '' and is_docs_page == false -%}
+  {%- if studio_url == '/studio/library/' -%}
+    {%- assign studio_domain = 'library' -%}
+  {%- elsif studio_url == '/studio/analytics/' -%}
+    {%- assign studio_domain = 'analytics' -%}
+  {%- elsif studio_url == '/studio/search/' -%}
+    {%- assign studio_domain = 'search' -%}
+  {%- elsif studio_url == '/studio/bulk-add-work/' or studio_url == '/studio/build-activity/' or studio_url == '/studio/studio-works/' -%}
+    {%- assign studio_domain = 'catalogue' -%}
+  {%- elsif studio_url == '/studio/catalogue/' or studio_url contains '/studio/catalogue-' -%}
+    {%- assign studio_domain = 'catalogue' -%}
+  {%- elsif studio_url contains '/studio/tag-' or studio_url contains '/studio/series-tag-' or studio_url == '/studio/series-tags/' -%}
+    {%- assign studio_domain = 'analytics' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- assign is_catalogue_active = false -%}
+{%- assign is_library_active = false -%}
+{%- assign is_analytics_active = false -%}
+{%- assign is_search_active = false -%}
+{%- if studio_domain == 'catalogue' -%}{%- assign is_catalogue_active = true -%}{%- endif -%}
+{%- if studio_domain == 'library' -%}{%- assign is_library_active = true -%}{%- endif -%}
+{%- if studio_domain == 'analytics' -%}{%- assign is_analytics_active = true -%}{%- endif -%}
+{%- if studio_domain == 'search' -%}{%- assign is_search_active = true -%}{%- endif -%}
+
+{% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-item' is_current=false is_active=is_catalogue_active %}
+{% include nav_item.html label="library" href='/studio/library/' class_name='nav-item' is_current=false is_active=is_library_active %}
+{% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-item' is_current=false is_active=is_analytics_active %}
+{% include nav_item.html label="search" href='/studio/search/' class_name='nav-item' is_current=false is_active=is_search_active %}
+{% include nav_item.html label="docs" href='/docs/?scope=studio&doc=site-docs' class_name='nav-item' is_current=is_docs_page is_active=is_docs_page %}

@@ -17,13 +17,26 @@ All Studio pages use:
 - `layout: studio`
 - `_layouts/studio.html`
 
-The Studio layout is a thin shell. It renders:
+The Studio route shell now provides the shared admin-facing navigation model. On Studio and Studio Docs routes, `_layouts/default.html` switches the top header nav to:
+
+- `Catalogue`
+- `Library`
+- `Analytics`
+- `Search`
+- `Docs`
+
+The Studio page layout then renders:
 
 - the page title
 - the page body content
 - an optional `i` link when `page.studio_page_doc` is present
 
-That `i` link is the page-to-doc bridge for Studio. Each page now points to a scoped Docs Viewer URL in the form:
+The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
+
+- the site title at top left, which returns to the public site
+- the footer `studio` link, which enters `/studio/`
+
+The `i` link is the page-to-doc bridge for Studio. Each page now points to a scoped Docs Viewer URL in the form:
 
 ```text
 /docs/?scope=studio&doc=<doc_id>
@@ -36,6 +49,10 @@ This keeps Studio implementation notes in the shared `/docs/` module rather than
 Current route inventory:
 
 - `studio/index.md`
+- `studio/catalogue/index.md`
+- `studio/library/index.md`
+- `studio/analytics/index.md`
+- `studio/search/index.md`
 - `studio/build-activity/index.md`
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
@@ -75,6 +92,7 @@ Current page-level doc links:
 - Series Tags -> `/docs/?scope=studio&doc=series-tags`
 - Series Tag Editor -> `/docs/?scope=studio&doc=tag-editor`
 - Studio Works -> `/docs/?scope=studio&doc=studio-works`
+- Studio landing and dashboards -> phased-plan and domain-plan docs
 
 ## Shared Runtime Modules
 
@@ -86,6 +104,10 @@ Shared Studio runtime and wiring currently live in:
   provides shared JSON loading and common shaping helpers for Studio pages
 - `assets/studio/js/studio-transport.js`
   provides local-write endpoint definitions, health probing, and shared JSON POST transport
+- `assets/studio/js/studio-dashboard.js`
+  hydrates lightweight dashboard metrics for the new domain landing pages
+- `assets/studio/js/docs-rebuild-button.js`
+  wires the docs rebuild action beside the Studio docs search input
 
 Current page controllers:
 
@@ -135,6 +157,7 @@ Current Studio usage of the Docs Viewer:
 - `scripts/build_docs.rb` builds the Studio docs payload into the Studio docs scope
 - `/docs/?scope=studio&doc=<doc_id>` opens those docs in the shared Docs Viewer shell
 - Studio page `i` links use those scoped URLs directly
+- the Studio docs page uses the same top header nav and also renders a `Rebuild docs` action beside the docs search input
 
 This means Studio documentation changes must stay aligned with the shared Docs Viewer behavior documented in **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** and **[Docs Viewer Overview](/docs/?scope=studio&doc=docs-viewer-overview)**.
 
@@ -147,7 +170,6 @@ What it starts:
 - `bundle exec ruby scripts/build_docs.rb --write`
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/tag_write_server.py`
-- `scripts/studio/catalogue_write_server.py`
 - `scripts/studio/catalogue_write_server.py`
 
 What it does not start:

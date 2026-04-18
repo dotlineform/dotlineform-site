@@ -326,6 +326,167 @@ th{ background: var(--panel-2); }
   margin: 0 0 0.45rem;
 }
 
+.studioHome{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.studioHome__panel{
+  display: grid;
+  gap: 0.45rem;
+  min-height: 10rem;
+  padding: 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.studioHome__panel:visited{
+  color: var(--text);
+}
+
+.studioHome__panel:hover{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.studioHome__panel:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: none;
+}
+
+.studioHome__panel h3,
+.studioHome__panel p{
+  margin: 0;
+}
+
+.studioHome__panel p{
+  max-width: 28ch;
+}
+
+.studioDashboard{
+  display: grid;
+  gap: 1.5rem;
+}
+
+.studioDashboard__intro{
+  max-width: 62ch;
+  margin: 0;
+  color: var(--muted);
+}
+
+.studioDashboard__metrics{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+}
+
+.studioMetricCard,
+.studioInfoCard{
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.studioMetricCard__label,
+.studioMetricCard__value,
+.studioMetricCard__meta,
+.studioInfoCard h4,
+.studioInfoCard p{
+  margin: 0;
+}
+
+.studioMetricCard{
+  display: grid;
+  gap: 0.35rem;
+}
+
+.studioMetricCard__label{
+  font-size: var(--font-small);
+  color: var(--muted);
+}
+
+.studioMetricCard__value{
+  font-size: clamp(1.6rem, 2vw, 2rem);
+  line-height: 1.1;
+}
+
+.studioMetricCard__meta{
+  color: var(--muted);
+  line-height: var(--line-snug);
+}
+
+.studioDashboard__section{
+  display: grid;
+  gap: 0.8rem;
+}
+
+.studioDashboard__sectionHeader{
+  display: grid;
+  gap: 0.35rem;
+}
+
+.studioDashboard__sectionHeader h3,
+.studioDashboard__sectionHeader p{
+  margin: 0;
+}
+
+.studioDashboard__sectionHeader p{
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+.studioCardGrid,
+.studioInfoGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.studioCardLink{
+  display: grid;
+  gap: 0.4rem;
+  min-height: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.studioCardLink:visited{
+  color: var(--text);
+}
+
+.studioCardLink:hover{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+  text-decoration: none;
+}
+
+.studioCardLink:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+  text-decoration: none;
+}
+
+.studioCardLink h4,
+.studioCardLink p{
+  margin: 0;
+}
+
+.studioCardLink p,
+.studioInfoCard p{
+  color: var(--muted);
+}
+
 .buildActivityPage{
   max-width: 980px;
 }
@@ -756,7 +917,15 @@ th{ background: var(--panel-2); }
   margin: 0 0 var(--space-2);
 }
 
+.docsViewer__searchRow{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
 .docsViewer__search{
+  flex: 1 1 18rem;
   max-width: var(--content-measure);
 }
 
@@ -779,6 +948,33 @@ th{ background: var(--panel-2); }
   border-color: var(--border-strong);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--border-strong) 18%, transparent);
   outline-offset: 2px;
+}
+
+.docsViewer__actionButton{
+  min-height: 2.3rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  background: var(--panel);
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+  cursor: pointer;
+}
+
+.docsViewer__actionButton:hover{
+  background: var(--panel-2);
+}
+
+.docsViewer__actionButton:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewer__actionButton[disabled]{
+  cursor: wait;
+  opacity: 0.72;
 }
 
 .docsViewer__status{
@@ -2508,6 +2704,10 @@ note: works tags are not currently in use on the work pages themselves.
 }
 
 @media (max-width: 720px){
+  .studioHome{
+    grid-template-columns: 1fr;
+  }
+
   .worksList__head{
     grid-template-columns: 1fr;
     row-gap: var(--list-row-gap-tight);

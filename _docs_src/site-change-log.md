@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-18
 
+- implemented Phase 1 Studio shell foundations: the public site nav now stays user-facing, Studio gets its own admin nav (`Catalogue`, `Library`, `Analytics`, `Search`, `Docs`), `/studio/` is now a four-panel landing page, new domain dashboards live under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`, and Studio docs now include a local `Rebuild docs` button beside the shared search field
 - added the follow-on planning doc [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan) for post-Phase-15 workflow refinement, media/prose handling, activity improvements, Studio landing-page redesign, internal generator cleanup, and end-to-end testing preparation
 - updated `AGENTS.md` to reflect the live JSON-led catalogue workflow, the retired workbook-led entrypoints, and the current scoped JSON rebuild path
 - added the Phase 12 workbook import flow at `/studio/bulk-add-work/`, with one-way preview/apply import from `data/works.xlsx` into canonical JSON for new works and new work details

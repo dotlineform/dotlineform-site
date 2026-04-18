@@ -1,6 +1,7 @@
 const STUDIO_WRITE_ENDPOINTS = Object.freeze({
   saveTags: "http://127.0.0.1:8787/save-tags",
   health: "http://127.0.0.1:8787/health",
+  buildDocs: "http://127.0.0.1:8787/build-docs",
   importTagAssignmentsPreview: "http://127.0.0.1:8787/import-tag-assignments-preview",
   importTagAssignments: "http://127.0.0.1:8787/import-tag-assignments",
   importTagRegistry: "http://127.0.0.1:8787/import-tag-registry",

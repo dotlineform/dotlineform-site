@@ -17,17 +17,24 @@
   <article class="docsViewer__main" aria-live="polite">
     <div class="docsViewer__mainHeader">
       {%- if include.search_index_url -%}
-      <div class="docsViewer__search">
-        <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
-        <input
-          class="docsViewer__searchInput"
-          id="docsViewerSearchInput"
-          type="search"
-          autocomplete="off"
-          spellcheck="false"
-          placeholder="{{ include.search_placeholder | default: 'search docs' }}"
-          aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
-        >
+      <div class="docsViewer__searchRow">
+        <div class="docsViewer__search">
+          <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
+          <input
+            class="docsViewer__searchInput"
+            id="docsViewerSearchInput"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="{{ include.search_placeholder | default: 'search docs' }}"
+            aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
+          >
+        </div>
+        {%- if include.show_rebuild_button -%}
+        <button class="docsViewer__actionButton" type="button" id="docsViewerRebuildButton">
+          {{ include.rebuild_button_label | default: 'Rebuild docs' }}
+        </button>
+        {%- endif -%}
       </div>
       {%- endif -%}
       <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>

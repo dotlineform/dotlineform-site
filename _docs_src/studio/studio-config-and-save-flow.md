@@ -68,6 +68,7 @@ Current responsibilities include:
 Current write endpoints include:
 
 - `/health`
+- `/build-docs`
 - `/save-tags`
 - `/import-tag-assignments-preview`
 - `/import-tag-assignments`
@@ -101,6 +102,13 @@ Current write endpoints include:
 - `http://127.0.0.1:8788/catalogue/series/save`
 - `http://127.0.0.1:8788/catalogue/build-preview`
 - `http://127.0.0.1:8788/catalogue/build-apply`
+
+Current non-catalogue local action behavior also includes:
+
+- `POST /build-docs` on the tag write service
+- this runs `scripts/build_docs.rb --write` from the repo root
+- the Studio docs viewer exposes that action beside the docs search input
+- Library docs reuse the same viewer shell but do not expose the rebuild control
 
 ## Save Modes
 

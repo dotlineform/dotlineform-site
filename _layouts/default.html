@@ -41,35 +41,14 @@
         {%- assign u = page.url | default: "" -%}
         {% assign u_series = u | slice: 0, 8 %}
         {% assign u_moments = u | slice: 0, 9 %}
-        {% assign u_studio_docs = u | slice: 0, 13 %}
+        {% assign u_studio = u | slice: 0, 8 %}
         {%- assign is_studio_context = false -%}
-        {%- if page.layout == 'studio' or page.section == 'studio-docs' or u_studio_docs == '/docs/studio/' or u == '/docs/' -%}
+        {%- if page.layout == 'studio' or page.section == 'studio-docs' or u_studio == '/studio/' or u == '/docs/' -%}
           {%- assign is_studio_context = true -%}
         {%- endif -%}
 
         {% if is_studio_context %}
-          {% assign u_studio = u | slice: 0, 8 %}
-          {%- assign is_studio_index = false -%}
-          {%- assign is_studio_active = false -%}
-          {%- assign is_series_tags_index = false -%}
-          {%- assign is_series_tags_active = false -%}
-          {%- assign is_studio_docs_index = false -%}
-          {%- assign is_studio_docs_active = false -%}
-
-          {%- if u == '/studio/' -%}{%- assign is_studio_index = true -%}{%- endif -%}
-          {%- if page.layout == 'studio' and u_studio == '/studio/' and u != '/studio/series-tags/' and u != '/studio/series-tag-editor/' -%}
-            {%- assign is_studio_active = true -%}
-          {%- endif -%}
-          {%- if u == '/studio/series-tags/' -%}{%- assign is_series_tags_index = true -%}{%- endif -%}
-          {%- if u == '/studio/series-tag-editor/' or u == '/studio/series-tags/' -%}
-            {%- assign is_series_tags_active = true -%}
-          {%- endif -%}
-          {%- if u == '/docs/' -%}{%- assign is_studio_docs_index = true -%}{%- endif -%}
-          {%- if u == '/docs/' -%}{%- assign is_studio_docs_active = true -%}{%- endif -%}
-
-          {% include nav_item.html label="studio" href='/studio/' class_name='nav-item' is_current=is_studio_index is_active=is_studio_active %}
-          {% include nav_item.html label="series tags" href='/studio/series-tags/' class_name='nav-item' is_current=is_series_tags_index is_active=is_series_tags_active %}
-          {% include nav_item.html label="docs" href='/docs/?scope=studio&doc=studio' class_name='nav-item' is_current=is_studio_docs_index is_active=is_studio_docs_active %}
+          {% include studio_header_nav.html %}
         {% else %}
           {%- assign is_works_index = false -%}
           {%- assign is_works_active = false -%}
