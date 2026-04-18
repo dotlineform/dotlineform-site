@@ -198,8 +198,9 @@ After Phase 3, the current Catalogue shell conventions are:
 
 - Catalogue-domain pages no longer render a persistent page-link strip above the editor content
 - work, series, and detail editors now use the right-hand summary rail for readiness state as well as current-record context
+- work and detail editors now place compact media previews at the top of that summary rail
+- work detail rows on the work editor now use thumbnail-led navigation rather than text-only rows
 - the Catalogue dashboard uses grouped directional link lists rather than card panels
-- Catalogue-domain pages render a shared page-link strip for create, edit, review, and activity routes
 - metadata editors use a shared single-column row layout with labels on the left
 - Catalogue Status is a sortable list and now links directly into work, series, detail, file, and link editors
 - work-file and work-link editors are now standalone search-and-open pages as well as deep-link targets from the work editor

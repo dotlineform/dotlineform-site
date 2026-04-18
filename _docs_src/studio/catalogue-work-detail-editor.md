@@ -29,6 +29,7 @@ The first implementation covers:
 - bulk-edit those same fields across the selected detail records
 - show read-only fields for ids, published date, and dimensions
 - show detail media readiness, including the resolved expected source path and missing-state guidance
+- show a compact current-record image preview at the top of the summary rail
 - preview the scoped rebuild impact for the parent work
 - run `Save + Rebuild` through the local catalogue service
 - delete one work-detail source record in single-record mode
@@ -63,7 +64,8 @@ Current save/rebuild flow:
 6. the local write server validates the full source set, writes `work_details.json`, refreshes derived lookup payloads, and returns the normalized saved record
 7. the page reloads its focused detail lookup payload
 8. `POST /catalogue/build-preview` reports the parent-work rebuild impact and the current detail media readiness
-9. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
+9. the current-record rail resolves a compact detail preview from the generated detail thumb assets when they are available
+10. `POST /catalogue/build-apply` rebuilds the parent work scope from canonical JSON
 
 Bulk save flow:
 

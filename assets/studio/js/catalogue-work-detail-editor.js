@@ -13,6 +13,11 @@ import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
+import {
+  bindPreviewImages,
+  buildDetailThumbPreview,
+  loadCatalogueMediaConfig
+} from "./catalogue-media-preview.js";
 
 const EDITABLE_FIELDS = [
   { key: "project_subfolder", label: "project subfolder", type: "text" },
@@ -105,6 +110,66 @@ function getReadinessItems(state) {
   const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
   const items = readiness && Array.isArray(readiness.items) ? readiness.items : [];
   return items.filter((item) => normalizeText(item && item.key) === "detail_media");
+}
+
+function getReadinessItem(state, key) {
+  return getReadinessItems(state).find((item) => normalizeText(item && item.key) === key) || null;
+}
+
+function previewFallback(state, item, missingGeneratedText, missingSourceText) {
+  const status = normalizeText(item && item.status);
+  if (status === "ready") {
+    return {
+      fallbackState: "missing-generated",
+      fallbackText: missingGeneratedText
+    };
+  }
+  if (status === "missing_file") {
+    return {
+      fallbackState: "missing-source",
+      fallbackText: missingSourceText
+    };
+  }
+  if (status === "unavailable") {
+    return {
+      fallbackState: "unavailable",
+      fallbackText: normalizeText(item && item.summary) || t(state, "preview_unavailable", "Preview unavailable.")
+    };
+  }
+  return {
+    fallbackState: "not-configured",
+    fallbackText: normalizeText(item && item.summary) || t(state, "preview_not_configured", "Preview not configured.")
+  };
+}
+
+function renderCurrentPreview(state) {
+  if (!state.previewNode) return;
+  if (state.mode === "bulk" || !state.currentRecord) {
+    state.previewNode.innerHTML = "";
+    return;
+  }
+  const record = state.currentRecord;
+  const mediaItem = getReadinessItem(state, "detail_media");
+  const preview = buildDetailThumbPreview(state.mediaConfig, record.detail_uid);
+  const fallback = previewFallback(
+    state,
+    mediaItem,
+    t(state, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
+    t(state, "preview_source_missing", "Source media missing.")
+  );
+  const caption = buildRecordSummary(record);
+  const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
+  const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
+  state.previewNode.innerHTML = `
+    <figure class="catalogueRecordPreview">
+      <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
+        ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 96))}" height="${escapeHtml(String(preview.height || 96))}" alt="${escapeHtml(caption)}">` : ""}
+        <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
+      </div>
+      <figcaption class="catalogueRecordPreview__caption">${escapeHtml(caption)}</figcaption>
+    </figure>
+  `;
+  bindPreviewImages(state.previewNode);
 }
 
 function renderReadiness(state) {
@@ -463,9 +528,6 @@ function updateSummary(state) {
       const record = state.bulkRecords.get(detailUid);
       return normalizeWorkId(record && record.work_id);
     }).filter(Boolean)));
-    state.metaNode.textContent = selectedCount
-      ? t(state, "bulk_meta", "{count} details selected", { count: String(selectedCount) })
-      : "";
     state.summaryNode.innerHTML = `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_selected", "selected details"))}</span>
@@ -483,15 +545,12 @@ function updateSummary(state) {
     state.runtimeStateNode.textContent = state.rebuildPending
       ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
       : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    renderCurrentPreview(state);
     renderReadiness(state);
     return;
   }
 
   const record = state.currentRecord;
-  state.metaNode.textContent = record
-    ? `${record.detail_uid} · ${buildRecordSummary(record)}`
-    : "";
-
   const publicBase = getStudioRoute(state.config, "work_details_page_base");
   const workEditorBase = getStudioRoute(state.config, "catalogue_work_editor");
   const publicHref = record ? `${publicBase}${encodeURIComponent(record.detail_uid)}/` : "";
@@ -518,6 +577,7 @@ function updateSummary(state) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+  renderCurrentPreview(state);
   renderReadiness(state);
 }
 
@@ -656,11 +716,13 @@ async function refreshBuildPreview(state) {
         })
         : ""
     );
+    renderCurrentPreview(state);
     return;
   }
   if (!state.currentWorkId || !state.serverAvailable) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
+    renderCurrentPreview(state);
     renderReadiness(state);
     return;
   }
@@ -671,6 +733,7 @@ async function refreshBuildPreview(state) {
     });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    renderCurrentPreview(state);
     renderReadiness(state);
   } catch (error) {
     state.buildPreview = null;
@@ -679,6 +742,7 @@ async function refreshBuildPreview(state) {
       `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    renderCurrentPreview(state);
     renderReadiness(state);
   }
 }
@@ -994,6 +1058,7 @@ async function init() {
   const emptyNode = document.getElementById("catalogueWorkDetailEmpty");
   const fieldsNode = document.getElementById("catalogueWorkDetailFields");
   const readonlyNode = document.getElementById("catalogueWorkDetailReadonly");
+  const previewNode = document.getElementById("catalogueWorkDetailPreview");
   const summaryNode = document.getElementById("catalogueWorkDetailSummary");
   const readinessNode = document.getElementById("catalogueWorkDetailReadiness");
   const runtimeStateNode = document.getElementById("catalogueWorkDetailRuntimeState");
@@ -1010,8 +1075,7 @@ async function init() {
   const statusNode = document.getElementById("catalogueWorkDetailStatus");
   const warningNode = document.getElementById("catalogueWorkDetailWarning");
   const resultNode = document.getElementById("catalogueWorkDetailResult");
-  const metaNode = document.getElementById("catalogueWorkDetailMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode) {
     return;
   }
 
@@ -1033,6 +1097,7 @@ async function init() {
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
+    mediaConfig: loadCatalogueMediaConfig(root),
     rebuildPending: false,
     buildPreview: null,
     isSaving: false,
@@ -1053,11 +1118,11 @@ async function init() {
     statusNode,
     warningNode,
     resultNode,
+    previewNode,
     summaryNode,
     readinessNode,
     runtimeStateNode,
-    buildImpactNode,
-    metaNode
+    buildImpactNode
   };
 
   EDITABLE_FIELDS.forEach((field) => renderField(field, fieldsNode, state));

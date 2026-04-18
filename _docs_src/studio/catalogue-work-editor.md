@@ -27,7 +27,9 @@ The first implementation covers:
 - bulk-edit core scalar metadata across the selected works
 - bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
+- show a compact current-record media preview at the top of the summary rail
 - list the current work's detail records grouped by `project_subfolder`
+- show thumbnail images beside detail rows in those work-detail lists
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
@@ -88,7 +90,8 @@ Current save/rebuild flow:
 7. the page reloads its focused work lookup payload and marks runtime rebuild as still pending
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. the same preview now also carries work media/work prose readiness and source-path guidance
-10. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild` or `Import prose + rebuild`
+10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
+11. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild` or `Import prose + rebuild`
 
 Bulk save flow:
 

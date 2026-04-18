@@ -400,6 +400,10 @@ Implemented:
 
 ### Phase 6. Preview Media In Studio
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
 - improve identification of the current work, detail, file, or link record through visual context
@@ -432,6 +436,17 @@ Benefits:
 Risks:
 
 - previews can add clutter if they are not kept subordinate to editing tasks
+
+Implemented:
+
+1. Reused the public media conventions already used on `/works/`, `/work_details/`, and `/series/`, including existing thumb sizes, suffixes, and asset-format assumptions.
+2. Added a compact current-record preview block to the top of the work editor summary rail.
+3. Added a compact current-record preview block to the top of the detail editor summary rail.
+4. Kept both preview blocks small and captioned so they support identification without displacing source/readiness controls.
+5. Improved work-detail rows on the work editor so they now use small thumbnails and a more consistent list pattern.
+6. Added fallback states on focused work/detail previews to distinguish generated preview missing, source media missing, and readiness not configured.
+7. Kept preview rendering out of bulk mode.
+8. Reviewed work-file and work-link editors and kept them text-first for now; no preview surface was added in this phase.
 
 ### Phase 7. Prose Local Actions
 

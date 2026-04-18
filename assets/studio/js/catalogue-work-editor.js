@@ -16,6 +16,12 @@ import {
   buildSaveModeText,
   utcTimestamp
 } from "./tag-studio-save.js";
+import {
+  bindPreviewImages,
+  buildDetailThumbPreview,
+  buildWorkPrimaryPreview,
+  loadCatalogueMediaConfig
+} from "./catalogue-media-preview.js";
 
 const EDITABLE_FIELDS = [
   { key: "status", label: "status", type: "select", options: ["", "draft", "published"] },
@@ -175,6 +181,74 @@ function displayValue(value) {
 function getReadinessItems(state) {
   const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
   return readiness && Array.isArray(readiness.items) ? readiness.items : [];
+}
+
+function getReadinessItem(state, key) {
+  return getReadinessItems(state).find((item) => normalizeText(item && item.key) === key) || null;
+}
+
+function previewFallback(state, item, missingGeneratedText, missingSourceText) {
+  const status = normalizeText(item && item.status);
+  if (status === "ready") {
+    return {
+      fallbackState: "missing-generated",
+      fallbackText: missingGeneratedText
+    };
+  }
+  if (status === "missing_file") {
+    return {
+      fallbackState: "missing-source",
+      fallbackText: missingSourceText
+    };
+  }
+  if (status === "unavailable") {
+    return {
+      fallbackState: "unavailable",
+      fallbackText: normalizeText(item && item.summary) || t(state, "preview_unavailable", "Preview unavailable.")
+    };
+  }
+  return {
+    fallbackState: "not-configured",
+    fallbackText: normalizeText(item && item.summary) || t(state, "preview_not_configured", "Preview not configured.")
+  };
+}
+
+function renderCurrentPreview(state) {
+  if (!state.previewNode) return;
+  if (state.mode === "bulk" || !state.currentRecord) {
+    state.previewNode.innerHTML = "";
+    return;
+  }
+  const record = state.currentRecord;
+  const mediaItem = getReadinessItem(state, "work_media");
+  const preview = buildWorkPrimaryPreview(state.mediaConfig, record.work_id);
+  const fallback = previewFallback(
+    state,
+    mediaItem,
+    t(state, "preview_generated_missing", "Generated preview unavailable. Source media exists."),
+    t(state, "preview_source_missing", "Source media missing.")
+  );
+  const caption = buildRecordSummary(record);
+  const canShowGenerated = !mediaItem || normalizeText(mediaItem.status) === "ready";
+  const previewState = preview.src && canShowGenerated ? "loading" : fallback.fallbackState;
+  const publicHref = `${getStudioRoute(state.config, "works_page_base")}${encodeURIComponent(record.work_id)}/`;
+  const isPublished = normalizeText(record && record.status).toLowerCase() === "published";
+  const previewHref = isPublished ? publicHref : normalizeText(preview.fullSrc);
+  const previewTarget = isPublished ? "" : "_blank";
+  const previewRel = isPublished ? "" : "noopener";
+  const frameHtml = `
+    <div class="catalogueRecordPreview__frame" data-preview-state="${escapeHtml(previewState)}" data-preview-fallback="${escapeHtml(fallback.fallbackState)}">
+      ${preview.src && canShowGenerated ? `<img class="catalogueRecordPreview__media" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="180px" width="${escapeHtml(String(preview.width || 180))}" height="${escapeHtml(String(preview.height || 180))}" alt="${escapeHtml(caption)}">` : ""}
+      <div class="catalogueRecordPreview__placeholder">${escapeHtml(fallback.fallbackText)}</div>
+    </div>
+  `;
+  state.previewNode.innerHTML = `
+    <figure class="catalogueRecordPreview">
+      ${previewHref ? `<a class="catalogueRecordPreview__link" href="${escapeHtml(previewHref)}"${previewTarget ? ` target="${escapeHtml(previewTarget)}"` : ""}${previewRel ? ` rel="${escapeHtml(previewRel)}"` : ""}>${frameHtml}</a>` : frameHtml}
+      <figcaption class="catalogueRecordPreview__caption">${escapeHtml(caption)}</figcaption>
+    </figure>
+  `;
+  bindPreviewImages(state.previewNode);
 }
 
 function renderReadiness(state) {
@@ -579,8 +653,13 @@ function renderDetailRows(state, details) {
     const detailUid = normalizeText(detail && detail.detail_uid);
     const title = displayValue(detail && detail.title);
     const href = buildDetailEditorHref(state, detailUid);
+    const preview = buildDetailThumbPreview(state.mediaConfig, detailUid);
     return `
-      <div class="catalogueWorkDetails__row">
+      <div class="catalogueWorkDetails__row catalogueWorkDetails__row--detail">
+        <a class="catalogueThumbPreview" href="${escapeHtml(href)}" data-preview-state="${preview.src ? "loading" : "missing-generated"}" data-preview-fallback="missing-generated" aria-label="${escapeHtml(title)}">
+          ${preview.src ? `<img class="catalogueThumbPreview__img" data-preview-image src="${escapeHtml(preview.src)}" srcset="${escapeHtml(preview.srcset || "")}" sizes="48px" width="${escapeHtml(String(preview.width || 48))}" height="${escapeHtml(String(preview.height || 48))}" alt="" loading="lazy" decoding="async">` : ""}
+          <span class="catalogueThumbPreview__placeholder">${escapeHtml(t(state, "detail_preview_missing", "No preview"))}</span>
+        </a>
         <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(detailUid)}</a>
         <span class="catalogueWorkDetails__title">${escapeHtml(title)}</span>
       </div>
@@ -684,6 +763,7 @@ function updateDetailSections(state) {
 
   state.detailsMetaNode.textContent = `${details.length} total`;
   state.detailsResultsNode.innerHTML = blocks.join("");
+  bindPreviewImages(state.detailsResultsNode);
 }
 
 function updateWorkFilesSection(state) {
@@ -767,6 +847,7 @@ function updateSummary(state) {
     if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
     if (state.filesPanelNode) state.filesPanelNode.hidden = true;
     if (state.linksPanelNode) state.linksPanelNode.hidden = true;
+    renderCurrentPreview(state);
     renderReadiness(state);
     return;
   }
@@ -813,6 +894,7 @@ function updateSummary(state) {
   updateDetailSections(state);
   updateWorkFilesSection(state);
   updateWorkLinksSection(state);
+  renderCurrentPreview(state);
   renderReadiness(state);
 }
 
@@ -1280,12 +1362,14 @@ async function refreshBuildPreview(state) {
         : ""
     );
     state.buildPreview = null;
+    renderCurrentPreview(state);
     renderReadiness(state);
     return;
   }
   if (!state.currentWorkId || !state.serverAvailable) {
     setTextWithState(state.buildImpactNode, "");
     state.buildPreview = null;
+    renderCurrentPreview(state);
     renderReadiness(state);
     return;
   }
@@ -1296,6 +1380,7 @@ async function refreshBuildPreview(state) {
     });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    renderCurrentPreview(state);
     renderReadiness(state);
   } catch (error) {
     state.buildPreview = null;
@@ -1304,6 +1389,7 @@ async function refreshBuildPreview(state) {
       `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    renderCurrentPreview(state);
     renderReadiness(state);
   }
 }
@@ -1566,6 +1652,7 @@ async function init() {
   const emptyNode = document.getElementById("catalogueWorkEmpty");
   const fieldsNode = document.getElementById("catalogueWorkFields");
   const readonlyNode = document.getElementById("catalogueWorkReadonly");
+  const previewNode = document.getElementById("catalogueWorkPreview");
   const summaryNode = document.getElementById("catalogueWorkSummary");
   const readinessNode = document.getElementById("catalogueWorkReadiness");
   const runtimeStateNode = document.getElementById("catalogueWorkRuntimeState");
@@ -1596,7 +1683,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -1618,6 +1705,7 @@ async function init() {
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
+    mediaConfig: loadCatalogueMediaConfig(root),
     rebuildPending: false,
     pendingBuildExtraSeriesIds: [],
     buildPreview: null,
@@ -1639,6 +1727,7 @@ async function init() {
     statusNode,
     warningNode,
     resultNode,
+    previewNode,
     summaryNode,
     readinessNode,
     runtimeStateNode,

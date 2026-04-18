@@ -6,9 +6,54 @@ section: catalogue-work
 studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
 ---
 
+{% assign media_base = site.media_base | default: "" %}
+{% assign media_image_works = site.media_image_works | default: "/works/img" %}
+{% assign thumb_base = site.thumb_base | default: "" %}
+{% assign thumb_works = site.thumb_works | default: "/assets/works/img" %}
+{% assign thumb_work_details = site.thumb_work_details | default: "/assets/work_details/img" %}
+{% assign pipeline = site.data.pipeline %}
+{% assign primary_variants = pipeline.variants.primary %}
+{% assign compatibility_variants = pipeline.variants.compatibility %}
+{% assign thumb_variants = pipeline.variants.thumb %}
+{% assign primary_render_widths = compatibility_variants.render_widths | default: primary_variants.widths %}
+{% assign primary_display_width = primary_render_widths | first %}
+{% assign primary_full_width = primary_variants.preferred_width | default: primary_render_widths | last %}
+{% assign primary_suffix = primary_variants.suffix | default: "primary" %}
+{% assign thumb_sizes = thumb_variants.sizes | default: "96,192" %}
+{% assign thumb_suffix = thumb_variants.suffix | default: "thumb" %}
+{% assign asset_format = pipeline.encoding.format | default: "webp" %}
+{% assign works_primary_base = media_base | append: media_image_works | append: "/" %}
+{% assign works_thumb_base = thumb_base | append: thumb_works | append: "/" %}
+{% assign details_thumb_base = thumb_base | append: thumb_work_details | append: "/" %}
+{%- assign works_primary_base_out = works_primary_base -%}
+{%- assign works_thumb_base_out = works_thumb_base -%}
+{%- assign details_thumb_base_out = details_thumb_base -%}
+{%- unless works_primary_base contains '://' -%}
+  {%- assign works_primary_base_out = works_primary_base | relative_url -%}
+{%- endunless -%}
+{%- unless works_thumb_base contains '://' -%}
+  {%- assign works_thumb_base_out = works_thumb_base | relative_url -%}
+{%- endunless -%}
+{%- unless details_thumb_base contains '://' -%}
+  {%- assign details_thumb_base_out = details_thumb_base | relative_url -%}
+{%- endunless -%}
+
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
-<div class="tagStudioPage catalogueWorkPage" id="catalogueWorkRoot" hidden>
+<div
+  class="tagStudioPage catalogueWorkPage"
+  id="catalogueWorkRoot"
+  hidden
+  data-works-primary-base="{{ works_primary_base_out | escape }}"
+  data-thumb-works-base="{{ works_thumb_base_out | escape }}"
+  data-thumb-work-details-base="{{ details_thumb_base_out | escape }}"
+  data-primary-display-width="{{ primary_display_width | escape }}"
+  data-primary-full-width="{{ primary_full_width | escape }}"
+  data-primary-suffix="{{ primary_suffix | escape }}"
+  data-thumb-sizes="{{ thumb_sizes | jsonify | escape }}"
+  data-thumb-suffix="{{ thumb_suffix | escape }}"
+  data-asset-format="{{ asset_format | escape }}"
+>
   <section class="tagStudio__panel tagStudio__panel--editor">
     <div class="tagStudio__inputRow tagStudio__inputRow--editor">
       <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">
@@ -50,6 +95,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
 
     <aside class="tagStudio__panel catalogueWorkSummary">
       <h2 class="tagStudio__heading">current record</h2>
+      <div id="catalogueWorkPreview"></div>
       <div class="tagStudioForm__fields" id="catalogueWorkReadonly"></div>
       <p class="tagStudioForm__impact" id="catalogueWorkRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueWorkBuildImpact"></p>
