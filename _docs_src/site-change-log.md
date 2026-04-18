@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-18
 
+- added the Phase 2 moments import flow at `/studio/catalogue-moment-import/`, with explicit source-file preview/apply, targeted moment rebuilds, catalogue-search rebuild, and first-pass activity/build reporting without folder scanning or srcset generation
 - implemented Phase 1 Studio shell foundations: the public site nav now stays user-facing, Studio gets its own admin nav (`Catalogue`, `Library`, `Analytics`, `Search`, `Docs`), `/studio/` is now a four-panel landing page, new domain dashboards live under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`, and Studio docs now include a local `Rebuild docs` button beside the shared search field
 - added the follow-on planning doc [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan) for post-Phase-15 workflow refinement, media/prose handling, activity improvements, Studio landing-page redesign, internal generator cleanup, and end-to-end testing preparation
 - updated `AGENTS.md` to reflect the live JSON-led catalogue workflow, the retired workbook-led entrypoints, and the current scoped JSON rebuild path

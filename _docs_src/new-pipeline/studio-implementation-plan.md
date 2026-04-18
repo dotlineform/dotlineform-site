@@ -55,9 +55,13 @@ Parallel domain planning lives in:
 
 ## Phase Structure
 
-This roadmap is split into a shared Studio shell phase, Catalogue-focused implementation phases, one priority moments phase, one deferred cloud-native target phase, and parallel planning stubs for other Studio domains.
+This roadmap is split into a completed Studio shell phase, a priority moments phase, Catalogue-focused refinement phases, one deferred cloud-native target phase, and parallel planning stubs for other Studio domains.
 
 ### Phase 1. Studio Shell And Navigation Foundation
+
+Status:
+
+- completed on 2026-04-18
 
 Scope:
 
@@ -103,18 +107,18 @@ Deliverables:
 - a Docs rebuild button positioned next to the shared docs search field
 - a first Catalogue dashboard with links to work and series editing flows and brief workflow summaries
 - initial Library, Analytics, and Search dashboards that establish the entry surface even where deeper workflow implementation is still pending
+- Studio-domain top-level nav on Studio and Docs routes only, with the public `Works` / `Library` top-level nav retained for the public site
+- the public/studio crossover reduced to the site title link and the footer `studio` link
 
-Task list:
+Delivered:
 
-1. Define the route structure for the four domain dashboards and confirm where they live under `/studio/`.
-2. Update the shared Studio shell so the top nav becomes `Catalogue`, `Library`, `Analytics`, `Search`, and `Docs`.
-3. Remove any need for extra `/studio/` links outside the four-panel grid.
-4. Implement the `/studio/` landing page as a 2x2 domain panel layout with the approved copy.
-5. Add one landing dashboard for each domain with space for workflow links, guidance docs, maintenance actions, and lightweight analytics.
-6. Implement the first Catalogue dashboard content, including links to work and series edit pages and short workflow summaries.
-7. Add the Docs rebuild action beside the docs search field and keep Docs as a nav item rather than a dashboard.
-8. Review current Studio routes and move or relabel any entry points that bypass the dashboard structure unnecessarily.
-9. Update shared Studio docs so the new landing/navigation model is the documented entry path.
+1. Defined the domain dashboard routes under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`.
+2. Implemented the Studio-domain top nav as `Catalogue`, `Library`, `Analytics`, `Search`, and `Docs`.
+3. Replaced the old `/studio/` route list with the 2x2 domain landing page.
+4. Added landing dashboards for all four Studio domains with workflow links, guidance links, and lightweight metrics.
+5. Implemented the first Catalogue dashboard with work/series/status/activity/build entry points and workflow summary copy.
+6. Added the Docs rebuild action beside the shared Studio docs search field.
+7. Updated shared Studio docs so the dashboard/navigation model is now the documented entry path.
 
 Verification:
 
@@ -134,7 +138,62 @@ Risks:
 
 - this can sprawl into a full Studio redesign if it is not kept structural
 
-### Phase 2. Catalogue Workflow And UI Consistency
+### Phase 2. Moments Create And Import Workflow
+
+Status:
+
+- completed on 2026-04-18
+
+Scope:
+
+- add the first functional Studio-backed moments workflow
+- support adding a new moment by specifying an explicit source markdown filename on the webpage rather than scanning the `moments/` directory
+- support the current metadata model where moment metadata is stored in the `.md` file front matter itself
+- support optional image filename handling as explicit metadata, while preserving the current public runtime behavior when an image is missing
+- support targeted import/rebuild for one moment or a small selected set
+
+Out of scope:
+
+- automatic scanning of moment folders for new or changed content
+- srcset generation or wider media automation
+- broad redesign of public `/moments/` runtime behavior
+
+Deliverables:
+
+- a moments-focused Studio entry surface
+- file-driven import flow for one existing moment source markdown file
+- source preview covering the resolved front matter, source-image state, and current generated/runtime state
+- targeted moment validation and rebuild hooks
+- moments status visibility sufficient for draft/published workflow handling without adding browser-side prose editing
+
+Delivered:
+
+1. Added `/studio/catalogue-moment-import/` as the first moments-focused Studio route.
+2. Implemented filename-only preview/apply flow against the canonical moments source folder.
+3. Added local write-service endpoints for moment import preview and apply.
+4. Added targeted rebuild support in `catalogue_json_build.py` for `--moment-file`.
+5. Reused the existing generator behavior so moment publish state and `published_date` remain generator-owned.
+6. Kept missing source images non-blocking and left srcset generation out of scope.
+7. Added first-pass build and catalogue activity reporting for moment imports.
+8. Updated Studio/docs references so the file-driven moments path is now the documented entry flow.
+
+Verification:
+
+- user can add a new moment without relying on the retired automated scanning flow
+- targeted moment import/rebuild succeeds for an explicit file-based markdown workflow
+- the saved metadata shape matches the current moment front matter model
+- missing images remain acceptable and the current public `/moments/.../` UI still handles them cleanly
+- current moment runtime contracts remain stable unless a change is documented explicitly
+
+Benefits:
+
+- closes a priority workflow gap without recreating the old orchestration model
+
+Risks:
+
+- moment handling can blur into a second large prose-management project if the first phase is not kept narrow
+
+### Phase 3. Catalogue Workflow And UI Consistency
 
 Scope:
 
@@ -167,7 +226,7 @@ Risks:
 
 - a subjective polish pass can consume time without improving workflow clarity
 
-### Phase 3. Catalogue Activity And Build Reporting
+### Phase 4. Catalogue Activity And Build Reporting
 
 Scope:
 
@@ -199,40 +258,6 @@ Benefits:
 Risks:
 
 - activity surfaces can become noisy if they try to mirror logs too literally
-
-### Phase 4. Moments Create And Import Workflow
-
-Scope:
-
-- add the first functional Studio-backed moments workflow
-- support adding a new moment by specifying a source prose file and associated metadata explicitly
-- support targeted import/rebuild for one moment or a small selected set
-
-Out of scope:
-
-- automatic scanning of moment folders for new or changed content
-- broad redesign of public `/moments/` runtime behavior
-
-Deliverables:
-
-- a moments-focused Studio entry surface
-- create/import flow for a moment based on an explicitly specified file
-- targeted moment validation and rebuild hooks
-- moments status visibility sufficient for draft/published workflow handling
-
-Verification:
-
-- user can add a new moment without relying on the retired automated scanning flow
-- targeted moment import/rebuild succeeds for an explicit file-based workflow
-- current moment runtime contracts remain stable unless a change is documented explicitly
-
-Benefits:
-
-- closes a priority workflow gap without recreating the old orchestration model
-
-Risks:
-
-- moment handling can blur into a second large prose-management project if the first phase is not kept narrow
 
 ### Phase 5. Media And Prose Readiness
 

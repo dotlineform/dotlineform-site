@@ -36,6 +36,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
         <h4>New series</h4>
         <p>Create a series record and establish the series-level metadata boundary.</p>
       </a>
+      <a class="studioCardLink" href="{{ '/studio/catalogue-moment-import/' | relative_url }}">
+        <h4>Import moment</h4>
+        <p>Import one moment from an explicit markdown source file and publish it into the runtime.</p>
+      </a>
       <a class="studioCardLink" href="{{ '/studio/catalogue-status/' | relative_url }}">
         <h4>Catalogue status</h4>
         <p>Review catalogue state, locate records, and move into editing flows.</p>
@@ -76,6 +80,10 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
       <article class="studioInfoCard">
         <h4>Operational checks</h4>
         <p>Use Catalogue Activity and Build Activity as the operational view once source writes or rebuild actions have run.</p>
+      </article>
+      <article class="studioInfoCard">
+        <h4>Moments</h4>
+        <p>Import existing source markdown files one at a time. Missing images are acceptable in this first phase.</p>
       </article>
     </div>
   </section>

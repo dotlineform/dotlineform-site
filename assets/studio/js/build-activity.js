@@ -70,7 +70,8 @@ function renderEntry(config, entry) {
   const sourceLabels = {
     works: "works",
     series: "series",
-    work_details: "work details"
+    work_details: "work details",
+    moments: "moments"
   };
   const workbookLabels = {
     works: "works",

@@ -1,7 +1,7 @@
 ---
 doc_id: studio
 title: Studio
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: ""
 sort_order: 5
 ---
@@ -37,6 +37,7 @@ Read this section in this order:
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**
    - **[Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)**
+   - **[Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)**
    - **[Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)**
    - **[Tag Groups](/docs/?scope=studio&doc=tag-groups)**
    - **[Tag Registry](/docs/?scope=studio&doc=tag-registry)**
@@ -60,6 +61,7 @@ Current workflow/detail routes:
 - `/studio/catalogue-status/`
 - `/studio/catalogue-activity/`
 - `/studio/bulk-add-work/`
+- `/studio/catalogue-moment-import/`
 - `/studio/catalogue-work/?work=<work_id>`
 - `/studio/tag-groups/`
 - `/studio/tag-registry/`

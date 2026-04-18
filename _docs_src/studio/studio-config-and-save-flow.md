@@ -37,7 +37,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_moment_import`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -92,6 +92,8 @@ Current write endpoints include:
 - `http://127.0.0.1:8788/catalogue/work-detail/save`
 - `http://127.0.0.1:8788/catalogue/import-preview`
 - `http://127.0.0.1:8788/catalogue/import-apply`
+- `http://127.0.0.1:8788/catalogue/moment/import-preview`
+- `http://127.0.0.1:8788/catalogue/moment/import-apply`
 - `http://127.0.0.1:8788/catalogue/work-file/create`
 - `http://127.0.0.1:8788/catalogue/work-file/save`
 - `http://127.0.0.1:8788/catalogue/work-file/delete`
@@ -174,6 +176,17 @@ Catalogue workbook import behavior:
 - existing source records are reported as duplicates and skipped
 - blocked workbook rows stop apply until the workbook is fixed
 - the server writes only canonical source JSON and does not write back into Excel
+
+Catalogue moment import behavior:
+
+- the moments page sends `POST /catalogue/moment/import-preview` and `POST /catalogue/moment/import-apply`
+- both endpoints resolve one explicit markdown filename from the canonical moments source folder under `DOTLINEFORM_PROJECTS_BASE_DIR`
+- this phase imports existing source files only; it does not create prose files in Studio
+- preview reads the source front matter, validates the required metadata, and reports current runtime/generated status
+- apply runs a targeted `generate_work_pages.py --only moments --moment-ids ... --write` flow and then rebuilds catalogue search
+- missing source images are allowed in this phase and do not block import
+- apply may update source front matter to published state and preserve or set `published_date` via the generator
+- the page does not edit moment prose or front matter fields directly; source-file editing remains external in this phase
 
 Catalogue work file local save behavior:
 

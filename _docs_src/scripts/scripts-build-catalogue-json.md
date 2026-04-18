@@ -16,6 +16,8 @@ python3 ./scripts/catalogue_json_build.py --work-id 00001
 
 This helper is the Phase 5 JSON-source rebuild entrypoint for a focused work scope.
 
+It also supports a focused moment scope used by the first Studio moments import page.
+
 ## Common Runs
 
 Preview the scoped build:
@@ -36,6 +38,18 @@ Include an additional series when membership changed and the previous series pag
 python3 ./scripts/catalogue_json_build.py --work-id 00001 --extra-series-ids 004 --write
 ```
 
+Preview a single moment import scope:
+
+```bash
+python3 ./scripts/catalogue_json_build.py --moment-file keys.md
+```
+
+Run the moment import scope:
+
+```bash
+python3 ./scripts/catalogue_json_build.py --moment-file keys.md --write
+```
+
 ## Current Behavior
 
 The helper:
@@ -52,16 +66,23 @@ The helper:
   - `recent-index-json`
 - then runs `build_search.rb --scope catalogue`
 
+For `--moment-file`, the helper:
+
+- resolves the canonical source file under `<DOTLINEFORM_PROJECTS_BASE_DIR>/moments/`
+- validates the source markdown filename plus required front matter
+- runs the internal `generate_work_pages.py` engine with `--only moments --moment-ids <moment_id>`
+- then runs `build_search.rb --scope catalogue`
+
 The helper does not:
 
 - copy media
 - build srcset derivatives
 - rebuild unrelated works
-- rebuild moments
+- scan the moments folder for changes
 
 ## Purpose
 
-This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/`.
+This is the command-path companion to the Studio `Save + Rebuild` action on `/studio/catalogue-work/` and the file-driven moments import flow on `/studio/catalogue-moment-import/`.
 
 It keeps Phase 5 narrow:
 
@@ -73,4 +94,5 @@ It keeps Phase 5 narrow:
 
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Build Activity](/docs/?scope=studio&doc=build-activity)
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

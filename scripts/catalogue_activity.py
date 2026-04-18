@@ -97,6 +97,7 @@ def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
             "works": _compact_ids(affected.get("works")),
             "series": _compact_ids(affected.get("series")),
             "work_details": _compact_ids(affected.get("work_details")),
+            "moments": _compact_ids(affected.get("moments")),
         },
         "log_ref": entry.get("log_ref"),
     }

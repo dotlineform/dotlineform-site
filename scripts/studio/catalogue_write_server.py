@@ -79,8 +79,15 @@ from catalogue_source import (  # noqa: E402
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # noqa: E402
-from catalogue_json_build import build_scope_for_work, run_scoped_build  # noqa: E402
-from catalogue_json_build import build_scope_for_series, run_series_scoped_build  # noqa: E402
+from catalogue_json_build import (  # noqa: E402
+    build_scope_for_moment,
+    build_scope_for_series,
+    build_scope_for_work,
+    preview_moment_source,
+    run_moment_scoped_build,
+    run_scoped_build,
+    run_series_scoped_build,
+)
 from catalogue_workbook_import import (  # noqa: E402
     DEFAULT_IMPORT_WORKBOOK_PATH,
     IMPORT_MODE_WORKS,
@@ -113,6 +120,8 @@ SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
+MOMENT_IMPORT_PREVIEW_PATH = "/catalogue/moment/import-preview"
+MOMENT_IMPORT_APPLY_PATH = "/catalogue/moment/import-apply"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
 DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
 DELETE_APPLY_PATH = "/catalogue/delete-apply"
@@ -261,6 +270,14 @@ def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, li
         extra_work_ids.append(slug_id(raw))
     force = bool(body.get("force"))
     return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, force
+
+
+def extract_moment_import_request(body: Mapping[str, Any]) -> tuple[str, bool]:
+    moment_file = str(body.get("moment_file") or body.get("file") or "").strip()
+    if not moment_file:
+        raise ValueError("moment_file is required")
+    force = bool(body.get("force"))
+    return moment_file, force
 
 
 def extract_import_mode(body: Mapping[str, Any]) -> str:
@@ -1089,6 +1106,8 @@ class Handler(BaseHTTPRequestHandler):
             SERIES_CREATE_PATH,
             BUILD_PREVIEW_PATH,
             BUILD_APPLY_PATH,
+            MOMENT_IMPORT_PREVIEW_PATH,
+            MOMENT_IMPORT_APPLY_PATH,
         }:
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"})
             return
@@ -1193,6 +1212,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == BUILD_APPLY_PATH:
                 self._handle_build_apply(allowed)
+                return
+            if self.path == MOMENT_IMPORT_PREVIEW_PATH:
+                self._handle_moment_import_preview(allowed)
+                return
+            if self.path == MOMENT_IMPORT_APPLY_PATH:
+                self._handle_moment_import_apply(allowed)
                 return
             self._send_json(HTTPStatus.NOT_FOUND, {"ok": False, "error": "not found"}, allowed)
         except ValueError as exc:
@@ -2892,6 +2917,101 @@ class Handler(BaseHTTPRequestHandler):
                         "works": list((result.get("scope") or {}).get("work_ids", [])),
                         "series": list((result.get("scope") or {}).get("series_ids", [])),
                         "work_details": [],
+                    },
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _handle_moment_import_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        moment_file, force = extract_moment_import_request(body)
+        preview = preview_moment_source(self.server.repo_root, moment_file)
+        payload: Dict[str, Any] = {
+            "ok": True,
+            "moment_file": preview.get("moment_file") or moment_file,
+            "force": bool(force),
+            "preview": preview,
+        }
+        if preview.get("valid"):
+            scope = build_scope_for_moment(self.server.repo_root, moment_file, force=force)
+            payload["build"] = scope
+            payload["effective_force"] = bool(scope.get("effective_force"))
+        else:
+            payload["effective_force"] = bool(preview.get("effective_force"))
+        self._send_json(HTTPStatus.OK, payload, allowed)
+
+    def _handle_moment_import_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        moment_file, force = extract_moment_import_request(body)
+        preview = preview_moment_source(self.server.repo_root, moment_file)
+        if not preview.get("valid"):
+            errors = preview.get("errors") or []
+            raise ValueError("; ".join(str(error) for error in errors) or "moment import preview failed")
+
+        result = run_moment_scoped_build(
+            self.server.repo_root,
+            moment_file=moment_file,
+            write=not self.server.dry_run,
+            force=force,
+            log_activity=not self.server.dry_run,
+        )
+        scope = result.get("scope") or {}
+        effective_force = bool(scope.get("effective_force")) or bool(force)
+        moment_ids = list(scope.get("moment_ids", []))
+        moment_id = str(moment_ids[0] if moment_ids else preview.get("moment_id") or "").strip().lower()
+        payload: Dict[str, Any] = {
+            "ok": result.get("status") == "completed",
+            "moment_file": preview.get("moment_file") or moment_file,
+            "moment_id": moment_id,
+            "force": bool(force),
+            "effective_force": effective_force,
+            "preview": preview,
+            "build": scope,
+            "steps": result.get("steps", []),
+            "public_url": str(preview.get("public_url") or ""),
+        }
+        if self.server.dry_run:
+            payload["dry_run"] = True
+        if result.get("status") != "completed":
+            if not self.server.dry_run:
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "moment.import_failed"),
+                        "time_utc": now_utc,
+                        "kind": "moment",
+                        "operation": "moment.import",
+                        "status": "failed",
+                        "summary": f"Moment import failed for {moment_id or preview.get('moment_file')}.",
+                        "affected": {
+                            "works": [],
+                            "series": [],
+                            "work_details": [],
+                            "moments": [moment_id] if moment_id else [],
+                        },
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+            payload["error"] = str(result.get("error") or "Scoped moment build failed.")
+            payload["failed_step"] = result.get("failed_step")
+            self._send_json(HTTPStatus.INTERNAL_SERVER_ERROR, payload, allowed)
+            return
+        if not self.server.dry_run:
+            payload["completed_at_utc"] = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(payload["completed_at_utc"], "moment.import"),
+                    "time_utc": payload["completed_at_utc"],
+                    "kind": "moment",
+                    "operation": "moment.import",
+                    "status": "completed",
+                    "summary": f"Moment import completed for {moment_id}.",
+                    "affected": {
+                        "works": [],
+                        "series": [],
+                        "work_details": [],
+                        "moments": [moment_id] if moment_id else [],
                     },
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }

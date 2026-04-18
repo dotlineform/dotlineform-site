@@ -53,7 +53,8 @@ function renderAffected(affected, noneLabel) {
   const labels = {
     works: "works",
     series: "series",
-    work_details: "work details"
+    work_details: "work details",
+    moments: "moments"
   };
   const items = Object.keys(labels).map((key) => `
     <li class="buildActivityEntry__detailItem">

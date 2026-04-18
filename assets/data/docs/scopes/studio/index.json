@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T16:03:04Z",
+  "generated_at": "2026-04-18T17:51:12Z",
   "docs": [
     {
       "scope": "studio",
@@ -16,7 +16,7 @@
       "scope": "studio",
       "doc_id": "studio",
       "title": "Studio",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 5,
       "source_path": "studio/studio.md",
@@ -715,6 +715,17 @@
       "source_path": "studio/tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-moment-import",
+      "title": "Catalogue Moment Import",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 45,
+      "source_path": "studio/catalogue-moment-import.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-import",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-import.json"
     },
     {
       "scope": "studio",
