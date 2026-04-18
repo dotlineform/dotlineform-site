@@ -679,6 +679,21 @@ Risks:
 
 - cleanup can sprawl unless it stays tied to explicit dead paths and boundary simplification
 
+Task list:
+
+1. Inventory the workbook-shaped compatibility code that still remains after Phase 9, and separate it into three buckets: still required for non-live tooling, removable dead path, and code that should move behind a clearer compatibility boundary.
+2. Trace the current responsibilities inside `generate_work_pages.py` and mark which ones are true runtime generation concerns versus transitional glue left over from the workbook-led model.
+3. Remove dead branches that are no longer reachable in the live JSON-led workflow, especially paths that only existed to support the retired temporary-workbook bridge.
+4. Narrow any remaining workbook-oriented helpers so they are only available to the legacy or comparison tooling that still needs them, rather than sitting in the main runtime path by default.
+5. Review the current in-memory compatibility projection introduced in Phase 9 and decide which parts should remain temporarily, which should move into named helper functions, and which can now be replaced by direct record-native logic.
+6. Simplify generator branching where JSON-only runtime behavior is now the real path, so the control flow reads as intentional runtime logic rather than a migration layer that still looks temporary.
+7. Extract or regroup helper functions where that materially clarifies boundaries, for example separating source-record preparation, artifact generation, and non-live compatibility support, without turning this phase into a broad file-splitting exercise.
+8. Remove or tighten comments, variable names, and docstrings that still describe the generator primarily as a workbook-led command when the live rebuild path is now JSON-native and internal.
+9. Keep the retained public/runtime output contract fixed while cleaning up internals, and treat any output drift as a regression unless it is clearly explained and accepted.
+10. Re-run representative scoped builds for work, series, detail, and moment cases after each cleanup slice, so artifact stability is checked continuously rather than only at the end.
+11. Document the remaining non-live compatibility layer explicitly once cleanup is done, so future maintenance can see what still exists for import/comparison reasons and what is now truly retired.
+12. Update the plan/docs trail to describe the post-cleanup generator boundary clearly, including what still belongs in Phase 10 and what future work is no longer needed because the half-transitioned generator state has been resolved.
+
 ### Phase 11. End-To-End Testing Checklist And Execution Prep
 
 Scope:
