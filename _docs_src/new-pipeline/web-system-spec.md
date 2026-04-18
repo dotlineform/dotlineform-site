@@ -65,9 +65,13 @@ Recommended route progression:
 - `/studio/catalogue/work/?work=<work_id>`
   - work metadata editor
   - first implementation target
+- `/studio/catalogue/new-work/`
+  - draft work creation
 - `/studio/catalogue/work-detail/?detail=<detail_uid>`
   - work detail metadata editor
   - can also be opened from the work editor
+- `/studio/catalogue/new-work-detail/?work=<work_id>`
+  - draft detail creation under a selected work
 - `/studio/catalogue/series/?series=<series_id>`
   - series metadata and membership editor
 - `/studio/catalogue/new-series/`

@@ -25,14 +25,16 @@ Script:
 Exposed endpoints:
 
 - `GET /health`
+- `POST /catalogue/work/create`
 - `POST /catalogue/work/save`
+- `POST /catalogue/work-detail/create`
 - `POST /catalogue/work-detail/save`
 - `POST /catalogue/series/create`
 - `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation saves existing work records, work detail records, and series records in canonical catalogue source JSON, can create draft series records, and can run a scoped JSON-source rebuild for one work or one series scope. It does not create works, write prose files, or write media files.
+The current implementation can create draft work, work-detail, and series records, saves existing work/work-detail/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files or write media files.
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 
@@ -71,6 +73,29 @@ Successful responses include:
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
+`POST /catalogue/work/create` expects:
+
+```json
+{
+  "work_id": "01942",
+  "record": {
+    "title": "New draft work",
+    "status": "draft",
+    "series_ids": ["009"],
+    "project_folder": "2026/new-work",
+    "project_filename": "new-work.jpg"
+  }
+}
+```
+
+Request behavior:
+
+- `work_id` must not already exist
+- blank or missing `status` is normalized to `draft`
+- `title` is required
+- `series_ids` may be an array or comma-separated value
+- media/prose path fields are stored as source metadata only; the server does not copy media files
+
 `POST /catalogue/work-detail/save` expects:
 
 ```json
@@ -96,6 +121,29 @@ Request behavior:
 - `record.detail_uid`, `record.work_id`, and `record.detail_id` must remain consistent with the target record
 - the parent `work_id` must exist in canonical source JSON
 - `expected_record_hash`, when provided, must match the current stored detail hash or the server returns `409 Conflict`
+
+`POST /catalogue/work-detail/create` expects:
+
+```json
+{
+  "work_id": "01942",
+  "detail_id": "001",
+  "record": {
+    "title": "Detail title",
+    "project_subfolder": "details",
+    "project_filename": "detail-001.jpg",
+    "status": "draft"
+  }
+}
+```
+
+Request behavior:
+
+- parent `work_id` must already exist
+- `detail_id` must be unique within that work
+- blank or missing `status` is normalized to `draft`
+- `title` is required
+- the server derives and validates the normalized `detail_uid`
 
 `POST /catalogue/series/save` expects:
 

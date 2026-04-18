@@ -427,11 +427,13 @@ Work:
 - leave source media placement unchanged
 - show media filename/path expectations instead of uploading media
 - keep this phase scoped to single-record creation in Studio; do not assume bulk-add via web UI
+- implement the first increment as narrow draft-create pages that redirect into the existing work and detail editors after save
 
 Acceptance:
 
 - user can create a draft work record
 - user can create draft detail records for a work
+- the work editor provides a direct entry point into detail creation for the current work
 - media scripts can still copy and derive images using the same source path conventions
 
 Benefits:

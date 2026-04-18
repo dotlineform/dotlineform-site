@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-17T22:29:08Z",
+  "generated_at": "2026-04-18T09:15:30Z",
   "docs": [
     {
       "scope": "studio",
@@ -476,6 +476,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-new-work-editor",
+      "title": "New Catalogue Work",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 34,
+      "source_path": "studio/catalogue-new-work-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "build-activity",
       "title": "Build Activity",
       "last_updated": "2026-04-17",
@@ -517,6 +528,17 @@
       "source_path": "llm/llm.md",
       "viewer_url": "/docs/?scope=studio&doc=llm",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-new-work-detail-editor",
+      "title": "New Catalogue Work Detail",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 35,
+      "source_path": "studio/catalogue-new-work-detail-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-detail-editor.json"
     },
     {
       "scope": "studio",

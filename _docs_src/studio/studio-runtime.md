@@ -37,7 +37,9 @@ Current route inventory:
 
 - `studio/index.md`
 - `studio/build-activity/index.md`
+- `studio/catalogue-new-work/index.md`
 - `studio/catalogue-work/index.md`
+- `studio/catalogue-new-work-detail/index.md`
 - `studio/catalogue-work-detail/index.md`
 - `studio/catalogue-series/index.md`
 - `studio/catalogue-new-series/index.md`
@@ -53,7 +55,9 @@ Current page-level doc links:
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
+- New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
+- New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
 - New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
@@ -76,7 +80,9 @@ Shared Studio runtime and wiring currently live in:
 Current page controllers:
 
 - `assets/studio/js/build-activity.js`
+- `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`

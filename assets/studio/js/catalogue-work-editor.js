@@ -511,6 +511,10 @@ function updateSummary(state) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+  if (state.newDetailLinkNode) {
+    const base = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
+    state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+  }
   updateDetailSections(state);
 }
 
@@ -865,6 +869,7 @@ async function init() {
   const runtimeStateNode = document.getElementById("catalogueWorkRuntimeState");
   const buildImpactNode = document.getElementById("catalogueWorkBuildImpact");
   const detailsHeadingNode = document.getElementById("catalogueWorkDetailsHeading");
+  const newDetailLinkNode = document.getElementById("catalogueWorkNewDetailLink");
   const detailSearchNode = document.getElementById("catalogueWorkDetailSearch");
   const detailsMetaNode = document.getElementById("catalogueWorkDetailsMeta");
   const detailsResultsNode = document.getElementById("catalogueWorkDetailsResults");
@@ -880,7 +885,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -920,6 +925,7 @@ async function init() {
     detailSearchNode,
     detailsMetaNode,
     detailsResultsNode,
+    newDetailLinkNode,
     metaNode
   };
 
@@ -931,6 +937,7 @@ async function init() {
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find work by id");
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
+    newDetailLinkNode.textContent = t(state, "details_new_button", "New Detail");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");

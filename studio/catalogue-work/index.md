@@ -59,6 +59,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
+      <a class="tagStudio__button" id="catalogueWorkNewDetailLink" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}">New Detail</a>
       <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">
         <label class="visually-hidden" for="catalogueWorkDetailSearch">Find detail by id</label>
         <input

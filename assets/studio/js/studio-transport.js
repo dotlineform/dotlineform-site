@@ -16,7 +16,9 @@ const STUDIO_WRITE_ENDPOINTS = Object.freeze({
 });
 
 const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
+  createWork: "http://127.0.0.1:8788/catalogue/work/create",
   saveWork: "http://127.0.0.1:8788/catalogue/work/save",
+  createWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/create",
   saveWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/save",
   createSeries: "http://127.0.0.1:8788/catalogue/series/create",
   saveSeries: "http://127.0.0.1:8788/catalogue/series/save",

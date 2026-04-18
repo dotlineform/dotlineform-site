@@ -28,6 +28,7 @@ The first implementation covers:
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
+- provide a direct `New Detail` entry point for the current work
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
