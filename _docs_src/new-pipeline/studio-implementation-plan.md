@@ -525,6 +525,23 @@ Risks:
 
 - broad or implicit automation could recreate the confusion of the retired orchestrator
 
+Task list:
+
+1. Define one explicit local media pipeline boundary for this phase, covering only repo-local derivative generation for works and work details, and leaving R2 primary-image handling out of scope.
+2. Document the exact input/output contract for that local media pipeline: source image path from catalogue metadata, generated derivative set, destination repo paths, naming rules, and what counts as success, no-op, or failure.
+3. Decide whether derivative generation should run automatically as part of scoped rebuilds, full catalogue rebuilds, or both, and make that trigger rule explicit before implementing any UI.
+4. Replace the old staging-folder expectation with a direct generation flow into the repo-managed derivative locations where that is safe, so the retired manual copy/check step is no longer part of the active workflow.
+5. Review the current derivative conventions already assumed by the public site and Studio previews, including thumb sizes, srcset variants, suffixes, and work-detail handling, and treat those as the initial compatibility target.
+6. Define how work and detail records signal media-generation eligibility, including what minimum metadata and source-file conditions must be present before automatic derivative generation should run.
+7. Extend the backend build path so local derivative generation can be invoked as a bounded sub-step of the existing rebuild flow rather than as a separate opaque orchestration layer.
+8. Add explicit result reporting for that media-generation sub-step, including generated outputs, no-op outcomes, missing-source cases, and failures, so Build Activity can report media work clearly.
+9. Update media readiness logic so it can distinguish between `ready because derivatives exist`, `pending because generation has not yet run`, and `blocked because required source inputs are missing`.
+10. Decide whether any lightweight Studio action is still needed for exceptional cases, such as a manual rerun of local derivative generation for one work or one detail, without making that the default path.
+11. Confirm that derivative generation for works and work details follows the same operational pattern where possible, while still allowing detail-specific output paths and naming.
+12. Review whether generated thumbnails and other local derivatives should be written directly into their final repo locations during build, with no extra staging area or post-build copy step.
+13. Add verification coverage for media generation outcomes, including a normal generated case, a no-op rebuild where assets are already current, and a blocked case where source media is missing.
+14. Run a final UX pass across Build Activity and readiness surfaces so automatic local media generation is visible and understandable without reintroducing the hidden complexity of the old pipeline.
+
 ### Phase 9. Internal Generator Refactor
 
 Scope:
