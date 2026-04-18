@@ -114,6 +114,16 @@
       ]
     }
   ],
+  "work_files": [
+    {
+      "file_uid": "00160:mouse-story",
+      "work_id": "00160",
+      "filename": "mouse story.pdf",
+      "label": "mouse story.pdf",
+      "status": "published"
+    }
+  ],
+  "work_links": [],
   "series_summary": [
     {
       "series_id": "104",

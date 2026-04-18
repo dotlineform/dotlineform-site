@@ -31,6 +31,16 @@
   },
   "record_hash": "83c177159b1ebb9525df2609b7b1d51f6f30d5d01592b527dafe8f22efde1206",
   "detail_sections": [],
+  "work_files": [],
+  "work_links": [
+    {
+      "link_uid": "01250:bandcamp",
+      "work_id": "01250",
+      "url": "https://dotlineform.bandcamp.com/album/genetic",
+      "label": "Bandcamp",
+      "status": "published"
+    }
+  ],
   "series_summary": [
     {
       "series_id": "069",
