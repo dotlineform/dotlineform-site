@@ -218,6 +218,22 @@ Verification:
 - user can move between Catalogue status, activity, create, edit, bulk edit, and build actions without unclear route jumps
 - key Catalogue pages follow the shared Studio UI patterns documented in **[Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)**
 
+Notes:
+
+On Catalogue dashboard, use a grouped vertical stack of links rather than panels as the links to pages. The links should be directional: e.g. Edit Work, Create New Work
+check all the pages are navigable from dashboard e.g. /studio/catalogue-work/
+
+UI elements should mirror existing site pages rather than introduce new patterns:
+
+- metadata input boxes should be vertically stacked in a single column with labels to the left
+- guidance notes should be centralised in a single panel where possible. obvious signposts to other pages should be links and not plain text
+- lists should be minimal and by default fill content width, allowing new columns to be added easily
+- lists are by default sortable by clicking headers
+- items are only formatted as pills when the pill serves a recognisable purpose (e.g. colour coding, is clickable)
+- buttons should all have same style and height
+- text boxes should all be same height except for obvious candidates where expandability is useful e.g. ‘notes’
+
+
 Benefits:
 
 - lowers day-to-day operator friction
