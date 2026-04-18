@@ -18,11 +18,6 @@ layout: default
       </a>
     {% endif %}
   </div>
-  {% assign section_key = page.section | default: '' %}
-  {% assign studio_domain_key = page.studio_domain | default: '' %}
-  {% if studio_domain_key == 'catalogue' or section_key contains 'catalogue' or section_key == 'bulk-add-work' or section_key == 'build-activity' or section_key == 'studio-works' %}
-    {% include catalogue_page_links.html %}
-  {% endif %}
   <div class="studio__content">
     {{ content }}
   </div>

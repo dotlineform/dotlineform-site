@@ -34,12 +34,12 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Create draft records and import new source content.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work/' | relative_url }}"><span class="studioLinkList__title">Create New Work</span><span class="studioLinkList__meta">Create a draft work record in the JSON catalogue pipeline.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span><span class="studioLinkList__meta">Create a series record and establish the series-level metadata boundary.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}"><span class="studioLinkList__title">Create New Detail</span><span class="studioLinkList__meta">Create a new work detail record for an existing work.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}"><span class="studioLinkList__title">Create New File</span><span class="studioLinkList__meta">Create a new downloadable file record for an existing work.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}"><span class="studioLinkList__title">Create New Link</span><span class="studioLinkList__meta">Create a new published link record for an existing work.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span><span class="studioLinkList__meta">Import one moment from an explicit markdown source file and publish it into the runtime.</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work/' | relative_url }}"><span class="studioLinkList__title">Create New Work</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-series/' | relative_url }}"><span class="studioLinkList__title">Create New Series</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}"><span class="studioLinkList__title">Create New Detail</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}"><span class="studioLinkList__title">Create New File</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}"><span class="studioLinkList__title">Create New Link</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-moment-import/' | relative_url }}"><span class="studioLinkList__title">Import Moment</span></a></li>
         </ul>
       </section>
       <section class="studioLinkGroup">
@@ -48,11 +48,11 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Open an editor route, then search for the record you need.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Edit Work</span><span class="studioLinkList__meta">Search by work id and open a single-work metadata editor.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span><span class="studioLinkList__meta">Search by series title and manage metadata plus member works.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span><span class="studioLinkList__meta">Search by detail id and open a single-detail metadata editor.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-file/' | relative_url }}"><span class="studioLinkList__title">Edit Work File</span><span class="studioLinkList__meta">Search by file id and edit one work-file record.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-link/' | relative_url }}"><span class="studioLinkList__title">Edit Work Link</span><span class="studioLinkList__meta">Search by link id and edit one work-link record.</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work/' | relative_url }}"><span class="studioLinkList__title">Edit Work</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-series/' | relative_url }}"><span class="studioLinkList__title">Edit Series</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-detail/' | relative_url }}"><span class="studioLinkList__title">Edit Work Detail</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-file/' | relative_url }}"><span class="studioLinkList__title">Edit Work File</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-work-link/' | relative_url }}"><span class="studioLinkList__title">Edit Work Link</span></a></li>
         </ul>
       </section>
       <section class="studioLinkGroup">
@@ -61,11 +61,11 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Use review pages to find draft records, inspect activity, and follow rebuild effects.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}"><span class="studioLinkList__title">Review Catalogue Status</span><span class="studioLinkList__meta">Inspect non-published source records and jump into the matching editor routes.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-activity/' | relative_url }}"><span class="studioLinkList__title">Review Source Activity</span><span class="studioLinkList__meta">Inspect recent source changes and follow up on affected records.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/build-activity/' | relative_url }}"><span class="studioLinkList__title">Review Build Activity</span><span class="studioLinkList__meta">Review rebuild outcomes and confirm which generated outputs changed.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/studio-works/' | relative_url }}"><span class="studioLinkList__title">Open Works View</span><span class="studioLinkList__meta">Review the current works index and jump into portfolio-specific checks.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/studio/bulk-add-work/' | relative_url }}"><span class="studioLinkList__title">Run Bulk Add Work</span><span class="studioLinkList__meta">Stage or import batches where a single-record flow is too slow.</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-status/' | relative_url }}"><span class="studioLinkList__title">Review Catalogue Status</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/catalogue-activity/' | relative_url }}"><span class="studioLinkList__title">Review Source Activity</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/build-activity/' | relative_url }}"><span class="studioLinkList__title">Review Build Activity</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/studio-works/' | relative_url }}"><span class="studioLinkList__title">Open Works View</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/studio/bulk-add-work/' | relative_url }}"><span class="studioLinkList__title">Run Bulk Add Work</span></a></li>
         </ul>
       </section>
       <section class="studioLinkGroup">
@@ -74,9 +74,9 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
           <p>Docs support the workflow, but the dashboard should remain the primary entry surface.</p>
         </div>
         <ul class="studioLinkList">
-          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan' | relative_url }}"><span class="studioLinkList__title">Studio Implementation Plan</span><span class="studioLinkList__meta">Current phased plan for Studio shell, Catalogue refinement, moments, and later workstreams.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=scripts-main-pipeline' | relative_url }}"><span class="studioLinkList__title">Main Pipeline</span><span class="studioLinkList__meta">Reference for the current pipeline stages and the script boundaries they rely on.</span></a></li>
-          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=studio' | relative_url }}"><span class="studioLinkList__title">Studio Docs</span><span class="studioLinkList__meta">Shared Studio runtime, UI, and implementation notes.</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan' | relative_url }}"><span class="studioLinkList__title">Studio Implementation Plan</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=scripts-main-pipeline' | relative_url }}"><span class="studioLinkList__title">Main Pipeline</span></a></li>
+          <li><a class="studioLinkList__item" href="{{ '/docs/?scope=studio&doc=studio' | relative_url }}"><span class="studioLinkList__title">Studio Docs</span></a></li>
         </ul>
       </section>
     </div>
