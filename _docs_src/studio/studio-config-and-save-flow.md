@@ -83,6 +83,8 @@ Current write endpoints include:
 - `/promote-tag-alias-preview`
 - `http://127.0.0.1:8788/health`
 - `http://127.0.0.1:8788/catalogue/bulk-save`
+- `http://127.0.0.1:8788/catalogue/delete-preview`
+- `http://127.0.0.1:8788/catalogue/delete-apply`
 - `http://127.0.0.1:8788/catalogue/work/create`
 - `http://127.0.0.1:8788/catalogue/work/save`
 - `http://127.0.0.1:8788/catalogue/work-detail/create`
@@ -138,6 +140,9 @@ Catalogue editor local save behavior:
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
 - bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, and optional series membership operations
 - bulk work rebuild remains a follow-on sequence of scoped work rebuilds rather than a separate bulk build pipeline
+- single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
+- work delete removes the selected work plus dependent detail/file/link source records
+- work delete is disabled while the work editor is in bulk mode
 
 Catalogue work detail local save behavior:
 
@@ -147,6 +152,8 @@ Catalogue work detail local save behavior:
 - the server writes `work_details.json` only after full-source validation succeeds
 - bulk mode on the same page sends `POST /catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, and the touched field updates
 - bulk detail rebuild remains a follow-on sequence of scoped parent-work rebuilds
+- single-record mode on the same page can also request `POST /catalogue/delete-preview` and `POST /catalogue/delete-apply`
+- work-detail delete is disabled while the detail editor is in bulk mode
 
 Catalogue workbook import behavior:
 
@@ -184,6 +191,7 @@ Catalogue series local save behavior:
 - the request includes the current `series_id`, a browser-computed series record hash, the normalized series patch, and only the changed work membership rows
 - work membership writes preserve the edited `series_ids` order for each changed work
 - the server validates `primary_work_id` membership and then writes `series.json` plus affected `works.json` atomically
+- the same page can also request delete preview/apply for one series record
 
 Catalogue scoped rebuild behavior:
 

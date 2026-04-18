@@ -478,6 +478,7 @@ function updateEditorState(state) {
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
+  state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
 }
 
 function onFieldInput(state, fieldKey) {
@@ -694,6 +695,53 @@ async function buildCurrentSeries(state) {
   }
 }
 
+async function deleteCurrentSeries(state) {
+  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
+  state.isDeleting = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "delete_status_running", "Preparing delete preview…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const previewResponse = await postJson(CATALOGUE_WRITE_ENDPOINTS.deletePreview, {
+      kind: "series",
+      series_id: state.currentSeriesId,
+      expected_record_hash: state.currentRecordHash
+    });
+    const preview = previewResponse && previewResponse.preview ? previewResponse.preview : null;
+    const blockers = Array.isArray(preview && preview.blockers) ? preview.blockers : [];
+    const validationErrors = Array.isArray(preview && preview.validation_errors) ? preview.validation_errors : [];
+    if ((preview && preview.blocked) || blockers.length || validationErrors.length) {
+      const message = blockers[0] || validationErrors[0] || t(state, "delete_status_blocked", "Delete is blocked.");
+      setTextWithState(state.statusNode, message, "error");
+      state.isDeleting = false;
+      updateEditorState(state);
+      return;
+    }
+    const summary = normalizeText(preview && preview.summary) || t(state, "delete_confirm_default", "Delete this source record?");
+    if (!window.confirm(summary)) {
+      setTextWithState(state.statusNode, t(state, "delete_status_cancelled", "Delete cancelled."));
+      state.isDeleting = false;
+      updateEditorState(state);
+      return;
+    }
+    setTextWithState(state.statusNode, t(state, "delete_status_running", "Deleting source record…"));
+    await postJson(CATALOGUE_WRITE_ENDPOINTS.deleteApply, {
+      kind: "series",
+      series_id: state.currentSeriesId,
+      expected_record_hash: state.currentRecordHash
+    });
+    const route = getStudioRoute(state.config, "catalogue_status");
+    window.location.assign(route);
+  } catch (error) {
+    const message = Number(error && error.status) === 409
+      ? t(state, "delete_status_conflict", "Source record changed since this page loaded. Reload before deleting again.")
+      : `${t(state, "delete_status_failed", "Source delete failed.")} ${normalizeText(error && error.message)}`.trim();
+    setTextWithState(state.statusNode, message, "error");
+    state.isDeleting = false;
+    updateEditorState(state);
+  }
+}
+
 async function saveAndBuildCurrentSeries(state) {
   if (!state.currentRecord) return;
   if (draftHasChanges(state)) {
@@ -747,6 +795,7 @@ async function init() {
   const openButton = document.getElementById("catalogueSeriesOpen");
   const saveButton = document.getElementById("catalogueSeriesSave");
   const buildButton = document.getElementById("catalogueSeriesBuild");
+  const deleteButton = document.getElementById("catalogueSeriesDelete");
   const saveModeNode = document.getElementById("catalogueSeriesSaveMode");
   const contextNode = document.getElementById("catalogueSeriesContext");
   const statusNode = document.getElementById("catalogueSeriesStatus");
@@ -760,7 +809,7 @@ async function init() {
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
@@ -780,6 +829,7 @@ async function init() {
     buildPreview: null,
     isSaving: false,
     isBuilding: false,
+    isDeleting: false,
     serverAvailable: false,
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
@@ -791,6 +841,7 @@ async function init() {
     popupListNode,
     saveButton,
     buildButton,
+    deleteButton,
     saveModeNode,
     contextNode,
     statusNode,
@@ -817,6 +868,7 @@ async function init() {
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
+    deleteButton.textContent = t(state, "delete_button", "Delete Source");
     membersHeadingNode.textContent = t(state, "members_heading", "member works");
     memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
     memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
@@ -885,6 +937,7 @@ async function init() {
     });
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
     buildButton.addEventListener("click", () => saveAndBuildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));
+    deleteButton.addEventListener("click", () => deleteCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected delete failure", error)));
     memberSearchNode.addEventListener("input", () => updateMemberList(state));
     memberAddButton.addEventListener("click", () => addWorkToSeries(state));
     memberAddNode.addEventListener("keydown", (event) => {

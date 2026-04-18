@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-series-editor
 title: Catalogue Series Editor
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 36
 ---
@@ -32,6 +32,7 @@ The first implementation covers:
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
 - preview the scoped rebuild impact for the current series
 - run `Save + Rebuild` through the local catalogue service
+- delete one series source record and remove its membership from affected works
 
 Draft/publish rule:
 
@@ -60,6 +61,13 @@ Current save/rebuild flow:
 6. the page reloads its focused series lookup payload
 7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works
 8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON
+
+Delete flow:
+
+1. page requests `POST /catalogue/delete-preview`
+2. preview reports affected member works and any validation blockers
+3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+4. the server deletes the series source record and removes that `series_id` from affected work records in one atomic write bundle
 
 ## Related References
 

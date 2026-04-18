@@ -41,6 +41,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
         <div class="catalogueWorkPage__actions">
           <button type="button" class="tagStudio__button" id="catalogueSeriesSave">Save Source</button>
           <button type="button" class="tagStudio__button" id="catalogueSeriesBuild">Save + Rebuild</button>
+          <button type="button" class="tagStudio__button" id="catalogueSeriesDelete">Delete Source</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueSeriesMeta"></p>

@@ -598,7 +598,8 @@ Goal:
 Work:
 
 - add delete preview and apply endpoints for works, work details, and series
-- add focused Studio delete pages or modal flows for each record type
+- add delete buttons to the work, work-detail, and series editor pages
+- keep work and work-detail delete disabled while those pages are in bulk-edit mode
 - validate dependent impacts before delete apply
 - make work delete preview include dependent details, files, links, generated outputs, and series-primary impacts
 - make series delete preview include member work impacts and primary-work consequences

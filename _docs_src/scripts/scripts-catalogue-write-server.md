@@ -26,6 +26,8 @@ Exposed endpoints:
 
 - `GET /health`
 - `POST /catalogue/bulk-save`
+- `POST /catalogue/delete-preview`
+- `POST /catalogue/delete-apply`
 - `POST /catalogue/work/create`
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/create`
@@ -78,6 +80,47 @@ Request behavior:
 - work bulk `series_operation.mode` may be `replace` or `add_remove`
 - the server validates the combined source write before writing the canonical JSON file once
 - successful response includes changed counts, changed ids, normalized changed records, and rebuild targets
+
+`POST /catalogue/delete-preview` expects:
+
+```json
+{
+  "kind": "work",
+  "work_id": "00002"
+}
+```
+
+or:
+
+```json
+{
+  "kind": "work_detail",
+  "detail_uid": "00001-001"
+}
+```
+
+or:
+
+```json
+{
+  "kind": "series",
+  "series_id": "026"
+}
+```
+
+Request behavior:
+
+- returns a delete summary, affected records, blockers, and validation errors
+- work delete preview includes dependent detail/file/link source records
+- work delete blocks when the work is still used as `primary_work_id` by a series
+- series delete preview includes affected member works
+
+`POST /catalogue/delete-apply` accepts the same shape plus optional `expected_record_hash` and then:
+
+- re-runs delete preview and blocks when preview is not clean
+- writes the canonical source JSON files needed for that delete
+- refreshes derived lookup payloads after non-dry-run writes
+- records one aggregated Catalogue Activity entry for the delete operation
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 

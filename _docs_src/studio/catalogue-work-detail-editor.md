@@ -30,6 +30,7 @@ The first implementation covers:
 - show read-only fields for ids, published date, and dimensions
 - preview the scoped rebuild impact for the parent work
 - run `Save + Rebuild` through the local catalogue service
+- delete one work-detail source record in single-record mode
 
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
 
@@ -47,6 +48,7 @@ Current bulk-edit behavior:
 - untouched fields preserve per-record values
 - an empty touched field clears that field across the selected details
 - `Save + Rebuild` runs one scoped parent-work rebuild per affected parent work
+- delete is disabled in bulk mode
 
 ## Save Boundary
 
@@ -69,6 +71,12 @@ Bulk save flow:
 3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, and the touched field updates
 4. the local write server validates the combined source write, writes `work_details.json` once, refreshes lookup payloads, and returns changed counts plus parent-work rebuild targets
 5. `Save + Rebuild` then runs one scoped rebuild per affected parent work
+
+Delete flow:
+
+1. single-record mode requests `POST /catalogue/delete-preview`
+2. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+3. the server deletes the detail source record and the page returns to the parent work editor
 
 ## Current Editable Fields
 

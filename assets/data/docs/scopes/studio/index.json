@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T10:51:25Z",
+  "generated_at": "2026-04-18T11:09:15Z",
   "docs": [
     {
       "scope": "studio",
@@ -555,7 +555,7 @@
       "scope": "studio",
       "doc_id": "catalogue-series-editor",
       "title": "Catalogue Series Editor",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 36,
       "source_path": "studio/catalogue-series-editor.md",

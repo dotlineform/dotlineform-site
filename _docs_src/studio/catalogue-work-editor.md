@@ -40,6 +40,7 @@ The first implementation covers:
 - save source JSON only
 - preview the scoped rebuild impact for the current work
 - run `Save + Rebuild` through the local catalogue service
+- delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
 
 It does not yet:
@@ -69,6 +70,7 @@ Current bulk-edit behavior:
 - `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
 - detail, file, and link sections are hidden while bulk mode is active
 - `Save + Rebuild` runs one scoped work rebuild per affected work scope after the bulk source save
+- delete is disabled in bulk mode
 
 ## Save Boundary
 
@@ -92,6 +94,13 @@ Bulk save flow:
 4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, and optional series membership operations
 5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus rebuild targets
 6. `Save + Rebuild` then runs one scoped work rebuild per affected work target
+
+Delete flow:
+
+1. single-record mode requests `POST /catalogue/delete-preview`
+2. the server returns blockers, validation errors, and dependent source-record impact
+3. if preview is clean, the page confirms and sends `POST /catalogue/delete-apply`
+4. the server deletes the work plus dependent detail/file/link source records in one atomic write bundle
 
 The current rebuild scope is intentionally narrow:
 

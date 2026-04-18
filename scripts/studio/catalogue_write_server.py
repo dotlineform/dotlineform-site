@@ -11,6 +11,8 @@ Run:
 Endpoints:
   GET /health
   POST /catalogue/bulk-save
+  POST /catalogue/delete-preview
+  POST /catalogue/delete-apply
   POST /catalogue/work/create
   POST /catalogue/work/save
   POST /catalogue/work-detail/create
@@ -112,6 +114,8 @@ SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
 BULK_SAVE_PATH = "/catalogue/bulk-save"
+DELETE_PREVIEW_PATH = "/catalogue/delete-preview"
+DELETE_APPLY_PATH = "/catalogue/delete-apply"
 
 BULK_WORK_EDITABLE_FIELDS = {
     "status",
@@ -327,6 +331,25 @@ def extract_bulk_save_request(body: Mapping[str, Any]) -> Dict[str, Any]:
         "expected_record_hashes": expected_hashes,
         "set_fields": set_fields,
         "series_operation": series_operation,
+    }
+
+
+def extract_delete_request(body: Mapping[str, Any]) -> Dict[str, str]:
+    kind = str(body.get("kind") or "").strip().lower()
+    if kind not in {"work", "work_detail", "series"}:
+        raise ValueError("delete kind must be work, work_detail, or series")
+
+    if kind == "work":
+        record_id = slug_id(body.get("work_id") or body.get("id"))
+    elif kind == "work_detail":
+        record_id = normalize_detail_uid_value(body.get("detail_uid") or body.get("id"))
+    else:
+        record_id = normalize_series_id(body.get("series_id") or body.get("id"))
+    expected_record_hash = str(body.get("expected_record_hash") or "").strip()
+    return {
+        "kind": kind,
+        "id": record_id,
+        "expected_record_hash": expected_record_hash,
     }
 
 
@@ -567,6 +590,184 @@ def apply_work_bulk_series_operation(
         seen.add(series_id)
         next_series_ids.append(series_id)
     return next_series_ids
+
+
+def preview_work_delete(source_dir: Path, work_id: str) -> Dict[str, Any]:
+    source_records = records_from_json_source(source_dir)
+    work_record = source_records.works.get(work_id)
+    if not isinstance(work_record, dict):
+        raise ValueError(f"work_id not found: {work_id}")
+
+    dependent_detail_ids = sorted(
+        detail_uid
+        for detail_uid, detail_record in source_records.work_details.items()
+        if str(detail_record.get("work_id") or "") == work_id
+    )
+    dependent_file_ids = sorted(
+        file_uid
+        for file_uid, file_record in source_records.work_files.items()
+        if str(file_record.get("work_id") or "") == work_id
+    )
+    dependent_link_ids = sorted(
+        link_uid
+        for link_uid, link_record in source_records.work_links.items()
+        if str(link_record.get("work_id") or "") == work_id
+    )
+    primary_series_ids = sorted(
+        series_id
+        for series_id, series_record in source_records.series.items()
+        if str(series_record.get("primary_work_id") or "") == work_id
+    )
+    blockers: list[str] = []
+    if primary_series_ids:
+        blockers.append(
+            "Work is primary_work_id for series: " + ", ".join(primary_series_ids) + ". Reassign those series before deleting the work."
+        )
+    return {
+        "kind": "work",
+        "id": work_id,
+        "record": work_record,
+        "blockers": blockers,
+        "affected": {
+            "works": [work_id],
+            "series": normalize_series_ids_value(work_record.get("series_ids")),
+            "work_details": dependent_detail_ids,
+            "work_files": dependent_file_ids,
+            "work_links": dependent_link_ids,
+        },
+        "summary": f"Delete work {work_id}, {len(dependent_detail_ids)} detail record(s), {len(dependent_file_ids)} file record(s), and {len(dependent_link_ids)} link record(s).",
+    }
+
+
+def preview_work_detail_delete(source_dir: Path, detail_uid: str) -> Dict[str, Any]:
+    source_records = records_from_json_source(source_dir)
+    detail_record = source_records.work_details.get(detail_uid)
+    if not isinstance(detail_record, dict):
+        raise ValueError(f"detail_uid not found: {detail_uid}")
+    work_id = str(detail_record.get("work_id") or "")
+    return {
+        "kind": "work_detail",
+        "id": detail_uid,
+        "record": detail_record,
+        "blockers": [],
+        "affected": {
+            "works": [work_id] if work_id else [],
+            "series": [],
+            "work_details": [detail_uid],
+            "work_files": [],
+            "work_links": [],
+        },
+        "summary": f"Delete work detail {detail_uid}.",
+    }
+
+
+def preview_series_delete(source_dir: Path, series_id: str) -> Dict[str, Any]:
+    source_records = records_from_json_source(source_dir)
+    series_record = source_records.series.get(series_id)
+    if not isinstance(series_record, dict):
+        raise ValueError(f"series_id not found: {series_id}")
+    member_work_ids = sorted(
+        work_id
+        for work_id, work_record in source_records.works.items()
+        if series_id in normalize_series_ids_value(work_record.get("series_ids"))
+    )
+    return {
+        "kind": "series",
+        "id": series_id,
+        "record": series_record,
+        "blockers": [],
+        "affected": {
+            "works": member_work_ids,
+            "series": [series_id],
+            "work_details": [],
+            "work_files": [],
+            "work_links": [],
+        },
+        "summary": f"Delete series {series_id} and remove it from {len(member_work_ids)} member work record(s).",
+    }
+
+
+def validate_work_delete_records(source_dir: Path, work_id: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    updated_works = dict(source_records.works)
+    updated_works.pop(work_id, None)
+    updated_work_details = {
+        detail_uid: detail_record
+        for detail_uid, detail_record in source_records.work_details.items()
+        if str(detail_record.get("work_id") or "") != work_id
+    }
+    updated_work_files = {
+        file_uid: file_record
+        for file_uid, file_record in source_records.work_files.items()
+        if str(file_record.get("work_id") or "") != work_id
+    }
+    updated_work_links = {
+        link_uid: link_record
+        for link_uid, link_record in source_records.work_links.items()
+        if str(link_record.get("work_id") or "") != work_id
+    }
+    normalized_records = CatalogueSourceRecords(
+        works=sort_record_map(updated_works),
+        work_details=sort_record_map(updated_work_details),
+        series=sort_record_map(source_records.series),
+        work_files=sort_record_map(updated_work_files),
+        work_links=sort_record_map(updated_work_links),
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_work_detail_delete_records(source_dir: Path, detail_uid: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_details.pop(detail_uid, None)
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=sort_record_map(source_records.work_details),
+        series=source_records.series,
+        work_files=source_records.work_files,
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_series_delete_records(source_dir: Path, series_id: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.series.pop(series_id, None)
+    updated_works: Dict[str, Dict[str, Any]] = {}
+    for work_id, work_record in source_records.works.items():
+        current_series_ids = normalize_series_ids_value(work_record.get("series_ids"))
+        if series_id not in current_series_ids:
+            continue
+        updated_works[work_id] = normalize_work_update(
+            work_id,
+            work_record,
+            {"series_ids": [value for value in current_series_ids if value != series_id]},
+        )
+    source_records.works.update(updated_works)
+    normalized_records = CatalogueSourceRecords(
+        works=sort_record_map(source_records.works),
+        work_details=source_records.work_details,
+        series=sort_record_map(source_records.series),
+        work_files=source_records.work_files,
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def build_delete_preview(source_dir: Path, kind: str, record_id: str) -> Dict[str, Any]:
+    if kind == "work":
+        preview = preview_work_delete(source_dir, record_id)
+        preview["validation_errors"] = validate_work_delete_records(source_dir, record_id)
+    elif kind == "work_detail":
+        preview = preview_work_detail_delete(source_dir, record_id)
+        preview["validation_errors"] = validate_work_detail_delete_records(source_dir, record_id)
+    else:
+        preview = preview_series_delete(source_dir, record_id)
+        preview["validation_errors"] = validate_series_delete_records(source_dir, record_id)
+    blockers = list(preview.get("blockers") or [])
+    validation_errors = list(preview.get("validation_errors") or [])
+    preview["blockers"] = blockers
+    preview["blocked"] = bool(blockers or validation_errors)
+    return preview
 
 
 def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
@@ -870,6 +1071,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_OPTIONS(self) -> None:  # noqa: N802
         if self.path not in {
             BULK_SAVE_PATH,
+            DELETE_PREVIEW_PATH,
+            DELETE_APPLY_PATH,
             WORK_CREATE_PATH,
             WORK_SAVE_PATH,
             DETAIL_CREATE_PATH,
@@ -939,6 +1142,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == BULK_SAVE_PATH:
                 self._handle_bulk_save(allowed)
+                return
+            if self.path == DELETE_PREVIEW_PATH:
+                self._handle_delete_preview(allowed)
+                return
+            if self.path == DELETE_APPLY_PATH:
+                self._handle_delete_apply(allowed)
                 return
             if self.path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
@@ -1346,6 +1555,217 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_delete_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        request = extract_delete_request(body)
+        preview = build_delete_preview(self.server.source_dir, request["kind"], request["id"])
+        self._send_json(
+            HTTPStatus.OK,
+            {
+                "ok": True,
+                "kind": request["kind"],
+                "id": request["id"],
+                "preview": preview,
+            },
+            allowed,
+        )
+
+    def _handle_delete_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        request = extract_delete_request(body)
+        kind = request["kind"]
+        record_id = request["id"]
+        expected_hash = request["expected_record_hash"]
+        preview = build_delete_preview(self.server.source_dir, kind, record_id)
+        if preview.get("blocked"):
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {
+                    "ok": False,
+                    "error": "delete preview contains blockers",
+                    "kind": kind,
+                    "id": record_id,
+                    "preview": preview,
+                },
+                allowed,
+            )
+            return
+
+        backup_paths: list[Path] = []
+        response_payload: Dict[str, Any]
+
+        if kind == "work":
+            works_payload = load_works_payload(self.server.works_path)
+            details_payload = load_work_details_payload(self.server.work_details_path)
+            files_payload = load_work_files_payload(self.server.work_files_path)
+            links_payload = load_work_links_payload(self.server.work_links_path)
+            current_record = works_payload["works"].get(record_id)
+            if not isinstance(current_record, dict):
+                raise ValueError(f"work_id not found: {record_id}")
+            current_hash = record_hash(current_record)
+            if expected_hash and expected_hash != current_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {"ok": False, "error": "record changed since loaded", "work_id": record_id, "current_record_hash": current_hash},
+                    allowed,
+                )
+                return
+            updated_works = dict(works_payload["works"])
+            del updated_works[record_id]
+            updated_details = {
+                detail_uid: detail_record
+                for detail_uid, detail_record in details_payload["work_details"].items()
+                if str(detail_record.get("work_id") or "") != record_id
+            }
+            updated_files = {
+                file_uid: file_record
+                for file_uid, file_record in files_payload["work_files"].items()
+                if str(file_record.get("work_id") or "") != record_id
+            }
+            updated_links = {
+                link_uid: link_record
+                for link_uid, link_record in links_payload["work_links"].items()
+                if str(link_record.get("work_id") or "") != record_id
+            }
+            if not self.server.dry_run:
+                payloads = {
+                    self.server.works_path.resolve(): payload_for_map("works", updated_works),
+                    self.server.work_details_path.resolve(): payload_for_map("work_details", updated_details),
+                    self.server.work_files_path.resolve(): payload_for_map("work_files", updated_files),
+                    self.server.work_links_path.resolve(): payload_for_map("work_links", updated_links),
+                }
+                for target_path in payloads:
+                    if target_path not in self.server.allowed_write_paths:
+                        raise ValueError("write target not allowlisted")
+                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+            response_payload = {
+                "ok": True,
+                "kind": kind,
+                "id": record_id,
+                "deleted": True,
+                "preview": preview,
+            }
+            if not self.server.dry_run:
+                self._refresh_lookup_payloads()
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "work.delete"),
+                        "time_utc": now_utc,
+                        "kind": "source_save",
+                        "operation": "work.delete",
+                        "status": "completed",
+                        "summary": f"Deleted work {record_id} and dependent source records.",
+                        "affected": preview["affected"],
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+        elif kind == "work_detail":
+            details_payload = load_work_details_payload(self.server.work_details_path)
+            current_record = details_payload["work_details"].get(record_id)
+            if not isinstance(current_record, dict):
+                raise ValueError(f"detail_uid not found: {record_id}")
+            current_hash = record_hash(current_record)
+            if expected_hash and expected_hash != current_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {"ok": False, "error": "record changed since loaded", "detail_uid": record_id, "current_record_hash": current_hash},
+                    allowed,
+                )
+                return
+            updated_details = dict(details_payload["work_details"])
+            del updated_details[record_id]
+            if not self.server.dry_run:
+                target_path = self.server.work_details_path.resolve()
+                if target_path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+                backup_paths = atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+            response_payload = {
+                "ok": True,
+                "kind": kind,
+                "id": record_id,
+                "deleted": True,
+                "preview": preview,
+            }
+            if not self.server.dry_run:
+                self._refresh_lookup_payloads()
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "work-detail.delete"),
+                        "time_utc": now_utc,
+                        "kind": "source_save",
+                        "operation": "work-detail.delete",
+                        "status": "completed",
+                        "summary": f"Deleted work detail {record_id}.",
+                        "affected": preview["affected"],
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+        else:
+            series_payload = load_series_payload(self.server.series_path)
+            works_payload = load_works_payload(self.server.works_path)
+            current_record = series_payload["series"].get(record_id)
+            if not isinstance(current_record, dict):
+                raise ValueError(f"series_id not found: {record_id}")
+            current_hash = record_hash(current_record)
+            if expected_hash and expected_hash != current_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {"ok": False, "error": "record changed since loaded", "series_id": record_id, "current_record_hash": current_hash},
+                    allowed,
+                )
+                return
+            updated_series = dict(series_payload["series"])
+            del updated_series[record_id]
+            updated_works = dict(works_payload["works"])
+            for work_id in preview["affected"]["works"]:
+                work_record = updated_works.get(work_id)
+                if not isinstance(work_record, dict):
+                    continue
+                next_series_ids = [value for value in normalize_series_ids_value(work_record.get("series_ids")) if value != record_id]
+                updated_works[work_id] = normalize_work_update(work_id, work_record, {"series_ids": next_series_ids})
+            if not self.server.dry_run:
+                payloads = {
+                    self.server.series_path.resolve(): payload_for_map("series", updated_series),
+                    self.server.works_path.resolve(): payload_for_map("works", updated_works),
+                }
+                for target_path in payloads:
+                    if target_path not in self.server.allowed_write_paths:
+                        raise ValueError("write target not allowlisted")
+                backup_paths = atomic_write_many(payloads, self.server.backups_dir)
+            response_payload = {
+                "ok": True,
+                "kind": kind,
+                "id": record_id,
+                "deleted": True,
+                "preview": preview,
+            }
+            if not self.server.dry_run:
+                self._refresh_lookup_payloads()
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "series.delete"),
+                        "time_utc": now_utc,
+                        "kind": "source_save",
+                        "operation": "series.delete",
+                        "status": "completed",
+                        "summary": f"Deleted series {record_id} and updated member work records.",
+                        "affected": preview["affected"],
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = True
+        else:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_work_create(self, allowed: Optional[str]) -> None:
