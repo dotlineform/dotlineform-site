@@ -19,8 +19,9 @@ This document defines the next phased implementation pass after Phases 0-15 of t
 [Phase 7. Optional Canonical Prose Management](#phase-7-optional-canonical-prose-management)  
 [Phase 8. Media Local Action Surfaces](#phase-8-media-local-action-surfaces)
 [Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)  
-[Phase 10. End-To-End Testing Checklist And Execution Prep](#phase-10-end-to-end-testing-checklist-and-execution-prep)  
-[Phase 11. Cloud-Native Media Target](#phase-11-cloud-native-media-target)
+[Phase 10. Generator Cleanup And Simplification](#phase-10-generator-cleanup-and-simplification)  
+[Phase 11. End-To-End Testing Checklist And Execution Prep](#phase-11-end-to-end-testing-checklist-and-execution-prep)  
+[Phase 12. Cloud-Native Media Target](#phase-12-cloud-native-media-target)
 
 It is now a wider Studio roadmap rather than a catalogue-only refinement note. Catalogue remains the main delivery thread, but Studio shell, navigation, and adjacent domain planning now need to move in parallel so work can continue across the product without waiting for catalogue to become fully complete or fully tested first.
 
@@ -567,7 +568,9 @@ Scope:
 Out of scope:
 
 - public runtime contract redesign
-- unrelated cleanup in the generator codebase
+- broad cleanup inside `generate_work_pages.py` that does not directly remove the live JSON rebuild's workbook bridge
+- CLI and option cleanup for older generator entrypoints that remain operationally separate from the scoped JSON path
+- structural simplification, dead-code removal, helper extraction, and naming cleanup that can be deferred until the JSON path is proven stable
 
 Deliverables:
 
@@ -588,7 +591,67 @@ Risks:
 
 - this is the highest technical-risk phase because it touches the runtime writer path
 
-### Phase 10. End-To-End Testing Checklist And Execution Prep
+Task list:
+
+1. Identify every place where the live JSON-scoped rebuild path still depends on workbook-shaped intermediate structures inside `generate_work_pages.py`, and distinguish those from compatibility paths that can stay temporarily for non-live use.
+2. Define one explicit normalized-record input contract for the JSON path, covering works, series, work details, and moments where relevant, so the generator can consume source records directly without first reshaping them into workbook analogues.
+3. Trace the current JSON-scoped rebuild route end to end, from Studio/build helper entry through generator writes, and document the exact points where workbook-shaped assumptions still leak into page generation, JSON generation, or aggregate index generation.
+4. Refactor the live JSON path so it reads normalized records directly for the in-scope artifact families, while keeping the public output contract unchanged.
+5. Keep the refactor narrowly focused on the live JSON path first, rather than trying to clean up every legacy generator branch at the same time.
+6. Decide which workbook-shaped helpers still need to remain temporarily for workbook import, comparison, or other transitional tooling, and isolate those from the live JSON runtime path instead of deleting them blindly.
+7. Add a clear runtime boundary between `JSON-source build input` and any retained transitional compatibility layer, so future cleanup can remove the latter without rediscovering the design intent.
+8. Add before/after comparison coverage for key generated artifacts, including work pages, series pages, per-work JSON payloads, aggregate indexes, and any other outputs touched by the scoped rebuild flow.
+9. Define what differences are acceptable in those comparisons, for example timestamps or deliberately normalized metadata ordering, and treat any other drift as a refactor failure until explained.
+10. Make sure the refactored JSON-native path still respects scoped rebuild boundaries, so focused work or series rebuilds do not accidentally widen back into unnecessary generator output.
+11. Review how the refactor interacts with the newly added local media/build-preview phases, and confirm that the generator change does not silently break readiness, preview assumptions, or Build Activity reporting.
+12. Keep explicit notes on any remaining workbook-shaped compatibility code after the refactor lands, so Phase 10 starts with a known cleanup list rather than another discovery pass.
+13. Run a final artifact-equivalence pass on representative work, series, detail, and moment scopes before calling the phase complete.
+14. Update the plan/docs trail so the repository clearly states that the live JSON rebuild path is now generator-native and no longer depends on materializing `works.xlsx`.
+
+Follow-on note:
+
+- the deferred cleanup work listed above should not disappear; it is captured explicitly in the next phase rather than being treated as vague background debt
+
+### Phase 10. Generator Cleanup And Simplification
+
+Status:
+
+- deferred until the Phase 9 JSON-native generator path is stable and artifact-equivalent
+
+Scope:
+
+- simplify `generate_work_pages.py` after the workbook bridge has been removed from the live JSON rebuild path
+- remove dead compatibility branches, narrow legacy-only helpers, and clarify the remaining generator responsibilities
+- separate genuine runtime requirements from transitional comparison or import-support code
+
+Out of scope:
+
+- reworking the public page/data contract
+- changing the intended output set of the generator
+- mixing cleanup with the higher-risk Phase 9 refactor before the JSON-native path is validated
+
+Deliverables:
+
+- an explicit cleanup pass over the generator codebase rather than an indefinite “later tidy-up”
+- removal or isolation of workbook-shaped compatibility code that no longer serves the live path
+- clearer module boundaries, naming, and comments in the generator/runtime layer
+- updated docs describing the post-refactor generator boundary
+
+Verification:
+
+- the generator remains artifact-equivalent after cleanup
+- deferred compatibility code is either removed or clearly isolated behind non-live paths
+- the roadmap no longer contains an ambiguous “unrelated cleanup” exclusion
+
+Benefits:
+
+- prevents the generator from remaining permanently half-transitioned after Phase 9
+
+Risks:
+
+- cleanup can sprawl unless it stays tied to explicit dead paths and boundary simplification
+
+### Phase 11. End-To-End Testing Checklist And Execution Prep
 
 Scope:
 
@@ -619,7 +682,7 @@ Risks:
 
 - testing can become unfocused if the checklist is not tied to the actual phase outcomes above
 
-### Phase 11. Cloud-Native Media Target
+### Phase 12. Cloud-Native Media Target
 
 Scope:
 
