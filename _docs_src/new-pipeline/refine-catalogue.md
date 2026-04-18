@@ -59,6 +59,18 @@ Candidate work:
 - make status, rebuild-needed, and draft/published state more legible without adding visual noise
 - review bulk-edit mode transitions and exit paths on work and detail pages
 
+Example design improvements:
+
+- /studio/catalogue-work/ : stack metadata fields vertically in a single column, with labels on same row as the field, fields aligned to their left edges
+- all buttons same style and height
+
+UI design references:
+
+ - list with buttons or status indicators: /studio/series-tags/
+ - list with lots of text records, smaller font, list data above the list: /studio/studio-works/?sort=cat&dir=asc
+ - search input field, buttons aligned and all in a single row with status message: studio/series-tag-editor/?series=036&works=00293%2C00294%2C00296
+ - primary image with caption: studio/series-tag-editor/?series=036&works=00293%2C00294%2C00296
+
 Acceptance:
 
 - a user can move between status review, single-record edit, bulk edit, create, import, and activity pages without unclear route jumps
@@ -96,6 +108,19 @@ Candidate work:
 - separate everyday catalogue actions from lower-frequency maintenance actions
 - make the current workflow boundary obvious so retired workbook commands are not implied anywhere in the UI
 
+Target design:
+
+ - Studio landing page displays 4 panels with link to individual dashboards:
+ 1. Catalogue: works and series import and editing dashboard: workflows for maintaining /series/ domain
+ 2. Library: workflow for maintaining /library/?doc=library domain.
+ 3. Analytics: dashboard for tagging and future analytical tools
+ 4. Search: dashboard for search configuration and pipelines
+ 5. Docs: /docs/?scope=studio&doc=site-docs
+
+ Studio top nav should mirror these panel links.
+
+
+
 Acceptance:
 
 - the landing page reflects the real current catalogue workflow rather than the earlier tag/build emphasis
@@ -105,6 +130,7 @@ Acceptance:
 Focus:
 
 - make the metadata workflow and media workflow fit together cleanly now that the workbook orchestrator is retired
+- 'media' refers to images and work files.
 
 Candidate work:
 
@@ -112,6 +138,12 @@ Candidate work:
 - define how missing media should be surfaced before or after rebuild
 - review whether media readiness checks belong in build preview, status review, or dedicated maintenance surfaces
 - decide whether any lightweight local action surface is needed for media copy/srcset commands
+
+Target state:
+
+- media copying and image srcset generation should be driven from web pages without needing scripts to be called from Terminal.
+- thumbnails need to be copied into repo (this is currently a manual action)
+- primary images are saved remotely (R2) so this remains manual. automating this will be a future requirement.
 
 Acceptance:
 
@@ -162,6 +194,11 @@ Candidate work:
 - review how missing prose should appear in editors and build previews
 - consider whether prose readiness belongs in catalogue status or a separate maintenance view
 
+Target state:
+
+- work and series prose files are currently stored in project folders, which are scanned by the legacy pipeline, converted to HTML and saved in runtime JSON. a script flag enables targetted import of these files. this workflow needs to be replicated in the new pipeline and built into the works workflow. documented (partially) in /docs/?scope=studio&doc=scripts-main-pipeline, /docs/?scope=studio&doc=scripts-main-pipeline
+- moments: this is a distinct catalogue of prose files, not related to works or series. this has an index toggle on /series/ index page but no visible /moments/ index url. an example moment is /moments/memory/. the moments workflow is automated in the current pipeline (with targetted flags) and needs to be added to the Catalogue workflow/pipeline. this will be a priority phase of work in its own right.
+
 Acceptance:
 
 - prose handling is no longer a hidden side path outside the main workflow
@@ -187,6 +224,12 @@ Candidate work:
 - surface aggregated rebuild consequences more clearly after scoped rebuilds
 - review whether the current feed should expose more links back to affected records or actions
 - keep import reporting aggregated by counts rather than dumping long record lists
+
+Design principles:
+
+- should report on what has changed, not report 0s
+- should enumerated changed fields but does not need to show before/after values
+- should mirror design language of the other lists, and expand the details by default in sub-rows
 
 Acceptance:
 
@@ -258,28 +301,29 @@ Acceptance:
 
 Suggested order:
 
-1. Studio workflow and UI consistency
-2. Studio landing page and navigation
+1. Studio landing page and navigation
+2. Studio workflow and UI consistency
 3. Catalogue activity and build reporting
 4. Media handling and srcset workflow
 5. Preview media in Studio
 6. Prose file handling
-7. End-to-end testing checklist
+7. Moments workflow
 8. Internal generator refactor
+9. End-to-end testing
 
 Reasoning:
 
 - workflow clarity should improve before deeper testing
 - media and prose boundaries should be explicit before the checklist is finalized
-- the internal generator refactor should come after the current flow is easier to test and compare
+- the internal generator refactor should come before significant end to end testing because it is highly upstream
 
 ## Open Questions
 
-- should Studio eventually expose lightweight media actions, or only explain the external commands?
-- should prose remain external-only, or should Studio own some part of prose creation/validation?
-- should build preview report media/prose readiness explicitly, or should those become separate status surfaces?
-- how much of catalogue activity should link directly back to editor routes?
-- should the Studio landing page become a workflow dashboard rather than a simple page list?
+- should Studio eventually expose lightweight media actions, or only explain the external commands? - Studio should remove the need to run pipeline scripts in Terminal
+- should prose remain external-only, or should Studio own some part of prose creation/validation? - Studio (specifically, the Catalogue domain) should own all content production and administration. The 'Catalogue' at /series/ is front-end runtime only with no administration abilities.
+- should build preview report media/prose readiness explicitly, or should those become separate status surfaces? - media/prose are intrinsic elements of 'works' and should be reported explicitly rather than separately.
+- how much of catalogue activity should link directly back to editor routes? - aim for all of it. whilst it contains CMS-like elements (e.g. publishing states, build reports) it should be viewed as a front-end to running scripts in Terminal.
+- should the Studio landing page become a workflow dashboard rather than a simple page list? - yes, this is described in the above 'Studio Landing Page And Navigation' section.
 
 ## Deliverables For The Next Session
 
