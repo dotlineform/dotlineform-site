@@ -10,6 +10,18 @@ sort_order: 50
 
 This document defines the next phased implementation pass after Phases 0-15 of the JSON-led catalogue pipeline.
 
+[Phase 1. Studio Shell And Navigation Foundation](#phase-1-studio-shell-and-navigation-foundation)  
+[Phase 2. Moments Create And Import Workflow](#phase-2-moments-create-and-import-workflow)  
+[Phase 3. Catalogue Workflow And UI Consistency](#phase-3-catalogue-workflow-and-ui-consistency)  
+[Phase 4. Catalogue Activity And Build Reporting](#phase-4-catalogue-activity-and-build-reporting)  
+[Phase 5. Media And Prose Readiness](#phase-5-media-and-prose-readiness)  
+[Phase 6. Preview Media In Studio](#phase-6-preview-media-in-studio)  
+[Phase 7. Prose Local Actions](#phase-7-prose-local-actions)  
+[Phase 8. Media Local Action Surfaces](#phase-8-media-local-action-surfaces)
+[Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)  
+[Phase 10. End-To-End Testing Checklist And Execution Prep](#phase-10-end-to-end-testing-checklist-and-execution-prep)  
+[Phase 11. Cloud-Native Media Target](#phase-11-cloud-native-media-target)
+
 It is now a wider Studio roadmap rather than a catalogue-only refinement note. Catalogue remains the main delivery thread, but Studio shell, navigation, and adjacent domain planning now need to move in parallel so work can continue across the product without waiting for catalogue to become fully complete or fully tested first.
 
 Parallel domain planning lives in:
@@ -289,7 +301,8 @@ Deliverables:
 
 - clearer aggregated activity summaries for source writes and rebuilds
 - clearer surfaced rebuild consequences after scoped runs
-- more direct links from activity rows into affected records or follow-on actions
+- more direct links from activity and build rows into affected records or follow-on actions
+- cleaner list UI, more consistent with other Studio lists with sortable column headers, split 'Scoped rebuild' and 'Saved' into a status column, separate column for the actual scope (work detail xxx, works xxx...)
 - stronger conventions for what belongs in Catalogue Activity versus Build Activity
 
 Verification:
