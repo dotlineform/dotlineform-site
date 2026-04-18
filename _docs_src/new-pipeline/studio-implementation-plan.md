@@ -612,6 +612,13 @@ Follow-on note:
 
 - the deferred cleanup work listed above should not disappear; it is captured explicitly in the next phase rather than being treated as vague background debt
 
+Pre-Phase 10 task:
+
+- switch the bulk import workflow from the fixed workbook `data/works.xlsx` to `data/works_bulk_import.xlsx`, and make the workbook filename configurable in the relevant scripts/UI/docs rather than hard-coded
+- confirm the reduced bulk-import workbook remains aligned with the importer's required schema for `Works` and `WorkDetails`
+- check the retained additional metadata fields in the Excel workbook and confirm which of them are currently eligible for import, so bulk import can carry as much intended metadata as possible without creating avoidable follow-on bulk-edit work
+- update Studio bulk-import UI copy, write-server import endpoints, and related docs so they reference the configured workbook path instead of assuming `data/works.xlsx`
+
 ### Phase 10. Generator Cleanup And Simplification
 
 Status:
