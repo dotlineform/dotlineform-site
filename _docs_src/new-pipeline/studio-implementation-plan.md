@@ -734,6 +734,23 @@ Risks:
 
 - testing can become unfocused if the checklist is not tied to the actual phase outcomes above
 
+Task list:
+
+1. Create one separate end-to-end checklist document rather than continuing to grow this implementation plan, so test execution has its own stable working surface.
+2. Start the checklist with explicit environment prerequisites, including local Studio services, projects/media base configuration, and any required repo-local source files or generated data that must exist before testing begins.
+3. Record the exact split between `manual browser testing` and `Codex-runnable verification`, so each step is clearly owned and the checklist does not drift into ambiguous partial coverage.
+4. Map every major implemented Studio surface to at least one checklist scenario, including Studio shell/navigation, Catalogue dashboard routing, status/activity pages, build activity, work editor, detail editor, series editor, work-file/work-link editors, bulk import, and moments import.
+5. Add create/edit/save scenarios for works, details, series, work files, and work links, with explicit expected source-write outcomes and expected rebuild follow-up where applicable.
+6. Add a moments-specific scenario that covers explicit source-file preview, import/apply, missing-image tolerance, and the expected public/runtime follow-through for one moment.
+7. Add bulk-import scenarios for both `works` and `work_details` modes, including duplicate handling, blocked-row handling, and the expected one-way JSON import behavior.
+8. Add delete-flow scenarios for the implemented delete preview/apply surfaces, including validation blocking where source integrity would be broken and the expected rebuild scope after deletion.
+9. Add build/reporting scenarios that confirm scoped rebuild preview/apply behavior, Build Activity logging, Catalogue Activity logging, and the visibility of local media generation and readiness state.
+10. Add readiness and preview checks for prose/media on work, series, and detail pages, including at least one `ready`, one `missing file`, and one `missing metadata` or `pending generation` case where practical.
+11. Include explicit public-site verification points after key Studio actions, for example opening the public work page, series page, moment page, or related runtime JSON-backed surface to confirm the expected output actually changed.
+12. Add a lightweight responsive pass covering the key Studio pages on both desktop and mobile widths, focusing on navigation, action buttons, form layout, current-record panels, and operational tables.
+13. Define what evidence should be captured during execution, such as pass/fail notes, blockers, or follow-up issues, without turning the checklist itself into a permanent results ledger.
+14. End the checklist with a short triage section that groups likely failures into `source/config issue`, `UI issue`, `write-service issue`, `generator/build issue`, and `docs/signposting issue`, so follow-up work can be routed quickly after the first full run.
+
 ### Phase 12. Cloud-Native Media Target
 
 Scope:
