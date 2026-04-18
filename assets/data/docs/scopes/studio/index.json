@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T14:00:38Z",
+  "generated_at": "2026-04-18T15:19:09Z",
   "docs": [
     {
       "scope": "studio",
@@ -740,17 +740,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "new-pipeline-refine-catalogue",
-      "title": "Refine Catalogue",
-      "last_updated": "2026-04-18",
-      "parent_id": "new-pipeline",
-      "sort_order": 50,
-      "source_path": "new-pipeline/refine-catalogue.md",
-      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-catalogue",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-catalogue.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "search",
       "title": "Search",
       "last_updated": "2026-03-31",
@@ -781,6 +770,17 @@
       "source_path": "config/config-search-policy-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-policy-json.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-studio-implementation-plan",
+      "title": "Studio Implementation Plan",
+      "last_updated": "2026-04-18",
+      "parent_id": "new-pipeline",
+      "sort_order": 50,
+      "source_path": "new-pipeline/studio-implementation-plan.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json"
     },
     {
       "scope": "studio",
@@ -839,6 +839,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "new-pipeline-refine-library",
+      "title": "Library Plan",
+      "last_updated": "2026-04-18",
+      "parent_id": "new-pipeline",
+      "sort_order": 60,
+      "source_path": "new-pipeline/refine-library.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-library",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-library.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "search-ui-behaviour",
       "title": "Search UI Behaviour",
       "last_updated": "2026-03-31",
@@ -858,6 +869,28 @@
       "source_path": "studio/series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-refine-analytics",
+      "title": "Analytics Plan",
+      "last_updated": "2026-04-18",
+      "parent_id": "new-pipeline",
+      "sort_order": 61,
+      "source_path": "new-pipeline/refine-analytics.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-analytics.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-refine-search",
+      "title": "Search Plan",
+      "last_updated": "2026-04-18",
+      "parent_id": "new-pipeline",
+      "sort_order": 62,
+      "source_path": "new-pipeline/refine-search.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-search",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-search.json"
     },
     {
       "scope": "studio",

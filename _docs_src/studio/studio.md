@@ -8,7 +8,7 @@ sort_order: 5
 
 # Studio
 
-This section documents the Studio routes used to review and edit the site’s tag data.
+This section documents the Studio routes used to review and edit site data, catalogue records, and related operational workflows.
 
 Studio is a site-owned toolset, not a separate app. Each page is rendered by Jekyll under `/studio/`, uses the shared Studio layout, and links its implementation notes into the scoped Docs Viewer.
 

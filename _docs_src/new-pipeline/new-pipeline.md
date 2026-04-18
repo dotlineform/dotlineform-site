@@ -18,7 +18,10 @@ Read this section in this order:
 2. **[Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)** for the proposed canonical JSON source files and how they map from the existing workbook sheets
 3. **[Web System Specification](/docs/?scope=studio&doc=new-pipeline-web-system-spec)** for the Studio pages, local write service, validation, bulk edit behavior, and build boundaries
 4. **[Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)** for the phased implementation record and the final retirement of workbook-led entrypoints
-5. **[Refine Catalogue](/docs/?scope=studio&doc=new-pipeline-refine-catalogue)** for the next planning pass covering workflow refinement, media/prose handling, activity reporting, and end-to-end testing
+5. **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)** for the next phased Studio roadmap, with Catalogue as the main implementation thread
+6. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
+7. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
+8. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
 
 ## Scope
 
