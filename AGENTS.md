@@ -59,8 +59,11 @@
 
 ## Pipeline Conventions
 
-- Treat `data/works.xlsx` as canonical source for generated collections.
-- Treat worksheets `Works`, `Series`, `WorkDetails`, and `Moments` as canonical.
+- Treat `assets/studio/data/catalogue/*.json` as canonical source for catalogue metadata.
+- Treat `data/works.xlsx` as a bulk-import source for new works and new work details only.
+- Do not treat workbook-led scripts as part of the live workflow. `build_catalogue.py`, `copy_draft_media_files.py`, and `export_catalogue_source.py` are retained as deprecated reference entrypoints and should exit cleanly.
+- Treat `scripts/catalogue_json_build.py` as the live CLI rebuild path for generated catalogue/runtime artifacts.
+- Treat `scripts/generate_work_pages.py` as an internal generator entrypoint, not a user-facing command.
 - Keep generated output deterministic (stable ordering, stable checksums, stable formatting).
 - Canonical series prose is resolved via `Series.primary_work_id -> Works.project_folder -> <prose_subdir> -> Series.series_prose_file`.
 - Keep `_series/*.md` minimal; richer series metadata and prose belong in generated JSON artifacts under `assets/series/index/`.
@@ -78,6 +81,9 @@
 ## Validation Checklist
 
 - After changing Python scripts, run a syntax check with the configured interpreter.
+- After generator or pipeline-entrypoint changes, verify both:
+  - deprecated user-facing commands exit cleanly with guidance
+  - `scripts/catalogue_json_build.py` still previews or runs successfully
 - After generator changes, run a dry-run and summarize what would be written.
 - After layout/template changes, verify behavior on desktop and mobile.
 - For a Codex-run browser smoke test on this machine, prefer local Playwright Chromium via the Miniconda Python environment:
@@ -166,6 +172,7 @@
 - `_docs_src/studio/*.md` are the central product/behavior docs for Studio features.
 - `_docs_src/search/*.md` are the central product/behavior docs for search.
 - `_docs_src/data-models/*.md` are the central schema and payload-contract docs for generated/runtime data artifacts and source-data records.
+- `_docs_src/new-pipeline/refine-catalogue.md` is the planning doc for post-Phase-15 workflow refinement and testing preparation.
 - `_docs_src/site/*.md` plus `_docs_src/site-change-log.md` are the central architecture/history docs for the broader non-search site.
 - When a published doc references another published doc, use the docs-viewer link form `/docs/?scope=studio&doc=<doc_id>` rather than a raw `.md` filename or legacy `/docs/.../` path.
 - Keep raw repo file paths for unpublished docs, literal output paths, and non-doc files such as scripts, JSON artifacts, `README.md`, or `AGENTS.md`.

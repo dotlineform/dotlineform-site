@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T11:36:52Z",
+  "generated_at": "2026-04-18T11:44:47Z",
   "docs": [
     {
       "scope": "studio",
@@ -737,6 +737,17 @@
       "source_path": "scripts/scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-refine-catalogue",
+      "title": "Refine Catalogue",
+      "last_updated": "2026-04-18",
+      "parent_id": "new-pipeline",
+      "sort_order": 50,
+      "source_path": "new-pipeline/refine-catalogue.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-catalogue",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-catalogue.json"
     },
     {
       "scope": "studio",
