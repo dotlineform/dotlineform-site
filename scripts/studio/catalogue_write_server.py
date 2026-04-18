@@ -14,6 +14,8 @@ Endpoints:
   POST /catalogue/work/save
   POST /catalogue/work-detail/create
   POST /catalogue/work-detail/save
+  POST /catalogue/import-preview
+  POST /catalogue/import-apply
   POST /catalogue/series/create
   POST /catalogue/series/save
   POST /catalogue/build-preview
@@ -76,6 +78,15 @@ from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # noqa: E402
 from catalogue_json_build import build_scope_for_work, run_scoped_build  # noqa: E402
 from catalogue_json_build import build_scope_for_series, run_series_scoped_build  # noqa: E402
+from catalogue_workbook_import import (  # noqa: E402
+    DEFAULT_IMPORT_WORKBOOK_PATH,
+    IMPORT_MODE_WORKS,
+    IMPORT_MODE_WORK_DETAILS,
+    apply_workbook_import_plan,
+    build_workbook_import_plan,
+    normalize_import_mode,
+    plan_to_response,
+)
 from script_logging import append_script_log  # noqa: E402
 from series_ids import normalize_series_id, parse_series_ids  # noqa: E402
 
@@ -93,6 +104,8 @@ WORK_FILE_DELETE_PATH = "/catalogue/work-file/delete"
 WORK_LINK_SAVE_PATH = "/catalogue/work-link/save"
 WORK_LINK_CREATE_PATH = "/catalogue/work-link/create"
 WORK_LINK_DELETE_PATH = "/catalogue/work-link/delete"
+IMPORT_PREVIEW_PATH = "/catalogue/import-preview"
+IMPORT_APPLY_PATH = "/catalogue/import-apply"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
@@ -214,6 +227,10 @@ def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, li
         extra_work_ids.append(slug_id(raw))
     force = bool(body.get("force"))
     return normalized_work_id, normalized_series_id, extra_series_ids, extra_work_ids, force
+
+
+def extract_import_mode(body: Mapping[str, Any]) -> str:
+    return normalize_import_mode(body.get("mode"))
 
 
 def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
@@ -718,6 +735,8 @@ class Handler(BaseHTTPRequestHandler):
             WORK_LINK_CREATE_PATH,
             WORK_LINK_SAVE_PATH,
             WORK_LINK_DELETE_PATH,
+            IMPORT_PREVIEW_PATH,
+            IMPORT_APPLY_PATH,
             SERIES_SAVE_PATH,
             SERIES_CREATE_PATH,
             BUILD_PREVIEW_PATH,
@@ -799,6 +818,12 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == WORK_LINK_DELETE_PATH:
                 self._handle_work_link_delete(allowed)
+                return
+            if self.path == IMPORT_PREVIEW_PATH:
+                self._handle_import_preview(allowed)
+                return
+            if self.path == IMPORT_APPLY_PATH:
+                self._handle_import_apply(allowed)
                 return
             if self.path == SERIES_SAVE_PATH:
                 self._handle_series_save(allowed)
@@ -1840,6 +1865,105 @@ class Handler(BaseHTTPRequestHandler):
                     "status": "completed",
                     "summary": f"Created draft series {series_id} and {len(changed_work_ids)} member work records.",
                     "affected": {"works": changed_work_ids, "series": [series_id], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_import_preview(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        mode = extract_import_mode(body)
+        workbook_path = (self.server.repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve()
+        plan = build_workbook_import_plan(self.server.source_dir, workbook_path, mode)
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "mode": mode,
+            "preview": plan_to_response(plan, repo_root=self.server.repo_root),
+        }
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_import_apply(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        mode = extract_import_mode(body)
+        workbook_path = (self.server.repo_root / DEFAULT_IMPORT_WORKBOOK_PATH).resolve()
+        plan = build_workbook_import_plan(self.server.source_dir, workbook_path, mode)
+        preview_payload = plan_to_response(plan, repo_root=self.server.repo_root)
+
+        if plan.blocked_count > 0:
+            self._send_json(
+                HTTPStatus.BAD_REQUEST,
+                {
+                    "ok": False,
+                    "error": "import preview contains blocked rows",
+                    "mode": mode,
+                    "preview": preview_payload,
+                },
+                allowed,
+            )
+            return
+
+        changed = plan.importable_count > 0
+        target_kind = plan.target_kind
+        backup_paths: list[Path] = []
+        if changed and not self.server.dry_run:
+            updated_records = apply_workbook_import_plan(self.server.source_dir, plan)
+            if target_kind == "works":
+                target_path = self.server.works_path.resolve()
+                payloads_by_path = {target_path: payload_for_map("works", updated_records.works)}
+            else:
+                target_path = self.server.work_details_path.resolve()
+                payloads_by_path = {self.server.work_details_path.resolve(): payload_for_map("work_details", updated_records.work_details)}
+            for path in payloads_by_path:
+                if path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+            backup_paths = atomic_write_many(payloads_by_path, self.server.backups_dir)
+            self._refresh_lookup_payloads()
+
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "mode": mode,
+            "changed": changed,
+            "imported_count": plan.importable_count,
+            "duplicate_count": plan.duplicate_count,
+            "target_kind": target_kind,
+            "preview": preview_payload,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+        self.server.log_event(
+            "catalogue_import_apply",
+            {
+                "mode": mode,
+                "imported_count": plan.importable_count,
+                "duplicate_count": plan.duplicate_count,
+                "blocked_count": plan.blocked_count,
+                "dry_run": self.server.dry_run,
+            },
+        )
+        if not self.server.dry_run:
+            now_utc = utc_now()
+            operation = "import.works" if mode == IMPORT_MODE_WORKS else "import.work-details"
+            summary_label = "work" if mode == IMPORT_MODE_WORKS else "work detail"
+            duplicate_suffix = f"; {plan.duplicate_count} duplicate record(s) already existed" if plan.duplicate_count else ""
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, operation),
+                    "time_utc": now_utc,
+                    "kind": "source_import",
+                    "operation": operation,
+                    "status": "completed",
+                    "summary": f"Imported {plan.importable_count} {summary_label} record(s) from workbook{duplicate_suffix}.",
+                    "affected": {
+                        "works": {"count": plan.importable_count} if mode == IMPORT_MODE_WORKS else {"count": 0},
+                        "series": [],
+                        "work_details": {"count": plan.importable_count} if mode == IMPORT_MODE_WORK_DETAILS else {"count": 0},
+                    },
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )

@@ -38,6 +38,7 @@ Current route inventory:
 - `studio/index.md`
 - `studio/build-activity/index.md`
 - `studio/catalogue-new-work/index.md`
+- `studio/bulk-add-work/index.md`
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-new-work-detail/index.md`
 - `studio/catalogue-work-detail/index.md`
@@ -58,6 +59,7 @@ Current page-level doc links:
 
 - Tag Groups -> `/docs/?scope=studio&doc=tag-groups`
 - Build Activity -> `/docs/?scope=studio&doc=build-activity`
+- Bulk Add Work -> `/docs/?scope=studio&doc=bulk-add-work`
 - Catalogue Work Editor -> `/docs/?scope=studio&doc=catalogue-work-editor`
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
@@ -88,6 +90,7 @@ Shared Studio runtime and wiring currently live in:
 Current page controllers:
 
 - `assets/studio/js/build-activity.js`
+- `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`

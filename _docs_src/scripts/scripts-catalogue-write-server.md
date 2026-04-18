@@ -29,6 +29,8 @@ Exposed endpoints:
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/create`
 - `POST /catalogue/work-detail/save`
+- `POST /catalogue/import-preview`
+- `POST /catalogue/import-apply`
 - `POST /catalogue/work-file/create`
 - `POST /catalogue/work-file/save`
 - `POST /catalogue/work-file/delete`
@@ -40,7 +42,7 @@ Exposed endpoints:
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation can create draft work, work-detail, work-file, work-link, and series records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files or write media files.
+The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files, write media files, or write back into Excel.
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 
@@ -150,6 +152,39 @@ Request behavior:
 - blank or missing `status` is normalized to `draft`
 - `title` is required
 - the server derives and validates the normalized `detail_uid`
+
+`POST /catalogue/import-preview` expects:
+
+```json
+{
+  "mode": "works"
+}
+```
+
+or:
+
+```json
+{
+  "mode": "work_details"
+}
+```
+
+Request behavior:
+
+- workbook source is always `data/works.xlsx`
+- `works` mode previews new work records only
+- `work_details` mode previews new detail records only
+- existing source records are counted as duplicates and skipped
+- blocked workbook rows are reported with reasons
+- preview does not write source JSON
+
+`POST /catalogue/import-apply` accepts the same shape and then:
+
+- re-runs the preview plan against `data/works.xlsx`
+- rejects apply when blocked workbook rows remain
+- writes only importable new records into canonical source JSON
+- refreshes derived lookup payloads after non-dry-run writes
+- writes one aggregated Catalogue Activity entry that records import counts rather than one entry per imported record
 
 `POST /catalogue/work-file/save` expects:
 

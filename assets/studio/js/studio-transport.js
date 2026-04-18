@@ -20,6 +20,8 @@ const CATALOGUE_WRITE_ENDPOINTS = Object.freeze({
   saveWork: "http://127.0.0.1:8788/catalogue/work/save",
   createWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/create",
   saveWorkDetail: "http://127.0.0.1:8788/catalogue/work-detail/save",
+  importPreview: "http://127.0.0.1:8788/catalogue/import-preview",
+  importApply: "http://127.0.0.1:8788/catalogue/import-apply",
   createWorkFile: "http://127.0.0.1:8788/catalogue/work-file/create",
   saveWorkFile: "http://127.0.0.1:8788/catalogue/work-file/save",
   deleteWorkFile: "http://127.0.0.1:8788/catalogue/work-file/delete",

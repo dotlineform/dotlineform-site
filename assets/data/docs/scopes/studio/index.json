@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T09:43:54Z",
+  "generated_at": "2026-04-18T10:15:25Z",
   "docs": [
     {
       "scope": "studio",
@@ -429,6 +429,17 @@
       "source_path": "new-pipeline/web-system-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-web-system-spec.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "bulk-add-work",
+      "title": "Bulk Add Work",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 33,
+      "source_path": "studio/bulk-add-work.md",
+      "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json"
     },
     {
       "scope": "studio",

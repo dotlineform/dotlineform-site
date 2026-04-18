@@ -501,17 +501,27 @@ Goal:
 
 Work:
 
-- add import preview for `data/works.xlsx` or a selected workbook
-- support `add-new-only`
-- support `update-draft-only`
-- reject updates to published existing records by default
-- add export-to-workbook/report command if useful for offline review
+- add one Studio route for workbook import with two modes: `works` and `work_details`
+- read a fixed workbook source at `data/works.xlsx`
+- works import adds new work records only
+- work-details import adds new detail records only
+- imported records default to `draft`
+- ignore workbook `status` fields during import
+- do not write anything back into the workbook
+- works import requires referenced series to already exist in canonical source
+- work-details import requires the parent work to already exist in canonical source
+- preview reports importable rows, duplicates, blocked rows, and blocked reasons
+- duplicate existing records are reported and skipped, not updated
+- apply is blocked while invalid workbook rows remain
+- write aggregated import counts into Catalogue Activity, not one entry per imported record
 
 Acceptance:
 
-- new records can be staged from a workbook into source JSON
-- published existing JSON records are not overwritten in default import mode
-- preview reports all blocked rows and normalization decisions
+- user can import new work records from `data/works.xlsx` without opening JSON files
+- user can import new work-detail records from `data/works.xlsx` without opening JSON files
+- existing source records are reported as duplicates and are not overwritten
+- canonical source JSON remains valid after import
+- workbook remains a transient import surface rather than a write target
 
 Benefits:
 
@@ -525,8 +535,9 @@ Risks:
 Mitigation:
 
 - make import one-way into JSON
-- block published-record overwrites by default
-- label exported workbooks as reports or import templates, not canonical source
+- allow only additive imports in this phase
+- block apply when workbook rows are invalid
+- require the user to clear imported workbook rows after successful apply
 
 ## Phase 13: Bulk Edit
 

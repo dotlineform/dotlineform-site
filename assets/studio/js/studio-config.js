@@ -10,6 +10,7 @@ const DEFAULT_STUDIO_CONFIG = {
       build_activity: "/studio/build-activity/",
       catalogue_status: "/studio/catalogue-status/",
       catalogue_activity: "/studio/catalogue-activity/",
+      bulk_add_work: "/studio/bulk-add-work/",
       catalogue_work_editor: "/studio/catalogue-work/",
       catalogue_new_work_editor: "/studio/catalogue-new-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",

@@ -8,6 +8,7 @@ permalink: /studio/
 - [build activity]({{ '/studio/build-activity/' | relative_url }})
 - [catalogue status]({{ '/studio/catalogue-status/' | relative_url }})
 - [catalogue activity]({{ '/studio/catalogue-activity/' | relative_url }})
+- [bulk add work]({{ '/studio/bulk-add-work/' | relative_url }})
 - [new catalogue work]({{ '/studio/catalogue-new-work/' | relative_url }})
 - [catalogue work]({{ '/studio/catalogue-work/' | relative_url }})
 - [catalogue work detail]({{ '/studio/catalogue-work-detail/' | relative_url }})

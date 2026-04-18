@@ -439,22 +439,27 @@ Recommended import modes:
 - `add-new-only`
   - add records whose IDs do not already exist
   - reject existing IDs
-- `update-draft-only`
-  - update existing records only when current source status is `draft`
-  - reject published records
-- `explicit-overwrite`
-  - requires a preview, per-record confirmation, and backup
-  - not part of the first UI phase
+
+Initial implemented workbook import scope:
+
+- fixed workbook source: `data/works.xlsx`
+- one Studio route with two modes:
+  - new `Works`
+  - new `WorkDetails`
+- imported records default to `draft`
+- workbook `status` fields are ignored
+- no workbook writeback
+- existing JSON records are reported as duplicates and skipped
+- works import requires referenced series to already exist
+- work-details import requires the parent work to already exist
 
 Import preview should report:
 
 - new works
 - new work details
-- new series
-- records blocked because they already exist and are published
+- duplicate existing IDs
 - unknown series references
-- orphaned details/files/links
+- orphaned details
 - IDs that need normalization
-- fields that are not recognized by the JSON schema
 
 This keeps Excel useful for bulk additions without letting it overwrite the canonical JSON source by accident.

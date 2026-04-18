@@ -65,6 +65,16 @@ def _atomic_write_text(path: Path, text: str) -> None:
 
 
 def _compact_ids(ids: Any, limit: int = 12) -> Dict[str, Any]:
+    if isinstance(ids, dict):
+        count = int(ids.get("count") or 0)
+        sample_ids = ids.get("sample_ids") if isinstance(ids.get("sample_ids"), list) else []
+        truncated = int(ids.get("truncated") or 0)
+        ordered = [str(item).strip() for item in sample_ids if str(item).strip()]
+        return {
+            "count": count,
+            "sample_ids": ordered[:limit],
+            "truncated": max(0, truncated),
+        }
     raw_ids = ids if isinstance(ids, list) else []
     ordered = [str(item).strip() for item in raw_ids if str(item).strip()]
     return {

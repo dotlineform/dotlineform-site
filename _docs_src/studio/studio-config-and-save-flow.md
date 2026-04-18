@@ -37,7 +37,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `bulk_add_work`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -86,6 +86,8 @@ Current write endpoints include:
 - `http://127.0.0.1:8788/catalogue/work/save`
 - `http://127.0.0.1:8788/catalogue/work-detail/create`
 - `http://127.0.0.1:8788/catalogue/work-detail/save`
+- `http://127.0.0.1:8788/catalogue/import-preview`
+- `http://127.0.0.1:8788/catalogue/import-apply`
 - `http://127.0.0.1:8788/catalogue/work-file/create`
 - `http://127.0.0.1:8788/catalogue/work-file/save`
 - `http://127.0.0.1:8788/catalogue/work-file/delete`
@@ -140,6 +142,18 @@ Catalogue work detail local save behavior:
 - the request includes `detail_uid`, a browser-computed record hash, and a normalized detail patch
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
+
+Catalogue workbook import behavior:
+
+- the bulk-add page sends `POST /catalogue/import-preview` and `POST /catalogue/import-apply`
+- both endpoints always read the fixed workbook `data/works.xlsx`
+- preview/apply support two modes: `works` and `work_details`
+- works import adds new work records only
+- work-details import adds new detail records only
+- imported records default to `draft`
+- existing source records are reported as duplicates and skipped
+- blocked workbook rows stop apply until the workbook is fixed
+- the server writes only canonical source JSON and does not write back into Excel
 
 Catalogue work file local save behavior:
 
