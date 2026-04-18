@@ -1,9 +1,13 @@
 import {
+  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { loadStudioLookupRecordJson } from "./studio-data.js";
+import {
+  fetchJson,
+  loadStudioLookupRecordJson
+} from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   postJson,
@@ -28,6 +32,7 @@ const READONLY_FIELDS = [
 
 const STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const SEARCH_LIMIT = 20;
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -63,6 +68,13 @@ function displayValue(value) {
   return text || "—";
 }
 
+function buildSearchToken(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const digits = text.replace(/\D/g, "");
+  return digits || text.toLowerCase();
+}
+
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -70,8 +82,57 @@ function setTextWithState(node, text, state = "") {
   else delete node.dataset.state;
 }
 
+function setPopupVisibility(state, visible) {
+  state.popupNode.hidden = !visible;
+}
+
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_file_editor.${key}`, fallback, tokens);
+}
+
+function buildRecordSummary(record) {
+  const label = normalizeText(record && record.label);
+  const filename = normalizeText(record && record.filename);
+  const workId = normalizeText(record && record.work_id);
+  if (label && filename && label !== filename) return `${label} · ${filename} · work ${workId || "—"}`;
+  return label || filename || (workId ? `work ${workId}` : "—");
+}
+
+function getSearchMatches(state, rawQuery) {
+  const query = buildSearchToken(rawQuery);
+  if (!query) return [];
+  const matches = [];
+  for (const [fileUid, record] of state.fileSearchByUid.entries()) {
+    const label = normalizeText(record && record.label).toLowerCase();
+    const filename = normalizeText(record && record.filename).toLowerCase();
+    const workId = normalizeText(record && record.work_id);
+    if (fileUid.toLowerCase().includes(query) || label.includes(query) || filename.includes(query) || workId.includes(query)) {
+      matches.push({ fileUid, record });
+    }
+  }
+  matches.sort((a, b) => a.fileUid.localeCompare(b.fileUid, undefined, { numeric: true, sensitivity: "base" }));
+  return matches.slice(0, SEARCH_LIMIT);
+}
+
+function renderSearchMatches(state, matches, message = "") {
+  if (!matches.length && !message) {
+    state.popupListNode.innerHTML = "";
+    setPopupVisibility(state, false);
+    return;
+  }
+  if (!matches.length) {
+    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
+    setPopupVisibility(state, true);
+    return;
+  }
+  const rows = matches.map(({ fileUid, record }) => `
+    <button type="button" class="tagStudioSuggest__workButton" data-file-uid="${escapeHtml(fileUid)}">
+      <span class="tagStudioSuggest__workId">${escapeHtml(fileUid)}</span>
+      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
+    </button>
+  `);
+  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
+  setPopupVisibility(state, true);
 }
 
 function renderField(field, fieldsNode, state) {
@@ -252,6 +313,24 @@ function updateEditorState(state) {
   state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
 }
 
+function openWorkFileByUid(state, fileUid) {
+  const normalizedFileUid = normalizeText(fileUid);
+  if (!normalizedFileUid) return;
+  const route = getStudioRoute(state.config, "catalogue_work_file_editor");
+  window.location.assign(`${route}?file=${encodeURIComponent(normalizedFileUid)}`);
+}
+
+function openRequestedSearch(state, rawValue) {
+  const matches = getSearchMatches(state, rawValue);
+  const exactMatch = matches.find(({ fileUid }) => normalizeText(fileUid).toLowerCase() === normalizeText(rawValue).toLowerCase());
+  const selected = exactMatch || matches[0];
+  if (!selected) {
+    renderSearchMatches(state, [], t(state, "search_no_match", "No matching work files."));
+    return;
+  }
+  openWorkFileByUid(state, selected.fileUid);
+}
+
 function setLoadedRecord(state, fileUid, record, options = {}) {
   state.currentFileUid = fileUid;
   state.currentRecord = record;
@@ -262,6 +341,7 @@ function setLoadedRecord(state, fileUid, record, options = {}) {
   state.draft = { ...state.baselineDraft };
   applyDraftToInputs(state);
   applyReadonly(state);
+  if (state.searchNode) state.searchNode.value = fileUid;
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for work file {file_uid}.", { file_uid: fileUid }));
   setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work file {file_uid}.", { file_uid: fileUid }));
   if (!options.keepResult) setTextWithState(state.resultNode, "");
@@ -389,6 +469,10 @@ async function init() {
   const emptyNode = document.getElementById("catalogueWorkFileEmpty");
   const fieldsNode = document.getElementById("catalogueWorkFileFields");
   const readonlyNode = document.getElementById("catalogueWorkFileReadonly");
+  const searchNode = document.getElementById("catalogueWorkFileSearch");
+  const popupNode = document.getElementById("catalogueWorkFilePopup");
+  const popupListNode = document.getElementById("catalogueWorkFilePopupList");
+  const openButton = document.getElementById("catalogueWorkFileOpen");
   const saveModeNode = document.getElementById("catalogueWorkFileSaveMode");
   const contextNode = document.getElementById("catalogueWorkFileContext");
   const statusNode = document.getElementById("catalogueWorkFileStatus");
@@ -401,12 +485,13 @@ async function init() {
   const saveButton = document.getElementById("catalogueWorkFileSave");
   const buildButton = document.getElementById("catalogueWorkFileBuild");
   const deleteButton = document.getElementById("catalogueWorkFileDelete");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton) {
     return;
   }
 
   const state = {
     config: null,
+    fileSearchByUid: new Map(),
     currentLookup: null,
     currentFileUid: "",
     currentWorkId: "",
@@ -423,6 +508,10 @@ async function init() {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
     saveButton,
     buildButton,
     deleteButton,
@@ -442,22 +531,65 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
+    searchNode.placeholder = t(state, "search_placeholder", "find work file by id, filename, or work id");
+    openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
     deleteButton.textContent = t(state, "delete_button", "Delete Source");
 
-    const serverAvailable = await probeCatalogueHealth();
+    const [filesPayload, serverAvailable] = await Promise.all([
+      fetchJson(getStudioDataPath(config, "catalogue_work_files"), { cache: "no-store" }),
+      probeCatalogueHealth()
+    ]);
+    const fileRecords = filesPayload && filesPayload.work_files && typeof filesPayload.work_files === "object"
+      ? filesPayload.work_files
+      : {};
+    Object.keys(fileRecords).forEach((key) => {
+      const record = fileRecords[key] && typeof fileRecords[key] === "object" ? fileRecords[key] : {};
+      const fileUid = normalizeText(record.file_uid || key);
+      if (!fileUid) return;
+      state.fileSearchByUid.set(fileUid, record);
+    });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_file_editor.${key}`, fallback, tokens));
     if (!state.serverAvailable) {
       setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
     }
 
+    searchNode.addEventListener("input", () => {
+      const query = searchNode.value;
+      if (!normalizeText(query)) {
+        renderSearchMatches(state, [], "");
+        return;
+      }
+      const matches = getSearchMatches(state, query);
+      if (!matches.length) {
+        renderSearchMatches(state, [], t(state, "search_no_match", "No matching work files."));
+        return;
+      }
+      renderSearchMatches(state, matches);
+    });
+    searchNode.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      openRequestedSearch(state, searchNode.value);
+    });
+    popupListNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-file-uid]") : null;
+      if (!button) return;
+      openWorkFileByUid(state, button.getAttribute("data-file-uid"));
+    });
+    openButton.addEventListener("click", () => {
+      openRequestedSearch(state, searchNode.value);
+    });
+    document.addEventListener("click", (event) => {
+      if (event.target === searchNode || popupNode.contains(event.target)) return;
+      setPopupVisibility(state, false);
+    });
+
     const fileUid = normalizeText(new URLSearchParams(window.location.search).get("file"));
     if (!fileUid) {
-      setTextWithState(contextNode, t(state, "missing_file_param", "Open this page from a work editor with a file record selected."));
-      emptyNode.textContent = t(state, "missing_file_param", "Open this page from a work editor with a file record selected.");
-      emptyNode.hidden = false;
+      setTextWithState(contextNode, t(state, "missing_file_param", "Search for a work file by file id, filename, label, or work id."));
       root.hidden = false;
       loadingNode.hidden = true;
       updateEditorState(state);

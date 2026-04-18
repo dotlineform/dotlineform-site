@@ -19,7 +19,8 @@ This page edits one canonical work-link source record from `assets/studio/data/c
 
 The first implementation covers:
 
-- open one work-link record from the work editor
+- search for a work-link record by link id, label, URL, or work id
+- open one work-link record from either the dashboard route or the work editor
 - edit `url`
 - edit `label`
 - edit `status`

@@ -1,9 +1,13 @@
 import {
+  getStudioDataPath,
   getStudioRoute,
   getStudioText,
   loadStudioConfig
 } from "./studio-config.js";
-import { loadStudioLookupRecordJson } from "./studio-data.js";
+import {
+  fetchJson,
+  loadStudioLookupRecordJson
+} from "./studio-data.js";
 import {
   CATALOGUE_WRITE_ENDPOINTS,
   postJson,
@@ -28,6 +32,7 @@ const READONLY_FIELDS = [
 
 const STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const SEARCH_LIMIT = 20;
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -63,6 +68,13 @@ function displayValue(value) {
   return text || "—";
 }
 
+function buildSearchToken(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  const digits = text.replace(/\D/g, "");
+  return digits || text.toLowerCase();
+}
+
 function setTextWithState(node, text, state = "") {
   if (!node) return;
   node.textContent = text || "";
@@ -70,8 +82,57 @@ function setTextWithState(node, text, state = "") {
   else delete node.dataset.state;
 }
 
+function setPopupVisibility(state, visible) {
+  state.popupNode.hidden = !visible;
+}
+
 function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `catalogue_work_link_editor.${key}`, fallback, tokens);
+}
+
+function buildRecordSummary(record) {
+  const label = normalizeText(record && record.label);
+  const url = normalizeText(record && record.url);
+  const workId = normalizeText(record && record.work_id);
+  if (label && url) return `${label} · ${url} · work ${workId || "—"}`;
+  return label || url || (workId ? `work ${workId}` : "—");
+}
+
+function getSearchMatches(state, rawQuery) {
+  const query = buildSearchToken(rawQuery);
+  if (!query) return [];
+  const matches = [];
+  for (const [linkUid, record] of state.linkSearchByUid.entries()) {
+    const label = normalizeText(record && record.label).toLowerCase();
+    const url = normalizeText(record && record.url).toLowerCase();
+    const workId = normalizeText(record && record.work_id);
+    if (linkUid.toLowerCase().includes(query) || label.includes(query) || url.includes(query) || workId.includes(query)) {
+      matches.push({ linkUid, record });
+    }
+  }
+  matches.sort((a, b) => a.linkUid.localeCompare(b.linkUid, undefined, { numeric: true, sensitivity: "base" }));
+  return matches.slice(0, SEARCH_LIMIT);
+}
+
+function renderSearchMatches(state, matches, message = "") {
+  if (!matches.length && !message) {
+    state.popupListNode.innerHTML = "";
+    setPopupVisibility(state, false);
+    return;
+  }
+  if (!matches.length) {
+    state.popupListNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(message)}</p>`;
+    setPopupVisibility(state, true);
+    return;
+  }
+  const rows = matches.map(({ linkUid, record }) => `
+    <button type="button" class="tagStudioSuggest__workButton" data-link-uid="${escapeHtml(linkUid)}">
+      <span class="tagStudioSuggest__workId">${escapeHtml(linkUid)}</span>
+      <span class="tagStudioSuggest__workTitle">${escapeHtml(buildRecordSummary(record))}</span>
+    </button>
+  `);
+  state.popupListNode.innerHTML = `<div class="tagStudioSuggest__workRows">${rows.join("")}</div>`;
+  setPopupVisibility(state, true);
 }
 
 function renderField(field, fieldsNode, state) {
@@ -231,6 +292,24 @@ function updateEditorState(state) {
   state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
 }
 
+function openWorkLinkByUid(state, linkUid) {
+  const normalizedLinkUid = normalizeText(linkUid);
+  if (!normalizedLinkUid) return;
+  const route = getStudioRoute(state.config, "catalogue_work_link_editor");
+  window.location.assign(`${route}?link=${encodeURIComponent(normalizedLinkUid)}`);
+}
+
+function openRequestedSearch(state, rawValue) {
+  const matches = getSearchMatches(state, rawValue);
+  const exactMatch = matches.find(({ linkUid }) => normalizeText(linkUid).toLowerCase() === normalizeText(rawValue).toLowerCase());
+  const selected = exactMatch || matches[0];
+  if (!selected) {
+    renderSearchMatches(state, [], t(state, "search_no_match", "No matching work links."));
+    return;
+  }
+  openWorkLinkByUid(state, selected.linkUid);
+}
+
 function setLoadedRecord(state, linkUid, record, options = {}) {
   state.currentLinkUid = linkUid;
   state.currentRecord = record;
@@ -241,6 +320,7 @@ function setLoadedRecord(state, linkUid, record, options = {}) {
   state.draft = { ...state.baselineDraft };
   applyDraftToInputs(state);
   applyReadonly(state);
+  if (state.searchNode) state.searchNode.value = linkUid;
   setTextWithState(state.contextNode, t(state, "context_loaded", "Editing source metadata for work link {link_uid}.", { link_uid: linkUid }));
   setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work link {link_uid}.", { link_uid: linkUid }));
   if (!options.keepResult) setTextWithState(state.resultNode, "");
@@ -364,6 +444,10 @@ async function init() {
   const emptyNode = document.getElementById("catalogueWorkLinkEmpty");
   const fieldsNode = document.getElementById("catalogueWorkLinkFields");
   const readonlyNode = document.getElementById("catalogueWorkLinkReadonly");
+  const searchNode = document.getElementById("catalogueWorkLinkSearch");
+  const popupNode = document.getElementById("catalogueWorkLinkPopup");
+  const popupListNode = document.getElementById("catalogueWorkLinkPopupList");
+  const openButton = document.getElementById("catalogueWorkLinkOpen");
   const saveModeNode = document.getElementById("catalogueWorkLinkSaveMode");
   const contextNode = document.getElementById("catalogueWorkLinkContext");
   const statusNode = document.getElementById("catalogueWorkLinkStatus");
@@ -376,10 +460,11 @@ async function init() {
   const saveButton = document.getElementById("catalogueWorkLinkSave");
   const buildButton = document.getElementById("catalogueWorkLinkBuild");
   const deleteButton = document.getElementById("catalogueWorkLinkDelete");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton) return;
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !runtimeStateNode || !buildImpactNode || !summaryNode || !saveButton || !buildButton || !deleteButton) return;
 
   const state = {
     config: null,
+    linkSearchByUid: new Map(),
     currentLookup: null,
     currentLinkUid: "",
     currentWorkId: "",
@@ -396,6 +481,10 @@ async function init() {
     fieldNodes: new Map(),
     fieldStatusNodes: new Map(),
     readonlyNodes: new Map(),
+    searchNode,
+    popupNode,
+    popupListNode,
+    openButton,
     saveButton,
     buildButton,
     deleteButton,
@@ -415,18 +504,60 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
+    searchNode.placeholder = t(state, "search_placeholder", "find work link by id, label, URL, or work id");
+    openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
     deleteButton.textContent = t(state, "delete_button", "Delete Source");
-    const serverAvailable = await probeCatalogueHealth();
+    const [linksPayload, serverAvailable] = await Promise.all([
+      fetchJson(getStudioDataPath(config, "catalogue_work_links"), { cache: "no-store" }),
+      probeCatalogueHealth()
+    ]);
+    const linkRecords = linksPayload && linksPayload.work_links && typeof linksPayload.work_links === "object"
+      ? linksPayload.work_links
+      : {};
+    Object.keys(linkRecords).forEach((key) => {
+      const record = linkRecords[key] && typeof linkRecords[key] === "object" ? linkRecords[key] : {};
+      const linkUid = normalizeText(record.link_uid || key);
+      if (!linkUid) return;
+      state.linkSearchByUid.set(linkUid, record);
+    });
     state.serverAvailable = Boolean(serverAvailable);
     saveModeNode.textContent = buildSaveModeText(config, serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `catalogue_work_link_editor.${key}`, fallback, tokens));
     if (!state.serverAvailable) setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Save is disabled."), "warn");
+    searchNode.addEventListener("input", () => {
+      const query = searchNode.value;
+      if (!normalizeText(query)) {
+        renderSearchMatches(state, [], "");
+        return;
+      }
+      const matches = getSearchMatches(state, query);
+      if (!matches.length) {
+        renderSearchMatches(state, [], t(state, "search_no_match", "No matching work links."));
+        return;
+      }
+      renderSearchMatches(state, matches);
+    });
+    searchNode.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      openRequestedSearch(state, searchNode.value);
+    });
+    popupListNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-link-uid]") : null;
+      if (!button) return;
+      openWorkLinkByUid(state, button.getAttribute("data-link-uid"));
+    });
+    openButton.addEventListener("click", () => {
+      openRequestedSearch(state, searchNode.value);
+    });
+    document.addEventListener("click", (event) => {
+      if (event.target === searchNode || popupNode.contains(event.target)) return;
+      setPopupVisibility(state, false);
+    });
     const linkUid = normalizeText(new URLSearchParams(window.location.search).get("link"));
     if (!linkUid) {
-      setTextWithState(contextNode, t(state, "missing_link_param", "Open this page from a work editor with a link record selected."));
-      emptyNode.textContent = t(state, "missing_link_param", "Open this page from a work editor with a link record selected.");
-      emptyNode.hidden = false;
+      setTextWithState(contextNode, t(state, "missing_link_param", "Search for a work link by link id, label, URL, or work id."));
       root.hidden = false;
       loadingNode.hidden = true;
       updateEditorState(state);

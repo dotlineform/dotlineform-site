@@ -9,12 +9,14 @@ import {
 } from "./studio-data.js";
 
 const FAMILIES = [
-  { key: "works", label: "works", pathKey: "catalogue_works", objectKey: "works", idField: "work_id" },
-  { key: "work_details", label: "work details", pathKey: "catalogue_work_details", objectKey: "work_details", idField: "detail_uid" },
-  { key: "series", label: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id" },
-  { key: "work_files", label: "work files", pathKey: "catalogue_work_files", objectKey: "work_files", idField: "file_uid" },
-  { key: "work_links", label: "work links", pathKey: "catalogue_work_links", objectKey: "work_links", idField: "link_uid" }
+  { key: "works", label: "works", pathKey: "catalogue_works", objectKey: "works", idField: "work_id", routeKey: "catalogue_work_editor", paramKey: "work" },
+  { key: "work_details", label: "work details", pathKey: "catalogue_work_details", objectKey: "work_details", idField: "detail_uid", routeKey: "catalogue_work_detail_editor", paramKey: "detail" },
+  { key: "series", label: "series", pathKey: "catalogue_series", objectKey: "series", idField: "series_id", routeKey: "catalogue_series_editor", paramKey: "series" },
+  { key: "work_files", label: "work files", pathKey: "catalogue_work_files", objectKey: "work_files", idField: "file_uid", routeKey: "catalogue_work_file_editor", paramKey: "file" },
+  { key: "work_links", label: "work links", pathKey: "catalogue_work_links", objectKey: "work_links", idField: "link_uid", routeKey: "catalogue_work_link_editor", paramKey: "link" }
 ];
+
+const SORT_KEYS = ["id", "type", "status", "title", "reference"];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -102,7 +104,7 @@ function renderKey(keyNode, counts, activeFamily) {
   keyNode.innerHTML = buttons.join("");
 }
 
-function renderList(listNode, entries) {
+function renderList(listNode, entries, state) {
   if (!entries.length) {
     listNode.innerHTML = "";
     return;
@@ -118,14 +120,32 @@ function renderList(listNode, entries) {
   `);
   listNode.innerHTML = `
     <div class="tagStudioList__head catalogueStatusPage__head">
-      <span class="tagStudioList__headLabel">id</span>
-      <span class="tagStudioList__headLabel">type</span>
-      <span class="tagStudioList__headLabel">status</span>
-      <span class="tagStudioList__headLabel">title</span>
-      <span class="tagStudioList__headLabel">reference</span>
+      ${renderSortButton("id", state.sortKey, state.sortDir)}
+      ${renderSortButton("type", state.sortKey, state.sortDir)}
+      ${renderSortButton("status", state.sortKey, state.sortDir)}
+      ${renderSortButton("title", state.sortKey, state.sortDir)}
+      ${renderSortButton("reference", state.sortKey, state.sortDir)}
     </div>
     <ul class="tagStudioList__rows catalogueStatusPage__rows">${rows.join("")}</ul>
   `;
+}
+
+function renderSortButton(label, activeKey, activeDir) {
+  const buttonState = activeKey === label ? "active" : "";
+  const suffix = activeKey === label ? (activeDir === "desc" ? " ↓" : " ↑") : "";
+  return `<button type="button" class="tagStudioList__sortBtn" data-sort-key="${escapeHtml(label)}" data-state="${buttonState}">${escapeHtml(`${label}${suffix}`)}</button>`;
+}
+
+function compareEntries(a, b, sortKey, sortDir) {
+  const direction = sortDir === "desc" ? -1 : 1;
+  const fieldA = normalizeText(sortKey === "type" ? a.familyLabel : a[sortKey]);
+  const fieldB = normalizeText(sortKey === "type" ? b.familyLabel : b[sortKey]);
+  const compare = fieldA.localeCompare(fieldB, undefined, { numeric: true, sensitivity: "base" });
+  if (compare !== 0) return compare * direction;
+  if (a.family !== b.family) {
+    return a.family.localeCompare(b.family, undefined, { numeric: true, sensitivity: "base" });
+  }
+  return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
 }
 
 function applyFilters(state) {
@@ -135,13 +155,14 @@ function applyFilters(state) {
     if (query && !entry.searchText.includes(query)) return false;
     return true;
   });
+  const sorted = filtered.slice().sort((a, b) => compareEntries(a, b, state.sortKey, state.sortDir));
 
-  state.metaNode.textContent = filtered.length === 1
+  state.metaNode.textContent = sorted.length === 1
     ? getStudioText(state.config, "catalogue_status.meta_summary_one", "1 non-published source record")
-    : getStudioText(state.config, "catalogue_status.meta_summary", "{count} non-published source records", { count: filtered.length });
+    : getStudioText(state.config, "catalogue_status.meta_summary", "{count} non-published source records", { count: sorted.length });
   renderKey(state.keyNode, state.counts, state.activeFamily);
-  renderList(state.listNode, filtered);
-  state.emptyNode.hidden = filtered.length > 0;
+  renderList(state.listNode, sorted, state);
+  state.emptyNode.hidden = sorted.length > 0;
 }
 
 async function init() {
@@ -161,17 +182,20 @@ async function init() {
       if (a.family !== b.family) return a.family.localeCompare(b.family);
       return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: "base" });
     });
-    const workEditorRoute = getStudioRoute(config, "catalogue_work_editor");
     entries.forEach((entry) => {
-      if (entry.family === "works" && workEditorRoute) {
-        entry.editorHref = `${workEditorRoute}?work=${encodeURIComponent(entry.id)}`;
-      }
+      const family = FAMILIES.find((item) => item.key === entry.family);
+      if (!family) return;
+      const route = getStudioRoute(config, family.routeKey);
+      if (!route) return;
+      entry.editorHref = `${route}?${family.paramKey}=${encodeURIComponent(entry.id)}`;
     });
     const state = {
       config,
       entries,
       counts: buildFamilyCounts(entries),
       activeFamily: "all",
+      sortKey: "type",
+      sortDir: "asc",
       keyNode,
       searchNode,
       metaNode,
@@ -183,6 +207,19 @@ async function init() {
       const button = event.target && event.target.closest ? event.target.closest("[data-family]") : null;
       if (!button) return;
       state.activeFamily = normalizeText(button.getAttribute("data-family")) || "all";
+      applyFilters(state);
+    });
+    listNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-sort-key]") : null;
+      if (!button) return;
+      const sortKey = normalizeText(button.getAttribute("data-sort-key"));
+      if (!SORT_KEYS.includes(sortKey)) return;
+      if (state.sortKey === sortKey) {
+        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+      } else {
+        state.sortKey = sortKey;
+        state.sortDir = sortKey === "status" ? "desc" : "asc";
+      }
       applyFilters(state);
     });
     searchNode.addEventListener("input", () => applyFilters(state));

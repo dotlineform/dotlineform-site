@@ -19,7 +19,8 @@ This page edits one canonical work-file source record from `assets/studio/data/c
 
 The first implementation covers:
 
-- open one work-file record from the work editor
+- search for a work-file record by file id, filename, label, or work id
+- open one work-file record from either the dashboard route or the work editor
 - edit `filename`
 - edit `label`
 - edit `status`

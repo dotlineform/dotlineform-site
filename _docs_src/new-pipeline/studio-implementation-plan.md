@@ -195,6 +195,10 @@ Risks:
 
 ### Phase 3. Catalogue Workflow And UI Consistency
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
 - align list, editor, status, and action patterns across work, detail, series, file, and link pages
@@ -212,6 +216,16 @@ Deliverables:
 - clearer return paths after create and delete flows
 - clearer bulk-edit entry and exit behavior
 - more legible draft/published and rebuild-needed states
+
+Delivered:
+
+1. Reworked the Catalogue dashboard from a card-grid route list into grouped directional link sections for create, edit, review, and guidance flows.
+2. Added a shared Catalogue page-link strip across Catalogue-domain pages so the main workflow surfaces are mutually discoverable without returning to docs.
+3. Normalized Catalogue metadata forms onto a single-column row layout with labels on the left and shared control/button sizing.
+4. Made `/studio/catalogue-work-file/` and `/studio/catalogue-work-link/` standalone dashboard destinations by adding first-class search-and-open controls.
+5. Extended Catalogue Status so it now links directly into all current editor families rather than only work records.
+6. Made Catalogue Status sortable by clicking the list headers for `id`, `type`, `status`, `title`, and `reference`.
+7. Kept the existing site visual language rather than introducing a separate Catalogue-only component style.
 
 Verification:
 

@@ -10,8 +10,21 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-link-editor
 
 <div class="tagStudioPage catalogueWorkPage" id="catalogueWorkLinkRoot" hidden>
   <section class="tagStudio__panel tagStudio__panel--editor">
-    <div class="tagStudio__headingRow">
-      <h2 class="tagStudio__heading">work link metadata</h2>
+    <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+      <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">
+        <label class="visually-hidden" for="catalogueWorkLinkSearch">Find work link by id</label>
+        <input
+          type="text"
+          class="tagStudio__input"
+          id="catalogueWorkLinkSearch"
+          placeholder="find work link by id"
+          autocomplete="off"
+        >
+        <div class="tagStudio__popup" id="catalogueWorkLinkPopup" hidden>
+          <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkLinkPopupList"></div>
+        </div>
+      </div>
+      <button type="button" class="tagStudio__button" id="catalogueWorkLinkOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkLinkSaveMode"></span>
     </div>
 

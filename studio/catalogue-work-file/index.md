@@ -10,8 +10,21 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-file-editor
 
 <div class="tagStudioPage catalogueWorkPage" id="catalogueWorkFileRoot" hidden>
   <section class="tagStudio__panel tagStudio__panel--editor">
-    <div class="tagStudio__headingRow">
-      <h2 class="tagStudio__heading">work file metadata</h2>
+    <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+      <div class="tagStudioForm__searchWrap catalogueWorkPage__searchWrap">
+        <label class="visually-hidden" for="catalogueWorkFileSearch">Find work file by id</label>
+        <input
+          type="text"
+          class="tagStudio__input"
+          id="catalogueWorkFileSearch"
+          placeholder="find work file by id"
+          autocomplete="off"
+        >
+        <div class="tagStudio__popup" id="catalogueWorkFilePopup" hidden>
+          <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkFilePopupList"></div>
+        </div>
+      </div>
+      <button type="button" class="tagStudio__button" id="catalogueWorkFileOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkFileSaveMode"></span>
     </div>
 

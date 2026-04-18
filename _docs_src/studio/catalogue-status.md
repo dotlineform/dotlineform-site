@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-status
 title: Catalogue Status
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 33
 ---
@@ -37,8 +37,10 @@ The page:
 - groups counts by record family
 - supports a simple search across id, status, title, and parent/reference fields
 - shows id, type, status, title, and reference columns
+- supports header-click sorting on `id`, `type`, `status`, `title`, and `reference`
+- links each row into the focused editor for its record family when that editor exists
 
-It does not edit source records yet. Links into focused editors should be added when those editors exist.
+It remains a review surface rather than an editor. Editing still happens on the focused record pages.
 
 ## Boundaries
 

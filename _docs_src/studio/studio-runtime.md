@@ -30,6 +30,7 @@ The Studio page layout then renders:
 - the page title
 - the page body content
 - an optional `i` link when `page.studio_page_doc` is present
+- shared Catalogue page links on Catalogue-domain routes so the key create, edit, review, and activity pages remain cross-linked inside Studio
 
 The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
 
@@ -53,6 +54,8 @@ Current route inventory:
 - `studio/library/index.md`
 - `studio/analytics/index.md`
 - `studio/search/index.md`
+- `studio/catalogue-status/index.md`
+- `studio/catalogue-activity/index.md`
 - `studio/build-activity/index.md`
 - `studio/catalogue-new-work/index.md`
 - `studio/bulk-add-work/index.md`
@@ -116,6 +119,8 @@ Current page controllers:
 - `assets/studio/js/build-activity.js`
 - `assets/studio/js/bulk-add-work.js`
 - `assets/studio/js/catalogue-moment-import.js`
+- `assets/studio/js/catalogue-status.js`
+- `assets/studio/js/catalogue-activity.js`
 - `assets/studio/js/catalogue-new-work-editor.js`
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
@@ -187,3 +192,13 @@ Current local generated Studio feed surfaced through this runtime:
 - `assets/studio/data/catalogue_activity.json`
 
 The runner is therefore sufficient for route-shell and write-flow testing, but not a full content-generation pipeline.
+
+## Current Catalogue UI Baseline
+
+After Phase 3, the current Catalogue shell conventions are:
+
+- the Catalogue dashboard uses grouped directional link lists rather than card panels
+- Catalogue-domain pages render a shared page-link strip for create, edit, review, and activity routes
+- metadata editors use a shared single-column row layout with labels on the left
+- Catalogue Status is a sortable list and now links directly into work, series, detail, file, and link editors
+- work-file and work-link editors are now standalone search-and-open pages as well as deep-link targets from the work editor
