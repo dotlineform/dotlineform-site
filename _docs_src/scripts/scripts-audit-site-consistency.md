@@ -120,4 +120,4 @@ Warning policy:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
+- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)

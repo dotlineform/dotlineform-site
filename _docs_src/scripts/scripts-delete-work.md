@@ -1,12 +1,19 @@
 ---
 doc_id: scripts-delete-work
-title: Delete Work
-last_updated: 2026-04-01
-parent_id: scripts
+title: "Deprecated: Delete Work"
+last_updated: 2026-04-18
+parent_id: _archive
 sort_order: 60
 ---
 
-# Delete Work
+# Deprecated: Delete Work
+
+Status:
+
+- deprecated workbook-led delete reference
+- retained for historical context only
+
+This document describes the retired `delete_work.py` workflow. The live catalogue workflow now deletes works through Studio-backed source-delete actions.
 
 Script:
 

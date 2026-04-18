@@ -58,7 +58,7 @@ Current planner mode labels:
 - `bootstrap`
 - `incremental`
 
-Those labels are defined by the catalogue pipeline rather than the Studio page itself. See **[Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)** for the current meanings.
+Historical planner labels came from the retired workbook-led pipeline. Current scoped JSON build entries use the JSON-led rebuild flow and share this same activity surface.
 
 ## Current Boundaries
 
@@ -77,6 +77,7 @@ What it is not for:
 
 ## Related References
 
-- **[Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)** for the current planner and build entrypoint
+- **[Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)** for the live scoped rebuild entrypoint
+- **[New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)** for the current workflow boundary
 - **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the Studio route shell and page inventory
 - **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for the shared Studio config boundary

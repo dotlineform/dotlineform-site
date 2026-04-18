@@ -23,7 +23,7 @@ It is an architecture note because it defines where ordering is owned and how di
 ## Cached Derivative
 
 - `_works/<work_id>.md` contains `series_sort`.
-- `series_sort` is a cache derived by [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages) from workbook rules.
+- `series_sort` is a cache derived by the catalogue generator during scoped JSON rebuilds.
 - `series_sort` is still used by some build-time Liquid/JS sorting paths (for example the works index `seriessort` sort key).
 
 ## Runtime Usage By Page
@@ -49,10 +49,10 @@ Whenever series ordering might change (new work in series, title/year edits affe
 Recommended command:
 
 ```bash
-./scripts/generate_work_pages.py --only work-pages,series-index-json,works-index-json --series-ids <series_id> --force --write
+python3 ./scripts/catalogue_json_build.py --series-id <series_id> --write
 ```
 
-This command is usually part of the wider site [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline) or a targeted maintenance run documented in [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases).
+This command is the live scoped rebuild path for JSON-led catalogue maintenance.
 
 ## Why This Hybrid Exists
 

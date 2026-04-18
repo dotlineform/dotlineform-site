@@ -79,5 +79,5 @@ Target artifacts on `--write`:
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)

@@ -13,7 +13,7 @@ This section documents the checked-in configuration artifacts that the current s
 Use this section for:
 
 - site-wide Jekyll config in `_config.yml`
-- shared [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline) defaults in `_data/pipeline.json`
+- shared catalogue/media/runtime defaults in `_data/pipeline.json`
 - shared Studio/search browser config in `assets/studio/data/studio_config.json`
 - the Studio/search config loader in `assets/studio/js/studio-config.js`
 - dedicated `/search/` runtime policy in `assets/data/search/policy.json`

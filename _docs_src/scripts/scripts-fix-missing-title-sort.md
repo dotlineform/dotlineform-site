@@ -63,4 +63,4 @@ This helper does not touch generated JSON, workbook data, or other collections.
 ## Related References
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)

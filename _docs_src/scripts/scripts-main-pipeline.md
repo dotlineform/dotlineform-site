@@ -1,12 +1,19 @@
 ---
 doc_id: scripts-main-pipeline
-title: Build Catalogue
-last_updated: 2026-04-01
-parent_id: scripts
+title: "Deprecated: Build Catalogue"
+last_updated: 2026-04-18
+parent_id: _archive
 sort_order: 20
 ---
 
-# Build Catalogue
+# Deprecated: Build Catalogue
+
+Status:
+
+- deprecated workbook-led pipeline reference
+- retained for historical context only
+
+This document describes the retired workbook-led `build_catalogue.py` flow. The live catalogue workflow now uses Studio-backed canonical JSON plus scoped JSON rebuilds.
 
 Script:
 

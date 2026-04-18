@@ -14,7 +14,7 @@ Config file:
 
 ## Scope
 
-`_data/pipeline.json` stores shared defaults for the current [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline) and the Liquid-rendered media/runtime surfaces that depend on the same variant and path conventions.
+`_data/pipeline.json` stores shared defaults for the current JSON-led catalogue workflow and the Liquid-rendered media/runtime surfaces that depend on the same variant and path conventions.
 
 Current responsibilities include:
 
@@ -28,9 +28,7 @@ Current responsibilities include:
 Current Python callers load it through `scripts/pipeline_config.py`:
 
 - `scripts/generate_work_pages.py`
-- `scripts/build_catalogue.py`
 - `scripts/make_srcset_images.py`
-- `scripts/copy_draft_media_files.py`
 - `scripts/audit_site_consistency.py`
 
 Current Jekyll/Liquid callers read it as `site.data.pipeline`:

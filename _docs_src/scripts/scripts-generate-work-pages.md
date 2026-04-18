@@ -1,12 +1,19 @@
 ---
 doc_id: scripts-generate-work-pages
-title: Generate Work Pages
-last_updated: 2026-04-01
-parent_id: scripts
+title: "Deprecated: Generate Work Pages"
+last_updated: 2026-04-18
+parent_id: _archive
 sort_order: 50
 ---
 
-# Generate Work Pages
+# Deprecated: Generate Work Pages
+
+Status:
+
+- deprecated direct entrypoint
+- retained for historical context only
+
+This document describes the retired direct `generate_work_pages.py` command surface. The live catalogue workflow now uses `catalogue_json_build.py`, which calls the generator internally for scoped JSON builds.
 
 Script:
 

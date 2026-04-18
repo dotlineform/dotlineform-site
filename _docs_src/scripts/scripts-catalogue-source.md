@@ -1,57 +1,30 @@
 ---
 doc_id: scripts-catalogue-source
-title: Catalogue Source Export
-last_updated: 2026-04-17
+title: Catalogue Source Utilities
+last_updated: 2026-04-18
 parent_id: scripts
 sort_order: 55
 ---
 
-# Catalogue Source Export
+# Catalogue Source Utilities
 
-These scripts implement Phase 0 of the JSON-led catalogue pipeline.
+These utilities validate and compare the canonical catalogue source JSON.
 
-They do not write runtime-critical public catalogue artifacts. They only export and check canonical source JSON under:
+They do not write runtime-critical public catalogue artifacts. They work against canonical source JSON under:
 
 ```text
 assets/studio/data/catalogue/
 ```
 
-## Export
-
-Dry-run:
-
-```bash
-./scripts/export_catalogue_source.py
-```
-
-Write source JSON:
-
-```bash
-./scripts/export_catalogue_source.py --write
-```
-
-Default input:
-
-- `data/works.xlsx`
-
-Default outputs:
-
-- `assets/studio/data/catalogue/works.json`
-- `assets/studio/data/catalogue/work_details.json`
-- `assets/studio/data/catalogue/series.json`
-- `assets/studio/data/catalogue/work_files.json`
-- `assets/studio/data/catalogue/work_links.json`
-- `assets/studio/data/catalogue/meta.json`
-
-The source JSON headers are deterministic and avoid volatile timestamps. Activity timestamps belong in future catalogue activity artifacts and JSONL logs, not in canonical source files.
+The Phase 0 workbook export fixture is now retired. Canonical source JSON is maintained directly through Studio and the workbook import flow.
 
 ## Validate
 
 ```bash
-./scripts/validate_catalogue_source.py
+python3 ./scripts/validate_catalogue_source.py
 ```
 
-Validation checks the exported JSON source for the same core relationship errors covered by the current workbook preflight:
+Validation checks the source JSON for the same core relationship errors covered by the current catalogue validations:
 
 - malformed work, detail, and series IDs
 - source map keys that do not match normalized record IDs
@@ -63,7 +36,7 @@ Validation checks the exported JSON source for the same core relationship errors
 ## Compare
 
 ```bash
-./scripts/compare_catalogue_sources.py
+python3 ./scripts/compare_catalogue_sources.py
 ```
 
 The comparison loads:
@@ -71,9 +44,7 @@ The comparison loads:
 - workbook-normalized records from `data/works.xlsx`
 - JSON-normalized records from `assets/studio/data/catalogue/`
 
-It reports count mismatches, missing IDs, extra IDs, and record differences.
-
-For a successful Phase 0 export, comparison should pass with no differences.
+It reports count mismatches, missing IDs, extra IDs, and record differences. During the transition away from workbook-led maintenance, intentional JSON-side edits may also appear here and should be inspected case by case.
 
 ## Shared Module
 
@@ -85,15 +56,8 @@ scripts/catalogue_source.py
 
 This module is a migration fixture and compatibility adapter. It is not yet the final native generator data layer.
 
-Phase 1 reuse:
-
-- `generate_work_pages.py --source json` now uses this module to materialize canonical source JSON into a temporary workbook adapter
-- direct source validation and workbook-vs-JSON comparison remain owned by the scripts on this page
-
 ## Related References
 
 - [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)
-- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)

@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-build-catalogue-json
 title: Scoped JSON Catalogue Build
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: scripts
 sort_order: 55
 ---
@@ -43,7 +43,7 @@ The helper:
 - reads canonical JSON source from `assets/studio/data/catalogue/`
 - resolves the current work record and its current series ids
 - unions any `--extra-series-ids`
-- runs `generate_work_pages.py --source json` with a narrow `--only` selection:
+- runs the internal `generate_work_pages.py` JSON engine with a narrow `--only` selection:
   - `work-pages`
   - `work-json`
   - `series-pages`
@@ -71,7 +71,6 @@ It keeps Phase 5 narrow:
 
 ## Related References
 
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Build Activity](/docs/?scope=studio&doc=build-activity)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

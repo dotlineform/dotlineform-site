@@ -1,14 +1,14 @@
 ---
 doc_id: new-pipeline-implementation-plan
 title: Implementation Plan
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: new-pipeline
 sort_order: 40
 ---
 
 # Implementation Plan
 
-This document defines a phased path from the current workbook-led catalogue pipeline to a JSON-led Studio workflow.
+This document records the phased implementation from the workbook-led catalogue pipeline to the JSON-led Studio workflow.
 
 ## Phase 0: Baseline And Migration Fixture
 
@@ -632,41 +632,39 @@ Mitigation:
 
 Goal:
 
-- make JSON source the default and workbook source optional
+- make the JSON-led Studio workflow the only live catalogue workflow
 
 Work:
 
-- make JSON source the default for generation
-- refactor `generate_work_pages.py` so normal JSON-source generation reads normalized records directly from `JsonCatalogueSource`
-- remove the temporary workbook materialization bridge from normal `--source json` runs
-- keep the workbook reader only for legacy fallback, source comparison, and workbook import/export workflows
-- update pipeline docs and script docs
-- demote `build_catalogue.py` to legacy or replace it with JSON-source build commands
-- keep workbook import/export commands documented separately
-- remove workbook status/dimension writeback from normal runs
+- keep workbook import available only through the dedicated import flow
+- retire direct workbook-led entrypoints such as `build_catalogue.py`, `copy_draft_media_files.py`, and `export_catalogue_source.py`
+- keep `generate_work_pages.py` as an internal JSON-build engine rather than a user-facing command
+- remove user-facing dual-mode guidance from active docs
+- archive legacy workbook-led docs under the docs viewer archive and mark them deprecated
+- update active docs so they describe only the JSON-led Studio workflow and current validation/build helpers
 
 Acceptance:
 
 - normal catalogue maintenance no longer requires opening or saving `data/works.xlsx`
 - `data/works.xlsx` is not used to edit currently published works
-- JSON-source generation no longer depends on creating a temporary workbook
-- generated artifacts remain equivalent to the Phase 1 bridge output, aside from expected timestamps or documented version metadata changes
+- workbook-led commands exit cleanly with deprecation guidance instead of running legacy behavior
+- the active docs viewer surfaces only the JSON-led workflow while retaining deprecated references in the archive
 - public runtime artifacts remain stable
-- media scripts remain available but are not coupled to workbook orchestration
+- the current scoped JSON build flow remains the live rebuild path
 
 Benefits:
 
-- reaches the target operating model
+- removes testing confusion caused by legacy command paths that still imply workbook ownership
 
 Risks:
 
-- old habits and old commands may still update the workbook
+- old habits and old bookmarks may still send the user toward retired scripts or docs
 
 Mitigation:
 
-- make command docs explicit
-- add warnings to legacy workbook commands
-- keep JSON-source validation and build commands simple
+- make active docs explicit
+- add warnings to retired workbook commands
+- keep the current JSON-source validation and build commands simple
 
 ## Cross-Phase Risks
 

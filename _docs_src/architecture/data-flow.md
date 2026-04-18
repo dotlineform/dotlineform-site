@@ -22,7 +22,7 @@ Current public browsing routes covered here:
 - `/work_details/<detail_uid>/`
 - `/moments/<moment_id>/`
 
-The main writer for these artifacts is [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages), usually run directly or through the site [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline).
+The main live rebuild path for these artifacts is the scoped JSON build flow described in [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) and [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline).
 
 ## Overview
 

@@ -174,14 +174,15 @@ R2-related variables should be configured through cloud secret stores, for examp
 Use the same command sequence in both environments:
 
 1. environment checks
-2. dry-run generation checks
+2. dry-run source/build checks
 3. docs/search/site validation
 
 Example check sequence:
 
 ```bash
 ./scripts/audit_site_consistency.py --strict
-./scripts/build_catalogue.py --dry-run --no-confirm
+python3 ./scripts/validate_catalogue_source.py
+python3 ./scripts/catalogue_json_build.py --work-id 00001
 ./scripts/build_docs.rb
 ./scripts/build_search.rb
 bundle exec jekyll build --quiet
@@ -247,6 +248,6 @@ Watch-outs:
 
 - [Scripts](/docs/?scope=studio&doc=scripts)
 - [Local Setup](/docs/?scope=studio&doc=local-setup)
-- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
 - [Pipeline Config JSON](/docs/?scope=studio&doc=config-pipeline-json)
 - [Jekyll Site Config](/docs/?scope=studio&doc=config-jekyll-site-config)

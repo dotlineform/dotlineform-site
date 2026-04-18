@@ -1,12 +1,19 @@
 ---
 doc_id: scripts-copy-draft-media
-title: Copy Draft Media
-last_updated: 2026-04-01
-parent_id: scripts
+title: "Deprecated: Copy Draft Media"
+last_updated: 2026-04-18
+parent_id: _archive
 sort_order: 30
 ---
 
-# Copy Draft Media
+# Deprecated: Copy Draft Media
+
+Status:
+
+- deprecated workbook-led media staging reference
+- retained for historical context only
+
+This document describes the retired `copy_draft_media_files.py` entrypoint from the workbook-led pipeline.
 
 Script:
 

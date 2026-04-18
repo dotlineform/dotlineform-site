@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T11:09:15Z",
+  "generated_at": "2026-04-18T11:36:52Z",
   "docs": [
     {
       "scope": "studio",
@@ -44,6 +44,17 @@
       "source_path": "architecture/data-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=data-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-flow.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "pipeline-use-cases",
+      "title": "Deprecated: Pipeline Use Cases",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
+      "sort_order": 10,
+      "source_path": "scripts/pipeline-use-cases.md",
+      "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
     },
     {
       "scope": "studio",
@@ -113,17 +124,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "pipeline-use-cases",
-      "title": "Pipeline Use Cases",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
-      "sort_order": 10,
-      "source_path": "scripts/pipeline-use-cases.md",
-      "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "data-models-shared",
       "title": "Shared Patterns",
       "last_updated": "2026-03-31",
@@ -168,17 +168,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "scripts-main-pipeline",
-      "title": "Build Catalogue",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
-      "sort_order": 20,
-      "source_path": "scripts/scripts-main-pipeline.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "last_updated": "2026-04-01",
@@ -187,6 +176,17 @@
       "source_path": "data-models/data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-catalogue.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-main-pipeline",
+      "title": "Deprecated: Build Catalogue",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
+      "sort_order": 20,
+      "source_path": "scripts/scripts-main-pipeline.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
     },
     {
       "scope": "studio",
@@ -300,17 +300,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "scripts-copy-draft-media",
-      "title": "Copy Draft Media",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
-      "sort_order": 30,
-      "source_path": "scripts/scripts-copy-draft-media.md",
-      "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "css-primitives",
       "title": "CSS Primitives",
       "last_updated": "2026-03-31",
@@ -319,6 +308,17 @@
       "source_path": "design/css-primitives.md",
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "scripts-copy-draft-media",
+      "title": "Deprecated: Copy Draft Media",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
+      "sort_order": 30,
+      "source_path": "scripts/scripts-copy-draft-media.md",
+      "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
     },
     {
       "scope": "studio",
@@ -357,7 +357,7 @@
       "scope": "studio",
       "doc_id": "scripts",
       "title": "Scripts",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 30,
       "source_path": "scripts/scripts.md",
@@ -643,7 +643,7 @@
       "scope": "studio",
       "doc_id": "new-pipeline-implementation-plan",
       "title": "Implementation Plan",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 40,
       "source_path": "new-pipeline/implementation-plan.md",
@@ -665,7 +665,7 @@
       "scope": "studio",
       "doc_id": "new-pipeline",
       "title": "New Cat Pipeline",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 40,
       "source_path": "new-pipeline/new-pipeline.md",
@@ -730,9 +730,9 @@
     {
       "scope": "studio",
       "doc_id": "scripts-generate-work-pages",
-      "title": "Generate Work Pages",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
+      "title": "Deprecated: Generate Work Pages",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
       "sort_order": 50,
       "source_path": "scripts/scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
@@ -785,8 +785,8 @@
     {
       "scope": "studio",
       "doc_id": "scripts-catalogue-source",
-      "title": "Catalogue Source Export",
-      "last_updated": "2026-04-17",
+      "title": "Catalogue Source Utilities",
+      "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 55,
       "source_path": "scripts/scripts-catalogue-source.md",
@@ -797,7 +797,7 @@
       "scope": "studio",
       "doc_id": "scripts-build-catalogue-json",
       "title": "Scoped JSON Catalogue Build",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 55,
       "source_path": "scripts/scripts-build-catalogue-json.md",
@@ -818,9 +818,9 @@
     {
       "scope": "studio",
       "doc_id": "scripts-delete-work",
-      "title": "Delete Work",
-      "last_updated": "2026-04-01",
-      "parent_id": "scripts",
+      "title": "Deprecated: Delete Work",
+      "last_updated": "2026-04-18",
+      "parent_id": "_archive",
       "sort_order": 60,
       "source_path": "scripts/scripts-delete-work.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-delete-work",
@@ -957,6 +957,17 @@
       "source_path": "studio/studio-works.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-works",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-works.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "_archive",
+      "title": "Archive",
+      "last_updated": "2026-04-18",
+      "parent_id": "",
+      "sort_order": 90,
+      "source_path": "_archive/archive.md",
+      "viewer_url": "/docs/?scope=studio&doc=_archive",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/_archive.json"
     },
     {
       "scope": "studio",

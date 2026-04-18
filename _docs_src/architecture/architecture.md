@@ -16,7 +16,7 @@ Use this section for:
 - generated artifact flow into runtime pages
 - shared shell behavior
 - cross-page runtime ordering rules
-- how the site [pipeline](/docs/?scope=studio&doc=scripts-main-pipeline) and [generation step](/docs/?scope=studio&doc=scripts-generate-work-pages) feed those runtime surfaces
+- how the current JSON-led catalogue workflow feeds those runtime surfaces
 
 This section does not try to be the canonical home for:
 
@@ -31,6 +31,6 @@ Related references:
 - **[Site Shell Runtime](/docs/?scope=studio&doc=site-shell-runtime)** for the shared shell, scope split, and docs-viewer shell boundary
 - **[Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)** for canonical ordering across generated artifacts and runtime pages
 - **[Docs Viewer Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary)** for the guardrail on when docs scopes should and should not fork the shared viewer runtime
-- **[Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)** for the generator that writes the main runtime JSON artifacts used by public catalogue pages
+- **[Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)** for the live rebuild path that refreshes the main runtime JSON artifacts used by public catalogue pages
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)** for the history of meaningful non-search site and Studio changes
 - **[Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)** for maintenance rules and entry format

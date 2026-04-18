@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate Jekyll work/moment pages and JSON artifacts from an Excel workbook.
+Generate Jekyll work/moment pages and JSON artifacts.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
 file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
@@ -37,11 +37,8 @@ Safe by default:
 specify work_ids to process with --work-ids (comma-separated list)
   - Only those IDs are processed; others are skipped early.
   - Status filtering still applies to the selected IDs unless you also pass --force.
-Usage:
-    python3 scripts/generate_work_pages.py --work-ids 00001,00002 --write
-    python3 scripts/generate_work_pages.py --work-ids-file tmp/work_ids.txt --write
-    python3 scripts/generate_work_pages.py --series-ids curve-poems,dots --write
-    python3 scripts/generate_work_pages.py --moment-ids blue-sky,compiled --write
+This script is now an internal JSON-build engine used by `catalogue_json_build.py`.
+Direct workbook-led invocation is retained only as historical reference and exits cleanly.
 
 Common flags:
 - --write: persist generated files + workbook status/date updates
@@ -865,6 +862,11 @@ def main() -> None:
         default=str(DEFAULT_CATALOGUE_SOURCE_DIR),
         help="Catalogue source JSON directory when --source=json.",
     )
+    ap.add_argument(
+        "--internal-json-source-run",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
 
     # Worksheet names
     ap.add_argument("--works-sheet", default="Works", help="Worksheet name for base work metadata")
@@ -950,6 +952,17 @@ def main() -> None:
         ),
     )
     args = ap.parse_args()
+
+    if not args.internal_json_source_run:
+        print(
+            "Deprecated direct entrypoint: scripts/generate_work_pages.py is now an internal JSON build engine.\n"
+            "Use `python3 ./scripts/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
+            "Workbook-led direct generation is retired."
+        )
+        return
+    if args.source != "json":
+        raise SystemExit("scripts/generate_work_pages.py now only supports internal JSON-source runs.")
+
     repo_root = Path(__file__).resolve().parents[1]
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
     media_base_dir_display = Path(args.media_base_dir).expanduser() if normalize_text(args.media_base_dir) else None

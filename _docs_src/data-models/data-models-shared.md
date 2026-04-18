@@ -128,8 +128,8 @@ Current builders and validators enforce more of the model than the raw JSON alon
 
 Current enforcement layers:
 
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-  writes the main catalogue indexes and record payloads, syncs missing Studio assignment rows, and hashes generated payloads
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
+  drives the live rebuild path that writes the main catalogue indexes and record payloads
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
   documents the unified search builder that now owns `catalogue`, `studio`, and `library` search outputs from canonical repo JSON and published docs indexes
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

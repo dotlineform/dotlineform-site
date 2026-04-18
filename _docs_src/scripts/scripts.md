@@ -1,14 +1,14 @@
 ---
 doc_id: scripts
 title: Scripts
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: ""
 sort_order: 30
 ---
 
 # Scripts
 
-This section describes the scripts used to build site data.
+This section describes the active repo scripts used to maintain site data.
 
 # Introduction
 
@@ -18,15 +18,15 @@ For local environment/bootstrap steps, see [Local Setup](/docs/?scope=studio&doc
 
 ## Purpose
 
-This page is now the high-level entry point for repo scripts.
-Command-level usage, flags, output paths, and operational notes now live in the child docs below.
+This page is the high-level entry point for active repo scripts.
+Command-level usage, flags, output paths, and operational notes live in the child docs below.
 Local server architecture and future consolidation strategy live in **[Servers](/docs/?scope=studio&doc=servers)**.
 
 The current script surface falls into four groups:
 
 - docs-domain builders for scope-owned docs artifacts
 - search builders for scope-owned search artifacts
-- catalogue/media generators for public site content
+- JSON-led catalogue maintenance and scoped rebuild helpers
 - local tooling for audits, CSS analysis, and Studio write flows
 
 ## Common Runtime Assumptions
@@ -77,51 +77,31 @@ Search builds:
     - `assets/data/search/studio/index.json`
     - `assets/data/search/library/index.json`
 
-Catalogue/media builds:
+Catalogue/runtime maintenance:
 
-- `./scripts/build_catalogue.py`
-  - plans workbook-backed work/series/detail generation plus file-backed moment generation, canonical source-media changes, and current work/series/moment prose changes from `var/build_catalogue_state.json`, runs a shared workbook/source preflight, prunes stale repo-owned generated artifacts and stale local media outputs for removed rows, then orchestrates copy -> srcset -> generation for works, work details, and moments, then rebuilds catalogue search
-  - writes a local build-activity journal and a Studio-facing recent-activity feed after successful non-dry-run runs
-- `./scripts/generate_work_pages.py`
-  - runs the shared workbook preflight, then builds catalogue pages plus runtime JSON, including:
-    - `assets/data/series_index.json`
-    - `assets/data/works_index.json`
-    - `assets/data/moments_index.json`
 - `python3 ./scripts/catalogue_json_build.py`
-  - previews or runs a scoped JSON-source rebuild for a selected work id, including aggregate indexes and catalogue search
-- `./scripts/export_catalogue_source.py`
-  - exports Phase 0 catalogue source JSON from `data/works.xlsx` into `assets/studio/data/catalogue/`
-- `./scripts/export_catalogue_lookup.py`
+  - previews or runs a scoped JSON-source rebuild for one work or one series scope, including aggregate indexes and catalogue search
+- `python3 ./scripts/validate_catalogue_source.py`
+  - validates canonical catalogue source JSON under `assets/studio/data/catalogue/`
+- `python3 ./scripts/compare_catalogue_sources.py`
+  - compares workbook-normalized source records with JSON-normalized source records during transition checks
+- `python3 ./scripts/export_catalogue_lookup.py`
   - exports derived Studio lookup JSON from canonical source into `assets/studio/data/catalogue_lookup/`
-- `./scripts/validate_catalogue_source.py`
-  - validates the exported catalogue source JSON
-- `./scripts/compare_catalogue_sources.py`
-  - compares workbook-normalized source records with JSON-normalized source records
-- `./scripts/copy_draft_media_files.py`
-  - stages source media into the srcset input folders
 - `bash scripts/make_srcset_images.sh`
-  - builds derivative image outputs from staged source media
+  - builds derivative image outputs when media work is needed outside the Studio metadata flow
 
 ## Script References
 
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
   Build scope-owned docs JSON for Studio and Library docs.
-- [Build Catalogue](/docs/?scope=studio&doc=scripts-main-pipeline)
-  Run the copy -> srcset -> generation pipeline from one entrypoint.
-- [Copy Draft Media](/docs/?scope=studio&doc=scripts-copy-draft-media)
-  Stage source media for works, work details, and moments from workbook-driven IDs.
 - [Srcset Builder](/docs/?scope=studio&doc=scripts-srcset-builder)
   Build srcset derivatives through the stable shell entrypoint and shared Python implementation.
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
-  Generate collection stubs, per-record JSON, and aggregate catalogue indexes.
 - [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json)
   Preview or run the Phase 5 scoped JSON-source rebuild flow for one work.
-- [Catalogue Source Export](/docs/?scope=studio&doc=scripts-catalogue-source)
-  Export, validate, and compare Phase 0 catalogue source JSON.
+- [Catalogue Source Utilities](/docs/?scope=studio&doc=scripts-catalogue-source)
+  Validate and compare canonical catalogue source JSON during the transition away from workbook-led tooling.
 - [Catalogue Lookup Export](/docs/?scope=studio&doc=scripts-catalogue-lookup)
   Export derived Studio lookup payloads for focused editor reads.
-- [Delete Work](/docs/?scope=studio&doc=scripts-delete-work)
-  Remove one work from generated artifacts when workbook status is `delete`.
 - [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
   Remove one moment from generated artifacts, with optional source-file deletion.
 - [Delete Moment](/docs/?scope=studio&doc=scripts-delete-moment)
@@ -141,8 +121,8 @@ Catalogue/media builds:
 
 ## Related References
 
-- [Pipeline Use Cases](/docs/?scope=studio&doc=pipeline-use-cases)
 - [Servers](/docs/?scope=studio&doc=servers)
+- [New Catalogue Pipeline](/docs/?scope=studio&doc=new-pipeline)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Sorting Architecture](/docs/?scope=studio&doc=sorting-architecture)
 - [CSS Audit Spec](/docs/?scope=studio&doc=css-audit-spec)

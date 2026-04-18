@@ -1,23 +1,23 @@
 ---
 doc_id: new-pipeline
 title: New Cat Pipeline
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: ""
 sort_order: 40
 ---
 
 # New Catalogue Pipeline
 
-This section describes the proposed move from workbook-led catalogue maintenance to a local Studio workflow where JSON source files are the canonical truth.
+This section describes the active catalogue workflow: local Studio maintenance backed by canonical JSON source files.
 
-The goal is not to redesign the public catalogue runtime. The public pages should continue to read the existing generated route stubs and runtime JSON artifacts. The change is upstream: replace `data/works.xlsx` as the primary editing surface, preserve the existing runtime data contracts where possible, and let Studio write canonical source JSON through localhost-only services.
+The goal is not to redesign the public catalogue runtime. The public pages continue to read the existing generated route stubs and runtime JSON artifacts. The change is upstream: `data/works.xlsx` is no longer the primary editing surface, runtime data contracts stay stable where possible, and Studio writes canonical source JSON through localhost-only services.
 
 Read this section in this order:
 
 1. **[Current Pipeline Map](/docs/?scope=studio&doc=new-pipeline-current-pipeline-map)** for how `build_catalogue.py`, `generate_work_pages.py`, `data/works.xlsx`, media scripts, and generated runtime artifacts currently fit together
 2. **[Source Model](/docs/?scope=studio&doc=new-pipeline-source-model)** for the proposed canonical JSON source files and how they map from the existing workbook sheets
 3. **[Web System Specification](/docs/?scope=studio&doc=new-pipeline-web-system-spec)** for the Studio pages, local write service, validation, bulk edit behavior, and build boundaries
-4. **[Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)** for a phased path that starts with a single-work metadata editor and expands toward import, delete, bulk edit, and publication workflows
+4. **[Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)** for the phased implementation record and the final retirement of workbook-led entrypoints
 
 ## Scope
 
@@ -28,7 +28,7 @@ In scope:
 - keeping current runtime-critical JSON files stable wherever possible
 - adding local Studio pages for searching, editing, adding, deleting, and bulk-editing catalogue source records
 - keeping media storage conventions and media derivative scripts functionally unchanged
-- retaining a workbook import/export path for bulk additions, but not for editing currently published records
+- retaining a workbook import path for bulk additions, but not for editing currently published records
 
 Out of scope for the first implementation pass:
 

@@ -33,7 +33,7 @@ Current checked-in catalogue model families:
 
 Primary writers:
 
-- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages) for route stubs, shared indexes, and per-record catalogue payloads
+- [Scoped JSON Catalogue Build](/docs/?scope=studio&doc=scripts-build-catalogue-json) for the live rebuild path that refreshes route stubs, shared indexes, and per-record catalogue payloads
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline) for `assets/data/search/catalogue/index.json`
 
 Primary validator:

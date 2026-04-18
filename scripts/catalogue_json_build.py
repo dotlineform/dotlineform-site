@@ -180,6 +180,7 @@ def build_generate_command(repo_root: Path, source_dir: Path, scope: Dict[str, A
     cmd = [
         sys.executable,
         str(repo_root / "scripts" / "generate_work_pages.py"),
+        "--internal-json-source-run",
         "--source",
         "json",
         "--source-dir",

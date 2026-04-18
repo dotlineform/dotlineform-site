@@ -1,12 +1,19 @@
 ---
 doc_id: pipeline-use-cases
-title: Pipeline Use Cases
-last_updated: 2026-04-01
-parent_id: scripts
+title: "Deprecated: Pipeline Use Cases"
+last_updated: 2026-04-18
+parent_id: _archive
 sort_order: 10
 ---
 
-# Pipeline Use Cases
+# Deprecated: Pipeline Use Cases
+
+Status:
+
+- deprecated workbook-led workflow reference
+- retained for historical context only
+
+This document describes the retired workbook-led CLI workflow. The live catalogue workflow now uses Studio editing, dedicated import flows, and scoped JSON rebuilds.
 
 This guide assumes:
 

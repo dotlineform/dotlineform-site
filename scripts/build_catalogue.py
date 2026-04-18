@@ -1417,6 +1417,14 @@ def delete_stale_artifact_paths(paths: Iterable[Path]) -> int:
 
 
 def main() -> int:
+    print(
+        "Deprecated: scripts/build_catalogue.py is no longer part of the live catalogue workflow.\n"
+        "Use Studio catalogue pages to edit canonical JSON source records.\n"
+        "Use `python3 ./scripts/catalogue_json_build.py --work-id <work_id> [--write]` for scoped runtime rebuilds.\n"
+        "The workbook-led pipeline is retained only as historical reference."
+    )
+    return 0
+
     media_base = env_var_value(PIPELINE_CONFIG, "media_base_dir")
     projects_base = env_var_value(PIPELINE_CONFIG, "projects_base_dir")
     default_work_input = join_base_and_subdir(media_base, media_mode_input_subdir(PIPELINE_CONFIG, "work"))

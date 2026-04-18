@@ -413,6 +413,13 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    print(
+        "Deprecated: scripts/copy_draft_media_files.py is no longer part of the live catalogue workflow.\n"
+        "Media preparation is no longer orchestrated from the retired workbook-led pipeline.\n"
+        "This script is retained only as historical reference."
+    )
+    return 0
+
     if PROJECTS_BASE_DIR_ENV == "":
         raise SystemExit(f"Missing {PROJECTS_BASE_DIR_ENV_NAME}. Set it in your local environment.")
     if WORKS_BASE_DIR_ENV == "":
