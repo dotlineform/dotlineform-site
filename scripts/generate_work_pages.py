@@ -3,7 +3,8 @@
 Generate Jekyll work/moment pages and JSON artifacts.
 
 This repo stores works as a Jekyll collection in `_works/`. The generator writes one Markdown
-file per work (e.g. `_works/00286.md`) with YAML front matter populated from these worksheets.
+file per work (e.g. `_works/00286.md`) with YAML front matter populated from canonical catalogue
+source records plus an in-memory sheet-like projection retained for internal compatibility.
 
 Series index JSON is written to assets/data/series_index.json.
 Work-details JSON index files are written to assets/works/index/<work_id>.json (work-driven; one per selected work).
@@ -37,11 +38,11 @@ Safe by default:
 specify work_ids to process with --work-ids (comma-separated list)
   - Only those IDs are processed; others are skipped early.
   - Status filtering still applies to the selected IDs unless you also pass --force.
-This script is now an internal JSON-build engine used by `catalogue_json_build.py`.
-Direct workbook-led invocation is retained only as historical reference and exits cleanly.
+This script is an internal JSON-build engine used by `catalogue_json_build.py`.
+It is not a user-facing workbook command.
 
 Common flags:
-- --write: persist generated files + workbook status/date updates
+- --write: persist generated files + canonical source status/date updates
 - --force: regenerate even when checksum/hash matches existing output
 - --work-ids / --work-ids-file: limit work/work_details generation scope
 - --series-ids / --series-ids-file: limit series page/JSON scope
@@ -74,9 +75,6 @@ from typing import Any, Dict, List, Optional
 import hashlib
 import json
 import sys
-
-import openpyxl
-
 
 RECENT_INDEX_SCHEMA = "recent_index_v1"
 RECENT_INDEX_LIMIT = 50
@@ -114,11 +112,6 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
         source_works_root_subdir,
     )
 
-
-try:
-    from catalogue_preflight import raise_if_invalid_catalogue_workbook
-except ModuleNotFoundError:  # pragma: no cover - package import fallback
-    from scripts.catalogue_preflight import raise_if_invalid_catalogue_workbook
 
 try:
     from catalogue_source import (
@@ -910,24 +903,17 @@ def load_tag_registry_payload(path: Path) -> Dict[str, Any]:
 # Main program
 # ----------------------------
 # High-level flow:
-# 1) Parse CLI args (column mapping + output options)
-# 2) Load workbook + sheets
-# 3) Build header->index maps from row 1 of each sheet
-# 4) Iterate Works rows -> build front matter + body -> write one file per work
+# 1) Parse CLI args (scope + output options)
+# 2) Load canonical source JSON
+# 3) Build the internal sheet-like projection used by retained generator helpers
+# 4) Iterate the projected rows -> build front matter + body -> write generated artifacts
 def main() -> None:
-    # CLI arguments define how we map Excel columns to front matter fields, and where output files go.
+    # CLI arguments define the internal JSON-source run and where output files go.
     ap = argparse.ArgumentParser()
-    ap.add_argument("xlsx", nargs="?", default="data/works.xlsx", help="Path to Excel workbook (.xlsx)")
-    ap.add_argument(
-        "--source",
-        choices=["xlsx", "json"],
-        default="xlsx",
-        help="Source backend for catalogue metadata. Default: xlsx.",
-    )
     ap.add_argument(
         "--source-dir",
         default=str(DEFAULT_CATALOGUE_SOURCE_DIR),
-        help="Catalogue source JSON directory when --source=json.",
+        help="Canonical catalogue source JSON directory.",
     )
     ap.add_argument(
         "--internal-json-source-run",
@@ -1027,8 +1013,6 @@ def main() -> None:
             "Workbook-led direct generation is retired."
         )
         return
-    if args.source != "json":
-        raise SystemExit("scripts/generate_work_pages.py now only supports internal JSON-source runs.")
 
     repo_root = Path(__file__).resolve().parents[1]
     projects_base_dir_display = Path(args.projects_base_dir).expanduser() if normalize_text(args.projects_base_dir) else None
@@ -1056,13 +1040,9 @@ def main() -> None:
             media_base_dir=media_base_dir_display,
         )
 
-    json_source_dir: Optional[Path] = None
-    source_records = None
-    using_json_source = args.source == "json"
-    if using_json_source:
-        json_source_dir = Path(args.source_dir).expanduser()
-        source_records = records_from_json_source(json_source_dir)
-        print(f"Catalogue source: JSON {display_path(json_source_dir)}")
+    json_source_dir = Path(args.source_dir).expanduser()
+    source_records = records_from_json_source(json_source_dir)
+    print(f"Catalogue source: JSON {display_path(json_source_dir)}")
 
     log_event(
         "generate_start",
@@ -1070,7 +1050,7 @@ def main() -> None:
             "argv": sys.argv[1:],
             "write": bool(args.write),
             "force": bool(args.force),
-            "source": args.source,
+            "source": "json",
         },
     )
 
@@ -1134,69 +1114,40 @@ def main() -> None:
             "or pass --media-base-dir."
         )
 
-    xlsx_path: Optional[Path] = None
-    wb_values = None
-    wb_write = None
-    if using_json_source:
-        assert source_records is not None
-        works_rows = rows_from_records(WORKBOOK_HEADERS["Works"], list(source_records.works.values()))
-        series_rows = rows_from_records(WORKBOOK_HEADERS["Series"], list(source_records.series.values()))
-        series_sort_rows = rows_from_records(
-            WORKBOOK_HEADERS["SeriesSort"],
-            [
-                {
-                    "series_id": record.get("series_id"),
-                    "sort_fields": record.get("sort_fields") or "work_id",
-                }
-                for record in source_records.series.values()
-            ],
-        )
-        work_details_rows = rows_from_records(WORKBOOK_HEADERS["WorkDetails"], list(source_records.work_details.values()))
-        work_files_rows = rows_from_records(WORKBOOK_HEADERS["WorkFiles"], list(source_records.work_files.values()))
-        work_links_rows = rows_from_records(WORKBOOK_HEADERS["WorkLinks"], list(source_records.work_links.values()))
-
-        works_ws = ProxyWorksheet(WORKBOOK_HEADERS["Works"], works_rows[1:])
-        series_ws = ProxyWorksheet(WORKBOOK_HEADERS["Series"], series_rows[1:])
-        work_details_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkDetails"], work_details_rows[1:])
-        work_files_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkFiles"], work_files_rows[1:])
-        work_links_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkLinks"], work_links_rows[1:])
-
-        def read_sheet_rows(sheet_name: str) -> List[tuple]:
-            mapping = {
-                args.works_sheet: works_rows,
-                args.series_sheet: series_rows,
-                args.series_sort_sheet: series_sort_rows,
-                args.work_details_sheet: work_details_rows,
-                args.work_files_sheet: work_files_rows,
-                args.work_links_sheet: work_links_rows,
+    works_rows = rows_from_records(WORKBOOK_HEADERS["Works"], list(source_records.works.values()))
+    series_rows = rows_from_records(WORKBOOK_HEADERS["Series"], list(source_records.series.values()))
+    series_sort_rows = rows_from_records(
+        WORKBOOK_HEADERS["SeriesSort"],
+        [
+            {
+                "series_id": record.get("series_id"),
+                "sort_fields": record.get("sort_fields") or "work_id",
             }
-            if sheet_name not in mapping:
-                raise SystemExit(f"Sheet not found in JSON source projection: {sheet_name}")
-            return mapping[sheet_name]
-    else:
-        # Resolve the workbook path and fail fast if it is missing.
-        xlsx_path = Path(args.xlsx).expanduser()
-        if not xlsx_path.exists():
-            raise SystemExit(f"Workbook not found: {xlsx_path}")
+            for record in source_records.series.values()
+        ],
+    )
+    work_details_rows = rows_from_records(WORKBOOK_HEADERS["WorkDetails"], list(source_records.work_details.values()))
+    work_files_rows = rows_from_records(WORKBOOK_HEADERS["WorkFiles"], list(source_records.work_files.values()))
+    work_links_rows = rows_from_records(WORKBOOK_HEADERS["WorkLinks"], list(source_records.work_links.values()))
 
-        # `data_only=True` reads the last-calculated values of formula cells.
-        # Keep a second non-data_only workbook for writes so formulas are preserved on save.
-        # If your sheet relies on formulas that haven't been calculated/saved, cached values may be None.
-        wb_values = openpyxl.load_workbook(xlsx_path, data_only=True)
-        wb_write = openpyxl.load_workbook(xlsx_path, data_only=False) if args.write else None
+    works_ws = ProxyWorksheet(WORKBOOK_HEADERS["Works"], works_rows[1:])
+    series_ws = ProxyWorksheet(WORKBOOK_HEADERS["Series"], series_rows[1:])
+    work_details_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkDetails"], work_details_rows[1:])
+    work_files_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkFiles"], work_files_rows[1:])
+    work_links_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkLinks"], work_links_rows[1:])
 
-        if args.works_sheet not in wb_values.sheetnames:
-            raise SystemExit(f"Sheet not found in workbook: {args.works_sheet}")
-        works_ws = wb_write[args.works_sheet] if wb_write is not None else wb_values[args.works_sheet]
-
-        def read_sheet_rows(sheet_name: str) -> List[tuple]:
-            if sheet_name not in wb_values.sheetnames:
-                raise SystemExit(f"Sheet not found in workbook: {sheet_name}")
-            ws = wb_values[sheet_name]
-            rows = list(ws.iter_rows(values_only=True))
-            if not rows:
-                return []
-            return rows
+    def read_sheet_rows(sheet_name: str) -> List[tuple]:
+        mapping = {
+            args.works_sheet: works_rows,
+            args.series_sheet: series_rows,
+            args.series_sort_sheet: series_sort_rows,
+            args.work_details_sheet: work_details_rows,
+            args.work_files_sheet: work_files_rows,
+            args.work_links_sheet: work_links_rows,
+        }
+        if sheet_name not in mapping:
+            raise SystemExit(f"Sheet not found in JSON source projection: {sheet_name}")
+        return mapping[sheet_name]
 
     def build_header_index(rows: List[tuple]) -> Dict[str, int]:
         if not rows:
@@ -1307,21 +1258,11 @@ def main() -> None:
     if run_work_files and work_files_stage_dir is not None:
         work_files_stage_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load all worksheets up-front.
+    # Load the internal sheet-like projection up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
-    if using_json_source:
-        series_sort_rows = read_sheet_rows(args.series_sort_sheet)
-        work_details_rows = read_sheet_rows(args.work_details_sheet)
-    else:
-        series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb_values.sheetnames else []
-        work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb_values.sheetnames else []
-        series_ws = wb_write[args.series_sheet] if wb_write is not None else wb_values[args.series_sheet]
-        work_details_ws = (
-            wb_write[args.work_details_sheet] if wb_write is not None else wb_values[args.work_details_sheet]
-        ) if args.work_details_sheet in wb_values.sheetnames else None
-        work_files_ws = wb_write[args.work_files_sheet] if wb_write is not None else wb_values[args.work_files_sheet]
-        work_links_ws = wb_write[args.work_links_sheet] if wb_write is not None else wb_values[args.work_links_sheet]
+    series_sort_rows = read_sheet_rows(args.series_sort_sheet)
+    work_details_rows = read_sheet_rows(args.work_details_sheet)
     work_files_rows = read_sheet_rows(args.work_files_sheet)
     work_links_rows = read_sheet_rows(args.work_links_sheet)
 
@@ -1944,20 +1885,9 @@ def main() -> None:
         run_moments = False
         run_moments_index_json = False
 
-    if using_json_source:
-        assert source_records is not None
-        source_validation_errors = validate_source_records(source_records)
-        if source_validation_errors:
-            raise SystemExit("JSON source validation failed: " + "; ".join(source_validation_errors[:20]))
-    else:
-        assert xlsx_path is not None
-        raise_if_invalid_catalogue_workbook(
-            xlsx_path,
-            works_sheet=args.works_sheet,
-            series_sheet=args.series_sheet,
-            work_details_sheet=args.work_details_sheet,
-            projects_base_dir=Path(args.projects_base_dir).expanduser(),
-        )
+    source_validation_errors = validate_source_records(source_records)
+    if source_validation_errors:
+        raise SystemExit("JSON source validation failed: " + "; ".join(source_validation_errors[:20]))
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
@@ -2214,10 +2144,6 @@ def main() -> None:
         or work_links_status_updated > 0
         or work_links_published_date_updated > 0
     ):
-        if not using_json_source:
-            assert wb_write is not None
-            assert xlsx_path is not None
-            wb_write.save(xlsx_path)
         if status_updated > 0:
             print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
@@ -2241,14 +2167,9 @@ def main() -> None:
             f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
             f" Missing/unresolved: {downloads_missing}."
         )
-        if using_json_source:
-            assert json_source_dir is not None
-            print(f"Catalogue source: {display_path(json_source_dir)}")
-        else:
-            assert xlsx_path is not None
-            print(f"Workbook: {display_path(xlsx_path)}")
+        print(f"Catalogue source: {display_path(json_source_dir)}")
         if args.write:
-            print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
+            print("Canonical source write-back runs after generation completes.")
     else:
         print("Work pages/files skipped: not selected by --only.")
 
@@ -2548,10 +2469,6 @@ def main() -> None:
                 print("Tag assignments sync: no missing series entries.")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
-            if not using_json_source:
-                assert wb_write is not None
-                assert xlsx_path is not None
-                wb_write.save(xlsx_path)
             if series_status_updated > 0:
                 print(f"Updated series status to 'published' for {series_status_updated} row(s).")
             if series_published_date_updated > 0:
@@ -2840,10 +2757,6 @@ def main() -> None:
                     details_written += 1
 
             if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
-                if not using_json_source:
-                    assert wb_write is not None
-                    assert xlsx_path is not None
-                    wb_write.save(xlsx_path)
                 if details_status_updated > 0:
                     print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
                 if details_published_date_updated > 0:
@@ -3619,7 +3532,7 @@ def main() -> None:
                 f"Path: {display_path(moments_index_json_path)} (overwrite={exists})"
             )
 
-    if args.write and using_json_source and json_source_dir is not None:
+    if args.write:
         rebuilt_source_records = rebuild_source_records_from_projection()
         synced_paths = write_source_record_payloads(json_source_dir, rebuilt_source_records)
         print("Catalogue source JSON write-back done.")
@@ -3631,7 +3544,7 @@ def main() -> None:
         {
             "write": bool(args.write),
             "force": bool(args.force),
-            "source": args.source,
+            "source": "json",
         },
     )
 

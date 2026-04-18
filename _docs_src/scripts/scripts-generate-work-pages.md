@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-generate-work-pages
 title: "Deprecated: Generate Work Pages"
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 parent_id: _archive
 sort_order: 50
 ---
@@ -26,18 +26,17 @@ Common runs:
 ```bash
 ./scripts/generate_work_pages.py
 ./scripts/generate_work_pages.py --write
-./scripts/generate_work_pages.py --source json --work-ids 00456 --write
-./scripts/generate_work_pages.py --work-ids 00456 --write
-./scripts/generate_work_pages.py --work-ids-file /tmp/work_ids.txt --write
-./scripts/generate_work_pages.py --series-ids 001,002 --write
-./scripts/generate_work_pages.py --only moments --moment-ids blue-sky --write
+python3 ./scripts/catalogue_json_build.py --work-id 00456
+python3 ./scripts/catalogue_json_build.py --work-id 00456 --write
+python3 ./scripts/catalogue_json_build.py --moment-file keys.md
+python3 ./scripts/catalogue_json_build.py --moment-file keys.md --write
 ```
 
-Before any writes begin, the generator now runs the same shared catalogue workbook/source preflight used by `build_catalogue.py`. Blocking workbook and moment-source errors are aggregated and reported together before file writes or workbook status updates start.
+Before any writes begin, the generator validates canonical source records and moment-source inputs before file writes or canonical source status/date updates start.
 
-Generator log output also shortens local absolute paths for workbook, source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
+Generator log output also shortens local absolute paths for source, staged-media, and generated-file messages so routine runs no longer echo machine-specific roots.
 
-When `--write` is used, the generator now reads cached formula values from one workbook instance and writes updates through a separate non-`data_only` workbook instance for workbook-backed outputs. Moment publish status and `published_date` are now written back to moment source front matter rather than to the workbook.
+When `--write` is used, the generator writes mutable catalogue/source state back into canonical JSON and moment source front matter rather than into a workbook.
 
 Moment canonical source model:
 
@@ -59,13 +58,12 @@ Moment canonical source model:
 
 ## Useful Flags
 
-- `--write`: persist generated file changes plus workbook-backed work/work-detail/link updates
-- `--source` with default `xlsx`
-  - `xlsx` reads `data/works.xlsx` or the positional workbook path
-  - `json` reads canonical source JSON from `assets/studio/data/catalogue/`
-  - JSON source mode no longer materializes a temporary `works.xlsx`; the live path now reads canonical source records directly and uses only an in-memory compatibility projection where retained generator logic still expects sheet-like rows
+- `--internal-json-source-run`
+  - internal-only flag used by `catalogue_json_build.py`
+  - direct manual use is not part of the supported workflow
+- `--write`: persist generated file changes plus canonical-source work/work-detail/link/series updates
 - `--source-dir` with default `assets/studio/data/catalogue`
-  - used only when `--source json`
+  - canonical source JSON directory for the internal run
 - `--force`: regenerate even when checksums match
 - `--work-ids`, `--work-ids-file`
 - `--series-ids`, `--series-ids-file`
@@ -156,19 +154,19 @@ Artifact behavior:
 
 There is no separate `works-prose` artifact; use `work-json` for prose-only refreshes.
 
-## Workbook Preflight
+## Source Validation
 
-The shared preflight currently stops the run when actionable catalogue rows contain blocking workbook errors such as:
+The internal generator currently stops the run when actionable canonical source records contain blocking structural errors such as:
 
 - malformed `work_id`, `detail_id`, `series_id`, or `moment_id` values
-- `Works.series_ids` values that do not normalize to a valid series ID or do not exist in `Series`
-- missing `Series.primary_work_id`
-- `Series.primary_work_id` values that do not resolve to a `Works` row
-- `Series.primary_work_id` values whose `Works.series_ids` do not include that series
-- `WorkDetails.work_id` values that do not resolve to `Works`
+- `works.series_ids` values that do not normalize to a valid series ID or do not exist in `series`
+- missing `series.primary_work_id`
+- `series.primary_work_id` values that do not resolve to a `works` record
+- `series.primary_work_id` values whose `works.series_ids` do not include that series
+- `work_details.work_id` values that do not resolve to `works`
 - non-slug-safe moment source filenames under `moments/*.md`
 
-This preflight runs before generated files or workbook status/date updates are written, so those failures no longer appear after a partially written run.
+This validation runs before generated files or canonical source status/date updates are written, so those failures no longer appear after a partially written run.
 
 ## Runtime Canonical Data Flow
 

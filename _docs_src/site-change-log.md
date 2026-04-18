@@ -1,7 +1,7 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 110
 ---
@@ -27,6 +27,7 @@ sort_order: 110
 
 ## 2026-04-19
 
+- completed Phase 10 generator cleanup work: `generate_work_pages.py` now carries only the internal JSON-source runtime path, the dead workbook branch and workbook-oriented runtime messaging were removed, the remaining in-memory compatibility layer is explicit, and moment-scoped rebuilds now call the same internal generator entry boundary as work and series rebuilds
 - completed the pre-Phase 10 bulk-import follow-up: the workbook path is now configured in `_data/pipeline.json` and points to `data/works_bulk_import.xlsx`, the Studio bulk-import UI and write server no longer assume `data/works.xlsx`, and the reduced workbook was checked against the importer schema with all retained `Works` and `WorkDetails` headers confirmed as eligible import fields
 
 ## 2026-04-17

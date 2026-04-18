@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T22:49:46Z",
+  "generated_at": "2026-04-18T22:56:49Z",
   "docs": [
     {
       "scope": "studio",
@@ -742,7 +742,7 @@
       "scope": "studio",
       "doc_id": "scripts-generate-work-pages",
       "title": "Deprecated: Generate Work Pages",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-19",
       "parent_id": "_archive",
       "sort_order": 50,
       "source_path": "scripts/scripts-generate-work-pages.md",
@@ -1061,7 +1061,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 110,
       "source_path": "site-change-log.md",

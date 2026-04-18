@@ -644,7 +644,7 @@ Completed on 2026-04-19:
 
 Status:
 
-- deferred until the Phase 9 JSON-native generator path is stable and artifact-equivalent
+- completed on 2026-04-19
 
 Scope:
 
@@ -693,6 +693,15 @@ Task list:
 10. Re-run representative scoped builds for work, series, detail, and moment cases after each cleanup slice, so artifact stability is checked continuously rather than only at the end.
 11. Document the remaining non-live compatibility layer explicitly once cleanup is done, so future maintenance can see what still exists for import/comparison reasons and what is now truly retired.
 12. Update the plan/docs trail to describe the post-cleanup generator boundary clearly, including what still belongs in Phase 10 and what future work is no longer needed because the half-transitioned generator state has been resolved.
+
+Implemented:
+
+1. Removed the unreachable workbook-only entry and runtime branch from `generate_work_pages.py`, so the internal generator now loads canonical source JSON directly rather than carrying dead workbook control flow alongside the live path.
+2. Simplified the internal generator CLI boundary so the active runtime path is explicitly `--internal-json-source-run` plus `--source-dir`, instead of still parsing workbook/source-mode options that no longer belong to the live flow.
+3. Kept the retained compatibility layer narrow and explicit: the generator still builds an in-memory sheet-like projection for the sections that still expect row-oriented helpers, but that compatibility no longer pretends to be a workbook runtime.
+4. Removed leftover workbook-save conditionals and workbook-oriented messaging from the live generator path, so generation now reads and logs like an intentional canonical-source runtime instead of a migration-era dual-mode command.
+5. Fixed the moment-scoped generate command in `catalogue_json_build.py` so moments now use the same internal generator entry boundary as work- and series-scoped rebuilds, rather than bypassing the internal JSON-run path.
+6. Updated the plan/docs trail to reflect the cleaned boundary: the live generator is JSON-native and internal, while any remaining workbook-shaped compatibility is now clearly non-live cleanup residue rather than an active runtime mode.
 
 ### Phase 11. End-To-End Testing Checklist And Execution Prep
 

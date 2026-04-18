@@ -1045,8 +1045,6 @@ def build_generate_command(repo_root: Path, source_dir: Path, scope: Dict[str, A
         sys.executable,
         str(repo_root / "scripts" / "generate_work_pages.py"),
         "--internal-json-source-run",
-        "--source",
-        "json",
         "--source-dir",
         str(source_dir),
         "--work-ids",
@@ -1064,10 +1062,13 @@ def build_generate_command(repo_root: Path, source_dir: Path, scope: Dict[str, A
     return cmd
 
 
-def build_generate_moment_command(repo_root: Path, scope: Dict[str, Any], *, write: bool, force: bool) -> list[str]:
+def build_generate_moment_command(repo_root: Path, source_dir: Path, scope: Dict[str, Any], *, write: bool, force: bool) -> list[str]:
     cmd = [
         sys.executable,
         str(repo_root / "scripts" / "generate_work_pages.py"),
+        "--internal-json-source-run",
+        "--source-dir",
+        str(source_dir),
         "--only",
         "moments",
         "--moment-ids",
@@ -1111,7 +1112,10 @@ def run_scoped_build_scope(
     media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env)
     if scope_kind == "moment":
         commands = [
-            ("Generate Moment Pages", build_generate_moment_command(repo_root, scope, write=write, force=effective_force)),
+            (
+                "Generate Moment Pages",
+                build_generate_moment_command(repo_root, repo_root / DEFAULT_SOURCE_DIR, scope, write=write, force=effective_force),
+            ),
             ("Build Catalogue Search Index", build_search_command(repo_root, write=write, force=effective_force, env=env)),
         ]
     else:
@@ -1389,7 +1393,13 @@ def print_preview(scope: Dict[str, Any], repo_root: Path, source_dir: Path, *, f
     print("Commands:")
     commands = (
         [
-            build_generate_moment_command(repo_root, scope, write=False, force=bool(scope.get("effective_force")) or bool(force)),
+            build_generate_moment_command(
+                repo_root,
+                repo_root / DEFAULT_SOURCE_DIR,
+                scope,
+                write=False,
+                force=bool(scope.get("effective_force")) or bool(force),
+            ),
             build_search_command(repo_root, write=False, force=bool(scope.get("effective_force")) or bool(force)),
         ]
         if scope.get("kind") == "moment"

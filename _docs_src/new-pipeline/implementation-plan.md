@@ -58,8 +58,7 @@ Goal:
 
 Work:
 
-- add `--source json` and `--source-dir` to `generate_work_pages.py`
-- keep `xlsx` as the default source during migration
+- add an explicit internal JSON-run boundary to `generate_work_pages.py`
 - use `scripts/catalogue_source.py` to load canonical source JSON and remove the temporary workbook bridge from the live rebuild path
 - keep any retained workbook-shaped compatibility in-memory and isolated from the live JSON runtime boundary
 - write generator-updated mutable fields back into canonical source JSON directly after JSON-source write runs
