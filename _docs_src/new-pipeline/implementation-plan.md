@@ -543,42 +543,91 @@ Mitigation:
 
 Goal:
 
-- replace Excel filtering/fill-down use cases with safer preview/apply flows
+- replace the remaining Excel filtering and fill-down metadata workflows for existing records
 
 Work:
 
-- add bulk edit route
-- implement selectors for work ID range, explicit IDs, works in series, details under work, and explicit detail UIDs
-- implement scalar set/clear operations
-- implement series membership operations
-- implement preview endpoint
-- implement apply endpoint with backup bundle
+- add bulk-edit mode to the existing work editor and work-detail editor pages
+- treat a comma-delimited list or `-` ranges in the editor search field as a bulk selection
+- support bulk edits for work core metadata only; exclude work files and work links
+- support bulk edits for work-detail metadata only
+- exclude bulk series metadata editing
+- support work `series_ids` changes in bulk mode
+- allow a plain comma-delimited `series_ids` list to replace memberships for the selected works
+- allow `+series_id` and `-series_id` entries to add or remove memberships for the selected works without sorting the resulting `series_ids` list
+- apply one validated source write per bulk operation, with stale-hash checks for every selected record
+- return changed counts and affected work scopes for rebuild
+- keep rebuild as a follow-on scoped work rebuild, not a separate bulk build system
 
 Acceptance:
 
-- user can apply one metadata field change to a range of works
-- preview lists old and new values before apply
+- user can bulk-edit work metadata from the work editor by entering multiple `work_id` values or ranges
+- user can bulk-edit work-detail metadata from the work-detail editor by entering multiple `detail_uid` values or same-work detail ranges
+- untouched fields preserve per-record values across the selected set
+- an empty touched field clears that field across the selected set
 - invalid records block apply
-- affected IDs are returned for rebuild
+- affected work IDs are returned for rebuild
 
 Benefits:
 
-- preserves the main productivity advantage of spreadsheets while reducing accidental edits
+- preserves the main productivity advantage of spreadsheet editing for existing records while keeping source writes inside validated JSON workflows
 
 Risks:
 
 - bulk operations can damage many records quickly
-- bulk web UI can become more complex than the actual need if it tries to absorb bulk-add workflows that workbook import already covers
+- bulk mode can become confusing if it tries to look like single-record edit while behaving differently
+- bulk series membership changes can accidentally replace memberships when the intent was additive or subtractive
 
 Mitigation:
 
-- require preview before apply
+- keep bulk edit on the existing editor pages instead of adding a separate surface
+- keep the initial selector model narrow: explicit IDs plus ranges only
+- show mixed-value hints and require fields to be touched before they apply
+- distinguish replace vs add/remove behavior for bulk `series_ids`
 - include changed count and unchanged count
 - write one backup bundle per apply
 - keep initial operations narrow
 - keep initial bulk-edit scope focused on metadata changes to existing records, not bulk creation
 
-## Phase 14: Retire Workbook-Led Pipeline
+## Phase 14: Delete Workflows
+
+Goal:
+
+- replace workbook-led and script-led delete workflows with explicit Studio preview/apply delete flows
+
+Work:
+
+- add delete preview and apply endpoints for works, work details, and series
+- add focused Studio delete pages or modal flows for each record type
+- validate dependent impacts before delete apply
+- make work delete preview include dependent details, files, links, generated outputs, and series-primary impacts
+- make series delete preview include member work impacts and primary-work consequences
+- keep media and prose cleanup rules explicit rather than implicit
+
+Acceptance:
+
+- user can preview delete impact before removing a work, work detail, or series
+- delete apply blocks when the source model would become invalid
+- affected runtime rebuild scopes are identified clearly
+- the delete workflow no longer depends on workbook status flags
+
+Benefits:
+
+- makes destructive operations explicit and reviewable
+
+Risks:
+
+- delete behavior has more edge cases than metadata edits
+- overreaching delete cleanup can remove files the user intended to keep
+
+Mitigation:
+
+- preview before apply
+- backup bundle before write
+- keep source-record deletion separate from optional media/prose cleanup
+- start with clearly bounded delete scope and expand only where behavior is deterministic
+
+## Phase 15: Retire Workbook-Led Pipeline
 
 Goal:
 

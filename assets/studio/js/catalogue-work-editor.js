@@ -50,6 +50,7 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const SERIES_ID_RE = /^\d+$/;
 const SEARCH_LIMIT = 20;
 const DETAIL_LIST_LIMIT = 10;
+const BULK_PREVIEW_LIMIT = 12;
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -181,6 +182,103 @@ function buildSearchToken(value) {
 
 function compareDetailUid(a, b) {
   return normalizeText(a).localeCompare(normalizeText(b), undefined, { numeric: true, sensitivity: "base" });
+}
+
+function parseWorkSelection(rawValue) {
+  const text = normalizeText(rawValue);
+  if (!text) return [];
+  const tokens = text.split(",").map((item) => normalizeText(item)).filter(Boolean);
+  const workIds = [];
+  const seen = new Set();
+  tokens.forEach((token) => {
+    const rangeMatch = token.match(/^(\d{1,5})\s*-\s*(\d{1,5})$/);
+    if (rangeMatch) {
+      const start = Number(normalizeWorkId(rangeMatch[1]));
+      const end = Number(normalizeWorkId(rangeMatch[2]));
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
+        throw new Error(`Invalid work id range: ${token}`);
+      }
+      for (let value = start; value <= end; value += 1) {
+        const workId = String(value).padStart(5, "0");
+        if (seen.has(workId)) continue;
+        seen.add(workId);
+        workIds.push(workId);
+      }
+      return;
+    }
+    const workId = normalizeWorkId(token);
+    if (!workId) {
+      throw new Error(`Invalid work id: ${token}`);
+    }
+    if (seen.has(workId)) return;
+    seen.add(workId);
+    workIds.push(workId);
+  });
+  return workIds;
+}
+
+function formatSelectionList(ids) {
+  const items = Array.isArray(ids) ? ids.slice(0, BULK_PREVIEW_LIMIT) : [];
+  if (!items.length) return "";
+  const more = (ids.length || 0) - items.length;
+  return more > 0 ? `${items.join(", ")} +${more} more` : items.join(", ");
+}
+
+function isWorkBulkQuery(rawValue) {
+  try {
+    return parseWorkSelection(rawValue).length > 1;
+  } catch (_error) {
+    return false;
+  }
+}
+
+function buildBulkDraftFromRecords(records) {
+  const drafts = records.map((record) => buildDraftFromRecord(record));
+  const draft = {};
+  const mixedFields = new Set();
+  EDITABLE_FIELDS.forEach((field) => {
+    const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
+    const first = values[0] || "";
+    const allSame = values.every((value) => value === first);
+    if (allSame) {
+      draft[field.key] = drafts[0][field.key];
+    } else {
+      draft[field.key] = "";
+      mixedFields.add(field.key);
+    }
+  });
+  return { draft, mixedFields };
+}
+
+function parseBulkSeriesOperation(value) {
+  const text = normalizeText(value);
+  if (!text) {
+    return { mode: "replace", series_ids: [] };
+  }
+  const tokens = text.split(",").map((item) => normalizeText(item)).filter(Boolean);
+  const signed = tokens.filter((token) => token.startsWith("+") || token.startsWith("-"));
+  if (signed.length && signed.length !== tokens.length) {
+    throw new Error("Use either plain series ids or only +id/-id entries.");
+  }
+  if (!signed.length) {
+    return { mode: "replace", series_ids: parseSeriesIds(tokens) };
+  }
+  const addSeriesIds = [];
+  const removeSeriesIds = [];
+  tokens.forEach((token) => {
+    const sign = token[0];
+    const seriesId = normalizeSeriesId(token.slice(1));
+    if (!seriesId) {
+      throw new Error(`Invalid series id entry: ${token}`);
+    }
+    if (sign === "+") addSeriesIds.push(seriesId);
+    if (sign === "-") removeSeriesIds.push(seriesId);
+  });
+  return {
+    mode: "add_remove",
+    add_series_ids: dedupeSeriesIds(addSeriesIds),
+    remove_series_ids: dedupeSeriesIds(removeSeriesIds)
+  };
 }
 
 function detailSectionLabel(state, sectionKey) {
@@ -579,6 +677,47 @@ function updateWorkLinksSection(state) {
 }
 
 function updateSummary(state) {
+  if (state.mode === "bulk") {
+    const selectedCount = state.bulkWorkIds.length;
+    const selectedRecords = state.bulkWorkIds.map((workId) => state.bulkRecords.get(workId)).filter(Boolean);
+    const seriesIds = dedupeSeriesIds(
+      selectedRecords.flatMap((record) => parseSeriesIds(record && record.series_ids))
+    );
+    state.metaNode.textContent = selectedCount
+      ? t(state, "bulk_meta", "{count} works selected", { count: String(selectedCount) })
+      : "";
+    state.summaryNode.innerHTML = `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_selected", "selected works"))}</span>
+        <span class="tagStudioForm__readonly">${escapeHtml(formatSelectionList(state.bulkWorkIds) || "—")}</span>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_count", "record count"))}</span>
+        <span class="tagStudioForm__readonly">${escapeHtml(String(selectedCount || 0))}</span>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_series_label", "series"))}</span>
+        <span class="tagStudioForm__readonly catalogueWorkSummary__series">${escapeHtml(seriesIds.length ? formatSelectionList(seriesIds) : "—")}</span>
+      </div>
+    `;
+    state.runtimeStateNode.textContent = state.rebuildPending
+      ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
+      : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    if (state.newDetailLinkNode) {
+      state.newDetailLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
+    }
+    if (state.newFileLinkNode) {
+      state.newFileLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_file_editor");
+    }
+    if (state.newLinkLinkNode) {
+      state.newLinkLinkNode.href = getStudioRoute(state.config, "catalogue_new_work_link_editor");
+    }
+    if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
+    if (state.filesPanelNode) state.filesPanelNode.hidden = true;
+    if (state.linksPanelNode) state.linksPanelNode.hidden = true;
+    return;
+  }
+
   const record = state.currentRecord;
   state.metaNode.textContent = record
     ? `${record.work_id} · ${buildRecordSummary(record)}`
@@ -615,6 +754,9 @@ function updateSummary(state) {
     const base = getStudioRoute(state.config, "catalogue_new_work_link_editor");
     state.newLinkLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
   }
+  if (state.detailsPanelNode) state.detailsPanelNode.hidden = false;
+  if (state.filesPanelNode) state.filesPanelNode.hidden = false;
+  if (state.linksPanelNode) state.linksPanelNode.hidden = false;
   updateDetailSections(state);
   updateWorkFilesSection(state);
   updateWorkLinksSection(state);
@@ -639,10 +781,10 @@ function formatBuildPreview(state, build) {
   );
 }
 
-function syncUrl(workId) {
+function syncUrl(workValue) {
   const url = new URL(window.location.href);
-  if (workId) {
-    url.searchParams.set("work", workId);
+  if (workValue) {
+    url.searchParams.set("work", workValue);
   } else {
     url.searchParams.delete("work");
   }
@@ -650,11 +792,68 @@ function syncUrl(workId) {
 }
 
 function draftHasChanges(state) {
+  if (state.mode === "bulk") {
+    return state.bulkTouchedFields.size > 0;
+  }
   if (!state.baselineDraft) return false;
   return EDITABLE_FIELDS.some((field) => canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key]));
 }
 
 function validateDraft(state) {
+  if (state.mode === "bulk") {
+    const errors = new Map();
+    if (state.bulkTouchedFields.has("status")) {
+      const status = normalizeText(state.draft.status).toLowerCase();
+      if (!STATUS_OPTIONS.has(status)) {
+        errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
+      }
+    }
+
+    if (state.bulkTouchedFields.has("published_date")) {
+      const publishedDate = normalizeText(state.draft.published_date);
+      if (publishedDate && !DATE_RE.test(publishedDate)) {
+        errors.set("published_date", t(state, "field_invalid_date", "Use YYYY-MM-DD or leave blank."));
+      }
+    }
+
+    if (state.bulkTouchedFields.has("year")) {
+      const year = normalizeText(state.draft.year);
+      if (year && !/^-?\d+$/.test(year)) {
+        errors.set("year", t(state, "field_invalid_year", "Use a whole year or leave blank."));
+      }
+    }
+
+    ["height_cm", "width_cm", "depth_cm"].forEach((fieldKey) => {
+      if (!state.bulkTouchedFields.has(fieldKey)) return;
+      const value = normalizeText(state.draft[fieldKey]);
+      if (value && !Number.isFinite(Number(value))) {
+        errors.set(fieldKey, t(state, "field_invalid_number", "Use a number or leave blank."));
+      }
+    });
+
+    if (state.bulkTouchedFields.has("series_ids")) {
+      try {
+        const operation = parseBulkSeriesOperation(state.draft.series_ids);
+        const seriesIds = operation.mode === "replace"
+          ? operation.series_ids
+          : [...operation.add_series_ids, ...operation.remove_series_ids];
+        for (const seriesId of seriesIds) {
+          if (!state.seriesById.has(seriesId)) {
+            errors.set("series_ids", t(state, "field_unknown_series_id", "Unknown series id: {series_id}.", { series_id: seriesId }));
+            break;
+          }
+        }
+      } catch (error) {
+        errors.set(
+          "series_ids",
+          normalizeText(error && error.message) || t(state, "field_invalid_series_id", "Use comma-separated numeric series ids.")
+        );
+      }
+    }
+
+    return errors;
+  }
+
   const errors = new Map();
   const status = normalizeText(state.draft.status).toLowerCase();
   if (!STATUS_OPTIONS.has(status)) {
@@ -701,13 +900,55 @@ function updateFieldMessages(state, errors) {
   EDITABLE_FIELDS.forEach((field) => {
     const messageNode = state.fieldStatusNodes.get(field.key);
     if (!messageNode) return;
-    const message = errors.get(field.key) || "";
+    let message = errors.get(field.key) || "";
+    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
+      message = field.key === "series_ids"
+        ? t(state, "bulk_field_mixed_series", "Mixed values across selection. Leave untouched to preserve, use plain ids to replace, or +id/-id to add or remove.")
+        : t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
+    }
     messageNode.textContent = message;
     messageNode.hidden = !message;
   });
 }
 
 function buildPayload(state) {
+  if (state.mode === "bulk") {
+    const setFields = {};
+    EDITABLE_FIELDS.forEach((field) => {
+      if (!state.bulkTouchedFields.has(field.key) || field.key === "series_ids") return;
+      const value = state.draft[field.key];
+      if (field.key === "status") {
+        setFields.status = normalizeText(value).toLowerCase() || null;
+        return;
+      }
+      if (field.key === "year") {
+        setFields.year = normalizeText(value) ? Number(value) : null;
+        return;
+      }
+      if (["height_cm", "width_cm", "depth_cm"].includes(field.key)) {
+        setFields[field.key] = normalizeText(value) ? Number(value) : null;
+        return;
+      }
+      setFields[field.key] = normalizeText(value) || null;
+    });
+
+    const expectedRecordHashes = {};
+    state.bulkWorkIds.forEach((workId) => {
+      expectedRecordHashes[workId] = state.bulkRecordHashes.get(workId) || "";
+    });
+
+    const payload = {
+      kind: "works",
+      ids: state.bulkWorkIds.slice(),
+      expected_record_hashes: expectedRecordHashes,
+      set_fields: setFields
+    };
+    if (state.bulkTouchedFields.has("series_ids")) {
+      payload.series_operation = parseBulkSeriesOperation(state.draft.series_ids);
+    }
+    return payload;
+  }
+
   const draft = state.draft;
   return {
     work_id: state.currentWorkId,
@@ -737,10 +978,17 @@ function buildPayload(state) {
 }
 
 function setLoadedRecord(state, workId, record, options = {}) {
+  state.mode = "single";
   state.currentWorkId = workId;
   state.currentRecord = record;
   state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
+  state.bulkWorkIds = [];
+  state.bulkRecords = new Map();
+  state.bulkRecordHashes = new Map();
+  state.bulkMixedFields = new Set();
+  state.bulkTouchedFields = new Set();
+  state.bulkBuildTargets = [];
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   applyDraftToInputs(state);
@@ -755,20 +1003,75 @@ function setLoadedRecord(state, workId, record, options = {}) {
   updateEditorState(state);
 }
 
+function setLoadedBulkWorks(state, workIds, recordsById, recordHashes, options = {}) {
+  state.mode = "bulk";
+  state.currentWorkId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.bulkWorkIds = workIds.slice();
+  state.bulkRecords = new Map(recordsById);
+  state.bulkRecordHashes = new Map(recordHashes);
+  state.bulkBuildTargets = Array.isArray(options.buildTargets) ? options.buildTargets.slice() : [];
+  const records = workIds.map((workId) => recordsById.get(workId)).filter(Boolean);
+  const bulkDraft = buildBulkDraftFromRecords(records);
+  state.baselineDraft = { ...bulkDraft.draft };
+  state.draft = { ...bulkDraft.draft };
+  state.bulkMixedFields = bulkDraft.mixedFields;
+  state.bulkTouchedFields = new Set();
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  syncUrl(workIds.join(","));
+  setTextWithState(
+    state.contextNode,
+    t(state, "bulk_context_loaded", "Bulk editing {count} work records: {work_ids}.", {
+      count: String(workIds.length),
+      work_ids: formatSelectionList(workIds)
+    })
+  );
+  setTextWithState(
+    state.statusNode,
+    t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(workIds.length) })
+  );
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) {
+    setTextWithState(state.resultNode, "");
+  }
+  updateEditorState(state);
+}
+
 function updateEditorState(state) {
-  const hasRecord = Boolean(state.currentRecord);
+  const hasRecord = state.mode === "bulk" ? state.bulkWorkIds.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
   updateSummary(state);
   if (!hasRecord) {
     setTextWithState(state.buildImpactNode, "");
+  } else if (state.mode === "bulk") {
+    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
+      ? state.bulkBuildTargets
+      : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+    setTextWithState(
+      state.buildImpactNode,
+      t(state, "bulk_build_preview", "Build preview: {count} work scopes will be rebuilt.", {
+        count: String(previewTargets.length)
+      })
+    );
   }
 
   const dirty = hasRecord && draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
   if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId }));
+    setTextWithState(
+      state.statusNode,
+      state.mode === "bulk"
+        ? t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) })
+        : t(state, "save_status_loaded", "Loaded work {work_id}.", { work_id: state.currentWorkId })
+    );
   }
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
@@ -779,6 +1082,9 @@ function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   state.draft[fieldKey] = node.value;
+  if (state.mode === "bulk") {
+    state.bulkTouchedFields.add(fieldKey);
+  }
   updateEditorState(state);
 }
 
@@ -787,7 +1093,11 @@ function t(state, key, fallback, tokens = null) {
 }
 
 async function saveCurrentWork(state) {
-  if (!state.currentRecord) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkWorkIds.length) return;
+  } else if (!state.currentRecord) {
+    return;
+  }
   const errors = validateDraft(state);
   updateFieldMessages(state, errors);
   if (errors.size > 0) {
@@ -810,6 +1120,46 @@ async function saveCurrentWork(state) {
   setTextWithState(state.resultNode, "");
 
   try {
+    if (state.mode === "bulk") {
+      const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, buildPayload(state));
+      const changedRecords = Array.isArray(response && response.records) ? response.records : [];
+      changedRecords.forEach((item) => {
+        const workId = normalizeWorkId(item && item.work_id);
+        const record = item && item.record && typeof item.record === "object" ? item.record : null;
+        if (!workId || !record) return;
+        state.bulkRecords.set(workId, record);
+        state.bulkRecordHashes.set(workId, normalizeText(item.record_hash) || "");
+        state.workSearchById.set(workId, {
+          work_id: workId,
+          title: normalizeText(record.title),
+          year_display: normalizeText(record.year_display),
+          status: normalizeText(record.status),
+          series_ids: Array.isArray(record.series_ids) ? record.series_ids.slice() : [],
+          record_hash: normalizeText(item.record_hash)
+        });
+      });
+      state.rebuildPending = Boolean(response.changed);
+      state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
+      setLoadedBulkWorks(state, state.bulkWorkIds, state.bulkRecords, state.bulkRecordHashes, {
+        keepResult: true,
+        buildTargets: state.bulkBuildTargets
+      });
+      const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
+      const resultText = response.changed
+        ? t(state, "bulk_save_result_success", "Saved {count} work records at {saved_at}. Rebuild needed to update the public catalogue.", {
+          count: String(response.changed_count || 0),
+          saved_at: savedAt
+        })
+        : t(state, "save_result_unchanged", "Source already matches the current form values.");
+      setTextWithState(state.resultNode, resultText, response.changed ? "success" : "");
+      setTextWithState(
+        state.statusNode,
+        t(state, "bulk_status_loaded", "Loaded {count} work records.", { count: String(state.bulkWorkIds.length) }),
+        response.changed ? "success" : ""
+      );
+      return;
+    }
+
     const previousSeriesIds = parseSeriesIds(state.baselineDraft && state.baselineDraft.series_ids);
     const nextSeriesIds = parseSeriesIds(state.draft.series_ids);
     const payload = buildPayload(state);
@@ -861,6 +1211,21 @@ async function saveCurrentWork(state) {
 }
 
 async function refreshBuildPreview(state) {
+  if (state.mode === "bulk") {
+    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
+      ? state.bulkBuildTargets
+      : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+    setTextWithState(
+      state.buildImpactNode,
+      previewTargets.length
+        ? t(state, "bulk_build_preview", "Build preview: {count} work scopes will be rebuilt.", {
+          count: String(previewTargets.length)
+        })
+        : ""
+    );
+    state.buildPreview = null;
+    return;
+  }
   if (!state.currentWorkId || !state.serverAvailable) {
     setTextWithState(state.buildImpactNode, "");
     state.buildPreview = null;
@@ -884,12 +1249,42 @@ async function refreshBuildPreview(state) {
 }
 
 async function buildCurrentWork(state) {
-  if (!state.currentRecord || !state.serverAvailable) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkWorkIds.length || !state.serverAvailable) return;
+  } else if (!state.currentRecord || !state.serverAvailable) {
+    return;
+  }
   state.isBuilding = true;
   updateEditorState(state);
   setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
   setTextWithState(state.resultNode, "");
   try {
+    if (state.mode === "bulk") {
+      const buildTargets = state.rebuildPending && state.bulkBuildTargets.length
+        ? state.bulkBuildTargets
+        : state.bulkWorkIds.map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+      for (const target of buildTargets) {
+        await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+          work_id: target.work_id,
+          extra_series_ids: Array.isArray(target.extra_series_ids) ? target.extra_series_ids : []
+        });
+      }
+      state.rebuildPending = false;
+      state.bulkBuildTargets = [];
+      await refreshBuildPreview(state);
+      const completedAt = utcTimestamp();
+      setTextWithState(
+        state.resultNode,
+        t(state, "bulk_build_result_success", "Runtime rebuilt for {count} work scopes at {completed_at}. Build Activity updated.", {
+          count: String(buildTargets.length),
+          completed_at: completedAt
+        }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+      return;
+    }
+
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
       work_id: state.currentWorkId,
       extra_series_ids: state.pendingBuildExtraSeriesIds
@@ -917,13 +1312,67 @@ async function buildCurrentWork(state) {
 }
 
 async function saveAndBuildCurrentWork(state) {
-  if (!state.currentRecord) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkWorkIds.length) return;
+  } else if (!state.currentRecord) {
+    return;
+  }
   if (draftHasChanges(state)) {
     await saveCurrentWork(state);
-    if (!state.currentRecord || draftHasChanges(state)) return;
+    if (state.mode === "bulk") {
+      if (draftHasChanges(state)) return;
+    } else if (!state.currentRecord || draftHasChanges(state)) {
+      return;
+    }
     if (state.statusNode.dataset.state === "error") return;
   }
   await buildCurrentWork(state);
+}
+
+async function openWorkSelection(state, requestedValue) {
+  let workIds;
+  try {
+    workIds = parseWorkSelection(requestedValue);
+  } catch (error) {
+    renderSearchMatches(state, [], normalizeText(error && error.message) || t(state, "search_empty", "Enter a work id."));
+    return;
+  }
+
+  if (!workIds.length) {
+    renderSearchMatches(state, [], t(state, "search_empty", "Enter a work id."));
+    return;
+  }
+  if (workIds.length === 1) {
+    await openWorkById(state, workIds[0]);
+    return;
+  }
+
+  const unknown = workIds.find((workId) => !state.workSearchById.has(workId));
+  if (unknown) {
+    renderSearchMatches(state, [], t(state, "unknown_work_error", "Unknown work id: {work_id}.", { work_id: unknown }));
+    return;
+  }
+
+  state.searchNode.value = workIds.join(", ");
+  state.detailSearchNode.value = "";
+  setPopupVisibility(state, false);
+  state.pendingBuildExtraSeriesIds = [];
+  state.rebuildPending = false;
+  const lookups = await Promise.all(workIds.map((workId) => loadWorkLookupRecord(state, workId)));
+  const recordsById = new Map();
+  const recordHashes = new Map();
+  for (let index = 0; index < workIds.length; index += 1) {
+    const workId = workIds[index];
+    const lookup = lookups[index];
+    const record = lookup && lookup.work && typeof lookup.work === "object" ? lookup.work : null;
+    if (!record) {
+      throw new Error(`work lookup missing record for ${workId}`);
+    }
+    recordsById.set(workId, record);
+    recordHashes.set(workId, normalizeText(lookup.record_hash) || await computeRecordHash(record));
+  }
+  setLoadedBulkWorks(state, workIds, recordsById, recordHashes);
+  await refreshBuildPreview(state);
 }
 
 async function openWorkById(state, requestedWorkId) {
@@ -1001,12 +1450,19 @@ async function init() {
 
   const state = {
     config: null,
+    mode: "single",
     workSearchById: new Map(),
     seriesById: new Map(),
     currentLookup: null,
     currentWorkId: "",
     currentRecord: null,
     currentRecordHash: "",
+    bulkWorkIds: [],
+    bulkRecords: new Map(),
+    bulkRecordHashes: new Map(),
+    bulkMixedFields: new Set(),
+    bulkTouchedFields: new Set(),
+    bulkBuildTargets: [],
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
@@ -1035,12 +1491,15 @@ async function init() {
     detailSearchNode,
     detailsMetaNode,
     detailsResultsNode,
+    detailsPanelNode: detailsResultsNode.closest("section"),
     newDetailLinkNode,
     filesMetaNode,
     filesResultsNode,
+    filesPanelNode: filesResultsNode.closest("section"),
     newFileLinkNode,
     linksMetaNode,
     linksResultsNode,
+    linksPanelNode: linksResultsNode.closest("section"),
     newLinkLinkNode,
     metaNode
   };
@@ -1051,7 +1510,7 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
-    searchNode.placeholder = t(state, "search_placeholder", "find work by id");
+    searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
     newDetailLinkNode.textContent = t(state, "details_new_button", "New Detail");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
@@ -1095,6 +1554,10 @@ async function init() {
         renderSearchMatches(state, [], "");
         return;
       }
+      if (isWorkBulkQuery(query)) {
+        renderSearchMatches(state, [], "");
+        return;
+      }
       const matches = getSearchMatches(state, query);
       if (!matches.length) {
         renderSearchMatches(state, [], t(state, "search_no_match", "No matching work ids."));
@@ -1106,8 +1569,8 @@ async function init() {
     searchNode.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
-      openWorkById(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_editor: failed to open requested work", error);
+      openWorkSelection(state, searchNode.value).catch((error) => {
+        console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
     });
 
@@ -1124,8 +1587,8 @@ async function init() {
     });
 
     openButton.addEventListener("click", () => {
-      openWorkById(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_editor: failed to open requested work", error);
+      openWorkSelection(state, searchNode.value).catch((error) => {
+        console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
     });
     saveButton.addEventListener("click", () => saveCurrentWork(state).catch((error) => {
@@ -1140,10 +1603,10 @@ async function init() {
       setPopupVisibility(state, false);
     });
 
-    const requestedWorkId = normalizeWorkId(new URLSearchParams(window.location.search).get("work"));
-    if (requestedWorkId) {
-      openWorkById(state, requestedWorkId).catch((error) => {
-        console.warn("catalogue_work_editor: failed to open requested work", error);
+    const requestedWorkValue = normalizeText(new URLSearchParams(window.location.search).get("work"));
+    if (requestedWorkValue) {
+      openWorkSelection(state, requestedWorkValue).catch((error) => {
+        console.warn("catalogue_work_editor: failed to open requested work selection", error);
       });
     } else {
       setTextWithState(contextNode, t(state, "missing_work_param", "Search for a work by work id."));

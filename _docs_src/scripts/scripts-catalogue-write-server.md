@@ -25,6 +25,7 @@ Script:
 Exposed endpoints:
 
 - `GET /health`
+- `POST /catalogue/bulk-save`
 - `POST /catalogue/work/create`
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/create`
@@ -42,7 +43,41 @@ Exposed endpoints:
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files, write media files, or write back into Excel.
+The current implementation can create draft work, work-detail, work-file, work-link, and series records, can import new work/work-detail records from `data/works.xlsx`, can bulk-save existing work/work-detail records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files, write media files, or write back into Excel.
+
+`POST /catalogue/bulk-save` expects:
+
+```json
+{
+  "kind": "works",
+  "ids": ["00001", "00002", "00003"],
+  "expected_record_hashes": {
+    "00001": "sha256-a",
+    "00002": "sha256-b",
+    "00003": "sha256-c"
+  },
+  "set_fields": {
+    "status": "draft",
+    "storage_location": "rack-3"
+  },
+  "series_operation": {
+    "mode": "add_remove",
+    "add_series_ids": ["026"],
+    "remove_series_ids": ["009"]
+  }
+}
+```
+
+Request behavior:
+
+- `kind` must be `works` or `work_details`
+- `ids` must be a non-empty array of normalized target ids
+- `expected_record_hashes` may include one hash per selected id for stale-write protection
+- `set_fields` may include only the bulk-editable fields for that record kind
+- work bulk save may also include `series_operation`
+- work bulk `series_operation.mode` may be `replace` or `add_remove`
+- the server validates the combined source write before writing the canonical JSON file once
+- successful response includes changed counts, changed ids, normalized changed records, and rebuild targets
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 

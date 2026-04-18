@@ -10,6 +10,7 @@ Run:
 
 Endpoints:
   GET /health
+  POST /catalogue/bulk-save
   POST /catalogue/work/create
   POST /catalogue/work/save
   POST /catalogue/work-detail/create
@@ -110,6 +111,35 @@ SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
 BUILD_APPLY_PATH = "/catalogue/build-apply"
+BULK_SAVE_PATH = "/catalogue/bulk-save"
+
+BULK_WORK_EDITABLE_FIELDS = {
+    "status",
+    "published_date",
+    "project_folder",
+    "project_filename",
+    "title",
+    "year",
+    "year_display",
+    "medium_type",
+    "medium_caption",
+    "duration",
+    "height_cm",
+    "width_cm",
+    "depth_cm",
+    "storage_location",
+    "work_prose_file",
+    "notes",
+    "provenance",
+    "artist",
+}
+
+BULK_DETAIL_EDITABLE_FIELDS = {
+    "project_subfolder",
+    "project_filename",
+    "title",
+    "status",
+}
 
 
 def utc_now() -> str:
@@ -231,6 +261,73 @@ def extract_generic_build_request(body: Mapping[str, Any]) -> tuple[str, str, li
 
 def extract_import_mode(body: Mapping[str, Any]) -> str:
     return normalize_import_mode(body.get("mode"))
+
+
+def extract_bulk_save_request(body: Mapping[str, Any]) -> Dict[str, Any]:
+    kind = str(body.get("kind") or "").strip().lower()
+    if kind not in {"works", "work_details"}:
+        raise ValueError("bulk save kind must be works or work_details")
+
+    raw_ids = body.get("ids")
+    if not isinstance(raw_ids, list) or not raw_ids:
+        raise ValueError("bulk save ids must be a non-empty array")
+
+    ids: list[str] = []
+    seen_ids: set[str] = set()
+    for raw in raw_ids:
+        if kind == "works":
+            record_id = slug_id(raw)
+        else:
+            record_id = normalize_detail_uid_value(raw)
+        if record_id in seen_ids:
+            continue
+        seen_ids.add(record_id)
+        ids.append(record_id)
+    if not ids:
+        raise ValueError("bulk save ids must include at least one valid id")
+
+    raw_expected_hashes = body.get("expected_record_hashes") or {}
+    if not isinstance(raw_expected_hashes, dict):
+        raise ValueError("expected_record_hashes must be an object")
+    expected_hashes: Dict[str, str] = {}
+    for record_id in ids:
+        expected_hashes[record_id] = str(raw_expected_hashes.get(record_id) or "").strip()
+
+    raw_set_fields = body.get("set_fields") or {}
+    if not isinstance(raw_set_fields, dict):
+        raise ValueError("set_fields must be an object")
+    allowed_fields = BULK_WORK_EDITABLE_FIELDS if kind == "works" else BULK_DETAIL_EDITABLE_FIELDS
+    unknown_fields = sorted(str(key) for key in raw_set_fields.keys() if str(key) not in allowed_fields)
+    if unknown_fields:
+        raise ValueError(f"bulk save contains unsupported fields: {', '.join(unknown_fields)}")
+    set_fields = {str(key): raw_set_fields[key] for key in raw_set_fields.keys()}
+
+    raw_series_operation = body.get("series_operation")
+    if kind != "works" and raw_series_operation not in (None, "", {}):
+        raise ValueError("series_operation is only supported for works bulk save")
+
+    series_operation = None
+    if kind == "works" and raw_series_operation is not None:
+        if not isinstance(raw_series_operation, dict):
+            raise ValueError("series_operation must be an object")
+        mode = str(raw_series_operation.get("mode") or "").strip().lower()
+        if mode not in {"replace", "add_remove"}:
+            raise ValueError("series_operation.mode must be replace or add_remove")
+        operation: Dict[str, Any] = {"mode": mode}
+        if mode == "replace":
+            operation["series_ids"] = normalize_series_ids_value(raw_series_operation.get("series_ids"))
+        else:
+            operation["add_series_ids"] = normalize_series_ids_value(raw_series_operation.get("add_series_ids"))
+            operation["remove_series_ids"] = normalize_series_ids_value(raw_series_operation.get("remove_series_ids"))
+        series_operation = operation
+
+    return {
+        "kind": kind,
+        "ids": ids,
+        "expected_record_hashes": expected_hashes,
+        "set_fields": set_fields,
+        "series_operation": series_operation,
+    }
 
 
 def extract_work_update(body: Mapping[str, Any]) -> Dict[str, Any]:
@@ -423,6 +520,53 @@ def normalize_work_link_update(
 
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
     return [field for field in after.keys() if before.get(field) != after.get(field)]
+
+
+def validate_bulk_records(
+    source_dir: Path,
+    *,
+    work_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
+    detail_updates: Optional[Mapping[str, Dict[str, Any]]] = None,
+) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    if work_updates:
+        for work_id, work_record in work_updates.items():
+            source_records.works[work_id] = work_record
+    if detail_updates:
+        for detail_uid, detail_record in detail_updates.items():
+            source_records.work_details[detail_uid] = detail_record
+    normalized_records = CatalogueSourceRecords(
+        works=sort_record_map(source_records.works),
+        work_details=sort_record_map(source_records.work_details),
+        series=source_records.series,
+        work_files=source_records.work_files,
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def apply_work_bulk_series_operation(
+    current_series_ids: list[str],
+    operation: Optional[Mapping[str, Any]],
+) -> list[str]:
+    if not operation:
+        return current_series_ids
+    mode = str(operation.get("mode") or "").strip().lower()
+    if mode == "replace":
+        return normalize_series_ids_value(operation.get("series_ids"))
+    if mode != "add_remove":
+        raise ValueError("unsupported series bulk operation")
+
+    add_series_ids = normalize_series_ids_value(operation.get("add_series_ids"))
+    remove_series_ids = set(normalize_series_ids_value(operation.get("remove_series_ids")))
+    next_series_ids = [series_id for series_id in current_series_ids if series_id not in remove_series_ids]
+    seen = set(next_series_ids)
+    for series_id in add_series_ids:
+        if series_id in seen:
+            continue
+        seen.add(series_id)
+        next_series_ids.append(series_id)
+    return next_series_ids
 
 
 def validate_updated_records(source_dir: Path, work_id: str, work_record: Dict[str, Any]) -> list[str]:
@@ -725,6 +869,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_OPTIONS(self) -> None:  # noqa: N802
         if self.path not in {
+            BULK_SAVE_PATH,
             WORK_CREATE_PATH,
             WORK_SAVE_PATH,
             DETAIL_CREATE_PATH,
@@ -791,6 +936,9 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self.path == WORK_CREATE_PATH:
                 self._handle_work_create(allowed)
+                return
+            if self.path == BULK_SAVE_PATH:
+                self._handle_bulk_save(allowed)
                 return
             if self.path == WORK_SAVE_PATH:
                 self._handle_work_save(allowed)
@@ -943,6 +1091,258 @@ class Handler(BaseHTTPRequestHandler):
                     "status": "completed",
                     "summary": "Saved 1 work source record.",
                     "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_bulk_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        request = extract_bulk_save_request(body)
+        kind = request["kind"]
+        selected_ids: list[str] = request["ids"]
+        expected_hashes: Dict[str, str] = request["expected_record_hashes"]
+        set_fields: Dict[str, Any] = request["set_fields"]
+        series_operation = request["series_operation"]
+
+        source_records = records_from_json_source(self.server.source_dir)
+        changed_record_payloads: list[Dict[str, Any]] = []
+        changed_ids: list[str] = []
+        changed_field_names: set[str] = set()
+        build_targets: list[Dict[str, Any]] = []
+        affected_work_ids: list[str] = []
+        affected_series_ids: set[str] = set()
+
+        if kind == "works":
+            works_payload = load_works_payload(self.server.works_path)
+            works_map = works_payload["works"]
+            pending_updates: Dict[str, Dict[str, Any]] = {}
+            for work_id in selected_ids:
+                current_record = works_map.get(work_id)
+                if not isinstance(current_record, dict):
+                    raise ValueError(f"work_id not found: {work_id}")
+                expected_hash = expected_hashes.get(work_id) or ""
+                current_hash = record_hash(current_record)
+                if expected_hash and expected_hash != current_hash:
+                    self._send_json(
+                        HTTPStatus.CONFLICT,
+                        {
+                            "ok": False,
+                            "error": "record changed since loaded",
+                            "kind": kind,
+                            "work_id": work_id,
+                            "current_record_hash": current_hash,
+                        },
+                        allowed,
+                    )
+                    return
+
+                update = dict(set_fields)
+                if series_operation is not None:
+                    update["series_ids"] = apply_work_bulk_series_operation(
+                        normalize_series_ids_value(current_record.get("series_ids")),
+                        series_operation,
+                    )
+                updated_record = normalize_work_update(work_id, current_record, update)
+                pending_updates[work_id] = updated_record
+
+            validation_errors = validate_bulk_records(self.server.source_dir, work_updates=pending_updates)
+            if validation_errors:
+                raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+
+            updated_works = dict(works_map)
+            for work_id in selected_ids:
+                current_record = works_map[work_id]
+                updated_record = pending_updates[work_id]
+                fields_changed = changed_fields(current_record, updated_record)
+                if not fields_changed:
+                    continue
+                changed_ids.append(work_id)
+                changed_field_names.update(fields_changed)
+                changed_record_payloads.append(
+                    {
+                        "work_id": work_id,
+                        "record_hash": record_hash(updated_record),
+                        "record": updated_record,
+                    }
+                )
+                previous_series_ids = normalize_series_ids_value(current_record.get("series_ids"))
+                next_series_ids = normalize_series_ids_value(updated_record.get("series_ids"))
+                extra_series_ids = [series_id for series_id in previous_series_ids if series_id not in next_series_ids]
+                build_targets.append({"work_id": work_id, "extra_series_ids": extra_series_ids})
+                affected_work_ids.append(work_id)
+                affected_series_ids.update(previous_series_ids)
+                affected_series_ids.update(next_series_ids)
+                updated_works[work_id] = updated_record
+
+            changed = bool(changed_ids)
+            backup_paths: list[Path] = []
+            if changed:
+                target_path = self.server.works_path.resolve()
+                if target_path not in self.server.allowed_write_paths:
+                    raise ValueError("write target not allowlisted")
+                if not self.server.dry_run:
+                    backup_paths = atomic_write_many({target_path: payload_for_map("works", updated_works)}, self.server.backups_dir)
+
+            response_payload: Dict[str, Any] = {
+                "ok": True,
+                "kind": kind,
+                "selected_ids": selected_ids,
+                "selected_count": len(selected_ids),
+                "changed": changed,
+                "changed_ids": changed_ids,
+                "changed_count": len(changed_ids),
+                "changed_fields": sorted(changed_field_names),
+                "records": changed_record_payloads,
+                "build_targets": build_targets,
+                "affected_work_ids": affected_work_ids,
+                "affected_series_ids": sorted(affected_series_ids),
+            }
+            if self.server.dry_run:
+                response_payload["dry_run"] = True
+                response_payload["would_write"] = changed
+            elif changed:
+                response_payload["saved_at_utc"] = utc_now()
+                if backup_paths:
+                    response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+            self.server.log_event(
+                "catalogue_bulk_save",
+                {
+                    "kind": kind,
+                    "selected_count": len(selected_ids),
+                    "changed_count": len(changed_ids),
+                    "changed_fields": sorted(changed_field_names),
+                    "dry_run": self.server.dry_run,
+                },
+            )
+            if changed and not self.server.dry_run:
+                self._refresh_lookup_payloads()
+                now_utc = utc_now()
+                self.server.append_activity(
+                    {
+                        "id": activity_id(now_utc, "bulk-save.works"),
+                        "time_utc": now_utc,
+                        "kind": "source_save",
+                        "operation": "bulk-save.works",
+                        "status": "completed",
+                        "summary": f"Bulk-saved {len(changed_ids)} work source record(s).",
+                        "affected": {"works": changed_ids, "series": sorted(affected_series_ids), "work_details": []},
+                        "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                    }
+                )
+            self._send_json(HTTPStatus.OK, response_payload, allowed)
+            return
+
+        details_payload = load_work_details_payload(self.server.work_details_path)
+        detail_map = details_payload["work_details"]
+        pending_updates = {}
+        for detail_uid in selected_ids:
+            current_record = detail_map.get(detail_uid)
+            if not isinstance(current_record, dict):
+                raise ValueError(f"detail_uid not found: {detail_uid}")
+            expected_hash = expected_hashes.get(detail_uid) or ""
+            current_hash = record_hash(current_record)
+            if expected_hash and expected_hash != current_hash:
+                self._send_json(
+                    HTTPStatus.CONFLICT,
+                    {
+                        "ok": False,
+                        "error": "record changed since loaded",
+                        "kind": kind,
+                        "detail_uid": detail_uid,
+                        "current_record_hash": current_hash,
+                    },
+                    allowed,
+                )
+                return
+            updated_record = normalize_work_detail_update(detail_uid, current_record, set_fields)
+            work_id = str(updated_record.get("work_id") or "")
+            if work_id not in source_records.works:
+                raise ValueError(f"parent work_id not found: {work_id}")
+            pending_updates[detail_uid] = updated_record
+
+        validation_errors = validate_bulk_records(self.server.source_dir, detail_updates=pending_updates)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+
+        updated_details = dict(detail_map)
+        for detail_uid in selected_ids:
+            current_record = detail_map[detail_uid]
+            updated_record = pending_updates[detail_uid]
+            fields_changed = changed_fields(current_record, updated_record)
+            if not fields_changed:
+                continue
+            changed_ids.append(detail_uid)
+            changed_field_names.update(fields_changed)
+            changed_record_payloads.append(
+                {
+                    "detail_uid": detail_uid,
+                    "record_hash": record_hash(updated_record),
+                    "record": updated_record,
+                }
+            )
+            work_id = str(updated_record.get("work_id") or "")
+            affected_work_ids.append(work_id)
+            build_targets.append({"work_id": work_id, "extra_series_ids": []})
+            updated_details[detail_uid] = updated_record
+
+        changed = bool(changed_ids)
+        backup_paths = []
+        if changed:
+            target_path = self.server.work_details_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many({target_path: payload_for_map("work_details", updated_details)}, self.server.backups_dir)
+
+        response_payload = {
+            "ok": True,
+            "kind": kind,
+            "selected_ids": selected_ids,
+            "selected_count": len(selected_ids),
+            "changed": changed,
+            "changed_ids": changed_ids,
+            "changed_count": len(changed_ids),
+            "changed_fields": sorted(changed_field_names),
+            "records": changed_record_payloads,
+            "build_targets": [
+                {"work_id": work_id, "extra_series_ids": []}
+                for work_id in sorted(set(affected_work_ids))
+            ],
+            "affected_work_ids": sorted(set(affected_work_ids)),
+            "affected_series_ids": [],
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+
+        self.server.log_event(
+            "catalogue_bulk_save",
+            {
+                "kind": kind,
+                "selected_count": len(selected_ids),
+                "changed_count": len(changed_ids),
+                "changed_fields": sorted(changed_field_names),
+                "dry_run": self.server.dry_run,
+            },
+        )
+        if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "bulk-save.work-details"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "bulk-save.work-details",
+                    "status": "completed",
+                    "summary": f"Bulk-saved {len(changed_ids)} work detail source record(s).",
+                    "affected": {"works": sorted(set(affected_work_ids)), "series": [], "work_details": changed_ids},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )

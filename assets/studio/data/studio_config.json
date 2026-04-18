@@ -486,7 +486,7 @@
     },
     "catalogue_work_editor": {
       "load_failed_error": "Failed to load catalogue source data for the work editor.",
-      "search_placeholder": "find work by id",
+      "search_placeholder": "find work id(s): 00001, 00003-00005",
       "search_empty": "Enter a work id.",
       "search_no_match": "No matching work ids.",
       "search_multiple_matches": "Choose a work from the list.",
@@ -567,7 +567,7 @@
     },
     "catalogue_work_detail_editor": {
       "load_failed_error": "Failed to load catalogue source data for the work detail editor.",
-      "search_placeholder": "find detail by id",
+      "search_placeholder": "find detail id(s): 00001-001, 00001-003-005",
       "search_empty": "Enter a detail id.",
       "search_no_match": "No matching detail ids.",
       "missing_detail_param": "Search for a work detail by detail id.",

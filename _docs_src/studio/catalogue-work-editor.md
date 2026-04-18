@@ -13,7 +13,7 @@ Route:
 - `/studio/catalogue-work/`
 - focused record selection uses `?work=<work_id>`
 
-This page is the first end-to-end catalogue metadata editor in Studio. It edits one canonical work source record from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service.
+This page edits canonical work source records from `assets/studio/data/catalogue/works.json` and writes changes through the local catalogue write service. It now supports both focused single-record edit and bulk edit mode on the same route.
 
 ## Current Scope
 
@@ -21,8 +21,11 @@ The first implementation covers:
 
 - search by `work_id`
 - open one work record
+- open multiple work records by comma-delimited `work_id` values and `start-end` ranges
 - edit core scalar metadata fields
 - edit ordered `series_ids`
+- bulk-edit core scalar metadata across the selected works
+- bulk-change `series_ids` by exact replacement or `+series_id` / `-series_id` diff entries
 - show generated read-only fields (`work_id`, `width_px`, `height_px`)
 - list the current work's detail records grouped by `project_subfolder`
 - cap visible detail rows at 10 per section
@@ -48,6 +51,25 @@ It does not yet:
 - update prose or media files
 - paginate detail/member lists
 
+## Bulk Mode
+
+Bulk mode is entered by opening more than one `work_id` from the search field.
+
+Current bulk-selection rules:
+
+- comma-delimited explicit ids are supported
+- `start-end` ranges are supported
+- explicit ids and ranges can be mixed in the same selection
+
+Current bulk-edit behavior:
+
+- the page stays on `/studio/catalogue-work/`
+- untouched fields preserve per-record values
+- an empty touched field clears that field across the selected works
+- `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
+- detail, file, and link sections are hidden while bulk mode is active
+- `Save + Rebuild` runs one scoped work rebuild per affected work scope after the bulk source save
+
 ## Save Boundary
 
 Current save/rebuild flow:
@@ -61,6 +83,15 @@ Current save/rebuild flow:
 7. the page reloads its focused work lookup payload and marks runtime rebuild as still pending
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild`
+
+Bulk save flow:
+
+1. page expands the requested work selection in the browser
+2. page loads focused lookup records for the selected works and tracks each record hash
+3. user edits only the fields that should apply across the selection
+4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, and optional series membership operations
+5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus rebuild targets
+6. `Save + Rebuild` then runs one scoped work rebuild per affected work target
 
 The current rebuild scope is intentionally narrow:
 

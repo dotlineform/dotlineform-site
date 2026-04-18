@@ -32,6 +32,7 @@ const READONLY_FIELDS = [
 
 const STATUS_OPTIONS = new Set(["", "draft", "published"]);
 const SEARCH_LIMIT = 20;
+const BULK_PREVIEW_LIMIT = 12;
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -96,6 +97,73 @@ function displayValue(value) {
 
 function canonicalizeScalar(field, value) {
   return normalizeText(value);
+}
+
+function parseDetailSelection(rawValue) {
+  const text = normalizeText(rawValue);
+  if (!text) return [];
+  const tokens = text.split(",").map((item) => normalizeText(item)).filter(Boolean);
+  const detailUids = [];
+  const seen = new Set();
+  tokens.forEach((token) => {
+    const rangeMatch = token.match(/^(\d{5})-(\d{3})-(\d{3})$/);
+    if (rangeMatch) {
+      const workId = normalizeWorkId(rangeMatch[1]);
+      const start = Number(rangeMatch[2]);
+      const end = Number(rangeMatch[3]);
+      if (!Number.isFinite(start) || !Number.isFinite(end) || start > end) {
+        throw new Error(`Invalid detail range: ${token}`);
+      }
+      for (let value = start; value <= end; value += 1) {
+        const detailUid = `${workId}-${String(value).padStart(3, "0")}`;
+        if (seen.has(detailUid)) continue;
+        seen.add(detailUid);
+        detailUids.push(detailUid);
+      }
+      return;
+    }
+    const detailUid = normalizeDetailUid(token);
+    if (!detailUid) {
+      throw new Error(`Invalid detail id: ${token}`);
+    }
+    if (seen.has(detailUid)) return;
+    seen.add(detailUid);
+    detailUids.push(detailUid);
+  });
+  return detailUids;
+}
+
+function isDetailBulkQuery(rawValue) {
+  try {
+    return parseDetailSelection(rawValue).length > 1;
+  } catch (_error) {
+    return false;
+  }
+}
+
+function formatSelectionList(items) {
+  const list = Array.isArray(items) ? items.slice(0, BULK_PREVIEW_LIMIT) : [];
+  if (!list.length) return "";
+  const more = (items.length || 0) - list.length;
+  return more > 0 ? `${list.join(", ")} +${more} more` : list.join(", ");
+}
+
+function buildBulkDraftFromRecords(records) {
+  const drafts = records.map((record) => buildDraftFromRecord(record));
+  const draft = {};
+  const mixedFields = new Set();
+  EDITABLE_FIELDS.forEach((field) => {
+    const values = drafts.map((item) => canonicalizeScalar(field, item[field.key]));
+    const first = values[0] || "";
+    const allSame = values.every((value) => value === first);
+    if (allSame) {
+      draft[field.key] = drafts[0][field.key];
+    } else {
+      draft[field.key] = "";
+      mixedFields.add(field.key);
+    }
+  });
+  return { draft, mixedFields };
 }
 
 function setTextWithState(node, text, state = "") {
@@ -251,6 +319,26 @@ function applyReadonly(state) {
 }
 
 function buildPayload(state) {
+  if (state.mode === "bulk") {
+    const setFields = {};
+    EDITABLE_FIELDS.forEach((field) => {
+      if (!state.bulkTouchedFields.has(field.key)) return;
+      setFields[field.key] = field.key === "status"
+        ? normalizeText(state.draft[field.key]).toLowerCase() || null
+        : normalizeText(state.draft[field.key]) || null;
+    });
+    const expectedRecordHashes = {};
+    state.bulkDetailUids.forEach((detailUid) => {
+      expectedRecordHashes[detailUid] = state.bulkRecordHashes.get(detailUid) || "";
+    });
+    return {
+      kind: "work_details",
+      ids: state.bulkDetailUids.slice(),
+      expected_record_hashes: expectedRecordHashes,
+      set_fields: setFields
+    };
+  }
+
   const draft = state.draft;
   return {
     detail_uid: state.currentDetailUid,
@@ -286,20 +374,26 @@ function formatBuildPreview(state, build) {
   );
 }
 
-function syncUrl(detailUid) {
+function syncUrl(detailValue) {
   const url = new URL(window.location.href);
-  if (detailUid) url.searchParams.set("detail", detailUid);
+  if (detailValue) url.searchParams.set("detail", detailValue);
   else url.searchParams.delete("detail");
   window.history.replaceState({}, "", url.toString());
 }
 
 function draftHasChanges(state) {
+  if (state.mode === "bulk") {
+    return state.bulkTouchedFields.size > 0;
+  }
   if (!state.baselineDraft) return false;
   return EDITABLE_FIELDS.some((field) => canonicalizeScalar(field, state.draft[field.key]) !== canonicalizeScalar(field, state.baselineDraft[field.key]));
 }
 
 function validateDraft(state) {
   const errors = new Map();
+  if (state.mode === "bulk" && !state.bulkTouchedFields.has("status")) {
+    return errors;
+  }
   const status = normalizeText(state.draft.status).toLowerCase();
   if (!STATUS_OPTIONS.has(status)) {
     errors.set("status", t(state, "field_invalid_status", "Use blank, draft, or published."));
@@ -311,13 +405,45 @@ function updateFieldMessages(state, errors) {
   EDITABLE_FIELDS.forEach((field) => {
     const messageNode = state.fieldStatusNodes.get(field.key);
     if (!messageNode) return;
-    const message = errors.get(field.key) || "";
+    let message = errors.get(field.key) || "";
+    if (!message && state.mode === "bulk" && state.bulkMixedFields.has(field.key) && !state.bulkTouchedFields.has(field.key)) {
+      message = t(state, "bulk_field_mixed", "Mixed values across selection. Leave untouched to preserve per-record values.");
+    }
     messageNode.textContent = message;
     messageNode.hidden = !message;
   });
 }
 
 function updateSummary(state) {
+  if (state.mode === "bulk") {
+    const selectedCount = state.bulkDetailUids.length;
+    const parentWorkIds = Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
+      const record = state.bulkRecords.get(detailUid);
+      return normalizeWorkId(record && record.work_id);
+    }).filter(Boolean)));
+    state.metaNode.textContent = selectedCount
+      ? t(state, "bulk_meta", "{count} details selected", { count: String(selectedCount) })
+      : "";
+    state.summaryNode.innerHTML = `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_selected", "selected details"))}</span>
+        <span class="tagStudioForm__readonly">${escapeHtml(formatSelectionList(state.bulkDetailUids) || "—")}</span>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_count", "record count"))}</span>
+        <span class="tagStudioForm__readonly">${escapeHtml(String(selectedCount || 0))}</span>
+      </div>
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_parent_count", "parent works"))}</span>
+        <span class="tagStudioForm__readonly">${escapeHtml(formatSelectionList(parentWorkIds) || "—")}</span>
+      </div>
+    `;
+    state.runtimeStateNode.textContent = state.rebuildPending
+      ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
+      : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    return;
+  }
+
   const record = state.currentRecord;
   state.metaNode.textContent = record
     ? `${record.detail_uid} · ${buildRecordSummary(record)}`
@@ -352,11 +478,18 @@ function updateSummary(state) {
 }
 
 function setLoadedRecord(state, detailUid, record, options = {}) {
+  state.mode = "single";
   state.currentDetailUid = detailUid;
   state.currentWorkId = normalizeWorkId(record && record.work_id);
   state.currentRecord = record;
   state.currentLookup = options.lookup || state.currentLookup;
   state.currentRecordHash = normalizeText(options.recordHash || state.currentRecordHash);
+  state.bulkDetailUids = [];
+  state.bulkRecords = new Map();
+  state.bulkRecordHashes = new Map();
+  state.bulkMixedFields = new Set();
+  state.bulkTouchedFields = new Set();
+  state.bulkBuildTargets = [];
   state.baselineDraft = buildDraftFromRecord(record);
   state.draft = { ...state.baselineDraft };
   applyDraftToInputs(state);
@@ -369,18 +502,77 @@ function setLoadedRecord(state, detailUid, record, options = {}) {
   updateEditorState(state);
 }
 
+function setLoadedBulkDetails(state, detailUids, recordsById, recordHashes, options = {}) {
+  state.mode = "bulk";
+  state.currentDetailUid = "";
+  state.currentWorkId = "";
+  state.currentRecord = null;
+  state.currentLookup = null;
+  state.currentRecordHash = "";
+  state.bulkDetailUids = detailUids.slice();
+  state.bulkRecords = new Map(recordsById);
+  state.bulkRecordHashes = new Map(recordHashes);
+  state.bulkBuildTargets = Array.isArray(options.buildTargets) ? options.buildTargets.slice() : [];
+  const records = detailUids.map((detailUid) => recordsById.get(detailUid)).filter(Boolean);
+  const bulkDraft = buildBulkDraftFromRecords(records);
+  state.baselineDraft = { ...bulkDraft.draft };
+  state.draft = { ...bulkDraft.draft };
+  state.bulkMixedFields = bulkDraft.mixedFields;
+  state.bulkTouchedFields = new Set();
+  applyDraftToInputs(state);
+  READONLY_FIELDS.forEach((field) => {
+    const node = state.readonlyNodes.get(field.key);
+    if (node) node.textContent = "—";
+  });
+  syncUrl(detailUids.join(","));
+  setTextWithState(
+    state.contextNode,
+    t(state, "bulk_context_loaded", "Bulk editing {count} detail records: {detail_ids}.", {
+      count: String(detailUids.length),
+      detail_ids: formatSelectionList(detailUids)
+    })
+  );
+  setTextWithState(
+    state.statusNode,
+    t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(detailUids.length) })
+  );
+  setTextWithState(state.warningNode, "");
+  if (!options.keepResult) setTextWithState(state.resultNode, "");
+  updateEditorState(state);
+}
+
 function updateEditorState(state) {
-  const hasRecord = Boolean(state.currentRecord);
+  const hasRecord = state.mode === "bulk" ? state.bulkDetailUids.length > 0 : Boolean(state.currentRecord);
   const errors = hasRecord ? validateDraft(state) : new Map();
   state.validationErrors = errors;
   updateFieldMessages(state, errors);
   updateSummary(state);
-  if (!hasRecord) setTextWithState(state.buildImpactNode, "");
+  if (!hasRecord) {
+    setTextWithState(state.buildImpactNode, "");
+  } else if (state.mode === "bulk") {
+    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
+      ? state.bulkBuildTargets
+      : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
+        const record = state.bulkRecords.get(detailUid);
+        return normalizeWorkId(record && record.work_id);
+      }).filter(Boolean)));
+    setTextWithState(
+      state.buildImpactNode,
+      t(state, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
+        count: String(previewTargets.length)
+      })
+    );
+  }
 
   const dirty = hasRecord && draftHasChanges(state);
   setTextWithState(state.warningNode, dirty ? t(state, "dirty_warning", "Unsaved source changes.") : "");
   if (!dirty && !errors.size && !state.resultNode.textContent && hasRecord) {
-    setTextWithState(state.statusNode, t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid }));
+    setTextWithState(
+      state.statusNode,
+      state.mode === "bulk"
+        ? t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) })
+        : t(state, "save_status_loaded", "Loaded detail {detail_uid}.", { detail_uid: state.currentDetailUid })
+    );
   }
 
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
@@ -391,6 +583,9 @@ function onFieldInput(state, fieldKey) {
   const node = state.fieldNodes.get(fieldKey);
   if (!node) return;
   state.draft[fieldKey] = node.value;
+  if (state.mode === "bulk") {
+    state.bulkTouchedFields.add(fieldKey);
+  }
   updateEditorState(state);
 }
 
@@ -399,6 +594,24 @@ function t(state, key, fallback, tokens = null) {
 }
 
 async function refreshBuildPreview(state) {
+  if (state.mode === "bulk") {
+    const previewTargets = state.rebuildPending && state.bulkBuildTargets.length
+      ? state.bulkBuildTargets
+      : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
+        const record = state.bulkRecords.get(detailUid);
+        return normalizeWorkId(record && record.work_id);
+      }).filter(Boolean)));
+    state.buildPreview = null;
+    setTextWithState(
+      state.buildImpactNode,
+      previewTargets.length
+        ? t(state, "bulk_build_preview", "Build preview: {count} parent work scopes will be rebuilt.", {
+          count: String(previewTargets.length)
+        })
+        : ""
+    );
+    return;
+  }
   if (!state.currentWorkId || !state.serverAvailable) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
@@ -419,7 +632,11 @@ async function refreshBuildPreview(state) {
 }
 
 async function saveCurrentDetail(state) {
-  if (!state.currentRecord) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkDetailUids.length) return;
+  } else if (!state.currentRecord) {
+    return;
+  }
   const errors = validateDraft(state);
   updateFieldMessages(state, errors);
   if (errors.size > 0) {
@@ -442,6 +659,45 @@ async function saveCurrentDetail(state) {
   setTextWithState(state.resultNode, "");
 
   try {
+    if (state.mode === "bulk") {
+      const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.bulkSave, buildPayload(state));
+      const changedRecords = Array.isArray(response && response.records) ? response.records : [];
+      changedRecords.forEach((item) => {
+        const detailUid = normalizeDetailUid(item && item.detail_uid);
+        const record = item && item.record && typeof item.record === "object" ? item.record : null;
+        if (!detailUid || !record) return;
+        state.bulkRecords.set(detailUid, record);
+        state.bulkRecordHashes.set(detailUid, normalizeText(item.record_hash) || "");
+        state.detailSearchByUid.set(detailUid, {
+          detail_uid: detailUid,
+          work_id: normalizeText(record.work_id),
+          detail_id: normalizeText(record.detail_id),
+          title: normalizeText(record.title),
+          status: normalizeText(record.status)
+        });
+      });
+      state.rebuildPending = Boolean(response.changed);
+      state.bulkBuildTargets = Array.isArray(response && response.build_targets) ? response.build_targets : [];
+      setLoadedBulkDetails(state, state.bulkDetailUids, state.bulkRecords, state.bulkRecordHashes, {
+        keepResult: true,
+        buildTargets: state.bulkBuildTargets
+      });
+      const savedAt = normalizeText(response.saved_at_utc || utcTimestamp());
+      const resultText = response.changed
+        ? t(state, "bulk_save_result_success", "Saved {count} detail records at {saved_at}. Rebuild needed to update the parent work output.", {
+          count: String(response.changed_count || 0),
+          saved_at: savedAt
+        })
+        : t(state, "save_result_unchanged", "Source already matches the current form values.");
+      setTextWithState(state.resultNode, resultText, response.changed ? "success" : "");
+      setTextWithState(
+        state.statusNode,
+        t(state, "bulk_status_loaded", "Loaded {count} detail records.", { count: String(state.bulkDetailUids.length) }),
+        response.changed ? "success" : ""
+      );
+      return;
+    }
+
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.saveWorkDetail, buildPayload(state));
     const record = response && response.record && typeof response.record === "object" ? response.record : null;
     if (!record) throw new Error("save response missing record");
@@ -480,12 +736,45 @@ async function saveCurrentDetail(state) {
 }
 
 async function buildCurrentDetail(state) {
-  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkDetailUids.length || !state.serverAvailable) return;
+  } else if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) {
+    return;
+  }
   state.isBuilding = true;
   updateEditorState(state);
   setTextWithState(state.statusNode, t(state, "build_status_running", "Running scoped rebuild…"));
   setTextWithState(state.resultNode, "");
   try {
+    if (state.mode === "bulk") {
+      const buildTargets = state.rebuildPending && state.bulkBuildTargets.length
+        ? state.bulkBuildTargets
+        : Array.from(new Set(state.bulkDetailUids.map((detailUid) => {
+          const record = state.bulkRecords.get(detailUid);
+          return normalizeWorkId(record && record.work_id);
+        }).filter(Boolean))).map((workId) => ({ work_id: workId, extra_series_ids: [] }));
+      for (const target of buildTargets) {
+        await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+          work_id: target.work_id,
+          extra_series_ids: Array.isArray(target.extra_series_ids) ? target.extra_series_ids : []
+        });
+      }
+      state.rebuildPending = false;
+      state.bulkBuildTargets = [];
+      await refreshBuildPreview(state);
+      const completedAt = utcTimestamp();
+      setTextWithState(
+        state.resultNode,
+        t(state, "bulk_build_result_success", "Runtime rebuilt for {count} parent work scopes at {completed_at}. Build Activity updated.", {
+          count: String(buildTargets.length),
+          completed_at: completedAt
+        }),
+        "success"
+      );
+      setTextWithState(state.statusNode, t(state, "build_status_success", "Scoped rebuild completed."), "success");
+      return;
+    }
+
     const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, { work_id: state.currentWorkId });
     state.rebuildPending = false;
     await refreshBuildPreview(state);
@@ -509,13 +798,65 @@ async function buildCurrentDetail(state) {
 }
 
 async function saveAndBuildCurrentDetail(state) {
-  if (!state.currentRecord) return;
+  if (state.mode === "bulk") {
+    if (!state.bulkDetailUids.length) return;
+  } else if (!state.currentRecord) {
+    return;
+  }
   if (draftHasChanges(state)) {
     await saveCurrentDetail(state);
-    if (!state.currentRecord || draftHasChanges(state)) return;
+    if (state.mode === "bulk") {
+      if (draftHasChanges(state)) return;
+    } else if (!state.currentRecord || draftHasChanges(state)) {
+      return;
+    }
     if (state.statusNode.dataset.state === "error") return;
   }
   await buildCurrentDetail(state);
+}
+
+async function openDetailSelection(state, requestedValue) {
+  let detailUids;
+  try {
+    detailUids = parseDetailSelection(requestedValue);
+  } catch (error) {
+    renderSearchMatches(state, [], normalizeText(error && error.message) || t(state, "search_empty", "Enter a detail id."));
+    return;
+  }
+
+  if (!detailUids.length) {
+    renderSearchMatches(state, [], t(state, "search_empty", "Enter a detail id."));
+    return;
+  }
+  if (detailUids.length === 1) {
+    await openDetailByUid(state, detailUids[0]);
+    return;
+  }
+
+  const unknown = detailUids.find((detailUid) => !state.detailSearchByUid.has(detailUid));
+  if (unknown) {
+    renderSearchMatches(state, [], t(state, "unknown_detail_error", "Unknown detail id: {detail_uid}.", { detail_uid: unknown }));
+    return;
+  }
+
+  state.searchNode.value = detailUids.join(", ");
+  setPopupVisibility(state, false);
+  state.rebuildPending = false;
+  const lookups = await Promise.all(detailUids.map((detailUid) => loadDetailLookupRecord(state, detailUid)));
+  const recordsById = new Map();
+  const recordHashes = new Map();
+  for (let index = 0; index < detailUids.length; index += 1) {
+    const detailUid = detailUids[index];
+    const lookup = lookups[index];
+    const record = lookup && lookup.work_detail && typeof lookup.work_detail === "object" ? lookup.work_detail : null;
+    if (!record) {
+      throw new Error(`detail lookup missing record for ${detailUid}`);
+    }
+    recordsById.set(detailUid, record);
+    recordHashes.set(detailUid, normalizeText(lookup.record_hash) || await computeRecordHash(record));
+  }
+  setLoadedBulkDetails(state, detailUids, recordsById, recordHashes);
+  await refreshBuildPreview(state);
 }
 
 async function openDetailByUid(state, requestedDetailUid) {
@@ -575,12 +916,19 @@ async function init() {
 
   const state = {
     config: null,
+    mode: "single",
     detailSearchByUid: new Map(),
     currentLookup: null,
     currentDetailUid: "",
     currentWorkId: "",
     currentRecord: null,
     currentRecordHash: "",
+    bulkDetailUids: [],
+    bulkRecords: new Map(),
+    bulkRecordHashes: new Map(),
+    bulkMixedFields: new Set(),
+    bulkTouchedFields: new Set(),
+    bulkBuildTargets: [],
     baselineDraft: null,
     draft: {},
     validationErrors: new Map(),
@@ -614,7 +962,7 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
-    searchNode.placeholder = t(state, "search_placeholder", "find detail by id");
+    searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");
@@ -643,6 +991,10 @@ async function init() {
         renderSearchMatches(state, [], "");
         return;
       }
+       if (isDetailBulkQuery(query)) {
+        renderSearchMatches(state, [], "");
+        return;
+      }
       const matches = getSearchMatches(state, query);
       if (!matches.length) {
         renderSearchMatches(state, [], t(state, "search_no_match", "No matching detail ids."));
@@ -654,8 +1006,8 @@ async function init() {
     searchNode.addEventListener("keydown", (event) => {
       if (event.key !== "Enter") return;
       event.preventDefault();
-      openDetailByUid(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail", error);
+      openDetailSelection(state, searchNode.value).catch((error) => {
+        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
       });
     });
 
@@ -668,8 +1020,8 @@ async function init() {
     });
 
     openButton.addEventListener("click", () => {
-      openDetailByUid(state, searchNode.value).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail", error);
+      openDetailSelection(state, searchNode.value).catch((error) => {
+        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
       });
     });
     saveButton.addEventListener("click", () => saveCurrentDetail(state).catch((error) => {
@@ -684,10 +1036,10 @@ async function init() {
       setPopupVisibility(state, false);
     });
 
-    const requestedDetailUid = normalizeDetailUid(new URLSearchParams(window.location.search).get("detail"));
-    if (requestedDetailUid) {
-      openDetailByUid(state, requestedDetailUid).catch((error) => {
-        console.warn("catalogue_work_detail_editor: failed to open requested detail", error);
+    const requestedDetailValue = normalizeText(new URLSearchParams(window.location.search).get("detail"));
+    if (requestedDetailValue) {
+      openDetailSelection(state, requestedDetailValue).catch((error) => {
+        console.warn("catalogue_work_detail_editor: failed to open requested detail selection", error);
       });
     } else {
       setTextWithState(contextNode, t(state, "missing_detail_param", "Search for a work detail by detail id."));

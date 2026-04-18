@@ -82,6 +82,7 @@ Current write endpoints include:
 - `/promote-tag-alias`
 - `/promote-tag-alias-preview`
 - `http://127.0.0.1:8788/health`
+- `http://127.0.0.1:8788/catalogue/bulk-save`
 - `http://127.0.0.1:8788/catalogue/work/create`
 - `http://127.0.0.1:8788/catalogue/work/save`
 - `http://127.0.0.1:8788/catalogue/work-detail/create`
@@ -135,6 +136,8 @@ Catalogue editor local save behavior:
 - derived lookup payloads under `assets/studio/data/catalogue_lookup/` are refreshed after canonical writes
 - backup bundles are written under `var/studio/catalogue/backups/`
 - activity is logged to `var/studio/catalogue/logs/catalogue_write_server.log` and summarized into `assets/studio/data/catalogue_activity.json`
+- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected work ids, one expected hash per selected work, touched scalar field updates, and optional series membership operations
+- bulk work rebuild remains a follow-on sequence of scoped work rebuilds rather than a separate bulk build pipeline
 
 Catalogue work detail local save behavior:
 
@@ -142,6 +145,8 @@ Catalogue work detail local save behavior:
 - the request includes `detail_uid`, a browser-computed record hash, and a normalized detail patch
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
+- bulk mode on the same page sends `POST /catalogue/bulk-save` with selected detail ids, one expected hash per selected detail, and the touched field updates
+- bulk detail rebuild remains a follow-on sequence of scoped parent-work rebuilds
 
 Catalogue workbook import behavior:
 

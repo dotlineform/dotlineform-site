@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T10:15:25Z",
+  "generated_at": "2026-04-18T10:51:25Z",
   "docs": [
     {
       "scope": "studio",
@@ -511,7 +511,7 @@
       "scope": "studio",
       "doc_id": "catalogue-work-detail-editor",
       "title": "Catalogue Work Detail Editor",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 35,
       "source_path": "studio/catalogue-work-detail-editor.md",
