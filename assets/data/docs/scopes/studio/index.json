@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T23:01:49Z",
+  "generated_at": "2026-04-18T23:05:06Z",
   "docs": [
     {
       "scope": "studio",
@@ -665,7 +665,7 @@
       "scope": "studio",
       "doc_id": "new-pipeline",
       "title": "New Cat Pipeline",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 40,
       "source_path": "new-pipeline/new-pipeline.md",
@@ -880,6 +880,17 @@
       "source_path": "studio/series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "new-pipeline-studio-e2e-checklist",
+      "title": "Studio E2E Checklist",
+      "last_updated": "2026-04-19",
+      "parent_id": "new-pipeline",
+      "sort_order": 60,
+      "source_path": "new-pipeline/studio-e2e-checklist.md",
+      "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-e2e-checklist.json"
     },
     {
       "scope": "studio",

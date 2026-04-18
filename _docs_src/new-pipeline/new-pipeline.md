@@ -1,7 +1,7 @@
 ---
 doc_id: new-pipeline
 title: New Cat Pipeline
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 40
 ---
@@ -19,9 +19,10 @@ Read this section in this order:
 3. **[Web System Specification](/docs/?scope=studio&doc=new-pipeline-web-system-spec)** for the Studio pages, local write service, validation, bulk edit behavior, and build boundaries
 4. **[Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)** for the phased implementation record and the final retirement of workbook-led entrypoints
 5. **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)** for the next phased Studio roadmap, with Catalogue as the main implementation thread
-6. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
-7. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
-8. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
+6. **[Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)** for the first full execution pass across Studio and public-runtime follow-through
+7. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
+8. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
+9. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
 
 ## Scope
 

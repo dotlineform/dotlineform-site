@@ -27,6 +27,7 @@ sort_order: 110
 
 ## 2026-04-19
 
+- completed Phase 11 execution-prep work: added a separate Studio end-to-end checklist document with prerequisites, manual/Codex execution split, scenario coverage across the implemented Studio routes, public-runtime follow-through checks, responsive checks, and a failure-triage model
 - completed Phase 10 generator cleanup work: `generate_work_pages.py` now carries only the internal JSON-source runtime path, the dead workbook branch and workbook-oriented runtime messaging were removed, the remaining in-memory compatibility layer is explicit, and moment-scoped rebuilds now call the same internal generator entry boundary as work and series rebuilds
 - completed the pre-Phase 10 bulk-import follow-up: the workbook path is now configured in `_data/pipeline.json` and points to `data/works_bulk_import.xlsx`, the Studio bulk-import UI and write server no longer assume `data/works.xlsx`, and the reduced workbook was checked against the importer schema with all retained `Works` and `WorkDetails` headers confirmed as eligible import fields
 

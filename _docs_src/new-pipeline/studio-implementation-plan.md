@@ -19,7 +19,7 @@ This document defines the next phased implementation pass after Phases 0-15 of t
 [Phase 7. Optional Canonical Prose Management](#phase-7-optional-canonical-prose-management)  
 [Phase 8. Media Local Action Surfaces](#phase-8-media-local-action-surfaces)
 [Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)  
-[Phase 10. Generator Cleanup And Simplification](#phase-10-generator-cleanup-and-simplification)  
+[Phase 10. Generator Cleanup And Simplification](#phase-10-generator-cleanup-and-simplification)   
 [Phase 11. End-To-End Testing Checklist And Execution Prep](#phase-11-end-to-end-testing-checklist-and-execution-prep)  
 [Phase 12. Cloud-Native Media Target](#phase-12-cloud-native-media-target)
 
@@ -705,6 +705,10 @@ Implemented:
 
 ### Phase 11. End-To-End Testing Checklist And Execution Prep
 
+Status:
+
+- completed on 2026-04-19
+
 Scope:
 
 - turn the current broad testing ideas into a concrete execution checklist
@@ -750,6 +754,14 @@ Task list:
 12. Add a lightweight responsive pass covering the key Studio pages on both desktop and mobile widths, focusing on navigation, action buttons, form layout, current-record panels, and operational tables.
 13. Define what evidence should be captured during execution, such as pass/fail notes, blockers, or follow-up issues, without turning the checklist itself into a permanent results ledger.
 14. End the checklist with a short triage section that groups likely failures into `source/config issue`, `UI issue`, `write-service issue`, `generator/build issue`, and `docs/signposting issue`, so follow-up work can be routed quickly after the first full run.
+
+Implemented:
+
+1. Added a separate execution document at **[Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)** so end-to-end testing now has its own working surface instead of living inside the implementation plan.
+2. Defined explicit prerequisites for local services, source paths, workbook availability, and representative source/runtime states before the first full pass begins.
+3. Defined the split between manual browser testing and Codex-runnable verification so each scenario has a clear execution owner.
+4. Mapped the checklist to the currently implemented Studio surfaces, including Studio shell/docs, Catalogue dashboard routing, work/detail/file/link/series flows, bulk import, moments import, activity/build reporting, readiness states, public runtime follow-through, and responsive checks.
+5. Added an execution order, expected outcomes, suggested Codex command set, and a short failure-triage model so the first full pass can move directly into issue routing once results are recorded externally.
 
 ### Phase 12. Cloud-Native Media Target
 
