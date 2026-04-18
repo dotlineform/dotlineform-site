@@ -16,7 +16,7 @@ This document defines the next phased implementation pass after Phases 0-15 of t
 [Phase 4. Catalogue Activity And Build Reporting](#phase-4-catalogue-activity-and-build-reporting)  
 [Phase 5. Media And Prose Readiness](#phase-5-media-and-prose-readiness)  
 [Phase 6. Preview Media In Studio](#phase-6-preview-media-in-studio)  
-[Phase 7. Prose Local Actions](#phase-7-prose-local-actions)  
+[Phase 7. Optional Canonical Prose Management](#phase-7-optional-canonical-prose-management)  
 [Phase 8. Media Local Action Surfaces](#phase-8-media-local-action-surfaces)
 [Phase 9. Internal Generator Refactor](#phase-9-internal-generator-refactor)  
 [Phase 10. End-To-End Testing Checklist And Execution Prep](#phase-10-end-to-end-testing-checklist-and-execution-prep)  
@@ -448,36 +448,43 @@ Implemented:
 7. Kept preview rendering out of bulk mode.
 8. Reviewed work-file and work-link editors and kept them text-first for now; no preview surface was added in this phase.
 
-### Phase 7. Prose Local Actions
+### Phase 7. Optional Canonical Prose Management
+
+Status:
+
+- deferred unless prose stops being external/imported-only and becomes a Studio-managed canonical source
 
 Scope:
 
-- add local create/open/edit/validate actions for prose where the narrow readiness phase proves insufficient
-- bring work and series prose handling further inside the Studio-led workflow
+- only pursue a further prose phase if work and series prose need to become repo-native, Studio-managed source records
+- treat this as a separate prose-authoring project rather than a continuation of the current import-led workflow
 
 Out of scope:
 
+- the existing external-file import flow delivered in Phase 5
+- ad hoc local actions where import and rebuild are already sufficient
 - moments automation beyond the explicit file-based flow established earlier
+- browser-based markdown editing unless separately justified and planned
 - remote prose editing
 
 Deliverables:
 
-- a defined local action boundary for work and series prose files
-- Studio-triggered prose create/open/import/validate actions as needed
-- clear integration between prose actions and rebuild flows
+- an explicit architecture decision: prose remains external/imported, or prose becomes repo-native and Studio-managed
+- if prose becomes repo-native, a separate implementation plan covering storage, editing, validation, rebuild, and migration
+- no implementation work in this phase unless that architecture decision changes
 
 Verification:
 
-- user can complete normal prose maintenance from Studio without dropping into ad hoc terminal work for routine cases
-- prose actions remain explicit and bounded rather than hidden behind unrelated save flows
+- the current plan is explicit that no further prose work is needed after Phase 5 for the external-file model
+- any future prose-authoring work is separated into its own dedicated plan rather than leaking into catalogue refinement by accident
 
 Benefits:
 
-- pulls another operational side path into the main Studio workflow
+- prevents the catalogue roadmap from drifting into an unscoped prose-authoring project
 
 Risks:
 
-- scope can expand sharply if prose editing becomes too ambitious too early
+- if prose authoring is needed later, the work is substantial and should not be treated as a small follow-on task
 
 ### Phase 8. Media Local Action Surfaces
 
