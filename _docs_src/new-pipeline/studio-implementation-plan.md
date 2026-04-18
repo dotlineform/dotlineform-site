@@ -416,6 +416,10 @@ Deliverables:
 - explicit fallback states for missing source media and missing generated media
 - limited file/link preview treatment only where it helps identify the record
 
+steer:
+- small image preview with caption - can fit at top of the ‘current record’ panel
+- details lists would be improved by being more consistent with /series/ list which includes thumbnail image
+
 Verification:
 
 - users can visually confirm key records without leaving Studio
