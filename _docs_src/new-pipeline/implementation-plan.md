@@ -60,17 +60,17 @@ Work:
 
 - add `--source json` and `--source-dir` to `generate_work_pages.py`
 - keep `xlsx` as the default source during migration
-- use `scripts/catalogue_source.py` to load canonical source JSON and materialize a temporary workbook adapter
-- run the existing artifact writer against the temporary workbook so current runtime contracts stay stable
-- sync generator-updated mutable fields back into canonical source JSON after JSON-source write runs
-- compare generated artifacts from workbook mode and JSON mode
+- use `scripts/catalogue_source.py` to load canonical source JSON and remove the temporary workbook bridge from the live rebuild path
+- keep any retained workbook-shaped compatibility in-memory and isolated from the live JSON runtime boundary
+- write generator-updated mutable fields back into canonical source JSON directly after JSON-source write runs
+- compare generated artifacts across the transitional paths while the workbook-led tooling still exists
 
 Acceptance:
 
 - JSON-source generation writes the same route stubs and runtime JSON payloads as workbook-source generation for the current catalogue, aside from expected generated timestamp differences
 - existing public runtime JSON schemas remain unchanged
 - `assets/data/series_index.json`, `assets/data/works_index.json`, `assets/data/recent_index.json`, and per-record JSON contracts remain stable
-- workbook mode still works as a fallback
+- workbook-shaped compatibility remains available only where still needed for import or comparison tooling, not as the live rebuild path
 
 Benefits:
 

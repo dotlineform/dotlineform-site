@@ -63,7 +63,7 @@ Moment canonical source model:
 - `--source` with default `xlsx`
   - `xlsx` reads `data/works.xlsx` or the positional workbook path
   - `json` reads canonical source JSON from `assets/studio/data/catalogue/`
-  - JSON source mode materializes a temporary workbook adapter so the current artifact writer continues to produce the existing runtime contracts
+  - JSON source mode no longer materializes a temporary `works.xlsx`; the live path now reads canonical source records directly and uses only an in-memory compatibility projection where retained generator logic still expects sheet-like rows
 - `--source-dir` with default `assets/studio/data/catalogue`
   - used only when `--source json`
 - `--force`: regenerate even when checksums match

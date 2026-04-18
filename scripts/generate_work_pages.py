@@ -68,7 +68,6 @@ import os
 import re
 import shutil
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -123,17 +122,35 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
 
 try:
     from catalogue_source import (
+        CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        WORKBOOK_HEADERS,
+        build_detail_record,
+        build_file_record,
+        build_link_record,
+        build_series_record,
+        build_series_sort_map,
+        build_work_record,
         records_from_json_source,
-        sync_mutable_fields_from_workbook,
-        write_records_to_workbook,
+        sort_record_map,
+        validate_source_records,
+        write_source_record_payloads,
     )
 except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.catalogue_source import (
+        CatalogueSourceRecords,
         DEFAULT_SOURCE_DIR as DEFAULT_CATALOGUE_SOURCE_DIR,
+        WORKBOOK_HEADERS,
+        build_detail_record,
+        build_file_record,
+        build_link_record,
+        build_series_record,
+        build_series_sort_map,
+        build_work_record,
         records_from_json_source,
-        sync_mutable_fields_from_workbook,
-        write_records_to_workbook,
+        sort_record_map,
+        validate_source_records,
+        write_source_record_payloads,
     )
 
 try:
@@ -216,6 +233,56 @@ def parse_list(raw: Any, sep: str = ",") -> List[str]:
     if not s:
         return []
     return [item.strip() for item in s.split(sep) if item.strip()]
+
+
+class ProxyCell:
+    def __init__(self, value: Any = None) -> None:
+        self.value = value
+
+
+class ProxyWorksheet:
+    def __init__(self, headers: List[str], rows: List[tuple[Any, ...]]) -> None:
+        self._headers = list(headers)
+        header_row = [ProxyCell(value) for value in self._headers]
+        data_rows = [[ProxyCell(value) for value in row] for row in rows]
+        self._rows: List[List[ProxyCell]] = [header_row, *data_rows]
+
+    @property
+    def max_column(self) -> int:
+        return len(self._headers)
+
+    def iter_rows(self, min_row: int = 1):
+        start = max(1, int(min_row)) - 1
+        for row in self._rows[start:]:
+            yield tuple(row)
+
+    def cell(self, row: int, column: int, value: Any = None) -> ProxyCell:
+        row_index = max(1, int(row)) - 1
+        column_index = max(1, int(column)) - 1
+        while len(self._rows) <= row_index:
+            self._rows.append([ProxyCell() for _ in range(len(self._headers))])
+        target_row = self._rows[row_index]
+        while len(target_row) <= column_index:
+            target_row.append(ProxyCell())
+        target = target_row[column_index]
+        if value is not None:
+            target.value = value
+        return target
+
+
+def workbook_cell_value(value: Any) -> Any:
+    if isinstance(value, list):
+        return ",".join(str(item) for item in value if item is not None)
+    return value
+
+
+def rows_from_records(headers: List[str], records: List[Dict[str, Any]]) -> List[tuple[Any, ...]]:
+    header_row = tuple(headers)
+    data_rows = [
+        tuple(workbook_cell_value(record.get(header)) for header in headers)
+        for record in records
+    ]
+    return [header_row, *data_rows]
 
 
 def parse_work_id_selection(raw: str) -> set[str]:
@@ -990,18 +1057,12 @@ def main() -> None:
         )
 
     json_source_dir: Optional[Path] = None
-    json_source_tempdir: Optional[tempfile.TemporaryDirectory[str]] = None
-    if args.source == "json":
+    source_records = None
+    using_json_source = args.source == "json"
+    if using_json_source:
         json_source_dir = Path(args.source_dir).expanduser()
-        json_source_tempdir = tempfile.TemporaryDirectory(prefix="catalogue-source-")
-        materialized_workbook_path = Path(json_source_tempdir.name) / "works.xlsx"
         source_records = records_from_json_source(json_source_dir)
-        write_records_to_workbook(source_records, materialized_workbook_path)
-        args.xlsx = str(materialized_workbook_path)
-        print(
-            "Catalogue source: JSON "
-            f"{display_path(json_source_dir)} -> {display_path(materialized_workbook_path)}"
-        )
+        print(f"Catalogue source: JSON {display_path(json_source_dir)}")
 
     log_event(
         "generate_start",
@@ -1073,29 +1134,69 @@ def main() -> None:
             "or pass --media-base-dir."
         )
 
-    # Resolve the workbook path and fail fast if it is missing.
-    xlsx_path = Path(args.xlsx).expanduser()
-    if not xlsx_path.exists():
-        raise SystemExit(f"Workbook not found: {xlsx_path}")
+    xlsx_path: Optional[Path] = None
+    wb_values = None
+    wb_write = None
+    if using_json_source:
+        assert source_records is not None
+        works_rows = rows_from_records(WORKBOOK_HEADERS["Works"], list(source_records.works.values()))
+        series_rows = rows_from_records(WORKBOOK_HEADERS["Series"], list(source_records.series.values()))
+        series_sort_rows = rows_from_records(
+            WORKBOOK_HEADERS["SeriesSort"],
+            [
+                {
+                    "series_id": record.get("series_id"),
+                    "sort_fields": record.get("sort_fields") or "work_id",
+                }
+                for record in source_records.series.values()
+            ],
+        )
+        work_details_rows = rows_from_records(WORKBOOK_HEADERS["WorkDetails"], list(source_records.work_details.values()))
+        work_files_rows = rows_from_records(WORKBOOK_HEADERS["WorkFiles"], list(source_records.work_files.values()))
+        work_links_rows = rows_from_records(WORKBOOK_HEADERS["WorkLinks"], list(source_records.work_links.values()))
 
-    # `data_only=True` reads the last-calculated values of formula cells.
-    # Keep a second non-data_only workbook for writes so formulas are preserved on save.
-    # If your sheet relies on formulas that haven't been calculated/saved, cached values may be None.
-    wb_values = openpyxl.load_workbook(xlsx_path, data_only=True)
-    wb_write = openpyxl.load_workbook(xlsx_path, data_only=False) if args.write else None
+        works_ws = ProxyWorksheet(WORKBOOK_HEADERS["Works"], works_rows[1:])
+        series_ws = ProxyWorksheet(WORKBOOK_HEADERS["Series"], series_rows[1:])
+        work_details_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkDetails"], work_details_rows[1:])
+        work_files_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkFiles"], work_files_rows[1:])
+        work_links_ws = ProxyWorksheet(WORKBOOK_HEADERS["WorkLinks"], work_links_rows[1:])
 
-    if args.works_sheet not in wb_values.sheetnames:
-        raise SystemExit(f"Sheet not found in workbook: {args.works_sheet}")
-    works_ws = wb_write[args.works_sheet] if wb_write is not None else wb_values[args.works_sheet]
+        def read_sheet_rows(sheet_name: str) -> List[tuple]:
+            mapping = {
+                args.works_sheet: works_rows,
+                args.series_sheet: series_rows,
+                args.series_sort_sheet: series_sort_rows,
+                args.work_details_sheet: work_details_rows,
+                args.work_files_sheet: work_files_rows,
+                args.work_links_sheet: work_links_rows,
+            }
+            if sheet_name not in mapping:
+                raise SystemExit(f"Sheet not found in JSON source projection: {sheet_name}")
+            return mapping[sheet_name]
+    else:
+        # Resolve the workbook path and fail fast if it is missing.
+        xlsx_path = Path(args.xlsx).expanduser()
+        if not xlsx_path.exists():
+            raise SystemExit(f"Workbook not found: {xlsx_path}")
 
-    def read_sheet_rows(sheet_name: str) -> List[tuple]:
-        if sheet_name not in wb_values.sheetnames:
-            raise SystemExit(f"Sheet not found in workbook: {sheet_name}")
-        ws = wb_values[sheet_name]
-        rows = list(ws.iter_rows(values_only=True))
-        if not rows:
-            return []
-        return rows
+        # `data_only=True` reads the last-calculated values of formula cells.
+        # Keep a second non-data_only workbook for writes so formulas are preserved on save.
+        # If your sheet relies on formulas that haven't been calculated/saved, cached values may be None.
+        wb_values = openpyxl.load_workbook(xlsx_path, data_only=True)
+        wb_write = openpyxl.load_workbook(xlsx_path, data_only=False) if args.write else None
+
+        if args.works_sheet not in wb_values.sheetnames:
+            raise SystemExit(f"Sheet not found in workbook: {args.works_sheet}")
+        works_ws = wb_write[args.works_sheet] if wb_write is not None else wb_values[args.works_sheet]
+
+        def read_sheet_rows(sheet_name: str) -> List[tuple]:
+            if sheet_name not in wb_values.sheetnames:
+                raise SystemExit(f"Sheet not found in workbook: {sheet_name}")
+            ws = wb_values[sheet_name]
+            rows = list(ws.iter_rows(values_only=True))
+            if not rows:
+                return []
+            return rows
 
     def build_header_index(rows: List[tuple]) -> Dict[str, int]:
         if not rows:
@@ -1209,16 +1310,20 @@ def main() -> None:
     # Load all worksheets up-front.
     works_rows = read_sheet_rows(args.works_sheet)
     series_rows = read_sheet_rows(args.series_sheet)
-    series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb_values.sheetnames else []
-    work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb_values.sheetnames else []
+    if using_json_source:
+        series_sort_rows = read_sheet_rows(args.series_sort_sheet)
+        work_details_rows = read_sheet_rows(args.work_details_sheet)
+    else:
+        series_sort_rows = read_sheet_rows(args.series_sort_sheet) if args.series_sort_sheet in wb_values.sheetnames else []
+        work_details_rows = read_sheet_rows(args.work_details_sheet) if args.work_details_sheet in wb_values.sheetnames else []
+        series_ws = wb_write[args.series_sheet] if wb_write is not None else wb_values[args.series_sheet]
+        work_details_ws = (
+            wb_write[args.work_details_sheet] if wb_write is not None else wb_values[args.work_details_sheet]
+        ) if args.work_details_sheet in wb_values.sheetnames else None
+        work_files_ws = wb_write[args.work_files_sheet] if wb_write is not None else wb_values[args.work_files_sheet]
+        work_links_ws = wb_write[args.work_links_sheet] if wb_write is not None else wb_values[args.work_links_sheet]
     work_files_rows = read_sheet_rows(args.work_files_sheet)
     work_links_rows = read_sheet_rows(args.work_links_sheet)
-    series_ws = wb_write[args.series_sheet] if wb_write is not None else wb_values[args.series_sheet]
-    work_details_ws = (
-        wb_write[args.work_details_sheet] if wb_write is not None else wb_values[args.work_details_sheet]
-    ) if args.work_details_sheet in wb_values.sheetnames else None
-    work_files_ws = wb_write[args.work_files_sheet] if wb_write is not None else wb_values[args.work_files_sheet]
-    work_links_ws = wb_write[args.work_links_sheet] if wb_write is not None else wb_values[args.work_links_sheet]
 
     if not works_rows:
         raise SystemExit(f"Works sheet '{args.works_sheet}' is empty")
@@ -1229,6 +1334,66 @@ def main() -> None:
     work_details_hi = build_header_index(work_details_rows) if work_details_rows else {}
     work_files_hi = build_header_index(work_files_rows) if work_files_rows else {}
     work_links_hi = build_header_index(work_links_rows) if work_links_rows else {}
+
+    def row_from_cells(row_cells: tuple[Any, ...]) -> tuple[Any, ...]:
+        return tuple(getattr(cell, "value", cell) for cell in row_cells)
+
+    def rebuild_source_records_from_projection():
+        works_records: Dict[str, Dict[str, Any]] = {}
+        for row_cells in works_ws.iter_rows(min_row=2):
+            row = row_from_cells(row_cells)
+            if is_empty(cell(row, works_hi, "work_id")):
+                continue
+            record = build_work_record(row, works_hi)
+            works_records[str(record["work_id"])] = record
+
+        sort_fields_by_series_id = build_series_sort_map(series_sort_rows, series_sort_hi)
+        series_records: Dict[str, Dict[str, Any]] = {}
+        for row_cells in series_ws.iter_rows(min_row=2):
+            row = row_from_cells(row_cells)
+            if is_empty(cell(row, series_hi, "series_id")):
+                continue
+            record = build_series_record(row, series_hi, sort_fields_by_series_id)
+            series_records[str(record["series_id"])] = record
+
+        detail_records: Dict[str, Dict[str, Any]] = {}
+        if work_details_ws is not None:
+            for row_cells in work_details_ws.iter_rows(min_row=2):
+                row = row_from_cells(row_cells)
+                if is_empty(cell(row, work_details_hi, "work_id")) or is_empty(cell(row, work_details_hi, "detail_id")):
+                    continue
+                record = build_detail_record(row, work_details_hi)
+                detail_records[str(record["detail_uid"])] = record
+
+        used_file_uids: set[str] = set()
+        work_file_records: Dict[str, Dict[str, Any]] = {}
+        for row_cells in work_files_ws.iter_rows(min_row=2):
+            row = row_from_cells(row_cells)
+            if is_empty(cell(row, work_files_hi, "work_id")):
+                continue
+            record = build_file_record(row, work_files_hi, used_file_uids)
+            work_file_records[str(record["file_uid"])] = record
+
+        used_link_uids: set[str] = set()
+        work_link_records: Dict[str, Dict[str, Any]] = {}
+        for row_cells in work_links_ws.iter_rows(min_row=2):
+            row = row_from_cells(row_cells)
+            if is_empty(cell(row, work_links_hi, "work_id")):
+                continue
+            record = build_link_record(row, work_links_hi, used_link_uids)
+            work_link_records[str(record["link_uid"])] = record
+
+        rebuilt_records = CatalogueSourceRecords(
+            works=sort_record_map(works_records),
+            work_details=sort_record_map(detail_records),
+            series=sort_record_map(series_records),
+            work_files=sort_record_map(work_file_records),
+            work_links=sort_record_map(work_link_records),
+        )
+        validation_errors = validate_source_records(rebuilt_records)
+        if validation_errors:
+            raise SystemExit("JSON source write-back validation failed: " + "; ".join(validation_errors[:20]))
+        return rebuilt_records
 
     if "status" not in works_hi:
         raise SystemExit("Works sheet missing required column: status")
@@ -1779,13 +1944,20 @@ def main() -> None:
         run_moments = False
         run_moments_index_json = False
 
-    raise_if_invalid_catalogue_workbook(
-        xlsx_path,
-        works_sheet=args.works_sheet,
-        series_sheet=args.series_sheet,
-        work_details_sheet=args.work_details_sheet,
-        projects_base_dir=Path(args.projects_base_dir).expanduser(),
-    )
+    if using_json_source:
+        assert source_records is not None
+        source_validation_errors = validate_source_records(source_records)
+        if source_validation_errors:
+            raise SystemExit("JSON source validation failed: " + "; ".join(source_validation_errors[:20]))
+    else:
+        assert xlsx_path is not None
+        raise_if_invalid_catalogue_workbook(
+            xlsx_path,
+            works_sheet=args.works_sheet,
+            series_sheet=args.series_sheet,
+            work_details_sheet=args.work_details_sheet,
+            projects_base_dir=Path(args.projects_base_dir).expanduser(),
+        )
 
     works_width_px_idx = works_hi.get("width_px")
     works_height_px_idx = works_hi.get("height_px")
@@ -2042,8 +2214,10 @@ def main() -> None:
         or work_links_status_updated > 0
         or work_links_published_date_updated > 0
     ):
-        assert wb_write is not None
-        wb_write.save(xlsx_path)
+        if not using_json_source:
+            assert wb_write is not None
+            assert xlsx_path is not None
+            wb_write.save(xlsx_path)
         if status_updated > 0:
             print(f"Updated status to 'published' for {status_updated} row(s).")
         if published_date_updated > 0:
@@ -2067,7 +2241,12 @@ def main() -> None:
             f"Downloads {'to copy' if not args.write else 'copied'}: {downloads_copied}."
             f" Missing/unresolved: {downloads_missing}."
         )
-        print(f"Workbook: {display_path(xlsx_path)}")
+        if using_json_source:
+            assert json_source_dir is not None
+            print(f"Catalogue source: {display_path(json_source_dir)}")
+        else:
+            assert xlsx_path is not None
+            print(f"Workbook: {display_path(xlsx_path)}")
         if args.write:
             print("Note: if the workbook is open in Excel, close and reopen it to see changes.")
     else:
@@ -2369,8 +2548,10 @@ def main() -> None:
                 print("Tag assignments sync: no missing series entries.")
 
         if args.write and (series_status_updated > 0 or series_published_date_updated > 0):
-            assert wb_write is not None
-            wb_write.save(xlsx_path)
+            if not using_json_source:
+                assert wb_write is not None
+                assert xlsx_path is not None
+                wb_write.save(xlsx_path)
             if series_status_updated > 0:
                 print(f"Updated series status to 'published' for {series_status_updated} row(s).")
             if series_published_date_updated > 0:
@@ -2659,8 +2840,10 @@ def main() -> None:
                     details_written += 1
 
             if args.write and (details_status_updated > 0 or details_published_date_updated > 0 or details_dimensions_updated > 0):
-                assert wb_write is not None
-                wb_write.save(xlsx_path)
+                if not using_json_source:
+                    assert wb_write is not None
+                    assert xlsx_path is not None
+                    wb_write.save(xlsx_path)
                 if details_status_updated > 0:
                     print(f"Updated work detail status to 'published' for {details_status_updated} row(s).")
                 if details_published_date_updated > 0:
@@ -3436,9 +3619,10 @@ def main() -> None:
                 f"Path: {display_path(moments_index_json_path)} (overwrite={exists})"
             )
 
-    if args.write and args.source == "json" and json_source_dir is not None:
-        synced_paths = sync_mutable_fields_from_workbook(json_source_dir, xlsx_path)
-        print("Catalogue source JSON sync done.")
+    if args.write and using_json_source and json_source_dir is not None:
+        rebuilt_source_records = rebuild_source_records_from_projection()
+        synced_paths = write_source_record_payloads(json_source_dir, rebuilt_source_records)
+        print("Catalogue source JSON write-back done.")
         for synced_path in synced_paths:
             print(f"  - {display_path(synced_path)}")
 
@@ -3450,9 +3634,6 @@ def main() -> None:
             "source": args.source,
         },
     )
-
-    if json_source_tempdir is not None:
-        json_source_tempdir.cleanup()
 
 if __name__ == "__main__":
     try:

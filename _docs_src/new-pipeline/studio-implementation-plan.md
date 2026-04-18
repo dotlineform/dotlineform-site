@@ -560,6 +560,10 @@ Implemented:
 
 ### Phase 9. Internal Generator Refactor
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
 - remove the temporary workbook bridge from the live JSON rebuild path
@@ -607,6 +611,14 @@ Task list:
 12. Keep explicit notes on any remaining workbook-shaped compatibility code after the refactor lands, so Phase 10 starts with a known cleanup list rather than another discovery pass.
 13. Run a final artifact-equivalence pass on representative work, series, detail, and moment scopes before calling the phase complete.
 14. Update the plan/docs trail so the repository clearly states that the live JSON rebuild path is now generator-native and no longer depends on materializing `works.xlsx`.
+
+Implemented:
+
+1. Removed the temporary workbook materialization step from the live JSON rebuild path in `generate_work_pages.py`, so scoped runtime rebuilds no longer depend on writing `works.xlsx` into a temp location before generation begins.
+2. Replaced the old workbook-sync tail for JSON runs with direct canonical-source write-back, rebuilding normalized source records from the live in-memory generation state and writing those payloads back through the catalogue source helpers.
+3. Kept the refactor narrowly scoped to the live JSON route: workbook save points still exist only for the non-live workbook branch, while JSON runs now validate and persist through the canonical source layer instead.
+4. Added an explicit in-memory compatibility projection for the retained generator sections that still expect sheet-like rows, so the runtime boundary is now `canonical source records -> in-memory projection -> generated artifacts`, rather than `canonical source records -> temp workbook -> generated artifacts`.
+5. Verified the refactored path with repeated scoped JSON writes, source-record validation during write-back, and a representative real work rebuild, while leaving broader dead-path cleanup and comparison-only compatibility work for Phase 10.
 
 Follow-on note:
 

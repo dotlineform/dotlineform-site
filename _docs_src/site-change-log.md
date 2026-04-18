@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-18
 
+- completed Phase 9 internal generator refactor: the live JSON rebuild path no longer materializes `works.xlsx`, `generate_work_pages.py` now rebuilds from canonical source records with an in-memory compatibility projection, and JSON-source write runs now persist mutable source updates directly back into canonical catalogue JSON
 - completed Phase 8 local-media generation work: scoped rebuilds now run a bounded local thumbnail-generation step for works, work details, and moments, readiness now distinguishes current media from pending local derivative generation, build preview now surfaces local-media state, and Build Activity now records generated local media alongside rebuild outcomes
 - completed Phase 6 preview-media work: work and detail editors now show compact current-record previews in the summary rail, work-detail rows on the work editor now use thumbnail-led navigation, and focused preview states now distinguish missing generated preview from missing source media
 - completed Phase 5 media/prose readiness work: work, series, and detail editors now surface source readiness in the summary rail, build preview now carries readiness state, work and series now offer narrow `Import prose + rebuild` actions, and detail preview now resolves its own source media path
