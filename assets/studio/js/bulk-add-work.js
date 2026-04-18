@@ -38,11 +38,16 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `bulk_add_work.${key}`, fallback, tokens);
 }
 
+function workbookPath(state, preview = null) {
+  if (preview && preview.workbook_path) return preview.workbook_path;
+  return normalizeText(state.workbookPath) || "data/works_bulk_import.xlsx";
+}
+
 function buildSummaryHtml(state, preview) {
   const summary = preview && preview.summary ? preview.summary : {};
   const fields = [
     { label: t(state, "summary_mode", "mode"), value: MODE_LABELS[preview && preview.mode] || MODE_LABELS[state.mode] || state.mode },
-    { label: t(state, "summary_workbook", "workbook"), value: preview && preview.workbook_path ? preview.workbook_path : "data/works.xlsx" },
+    { label: t(state, "summary_workbook", "workbook"), value: workbookPath(state, preview) },
     { label: t(state, "summary_candidate_rows", "candidate rows"), value: String(Number(summary.candidate_rows) || 0) },
     { label: t(state, "summary_importable", "importable"), value: String(Number(summary.importable_count) || 0) },
     { label: t(state, "summary_duplicates", "duplicates"), value: String(Number(summary.duplicate_count) || 0) },
@@ -164,7 +169,11 @@ async function runPreview(state) {
       "success"
     );
     if (Number(summary.blocked_count) > 0) {
-      setTextWithState(state.warningNode, t(state, "preview_blocked_warning", "Blocked rows must be fixed in data/works.xlsx before apply."), "warn");
+      setTextWithState(
+        state.warningNode,
+        t(state, "preview_blocked_warning", "Blocked rows must be fixed in {workbook} before apply.", { workbook: workbookPath(state, state.preview) }),
+        "warn"
+      );
     } else {
       setTextWithState(state.warningNode, "");
     }
@@ -204,7 +213,7 @@ async function applyImport(state) {
     );
     setTextWithState(
       state.warningNode,
-      t(state, "apply_clear_workbook", "Clear the imported rows from data/works.xlsx after you confirm the result."),
+      t(state, "apply_clear_workbook", "Clear the imported rows from {workbook} after you confirm the result.", { workbook: workbookPath(state, state.preview) }),
       "warn"
     );
   } catch (error) {
@@ -250,7 +259,8 @@ async function init() {
     summaryNode,
     previewDetailsNode,
     previewButton,
-    applyButton
+    applyButton,
+    workbookPath: normalizeText(root.dataset.workbookPath) || "data/works_bulk_import.xlsx"
   };
 
   try {
@@ -258,8 +268,11 @@ async function init() {
     state.config = config;
     state.serverAvailable = Boolean(await probeCatalogueHealth());
     saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `bulk_add_work.${key}`, fallback, tokens));
-    workbookNode.textContent = "data/works.xlsx";
-    setTextWithState(contextNode, t(state, "context_hint", "Bulk import is one-way from data/works.xlsx into canonical JSON. Use works mode for new works and work details mode for new detail rows."));
+    workbookNode.textContent = state.workbookPath;
+    setTextWithState(
+      contextNode,
+      t(state, "context_hint", "Bulk import is one-way from {workbook} into canonical JSON. Use works mode for new works and work details mode for new detail rows.", { workbook: state.workbookPath })
+    );
     if (!state.serverAvailable) {
       setTextWithState(statusNode, t(state, "save_mode_unavailable_hint", "Local catalogue server unavailable. Import is disabled."), "warn");
     }

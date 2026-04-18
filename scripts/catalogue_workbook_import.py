@@ -5,6 +5,11 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, Mapping
 
 try:
+    from pipeline_config import bulk_import_workbook_path, load_pipeline_config
+except ModuleNotFoundError:  # pragma: no cover - package import fallback
+    from scripts.pipeline_config import bulk_import_workbook_path, load_pipeline_config
+
+try:
     from catalogue_source import (
         CatalogueSourceRecords,
         DETAIL_FIELDS,
@@ -47,7 +52,8 @@ except ModuleNotFoundError:  # pragma: no cover - package import fallback
     from scripts.series_ids import normalize_series_id
 
 
-DEFAULT_IMPORT_WORKBOOK_PATH = Path("data/works.xlsx")
+PIPELINE_CONFIG = load_pipeline_config(Path(__file__))
+DEFAULT_IMPORT_WORKBOOK_PATH = bulk_import_workbook_path(PIPELINE_CONFIG)
 IMPORT_MODE_WORKS = "works"
 IMPORT_MODE_WORK_DETAILS = "work_details"
 VALID_IMPORT_MODES = {IMPORT_MODE_WORKS, IMPORT_MODE_WORK_DETAILS}

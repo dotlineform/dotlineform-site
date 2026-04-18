@@ -631,6 +631,15 @@ Pre-Phase 10 task:
 - check the retained additional metadata fields in the Excel workbook and confirm which of them are currently eligible for import, so bulk import can carry as much intended metadata as possible without creating avoidable follow-on bulk-edit work
 - update Studio bulk-import UI copy, write-server import endpoints, and related docs so they reference the configured workbook path instead of assuming `data/works.xlsx`
 
+Completed on 2026-04-19:
+
+- bulk import workbook path is now configured in `_data/pipeline.json` and currently resolves to `data/works_bulk_import.xlsx`
+- the bulk-import script, write server, and Studio import page now all read or display that configured workbook path instead of a hard-coded `data/works.xlsx`
+- the current `Works` sheet still includes the required headers `work_id`, `series_ids`, and `title`
+- the current `WorkDetails` sheet still includes the required headers `work_id`, `detail_id`, and `title`
+- every retained additional workbook header in both sheets is currently eligible for import; no current headers fall outside the recognized import schema
+- future workbook column changes should be treated as explicit change requests rather than something the importer is expected to detect and adapt to automatically
+
 ### Phase 10. Generator Cleanup And Simplification
 
 Status:

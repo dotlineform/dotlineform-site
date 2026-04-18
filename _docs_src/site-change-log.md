@@ -25,6 +25,10 @@ sort_order: 110
 - extended the derived catalogue lookup layer with focused work-file and work-link records so Studio can open those editors without loading full source maps
 - updated Studio runtime/docs routing and local save-flow docs for the new work-file and work-link surfaces
 
+## 2026-04-19
+
+- completed the pre-Phase 10 bulk-import follow-up: the workbook path is now configured in `_data/pipeline.json` and points to `data/works_bulk_import.xlsx`, the Studio bulk-import UI and write server no longer assume `data/works.xlsx`, and the reduced workbook was checked against the importer schema with all retained `Works` and `WorkDetails` headers confirmed as eligible import fields
+
 ## 2026-04-17
 
 - added the Phase 8 derived catalogue lookup payloads and switched the catalogue editors from full-source browser loads to lightweight search indexes plus focused per-record lookup JSON

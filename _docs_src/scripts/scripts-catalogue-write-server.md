@@ -249,7 +249,7 @@ or:
 
 Request behavior:
 
-- workbook source is always `data/works.xlsx`
+- workbook source is configured through `_data/pipeline.json` and currently resolves to `data/works_bulk_import.xlsx`
 - `works` mode previews new work records only
 - `work_details` mode previews new detail records only
 - existing source records are counted as duplicates and skipped
@@ -258,7 +258,7 @@ Request behavior:
 
 `POST /catalogue/import-apply` accepts the same shape and then:
 
-- re-runs the preview plan against `data/works.xlsx`
+- re-runs the preview plan against the configured workbook path
 - rejects apply when blocked workbook rows remain
 - writes only importable new records into canonical source JSON
 - refreshes derived lookup payloads after non-dry-run writes

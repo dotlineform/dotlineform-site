@@ -7,6 +7,9 @@
     "srcset_success_ids_file": "MAKE_SRCSET_SUCCESS_IDS_FILE"
   },
   "paths": {
+    "workbooks": {
+      "bulk_import": "data/works_bulk_import.xlsx"
+    },
     "source_roots": {
       "works": "projects",
       "moments": "moments"

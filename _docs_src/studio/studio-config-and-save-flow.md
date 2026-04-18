@@ -168,7 +168,7 @@ Catalogue work detail local save behavior:
 Catalogue workbook import behavior:
 
 - the bulk-add page sends `POST /catalogue/import-preview` and `POST /catalogue/import-apply`
-- both endpoints always read the fixed workbook `data/works.xlsx`
+- both endpoints read the configured bulk-import workbook path from `_data/pipeline.json`, currently `data/works_bulk_import.xlsx`
 - preview/apply support two modes: `works` and `work_details`
 - works import adds new work records only
 - work-details import adds new detail records only

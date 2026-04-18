@@ -238,7 +238,7 @@ source ~/.bashrc
 - Run project commands from `dotlineform-site/`.
 - Prefer the project-local script form: `./scripts/...`.
 - canonical catalogue metadata now lives under `assets/studio/data/catalogue/`.
-- `data/works.xlsx` is only used for the separate bulk-import workflow for new works and new work details.
+- `data/works_bulk_import.xlsx` is only used for the separate bulk-import workflow for new works and new work details.
 - Shared env var names and media subpaths are defined in `_data/pipeline.json`.
 - The pipeline currently generates primary image variants at `800`, `1200`, and `1600` widths.
 - Thumb sizes are currently `96` and `192`.

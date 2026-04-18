@@ -1,7 +1,7 @@
 ---
 doc_id: bulk-add-work
 title: Bulk Add Work
-last_updated: 2026-04-18
+last_updated: 2026-04-19
 parent_id: studio
 sort_order: 33
 ---
@@ -12,7 +12,7 @@ Route:
 
 - `/studio/bulk-add-work/`
 
-This page runs the fixed-workbook import flow from `data/works.xlsx` into canonical catalogue source JSON.
+This page runs the configured bulk-import workbook flow from `data/works_bulk_import.xlsx` into canonical catalogue source JSON.
 
 ## Current Scope
 
@@ -25,7 +25,7 @@ The first implementation covers one route with two modes:
 
 Current rules:
 
-- workbook source is always `data/works.xlsx`
+- workbook source is configured in `_data/pipeline.json` and currently points to `data/works_bulk_import.xlsx`
 - imports are one-way into canonical JSON
 - imported records default to `draft`
 - workbook `status` fields are ignored
@@ -33,13 +33,21 @@ Current rules:
 - works import requires referenced series to already exist
 - work-details import requires the parent work to already exist
 - blocked rows must be fixed in the workbook before apply
+- future workbook column changes are treated as explicit pipeline change requests rather than something the importer is expected to discover and adapt to automatically
+
+Current workbook check:
+
+- `Works` retains the required headers `work_id`, `series_ids`, and `title`
+- `WorkDetails` retains the required headers `work_id`, `detail_id`, and `title`
+- every additional retained header in the current workbook is already an eligible import field
+- no current workbook headers fall outside the importer's recognized field set
 
 ## Preview And Apply
 
 Current flow:
 
 1. choose import mode
-2. `POST /catalogue/import-preview` reads `data/works.xlsx` and reports:
+2. `POST /catalogue/import-preview` reads the configured workbook path and reports:
    - candidate row count
    - importable row count
    - duplicate row count
