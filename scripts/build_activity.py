@@ -14,7 +14,7 @@ JOURNAL_REL_PATH = Path("var/build_activity/build_catalogue.jsonl")
 FEED_REL_PATH = Path("assets/studio/data/build_activity.json")
 JOURNAL_LIMIT = 500
 FEED_LIMIT = 50
-FEED_SCHEMA = "studio_build_activity_v1"
+FEED_SCHEMA = "studio_build_activity_v2"
 
 
 def _coerce_json_value(value: Any) -> Any:
@@ -76,12 +76,89 @@ def _compact_id_group(ids: List[str], limit: int = 12) -> Dict[str, Any]:
     }
 
 
+def _group_first_id(group: Dict[str, Any]) -> str:
+    sample_ids = group.get("sample_ids") if isinstance(group.get("sample_ids"), list) else []
+    return str(sample_ids[0]).strip() if sample_ids else ""
+
+
+def _summarize_scope(entry: Dict[str, Any], compact_changes: Dict[str, Any]) -> Dict[str, str]:
+    script = str(entry.get("script") or "").strip()
+    source = compact_changes.get("source") if isinstance(compact_changes.get("source"), dict) else {}
+    results = entry.get("results") if isinstance(entry.get("results"), dict) else {}
+    work_id = str(results.get("work_id") or "").strip() or _group_first_id(source.get("works") or {})
+    series_id = str(results.get("series_id") or "").strip() or _group_first_id(source.get("series") or {})
+    moment_ids = results.get("moment_ids") if isinstance(results.get("moment_ids"), list) else []
+    moment_id = str(moment_ids[0]).strip() if moment_ids else _group_first_id(source.get("moments") or {})
+    if moment_id:
+        return {"kind": "moment", "label": f"moment {moment_id}", "id": moment_id}
+    if work_id:
+        work_count = int((source.get("works") or {}).get("count") or 0)
+        if work_count > 1:
+            return {"kind": "work", "label": f"{work_count} work records", "id": work_id}
+        return {"kind": "work", "label": f"work {work_id}", "id": work_id}
+    if series_id:
+        series_count = int((source.get("series") or {}).get("count") or 0)
+        if series_count > 1:
+            return {"kind": "series", "label": f"{series_count} series records", "id": series_id}
+        return {"kind": "series", "label": f"series {series_id}", "id": series_id}
+    if script == "build_catalogue":
+        return {"kind": "catalogue", "label": "full catalogue", "id": ""}
+    return {"kind": "catalogue", "label": "catalogue scope", "id": ""}
+
+
+def _run_label(entry: Dict[str, Any]) -> str:
+    script = str(entry.get("script") or "").strip()
+    planner_mode = str(entry.get("planner_mode") or "").strip()
+    if script == "build_catalogue_moment":
+        return "Moment rebuild"
+    if script == "build_catalogue_json":
+        return "Scoped rebuild"
+    if planner_mode == "incremental":
+        return "Incremental build"
+    if planner_mode == "bootstrap":
+        return "Bootstrap build"
+    return "Catalogue build"
+
+
+def _result_label(entry: Dict[str, Any], actions: Dict[str, Any]) -> str:
+    status = str(entry.get("status") or "").strip()
+    if status == "failed":
+        failed_step = str((entry.get("results") or {}).get("failed_step") or "").strip() if isinstance(entry.get("results"), dict) else ""
+        return f"failed at {failed_step}" if failed_step else "failed"
+    if bool(entry.get("dry_run")):
+        return "dry run"
+    search_rebuilt = bool(actions.get("rebuild_search"))
+    if search_rebuilt:
+        return "search rebuilt"
+    return "completed"
+
+
 def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
     changes = entry.get("changes", {}) if isinstance(entry.get("changes"), dict) else {}
     source = changes.get("source", {}) if isinstance(changes.get("source"), dict) else {}
     workbook = changes.get("workbook", {}) if isinstance(changes.get("workbook"), dict) else {}
     media = changes.get("media", {}) if isinstance(changes.get("media"), dict) else {}
     actions = entry.get("actions", {}) if isinstance(entry.get("actions"), dict) else {}
+    compact_changes = {
+        "source": {
+            "works": _compact_id_group(list(source.get("works", []))),
+            "series": _compact_id_group(list(source.get("series", []))),
+            "work_details": _compact_id_group(list(source.get("work_details", []))),
+            "moments": _compact_id_group(list(source.get("moments", []))),
+        },
+        "workbook": {
+            "works": _compact_id_group(list(workbook.get("works", []))),
+            "series": _compact_id_group(list(workbook.get("series", []))),
+            "work_details": _compact_id_group(list(workbook.get("work_details", []))),
+            "moments": _compact_id_group(list(workbook.get("moments", []))),
+        },
+        "media": {
+            "work": _compact_id_group(list(media.get("work", []))),
+            "work_details": _compact_id_group(list(media.get("work_details", []))),
+            "moment": _compact_id_group(list(media.get("moment", []))),
+        },
+    }
+    scope = _summarize_scope(entry, compact_changes)
     return {
         "id": entry.get("id"),
         "time_utc": entry.get("time_utc"),
@@ -90,24 +167,13 @@ def _build_feed_entry(entry: Dict[str, Any]) -> Dict[str, Any]:
         "dry_run": bool(entry.get("dry_run")),
         "summary": entry.get("summary"),
         "planner_mode": entry.get("planner_mode"),
-        "changes": {
-            "source": {
-                "works": _compact_id_group(list(source.get("works", []))),
-                "series": _compact_id_group(list(source.get("series", []))),
-                "work_details": _compact_id_group(list(source.get("work_details", []))),
-            },
-            "workbook": {
-                "works": _compact_id_group(list(workbook.get("works", []))),
-                "series": _compact_id_group(list(workbook.get("series", []))),
-                "work_details": _compact_id_group(list(workbook.get("work_details", []))),
-                "moments": _compact_id_group(list(workbook.get("moments", []))),
-            },
-            "media": {
-                "work": _compact_id_group(list(media.get("work", []))),
-                "work_details": _compact_id_group(list(media.get("work_details", []))),
-                "moment": _compact_id_group(list(media.get("moment", []))),
-            },
-        },
+        "run_label": _run_label(entry),
+        "scope_kind": scope["kind"],
+        "scope_label": scope["label"],
+        "scope_id": scope["id"],
+        "result_label": _result_label(entry, actions),
+        "search_rebuilt": bool(actions.get("rebuild_search")),
+        "changes": compact_changes,
         "actions": _coerce_json_value(actions),
         "results": _coerce_json_value(entry.get("results", {})),
     }

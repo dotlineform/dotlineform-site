@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T19:46:58Z",
+  "generated_at": "2026-04-18T20:00:38Z",
   "docs": [
     {
       "scope": "studio",
@@ -467,7 +467,7 @@
       "scope": "studio",
       "doc_id": "catalogue-activity",
       "title": "Catalogue Activity",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 34,
       "source_path": "studio/catalogue-activity.md",
@@ -500,7 +500,7 @@
       "scope": "studio",
       "doc_id": "build-activity",
       "title": "Build Activity",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 35,
       "source_path": "studio/build-activity.md",

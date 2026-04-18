@@ -1,7 +1,7 @@
 ---
 doc_id: build-activity
 title: Build Activity
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 35
 ---
@@ -12,12 +12,13 @@ This document describes the current Studio page at `/studio/build-activity/`.
 
 ## Purpose
 
-The page is a lightweight curator-facing history of recent catalogue build runs.
+The page is a curator-facing history of recent catalogue build runs.
 
-It is intended to answer two practical questions:
+It is intended to answer three practical questions:
 
 - what changed recently
 - did the last few catalogue builds behave as expected
+- what concrete scope did each rebuild target
 
 It is not the canonical engineering log for scripts and it is not yet a public-facing site history surface.
 
@@ -38,11 +39,13 @@ The published feed is a capped summary view. The fuller local journal lives outs
 
 ## Current Entry Shape
 
-Each entry currently includes:
+Each entry now includes:
 
 - UTC timestamp
+- run label
 - run status
-- planner mode
+- scope label
+- result label
 - short summary text
 - source change groups when the run came from a JSON-source scoped rebuild
 - workbook change groups
@@ -68,6 +71,7 @@ What this page is for:
 - checking that planner targeting looks plausible
 - checking what a scoped JSON-source rebuild touched after a Studio edit
 - spotting whether a run was a no-op, targeted rebuild, or larger rebuild
+- jumping back into the relevant editor or follow-on review route from a build row
 
 What it is not for:
 

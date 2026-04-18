@@ -1,34 +1,53 @@
 {
   "header": {
-    "schema": "catalogue_activity_v1",
-    "count": 7
+    "schema": "catalogue_activity_v2",
+    "count": 5
   },
   "entries": [
     {
-      "id": "2026-04-17T20:47:29Z-build-apply",
-      "time_utc": "2026-04-17T20:47:29Z",
-      "kind": "build",
-      "operation": "build.apply",
+      "id": "2026-04-18T18:16:49Z-moment-import",
+      "time_utc": "2026-04-18T18:16:49Z",
+      "kind": "moment",
+      "operation": "moment.import",
       "status": "completed",
-      "summary": "Scoped rebuild completed for work 00460.",
+      "summary": "Moment import completed for keys.",
+      "event_label": "Imported",
+      "attention_label": "published",
+      "needs_attention": false,
+      "scope_kind": "moment",
+      "scope_label": "moment keys",
+      "scope_id": "keys",
       "affected": {
         "works": {
-          "count": 1,
-          "sample_ids": [
-            "00460"
-          ],
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
         "series": {
-          "count": 1,
-          "sample_ids": [
-            "101"
-          ],
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
         "work_details": {
           "count": 0,
           "sample_ids": [],
+          "truncated": 0
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
+          "count": 1,
+          "sample_ids": [
+            "keys"
+          ],
           "truncated": 0
         }
       },
@@ -41,6 +60,12 @@
       "operation": "work-detail.save",
       "status": "completed",
       "summary": "Saved 1 work detail source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work_detail",
+      "scope_label": "work detail 00460-005",
+      "scope_id": "00460-005",
       "affected": {
         "works": {
           "count": 1,
@@ -60,33 +85,18 @@
             "00460-005"
           ],
           "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-17T20:46:11Z-build-apply",
-      "time_utc": "2026-04-17T20:46:11Z",
-      "kind": "build",
-      "operation": "build.apply",
-      "status": "completed",
-      "summary": "Scoped rebuild completed for work 00460.",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "00460"
-          ],
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
-        "series": {
-          "count": 1,
-          "sample_ids": [
-            "101"
-          ],
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
-        "work_details": {
+        "moments": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -101,6 +111,12 @@
       "operation": "work-detail.save",
       "status": "completed",
       "summary": "Saved 1 work detail source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work_detail",
+      "scope_label": "work detail 00460-005",
+      "scope_id": "00460-005",
       "affected": {
         "works": {
           "count": 1,
@@ -120,33 +136,18 @@
             "00460-005"
           ],
           "truncated": 0
-        }
-      },
-      "log_ref": "var/studio/catalogue/logs/catalogue_write_server.log"
-    },
-    {
-      "id": "2026-04-17T19:54:24Z-build-apply",
-      "time_utc": "2026-04-17T19:54:24Z",
-      "kind": "build",
-      "operation": "build.apply",
-      "status": "completed",
-      "summary": "Scoped rebuild completed for work 01941.",
-      "affected": {
-        "works": {
-          "count": 1,
-          "sample_ids": [
-            "01941"
-          ],
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
-        "series": {
-          "count": 1,
-          "sample_ids": [
-            "143"
-          ],
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
           "truncated": 0
         },
-        "work_details": {
+        "moments": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -161,6 +162,12 @@
       "operation": "work.save",
       "status": "completed",
       "summary": "Saved 1 work source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 01941",
+      "scope_id": "01941",
       "affected": {
         "works": {
           "count": 1,
@@ -175,6 +182,21 @@
           "truncated": 0
         },
         "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0
@@ -189,6 +211,12 @@
       "operation": "work.save",
       "status": "completed",
       "summary": "Saved 1 work source record.",
+      "event_label": "Saved",
+      "attention_label": "rebuild pending",
+      "needs_attention": true,
+      "scope_kind": "work",
+      "scope_label": "work 01941",
+      "scope_id": "01941",
       "affected": {
         "works": {
           "count": 1,
@@ -203,6 +231,21 @@
           "truncated": 0
         },
         "work_details": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_files": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "work_links": {
+          "count": 0,
+          "sample_ids": [],
+          "truncated": 0
+        },
+        "moments": {
           "count": 0,
           "sample_ids": [],
           "truncated": 0

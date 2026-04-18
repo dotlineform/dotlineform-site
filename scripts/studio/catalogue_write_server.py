@@ -1232,7 +1232,7 @@ class Handler(BaseHTTPRequestHandler):
                         "operation": self.path.strip("/") or "request",
                         "status": "failed",
                         "summary": "Catalogue request failed validation.",
-                        "affected": {"works": [], "series": [], "work_details": []},
+                        "affected": {"works": [], "series": [], "work_details": [], "work_files": [], "work_links": [], "moments": []},
                         "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                     }
                 )
@@ -2127,7 +2127,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-file.create",
                     "status": "completed",
                     "summary": f"Created draft work file {file_uid}.",
-                    "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "affected": {"works": [work_id], "series": [], "work_details": [], "work_files": [file_uid], "work_links": [], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -2196,7 +2196,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-file.save",
                     "status": "completed",
                     "summary": "Saved 1 work file source record.",
-                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": []},
+                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": [], "work_files": [file_uid], "work_links": [], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -2238,7 +2238,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-file.delete",
                     "status": "completed",
                     "summary": "Deleted 1 work file source record.",
-                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": []},
+                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": [], "work_files": [file_uid], "work_links": [], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -2321,7 +2321,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-link.create",
                     "status": "completed",
                     "summary": f"Created draft work link {link_uid}.",
-                    "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "affected": {"works": [work_id], "series": [], "work_details": [], "work_files": [], "work_links": [link_uid], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -2390,7 +2390,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-link.save",
                     "status": "completed",
                     "summary": "Saved 1 work link source record.",
-                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": []},
+                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": [], "work_files": [], "work_links": [link_uid], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
@@ -2432,7 +2432,7 @@ class Handler(BaseHTTPRequestHandler):
                     "operation": "work-link.delete",
                     "status": "completed",
                     "summary": "Deleted 1 work link source record.",
-                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": []},
+                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": [], "work_files": [], "work_links": [link_uid], "moments": []},
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )

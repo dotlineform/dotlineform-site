@@ -6,10 +6,12 @@ section: catalogue-activity
 studio_page_doc: /docs/?scope=studio&doc=catalogue-activity
 ---
 
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
+
 <div class="tagStudioPage buildActivityPage catalogueActivityPage" id="catalogueActivityRoot" hidden>
   <div class="tagStudio__panel buildActivityPage__panel">
     <p class="buildActivityPage__meta" id="catalogueActivityMeta"></p>
-    <ol class="buildActivityPage__list" id="catalogueActivityList"></ol>
+    <div id="catalogueActivityList"></div>
   </div>
 </div>
 

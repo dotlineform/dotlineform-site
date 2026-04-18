@@ -286,6 +286,10 @@ Risks:
 
 ### Phase 4. Catalogue Activity And Build Reporting
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
 - improve operational visibility for save, create, import, delete, bulk-edit, and rebuild flows
@@ -305,6 +309,16 @@ Deliverables:
 - cleaner list UI, more consistent with other Studio lists with sortable column headers, split 'Scoped rebuild' and 'Saved' into a status column, separate column for the actual scope (work detail xxx, works xxx...)
 - stronger conventions for what belongs in Catalogue Activity versus Build Activity
 
+Delivered:
+
+1. Separated the two activity feeds more cleanly so `Catalogue Activity` now tracks source-side events while `Build Activity` carries rebuild/run outcomes.
+2. Reworked both pages from expandable narrative cards into sortable operational lists with separate columns for type, status, scope, result or follow-up, and next action.
+3. Added explicit scope labels to both feeds so rows now identify concrete targets such as `work 00460`, `work detail 00460-005`, or `moment keys`.
+4. Added direct row-level links from activity rows into the relevant editor or follow-on route where a practical next step exists.
+5. Tightened `Catalogue Activity` so source saves, imports, deletes, and validation failures remain visible without mixing in `build.apply` rows.
+6. Tightened `Build Activity` so scoped rebuild rows surface their scope and search-rebuild outcome more directly.
+7. Extended source-activity feed shaping so work-file and work-link events can identify their own record scope rather than only the parent work.
+
 Verification:
 
 - activity pages answer `what changed`, `what rebuilt`, and `what still needs attention`
@@ -317,6 +331,23 @@ Benefits:
 Risks:
 
 - activity surfaces can become noisy if they try to mirror logs too literally
+
+Task list:
+
+1. Review the current `catalogue_activity.json` and `build_activity.json` entry shapes and define one clear responsibility boundary for each page, so source-write events stay on Catalogue Activity and rebuild/run outcomes stay on Build Activity.
+2. Decide which event families should appear in Catalogue Activity by default, covering save, create, import, delete, bulk-edit, validation failure, and any source-side no-op or conflict outcomes that materially affect operator follow-up.
+3. Decide which run families should appear in Build Activity by default, covering scoped rebuilds, wider catalogue builds, no-op runs, failed runs, and any planner/build modes that still need to remain visible during the transition from older labels.
+4. Replace any overly prose-heavy row summaries with clearer structured columns so the main list surfaces answer `when`, `what happened`, `what scope`, and `what next` at a glance.
+5. Rework both activity pages onto the shared minimal full-width Studio list pattern, with sortable column headers and column naming that matches the rest of the Catalogue UI.
+6. Split current mixed status text into clearer columns, so labels such as `Saved` and `Scoped rebuild` are treated as event/run type or status rather than bundled into one ambiguous summary field.
+7. Add a dedicated scope column that explicitly shows what the action targeted, for example `work 01234`, `work detail 01234-002`, `series 009`, `moment keys`, or `bulk import`.
+8. Define one compact convention for showing affected ids: keep counts visible by default, sample ids only where useful, and avoid expanding either page into an unbounded record dump.
+9. Add direct row-level links back into the relevant Catalogue routes, including focused editor pages, Catalogue Status, Build Activity, or other next-step destinations where the event naturally leads the user onward.
+10. Make sure activity rows surface whether further action is still needed, for example rebuild pending after a source save, validation follow-up after a failed write, or record review after a targeted import.
+11. Tighten Build Activity so scoped JSON rebuild consequences are easier to read, including which records rebuilt, whether search regenerated, and whether the run was effectively a no-op.
+12. Tighten Catalogue Activity so bulk add and moment import activity stays aggregated by counts and summaries, not as a long list of per-record write rows.
+13. Review whether any current event data needs small backend feed changes to support the new columns and links, and document those schema additions before changing the page UI.
+14. Run a final consistency pass across both activity pages so they feel like paired operational surfaces rather than two unrelated report pages with overlapping language.
 
 ### Phase 5. Media And Prose Readiness
 

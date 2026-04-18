@@ -1,4 +1,11 @@
-import { getStudioDataPath, getStudioText, loadStudioConfig } from "./studio-config.js";
+import {
+  getStudioDataPath,
+  getStudioRoute,
+  getStudioText,
+  loadStudioConfig
+} from "./studio-config.js";
+
+const SORT_KEYS = ["time", "event", "status", "scope", "attention"];
 
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
@@ -32,73 +39,148 @@ function formatTimestamp(value) {
   }
 }
 
-function textForStatus(config, status) {
+function statusText(config, status) {
   if (status === "completed") return getStudioText(config, "catalogue_activity.status_completed", "completed");
   if (status === "failed") return getStudioText(config, "catalogue_activity.status_failed", "failed");
   return getStudioText(config, "catalogue_activity.status_other", "status unknown");
 }
 
-function summarizeGroup(group, noneLabel) {
+function countText(label, group) {
   const count = Number(group && group.count) || 0;
-  if (!count) return noneLabel;
-  const sampleIds = Array.isArray(group && group.sample_ids) ? group.sample_ids : [];
-  const sampleText = sampleIds.length ? sampleIds.join(", ") : "";
-  const truncated = Number(group && group.truncated) || 0;
-  if (!sampleText && !truncated) return String(count);
-  if (truncated > 0) return `${count} (${sampleText}, +${truncated} more)`;
-  return `${count} (${sampleText})`;
+  if (!count) return "";
+  return `${label} ${count}`;
 }
 
-function renderAffected(affected, noneLabel) {
-  const labels = {
-    works: "works",
-    series: "series",
-    work_details: "work details",
-    moments: "moments"
-  };
-  const items = Object.keys(labels).map((key) => `
-    <li class="buildActivityEntry__detailItem">
-      <span class="buildActivityEntry__detailLabel">${labels[key]}</span>
-      <span class="buildActivityEntry__detailValue">${escapeHtml(summarizeGroup(affected && affected[key], noneLabel))}</span>
-    </li>
-  `);
-  return `<ul class="buildActivityEntry__detailList">${items.join("")}</ul>`;
+function summarizeAffected(affected) {
+  const parts = [
+    countText("works", affected && affected.works),
+    countText("series", affected && affected.series),
+    countText("details", affected && affected.work_details),
+    countText("files", affected && affected.work_files),
+    countText("links", affected && affected.work_links),
+    countText("moments", affected && affected.moments)
+  ].filter(Boolean);
+  return parts.join(" · ");
 }
 
-function renderEntry(config, entry) {
-  const noneLabel = getStudioText(config, "catalogue_activity.none", "none");
-  const timeText = formatTimestamp(entry && entry.time_utc);
-  const summary = normalizeText(entry && entry.summary) || noneLabel;
+function scopeLink(config, entry) {
+  const scopeKind = normalizeText(entry && entry.scope_kind);
+  const scopeId = normalizeText(entry && entry.scope_id);
+  const scopeLabel = normalizeText(entry && entry.scope_label) || "general catalogue";
+  let href = "";
+  if (scopeKind === "work" && scopeId) href = `${getStudioRoute(config, "catalogue_work_editor")}?work=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "series" && scopeId) href = `${getStudioRoute(config, "catalogue_series_editor")}?series=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "work_detail" && scopeId) href = `${getStudioRoute(config, "catalogue_work_detail_editor")}?detail=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "work_file" && scopeId) href = `${getStudioRoute(config, "catalogue_work_file_editor")}?file=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "work_link" && scopeId) href = `${getStudioRoute(config, "catalogue_work_link_editor")}?link=${encodeURIComponent(scopeId)}`;
+  if (scopeKind === "bulk_works" || scopeKind === "bulk_work_details") href = getStudioRoute(config, "bulk_add_work");
+  if (scopeKind === "moment") href = getStudioRoute(config, "catalogue_moment_import");
+  return { href, label: scopeLabel };
+}
+
+function nextLink(config, entry) {
   const status = normalizeText(entry && entry.status);
-  const statusText = textForStatus(config, status);
   const operation = normalizeText(entry && entry.operation);
-  const kind = normalizeText(entry && entry.kind);
-  const logRef = normalizeText(entry && entry.log_ref);
+  const attentionLabel = normalizeText(entry && entry.attention_label);
+  const scope = scopeLink(config, entry);
+  if (status === "failed") {
+    if (operation.startsWith("catalogue/import-")) {
+      return { href: getStudioRoute(config, "bulk_add_work"), label: "Open import" };
+    }
+    if (scope.href) return { href: scope.href, label: "Open record" };
+    return { href: getStudioRoute(config, "catalogue_status"), label: "Review status" };
+  }
+  if (attentionLabel === "rebuild pending") {
+    if (scope.href) return { href: scope.href, label: "Open record" };
+    return { href: getStudioRoute(config, "catalogue_status"), label: "Review status" };
+  }
+  if (operation === "moment.import") {
+    return { href: getStudioRoute(config, "build_activity"), label: "Review build" };
+  }
+  if (operation.startsWith("catalogue/import-")) {
+    return { href: getStudioRoute(config, "build_activity"), label: "Review build" };
+  }
+  if (scope.href) return { href: scope.href, label: "Open record" };
+  return { href: "", label: "" };
+}
 
-  return `
-    <li class="buildActivityEntry catalogueActivityEntry">
-      <details class="buildActivityEntry__details">
-        <summary class="buildActivityEntry__summary">
-          <span class="buildActivityEntry__time">${escapeHtml(timeText)}</span>
-          <span class="buildActivityEntry__status" data-status="${escapeHtml(status)}">${escapeHtml(statusText)}</span>
-          <span class="buildActivityEntry__headline">${escapeHtml(summary)}</span>
-        </summary>
-        <div class="buildActivityEntry__body">
-          ${operation ? `<p class="buildActivityEntry__meta">operation: ${escapeHtml(operation)}</p>` : ""}
-          ${kind ? `<p class="buildActivityEntry__meta">kind: ${escapeHtml(kind)}</p>` : ""}
-          <section class="buildActivityEntry__section">
-            <h3 class="buildActivityEntry__sectionTitle">${getStudioText(config, "catalogue_activity.detail_affected", "affected")}</h3>
-            ${renderAffected(entry && entry.affected, noneLabel)}
-          </section>
-          ${logRef ? `
-            <section class="buildActivityEntry__section">
-              <h3 class="buildActivityEntry__sectionTitle">${getStudioText(config, "catalogue_activity.detail_log", "log")}</h3>
-              <p class="buildActivityEntry__detailEmpty">${escapeHtml(logRef)}</p>
-            </section>
-          ` : ""}
-        </div>
-      </details>
-    </li>
+function sortButton(label, sortKey, sortDir) {
+  const active = sortKey === label;
+  const suffix = active ? (sortDir === "desc" ? " ↓" : " ↑") : "";
+  return `<button type="button" class="tagStudioList__sortBtn" data-sort-key="${escapeHtml(label)}" data-state="${active ? "active" : ""}">${escapeHtml(label + suffix)}</button>`;
+}
+
+function compareEntries(a, b, sortKey, sortDir) {
+  const direction = sortDir === "desc" ? -1 : 1;
+  if (sortKey === "time") {
+    return normalizeText(a.time_utc).localeCompare(normalizeText(b.time_utc)) * direction;
+  }
+  const fieldMap = {
+    event: normalizeText(a.event_label),
+    status: normalizeText(a.status),
+    scope: normalizeText(a.scope_label),
+    attention: normalizeText(a.attention_label)
+  };
+  const otherFieldMap = {
+    event: normalizeText(b.event_label),
+    status: normalizeText(b.status),
+    scope: normalizeText(b.scope_label),
+    attention: normalizeText(b.attention_label)
+  };
+  const compare = fieldMap[sortKey].localeCompare(otherFieldMap[sortKey], undefined, { numeric: true, sensitivity: "base" });
+  if (compare !== 0) return compare * direction;
+  return normalizeText(b.time_utc).localeCompare(normalizeText(a.time_utc));
+}
+
+function renderRows(config, entries) {
+  return entries.map((entry) => {
+    const timeText = formatTimestamp(entry.time_utc);
+    const status = normalizeText(entry.status);
+    const scope = scopeLink(config, entry);
+    const next = nextLink(config, entry);
+    const affectedText = summarizeAffected(entry.affected);
+    return `
+      <li class="tagStudioList__row activityReport__row activityReport__row--catalogue">
+        <span class="activityReport__cell activityReport__cell--time">
+          <span class="activityReport__title">${escapeHtml(timeText)}</span>
+        </span>
+        <span class="activityReport__cell">
+          <span class="activityReport__title">${escapeHtml(normalizeText(entry.event_label) || "Updated")}</span>
+          <span class="activityReport__meta">${escapeHtml(normalizeText(entry.summary) || "—")}</span>
+        </span>
+        <span class="activityReport__cell">
+          <span class="activityReport__pill" data-status="${escapeHtml(status)}">${escapeHtml(statusText(config, status))}</span>
+        </span>
+        <span class="activityReport__cell">
+          ${scope.href ? `<a class="activityReport__link" href="${escapeHtml(scope.href)}">${escapeHtml(scope.label)}</a>` : `<span class="activityReport__title">${escapeHtml(scope.label)}</span>`}
+          ${affectedText ? `<span class="activityReport__meta">${escapeHtml(affectedText)}</span>` : ""}
+        </span>
+        <span class="activityReport__cell">
+          <span class="activityReport__title">${escapeHtml(normalizeText(entry.attention_label) || "review")}</span>
+        </span>
+        <span class="activityReport__cell">
+          ${next.href ? `<a class="activityReport__link" href="${escapeHtml(next.href)}">${escapeHtml(next.label)}</a>` : `<span class="activityReport__meta">—</span>`}
+        </span>
+      </li>
+    `;
+  }).join("");
+}
+
+function renderList(config, listNode, state, entries) {
+  if (!entries.length) {
+    listNode.innerHTML = "";
+    return;
+  }
+  listNode.innerHTML = `
+    <div class="tagStudioList__head activityReport__head activityReport__head--catalogue">
+      ${sortButton("time", state.sortKey, state.sortDir)}
+      ${sortButton("event", state.sortKey, state.sortDir)}
+      ${sortButton("status", state.sortKey, state.sortDir)}
+      ${sortButton("scope", state.sortKey, state.sortDir)}
+      ${sortButton("attention", state.sortKey, state.sortDir)}
+      <span class="tagStudioList__headLabel">next</span>
+    </div>
+    <ol class="tagStudioList__rows activityReport__rows">${renderRows(config, entries)}</ol>
   `;
 }
 
@@ -109,6 +191,11 @@ async function loadFeed(config) {
   if (response.status === 404) return { entries: [] };
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
+}
+
+function applySort(state) {
+  const entries = state.entries.slice().sort((a, b) => compareEntries(a, b, state.sortKey, state.sortDir));
+  renderList(state.config, state.listNode, state, entries);
 }
 
 async function init() {
@@ -135,7 +222,27 @@ async function init() {
       return;
     }
 
-    listNode.innerHTML = entries.map((entry) => renderEntry(config, entry)).join("");
+    const state = {
+      config,
+      entries,
+      sortKey: "time",
+      sortDir: "desc",
+      listNode
+    };
+    listNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-sort-key]") : null;
+      if (!button) return;
+      const sortKey = normalizeText(button.getAttribute("data-sort-key"));
+      if (!SORT_KEYS.includes(sortKey)) return;
+      if (state.sortKey === sortKey) {
+        state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+      } else {
+        state.sortKey = sortKey;
+        state.sortDir = sortKey === "time" ? "desc" : "asc";
+      }
+      applySort(state);
+    });
+    applySort(state);
     root.hidden = false;
     statusNode.hidden = true;
   } catch (error) {

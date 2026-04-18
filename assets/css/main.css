@@ -628,6 +628,80 @@ th{ background: var(--panel-2); }
   gap: 0.8rem;
 }
 
+.activityReport__head,
+.activityReport__row{
+  gap: 0.8rem;
+}
+
+.activityReport__head--catalogue,
+.activityReport__row--catalogue{
+  grid-template-columns: minmax(9rem, 11rem) minmax(9rem, 1.1fr) minmax(6rem, 7rem) minmax(10rem, 1.1fr) minmax(8rem, 9rem) minmax(7rem, 8rem);
+}
+
+.activityReport__head--build,
+.activityReport__row--build{
+  grid-template-columns: minmax(9rem, 11rem) minmax(9rem, 1.1fr) minmax(6rem, 7rem) minmax(10rem, 1.1fr) minmax(8rem, 9rem) minmax(7rem, 8rem);
+}
+
+.activityReport__rows{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activityReport__cell{
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+  align-content: start;
+}
+
+.activityReport__title,
+.activityReport__meta{
+  margin: 0;
+}
+
+.activityReport__title{
+  font-size: var(--font-small);
+}
+
+.activityReport__meta{
+  color: var(--muted);
+  font-size: var(--font-caption);
+  line-height: var(--line-snug);
+}
+
+.activityReport__link{
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.activityReport__pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5.8rem;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  font-size: var(--font-small);
+  text-transform: lowercase;
+}
+
+.activityReport__pill[data-status="completed"]{
+  border-color: rgba(37, 108, 62, 0.24);
+  background: rgba(37, 108, 62, 0.08);
+  color: #256c3e;
+}
+
+.activityReport__pill[data-status="failed"]{
+  border-color: rgba(146, 56, 44, 0.24);
+  background: rgba(146, 56, 44, 0.08);
+  color: #92382c;
+}
+
 .buildActivityEntry{
   margin: 0;
 }
@@ -738,6 +812,16 @@ th{ background: var(--panel-2); }
 }
 
 @media (max-width: 720px){
+  .activityReport__head{
+    display: none;
+  }
+
+  .activityReport__row--catalogue,
+  .activityReport__row--build{
+    grid-template-columns: 1fr;
+    gap: 0.28rem;
+  }
+
   .buildActivityEntry__summary{
     grid-template-columns: 1fr;
   }

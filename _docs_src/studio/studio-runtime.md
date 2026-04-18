@@ -202,3 +202,9 @@ After Phase 3, the current Catalogue shell conventions are:
 - metadata editors use a shared single-column row layout with labels on the left
 - Catalogue Status is a sortable list and now links directly into work, series, detail, file, and link editors
 - work-file and work-link editors are now standalone search-and-open pages as well as deep-link targets from the work editor
+
+After Phase 4, the current operational reporting conventions are:
+
+- `Catalogue Activity` is the source-side activity surface for saves, creates, deletes, imports, and validation failures
+- `Build Activity` is the rebuild/run surface for scoped and wider catalogue builds
+- both pages now use sortable operational lists rather than expandable narrative cards
