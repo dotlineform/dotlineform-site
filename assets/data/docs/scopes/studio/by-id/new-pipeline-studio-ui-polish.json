@@ -1,0 +1,11 @@
+{
+  "scope": "studio",
+  "doc_id": "new-pipeline-studio-ui-polish",
+  "title": "Studio UI Polish",
+  "last_updated": "2026-04-19",
+  "parent_id": "new-pipeline",
+  "sort_order": 61,
+  "source_path": "new-pipeline/studio-ui-polish.md",
+  "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",
+  "content_html": "<h1 id=\"studio-ui-polish\">Studio UI Polish</h1>\n\n<p>This document is the punch list for cosmetic and small interaction fixes across Studio.</p>\n\n<p>Use it for:</p>\n\n<ul>\n  <li>spacing issues</li>\n  <li>alignment issues</li>\n  <li>inconsistent button or input styling</li>\n  <li>minor copy/signposting fixes</li>\n  <li>thumbnail/preview presentation fixes</li>\n  <li>mobile-only or desktop-only layout issues</li>\n</ul>\n\n<p>Do not use it for:</p>\n\n<ul>\n  <li>architectural changes</li>\n  <li>workflow redesign</li>\n  <li>new feature scope</li>\n  <li>source-model or generator changes</li>\n</ul>\n\n<h2 id=\"how-to-use-this-doc\">How To Use This Doc</h2>\n\n<p>Add each issue as one short item with:</p>\n\n<ul>\n  <li>route</li>\n  <li>problem</li>\n  <li>desired change</li>\n  <li>priority</li>\n  <li>viewport</li>\n  <li>screenshot reference if helpful</li>\n</ul>\n\n<p>Keep items small enough that several can be batched into one UI polish pass.</p>\n\n<h2 id=\"status-labels\">Status Labels</h2>\n\n<p>Use one of:</p>\n\n<ul>\n  <li><code class=\"language-plaintext highlighter-rouge\">open</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">in progress</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">done</code></li>\n  <li><code class=\"language-plaintext highlighter-rouge\">deferred</code></li>\n</ul>\n\n<h2 id=\"item-template\">Item Template</h2>\n\n<div class=\"language-text highlighter-rouge\"><div class=\"highlight\"><pre class=\"highlight\"><code>### UI-###\n\n- status: open\n- route:\n- priority: low | medium | high\n- viewport: desktop | mobile | both\n- problem:\n- desired change:\n- screenshot:\n- notes:\n</code></pre></div></div>\n\n<h2 id=\"current-items\">Current Items</h2>\n\n<p>Add new items below this line.</p>\n"
+}

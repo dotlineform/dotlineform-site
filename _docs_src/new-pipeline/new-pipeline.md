@@ -20,9 +20,10 @@ Read this section in this order:
 4. **[Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)** for the phased implementation record and the final retirement of workbook-led entrypoints
 5. **[Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)** for the next phased Studio roadmap, with Catalogue as the main implementation thread
 6. **[Studio E2E Checklist](/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist)** for the first full execution pass across Studio and public-runtime follow-through
-7. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
-8. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
-9. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
+7. **[Studio UI Polish](/docs/?scope=studio&doc=new-pipeline-studio-ui-polish)** for batching cosmetic Studio fixes without expanding the phase plan
+8. **[Library Plan](/docs/?scope=studio&doc=new-pipeline-refine-library)** for the parallel Library planning track
+9. **[Analytics Plan](/docs/?scope=studio&doc=new-pipeline-refine-analytics)** for the parallel Analytics planning track
+10. **[Search Plan](/docs/?scope=studio&doc=new-pipeline-refine-search)** for the parallel Search planning track
 
 ## Scope
 
