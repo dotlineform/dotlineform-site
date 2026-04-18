@@ -80,6 +80,7 @@ from catalogue_source import (  # noqa: E402
 from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # noqa: E402
 from catalogue_json_build import (  # noqa: E402
+    build_local_media_plan,
     build_scope_for_moment,
     build_scope_for_series,
     build_scope_for_work,
@@ -2841,6 +2842,7 @@ class Handler(BaseHTTPRequestHandler):
             )
         else:
             scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
+        scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
         self._send_json(
             HTTPStatus.OK,
             {
@@ -2857,12 +2859,14 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_build_apply(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
         if work_id:
             result = run_scoped_build(
                 self.server.repo_root,
                 source_dir=self.server.source_dir,
                 work_id=work_id,
                 extra_series_ids=extra_series_ids,
+                detail_uid=detail_uid,
                 write=not self.server.dry_run,
                 force=force,
                 log_activity=not self.server.dry_run,
@@ -2881,8 +2885,10 @@ class Handler(BaseHTTPRequestHandler):
             "ok": result.get("status") == "completed",
             "work_id": work_id,
             "series_id": series_id,
+            "detail_uid": detail_uid,
             "force": force,
             "build": result.get("scope"),
+            "media": result.get("media"),
             "steps": result.get("steps", []),
         }
         if self.server.dry_run:
@@ -2942,6 +2948,7 @@ class Handler(BaseHTTPRequestHandler):
         }
         if preview.get("valid"):
             scope = build_scope_for_moment(self.server.repo_root, moment_file, force=force)
+            scope["local_media"] = build_local_media_plan(self.server.repo_root, scope=scope)
             payload["build"] = scope
             payload["effective_force"] = bool(scope.get("effective_force"))
         else:

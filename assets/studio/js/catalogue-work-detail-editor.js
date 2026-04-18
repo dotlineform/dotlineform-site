@@ -118,10 +118,12 @@ function getReadinessItem(state, key) {
 
 function previewFallback(state, item, missingGeneratedText, missingSourceText) {
   const status = normalizeText(item && item.status);
-  if (status === "ready") {
+  if (status === "ready" || status === "pending_generation") {
     return {
       fallbackState: "missing-generated",
-      fallbackText: missingGeneratedText
+      fallbackText: status === "pending_generation"
+        ? (normalizeText(item && item.summary) || missingGeneratedText)
+        : missingGeneratedText
     };
   }
   if (status === "missing_file") {
@@ -466,10 +468,12 @@ function formatBuildPreview(state, build) {
   if (!build || typeof build !== "object") return "";
   const workIds = Array.isArray(build.work_ids) ? build.work_ids : [];
   const seriesIds = Array.isArray(build.series_ids) ? build.series_ids : [];
+  const localMedia = build.local_media && typeof build.local_media === "object" ? build.local_media : null;
+  const localCounts = localMedia && typeof localMedia.counts === "object" ? localMedia.counts : null;
   const workText = workIds.length ? workIds.join(", ") : "none";
   const seriesText = seriesIds.length ? seriesIds.join(", ") : "none";
   const searchText = build.rebuild_search ? t(state, "build_preview_search_yes", "yes") : t(state, "build_preview_search_no", "no");
-  return t(
+  const baseText = t(
     state,
     "build_preview_template",
     "Build preview: work {work_ids}; series {series_ids}; catalogue search {search_rebuild}.",
@@ -479,6 +483,17 @@ function formatBuildPreview(state, build) {
       search_rebuild: searchText
     }
   );
+  if (!localCounts) return baseText;
+  const pending = Number(localCounts.pending) || 0;
+  const blocked = Number(localCounts.blocked) || 0;
+  const unavailable = Number(localCounts.unavailable) || 0;
+  const current = Number(localCounts.current) || 0;
+  const mediaParts = [];
+  if (pending) mediaParts.push(`local media pending ${pending}`);
+  if (blocked) mediaParts.push(`local media blocked ${blocked}`);
+  if (unavailable) mediaParts.push(`local media unavailable ${unavailable}`);
+  if (!pending && !blocked && !unavailable && current) mediaParts.push(`local media current ${current}`);
+  return mediaParts.length ? `${baseText} ${mediaParts.join("; ")}.` : baseText;
 }
 
 function syncUrl(detailValue) {
@@ -891,7 +906,10 @@ async function buildCurrentDetail(state) {
       return;
     }
 
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, { work_id: state.currentWorkId });
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      work_id: state.currentWorkId,
+      detail_uid: state.currentDetailUid
+    });
     state.rebuildPending = false;
     await refreshBuildPreview(state);
     const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());

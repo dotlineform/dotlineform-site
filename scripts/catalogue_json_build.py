@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -39,6 +40,13 @@ DEFAULT_ARTIFACTS = [
     "recent-index-json",
 ]
 DEFAULT_MOMENT_ARTIFACTS = ["moments"]
+THUMB_SIZES = sorted({int(value) for value in PIPELINE_CONFIG["variants"]["thumb"]["sizes"]})
+THUMB_SUFFIX = str(PIPELINE_CONFIG["variants"]["thumb"]["suffix"])
+ASSET_FORMAT = str(PIPELINE_CONFIG["encoding"]["format"])
+ENCODER_CODEC = str(PIPELINE_CONFIG["encoding"]["codec"])
+WEBP_PRESET = str(PIPELINE_CONFIG["encoding"]["preset"])
+THUMB_Q = int(PIPELINE_CONFIG["encoding"]["thumb_quality"])
+COMPRESSION_LEVEL = int(PIPELINE_CONFIG["encoding"]["compression_level"])
 
 
 def utc_now() -> str:
@@ -86,6 +94,474 @@ def display_source_path(path: Path | None, projects_base_dir: Path | None = None
 def normalize_filename(value: Any) -> str:
     text = str(value or "").strip()
     return Path(text).name if text else ""
+
+
+def repo_relative_path(path: Path, repo_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(repo_root.resolve())).replace(os.sep, "/")
+    except ValueError:
+        return str(path.resolve())
+
+
+def resolve_work_media_source(
+    records,
+    work_id: str,
+    *,
+    env: Dict[str, str] | None = None,
+) -> tuple[Path | None, str, Path | None, str]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    work_record = records.works.get(work_id)
+    if not isinstance(work_record, dict):
+        raise ValueError(f"work_id not found: {work_id}")
+
+    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    project_folder = str(work_record.get("project_folder") or "").strip()
+    project_filename = normalize_filename(work_record.get("project_filename"))
+    if project_folder and project_filename and works_root is not None:
+        return works_root / project_folder / project_filename, "", projects_base_dir, availability_error
+    if project_filename:
+        return None, "missing_project_folder", projects_base_dir, availability_error
+    return None, "missing_project_filename", projects_base_dir, availability_error
+
+
+def resolve_detail_media_source(
+    records,
+    detail_uid: str,
+    *,
+    env: Dict[str, str] | None = None,
+) -> tuple[Path | None, str, Path | None, str]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    detail_record = records.work_details.get(detail_uid)
+    if not isinstance(detail_record, dict):
+        raise ValueError(f"detail_uid not found: {detail_uid}")
+
+    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    work_id = slug_id(detail_record.get("work_id"))
+    work_record = records.works.get(work_id)
+    project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
+    project_subfolder = str(detail_record.get("project_subfolder") or "").strip()
+    project_filename = normalize_filename(detail_record.get("project_filename"))
+    if not project_filename:
+        return None, "missing_project_filename", projects_base_dir, availability_error
+    if not project_folder:
+        return None, "missing_project_folder", projects_base_dir, availability_error
+    if works_root is None:
+        return None, "", projects_base_dir, availability_error
+    media_path = works_root / project_folder
+    if project_subfolder:
+        media_path = media_path / project_subfolder
+    return media_path / project_filename, "", projects_base_dir, availability_error
+
+
+def thumb_output_dir(repo_root: Path, kind: str) -> Path:
+    if kind == "work":
+        return repo_root / "assets" / "works" / "img"
+    if kind == "work_details":
+        return repo_root / "assets" / "work_details" / "img"
+    raise ValueError(f"unsupported local media kind: {kind}")
+
+
+def thumb_output_paths(repo_root: Path, kind: str, item_id: str) -> list[Path]:
+    root = thumb_output_dir(repo_root, kind)
+    return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
+
+
+def local_thumb_state(source_path: Path | None, output_paths: Sequence[Path]) -> str:
+    if source_path is None or not source_path.exists():
+        return "blocked"
+    if not output_paths:
+        return "current"
+    if not all(path.exists() for path in output_paths):
+        return "pending"
+    try:
+        source_mtime = source_path.stat().st_mtime
+        if all(path.stat().st_mtime >= source_mtime for path in output_paths):
+            return "current"
+    except OSError:
+        return "pending"
+    return "pending"
+
+
+def build_media_readiness_item(
+    *,
+    repo_root: Path,
+    kind: str,
+    item_id: str,
+    key: str,
+    title: str,
+    source_path: Path | None,
+    missing_reason: str,
+    projects_base_dir: Path | None,
+    availability_error: str,
+) -> Dict[str, Any]:
+    source_display = display_source_path(source_path, projects_base_dir)
+    outputs = thumb_output_paths_for_kind(repo_root, kind, item_id)
+    output_display = ", ".join(repo_relative_path(path, repo_root) for path in outputs)
+    state = local_thumb_state(source_path, outputs)
+
+    if availability_error:
+        return {
+            "key": key,
+            "title": title,
+            "status": "unavailable",
+            "summary": availability_error,
+            "next_step": "Start the local Studio service with the projects base directory configured.",
+            "source_path": source_display,
+            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "exists": False,
+        }
+    if state == "current":
+        return {
+            "key": key,
+            "title": title,
+            "status": "ready",
+            "summary": f"Source media is ready and local thumbnails are current in {output_display}.",
+            "next_step": "Local thumbnails are current for this record.",
+            "source_path": source_display,
+            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "exists": True,
+        }
+    if source_path and source_path.exists():
+        return {
+            "key": key,
+            "title": title,
+            "status": "pending_generation",
+            "summary": f"Source media is ready at {source_display}, but local thumbnails need generation or refresh.",
+            "next_step": "Run Save + Rebuild to generate local thumbnails.",
+            "source_path": source_display,
+            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "exists": True,
+        }
+    if missing_reason == "missing_project_folder":
+        return {
+            "key": key,
+            "title": title,
+            "status": "missing_metadata",
+            "summary": "Project folder is missing, so the source path cannot be resolved.",
+            "next_step": "Set project folder metadata and save before rebuilding media.",
+            "source_path": source_display,
+            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "exists": False,
+        }
+    if missing_reason:
+        return {
+            "key": key,
+            "title": title,
+            "status": "not_configured",
+            "summary": "No source file is configured yet.",
+            "next_step": "Set the source filename in metadata and save before rebuilding media.",
+            "source_path": source_display,
+            "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+            "exists": False,
+        }
+    return {
+        "key": key,
+        "title": title,
+        "status": "missing_file",
+        "summary": f"Configured source media is missing at {source_display}." if source_display else "Configured source media file is missing.",
+        "next_step": "Create or restore the source media file, or update the filename before rebuilding media.",
+        "source_path": source_display,
+        "generated_paths": [repo_relative_path(path, repo_root) for path in outputs],
+        "exists": False,
+    }
+
+
+def resolve_moment_media_source(
+    repo_root: Path,
+    moment_file: str,
+    *,
+    env: Dict[str, str] | None = None,
+) -> tuple[str, Path | None, str, Path | None, str]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    if projects_base_dir is None:
+        filename = normalize_moment_filename(moment_file)
+        return filename[:-3], None, "", None, availability_error
+    paths = build_moment_paths(projects_base_dir, moment_file)
+    source_path = paths["source_path"]
+    moment_id = source_path.stem.strip().lower()
+    if not source_path.exists():
+        return moment_id, None, "missing_moment_file", projects_base_dir, availability_error
+    entry = build_moment_source_entry(source_path, moments_images_root=paths["moments_images_root"])
+    source_image_path = Path(str(entry.get("source_image_path") or "")).resolve() if entry.get("source_image_path") else None
+    if source_image_path:
+        return moment_id, source_image_path, "", projects_base_dir, availability_error
+    return moment_id, None, "missing_image_file", projects_base_dir, availability_error
+
+
+def thumb_output_paths_for_kind(repo_root: Path, kind: str, item_id: str) -> list[Path]:
+    if kind == "moment":
+        root = repo_root / "assets" / "moments" / "img"
+        return [root / f"{item_id}-{THUMB_SUFFIX}-{size}.{ASSET_FORMAT}" for size in THUMB_SIZES]
+    return thumb_output_paths(repo_root, kind, item_id)
+
+
+def media_blocked_reason_text(reason: str) -> str:
+    mapping = {
+        "missing_project_folder": "project folder is missing",
+        "missing_project_filename": "project filename is missing",
+        "missing_moment_file": "moment source file is missing",
+        "missing_image_file": "moment image file is missing",
+    }
+    return mapping.get(reason, reason or "media source is not available")
+
+
+def build_local_media_task(
+    *,
+    repo_root: Path,
+    kind: str,
+    item_id: str,
+    source_path: Path | None,
+    availability_error: str = "",
+    blocked_reason: str = "",
+    projects_base_dir: Path | None = None,
+) -> Dict[str, Any]:
+    output_paths = thumb_output_paths_for_kind(repo_root, kind, item_id)
+    state = local_thumb_state(source_path, output_paths)
+    task: Dict[str, Any] = {
+        "kind": kind,
+        "id": item_id,
+        "source_path": display_source_path(source_path, projects_base_dir),
+        "source_abs_path": str(source_path.resolve()) if source_path is not None else "",
+        "output_paths": [repo_relative_path(path, repo_root) for path in output_paths],
+        "status": state,
+    }
+    if availability_error:
+        task["status"] = "unavailable"
+        task["reason"] = availability_error
+        return task
+    if blocked_reason:
+        task["status"] = "blocked"
+        task["reason"] = media_blocked_reason_text(blocked_reason)
+        return task
+    if state == "pending":
+        pending_outputs: list[Dict[str, Any]] = []
+        source_mtime = source_path.stat().st_mtime if source_path and source_path.exists() else 0.0
+        for size, path in zip(THUMB_SIZES, output_paths):
+            try:
+                if not path.exists() or path.stat().st_mtime < source_mtime:
+                    pending_outputs.append(
+                        {
+                            "size": size,
+                            "path": repo_relative_path(path, repo_root),
+                            "absolute_path": str(path.resolve()),
+                        }
+                    )
+            except OSError:
+                pending_outputs.append(
+                    {
+                        "size": size,
+                        "path": repo_relative_path(path, repo_root),
+                        "absolute_path": str(path.resolve()),
+                    }
+                )
+        task["pending_outputs"] = pending_outputs
+    return task
+
+
+def build_local_media_plan(
+    repo_root: Path,
+    *,
+    scope: Dict[str, Any],
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
+    scope_kind = str(scope.get("kind") or "work").strip().lower()
+    tasks: list[Dict[str, Any]] = []
+    if scope_kind == "moment":
+        moment_file = str(scope.get("moment_file") or "").strip()
+        if moment_file:
+            moment_id, source_path, missing_reason, projects_base_dir, availability_error = resolve_moment_media_source(repo_root, moment_file, env=env)
+            tasks.append(
+                build_local_media_task(
+                    repo_root=repo_root,
+                    kind="moment",
+                    item_id=moment_id,
+                    source_path=source_path,
+                    availability_error=availability_error,
+                    blocked_reason=missing_reason,
+                    projects_base_dir=projects_base_dir,
+                )
+            )
+    else:
+        source_dir = Path(str(scope.get("source_dir") or "")).expanduser() if scope.get("source_dir") else None
+        records = records_from_json_source(source_dir) if source_dir is not None else None
+        if records is None:
+            return {"tasks": [], "counts": {"pending": 0, "current": 0, "blocked": 0, "unavailable": 0}}
+        for work_id in scope.get("work_ids", []):
+            source_path, missing_reason, projects_base_dir, availability_error = resolve_work_media_source(records, str(work_id), env=env)
+            tasks.append(
+                build_local_media_task(
+                    repo_root=repo_root,
+                    kind="work",
+                    item_id=str(work_id),
+                    source_path=source_path,
+                    availability_error=availability_error,
+                    blocked_reason=missing_reason,
+                    projects_base_dir=projects_base_dir,
+                )
+            )
+        detail_uid = str(scope.get("detail_uid") or "").strip()
+        if detail_uid:
+            source_path, missing_reason, projects_base_dir, availability_error = resolve_detail_media_source(records, detail_uid, env=env)
+            tasks.append(
+                build_local_media_task(
+                    repo_root=repo_root,
+                    kind="work_details",
+                    item_id=detail_uid,
+                    source_path=source_path,
+                    availability_error=availability_error,
+                    blocked_reason=missing_reason,
+                    projects_base_dir=projects_base_dir,
+                )
+            )
+    counts = {
+        "pending": sum(1 for task in tasks if task.get("status") == "pending"),
+        "current": sum(1 for task in tasks if task.get("status") == "current"),
+        "blocked": sum(1 for task in tasks if task.get("status") == "blocked"),
+        "unavailable": sum(1 for task in tasks if task.get("status") == "unavailable"),
+    }
+    return {"tasks": tasks, "counts": counts}
+
+
+def run_ffmpeg_thumb(src: Path, size: int, dest: Path) -> tuple[int, str]:
+    cmd = [
+        "ffmpeg",
+        "-hide_banner",
+        "-loglevel",
+        "error",
+        "-nostdin",
+        "-y",
+        "-i",
+        str(src),
+        "-map_metadata",
+        "-1",
+        "-vf",
+        f"scale='if(gt(iw,ih),-1,{size})':'if(gt(iw,ih),{size},-1)':flags=lanczos,crop={size}:{size}",
+        "-c:v",
+        ENCODER_CODEC,
+        "-preset",
+        WEBP_PRESET,
+        "-q:v",
+        str(THUMB_Q),
+        "-compression_level",
+        str(COMPRESSION_LEVEL),
+        str(dest),
+    ]
+    proc = subprocess.run(cmd, text=True, capture_output=True)
+    return proc.returncode, (proc.stderr or proc.stdout or "").strip()
+
+
+def execute_local_media_plan(
+    repo_root: Path,
+    *,
+    scope: Dict[str, Any],
+    write: bool,
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
+    plan = build_local_media_plan(repo_root, scope=scope, env=env)
+    tasks = plan["tasks"]
+    if not tasks:
+        return {
+            "label": "Generate Local Media Derivatives",
+            "status": "skipped",
+            "summary": "No local media targets in this scope.",
+            "generated": {"work": [], "work_details": [], "moment": []},
+            "planned": {"work": [], "work_details": [], "moment": []},
+            "current": {"work": [], "work_details": [], "moment": []},
+            "blocked": {"work": [], "work_details": [], "moment": []},
+            "exit_code": 0,
+        }
+
+    pending_tasks = [task for task in tasks if task.get("status") == "pending"]
+    if pending_tasks and shutil.which("ffmpeg") is None:
+        return {
+            "label": "Generate Local Media Derivatives",
+            "status": "failed",
+            "summary": "ffmpeg is required for local media generation.",
+            "generated": {"work": [], "work_details": [], "moment": []},
+            "planned": {"work": [], "work_details": [], "moment": []},
+            "current": {"work": [], "work_details": [], "moment": []},
+            "blocked": {"work": [], "work_details": [], "moment": []},
+            "exit_code": 1,
+            "stderr_tail": "ffmpeg not found on PATH",
+        }
+
+    generated: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    planned: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    current: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    blocked: Dict[str, list[str]] = {"work": [], "work_details": [], "moment": []}
+    messages: list[str] = []
+
+    for task in tasks:
+        kind = str(task.get("kind") or "")
+        item_id = str(task.get("id") or "")
+        status = str(task.get("status") or "")
+        if status == "current":
+            current[kind].append(item_id)
+            continue
+        if status in {"blocked", "unavailable"}:
+            blocked[kind].append(item_id)
+            reason = str(task.get("reason") or "").strip()
+            if reason:
+                messages.append(f"{kind} {item_id}: {reason}")
+            continue
+        if status != "pending":
+            continue
+        if not write:
+            planned[kind].append(item_id)
+            continue
+        actual_source = Path(str(task.get("source_abs_path") or "")).resolve() if str(task.get("source_abs_path") or "").strip() else None
+        if actual_source is None:
+            reason = str(task.get("reason") or "missing source path").strip()
+            blocked[kind].append(item_id)
+            messages.append(f"{kind} {item_id}: {reason}")
+            continue
+        pending_outputs = task.get("pending_outputs") if isinstance(task.get("pending_outputs"), list) else []
+        for output_spec in pending_outputs:
+            output_path = Path(str(output_spec.get("absolute_path") or "")).resolve()
+            size = int(output_spec.get("size") or THUMB_SIZES[0])
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            exit_code, stderr_tail = run_ffmpeg_thumb(actual_source, size, output_path)
+            if exit_code != 0:
+                return {
+                    "label": "Generate Local Media Derivatives",
+                    "status": "failed",
+                    "summary": f"Local media generation failed for {kind} {item_id}.",
+                    "generated": generated,
+                    "planned": planned,
+                    "current": current,
+                    "blocked": blocked,
+                    "exit_code": exit_code,
+                    "stderr_tail": stderr_tail,
+                }
+        generated[kind].append(item_id)
+
+    summary_parts: list[str] = []
+    generated_total = sum(len(values) for values in generated.values())
+    planned_total = sum(len(values) for values in planned.values())
+    current_total = sum(len(values) for values in current.values())
+    blocked_total = sum(len(values) for values in blocked.values())
+    if generated_total:
+        summary_parts.append(f"generated local media for {generated_total} record(s)")
+    if planned_total:
+        summary_parts.append(f"would generate local media for {planned_total} record(s)")
+    if current_total:
+        summary_parts.append(f"{current_total} already current")
+    if blocked_total:
+        summary_parts.append(f"{blocked_total} blocked")
+    summary = "; ".join(summary_parts) if summary_parts else "No local media changes needed."
+    if messages:
+        summary = f"{summary} {'; '.join(messages[:3])}".strip()
+    return {
+        "label": "Generate Local Media Derivatives",
+        "status": "completed",
+        "summary": summary,
+        "generated": generated,
+        "planned": planned,
+        "current": current,
+        "blocked": blocked,
+        "exit_code": 0,
+        "stdout_tail": summary,
+    }
 
 
 def build_readiness_item(
@@ -151,6 +627,7 @@ def build_readiness_item(
 
 
 def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+    repo_root = detect_repo_root()
     projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     work_record = records.works.get(work_id)
     if not isinstance(work_record, dict):
@@ -162,14 +639,7 @@ def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = 
     project_filename = normalize_filename(work_record.get("project_filename"))
     prose_filename = normalize_filename(work_record.get("work_prose_file"))
 
-    media_path: Path | None = None
-    media_missing_reason = ""
-    if project_folder and project_filename and works_root is not None:
-        media_path = works_root / project_folder / project_filename
-    elif project_filename:
-        media_missing_reason = "missing_project_folder"
-    else:
-        media_missing_reason = "missing_project_filename"
+    media_path, media_missing_reason, _, _ = resolve_work_media_source(records, work_id, env=env)
 
     prose_path: Path | None = None
     prose_missing_reason = ""
@@ -181,18 +651,16 @@ def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = 
         prose_missing_reason = "missing_work_prose_file"
 
     items = [
-        build_readiness_item(
+        build_media_readiness_item(
+            repo_root=repo_root,
+            kind="work",
+            item_id=work_id,
             key="work_media",
             title="work media",
-            path=media_path,
+            source_path=media_path,
+            missing_reason=media_missing_reason,
             projects_base_dir=projects_base_dir,
             availability_error=availability_error,
-            missing_reason=media_missing_reason,
-            ready_summary=f"Source media is ready at {display_source_path(media_path, projects_base_dir)}.",
-            missing_file_summary=f"Configured source media is missing at {display_source_path(media_path, projects_base_dir)}." if media_path else "Configured source media file is missing.",
-            next_step_ready="Media generation is a later phase; use this to confirm the source path is correct.",
-            next_step_missing_file="Create or restore the source media file, or update project_filename.",
-            next_step_missing_metadata="Set project_folder and project_filename, then save the source record.",
         ),
         build_readiness_item(
             key="work_prose",
@@ -268,43 +736,24 @@ def build_series_readiness(records, series_id: str, *, env: Dict[str, str] | Non
 
 
 def build_detail_readiness(records, detail_uid: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+    repo_root = detect_repo_root()
     projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
     detail_record = records.work_details.get(detail_uid)
     if not isinstance(detail_record, dict):
         raise ValueError(f"detail_uid not found: {detail_uid}")
-
-    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
-    work_id = slug_id(detail_record.get("work_id"))
-    work_record = records.works.get(work_id)
-    project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
-    project_subfolder = str(detail_record.get("project_subfolder") or "").strip()
-    project_filename = normalize_filename(detail_record.get("project_filename"))
-
-    media_path: Path | None = None
-    media_missing_reason = ""
-    if not project_filename:
-        media_missing_reason = "missing_project_filename"
-    elif not project_folder:
-        media_missing_reason = "missing_project_folder"
-    elif works_root is not None:
-        media_path = works_root / project_folder
-        if project_subfolder:
-            media_path = media_path / project_subfolder
-        media_path = media_path / project_filename
+    media_path, media_missing_reason, _, _ = resolve_detail_media_source(records, detail_uid, env=env)
 
     items = [
-        build_readiness_item(
+        build_media_readiness_item(
+            repo_root=repo_root,
+            kind="work_details",
+            item_id=detail_uid,
             key="detail_media",
             title="detail media",
-            path=media_path,
+            source_path=media_path,
+            missing_reason=media_missing_reason,
             projects_base_dir=projects_base_dir,
             availability_error=availability_error,
-            missing_reason=media_missing_reason,
-            ready_summary=f"Source media is ready at {display_source_path(media_path, projects_base_dir)}.",
-            missing_file_summary=f"Configured source media is missing at {display_source_path(media_path, projects_base_dir)}." if media_path else "Configured source media file is missing.",
-            next_step_ready="Detail media generation is a later phase; use this to confirm the source path is correct.",
-            next_step_missing_file="Create or restore the source media file, or update project_filename.",
-            next_step_missing_metadata="Set project folder metadata on the parent work and project_filename on this detail, then save.",
         ),
     ]
     return {"items": items}
@@ -659,6 +1108,7 @@ def run_scoped_build_scope(
     env = os.environ.copy()
     scope_kind = str(scope.get("kind") or "work").strip().lower()
     effective_force = bool(scope.get("effective_force")) or bool(force)
+    media_step = execute_local_media_plan(repo_root, scope=scope, write=write, env=env)
     if scope_kind == "moment":
         commands = [
             ("Generate Moment Pages", build_generate_moment_command(repo_root, scope, write=write, force=effective_force)),
@@ -674,28 +1124,44 @@ def run_scoped_build_scope(
     failed_step = ""
     failure_message = ""
 
-    for label, cmd in commands:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(repo_root),
-            env=env,
-            text=True,
-            capture_output=True,
-        )
-        steps.append(
-            {
-                "label": label,
-                "command": cmd,
-                "exit_code": proc.returncode,
-                "stdout_tail": "\n".join(proc.stdout.strip().splitlines()[-8:]) if proc.stdout else "",
-                "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
-            }
-        )
-        if proc.returncode != 0:
-            status = "failed"
-            failed_step = label
-            failure_message = proc.stderr.strip() or proc.stdout.strip() or f"{label} failed with exit code {proc.returncode}"
-            break
+    steps.append(
+        {
+            "label": media_step.get("label", "Generate Local Media Derivatives"),
+            "command": [],
+            "exit_code": int(media_step.get("exit_code", 0)),
+            "stdout_tail": str(media_step.get("stdout_tail") or media_step.get("summary") or "").strip(),
+            "stderr_tail": str(media_step.get("stderr_tail") or "").strip(),
+            "status": str(media_step.get("status") or "completed"),
+        }
+    )
+    if media_step.get("status") == "failed":
+        status = "failed"
+        failed_step = str(media_step.get("label") or "Generate Local Media Derivatives")
+        failure_message = str(media_step.get("stderr_tail") or media_step.get("summary") or "Local media generation failed.")
+
+    if status != "failed":
+        for label, cmd in commands:
+            proc = subprocess.run(
+                cmd,
+                cwd=str(repo_root),
+                env=env,
+                text=True,
+                capture_output=True,
+            )
+            steps.append(
+                {
+                    "label": label,
+                    "command": cmd,
+                    "exit_code": proc.returncode,
+                    "stdout_tail": "\n".join(proc.stdout.strip().splitlines()[-8:]) if proc.stdout else "",
+                    "stderr_tail": "\n".join(proc.stderr.strip().splitlines()[-8:]) if proc.stderr else "",
+                }
+            )
+            if proc.returncode != 0:
+                status = "failed"
+                failed_step = label
+                failure_message = proc.stderr.strip() or proc.stdout.strip() or f"{label} failed with exit code {proc.returncode}"
+                break
 
     response: Dict[str, Any] = {
         "scope": scope,
@@ -703,6 +1169,13 @@ def run_scoped_build_scope(
         "write": bool(write),
         "force": effective_force,
         "steps": steps,
+        "media": {
+            "generated": media_step.get("generated", {"work": [], "work_details": [], "moment": []}),
+            "current": media_step.get("current", {"work": [], "work_details": [], "moment": []}),
+            "blocked": media_step.get("blocked", {"work": [], "work_details": [], "moment": []}),
+            "status": media_step.get("status", "completed"),
+            "summary": media_step.get("summary", ""),
+        },
     }
     if failed_step:
         response["failed_step"] = failed_step
@@ -716,6 +1189,7 @@ def run_scoped_build_scope(
                     time_utc=utc_now(),
                     status=status,
                     moment_ids=scope.get("moment_ids", []),
+                    generated_moment_ids=(response.get("media") or {}).get("generated", {}).get("moment", []),
                     failed_step=failed_step,
                     force=effective_force,
                 ),
@@ -728,6 +1202,8 @@ def run_scoped_build_scope(
                     status=status,
                     work_ids=scope["work_ids"],
                     series_ids=scope["series_ids"],
+                    generated_work_ids=(response.get("media") or {}).get("generated", {}).get("work", []),
+                    generated_detail_uids=(response.get("media") or {}).get("generated", {}).get("work_details", []),
                     failed_step=failed_step,
                     force=effective_force,
                 ),
@@ -741,11 +1217,12 @@ def run_scoped_build(
     source_dir: Path,
     work_id: str,
     extra_series_ids: Sequence[Any] | None = None,
+    detail_uid: str = "",
     write: bool,
     force: bool = False,
     log_activity: bool = True,
 ) -> Dict[str, Any]:
-    scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids)
+    scope = build_scope_for_work(source_dir, work_id, extra_series_ids=extra_series_ids, detail_uid=detail_uid)
     return run_scoped_build_scope(repo_root, scope=scope, write=write, force=force, log_activity=log_activity)
 
 
@@ -782,13 +1259,18 @@ def build_activity_entry_for_scoped_json_build(
     status: str,
     work_ids: Sequence[str],
     series_ids: Sequence[str],
+    generated_work_ids: Sequence[str] = (),
+    generated_detail_uids: Sequence[str] = (),
     failed_step: str = "",
     force: bool = False,
 ) -> Dict[str, Any]:
     work_ids_list = list(work_ids)
     series_ids_list = list(series_ids)
+    generated_work_ids_list = sorted(str(value) for value in generated_work_ids if str(value).strip())
+    generated_detail_uids_list = sorted(str(value) for value in generated_detail_uids if str(value).strip())
+    media_generated_count = len(generated_work_ids_list) + len(generated_detail_uids_list)
     summary = (
-        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, and catalogue search."
+        f"Scoped JSON build updated {len(work_ids_list)} work records, {len(series_ids_list)} series, rebuilt catalogue search, and generated local media for {media_generated_count} record(s)."
         if status == "completed"
         else f"Scoped JSON build failed for {len(work_ids_list)} work records."
     )
@@ -813,20 +1295,23 @@ def build_activity_entry_for_scoped_json_build(
                 "moments": [],
             },
             "media": {
-                "work": [],
-                "work_details": [],
+                "work": generated_work_ids_list,
+                "work_details": generated_detail_uids_list,
                 "moment": [],
             },
         },
         "actions": {
             "generate_work_ids": len(work_ids_list),
             "generate_series_ids": len(series_ids_list),
+            "generate_local_media": media_generated_count > 0,
             "rebuild_search": True,
             "force_generate": bool(force),
         },
         "results": {
             "source_mode": "json",
             "work_ids": sorted(work_ids_list),
+            "generated_work_media_ids": generated_work_ids_list,
+            "generated_detail_media_ids": generated_detail_uids_list,
             "failed_step": failed_step,
         },
     }
@@ -837,12 +1322,14 @@ def build_activity_entry_for_scoped_moment_build(
     time_utc: str,
     status: str,
     moment_ids: Sequence[str],
+    generated_moment_ids: Sequence[str] = (),
     failed_step: str = "",
     force: bool = False,
 ) -> Dict[str, Any]:
     moment_ids_list = sorted(str(moment_id) for moment_id in moment_ids if str(moment_id).strip())
+    generated_moment_ids_list = sorted(str(moment_id) for moment_id in generated_moment_ids if str(moment_id).strip())
     summary = (
-        f"Scoped moment build updated {len(moment_ids_list)} moment records and catalogue search."
+        f"Scoped moment build updated {len(moment_ids_list)} moment records, rebuilt catalogue search, and generated local media for {len(generated_moment_ids_list)} moment record(s)."
         if status == "completed"
         else f"Scoped moment build failed for {len(moment_ids_list)} moment records."
     )
@@ -871,17 +1358,19 @@ def build_activity_entry_for_scoped_moment_build(
             "media": {
                 "work": [],
                 "work_details": [],
-                "moment": [],
+                "moment": generated_moment_ids_list,
             },
         },
         "actions": {
             "generate_moment_ids": len(moment_ids_list),
+            "generate_local_media": bool(generated_moment_ids_list),
             "rebuild_search": True,
             "force_generate": bool(force),
         },
         "results": {
             "source_mode": "moment-source",
             "moment_ids": moment_ids_list,
+            "generated_moment_media_ids": generated_moment_ids_list,
             "failed_step": failed_step,
         },
     }

@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-18
 
+- completed Phase 8 local-media generation work: scoped rebuilds now run a bounded local thumbnail-generation step for works, work details, and moments, readiness now distinguishes current media from pending local derivative generation, build preview now surfaces local-media state, and Build Activity now records generated local media alongside rebuild outcomes
 - completed Phase 6 preview-media work: work and detail editors now show compact current-record previews in the summary rail, work-detail rows on the work editor now use thumbnail-led navigation, and focused preview states now distinguish missing generated preview from missing source media
 - completed Phase 5 media/prose readiness work: work, series, and detail editors now surface source readiness in the summary rail, build preview now carries readiness state, work and series now offer narrow `Import prose + rebuild` actions, and detail preview now resolves its own source media path
 - completed Phase 4 activity/build reporting work: `Catalogue Activity` now stays source-side, `Build Activity` now carries rebuild outcomes, both pages now use sortable operational lists with explicit scope/result columns, and activity rows now link back into the relevant editor or next workflow route

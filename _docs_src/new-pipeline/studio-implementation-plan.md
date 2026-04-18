@@ -488,9 +488,13 @@ Risks:
 
 ### Phase 8. Media Local Action Surfaces
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
-- add local web-triggered action surfaces for repo-local media tasks such as thumbnail copy or srcset generation where those actions are safe and operationally clear
+- add local build-driven media generation for repo-local thumbnail derivatives where those actions are safe and operationally clear
 
 steer:
 
@@ -527,20 +531,31 @@ Risks:
 
 Task list:
 
-1. Define one explicit local media pipeline boundary for this phase, covering only repo-local derivative generation for works and work details, and leaving R2 primary-image handling out of scope.
+1. Define one explicit local media pipeline boundary for this phase, covering repo-local derivative generation for works, work details, and moments, and leaving R2 primary-image handling out of scope.
 2. Document the exact input/output contract for that local media pipeline: source image path from catalogue metadata, generated derivative set, destination repo paths, naming rules, and what counts as success, no-op, or failure.
 3. Decide whether derivative generation should run automatically as part of scoped rebuilds, full catalogue rebuilds, or both, and make that trigger rule explicit before implementing any UI.
 4. Replace the old staging-folder expectation with a direct generation flow into the repo-managed derivative locations where that is safe, so the retired manual copy/check step is no longer part of the active workflow.
 5. Review the current derivative conventions already assumed by the public site and Studio previews, including thumb sizes, srcset variants, suffixes, and work-detail handling, and treat those as the initial compatibility target.
-6. Define how work and detail records signal media-generation eligibility, including what minimum metadata and source-file conditions must be present before automatic derivative generation should run.
+6. Define how work, detail, and moment records signal media-generation eligibility, including what minimum metadata and source-file conditions must be present before automatic derivative generation should run.
 7. Extend the backend build path so local derivative generation can be invoked as a bounded sub-step of the existing rebuild flow rather than as a separate opaque orchestration layer.
 8. Add explicit result reporting for that media-generation sub-step, including generated outputs, no-op outcomes, missing-source cases, and failures, so Build Activity can report media work clearly.
 9. Update media readiness logic so it can distinguish between `ready because derivatives exist`, `pending because generation has not yet run`, and `blocked because required source inputs are missing`.
 10. Decide whether any lightweight Studio action is still needed for exceptional cases, such as a manual rerun of local derivative generation for one work or one detail, without making that the default path.
-11. Confirm that derivative generation for works and work details follows the same operational pattern where possible, while still allowing detail-specific output paths and naming.
+11. Confirm that derivative generation for works, work details, and moments follows the same operational pattern where possible, while still allowing kind-specific output paths and naming.
 12. Review whether generated thumbnails and other local derivatives should be written directly into their final repo locations during build, with no extra staging area or post-build copy step.
 13. Add verification coverage for media generation outcomes, including a normal generated case, a no-op rebuild where assets are already current, and a blocked case where source media is missing.
 14. Run a final UX pass across Build Activity and readiness surfaces so automatic local media generation is visible and understandable without reintroducing the hidden complexity of the old pipeline.
+
+Implemented:
+
+1. Added one direct local-thumbnail generation path inside the scoped build helper, so scoped rebuilds now run a bounded media step before page/search generation instead of relying on the retired copy-stage/srcset choreography.
+2. Kept the local generation boundary explicit: this phase generates repo-local thumbnail derivatives only, while R2-backed primary-image handling remains deferred.
+3. Reused the shared pipeline config for derivative naming, sizes, format, and encoding so new local generation follows the same public and Studio asset conventions already assumed elsewhere.
+4. Wired the local media step into work rebuilds, detail rebuilds, series rebuilds, and moment imports, so moments now follow the same build-time thumbnail pattern as works and work details.
+5. Extended build preview so work, detail, and series editors now surface whether local media is current, pending generation, blocked by missing source input, or unavailable because local source roots are not configured.
+6. Reworked work and detail media readiness so `ready` now means both source media and local thumbnails are current, while `pending_generation` means source media exists but local thumbnails still need to be generated or refreshed.
+7. Updated detail rebuild apply calls so focused detail rebuilds can trigger detail-local thumbnail generation rather than only the parent work page rebuild.
+8. Extended scoped build results and Build Activity entries so local media generation now reports affected work, work-detail, and moment ids alongside the page/search rebuild outcome.
 
 ### Phase 9. Internal Generator Refactor
 
