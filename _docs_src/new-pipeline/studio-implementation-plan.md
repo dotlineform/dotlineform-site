@@ -233,6 +233,22 @@ UI elements should mirror existing site pages rather than introduce new patterns
 - buttons should all have same style and height
 - text boxes should all be same height except for obvious candidates where expandability is useful e.g. ‘notes’
 
+Task list:
+
+1. Rework the Catalogue dashboard entry area from card panels into grouped directional link lists, with labels such as `Edit Work`, `Create New Work`, `Edit Series`, and `Import Moment`.
+2. Audit all current Catalogue routes and make sure every live page is reachable from the dashboard, including direct signposts to routes such as `/studio/catalogue-work/`, `/studio/catalogue-series/`, `/studio/catalogue-status/`, `/studio/catalogue-activity/`, `/studio/build-activity/`, `/studio/bulk-add-work/`, and `/studio/catalogue-moment-import/`.
+3. Define one shared pattern for Catalogue page headers so each page consistently shows the page title, current context, status/result messaging, and directional links back to the dashboard or next likely action.
+4. Normalize action wording across Catalogue pages so create, save, rebuild, import, preview, delete, and navigation actions use one consistent verb set and button hierarchy.
+5. Refactor metadata forms to a single-column vertical stack, with labels aligned on the left and input controls using shared widths, heights, and spacing.
+6. Identify which fields should remain fixed-height inputs and which should become expandable text areas, then apply that rule consistently across work, detail, series, file, and link pages.
+7. Consolidate guidance copy into one clear guidance panel per page where possible, and convert any plain-text references to other Studio routes into explicit links.
+8. Review all list and table surfaces and switch them to the default minimal full-width list pattern so additional columns can be added later without redesigning the component.
+9. Make sortable headers the default for list/table views where header-based sorting is appropriate, and remove one-off list-specific sorting affordances where they create inconsistency.
+10. Review all current pill treatments and keep pills only where they communicate a distinct function such as state, color coding, or clickability; convert decorative pills back to plain text or links.
+11. Standardize button styling and control height across Catalogue pages, including dashboard links where button-like actions currently use mismatched sizing.
+12. Tighten post-action navigation so create, save, delete, import, and rebuild flows always leave the user with an obvious next step, link, or return path.
+13. Run a page-by-page consistency pass across work, detail, series, file, link, status, activity, bulk-add, and moment-import pages, and capture any remaining exceptions explicitly rather than leaving them as accidental drift.
+
 
 Benefits:
 
