@@ -492,6 +492,14 @@ Scope:
 
 - add local web-triggered action surfaces for repo-local media tasks such as thumbnail copy or srcset generation where those actions are safe and operationally clear
 
+steer:
+
+- the old pipeline copied and renamed work (and work details) source images into a staging folder e.g. for works $DOTLINEFORM_MEDIA_BASE_DIR/works/make_srcset_images
+- then it created srcset images which were then manually copied into repo /assets/works/img.  thumbnails -> repo, primary images -> R2.
+- the srcset images were created automatically as part of the pipeline orchestration.
+- the target for the new pipeline is an automatic process as part of build.
+- the old pipeline didn’t copy the thumbnails into repo, simply because the staging area was originally created to enable the user to check that the srcset had been created properly before manually copying into repo. this check is probably not needed, a completely automated process would be better.
+
 Out of scope:
 
 - R2 automation
