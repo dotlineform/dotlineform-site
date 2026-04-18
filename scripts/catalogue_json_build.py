@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -14,7 +15,15 @@ from typing import Any, Dict, Iterable, Sequence
 from build_activity import append_build_activity
 from catalogue_source import DEFAULT_SOURCE_DIR, normalize_status, records_from_json_source, slug_id
 from moment_sources import build_moment_source_entry, normalize_moment_filename, validate_moment_source_entry
-from pipeline_config import env_var_name, env_var_value, load_pipeline_config, source_moments_images_subdir, source_moments_root_subdir
+from pipeline_config import (
+    env_var_name,
+    env_var_value,
+    load_pipeline_config,
+    source_moments_images_subdir,
+    source_moments_root_subdir,
+    source_works_prose_subdir,
+    source_works_root_subdir,
+)
 from series_ids import normalize_series_id
 
 
@@ -53,6 +62,252 @@ def detect_projects_base_dir(env: Dict[str, str] | None = None) -> Path:
     if not path.exists():
         raise ValueError(f"{PROJECTS_BASE_DIR_ENV_NAME} does not exist: {path}")
     return path
+
+
+def detect_projects_base_dir_optional(env: Dict[str, str] | None = None) -> tuple[Path | None, str]:
+    try:
+        return detect_projects_base_dir(env), ""
+    except ValueError as exc:
+        return None, str(exc)
+
+
+def display_source_path(path: Path | None, projects_base_dir: Path | None = None) -> str:
+    if path is None:
+        return ""
+    normalized = path.resolve()
+    if projects_base_dir is not None:
+        try:
+            return str(normalized.relative_to(projects_base_dir.resolve())).replace(os.sep, "/")
+        except ValueError:
+            pass
+    return str(normalized)
+
+
+def normalize_filename(value: Any) -> str:
+    text = str(value or "").strip()
+    return Path(text).name if text else ""
+
+
+def build_readiness_item(
+    *,
+    key: str,
+    title: str,
+    path: Path | None,
+    projects_base_dir: Path | None,
+    availability_error: str = "",
+    missing_reason: str = "",
+    ready_summary: str,
+    missing_file_summary: str,
+    next_step_ready: str = "",
+    next_step_missing_file: str = "",
+    next_step_missing_metadata: str = "",
+    next_step_unavailable: str = "",
+    action: Dict[str, Any] | None = None,
+) -> Dict[str, Any]:
+    source_path = display_source_path(path, projects_base_dir)
+    exists = bool(path and path.exists())
+
+    if availability_error:
+        status = "unavailable"
+        summary = availability_error
+        next_step = next_step_unavailable or "Start the local Studio service with the projects base directory configured."
+    elif exists:
+        status = "ready"
+        summary = ready_summary
+        next_step = next_step_ready
+    elif missing_reason == "missing_project_folder":
+        status = "missing_metadata"
+        summary = "Project folder is missing, so the source path cannot be resolved."
+        next_step = next_step_missing_metadata or "Set project_folder and save the source record before checking readiness again."
+    elif missing_reason == "missing_primary_work_id":
+        status = "missing_metadata"
+        summary = "Primary work is missing, so the series prose path cannot be resolved."
+        next_step = next_step_missing_metadata or "Set primary_work_id and save the source record before checking readiness again."
+    elif missing_reason == "primary_work_missing":
+        status = "missing_metadata"
+        summary = "Primary work does not exist in the current source records."
+        next_step = next_step_missing_metadata or "Fix primary_work_id before checking readiness again."
+    elif missing_reason:
+        status = "not_configured"
+        summary = "No source file is configured yet."
+        next_step = next_step_missing_metadata or "Set the source filename in metadata and save before checking readiness again."
+    else:
+        status = "missing_file"
+        summary = missing_file_summary
+        next_step = next_step_missing_file or "Create or restore the source file, then check readiness again."
+
+    item: Dict[str, Any] = {
+        "key": key,
+        "title": title,
+        "status": status,
+        "summary": summary,
+        "next_step": next_step,
+        "source_path": source_path,
+        "exists": exists,
+    }
+    if action and status == "ready":
+        item["action"] = action
+    return item
+
+
+def build_work_readiness(records, work_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    work_record = records.works.get(work_id)
+    if not isinstance(work_record, dict):
+        raise ValueError(f"work_id not found: {work_id}")
+
+    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
+    project_folder = str(work_record.get("project_folder") or "").strip()
+    project_filename = normalize_filename(work_record.get("project_filename"))
+    prose_filename = normalize_filename(work_record.get("work_prose_file"))
+
+    media_path: Path | None = None
+    media_missing_reason = ""
+    if project_folder and project_filename and works_root is not None:
+        media_path = works_root / project_folder / project_filename
+    elif project_filename:
+        media_missing_reason = "missing_project_folder"
+    else:
+        media_missing_reason = "missing_project_filename"
+
+    prose_path: Path | None = None
+    prose_missing_reason = ""
+    if project_folder and prose_filename and works_root is not None:
+        prose_path = works_root / project_folder / prose_root / prose_filename
+    elif prose_filename:
+        prose_missing_reason = "missing_project_folder"
+    else:
+        prose_missing_reason = "missing_work_prose_file"
+
+    items = [
+        build_readiness_item(
+            key="work_media",
+            title="work media",
+            path=media_path,
+            projects_base_dir=projects_base_dir,
+            availability_error=availability_error,
+            missing_reason=media_missing_reason,
+            ready_summary=f"Source media is ready at {display_source_path(media_path, projects_base_dir)}.",
+            missing_file_summary=f"Configured source media is missing at {display_source_path(media_path, projects_base_dir)}." if media_path else "Configured source media file is missing.",
+            next_step_ready="Media generation is a later phase; use this to confirm the source path is correct.",
+            next_step_missing_file="Create or restore the source media file, or update project_filename.",
+            next_step_missing_metadata="Set project_folder and project_filename, then save the source record.",
+        ),
+        build_readiness_item(
+            key="work_prose",
+            title="work prose",
+            path=prose_path,
+            projects_base_dir=projects_base_dir,
+            availability_error=availability_error,
+            missing_reason=prose_missing_reason,
+            ready_summary=f"Source prose is ready at {display_source_path(prose_path, projects_base_dir)}.",
+            missing_file_summary=f"Configured source prose is missing at {display_source_path(prose_path, projects_base_dir)}." if prose_path else "Configured source prose file is missing.",
+            next_step_ready="Use Import prose + rebuild to publish the current prose file.",
+            next_step_missing_file="Create or restore the prose file, then import prose from this page.",
+            next_step_missing_metadata="Set project_folder and work_prose_file, then save the source record.",
+            action={
+                "kind": "prose-import",
+                "target_kind": "work",
+                "work_id": work_id,
+                "label": "Import prose + rebuild",
+            },
+        ),
+    ]
+    return {"items": items}
+
+
+def build_series_readiness(records, series_id: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    series_record = records.series.get(series_id)
+    if not isinstance(series_record, dict):
+        raise ValueError(f"series_id not found: {series_id}")
+
+    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    prose_root = source_works_prose_subdir(PIPELINE_CONFIG)
+    prose_filename = normalize_filename(series_record.get("series_prose_file"))
+    primary_work_id = slug_id(series_record.get("primary_work_id")) if series_record.get("primary_work_id") else ""
+    primary_work_record = records.works.get(primary_work_id) if primary_work_id else None
+    project_folder = str(primary_work_record.get("project_folder") or "").strip() if isinstance(primary_work_record, dict) else ""
+
+    prose_path: Path | None = None
+    prose_missing_reason = ""
+    if not prose_filename:
+        prose_missing_reason = "missing_series_prose_file"
+    elif not primary_work_id:
+        prose_missing_reason = "missing_primary_work_id"
+    elif not isinstance(primary_work_record, dict):
+        prose_missing_reason = "primary_work_missing"
+    elif not project_folder:
+        prose_missing_reason = "missing_project_folder"
+    elif works_root is not None:
+        prose_path = works_root / project_folder / prose_root / prose_filename
+
+    items = [
+        build_readiness_item(
+            key="series_prose",
+            title="series prose",
+            path=prose_path,
+            projects_base_dir=projects_base_dir,
+            availability_error=availability_error,
+            missing_reason=prose_missing_reason,
+            ready_summary=f"Source prose is ready at {display_source_path(prose_path, projects_base_dir)}.",
+            missing_file_summary=f"Configured source prose is missing at {display_source_path(prose_path, projects_base_dir)}." if prose_path else "Configured source prose file is missing.",
+            next_step_ready="Use Import prose + rebuild to publish the current prose file.",
+            next_step_missing_file="Create or restore the prose file, then import prose from this page.",
+            next_step_missing_metadata="Set primary_work_id and series_prose_file, then save the source record.",
+            action={
+                "kind": "prose-import",
+                "target_kind": "series",
+                "series_id": series_id,
+                "label": "Import prose + rebuild",
+            },
+        ),
+    ]
+    return {"items": items}
+
+
+def build_detail_readiness(records, detail_uid: str, *, env: Dict[str, str] | None = None) -> Dict[str, Any]:
+    projects_base_dir, availability_error = detect_projects_base_dir_optional(env)
+    detail_record = records.work_details.get(detail_uid)
+    if not isinstance(detail_record, dict):
+        raise ValueError(f"detail_uid not found: {detail_uid}")
+
+    works_root = (projects_base_dir / source_works_root_subdir(PIPELINE_CONFIG)) if projects_base_dir else None
+    work_id = slug_id(detail_record.get("work_id"))
+    work_record = records.works.get(work_id)
+    project_folder = str(work_record.get("project_folder") or "").strip() if isinstance(work_record, dict) else ""
+    project_subfolder = str(detail_record.get("project_subfolder") or "").strip()
+    project_filename = normalize_filename(detail_record.get("project_filename"))
+
+    media_path: Path | None = None
+    media_missing_reason = ""
+    if not project_filename:
+        media_missing_reason = "missing_project_filename"
+    elif not project_folder:
+        media_missing_reason = "missing_project_folder"
+    elif works_root is not None:
+        media_path = works_root / project_folder
+        if project_subfolder:
+            media_path = media_path / project_subfolder
+        media_path = media_path / project_filename
+
+    items = [
+        build_readiness_item(
+            key="detail_media",
+            title="detail media",
+            path=media_path,
+            projects_base_dir=projects_base_dir,
+            availability_error=availability_error,
+            missing_reason=media_missing_reason,
+            ready_summary=f"Source media is ready at {display_source_path(media_path, projects_base_dir)}.",
+            missing_file_summary=f"Configured source media is missing at {display_source_path(media_path, projects_base_dir)}." if media_path else "Configured source media file is missing.",
+            next_step_ready="Detail media generation is a later phase; use this to confirm the source path is correct.",
+            next_step_missing_file="Create or restore the source media file, or update project_filename.",
+            next_step_missing_metadata="Set project folder metadata on the parent work and project_filename on this detail, then save.",
+        ),
+    ]
+    return {"items": items}
 
 
 def build_moment_paths(projects_base_dir: Path, moment_file: str) -> Dict[str, Path]:
@@ -193,7 +448,14 @@ def validate_buildable_series_scope(records, series_ids: Sequence[str]) -> None:
         raise ValueError("series build precondition failed: " + "; ".join(errors[:20]))
 
 
-def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Sequence[Any] | None = None) -> Dict[str, Any]:
+def build_scope_for_work(
+    source_dir: Path,
+    work_id: str,
+    extra_series_ids: Sequence[Any] | None = None,
+    *,
+    detail_uid: str = "",
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
     normalized_work_id = slug_id(work_id)
     records = records_from_json_source(source_dir)
     work_record = records.works.get(normalized_work_id)
@@ -204,7 +466,7 @@ def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Seque
     requested_extra_series_ids = normalize_series_ids(extra_series_ids or [])
     series_ids = normalize_series_ids([*current_series_ids, *requested_extra_series_ids])
     validate_buildable_series_scope(records, series_ids)
-    return {
+    scope = {
         "work_ids": [normalized_work_id],
         "series_ids": series_ids,
         "current_series_ids": current_series_ids,
@@ -216,9 +478,22 @@ def build_scope_for_work(source_dir: Path, work_id: str, extra_series_ids: Seque
         "source_dir": str(source_dir),
         "summary": summarize_scope([normalized_work_id], series_ids),
     }
+    readiness = build_work_readiness(records, normalized_work_id, env=env)
+    if detail_uid:
+        normalized_detail_uid = str(detail_uid or "").strip()
+        readiness["items"].extend(build_detail_readiness(records, normalized_detail_uid, env=env).get("items", []))
+        scope["detail_uid"] = normalized_detail_uid
+    scope["readiness"] = readiness
+    return scope
 
 
-def build_scope_for_series(source_dir: Path, series_id: str, extra_work_ids: Sequence[Any] | None = None) -> Dict[str, Any]:
+def build_scope_for_series(
+    source_dir: Path,
+    series_id: str,
+    extra_work_ids: Sequence[Any] | None = None,
+    *,
+    env: Dict[str, str] | None = None,
+) -> Dict[str, Any]:
     normalized_series_id = normalize_series_id(series_id)
     records = records_from_json_source(source_dir)
     series_record = records.series.get(normalized_series_id)
@@ -250,7 +525,7 @@ def build_scope_for_series(source_dir: Path, series_id: str, extra_work_ids: Seq
 
     work_ids = sorted({*current_work_ids, *requested_extra_work_ids})
     validate_buildable_series_scope(records, [normalized_series_id])
-    return {
+    scope = {
         "kind": "series",
         "work_ids": work_ids,
         "series_ids": [normalized_series_id],
@@ -263,6 +538,8 @@ def build_scope_for_series(source_dir: Path, series_id: str, extra_work_ids: Seq
         "source_dir": str(source_dir),
         "summary": summarize_scope(work_ids, [normalized_series_id]),
     }
+    scope["readiness"] = build_series_readiness(records, normalized_series_id, env=env)
+    return scope
 
 
 def build_scope_for_moment(

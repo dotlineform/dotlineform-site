@@ -2831,8 +2831,14 @@ class Handler(BaseHTTPRequestHandler):
     def _handle_build_preview(self, allowed: Optional[str]) -> None:
         body = self._read_json_body()
         work_id, series_id, extra_series_ids, extra_work_ids, force = extract_generic_build_request(body)
+        detail_uid = normalize_detail_uid_value(body.get("detail_uid")) if body.get("detail_uid") else ""
         if work_id:
-            scope = build_scope_for_work(self.server.source_dir, work_id, extra_series_ids=extra_series_ids)
+            scope = build_scope_for_work(
+                self.server.source_dir,
+                work_id,
+                extra_series_ids=extra_series_ids,
+                detail_uid=detail_uid,
+            )
         else:
             scope = build_scope_for_series(self.server.source_dir, series_id, extra_work_ids=extra_work_ids)
         self._send_json(
@@ -2841,6 +2847,7 @@ class Handler(BaseHTTPRequestHandler):
                 "ok": True,
                 "work_id": work_id,
                 "series_id": series_id,
+                "detail_uid": detail_uid,
                 "force": force,
                 "build": scope,
             },

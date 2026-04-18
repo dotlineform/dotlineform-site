@@ -31,6 +31,8 @@ The first implementation covers:
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
 - preview the scoped rebuild impact for the current series
+- show series prose readiness, including the resolved primary-work prose path or the metadata dependency blocking it
+- run a narrow `Import prose + rebuild` action when the configured series prose file is ready
 - run `Save + Rebuild` through the local catalogue service
 - delete one series source record and remove its membership from affected works
 
@@ -59,8 +61,8 @@ Current save/rebuild flow:
 4. `POST /catalogue/series/save` sends the current `series_id`, the expected series record hash, the normalized series patch, and only the changed work membership rows
 5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records
 6. the page reloads its focused series lookup payload
-7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works
-8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON
+7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works and now also carries series prose readiness
+8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON for both `Save + Rebuild` and `Import prose + rebuild`
 
 Delete flow:
 

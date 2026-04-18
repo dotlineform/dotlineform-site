@@ -54,6 +54,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
       <p class="tagStudioForm__impact" id="catalogueWorkDetailRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueWorkDetailBuildImpact"></p>
       <div class="tagStudioForm__fields" id="catalogueWorkDetailSummary"></div>
+      <div class="tagStudioForm__fields" id="catalogueWorkDetailReadiness"></div>
     </aside>
   </div>
 </div>

@@ -47,6 +47,12 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function toneForReadinessStatus(status) {
+  if (status === "ready") return "ready";
+  if (status === "unavailable") return "error";
+  return "warning";
+}
+
 function normalizeWorkId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (!digits) return "";
@@ -93,6 +99,42 @@ async function computeRecordHash(record) {
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "—";
+}
+
+function getReadinessItems(state) {
+  const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
+  const items = readiness && Array.isArray(readiness.items) ? readiness.items : [];
+  return items.filter((item) => normalizeText(item && item.key) === "detail_media");
+}
+
+function renderReadiness(state) {
+  if (!state.readinessNode) return;
+  if (state.mode === "bulk" || !state.currentRecord) {
+    state.readinessNode.innerHTML = "";
+    return;
+  }
+  const items = getReadinessItems(state);
+  if (!items.length) {
+    state.readinessNode.innerHTML = "";
+    return;
+  }
+  state.readinessNode.innerHTML = items.map((item) => {
+    const tone = toneForReadinessStatus(normalizeText(item && item.status));
+    const title = normalizeText(item && item.title) || "readiness";
+    const summary = normalizeText(item && item.summary) || "—";
+    const sourcePath = normalizeText(item && item.source_path);
+    const nextStep = normalizeText(item && item.next_step);
+    return `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(title)}</span>
+        <div class="tagStudioForm__readonly catalogueReadiness__body">
+          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
+          ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
+          ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function canonicalizeScalar(field, value) {
@@ -441,6 +483,7 @@ function updateSummary(state) {
     state.runtimeStateNode.textContent = state.rebuildPending
       ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
       : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+    renderReadiness(state);
     return;
   }
 
@@ -475,6 +518,7 @@ function updateSummary(state) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+  renderReadiness(state);
 }
 
 function setLoadedRecord(state, detailUid, record, options = {}) {
@@ -578,6 +622,7 @@ function updateEditorState(state) {
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  renderReadiness(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -616,12 +661,17 @@ async function refreshBuildPreview(state) {
   if (!state.currentWorkId || !state.serverAvailable) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
+    renderReadiness(state);
     return;
   }
   try {
-    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, { work_id: state.currentWorkId });
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildPreview, {
+      work_id: state.currentWorkId,
+      detail_uid: state.currentDetailUid
+    });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    renderReadiness(state);
   } catch (error) {
     state.buildPreview = null;
     setTextWithState(
@@ -629,6 +679,7 @@ async function refreshBuildPreview(state) {
       `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    renderReadiness(state);
   }
 }
 
@@ -944,6 +995,7 @@ async function init() {
   const fieldsNode = document.getElementById("catalogueWorkDetailFields");
   const readonlyNode = document.getElementById("catalogueWorkDetailReadonly");
   const summaryNode = document.getElementById("catalogueWorkDetailSummary");
+  const readinessNode = document.getElementById("catalogueWorkDetailReadiness");
   const runtimeStateNode = document.getElementById("catalogueWorkDetailRuntimeState");
   const buildImpactNode = document.getElementById("catalogueWorkDetailBuildImpact");
   const searchNode = document.getElementById("catalogueWorkDetailSearchGlobal");
@@ -959,7 +1011,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkDetailWarning");
   const resultNode = document.getElementById("catalogueWorkDetailResult");
   const metaNode = document.getElementById("catalogueWorkDetailMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -1002,6 +1054,7 @@ async function init() {
     warningNode,
     resultNode,
     summaryNode,
+    readinessNode,
     runtimeStateNode,
     buildImpactNode,
     metaNode

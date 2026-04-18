@@ -30,7 +30,6 @@ The Studio page layout then renders:
 - the page title
 - the page body content
 - an optional `i` link when `page.studio_page_doc` is present
-- shared Catalogue page links on Catalogue-domain routes so the key create, edit, review, and activity pages remain cross-linked inside Studio
 
 The public site uses the user-facing `Works` / `Library` header nav. The only intended crossover points are:
 
@@ -197,6 +196,8 @@ The runner is therefore sufficient for route-shell and write-flow testing, but n
 
 After Phase 3, the current Catalogue shell conventions are:
 
+- Catalogue-domain pages no longer render a persistent page-link strip above the editor content
+- work, series, and detail editors now use the right-hand summary rail for readiness state as well as current-record context
 - the Catalogue dashboard uses grouped directional link lists rather than card panels
 - Catalogue-domain pages render a shared page-link strip for create, edit, review, and activity routes
 - metadata editors use a shared single-column row layout with labels on the left

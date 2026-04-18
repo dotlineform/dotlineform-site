@@ -39,6 +39,8 @@ The first implementation covers:
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
+- show work media and work prose readiness, including resolved source paths and missing-state guidance
+- run a narrow `Import prose + rebuild` action when the configured work prose file is ready
 - run `Save + Rebuild` through the local catalogue service
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
@@ -51,6 +53,7 @@ It does not yet:
 - edit series records directly
 - update prose or media files
 - paginate detail/member lists
+- generate media derivatives
 
 ## Bulk Mode
 
@@ -84,7 +87,8 @@ Current save/rebuild flow:
 6. the local write server validates the full source set, writes `works.json`, refreshes derived lookup payloads, and returns the normalized saved record
 7. the page reloads its focused work lookup payload and marks runtime rebuild as still pending
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
-9. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild`
+9. the same preview now also carries work media/work prose readiness and source-path guidance
+10. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild` or `Import prose + rebuild`
 
 Bulk save flow:
 

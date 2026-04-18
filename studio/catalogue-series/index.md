@@ -54,6 +54,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
       <p class="tagStudioForm__impact" id="catalogueSeriesRuntimeState"></p>
       <p class="tagStudioForm__impact" id="catalogueSeriesBuildImpact"></p>
       <div class="tagStudioForm__fields" id="catalogueSeriesSummary"></div>
+      <div class="tagStudioForm__fields" id="catalogueSeriesReadiness"></div>
     </aside>
   </div>
 

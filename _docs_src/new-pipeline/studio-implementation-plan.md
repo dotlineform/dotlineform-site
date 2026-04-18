@@ -351,6 +351,10 @@ Task list:
 
 ### Phase 5. Media And Prose Readiness
 
+Status:
+
+- completed on 2026-04-18
+
 Scope:
 
 - make media and prose state visible inside Catalogue workflows
@@ -383,22 +387,16 @@ Risks:
 
 - too much readiness detail can make editors noisy if it is not prioritised carefully
 
-Task list:
+Implemented:
 
-1. Review the current source fields and pipeline assumptions for prose and media, including `work_prose_file`, `series_prose_file`, work/detail image expectations, and the existing missing-reason logic already used by the build pipeline.
-2. Define one compact readiness model for Catalogue surfaces, separating `metadata ready`, `prose ready`, `media ready`, and `runtime follow-up needed` so the status language is consistent across work, series, and detail flows.
-3. Decide which readiness states belong directly on the editor pages and which belong in build preview or follow-up panels, so the pages stay operational rather than becoming dense technical diagnostics.
-4. Add explicit prose readiness indicators to the work and series editors, showing the expected prose file, whether it resolves to a valid source path, and whether missing prerequisites such as `project_folder` or prose filename are the blocking issue.
-5. Add explicit media readiness indicators to the work and detail editors, showing the expected source media path, whether the expected source exists, and whether the current record is blocked on missing source media versus merely awaiting later derivative generation.
-6. Define one clear convention for missing-state messaging, so users can distinguish between `not required`, `expected but missing`, `present`, and `present but rebuild still required`.
-7. Extend build preview output where necessary so it can surface when a record is metadata-valid but still incomplete from a prose or media readiness point of view.
-8. Add clearer signposting from Catalogue pages to the external source locations the user may need to inspect, including prose file references and media file expectations, without turning those pages into file browsers.
-9. Design a narrow prose import/rebuild hook for work prose, where the user can specify or confirm a prose file and trigger the relevant targeted rebuild without editing the prose itself in Studio.
-10. Design the equivalent narrow prose import/rebuild hook for series prose, again limited to visibility, validation, and targeted rebuild rather than local prose editing.
-11. Keep moments aligned with the same philosophy used earlier: explicit file-driven handling is acceptable, but automated scanning and broader prose-management behavior remain out of scope for this phase.
-12. Review whether the existing pipeline fingerprinting or preview data already contains enough readiness information, and only add backend feed/build-preview changes where the current payloads are insufficient for the new UI states.
-13. Make sure readiness states connect to an obvious next step, for example `open prose workflow`, `fix source media path`, `run targeted rebuild`, or `review build activity`, rather than presenting unresolved warnings without direction.
-14. Run a final consistency pass across work, series, detail, and any related preview surfaces so prose/media readiness is visible in the same language and priority order everywhere it appears.
+1. Added one compact readiness model to scoped build preview, covering work media, work prose, series prose, and detail media with consistent `ready`, `not configured`, `missing file`, `missing metadata`, and `unavailable` states.
+2. Surfaced work media and work prose readiness directly on `/studio/catalogue-work/`, including resolved source paths and explicit next-step messaging.
+3. Surfaced series prose readiness directly on `/studio/catalogue-series/`, including primary-work folder dependency handling and explicit next-step messaging.
+4. Surfaced detail media readiness directly on `/studio/catalogue-work-detail/`, using detail-specific preview data rather than only the parent work scope.
+5. Extended `POST /catalogue/build-preview` so detail previews can include `detail_uid` and return the relevant readiness rows without creating a separate detail rebuild planner.
+6. Added narrow `Import prose + rebuild` actions on the work and series editors, reusing the existing scoped build endpoint rather than introducing a second prose pipeline.
+7. Kept media actions out of scope for this phase; media readiness is visible, but derivative generation remains a later implementation phase.
+8. Kept the UI compact by placing readiness in the existing right-hand summary area rather than adding new panels or routes.
 
 ### Phase 6. Preview Media In Studio
 

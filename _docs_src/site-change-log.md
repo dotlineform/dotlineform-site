@@ -10,6 +10,7 @@ sort_order: 110
 
 ## 2026-04-18
 
+- completed Phase 5 media/prose readiness work: work, series, and detail editors now surface source readiness in the summary rail, build preview now carries readiness state, work and series now offer narrow `Import prose + rebuild` actions, and detail preview now resolves its own source media path
 - completed Phase 4 activity/build reporting work: `Catalogue Activity` now stays source-side, `Build Activity` now carries rebuild outcomes, both pages now use sortable operational lists with explicit scope/result columns, and activity rows now link back into the relevant editor or next workflow route
 - completed Phase 3 catalogue UI consistency work: the Catalogue dashboard now uses grouped directional links, Catalogue-domain pages now share a cross-linked page-nav strip, metadata editors use the left-label single-column form layout, work-file and work-link editors can be opened directly from dashboard search, and Catalogue Status now sorts by header and links into all current editor families
 - added the Phase 2 moments import flow at `/studio/catalogue-moment-import/`, with explicit source-file preview/apply, targeted moment rebuilds, catalogue-search rebuild, and first-pass activity/build reporting without folder scanning or srcset generation

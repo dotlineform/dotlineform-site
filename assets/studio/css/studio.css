@@ -1405,6 +1405,34 @@ input.tagStudio__input {
   color: inherit;
 }
 
+.catalogueReadiness__body {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.catalogueReadiness__summary[data-tone="ready"] {
+  color: var(--studio-success);
+}
+
+.catalogueReadiness__summary[data-tone="warning"] {
+  color: var(--studio-warn);
+}
+
+.catalogueReadiness__summary[data-tone="error"] {
+  color: var(--studio-danger);
+}
+
+.catalogueReadiness__path {
+  font-family: var(--font-mono, monospace);
+  word-break: break-word;
+}
+
+.catalogueReadiness__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
 .catalogueWorkDetails {
   margin-top: 1rem;
 }

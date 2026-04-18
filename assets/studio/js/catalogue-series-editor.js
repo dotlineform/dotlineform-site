@@ -49,6 +49,12 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function toneForReadinessStatus(status) {
+  if (status === "ready") return "ready";
+  if (status === "unavailable") return "error";
+  return "warning";
+}
+
 function normalizeSeriesId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (digits) return digits.padStart(3, "0");
@@ -83,6 +89,51 @@ async function computeRecordHash(record) {
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "—";
+}
+
+function getReadinessItems(state) {
+  const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
+  return readiness && Array.isArray(readiness.items) ? readiness.items : [];
+}
+
+function renderReadiness(state) {
+  if (!state.readinessNode || !state.currentRecord) {
+    if (state.readinessNode) state.readinessNode.innerHTML = "";
+    return;
+  }
+  const items = getReadinessItems(state);
+  if (!items.length) {
+    state.readinessNode.innerHTML = "";
+    return;
+  }
+
+  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
+  state.readinessNode.innerHTML = items.map((item) => {
+    const tone = toneForReadinessStatus(normalizeText(item && item.status));
+    const title = normalizeText(item && item.title) || "readiness";
+    const summary = normalizeText(item && item.summary) || "—";
+    const sourcePath = normalizeText(item && item.source_path);
+    const nextStep = normalizeText(item && item.next_step);
+    const action = item && item.action && typeof item.action === "object" ? item.action : null;
+    const proseAction = action && action.kind === "prose-import" && normalizeText(action.target_kind) === "series";
+    const disabledNote = proseAction && actionDisabled
+      ? (draftHasChanges(state)
+        ? t(state, "readiness_save_first", "Save source changes before importing prose.")
+        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+      : "";
+    return `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(title)}</span>
+        <div class="tagStudioForm__readonly catalogueReadiness__body">
+          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
+          ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
+          ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
+          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="series" ${actionDisabled ? "disabled" : ""}>${escapeHtml(normalizeText(action.label) || "Import prose + rebuild")}</button></div>` : ""}
+          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function buildSearchToken(value) {
@@ -395,6 +446,7 @@ function updateSummary(state) {
   state.runtimeStateNode.textContent = state.rebuildPending
     ? t(state, "summary_rebuild_needed", "source changed; rebuild pending")
     : t(state, "summary_rebuild_current", "source and runtime not yet diverged in this session");
+  renderReadiness(state);
 }
 
 function renderMemberRows(state, entries) {
@@ -479,6 +531,7 @@ function updateEditorState(state) {
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !hasRecord || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  renderReadiness(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -530,6 +583,7 @@ async function refreshBuildPreview(state) {
   if (!state.currentSeriesId || !state.serverAvailable) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, "");
+    renderReadiness(state);
     return;
   }
   try {
@@ -539,9 +593,54 @@ async function refreshBuildPreview(state) {
     });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    renderReadiness(state);
   } catch (error) {
     state.buildPreview = null;
     setTextWithState(state.buildImpactNode, `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(), "error");
+    renderReadiness(state);
+  }
+}
+
+async function importSeriesProse(state) {
+  if (!state.currentRecord || !state.currentSeriesId || !state.serverAvailable) return;
+  if (draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "prose_import_save_first", "Save source changes before importing prose."), "error");
+    return;
+  }
+  const proseItem = getReadinessItems(state).find((item) => normalizeText(item && item.key) === "series_prose");
+  if (!proseItem || normalizeText(proseItem.status) !== "ready") {
+    setTextWithState(state.statusNode, t(state, "prose_import_not_ready", "No ready series prose source is configured for this record."), "error");
+    return;
+  }
+
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing prose and rebuilding…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      series_id: state.currentSeriesId,
+      extra_work_ids: state.pendingBuildExtraWorkIds
+    });
+    state.rebuildPending = false;
+    state.pendingBuildExtraWorkIds = [];
+    await refreshBuildPreview(state);
+    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
+    setTextWithState(
+      state.resultNode,
+      t(state, "prose_import_result_success", "Prose imported and runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      "success"
+    );
+    setTextWithState(state.statusNode, t(state, "prose_import_status_success", "Prose import completed."), "success");
+  } catch (error) {
+    setTextWithState(
+      state.statusNode,
+      `${t(state, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
   }
 }
 
@@ -787,6 +886,7 @@ async function init() {
   const fieldsNode = document.getElementById("catalogueSeriesFields");
   const readonlyNode = document.getElementById("catalogueSeriesReadonly");
   const summaryNode = document.getElementById("catalogueSeriesSummary");
+  const readinessNode = document.getElementById("catalogueSeriesReadiness");
   const runtimeStateNode = document.getElementById("catalogueSeriesRuntimeState");
   const buildImpactNode = document.getElementById("catalogueSeriesBuildImpact");
   const searchNode = document.getElementById("catalogueSeriesSearch");
@@ -809,7 +909,7 @@ async function init() {
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
@@ -848,6 +948,7 @@ async function init() {
     warningNode,
     resultNode,
     summaryNode,
+    readinessNode,
     runtimeStateNode,
     buildImpactNode,
     metaNode,
@@ -934,6 +1035,11 @@ async function init() {
       if (matches[0]) {
         openSeriesById(state, matches[0].seriesId).catch((error) => console.warn("catalogue_series_editor: failed to open requested series", error));
       }
+    });
+    readinessNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
+      if (!button) return;
+      importSeriesProse(state).catch((error) => console.warn("catalogue_series_editor: unexpected prose import failure", error));
     });
     saveButton.addEventListener("click", () => saveCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save failure", error)));
     buildButton.addEventListener("click", () => saveAndBuildCurrentSeries(state).catch((error) => console.warn("catalogue_series_editor: unexpected save/build failure", error)));

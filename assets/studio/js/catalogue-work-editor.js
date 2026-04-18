@@ -65,6 +65,12 @@ function escapeHtml(value) {
     .replace(/'/g, "&#39;");
 }
 
+function toneForReadinessStatus(status) {
+  if (status === "ready") return "ready";
+  if (status === "unavailable") return "error";
+  return "warning";
+}
+
 function normalizeWorkId(value) {
   const digits = normalizeText(value).replace(/\D/g, "");
   if (!digits) return "";
@@ -164,6 +170,52 @@ function formatNumberText(value) {
 function displayValue(value) {
   const text = normalizeText(value);
   return text || "—";
+}
+
+function getReadinessItems(state) {
+  const readiness = state.buildPreview && typeof state.buildPreview === "object" ? state.buildPreview.readiness : null;
+  return readiness && Array.isArray(readiness.items) ? readiness.items : [];
+}
+
+function renderReadiness(state) {
+  if (!state.readinessNode) return;
+  if (state.mode === "bulk" || !state.currentRecord) {
+    state.readinessNode.innerHTML = "";
+    return;
+  }
+  const items = getReadinessItems(state);
+  if (!items.length) {
+    state.readinessNode.innerHTML = "";
+    return;
+  }
+
+  const actionDisabled = !state.serverAvailable || state.isSaving || state.isBuilding || draftHasChanges(state);
+  state.readinessNode.innerHTML = items.map((item) => {
+    const tone = toneForReadinessStatus(normalizeText(item && item.status));
+    const title = normalizeText(item && item.title) || "readiness";
+    const summary = normalizeText(item && item.summary) || "—";
+    const sourcePath = normalizeText(item && item.source_path);
+    const nextStep = normalizeText(item && item.next_step);
+    const action = item && item.action && typeof item.action === "object" ? item.action : null;
+    const proseAction = action && action.kind === "prose-import" && normalizeText(action.target_kind) === "work";
+    const disabledNote = proseAction && actionDisabled
+      ? (draftHasChanges(state)
+        ? t(state, "readiness_save_first", "Save source changes before importing prose.")
+        : t(state, "readiness_action_busy", "Wait for the current save or rebuild to finish."))
+      : "";
+    return `
+      <div class="tagStudioForm__field">
+        <span class="tagStudioForm__label">${escapeHtml(title)}</span>
+        <div class="tagStudioForm__readonly catalogueReadiness__body">
+          <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
+          ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
+          ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
+          ${proseAction ? `<div class="catalogueReadiness__actions"><button type="button" class="tagStudio__button" data-prose-import="work" ${actionDisabled ? "disabled" : ""}>${escapeHtml(normalizeText(action.label) || "Import prose + rebuild")}</button></div>` : ""}
+          ${disabledNote ? `<span class="tagStudioForm__meta">${escapeHtml(disabledNote)}</span>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function buildRecordSummary(record) {
@@ -715,6 +767,7 @@ function updateSummary(state) {
     if (state.detailsPanelNode) state.detailsPanelNode.hidden = true;
     if (state.filesPanelNode) state.filesPanelNode.hidden = true;
     if (state.linksPanelNode) state.linksPanelNode.hidden = true;
+    renderReadiness(state);
     return;
   }
 
@@ -760,6 +813,7 @@ function updateSummary(state) {
   updateDetailSections(state);
   updateWorkFilesSection(state);
   updateWorkLinksSection(state);
+  renderReadiness(state);
 }
 
 function formatBuildPreview(state, build) {
@@ -1077,6 +1131,7 @@ function updateEditorState(state) {
   state.saveButton.disabled = !hasRecord || state.isSaving || errors.size > 0 || !dirty || !state.serverAvailable;
   state.buildButton.disabled = !hasRecord || state.isSaving || state.isBuilding || errors.size > 0 || !state.serverAvailable;
   state.deleteButton.disabled = !Boolean(state.currentRecord) || state.mode === "bulk" || state.isSaving || state.isBuilding || state.isDeleting || !state.serverAvailable;
+  renderReadiness(state);
 }
 
 function onFieldInput(state, fieldKey) {
@@ -1225,11 +1280,13 @@ async function refreshBuildPreview(state) {
         : ""
     );
     state.buildPreview = null;
+    renderReadiness(state);
     return;
   }
   if (!state.currentWorkId || !state.serverAvailable) {
     setTextWithState(state.buildImpactNode, "");
     state.buildPreview = null;
+    renderReadiness(state);
     return;
   }
   try {
@@ -1239,6 +1296,7 @@ async function refreshBuildPreview(state) {
     });
     state.buildPreview = response && response.build ? response.build : null;
     setTextWithState(state.buildImpactNode, formatBuildPreview(state, state.buildPreview));
+    renderReadiness(state);
   } catch (error) {
     state.buildPreview = null;
     setTextWithState(
@@ -1246,6 +1304,50 @@ async function refreshBuildPreview(state) {
       `${t(state, "build_preview_failed", "Build preview unavailable.")} ${normalizeText(error && error.message)}`.trim(),
       "error"
     );
+    renderReadiness(state);
+  }
+}
+
+async function importWorkProse(state) {
+  if (!state.currentRecord || !state.currentWorkId || !state.serverAvailable) return;
+  if (draftHasChanges(state)) {
+    setTextWithState(state.statusNode, t(state, "prose_import_save_first", "Save source changes before importing prose."), "error");
+    return;
+  }
+  const proseItem = getReadinessItems(state).find((item) => normalizeText(item && item.key) === "work_prose");
+  if (!proseItem || normalizeText(proseItem.status) !== "ready") {
+    setTextWithState(state.statusNode, t(state, "prose_import_not_ready", "No ready work prose source is configured for this record."), "error");
+    return;
+  }
+
+  state.isBuilding = true;
+  updateEditorState(state);
+  setTextWithState(state.statusNode, t(state, "prose_import_running", "Importing prose and rebuilding…"));
+  setTextWithState(state.resultNode, "");
+  try {
+    const response = await postJson(CATALOGUE_WRITE_ENDPOINTS.buildApply, {
+      work_id: state.currentWorkId,
+      extra_series_ids: state.pendingBuildExtraSeriesIds
+    });
+    state.rebuildPending = false;
+    state.pendingBuildExtraSeriesIds = [];
+    await refreshBuildPreview(state);
+    const completedAt = normalizeText(response.completed_at_utc || utcTimestamp());
+    setTextWithState(
+      state.resultNode,
+      t(state, "prose_import_result_success", "Prose imported and runtime rebuilt at {completed_at}. Build Activity updated.", { completed_at: completedAt }),
+      "success"
+    );
+    setTextWithState(state.statusNode, t(state, "prose_import_status_success", "Prose import completed."), "success");
+  } catch (error) {
+    setTextWithState(
+      state.statusNode,
+      `${t(state, "prose_import_status_failed", "Prose import failed.")} ${normalizeText(error && error.message)}`.trim(),
+      "error"
+    );
+  } finally {
+    state.isBuilding = false;
+    updateEditorState(state);
   }
 }
 
@@ -1465,6 +1567,7 @@ async function init() {
   const fieldsNode = document.getElementById("catalogueWorkFields");
   const readonlyNode = document.getElementById("catalogueWorkReadonly");
   const summaryNode = document.getElementById("catalogueWorkSummary");
+  const readinessNode = document.getElementById("catalogueWorkReadiness");
   const runtimeStateNode = document.getElementById("catalogueWorkRuntimeState");
   const buildImpactNode = document.getElementById("catalogueWorkBuildImpact");
   const detailsHeadingNode = document.getElementById("catalogueWorkDetailsHeading");
@@ -1493,7 +1596,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -1537,6 +1640,7 @@ async function init() {
     warningNode,
     resultNode,
     summaryNode,
+    readinessNode,
     runtimeStateNode,
     buildImpactNode,
     detailSearchNode,
@@ -1641,6 +1745,13 @@ async function init() {
     openButton.addEventListener("click", () => {
       openWorkSelection(state, searchNode.value).catch((error) => {
         console.warn("catalogue_work_editor: failed to open requested work selection", error);
+      });
+    });
+    readinessNode.addEventListener("click", (event) => {
+      const button = event.target && event.target.closest ? event.target.closest("[data-prose-import]") : null;
+      if (!button) return;
+      importWorkProse(state).catch((error) => {
+        console.warn("catalogue_work_editor: unexpected prose import failure", error);
       });
     });
     saveButton.addEventListener("click", () => saveCurrentWork(state).catch((error) => {
