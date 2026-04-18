@@ -1,7 +1,7 @@
 ---
 doc_id: catalogue-work-editor
 title: Catalogue Work Editor
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 34
 ---
@@ -29,6 +29,10 @@ The first implementation covers:
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
 - provide a direct `New Detail` entry point for the current work
+- list the current work's file records
+- list the current work's link records
+- link into the dedicated work-file and work-link editors
+- provide direct `New File` and `New Link` entry points for the current work
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
@@ -38,6 +42,8 @@ The first implementation covers:
 It does not yet:
 
 - edit work details inline on the work page
+- edit work files inline on the work page
+- edit work links inline on the work page
 - edit series records directly
 - update prose or media files
 - paginate detail/member lists
@@ -75,6 +81,19 @@ Locked constraints for this phase:
 - works with multiple detail sections render as multiple grouped lists
 - this area is navigation into the detail editor, not inline editing
 
+## File And Link Navigation Surface
+
+The work editor now also includes file and link summary sections.
+
+Current behavior:
+
+- list current `WorkFiles` records for the work
+- list current `WorkLinks` records for the work
+- open focused file and link editors from each row
+- provide direct `New File` and `New Link` entry points from the current work
+
+These areas are intentionally summary/navigation surfaces in this phase, not inline editors.
+
 ## Current Editable Fields
 
 - `status`
@@ -100,6 +119,8 @@ Locked constraints for this phase:
 ## Related References
 
 - [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
+- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
 - [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
 - [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
 - [Implementation Plan](/docs/?scope=studio&doc=new-pipeline-implementation-plan)

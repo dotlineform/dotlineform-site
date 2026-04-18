@@ -14,6 +14,10 @@ const DEFAULT_STUDIO_CONFIG = {
       catalogue_new_work_editor: "/studio/catalogue-new-work/",
       catalogue_work_detail_editor: "/studio/catalogue-work-detail/",
       catalogue_new_work_detail_editor: "/studio/catalogue-new-work-detail/",
+      catalogue_work_file_editor: "/studio/catalogue-work-file/",
+      catalogue_new_work_file_editor: "/studio/catalogue-new-work-file/",
+      catalogue_work_link_editor: "/studio/catalogue-work-link/",
+      catalogue_new_work_link_editor: "/studio/catalogue-new-work-link/",
       catalogue_series_editor: "/studio/catalogue-series/",
       catalogue_new_series_editor: "/studio/catalogue-new-series/",
       tag_registry: "/studio/tag-registry/",
@@ -45,6 +49,8 @@ const DEFAULT_STUDIO_CONFIG = {
         catalogue_lookup_meta: "/assets/studio/data/catalogue_lookup/meta.json",
         catalogue_lookup_work_base: "/assets/studio/data/catalogue_lookup/works/",
         catalogue_lookup_work_detail_base: "/assets/studio/data/catalogue_lookup/work_details/",
+        catalogue_lookup_work_file_base: "/assets/studio/data/catalogue_lookup/work_files/",
+        catalogue_lookup_work_link_base: "/assets/studio/data/catalogue_lookup/work_links/",
         catalogue_lookup_series_base: "/assets/studio/data/catalogue_lookup/series/"
       },
       site: {

@@ -410,6 +410,16 @@ function buildDetailEditorHref(state, detailUid) {
   return `${route}?detail=${encodeURIComponent(detailUid)}`;
 }
 
+function buildWorkFileEditorHref(state, fileUid) {
+  const route = getStudioRoute(state.config, "catalogue_work_file_editor");
+  return `${route}?file=${encodeURIComponent(fileUid)}`;
+}
+
+function buildWorkLinkEditorHref(state, linkUid) {
+  const route = getStudioRoute(state.config, "catalogue_work_link_editor");
+  return `${route}?link=${encodeURIComponent(linkUid)}`;
+}
+
 async function loadWorkLookupRecord(state, workId) {
   return loadStudioLookupRecordJson(state.config, "catalogue_lookup_work_base", workId, { cache: "no-store" });
 }
@@ -423,6 +433,46 @@ function renderDetailRows(state, details) {
       <div class="catalogueWorkDetails__row">
         <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(detailUid)}</a>
         <span class="catalogueWorkDetails__title">${escapeHtml(title)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function getWorkFiles(state, workId) {
+  if (!state.currentLookup || state.currentWorkId !== workId) return [];
+  const items = Array.isArray(state.currentLookup.work_files) ? state.currentLookup.work_files : [];
+  return items.slice().sort((a, b) => normalizeText(a && a.file_uid).localeCompare(normalizeText(b && b.file_uid), undefined, { numeric: true, sensitivity: "base" }));
+}
+
+function getWorkLinks(state, workId) {
+  if (!state.currentLookup || state.currentWorkId !== workId) return [];
+  const items = Array.isArray(state.currentLookup.work_links) ? state.currentLookup.work_links : [];
+  return items.slice().sort((a, b) => normalizeText(a && a.link_uid).localeCompare(normalizeText(b && b.link_uid), undefined, { numeric: true, sensitivity: "base" }));
+}
+
+function renderWorkFileRows(state, items) {
+  return items.map((item) => {
+    const fileUid = normalizeText(item && item.file_uid);
+    const label = displayValue(item && item.label);
+    const href = buildWorkFileEditorHref(state, fileUid);
+    return `
+      <div class="catalogueWorkDetails__row">
+        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(fileUid)}</a>
+        <span class="catalogueWorkDetails__title">${escapeHtml(label)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderWorkLinkRows(state, items) {
+  return items.map((item) => {
+    const linkUid = normalizeText(item && item.link_uid);
+    const label = displayValue(item && item.label);
+    const href = buildWorkLinkEditorHref(state, linkUid);
+    return `
+      <div class="catalogueWorkDetails__row">
+        <a class="catalogueWorkDetails__link" href="${escapeHtml(href)}">${escapeHtml(linkUid)}</a>
+        <span class="catalogueWorkDetails__title">${escapeHtml(label)}</span>
       </div>
     `;
   }).join("");
@@ -486,6 +536,48 @@ function updateDetailSections(state) {
   state.detailsResultsNode.innerHTML = blocks.join("");
 }
 
+function updateWorkFilesSection(state) {
+  if (!state.filesResultsNode || !state.filesMetaNode) return;
+  if (!state.currentWorkId) {
+    state.filesMetaNode.textContent = "";
+    state.filesResultsNode.innerHTML = "";
+    return;
+  }
+  const items = getWorkFiles(state, state.currentWorkId);
+  if (!items.length) {
+    state.filesMetaNode.textContent = "";
+    state.filesResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "files_empty", "No work files for this work."))}</p>`;
+    return;
+  }
+  state.filesMetaNode.textContent = `${items.length} total`;
+  state.filesResultsNode.innerHTML = `
+    <section class="catalogueWorkDetails__section">
+      <div class="catalogueWorkDetails__rows">${renderWorkFileRows(state, items)}</div>
+    </section>
+  `;
+}
+
+function updateWorkLinksSection(state) {
+  if (!state.linksResultsNode || !state.linksMetaNode) return;
+  if (!state.currentWorkId) {
+    state.linksMetaNode.textContent = "";
+    state.linksResultsNode.innerHTML = "";
+    return;
+  }
+  const items = getWorkLinks(state, state.currentWorkId);
+  if (!items.length) {
+    state.linksMetaNode.textContent = "";
+    state.linksResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "links_empty", "No work links for this work."))}</p>`;
+    return;
+  }
+  state.linksMetaNode.textContent = `${items.length} total`;
+  state.linksResultsNode.innerHTML = `
+    <section class="catalogueWorkDetails__section">
+      <div class="catalogueWorkDetails__rows">${renderWorkLinkRows(state, items)}</div>
+    </section>
+  `;
+}
+
 function updateSummary(state) {
   const record = state.currentRecord;
   state.metaNode.textContent = record
@@ -515,7 +607,17 @@ function updateSummary(state) {
     const base = getStudioRoute(state.config, "catalogue_new_work_detail_editor");
     state.newDetailLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
   }
+  if (state.newFileLinkNode) {
+    const base = getStudioRoute(state.config, "catalogue_new_work_file_editor");
+    state.newFileLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+  }
+  if (state.newLinkLinkNode) {
+    const base = getStudioRoute(state.config, "catalogue_new_work_link_editor");
+    state.newLinkLinkNode.href = record ? `${base}?work=${encodeURIComponent(record.work_id)}` : base;
+  }
   updateDetailSections(state);
+  updateWorkFilesSection(state);
+  updateWorkLinksSection(state);
 }
 
 function formatBuildPreview(state, build) {
@@ -873,6 +975,14 @@ async function init() {
   const detailSearchNode = document.getElementById("catalogueWorkDetailSearch");
   const detailsMetaNode = document.getElementById("catalogueWorkDetailsMeta");
   const detailsResultsNode = document.getElementById("catalogueWorkDetailsResults");
+  const filesHeadingNode = document.getElementById("catalogueWorkFilesHeading");
+  const newFileLinkNode = document.getElementById("catalogueWorkNewFileLink");
+  const filesMetaNode = document.getElementById("catalogueWorkFilesMeta");
+  const filesResultsNode = document.getElementById("catalogueWorkFilesResults");
+  const linksHeadingNode = document.getElementById("catalogueWorkLinksHeading");
+  const newLinkLinkNode = document.getElementById("catalogueWorkNewLinkLink");
+  const linksMetaNode = document.getElementById("catalogueWorkLinksMeta");
+  const linksResultsNode = document.getElementById("catalogueWorkLinksResults");
   const searchNode = document.getElementById("catalogueWorkSearch");
   const popupNode = document.getElementById("catalogueWorkPopup");
   const popupListNode = document.getElementById("catalogueWorkPopupList");
@@ -885,7 +995,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -926,6 +1036,12 @@ async function init() {
     detailsMetaNode,
     detailsResultsNode,
     newDetailLinkNode,
+    filesMetaNode,
+    filesResultsNode,
+    newFileLinkNode,
+    linksMetaNode,
+    linksResultsNode,
+    newLinkLinkNode,
     metaNode
   };
 
@@ -939,6 +1055,10 @@ async function init() {
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
     newDetailLinkNode.textContent = t(state, "details_new_button", "New Detail");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
+    filesHeadingNode.textContent = t(state, "files_heading", "work files");
+    newFileLinkNode.textContent = t(state, "files_new_button", "New File");
+    linksHeadingNode.textContent = t(state, "links_heading", "work links");
+    newLinkLinkNode.textContent = t(state, "links_new_button", "New Link");
     openButton.textContent = t(state, "open_button", "Open");
     saveButton.textContent = t(state, "save_button", "Save Source");
     buildButton.textContent = t(state, "build_button", "Save + Rebuild");

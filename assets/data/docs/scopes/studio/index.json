@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T09:15:30Z",
+  "generated_at": "2026-04-18T09:43:54Z",
   "docs": [
     {
       "scope": "studio",
@@ -137,7 +137,7 @@
       "scope": "studio",
       "doc_id": "studio-runtime",
       "title": "Studio Runtime",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 10,
       "source_path": "studio/studio-runtime.md",
@@ -258,7 +258,7 @@
       "scope": "studio",
       "doc_id": "studio-config-and-save-flow",
       "title": "Studio Config and Save Flow",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 20,
       "source_path": "studio/studio-config-and-save-flow.md",
@@ -467,7 +467,7 @@
       "scope": "studio",
       "doc_id": "catalogue-work-editor",
       "title": "Catalogue Work Editor",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 34,
       "source_path": "studio/catalogue-work-editor.md",
@@ -553,6 +553,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "catalogue-work-file-editor",
+      "title": "Catalogue Work File Editor",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 36,
+      "source_path": "studio/catalogue-work-file-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-file-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-file-editor.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "catalogue-new-series-editor",
       "title": "New Catalogue Series",
       "last_updated": "2026-04-17",
@@ -561,6 +572,39 @@
       "source_path": "studio/catalogue-new-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-new-work-file-editor",
+      "title": "New Catalogue Work File",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 37,
+      "source_path": "studio/catalogue-new-work-file-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-file-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-work-link-editor",
+      "title": "Catalogue Work Link Editor",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 38,
+      "source_path": "studio/catalogue-work-link-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-work-link-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-link-editor.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "catalogue-new-work-link-editor",
+      "title": "New Catalogue Work Link",
+      "last_updated": "2026-04-18",
+      "parent_id": "studio",
+      "sort_order": 39,
+      "source_path": "studio/catalogue-new-work-link-editor.md",
+      "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-link-editor.json"
     },
     {
       "scope": "studio",
@@ -841,7 +885,7 @@
       "scope": "studio",
       "doc_id": "scripts-catalogue-write-server",
       "title": "Catalogue Write Server",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 71,
       "source_path": "scripts/scripts-catalogue-write-server.md",
@@ -940,7 +984,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 110,
       "source_path": "site-change-log.md",

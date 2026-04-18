@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_file_record_v1"
+  },
+  "work_file": {
+    "file_uid": "00008:nerve",
+    "work_id": "00008",
+    "filename": "nerve.pdf",
+    "label": "nerve.pdf",
+    "status": "published",
+    "published_date": "2026-04-01"
+  },
+  "record_hash": "7be4e7431e36ae236ccc002f722f651221f8e9347ad52eba9a894007b9b41505",
+  "work_summary": {
+    "work_id": "00008",
+    "title": "nerve"
+  }
+}

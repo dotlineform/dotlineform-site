@@ -468,6 +468,7 @@ Work:
 - preserve existing work-page metadata contracts fed by files and links
 - add local write endpoints for work-file and work-link saves and deletes
 - include affected parent work IDs in rebuild preview/apply responses
+- keep files and links as focused child editors, not large inline work-page forms
 
 Acceptance:
 
@@ -490,6 +491,7 @@ Mitigation:
 
 - keep files and links as focused work-attached child editors, similar to work details
 - keep the initial UI narrow: list current records on the work editor and open focused add/edit flows for changes
+- implemented first increment as work-editor file/link summaries plus focused create/edit routes for `WorkFiles` and `WorkLinks`
 
 ## Phase 12: Workbook Import And Export
 

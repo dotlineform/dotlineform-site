@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-catalogue-write-server
 title: Catalogue Write Server
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: scripts
 sort_order: 71
 ---
@@ -29,12 +29,18 @@ Exposed endpoints:
 - `POST /catalogue/work/save`
 - `POST /catalogue/work-detail/create`
 - `POST /catalogue/work-detail/save`
+- `POST /catalogue/work-file/create`
+- `POST /catalogue/work-file/save`
+- `POST /catalogue/work-file/delete`
+- `POST /catalogue/work-link/create`
+- `POST /catalogue/work-link/save`
+- `POST /catalogue/work-link/delete`
 - `POST /catalogue/series/create`
 - `POST /catalogue/series/save`
 - `POST /catalogue/build-preview`
 - `POST /catalogue/build-apply`
 
-The current implementation can create draft work, work-detail, and series records, saves existing work/work-detail/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files or write media files.
+The current implementation can create draft work, work-detail, work-file, work-link, and series records, saves existing work/work-detail/work-file/work-link/series records in canonical catalogue source JSON, and can run a scoped JSON-source rebuild for one work or one series scope. It does not write prose files or write media files.
 
 After successful canonical writes, the server also refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`.
 
@@ -145,6 +151,92 @@ Request behavior:
 - `title` is required
 - the server derives and validates the normalized `detail_uid`
 
+`POST /catalogue/work-file/save` expects:
+
+```json
+{
+  "file_uid": "00008:nerve",
+  "expected_record_hash": "optional-current-record-sha256",
+  "record": {
+    "filename": "nerve.pdf",
+    "label": "nerve.pdf",
+    "status": "published",
+    "published_date": "2026-04-01"
+  }
+}
+```
+
+Request behavior:
+
+- `file_uid` must resolve to an existing canonical file record
+- `filename` and `label` are required
+- `record` may be partial, but all keys must be known work-file source fields
+- the parent `work_id` must remain valid
+- `expected_record_hash`, when provided, must match the current stored file hash or the server returns `409 Conflict`
+
+`POST /catalogue/work-file/create` expects:
+
+```json
+{
+  "work_id": "01942",
+  "record": {
+    "filename": "new-file.pdf",
+    "label": "new-file.pdf",
+    "status": "draft"
+  }
+}
+```
+
+Request behavior:
+
+- parent `work_id` must already exist
+- blank or missing `status` is normalized to `draft`
+- `filename` and `label` are required
+- the server derives and validates the normalized `file_uid`
+
+`POST /catalogue/work-link/save` expects:
+
+```json
+{
+  "link_uid": "00457:bandcamp",
+  "expected_record_hash": "optional-current-record-sha256",
+  "record": {
+    "url": "https://dotlineform.bandcamp.com/album/intuition",
+    "label": "Bandcamp",
+    "status": "published",
+    "published_date": "2026-04-01"
+  }
+}
+```
+
+Request behavior:
+
+- `link_uid` must resolve to an existing canonical link record
+- `url` and `label` are required
+- `record` may be partial, but all keys must be known work-link source fields
+- the parent `work_id` must remain valid
+- `expected_record_hash`, when provided, must match the current stored link hash or the server returns `409 Conflict`
+
+`POST /catalogue/work-link/create` expects:
+
+```json
+{
+  "work_id": "01942",
+  "record": {
+    "url": "https://example.com/work",
+    "label": "Reference link",
+    "status": "draft"
+  }
+}
+```
+
+Request behavior:
+
+- parent `work_id` must already exist
+- blank or missing `status` is normalized to `draft`
+- `url` and `label` are required
+- the server derives and validates the normalized `link_uid`
+
 `POST /catalogue/series/save` expects:
 
 ```json
@@ -249,7 +341,7 @@ The server validates the proposed update through the shared catalogue source loa
 - binds to `127.0.0.1` only
 - CORS allows loopback origins only
 - write target is allowlisted to canonical catalogue source JSON files under `assets/studio/data/catalogue/`
-- current save endpoints write only `assets/studio/data/catalogue/works.json`, `assets/studio/data/catalogue/work_details.json`, and `assets/studio/data/catalogue/series.json`
+- current save endpoints write only canonical catalogue source JSON under `assets/studio/data/catalogue/`, including `works.json`, `work_details.json`, `work_files.json`, `work_links.json`, and `series.json`
 - timestamped backup bundles are created under `var/studio/catalogue/backups/`
 - event logs are written under `var/studio/catalogue/logs/`
 - logs include IDs, changed fields, status, and error summaries only; they do not include full submitted records

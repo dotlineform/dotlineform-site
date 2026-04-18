@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_link_record_v1"
+  },
+  "work_link": {
+    "link_uid": "00457:bandcamp",
+    "work_id": "00457",
+    "url": "https://dotlineform.bandcamp.com/album/intuition",
+    "label": "Bandcamp",
+    "status": "published",
+    "published_date": "2026-04-01"
+  },
+  "record_hash": "da2a9d5993517ed4d9d6fb3cc45b23a75e2cd00ccc4fa0fdfc13126abd459c8e",
+  "work_summary": {
+    "work_id": "00457",
+    "title": "intuition (2020)"
+  }
+}

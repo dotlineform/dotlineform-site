@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_link_record_v1"
+  },
+  "work_link": {
+    "link_uid": "01250:bandcamp",
+    "work_id": "01250",
+    "url": "https://dotlineform.bandcamp.com/album/genetic",
+    "label": "Bandcamp",
+    "status": "published",
+    "published_date": "2026-04-01"
+  },
+  "record_hash": "28cc8d9e26d4cb9595106d7ae75bc20860084e44c5cba02197a4a1f8e4c460f7",
+  "work_summary": {
+    "work_id": "01250",
+    "title": "genetic"
+  }
+}

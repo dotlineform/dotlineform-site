@@ -1,0 +1,18 @@
+{
+  "header": {
+    "schema": "studio_catalogue_lookup_work_file_record_v1"
+  },
+  "work_file": {
+    "file_uid": "00160:mouse-story",
+    "work_id": "00160",
+    "filename": "mouse story.pdf",
+    "label": "mouse story.pdf",
+    "status": "published",
+    "published_date": "2026-04-01"
+  },
+  "record_hash": "10ed807f15931500f5b5ace3909dada0632a5b40c29bae1ad883e78fba5477fb",
+  "work_summary": {
+    "work_id": "00160",
+    "title": "mouse story"
+  }
+}

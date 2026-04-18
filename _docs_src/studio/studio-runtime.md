@@ -1,7 +1,7 @@
 ---
 doc_id: studio-runtime
 title: Studio Runtime
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 10
 ---
@@ -41,6 +41,10 @@ Current route inventory:
 - `studio/catalogue-work/index.md`
 - `studio/catalogue-new-work-detail/index.md`
 - `studio/catalogue-work-detail/index.md`
+- `studio/catalogue-new-work-file/index.md`
+- `studio/catalogue-work-file/index.md`
+- `studio/catalogue-new-work-link/index.md`
+- `studio/catalogue-work-link/index.md`
 - `studio/catalogue-series/index.md`
 - `studio/catalogue-new-series/index.md`
 - `studio/tag-groups/index.md`
@@ -58,6 +62,10 @@ Current page-level doc links:
 - New Catalogue Work -> `/docs/?scope=studio&doc=catalogue-new-work-editor`
 - Catalogue Work Detail Editor -> `/docs/?scope=studio&doc=catalogue-work-detail-editor`
 - New Catalogue Work Detail -> `/docs/?scope=studio&doc=catalogue-new-work-detail-editor`
+- Catalogue Work File Editor -> `/docs/?scope=studio&doc=catalogue-work-file-editor`
+- New Catalogue Work File -> `/docs/?scope=studio&doc=catalogue-new-work-file-editor`
+- Catalogue Work Link Editor -> `/docs/?scope=studio&doc=catalogue-work-link-editor`
+- New Catalogue Work Link -> `/docs/?scope=studio&doc=catalogue-new-work-link-editor`
 - Catalogue Series Editor -> `/docs/?scope=studio&doc=catalogue-series-editor`
 - New Catalogue Series -> `/docs/?scope=studio&doc=catalogue-new-series-editor`
 - Tag Registry -> `/docs/?scope=studio&doc=tag-registry`
@@ -84,6 +92,10 @@ Current page controllers:
 - `assets/studio/js/catalogue-work-editor.js`
 - `assets/studio/js/catalogue-new-work-detail-editor.js`
 - `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-new-work-file-editor.js`
+- `assets/studio/js/catalogue-work-file-editor.js`
+- `assets/studio/js/catalogue-new-work-link-editor.js`
+- `assets/studio/js/catalogue-work-link-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
 - `assets/studio/js/catalogue-new-series-editor.js`
 - `assets/studio/js/tag-groups.js`
@@ -132,6 +144,8 @@ What it starts:
 - `bundle exec ruby scripts/build_docs.rb --write`
 - `bundle exec jekyll serve --host 127.0.0.1 --port 4000`
 - `scripts/studio/tag_write_server.py`
+- `scripts/studio/catalogue_write_server.py`
+- `scripts/studio/catalogue_write_server.py`
 
 What it does not start:
 

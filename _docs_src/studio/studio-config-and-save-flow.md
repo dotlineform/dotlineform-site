@@ -1,7 +1,7 @@
 ---
 doc_id: studio-config-and-save-flow
 title: Studio Config and Save Flow
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: studio
 sort_order: 20
 ---
@@ -37,8 +37,7 @@ Current responsibilities:
 Current route/data-path responsibilities include:
 
 - Studio route lookup such as `series_tags`, `series_tag_editor`, `tag_registry`, `tag_aliases`, and `tag_groups`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, and `catalogue_work_editor`
-- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, `catalogue_work_detail_editor`, and `catalogue_series_editor`
+- catalogue route lookup such as `catalogue_status`, `catalogue_activity`, `catalogue_work_editor`, `catalogue_work_detail_editor`, `catalogue_work_file_editor`, `catalogue_work_link_editor`, and `catalogue_series_editor`
 - shared docs/search route lookup such as `docs_page`, `library_page`, and `search`
 - Studio-owned JSON paths
 - shared catalogue index paths
@@ -83,8 +82,17 @@ Current write endpoints include:
 - `/promote-tag-alias`
 - `/promote-tag-alias-preview`
 - `http://127.0.0.1:8788/health`
+- `http://127.0.0.1:8788/catalogue/work/create`
 - `http://127.0.0.1:8788/catalogue/work/save`
+- `http://127.0.0.1:8788/catalogue/work-detail/create`
 - `http://127.0.0.1:8788/catalogue/work-detail/save`
+- `http://127.0.0.1:8788/catalogue/work-file/create`
+- `http://127.0.0.1:8788/catalogue/work-file/save`
+- `http://127.0.0.1:8788/catalogue/work-file/delete`
+- `http://127.0.0.1:8788/catalogue/work-link/create`
+- `http://127.0.0.1:8788/catalogue/work-link/save`
+- `http://127.0.0.1:8788/catalogue/work-link/delete`
+- `http://127.0.0.1:8788/catalogue/series/create`
 - `http://127.0.0.1:8788/catalogue/series/save`
 - `http://127.0.0.1:8788/catalogue/build-preview`
 - `http://127.0.0.1:8788/catalogue/build-apply`
@@ -133,6 +141,24 @@ Catalogue work detail local save behavior:
 - the server validates the parent work reference before writing
 - the server writes `work_details.json` only after full-source validation succeeds
 
+Catalogue work file local save behavior:
+
+- the file editor sends `POST /catalogue/work-file/save` to the same local catalogue write service
+- the request includes `file_uid`, a browser-computed record hash, and a normalized file patch
+- draft create uses `POST /catalogue/work-file/create`
+- delete uses `POST /catalogue/work-file/delete`
+- the server validates the parent work reference before writing
+- the server writes `work_files.json` only after full-source validation succeeds
+
+Catalogue work link local save behavior:
+
+- the link editor sends `POST /catalogue/work-link/save` to the same local catalogue write service
+- the request includes `link_uid`, a browser-computed record hash, and a normalized link patch
+- draft create uses `POST /catalogue/work-link/create`
+- delete uses `POST /catalogue/work-link/delete`
+- the server validates the parent work reference before writing
+- the server writes `work_links.json` only after full-source validation succeeds
+
 Catalogue series local save behavior:
 
 - the series editor sends `POST /catalogue/series/save` to the same local catalogue write service
@@ -178,6 +204,7 @@ Current ownership boundary:
 
 - Studio reads both Studio-owned JSON and shared site/search artifacts
 - editor routes now prefer derived lookup JSON under `assets/studio/data/catalogue_lookup/` instead of loading full canonical source maps into the browser
+- work, detail, file, link, and series editors now read focused derived lookup records rather than full canonical source maps
 - Studio writes only through the local save service
 - detailed payload shape belongs in [Data Models](/docs/?scope=studio&doc=data-models), not here
 

@@ -1,12 +1,18 @@
 ---
 doc_id: site-change-log
 title: Site Change Log
-last_updated: 2026-04-17
+last_updated: 2026-04-18
 parent_id: ""
 sort_order: 110
 ---
 
 # Site Change Log
+
+## 2026-04-18
+
+- added the Phase 11 work-file and work-link editing flow, including summaries on `/studio/catalogue-work/`, focused create/edit pages, canonical `work_files.json` and `work_links.json` write endpoints, and parent-work scoped rebuild support
+- extended the derived catalogue lookup layer with focused work-file and work-link records so Studio can open those editors without loading full source maps
+- updated Studio runtime/docs routing and local save-flow docs for the new work-file and work-link surfaces
 
 ## 2026-04-17
 

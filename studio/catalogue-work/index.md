@@ -74,6 +74,24 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
     <p class="tagStudioForm__meta" id="catalogueWorkDetailsMeta"></p>
     <div class="catalogueWorkDetails__results" id="catalogueWorkDetailsResults"></div>
   </section>
+
+  <section class="tagStudio__panel catalogueWorkDetails">
+    <div class="tagStudio__headingRow">
+      <h2 class="tagStudio__heading" id="catalogueWorkFilesHeading">work files</h2>
+      <a class="tagStudio__button" id="catalogueWorkNewFileLink" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}">New File</a>
+    </div>
+    <p class="tagStudioForm__meta" id="catalogueWorkFilesMeta"></p>
+    <div class="catalogueWorkDetails__results" id="catalogueWorkFilesResults"></div>
+  </section>
+
+  <section class="tagStudio__panel catalogueWorkDetails">
+    <div class="tagStudio__headingRow">
+      <h2 class="tagStudio__heading" id="catalogueWorkLinksHeading">work links</h2>
+      <a class="tagStudio__button" id="catalogueWorkNewLinkLink" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}">New Link</a>
+    </div>
+    <p class="tagStudioForm__meta" id="catalogueWorkLinksMeta"></p>
+    <div class="catalogueWorkDetails__results" id="catalogueWorkLinksResults"></div>
+  </section>
 </div>
 
 <p class="tagStudio__status" id="catalogueWorkLoading">loading catalogue work editor…</p>

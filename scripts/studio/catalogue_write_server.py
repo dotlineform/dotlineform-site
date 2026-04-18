@@ -51,6 +51,10 @@ from catalogue_source import (  # noqa: E402
     DEFAULT_SOURCE_DIR,
     DETAIL_FIELDS,
     DETAIL_TEXT_FIELDS,
+    FILE_FIELDS,
+    FILE_TEXT_FIELDS,
+    LINK_FIELDS,
+    LINK_TEXT_FIELDS,
     SERIES_FIELDS,
     SERIES_TEXT_FIELDS,
     SOURCE_FILES,
@@ -62,8 +66,10 @@ from catalogue_source import (  # noqa: E402
     normalize_status,
     payload_for_map,
     records_from_json_source,
+    safe_uid_fragment,
     slug_id,
     sort_record_map,
+    unique_uid,
     validate_source_records,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
@@ -81,6 +87,12 @@ WORK_SAVE_PATH = "/catalogue/work/save"
 WORK_CREATE_PATH = "/catalogue/work/create"
 DETAIL_SAVE_PATH = "/catalogue/work-detail/save"
 DETAIL_CREATE_PATH = "/catalogue/work-detail/create"
+WORK_FILE_SAVE_PATH = "/catalogue/work-file/save"
+WORK_FILE_CREATE_PATH = "/catalogue/work-file/create"
+WORK_FILE_DELETE_PATH = "/catalogue/work-file/delete"
+WORK_LINK_SAVE_PATH = "/catalogue/work-link/save"
+WORK_LINK_CREATE_PATH = "/catalogue/work-link/create"
+WORK_LINK_DELETE_PATH = "/catalogue/work-link/delete"
 SERIES_SAVE_PATH = "/catalogue/series/save"
 SERIES_CREATE_PATH = "/catalogue/series/create"
 BUILD_PREVIEW_PATH = "/catalogue/build-preview"
@@ -274,6 +286,34 @@ def extract_series_work_updates(body: Mapping[str, Any]) -> list[Dict[str, Any]]
     return updates
 
 
+def extract_work_file_update(body: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_record = body.get("record", body.get("work_file"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in FILE_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in FILE_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one work file field")
+    return dict(raw_record)
+
+
+def extract_work_link_update(body: Mapping[str, Any]) -> Dict[str, Any]:
+    raw_record = body.get("record", body.get("work_link"))
+    if raw_record is None:
+        raw_record = {field: body[field] for field in LINK_FIELDS if field in body}
+    if not isinstance(raw_record, dict):
+        raise ValueError("record must be an object")
+    unknown = sorted(str(key) for key in raw_record.keys() if str(key) not in LINK_FIELDS)
+    if unknown:
+        raise ValueError(f"record contains unsupported fields: {', '.join(unknown)}")
+    if not raw_record:
+        raise ValueError("record must include at least one work link field")
+    return dict(raw_record)
+
+
 def normalize_work_update(work_id: str, current_record: Mapping[str, Any], update: Mapping[str, Any]) -> Dict[str, Any]:
     merged = dict(current_record)
     merged.update(update)
@@ -332,6 +372,38 @@ def normalize_series_update(
     return normalize_source_record(merged, SERIES_FIELDS, text_fields=SERIES_TEXT_FIELDS)
 
 
+def normalize_work_file_update(
+    file_uid: str,
+    current_record: Mapping[str, Any],
+    update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    merged = dict(current_record)
+    merged.update(update)
+    merged["file_uid"] = str(merged.get("file_uid") or file_uid).strip()
+    if merged["file_uid"] != file_uid:
+        raise ValueError("record.file_uid must match file_uid")
+    merged["work_id"] = slug_id(merged.get("work_id"))
+    if "status" in update:
+        merged["status"] = normalize_status(update.get("status")) or None
+    return normalize_source_record(merged, FILE_FIELDS, text_fields=FILE_TEXT_FIELDS)
+
+
+def normalize_work_link_update(
+    link_uid: str,
+    current_record: Mapping[str, Any],
+    update: Mapping[str, Any],
+) -> Dict[str, Any]:
+    merged = dict(current_record)
+    merged.update(update)
+    merged["link_uid"] = str(merged.get("link_uid") or link_uid).strip()
+    if merged["link_uid"] != link_uid:
+        raise ValueError("record.link_uid must match link_uid")
+    merged["work_id"] = slug_id(merged.get("work_id"))
+    if "status" in update:
+        merged["status"] = normalize_status(update.get("status")) or None
+    return normalize_source_record(merged, LINK_FIELDS, text_fields=LINK_TEXT_FIELDS)
+
+
 def changed_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
     return [field for field in after.keys() if before.get(field) != after.get(field)]
 
@@ -384,6 +456,66 @@ def validate_created_detail_records(source_dir: Path, detail_uid: str, detail_re
         series=source_records.series,
         work_files=source_records.work_files,
         work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_updated_file_records(source_dir: Path, file_uid: str, file_record: Dict[str, Any]) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_files[file_uid] = file_record
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=source_records.work_details,
+        series=source_records.series,
+        work_files=sort_record_map(source_records.work_files),
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_created_file_records(source_dir: Path, file_uid: str, file_record: Dict[str, Any]) -> list[str]:
+    return validate_updated_file_records(source_dir, file_uid, file_record)
+
+
+def validate_deleted_file_records(source_dir: Path, file_uid: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_files.pop(file_uid, None)
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=source_records.work_details,
+        series=source_records.series,
+        work_files=sort_record_map(source_records.work_files),
+        work_links=source_records.work_links,
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_updated_link_records(source_dir: Path, link_uid: str, link_record: Dict[str, Any]) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_links[link_uid] = link_record
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=source_records.work_details,
+        series=source_records.series,
+        work_files=source_records.work_files,
+        work_links=sort_record_map(source_records.work_links),
+    )
+    return validate_source_records(normalized_records)
+
+
+def validate_created_link_records(source_dir: Path, link_uid: str, link_record: Dict[str, Any]) -> list[str]:
+    return validate_updated_link_records(source_dir, link_uid, link_record)
+
+
+def validate_deleted_link_records(source_dir: Path, link_uid: str) -> list[str]:
+    source_records = records_from_json_source(source_dir)
+    source_records.work_links.pop(link_uid, None)
+    normalized_records = CatalogueSourceRecords(
+        works=source_records.works,
+        work_details=source_records.work_details,
+        series=source_records.series,
+        work_files=source_records.work_files,
+        work_links=sort_record_map(source_records.work_links),
     )
     return validate_source_records(normalized_records)
 
@@ -452,6 +584,22 @@ def load_series_payload(path: Path) -> Dict[str, Any]:
     return payload
 
 
+def load_work_files_payload(path: Path) -> Dict[str, Any]:
+    payload = load_json_file(path)
+    work_files = payload.get("work_files")
+    if not isinstance(work_files, dict):
+        raise ValueError("work files source file must include a work_files object")
+    return payload
+
+
+def load_work_links_payload(path: Path) -> Dict[str, Any]:
+    payload = load_json_file(path)
+    work_links = payload.get("work_links")
+    if not isinstance(work_links, dict):
+        raise ValueError("work links source file must include a work_links object")
+    return payload
+
+
 def atomic_write_many(payloads_by_path: Dict[Path, Dict[str, Any]], backups_dir: Path) -> list[Path]:
     backups_dir.mkdir(parents=True, exist_ok=True)
     stamp = backup_stamp_now()
@@ -510,6 +658,8 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         lookup_dir: Path,
         works_path: Path,
         work_details_path: Path,
+        work_files_path: Path,
+        work_links_path: Path,
         series_path: Path,
         allowed_write_paths: set[Path],
         backups_dir: Path,
@@ -521,6 +671,8 @@ class CatalogueWriteServer(ThreadingHTTPServer):
         self.lookup_dir = lookup_dir.resolve()
         self.works_path = works_path.resolve()
         self.work_details_path = work_details_path.resolve()
+        self.work_files_path = work_files_path.resolve()
+        self.work_links_path = work_links_path.resolve()
         self.series_path = series_path.resolve()
         self.allowed_write_paths = {path.resolve() for path in allowed_write_paths}
         self.backups_dir = backups_dir.resolve()
@@ -560,6 +712,12 @@ class Handler(BaseHTTPRequestHandler):
             WORK_SAVE_PATH,
             DETAIL_CREATE_PATH,
             DETAIL_SAVE_PATH,
+            WORK_FILE_CREATE_PATH,
+            WORK_FILE_SAVE_PATH,
+            WORK_FILE_DELETE_PATH,
+            WORK_LINK_CREATE_PATH,
+            WORK_LINK_SAVE_PATH,
+            WORK_LINK_DELETE_PATH,
             SERIES_SAVE_PATH,
             SERIES_CREATE_PATH,
             BUILD_PREVIEW_PATH,
@@ -623,6 +781,24 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if self.path == DETAIL_SAVE_PATH:
                 self._handle_work_detail_save(allowed)
+                return
+            if self.path == WORK_FILE_CREATE_PATH:
+                self._handle_work_file_create(allowed)
+                return
+            if self.path == WORK_FILE_SAVE_PATH:
+                self._handle_work_file_save(allowed)
+                return
+            if self.path == WORK_FILE_DELETE_PATH:
+                self._handle_work_file_delete(allowed)
+                return
+            if self.path == WORK_LINK_CREATE_PATH:
+                self._handle_work_link_create(allowed)
+                return
+            if self.path == WORK_LINK_SAVE_PATH:
+                self._handle_work_link_save(allowed)
+                return
+            if self.path == WORK_LINK_DELETE_PATH:
+                self._handle_work_link_delete(allowed)
                 return
             if self.path == SERIES_SAVE_PATH:
                 self._handle_series_save(allowed)
@@ -1013,6 +1189,394 @@ class Handler(BaseHTTPRequestHandler):
                     "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
                 }
             )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_file_create(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        file_update = extract_work_file_update(body)
+        work_id = slug_id(body.get("work_id", file_update.get("work_id")))
+        source_records = records_from_json_source(self.server.source_dir)
+        if work_id not in source_records.works:
+            raise ValueError(f"parent work_id not found: {work_id}")
+        filename = str(file_update.get("filename") or "").strip()
+        label = str(file_update.get("label") or "").strip()
+        if not filename:
+            raise ValueError("work file filename is required")
+        if not label:
+            raise ValueError("work file label is required")
+        work_files_payload = load_work_files_payload(self.server.work_files_path)
+        work_files = work_files_payload["work_files"]
+        used_uids = set(work_files.keys())
+        fragment = safe_uid_fragment(Path(filename).stem or label, "file")
+        file_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
+        blank_record = {field: None for field in FILE_FIELDS}
+        blank_record["file_uid"] = file_uid
+        blank_record["work_id"] = work_id
+        file_update = dict(file_update)
+        file_update["file_uid"] = file_uid
+        file_update["work_id"] = work_id
+        if not normalize_status(file_update.get("status")):
+            file_update["status"] = "draft"
+        created_record = normalize_work_file_update(file_uid, blank_record, file_update)
+        validation_errors = validate_created_file_records(self.server.source_dir, file_uid, created_record)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        target_path = self.server.work_files_path.resolve()
+        if target_path not in self.server.allowed_write_paths:
+            raise ValueError("write target not allowlisted")
+        backup_paths: list[Path] = []
+        if not self.server.dry_run:
+            updated_records = dict(work_files)
+            updated_records[file_uid] = created_record
+            backup_paths = atomic_write_many({target_path: payload_for_map("work_files", updated_records)}, self.server.backups_dir)
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "file_uid": file_uid,
+            "work_id": work_id,
+            "created": True,
+            "changed": True,
+            "changed_fields": changed_fields(blank_record, created_record),
+            "record_hash": record_hash(created_record),
+            "record": created_record,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = True
+        else:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if not self.server.dry_run:
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-file.create"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-file.create",
+                    "status": "completed",
+                    "summary": f"Created draft work file {file_uid}.",
+                    "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_file_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        requested_uid = str(body.get("file_uid") or "").strip()
+        file_update = extract_work_file_update(body)
+        if not requested_uid:
+            requested_uid = str(file_update.get("file_uid") or "").strip()
+        file_uid = requested_uid
+        payload = load_work_files_payload(self.server.work_files_path)
+        record_map = payload["work_files"]
+        current_record = record_map.get(file_uid)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"file_uid not found: {file_uid}")
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "file_uid": file_uid, "current_record_hash": current_hash}, allowed)
+            return
+        updated_record = normalize_work_file_update(file_uid, current_record, file_update)
+        if not str(updated_record.get("filename") or "").strip():
+            raise ValueError("work file filename is required")
+        if not str(updated_record.get("label") or "").strip():
+            raise ValueError("work file label is required")
+        validation_errors = validate_updated_file_records(self.server.source_dir, file_uid, updated_record)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        fields_changed = changed_fields(current_record, updated_record)
+        changed = bool(fields_changed)
+        backup_paths: list[Path] = []
+        if changed:
+            updated_map = dict(record_map)
+            updated_map[file_uid] = updated_record
+            target_path = self.server.work_files_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many({target_path: payload_for_map("work_files", updated_map)}, self.server.backups_dir)
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "file_uid": file_uid,
+            "work_id": updated_record.get("work_id"),
+            "changed": changed,
+            "changed_fields": fields_changed,
+            "record_hash": record_hash(updated_record),
+            "record": updated_record,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-file.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-file.save",
+                    "status": "completed",
+                    "summary": "Saved 1 work file source record.",
+                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_file_delete(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        file_uid = str(body.get("file_uid") or "").strip()
+        if not file_uid:
+            raise ValueError("file_uid is required")
+        payload = load_work_files_payload(self.server.work_files_path)
+        record_map = payload["work_files"]
+        current_record = record_map.get(file_uid)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"file_uid not found: {file_uid}")
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "file_uid": file_uid, "current_record_hash": current_hash}, allowed)
+            return
+        validation_errors = validate_deleted_file_records(self.server.source_dir, file_uid)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        backup_paths: list[Path] = []
+        if not self.server.dry_run:
+            updated_map = dict(record_map)
+            del updated_map[file_uid]
+            target_path = self.server.work_files_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            backup_paths = atomic_write_many({target_path: payload_for_map("work_files", updated_map)}, self.server.backups_dir)
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-file.delete"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-file.delete",
+                    "status": "completed",
+                    "summary": "Deleted 1 work file source record.",
+                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "file_uid": file_uid,
+            "work_id": current_record.get("work_id"),
+            "deleted": True,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = True
+        elif backup_paths:
+            response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_link_create(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        link_update = extract_work_link_update(body)
+        work_id = slug_id(body.get("work_id", link_update.get("work_id")))
+        source_records = records_from_json_source(self.server.source_dir)
+        if work_id not in source_records.works:
+            raise ValueError(f"parent work_id not found: {work_id}")
+        url = str(link_update.get("url") or "").strip()
+        label = str(link_update.get("label") or "").strip()
+        if not url:
+            raise ValueError("work link url is required")
+        if not label:
+            raise ValueError("work link label is required")
+        payload = load_work_links_payload(self.server.work_links_path)
+        record_map = payload["work_links"]
+        used_uids = set(record_map.keys())
+        fragment = safe_uid_fragment(label or url, "link")
+        link_uid = unique_uid(f"{work_id}:{fragment}", used_uids)
+        blank_record = {field: None for field in LINK_FIELDS}
+        blank_record["link_uid"] = link_uid
+        blank_record["work_id"] = work_id
+        link_update = dict(link_update)
+        link_update["link_uid"] = link_uid
+        link_update["work_id"] = work_id
+        if not normalize_status(link_update.get("status")):
+            link_update["status"] = "draft"
+        created_record = normalize_work_link_update(link_uid, blank_record, link_update)
+        validation_errors = validate_created_link_records(self.server.source_dir, link_uid, created_record)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        target_path = self.server.work_links_path.resolve()
+        if target_path not in self.server.allowed_write_paths:
+            raise ValueError("write target not allowlisted")
+        backup_paths: list[Path] = []
+        if not self.server.dry_run:
+            updated_records = dict(record_map)
+            updated_records[link_uid] = created_record
+            backup_paths = atomic_write_many({target_path: payload_for_map("work_links", updated_records)}, self.server.backups_dir)
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "link_uid": link_uid,
+            "work_id": work_id,
+            "created": True,
+            "changed": True,
+            "changed_fields": changed_fields(blank_record, created_record),
+            "record_hash": record_hash(created_record),
+            "record": created_record,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = True
+        else:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if not self.server.dry_run:
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-link.create"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-link.create",
+                    "status": "completed",
+                    "summary": f"Created draft work link {link_uid}.",
+                    "affected": {"works": [work_id], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_link_save(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        requested_uid = str(body.get("link_uid") or "").strip()
+        link_update = extract_work_link_update(body)
+        if not requested_uid:
+            requested_uid = str(link_update.get("link_uid") or "").strip()
+        link_uid = requested_uid
+        payload = load_work_links_payload(self.server.work_links_path)
+        record_map = payload["work_links"]
+        current_record = record_map.get(link_uid)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"link_uid not found: {link_uid}")
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "link_uid": link_uid, "current_record_hash": current_hash}, allowed)
+            return
+        updated_record = normalize_work_link_update(link_uid, current_record, link_update)
+        if not str(updated_record.get("url") or "").strip():
+            raise ValueError("work link url is required")
+        if not str(updated_record.get("label") or "").strip():
+            raise ValueError("work link label is required")
+        validation_errors = validate_updated_link_records(self.server.source_dir, link_uid, updated_record)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        fields_changed = changed_fields(current_record, updated_record)
+        changed = bool(fields_changed)
+        backup_paths: list[Path] = []
+        if changed:
+            updated_map = dict(record_map)
+            updated_map[link_uid] = updated_record
+            target_path = self.server.work_links_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            if not self.server.dry_run:
+                backup_paths = atomic_write_many({target_path: payload_for_map("work_links", updated_map)}, self.server.backups_dir)
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "link_uid": link_uid,
+            "work_id": updated_record.get("work_id"),
+            "changed": changed,
+            "changed_fields": fields_changed,
+            "record_hash": record_hash(updated_record),
+            "record": updated_record,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = changed
+        elif changed:
+            response_payload["saved_at_utc"] = utc_now()
+            if backup_paths:
+                response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
+        if changed and not self.server.dry_run:
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-link.save"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-link.save",
+                    "status": "completed",
+                    "summary": "Saved 1 work link source record.",
+                    "affected": {"works": [updated_record.get("work_id")], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        self._send_json(HTTPStatus.OK, response_payload, allowed)
+
+    def _handle_work_link_delete(self, allowed: Optional[str]) -> None:
+        body = self._read_json_body()
+        link_uid = str(body.get("link_uid") or "").strip()
+        if not link_uid:
+            raise ValueError("link_uid is required")
+        payload = load_work_links_payload(self.server.work_links_path)
+        record_map = payload["work_links"]
+        current_record = record_map.get(link_uid)
+        if not isinstance(current_record, dict):
+            raise ValueError(f"link_uid not found: {link_uid}")
+        expected_hash = str(body.get("expected_record_hash") or "").strip()
+        current_hash = record_hash(current_record)
+        if expected_hash and expected_hash != current_hash:
+            self._send_json(HTTPStatus.CONFLICT, {"ok": False, "error": "record changed since loaded", "link_uid": link_uid, "current_record_hash": current_hash}, allowed)
+            return
+        validation_errors = validate_deleted_link_records(self.server.source_dir, link_uid)
+        if validation_errors:
+            raise ValueError("source validation failed: " + "; ".join(validation_errors[:20]))
+        backup_paths: list[Path] = []
+        if not self.server.dry_run:
+            updated_map = dict(record_map)
+            del updated_map[link_uid]
+            target_path = self.server.work_links_path.resolve()
+            if target_path not in self.server.allowed_write_paths:
+                raise ValueError("write target not allowlisted")
+            backup_paths = atomic_write_many({target_path: payload_for_map("work_links", updated_map)}, self.server.backups_dir)
+            self._refresh_lookup_payloads()
+            now_utc = utc_now()
+            self.server.append_activity(
+                {
+                    "id": activity_id(now_utc, "work-link.delete"),
+                    "time_utc": now_utc,
+                    "kind": "source_save",
+                    "operation": "work-link.delete",
+                    "status": "completed",
+                    "summary": "Deleted 1 work link source record.",
+                    "affected": {"works": [current_record.get("work_id")], "series": [], "work_details": []},
+                    "log_ref": str((LOGS_REL_DIR / "catalogue_write_server.log")),
+                }
+            )
+        response_payload: Dict[str, Any] = {
+            "ok": True,
+            "link_uid": link_uid,
+            "work_id": current_record.get("work_id"),
+            "deleted": True,
+        }
+        if self.server.dry_run:
+            response_payload["dry_run"] = True
+            response_payload["would_write"] = True
+        elif backup_paths:
+            response_payload["backups"] = [self.server.rel_path(path) for path in backup_paths]
         self._send_json(HTTPStatus.OK, response_payload, allowed)
 
     def _handle_series_save(self, allowed: Optional[str]) -> None:
@@ -1436,6 +2000,8 @@ def main() -> None:
     works_path = (source_dir / SOURCE_FILES["works"]).resolve()
     work_details_path = (source_dir / SOURCE_FILES["work_details"]).resolve()
     series_path = (source_dir / SOURCE_FILES["series"]).resolve()
+    work_files_path = (source_dir / SOURCE_FILES["work_files"]).resolve()
+    work_links_path = (source_dir / SOURCE_FILES["work_links"]).resolve()
     backups_dir = (repo_root / BACKUPS_REL_DIR).resolve()
     allowed_paths = {
         (source_dir / filename).resolve()
@@ -1452,6 +2018,8 @@ def main() -> None:
         works_path=works_path,
         work_details_path=work_details_path,
         series_path=series_path,
+        work_files_path=work_files_path,
+        work_links_path=work_links_path,
         allowed_write_paths=allowed_paths,
         backups_dir=backups_dir,
         dry_run=args.dry_run,
