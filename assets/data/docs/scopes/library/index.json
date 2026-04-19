@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-19T19:16:48Z",
+  "generated_at": "2026-04-19T19:54:17Z",
   "docs": [
     {
       "scope": "library",
@@ -11,6 +11,17 @@
       "source_path": "library.md",
       "viewer_url": "/library/?doc=library",
       "content_url": "/assets/data/docs/scopes/library/by-id/library.json"
+    },
+    {
+      "scope": "library",
+      "doc_id": "_archive",
+      "title": "Archive",
+      "last_updated": "2026-04-19",
+      "parent_id": "",
+      "sort_order": 200,
+      "source_path": "archive.md",
+      "viewer_url": "/library/?doc=_archive",
+      "content_url": "/assets/data/docs/scopes/library/by-id/_archive.json"
     }
   ]
 }

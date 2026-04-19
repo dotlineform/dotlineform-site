@@ -19,8 +19,4 @@ section: studio-docs
   management_base_url=docs_management_base_url
   search_placeholder='search studio docs'
   search_aria_label='Search Studio docs'
-  show_rebuild_button=true
-  rebuild_button_label='Rebuild docs'
 %}
-
-<script type="module" src="{{ '/assets/studio/js/docs-rebuild-button.js' | relative_url }}"></script>

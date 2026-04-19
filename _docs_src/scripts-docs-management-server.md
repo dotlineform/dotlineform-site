@@ -25,6 +25,7 @@ Exposed endpoints:
 
 - `GET /health`
 - `GET /capabilities`
+- `POST /docs/rebuild`
 - `POST /docs/create`
 - `POST /docs/move`
 - `POST /docs/archive`
@@ -62,6 +63,18 @@ Request behavior:
 - `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
 - `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
 - `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
+
+`POST /docs/rebuild` expects:
+
+```json
+{}
+```
+
+Rebuild behavior:
+
+- rebuilds generated docs payloads for Studio and Library
+- rebuilds docs-search artifacts for Studio and Library
+- is intended for local manage mode rather than the public hosted site
 
 `POST /docs/move` expects:
 

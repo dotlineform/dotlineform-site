@@ -16,6 +16,7 @@
   var manageRow = document.getElementById("docsViewerManageRow");
   var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
   var manageNote = document.getElementById("docsViewerManageNote");
+  var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
@@ -767,7 +768,7 @@
       manageNote.classList.toggle("is-error", noteIsError);
     }
 
-    if (!manageNewButton || !manageArchiveButton || !manageDeleteButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageArchiveButton || !manageDeleteButton) return;
 
     var doc = currentSelectedDoc();
     var reserved = Boolean(doc && doc.doc_id === "_archive");
@@ -786,6 +787,7 @@
       reserved
     );
 
+    manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
     manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
@@ -897,6 +899,27 @@
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
         setStatus(error.message || "Create failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleRebuildDocs() {
+    state.managementBusy = true;
+    setManagementMessage("Rebuilding docs...", false);
+    setStatus("Rebuilding docs...", false);
+
+    fetchManagementJson("/docs/rebuild", "POST", {})
+      .then(function (payload) {
+        var targetDocId = state.selectedDocId || defaultRouteDocId || defaultDocId();
+        setManagementMessage(payload.summary_text || "Docs rebuilt.", false);
+        return reloadDocsIndex(targetDocId, payload.summary_text || "Docs rebuilt.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Docs rebuild failed.", true);
+        setStatus(error.message || "Docs rebuild failed.", true);
       })
       .finally(function () {
         state.managementBusy = false;
@@ -1334,6 +1357,12 @@
         var input = event.target.closest("[data-bookmark-input]");
         if (!input) return;
         finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+      });
+    }
+
+    if (manageRebuildButton) {
+      manageRebuildButton.addEventListener("click", function () {
+        handleRebuildDocs();
       });
     }
 

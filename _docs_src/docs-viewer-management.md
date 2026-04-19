@@ -37,6 +37,46 @@ Not implemented yet:
 - rename flows beyond create-time title input
 - hosted-site or multi-user write behavior
 
+## Suggested Follow-On Features
+
+Recommended next steps if this stays a docs management surface rather than becoming a full document editor:
+
+- add a small metadata edit action for the current doc:
+  - `title`
+  - `parent_id`
+  - `sort_order`
+  - optionally `published`
+- add explicit `New Sibling` and `New Child` actions so placement can be chosen directly without relying only on drag/drop
+- add a lightweight recent-ops or restore view backed by the existing backup bundles
+- improve drag/drop affordances with clearer drop hints and a short manage-mode helper note
+- add guided `_archive` setup when archive is unavailable because the reserved doc does not exist
+- surface move/archive/delete preview details more clearly in the UI rather than relying only on confirm prompts
+- add `Open Source` for the current doc:
+  - local-only
+  - resolves the current doc's `.md` path through the docs-management server
+  - opens the file in the local machine's default Markdown editor
+  - returns the resolved path as fallback if launch fails
+- optionally add `Reveal In Finder` alongside `Open Source`
+
+Recommended boundary:
+
+- use the viewer to manage structure and metadata
+- use a real editor to write document body content
+
+Features to avoid unless the product direction changes:
+
+- inline markdown body editing
+- rich text editing
+- turning `/docs/` into a CMS
+- automatic cross-doc link rewriting
+
+Priority suggestion:
+
+- first: `Open Source` and/or `Reveal In Finder`
+- second: current-doc metadata editing
+- third: `New Sibling` and `New Child`
+- fourth: backup restore or recent-ops visibility
+
 ## Summary
 
 This document scopes a possible management mode for the shared Docs Viewer.

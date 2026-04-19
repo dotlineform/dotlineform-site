@@ -11,6 +11,7 @@ Run:
 Endpoints:
   GET /health
   GET /capabilities
+  POST /docs/rebuild
   POST /docs/create
   POST /docs/move
   POST /docs/archive
@@ -417,6 +418,43 @@ def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = Tr
     return {
         "ok": True,
         "steps": steps,
+    }
+
+
+def rebuild_all_docs_outputs(repo_root: Path) -> Dict[str, Any]:
+    bundle_bin = detect_bundle_bin()
+    if not bundle_bin:
+        raise RuntimeError("bundle executable not found")
+
+    commands = [
+        [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--write"],
+        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "studio", "--write"],
+        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", "library", "--write"],
+    ]
+    steps = []
+    for command in commands:
+        completed = subprocess.run(
+            command,
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        steps.append(
+            {
+                "command": " ".join(command),
+                "returncode": completed.returncode,
+                "stdout": completed.stdout.strip(),
+                "stderr": completed.stderr.strip(),
+            }
+        )
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
+            raise RuntimeError(f"docs rebuild failed: {detail}")
+    return {
+        "ok": True,
+        "steps": steps,
+        "summary_text": "Docs and docs search rebuilt for studio and library.",
     }
 
 
@@ -975,6 +1013,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             dry_run = self.app["dry_run"]
             if self.path == "/docs/create":
                 payload = handle_create(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/rebuild":
+                payload = rebuild_all_docs_outputs(repo_root)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/move":
