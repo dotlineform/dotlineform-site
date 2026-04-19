@@ -150,13 +150,20 @@ The star action should sit near the top of the active doc content area and feel 
 
 Persistence should be browser-local.
 
-For v1, `localStorage` is acceptable because the feature is expected to iterate at the UI level before the persistence contract is finalized.
+For v1, `IndexedDB` should be used from the start.
 
-Server-side persistence is a likely future phase, but it is intentionally deferred until the interaction model and stored bookmark shape have settled.
+Reasoning:
+
+- it remains a native browser-side JavaScript solution
+- it is persistent per user/browser profile
+- it supports a richer bookmark record shape without forcing a server contract too early
+- it gives the feature room to grow beyond a fragile key/value model
+
+Server-side persistence may still become useful in a later phase for cross-device or account-level continuity, but it is not required for this feature to be considered permanent and acceptable.
 
 Recommended storage:
 
-- `localStorage`
+- `IndexedDB`
 
 Each bookmark record should carry at least:
 
@@ -165,12 +172,14 @@ Each bookmark record should carry at least:
 - `label`
 - `default_title`
 - `created_at_utc`
+- `updated_at_utc`
 
 Behavior:
 
 - bookmarks persist across page reloads
 - Studio and Library bookmarks use the same storage model
 - the current pill row filters to the current scope so `/docs/` and `/library/` each show their own saved items
+- the storage layer should be isolated enough that a later sync/server-backed phase can migrate from the browser store without rewriting the UI behavior
 
 ## Accessibility
 
@@ -193,7 +202,7 @@ Required behavior:
 
 - header area may become visually busier
 - rename interaction can conflict with open behavior if not kept explicit
-- local-only persistence means bookmarks do not follow the user between browsers or machines
+- browser-local persistence still means bookmarks do not follow the user between browsers or machines
 
 ## Future Phase Note
 
@@ -201,6 +210,7 @@ If the feature proves useful and the interaction model stabilizes, a later phase
 
 - server-side persistence
 - cross-device continuity
+- migration from `IndexedDB` into any future synced persistence model
 - whether bookmark labels and ordering become part of a durable user profile model
 
 ## Acceptance Criteria

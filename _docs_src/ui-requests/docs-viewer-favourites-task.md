@@ -10,7 +10,7 @@ sort_order: 20
 
 Status:
 
-- requested implementation task breakdown
+- implemented first pass
 - depends on [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec)
 
 ## Goal
@@ -28,7 +28,28 @@ The work should add:
 - remove actions inside each pill
 - browser-local persistence
 
-This task is explicitly v1. It should use `localStorage` now and avoid prematurely introducing a server-side bookmark contract.
+This task is explicitly v1. It should use `IndexedDB` from the start and avoid prematurely introducing a server-side bookmark contract.
+
+## Implementation Status
+
+Implemented in the shared Docs Viewer module.
+
+Delivered behavior:
+
+- shared star toggle for the active doc
+- shared bookmark pill row
+- wrap-capable compact pills
+- open bookmark from pill click
+- inline removal with `x`
+- rename via right-click on the pill body
+- `IndexedDB` browser-local persistence
+- shared behavior across `/docs/` and `/library/`
+
+Implemented files:
+
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
 
 ## Implementation Boundary
 
@@ -56,10 +77,12 @@ Likely scope-owned routes to verify:
 
 ### 2. Add bookmark persistence
 
-- add browser-local storage for docs-viewer bookmarks
+- add browser-local `IndexedDB` storage for docs-viewer bookmarks
 - store bookmarks by at least `scope`, `doc_id`, `label`, and default title
+- include timestamps needed for later migration or conflict-free updates
 - preserve insertion order unless a clearer ordering rule is adopted during implementation
 - load bookmarks at viewer startup
+- isolate persistence behind a small storage helper so the UI does not depend directly on raw `IndexedDB` calls
 
 ### 3. Add favourite toggle behavior
 
@@ -80,7 +103,7 @@ Likely scope-owned routes to verify:
 
 - add a separate rename mode for pill labels
 - keep open and rename actions distinct
-- save rename changes to local storage
+- save rename changes to `IndexedDB`
 - fall back to the default doc title when the edited value is empty
 
 ### 6. Implement removal
@@ -121,6 +144,11 @@ Likely scope-owned routes to verify:
 - repeat the same flow in `/library/?doc=library`
 - confirm Studio and Library bookmarks do not mix in the same visible row
 
+Build verification completed:
+
+- `node --check assets/js/docs-viewer.js`
+- `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+
 ## Open Decisions
 
 - whether rename mode is entered by double-click, keyboard shortcut, or a dedicated small edit affordance
@@ -134,9 +162,21 @@ A: remove directly (star is effectively a toggle)
 
 Out of scope for this task, but likely for a later phase:
 
-- move bookmark persistence from `localStorage` to a server-backed model
+- add a migration path from browser-local `IndexedDB` into any future server-backed model
 - define whether bookmarks are scope-local only or user-global with scope filters
-- define migration behavior from local-only bookmarks into any later server-side model
+- define whether synced persistence is actually needed beyond per-browser permanence
+
+## Known Limitation
+
+Private browsing windows, especially Safari private windows, should be treated as non-durable for bookmark persistence.
+
+Current limitation:
+
+- the feature uses browser-local `IndexedDB`
+- in private browsing, the browser may expose only session-scoped storage
+- bookmarks can therefore disappear when the private session closes even though the feature works normally during the session
+
+This is expected browser behavior rather than a docs-viewer-specific bug.
 
 ## Done Criteria
 
@@ -145,3 +185,7 @@ Out of scope for this task, but likely for a later phase:
 - bookmark pills match the intended compact visual pattern
 - local persistence works without any server component
 - the implementation is documented back into the stable Docs Viewer/UI docs when shipped
+
+## Outcome
+
+This task is complete for v1.
