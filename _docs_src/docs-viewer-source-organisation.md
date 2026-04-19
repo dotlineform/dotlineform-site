@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer-source-organisation
 title: Source Organisation
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: docs-viewer
 sort_order: 20
 ---
@@ -35,6 +35,11 @@ Library docs source root:
 Each scope owns its own source-doc tree and generated output tree.
 The shared viewer does not merge those scopes into one combined docs corpus.
 
+Both source roots are now flat:
+
+- Studio docs: `_docs_src/*.md`
+- Library docs: `_docs_library_src/*.md`
+
 ## Current Tree Model
 
 Each source doc declares a `doc_id` and can optionally declare a `parent_id`.
@@ -50,7 +55,7 @@ This gives each scope its own hierarchical navigation tree without requiring sep
 
 ## Current Section Organisation
 
-Within the Studio source root, top-level parent docs currently group documentation by implementation area, including:
+Within the Studio source root, top-level parent docs group documentation by implementation area, including:
 
 - `architecture`
 - `config`
@@ -61,14 +66,31 @@ Within the Studio source root, top-level parent docs currently group documentati
 - `search`
 - `studio`
 
-There are also a few standalone top-level docs such as change logs and unpublished working notes under `_docs_src/_dev/`.
+Unpublished working docs and historical notes also live in the same flat root and stay out of the published viewer through `published: false`.
 
-Archive and draft material is kept separately under:
+Examples:
 
-- `_docs_src/_archive/`
-- `_docs_src/_draft/`
+- `backlog.md`
+- `ideas.md`
+- `design-backlog.md`
+- `search-config-architecture.md`
 
-Those folders support source organisation and backlog work, but they are not the same thing as the live docs-viewer scope structure.
+Archive remains a normal viewer-tree concept through the reserved `_archive` doc, not through a special storage folder.
+
+## Current Management-Relevant Constraint
+
+The flat Studio source layout is now part of the live Docs Viewer contract.
+
+Current effect:
+
+- Studio file storage no longer carries section meaning
+- tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
+- `_archive` remains meaningful as a reserved system doc in the viewer tree
+
+Important builder consequence:
+
+- the docs builder still resolves relative markdown links from each file's `source_path`
+- any future source-layout change must review or rewrite source-relative `.md` links if nested paths are reintroduced
 
 ## Current Generated Output Boundary
 
@@ -101,3 +123,4 @@ When updating Docs Viewer docs:
 - [Overview](/docs/?scope=studio&doc=docs-viewer-overview)
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
 - [Data Models](/docs/?scope=studio&doc=data-models)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)

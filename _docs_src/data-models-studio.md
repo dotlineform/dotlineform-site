@@ -1,7 +1,7 @@
 ---
 doc_id: data-models-studio
 title: Studio Scope
-last_updated: 2026-04-17
+last_updated: 2026-04-19
 parent_id: data-models
 sort_order: 30
 ---
@@ -28,7 +28,7 @@ Current checked-in Studio data artifacts:
   - `assets/studio/data/catalogue_activity.json`
   - `assets/studio/data/work_storage_index.json`
 - Studio docs source:
-  - `_docs_src/**/*.md`
+  - `_docs_src/*.md`
 - generated Studio docs data:
   - `assets/data/docs/scopes/studio/index.json`
   - `assets/data/docs/scopes/studio/by-id/<doc_id>.json`
@@ -257,7 +257,7 @@ Current enforcement:
 
 ## Studio Docs Data
 
-### `_docs_src/**/*.md`
+### `_docs_src/*.md`
 
 Purpose:
 

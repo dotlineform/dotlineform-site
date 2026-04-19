@@ -1,7 +1,7 @@
 ---
 doc_id: backlog
 title: Backlog
-last_updated: 2026-04-01
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 10
 published: false
@@ -11,18 +11,18 @@ published: false
 
 This file tracks active implementation backlog items that are not part of the current published docs set.
 
-Use `_docs_src/_dev/ideas.md` for unplanned proposals and architecture directions.
+Use `_docs_src/ideas.md` for unplanned proposals and architecture directions.
 
 Detailed UI and CSS work stays in:
 
-- `_docs_src/_dev/design-backlog.md`
+- `_docs_src/design-backlog.md`
 
 Detailed search architecture proposals stay in:
 
-- `_docs_src/_draft/search-config-architecture.md`
-- `_docs_src/_draft/search-config-implementation-note.md`
-- `_docs_src/_draft/search-pipeline-target-architecture.md`
-- `_docs_src/_draft/search-result-shaping.md`
+- `_docs_src/search-config-architecture.md`
+- `_docs_src/search-config-implementation-note.md`
+- `_docs_src/search-pipeline-target-architecture.md`
+- `_docs_src/search-result-shaping.md`
 
 ## Active Backlog
 

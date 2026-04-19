@@ -1,7 +1,7 @@
 ---
 doc_id: data-models-shared
 title: Shared Patterns
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: data-models
 sort_order: 10
 ---
@@ -22,7 +22,7 @@ Examples:
 - `_series/*.md`
 - `_work_details/*.md`
 - `_moments/*.md`
-- `_docs_src/**/*.md`
+- `_docs_src/*.md`
 - `_docs_library_src/*.md`
 
 Purpose:

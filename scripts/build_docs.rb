@@ -86,8 +86,14 @@ class DocsDataBuilder
   end
 
   def load_docs
-    Dir.glob(@source_dir.join("**/*.md").to_s).sort.filter_map do |file_path|
-      path = Pathname(file_path)
+    all_paths = Dir.glob(@source_dir.join("**/*.md").to_s).sort.map { |file_path| Pathname(file_path) }
+    nested_paths = all_paths.select { |path| path.dirname != @source_dir }
+    unless nested_paths.empty?
+      nested_list = nested_paths.map { |path| path.relative_path_from(@source_dir).to_s }.join(", ")
+      raise "Nested markdown docs are not supported under #{@source_dir}; move these files to the scope root: #{nested_list}"
+    end
+
+    all_paths.filter_map do |path|
       relative_path = path.relative_path_from(@source_dir).to_s
       front_matter, body_markdown = parse_source(path)
       next if unpublished_doc?(front_matter)

@@ -126,7 +126,7 @@ Map to:
 3. Add heuristic checks with confidence tags.
 4. Add Markdown/JSON reporting.
 5. Document usage in [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit).
-6. Add design follow-up tasks in `_docs_src/_dev/design-backlog.md`.
+6. Add design follow-up tasks in `_docs_src/design-backlog.md`.
 
 ## Acceptance Criteria (v1)
 

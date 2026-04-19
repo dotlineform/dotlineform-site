@@ -161,12 +161,12 @@ The next search scope will likely have a different upstream schema and different
 Search now has a documented ownership boundary for the full subsystem and a concrete proposal for how Studio v1 should read canonical docs outputs through a search-owned adapter while still fitting the shared `/search/` shell.
 
 **Affected files/docs:**  
-- `_docs_src/_draft/search-pipeline-target-architecture.md`
+- `_docs_src/search-pipeline-target-architecture.md`
 - [Search Studio V1 Index Shape](/docs/?scope=studio&doc=search-studio-v1-index-shape)
 - [Search](/docs/?scope=studio&doc=search)
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
-- `_docs_src/_draft/search-config-architecture.md`
-- `_docs_src/_draft/search-config-implementation-note.md`
+- `_docs_src/search-config-architecture.md`
+- `_docs_src/search-config-implementation-note.md`
 
 **Notes:**  
 This is a documentation decision only. It does not yet implement Studio search indexing or a standalone search build script.
@@ -192,7 +192,7 @@ The public search route already uses explicit `scope`, but the runtime still har
 - `assets/js/search/search-page.js`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
-- `_docs_src/_draft/search-config-implementation-note.md`
+- `_docs_src/search-config-implementation-note.md`
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 
 **Notes:**  
@@ -250,7 +250,7 @@ The search page now loads a top-level public search module, the current `catalog
 - [Search Overview](/docs/?scope=studio&doc=search-overview)
 - [Search Index Schema](/docs/?scope=studio&doc=search-index-schema)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
-- `_docs_src/_draft/search-config-architecture.md`
+- `_docs_src/search-config-architecture.md`
 
 **Notes:**  
 This change introduces the scoped search-data convention now, before additional scopes are implemented. The current runtime still only accepts `scope=catalogue`.
@@ -378,8 +378,8 @@ The architecture doc defined the boundary, but the next implementation step stil
 Search config work now has a documented first cut, a proposed `search_policy.json` shape, and a clearer roadmap for later phases such as ranking bands, field participation, and shared runtime/build policy.
 
 **Affected files/docs:**  
-- `_docs_src/_draft/search-config-architecture.md`
-- `_docs_src/_draft/search-config-implementation-note.md`
+- `_docs_src/search-config-architecture.md`
+- `_docs_src/search-config-implementation-note.md`
 - [Search](/docs/?scope=studio&doc=search)
 
 **Notes:**  
@@ -408,7 +408,7 @@ Readers can now move between published search docs through stable viewer links, 
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Normalisation Rules](/docs/?scope=studio&doc=search-normalisation-rules)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
-- `_docs_src/_draft/search-config-architecture.md`
+- `_docs_src/search-config-architecture.md`
 - [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 
 **Notes:**  
@@ -438,7 +438,7 @@ Search can now be reviewed one concern at a time, and future implementation chan
 - [Search UI Behaviour](/docs/?scope=studio&doc=search-ui-behaviour)
 - [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
 - [Search Validation Checklist](/docs/?scope=studio&doc=search-validation-checklist)
-- `_docs_src/_draft/search-config-architecture.md`
+- `_docs_src/search-config-architecture.md`
 - [Search Change Log Guidance](/docs/?scope=studio&doc=search-change-log-guidance)
 
 **Notes:**  
@@ -460,7 +460,7 @@ Search already has its own artifact, UI surface, and review docs. Config boundar
 Provides a clear basis for the next structural implementation step without prematurely externalizing all search logic.
 
 **Affected files/docs:**  
-- `_docs_src/_draft/search-config-architecture.md`
+- `_docs_src/search-config-architecture.md`
 - `assets/studio/data/studio_config.json`
 - `assets/studio/js/studio-config.js`
 

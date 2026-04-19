@@ -1,7 +1,7 @@
 ---
 doc_id: design-backlog
 title: Design Backlog
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 60
 published: false
@@ -13,11 +13,11 @@ This document holds the main design and UI follow-up work for the site.
 
 Keep current implementation rules in:
 
-- `_docs_src/design/ui-framework.md`
-- `_docs_src/design/studio-ui-framework.md`
-- `_docs_src/design/css-primitives.md`
+- `_docs_src/ui-framework.md`
+- `_docs_src/studio-ui-framework.md`
+- `_docs_src/css-primitives.md`
 
-Use this document for deferred refinement work so `_docs_src/_dev/backlog.md` can stay focused on repo-level tasks.
+Use this document for deferred refinement work so `_docs_src/backlog.md` can stay focused on repo-level tasks.
 
 ## Audit And Review Tooling
 
@@ -56,7 +56,7 @@ Use this document for deferred refinement work so `_docs_src/_dev/backlog.md` ca
 - Keep one backlog item per pattern, not per selector.
 - Split behaviour changes from presentation changes when they do not need to ship together.
 - Update the relevant current-state docs when a design task lands, especially:
-  - `_docs_src/design/studio-ui-framework.md`
-  - `_docs_src/design/ui-framework.md`
-  - `_docs_src/design/css-primitives.md`
-  - the affected Studio page docs in `_docs_src/studio/`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/ui-framework.md`
+  - `_docs_src/css-primitives.md`
+  - the affected Studio page docs in the Studio section under `_docs_src/studio.md`

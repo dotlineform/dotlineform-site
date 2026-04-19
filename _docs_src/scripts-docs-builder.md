@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-builder
 title: Docs Viewer Builder
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: scripts
 sort_order: 10
 ---
@@ -35,7 +35,7 @@ Generated outputs:
 
 ## What The Builder Does
 
-- reads Markdown source docs from each configured scope source root
+- reads Markdown source docs from each configured flat scope source root
 - reads front matter metadata such as `doc_id`, `title`, `last_updated`, `parent_id`, optional `sort_order`, and optional `published`
 - renders each Markdown body to HTML using the local Jekyll Markdown stack
 - passes raw HTML through as part of the Markdown body, so self-contained HTML/CSS/SVG docs can live in `.md` files
@@ -45,8 +45,9 @@ Generated outputs:
 
 ## Publishing Rules
 
-- every `.md` file under `_docs_src/` is published by default
-- every `.md` file under `_docs_library_src/` is published by default
+- every root-level `.md` file in `_docs_src/` is published by default
+- every root-level `.md` file in `_docs_library_src/` is published by default
+- nested Markdown docs are rejected so the flat source-layout contract stays explicit
 - add front matter with `published: false` to keep a Markdown file in either source root without publishing it
 - docs can contain ordinary Markdown, raw HTML, or a mix of both
 - if front matter is omitted, the builder falls back to:

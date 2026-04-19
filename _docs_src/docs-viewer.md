@@ -24,6 +24,7 @@ The current implementation uses:
 
 This section documents the current Docs Viewer implementation as a common module.
 It explains how the shared viewer serves multiple scopes, how the current viewer behaves, and how source docs are organised.
+Management-mode planning for local write behavior is tracked separately.
 
 This section does not document:
 
@@ -42,3 +43,4 @@ Those boundaries are intentional:
 - [Runtime Boundary](/docs/?scope=studio&doc=docs-viewer-runtime-boundary) records when scope differences should stay in shells or data and when a true runtime fork would be justified.
 - [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec) captures the current shared bookmark/favourites request for `/docs/` and `/library/`.
 - [Docs Viewer Favourites Task](/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task) breaks that request into implementation work.
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management) records the planned management-mode contract for local create/archive/delete operations and the required source-flattening prerequisite.

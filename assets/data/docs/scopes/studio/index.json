@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-19T16:33:48Z",
+  "generated_at": "2026-04-19T17:03:57Z",
   "docs": [
     {
       "scope": "studio",
@@ -19,7 +19,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 5,
-      "source_path": "studio/studio.md",
+      "source_path": "studio.md",
       "viewer_url": "/docs/?scope=studio&doc=studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio.json"
     },
@@ -30,7 +30,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "new-pipeline",
       "sort_order": 10,
-      "source_path": "new-pipeline/current-pipeline-map.md",
+      "source_path": "current-pipeline-map.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-current-pipeline-map",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-current-pipeline-map.json"
     },
@@ -41,7 +41,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "architecture",
       "sort_order": 10,
-      "source_path": "architecture/data-flow.md",
+      "source_path": "data-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=data-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-flow.json"
     },
@@ -52,7 +52,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
       "sort_order": 10,
-      "source_path": "scripts/pipeline-use-cases.md",
+      "source_path": "pipeline-use-cases.md",
       "viewer_url": "/docs/?scope=studio&doc=pipeline-use-cases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/pipeline-use-cases.json"
     },
@@ -63,7 +63,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "",
       "sort_order": 10,
-      "source_path": "design/design.md",
+      "source_path": "design.md",
       "viewer_url": "/docs/?scope=studio&doc=design",
       "content_url": "/assets/data/docs/scopes/studio/by-id/design.json"
     },
@@ -71,10 +71,10 @@
       "scope": "studio",
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "scripts",
       "sort_order": 10,
-      "source_path": "scripts/scripts-docs-builder.md",
+      "source_path": "scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json"
     },
@@ -85,7 +85,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "ui-requests",
       "sort_order": 10,
-      "source_path": "ui-requests/docs-viewer-favourites-spec.md",
+      "source_path": "docs-viewer-favourites-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-spec.json"
     },
@@ -96,7 +96,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "config",
       "sort_order": 10,
-      "source_path": "config/config-jekyll-site-config.md",
+      "source_path": "config-jekyll-site-config.md",
       "viewer_url": "/docs/?scope=studio&doc=config-jekyll-site-config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-jekyll-site-config.json"
     },
@@ -107,7 +107,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "llm",
       "sort_order": 10,
-      "source_path": "llm/llm-dimension.md",
+      "source_path": "llm-dimension.md",
       "viewer_url": "/docs/?scope=studio&doc=llm-dimension",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm-dimension.json"
     },
@@ -118,7 +118,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "servers",
       "sort_order": 10,
-      "source_path": "servers/local-studio-server-architecture.md",
+      "source_path": "local-studio-server-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=local-studio-server-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-studio-server-architecture.json"
     },
@@ -129,7 +129,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "docs-viewer",
       "sort_order": 10,
-      "source_path": "docs-viewer/docs-viewer-overview.md",
+      "source_path": "docs-viewer-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-overview.json"
     },
@@ -137,10 +137,10 @@
       "scope": "studio",
       "doc_id": "data-models-shared",
       "title": "Shared Patterns",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "data-models",
       "sort_order": 10,
-      "source_path": "data-models/data-models-shared.md",
+      "source_path": "data-models-shared.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-shared",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-shared.json"
     },
@@ -151,7 +151,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 10,
-      "source_path": "studio/studio-runtime.md",
+      "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json"
     },
@@ -162,7 +162,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "design",
       "sort_order": 10,
-      "source_path": "design/ui-framework.md",
+      "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json"
     },
@@ -173,7 +173,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 15,
-      "source_path": "ui-requests/ui-requests.md",
+      "source_path": "ui-requests.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-requests",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-requests.json"
     },
@@ -184,7 +184,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "",
       "sort_order": 20,
-      "source_path": "architecture/architecture.md",
+      "source_path": "architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/architecture.json"
     },
@@ -195,7 +195,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "data-models",
       "sort_order": 20,
-      "source_path": "data-models/data-models-catalogue.md",
+      "source_path": "data-models-catalogue.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-catalogue",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-catalogue.json"
     },
@@ -206,7 +206,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
       "sort_order": 20,
-      "source_path": "scripts/scripts-main-pipeline.md",
+      "source_path": "scripts-main-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
     },
@@ -217,7 +217,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "ui-requests",
       "sort_order": 20,
-      "source_path": "ui-requests/docs-viewer-favourites-task.md",
+      "source_path": "docs-viewer-favourites-task.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
     },
@@ -228,7 +228,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "config",
       "sort_order": 20,
-      "source_path": "config/config-pipeline-json.md",
+      "source_path": "config-pipeline-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-pipeline-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-pipeline-json.json"
     },
@@ -239,7 +239,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 20,
-      "source_path": "search/search-index-schema.md",
+      "source_path": "search-index-schema.md",
       "viewer_url": "/docs/?scope=studio&doc=search-index-schema",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-index-schema.json"
     },
@@ -250,7 +250,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 20,
-      "source_path": "search/search-overview.md",
+      "source_path": "search-overview.md",
       "viewer_url": "/docs/?scope=studio&doc=search-overview",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-overview.json"
     },
@@ -261,7 +261,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "architecture",
       "sort_order": 20,
-      "source_path": "architecture/site-shell-runtime.md",
+      "source_path": "site-shell-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=site-shell-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-shell-runtime.json"
     },
@@ -272,7 +272,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "new-pipeline",
       "sort_order": 20,
-      "source_path": "new-pipeline/source-model.md",
+      "source_path": "source-model.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-source-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-source-model.json"
     },
@@ -280,10 +280,10 @@
       "scope": "studio",
       "doc_id": "docs-viewer-source-organisation",
       "title": "Source Organisation",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "docs-viewer",
       "sort_order": 20,
-      "source_path": "docs-viewer/docs-viewer-source-organisation.md",
+      "source_path": "docs-viewer-source-organisation.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-source-organisation",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-source-organisation.json"
     },
@@ -294,7 +294,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 20,
-      "source_path": "studio/studio-config-and-save-flow.md",
+      "source_path": "studio-config-and-save-flow.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-config-and-save-flow",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-config-and-save-flow.json"
     },
@@ -305,7 +305,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "design",
       "sort_order": 20,
-      "source_path": "design/studio-ui-framework.md",
+      "source_path": "studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json"
     },
@@ -316,7 +316,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "design",
       "sort_order": 21,
-      "source_path": "design/studio-ui-rules.md",
+      "source_path": "studio-ui-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json"
     },
@@ -327,7 +327,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "",
       "sort_order": 23,
-      "source_path": "data-models/data-models.md",
+      "source_path": "data-models.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models.json"
     },
@@ -338,7 +338,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "",
       "sort_order": 25,
-      "source_path": "config/config.md",
+      "source_path": "config.md",
       "viewer_url": "/docs/?scope=studio&doc=config",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config.json"
     },
@@ -349,7 +349,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "design",
       "sort_order": 30,
-      "source_path": "design/css-primitives.md",
+      "source_path": "css-primitives.md",
       "viewer_url": "/docs/?scope=studio&doc=css-primitives",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-primitives.json"
     },
@@ -360,7 +360,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
       "sort_order": 30,
-      "source_path": "scripts/scripts-copy-draft-media.md",
+      "source_path": "scripts-copy-draft-media.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-copy-draft-media",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-copy-draft-media.json"
     },
@@ -371,7 +371,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "docs-viewer",
       "sort_order": 30,
-      "source_path": "docs-viewer/docs-viewer-runtime-boundary.md",
+      "source_path": "docs-viewer-runtime-boundary.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-runtime-boundary",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-runtime-boundary.json"
     },
@@ -382,7 +382,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "llm",
       "sort_order": 30,
-      "source_path": "llm/generic-llm-helper-pattern.md",
+      "source_path": "generic-llm-helper-pattern.md",
       "viewer_url": "/docs/?scope=studio&doc=generic-llm-helper-pattern",
       "content_url": "/assets/data/docs/scopes/studio/by-id/generic-llm-helper-pattern.json"
     },
@@ -393,7 +393,7 @@
       "last_updated": "2026-04-13",
       "parent_id": "scripts",
       "sort_order": 30,
-      "source_path": "scripts/local-setup.md",
+      "source_path": "local-setup.md",
       "viewer_url": "/docs/?scope=studio&doc=local-setup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/local-setup.json"
     },
@@ -404,7 +404,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 30,
-      "source_path": "scripts/scripts.md",
+      "source_path": "scripts.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts.json"
     },
@@ -415,7 +415,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 30,
-      "source_path": "search/search-field-registry.md",
+      "source_path": "search-field-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=search-field-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-field-registry.json"
     },
@@ -426,7 +426,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "architecture",
       "sort_order": 30,
-      "source_path": "architecture/sorting-architecture.md",
+      "source_path": "sorting-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=sorting-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/sorting-architecture.json"
     },
@@ -437,7 +437,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "config",
       "sort_order": 30,
-      "source_path": "config/config-studio-config-json.md",
+      "source_path": "config-studio-config-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-json.json"
     },
@@ -445,10 +445,10 @@
       "scope": "studio",
       "doc_id": "data-models-studio",
       "title": "Studio Scope",
-      "last_updated": "2026-04-17",
+      "last_updated": "2026-04-19",
       "parent_id": "data-models",
       "sort_order": 30,
-      "source_path": "data-models/data-models-studio.md",
+      "source_path": "data-models-studio.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-studio",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-studio.json"
     },
@@ -459,7 +459,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "studio",
       "sort_order": 30,
-      "source_path": "studio/tag-groups.md",
+      "source_path": "tag-groups.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-groups",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-groups.json"
     },
@@ -470,7 +470,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "new-pipeline",
       "sort_order": 30,
-      "source_path": "new-pipeline/web-system-spec.md",
+      "source_path": "web-system-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-web-system-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-web-system-spec.json"
     },
@@ -481,7 +481,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "studio",
       "sort_order": 33,
-      "source_path": "studio/bulk-add-work.md",
+      "source_path": "bulk-add-work.md",
       "viewer_url": "/docs/?scope=studio&doc=bulk-add-work",
       "content_url": "/assets/data/docs/scopes/studio/by-id/bulk-add-work.json"
     },
@@ -492,7 +492,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 33,
-      "source_path": "studio/catalogue-status.md",
+      "source_path": "catalogue-status.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-status",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-status.json"
     },
@@ -503,7 +503,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "",
       "sort_order": 33,
-      "source_path": "servers/servers.md",
+      "source_path": "servers.md",
       "viewer_url": "/docs/?scope=studio&doc=servers",
       "content_url": "/assets/data/docs/scopes/studio/by-id/servers.json"
     },
@@ -514,7 +514,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 34,
-      "source_path": "studio/catalogue-activity.md",
+      "source_path": "catalogue-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-activity.json"
     },
@@ -525,7 +525,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 34,
-      "source_path": "studio/catalogue-work-editor.md",
+      "source_path": "catalogue-work-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-editor.json"
     },
@@ -536,7 +536,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 34,
-      "source_path": "studio/catalogue-new-work-editor.md",
+      "source_path": "catalogue-new-work-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-editor.json"
     },
@@ -547,7 +547,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 35,
-      "source_path": "studio/build-activity.md",
+      "source_path": "build-activity.md",
       "viewer_url": "/docs/?scope=studio&doc=build-activity",
       "content_url": "/assets/data/docs/scopes/studio/by-id/build-activity.json"
     },
@@ -558,7 +558,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 35,
-      "source_path": "studio/catalogue-work-detail-editor.md",
+      "source_path": "catalogue-work-detail-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-detail-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-detail-editor.json"
     },
@@ -569,7 +569,7 @@
       "last_updated": "2026-04-14",
       "parent_id": "scripts",
       "sort_order": 35,
-      "source_path": "scripts/scripts-cloud-environments.md",
+      "source_path": "scripts-cloud-environments.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-cloud-environments",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-cloud-environments.json"
     },
@@ -580,7 +580,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "",
       "sort_order": 35,
-      "source_path": "llm/llm.md",
+      "source_path": "llm.md",
       "viewer_url": "/docs/?scope=studio&doc=llm",
       "content_url": "/assets/data/docs/scopes/studio/by-id/llm.json"
     },
@@ -591,7 +591,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 35,
-      "source_path": "studio/catalogue-new-work-detail-editor.md",
+      "source_path": "catalogue-new-work-detail-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-detail-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-detail-editor.json"
     },
@@ -602,7 +602,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 36,
-      "source_path": "studio/catalogue-series-editor.md",
+      "source_path": "catalogue-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-series-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-series-editor.json"
     },
@@ -613,7 +613,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 36,
-      "source_path": "studio/catalogue-work-file-editor.md",
+      "source_path": "catalogue-work-file-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-file-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-file-editor.json"
     },
@@ -624,7 +624,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "studio",
       "sort_order": 37,
-      "source_path": "studio/catalogue-new-series-editor.md",
+      "source_path": "catalogue-new-series-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-series-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-series-editor.json"
     },
@@ -635,7 +635,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 37,
-      "source_path": "studio/catalogue-new-work-file-editor.md",
+      "source_path": "catalogue-new-work-file-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-file-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-file-editor.json"
     },
@@ -646,7 +646,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 38,
-      "source_path": "studio/catalogue-work-link-editor.md",
+      "source_path": "catalogue-work-link-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-work-link-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-work-link-editor.json"
     },
@@ -657,7 +657,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 39,
-      "source_path": "studio/catalogue-new-work-link-editor.md",
+      "source_path": "catalogue-new-work-link-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-new-work-link-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-new-work-link-editor.json"
     },
@@ -668,7 +668,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "design",
       "sort_order": 40,
-      "source_path": "design/css-audit-spec.md",
+      "source_path": "css-audit-spec.md",
       "viewer_url": "/docs/?scope=studio&doc=css-audit-spec",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-audit-spec.json"
     },
@@ -679,7 +679,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 40,
-      "source_path": "docs-viewer/docs-viewer.md",
+      "source_path": "docs-viewer.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer.json"
     },
@@ -690,7 +690,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 40,
-      "source_path": "new-pipeline/implementation-plan.md",
+      "source_path": "implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-implementation-plan.json"
     },
@@ -701,7 +701,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "data-models",
       "sort_order": 40,
-      "source_path": "data-models/data-models-library.md",
+      "source_path": "data-models-library.md",
       "viewer_url": "/docs/?scope=studio&doc=data-models-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/data-models-library.json"
     },
@@ -712,7 +712,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 40,
-      "source_path": "new-pipeline/new-pipeline.md",
+      "source_path": "new-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline.json"
     },
@@ -723,7 +723,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 40,
-      "source_path": "search/search-ranking-model.md",
+      "source_path": "search-ranking-model.md",
       "viewer_url": "/docs/?scope=studio&doc=search-ranking-model",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-ranking-model.json"
     },
@@ -734,7 +734,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "scripts",
       "sort_order": 40,
-      "source_path": "scripts/scripts-srcset-builder.md",
+      "source_path": "scripts-srcset-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-srcset-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-srcset-builder.json"
     },
@@ -745,7 +745,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "config",
       "sort_order": 40,
-      "source_path": "config/config-studio-config-js.md",
+      "source_path": "config-studio-config-js.md",
       "viewer_url": "/docs/?scope=studio&doc=config-studio-config-js",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-studio-config-js.json"
     },
@@ -756,7 +756,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "studio",
       "sort_order": 40,
-      "source_path": "studio/tag-registry.md",
+      "source_path": "tag-registry.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-registry",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-registry.json"
     },
@@ -767,7 +767,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "studio",
       "sort_order": 45,
-      "source_path": "studio/catalogue-moment-import.md",
+      "source_path": "catalogue-moment-import.md",
       "viewer_url": "/docs/?scope=studio&doc=catalogue-moment-import",
       "content_url": "/assets/data/docs/scopes/studio/by-id/catalogue-moment-import.json"
     },
@@ -778,7 +778,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "design",
       "sort_order": 50,
-      "source_path": "design/css refactor.md",
+      "source_path": "css refactor.md",
       "viewer_url": "/docs/?scope=studio&doc=css-refactor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/css-refactor.json"
     },
@@ -789,7 +789,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "_archive",
       "sort_order": 50,
-      "source_path": "scripts/scripts-generate-work-pages.md",
+      "source_path": "scripts-generate-work-pages.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-generate-work-pages",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-generate-work-pages.json"
     },
@@ -800,7 +800,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "",
       "sort_order": 50,
-      "source_path": "search/search.md",
+      "source_path": "search.md",
       "viewer_url": "/docs/?scope=studio&doc=search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search.json"
     },
@@ -811,7 +811,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 50,
-      "source_path": "search/search-normalisation-rules.md",
+      "source_path": "search-normalisation-rules.md",
       "viewer_url": "/docs/?scope=studio&doc=search-normalisation-rules",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-normalisation-rules.json"
     },
@@ -822,7 +822,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "config",
       "sort_order": 50,
-      "source_path": "config/config-search-policy-json.md",
+      "source_path": "config-search-policy-json.md",
       "viewer_url": "/docs/?scope=studio&doc=config-search-policy-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/config-search-policy-json.json"
     },
@@ -833,7 +833,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 50,
-      "source_path": "new-pipeline/studio-implementation-plan.md",
+      "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json"
     },
@@ -844,7 +844,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "studio",
       "sort_order": 50,
-      "source_path": "studio/tag-aliases.md",
+      "source_path": "tag-aliases.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-aliases",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-aliases.json"
     },
@@ -855,7 +855,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 55,
-      "source_path": "scripts/scripts-catalogue-source.md",
+      "source_path": "scripts-catalogue-source.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-source",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-source.json"
     },
@@ -866,7 +866,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 55,
-      "source_path": "scripts/scripts-build-catalogue-json.md",
+      "source_path": "scripts-build-catalogue-json.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-build-catalogue-json",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-build-catalogue-json.json"
     },
@@ -877,7 +877,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 55,
-      "source_path": "search/search-public-ui-contract.md",
+      "source_path": "search-public-ui-contract.md",
       "viewer_url": "/docs/?scope=studio&doc=search-public-ui-contract",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-public-ui-contract.json"
     },
@@ -888,7 +888,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "_archive",
       "sort_order": 60,
-      "source_path": "scripts/scripts-delete-work.md",
+      "source_path": "scripts-delete-work.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-delete-work",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-delete-work.json"
     },
@@ -899,7 +899,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 60,
-      "source_path": "new-pipeline/refine-library.md",
+      "source_path": "refine-library.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-library",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-library.json"
     },
@@ -910,7 +910,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 60,
-      "source_path": "search/search-ui-behaviour.md",
+      "source_path": "search-ui-behaviour.md",
       "viewer_url": "/docs/?scope=studio&doc=search-ui-behaviour",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-ui-behaviour.json"
     },
@@ -921,7 +921,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "studio",
       "sort_order": 60,
-      "source_path": "studio/series-tags.md",
+      "source_path": "series-tags.md",
       "viewer_url": "/docs/?scope=studio&doc=series-tags",
       "content_url": "/assets/data/docs/scopes/studio/by-id/series-tags.json"
     },
@@ -932,7 +932,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "new-pipeline",
       "sort_order": 60,
-      "source_path": "new-pipeline/studio-e2e-checklist.md",
+      "source_path": "studio-e2e-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-e2e-checklist.json"
     },
@@ -943,7 +943,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 61,
-      "source_path": "new-pipeline/refine-analytics.md",
+      "source_path": "refine-analytics.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-analytics",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-analytics.json"
     },
@@ -954,7 +954,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "new-pipeline",
       "sort_order": 61,
-      "source_path": "new-pipeline/studio-ui-polish.md",
+      "source_path": "studio-ui-polish.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-ui-polish",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-ui-polish.json"
     },
@@ -965,7 +965,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "new-pipeline",
       "sort_order": 62,
-      "source_path": "new-pipeline/refine-search.md",
+      "source_path": "refine-search.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-refine-search",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-refine-search.json"
     },
@@ -976,7 +976,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "scripts",
       "sort_order": 70,
-      "source_path": "scripts/scripts-delete-moment.md",
+      "source_path": "scripts-delete-moment.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-delete-moment",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-delete-moment.json"
     },
@@ -987,7 +987,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 70,
-      "source_path": "search/search-build-pipeline.md",
+      "source_path": "search-build-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=search-build-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-build-pipeline.json"
     },
@@ -998,7 +998,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "studio",
       "sort_order": 70,
-      "source_path": "studio/tag-editor.md",
+      "source_path": "tag-editor.md",
       "viewer_url": "/docs/?scope=studio&doc=tag-editor",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tag-editor.json"
     },
@@ -1009,7 +1009,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "scripts",
       "sort_order": 70,
-      "source_path": "scripts/scripts-tag-write-server.md",
+      "source_path": "scripts-tag-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-tag-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-tag-write-server.json"
     },
@@ -1020,7 +1020,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "scripts",
       "sort_order": 71,
-      "source_path": "scripts/scripts-catalogue-write-server.md",
+      "source_path": "scripts-catalogue-write-server.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-write-server",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-write-server.json"
     },
@@ -1031,7 +1031,7 @@
       "last_updated": "2026-04-17",
       "parent_id": "scripts",
       "sort_order": 72,
-      "source_path": "scripts/scripts-catalogue-lookup.md",
+      "source_path": "scripts-catalogue-lookup.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-catalogue-lookup",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-catalogue-lookup.json"
     },
@@ -1042,7 +1042,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 75,
-      "source_path": "search/search-studio-v1-index-shape.md",
+      "source_path": "search-studio-v1-index-shape.md",
       "viewer_url": "/docs/?scope=studio&doc=search-studio-v1-index-shape",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-studio-v1-index-shape.json"
     },
@@ -1053,7 +1053,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "scripts",
       "sort_order": 80,
-      "source_path": "scripts/scripts-css-token-audit.md",
+      "source_path": "scripts-css-token-audit.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-css-token-audit.json"
     },
@@ -1064,7 +1064,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "search",
       "sort_order": 80,
-      "source_path": "search/search-validation-checklist.md",
+      "source_path": "search-validation-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=search-validation-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-validation-checklist.json"
     },
@@ -1075,7 +1075,7 @@
       "last_updated": "2026-04-01",
       "parent_id": "studio",
       "sort_order": 80,
-      "source_path": "studio/studio-works.md",
+      "source_path": "studio-works.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-works",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-works.json"
     },
@@ -1086,7 +1086,7 @@
       "last_updated": "2026-04-18",
       "parent_id": "",
       "sort_order": 90,
-      "source_path": "_archive/archive.md",
+      "source_path": "archive.md",
       "viewer_url": "/docs/?scope=studio&doc=_archive",
       "content_url": "/assets/data/docs/scopes/studio/by-id/_archive.json"
     },
@@ -1097,7 +1097,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "scripts",
       "sort_order": 90,
-      "source_path": "scripts/scripts-audit-site-consistency.md",
+      "source_path": "scripts-audit-site-consistency.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-audit-site-consistency",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-audit-site-consistency.json"
     },
@@ -1108,7 +1108,7 @@
       "last_updated": "2026-04-19",
       "parent_id": "ui-requests",
       "sort_order": 100,
-      "source_path": "ui-requests/docs-viewer-management.md",
+      "source_path": "docs-viewer-management.md",
       "viewer_url": "/docs/?scope=studio&doc=docs-viewer-management",
       "content_url": "/assets/data/docs/scopes/studio/by-id/docs-viewer-management.json"
     },
@@ -1119,7 +1119,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "scripts",
       "sort_order": 100,
-      "source_path": "scripts/scripts-fix-missing-title-sort.md",
+      "source_path": "scripts-fix-missing-title-sort.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-fix-missing-title-sort",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-fix-missing-title-sort.json"
     },
@@ -1152,7 +1152,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "studio",
       "sort_order": 200,
-      "source_path": "studio/registry-driven-scoring-architecture.md",
+      "source_path": "registry-driven-scoring-architecture.md",
       "viewer_url": "/docs/?scope=studio&doc=registry-driven-scoring-architecture",
       "content_url": "/assets/data/docs/scopes/studio/by-id/registry-driven-scoring-architecture.json"
     },
@@ -1163,7 +1163,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "studio",
       "sort_order": 210,
-      "source_path": "studio/experimental-dimension-framework.md",
+      "source_path": "experimental-dimension-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=experimental-dimension-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/experimental-dimension-framework.json"
     },
@@ -1174,7 +1174,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "studio",
       "sort_order": 250,
-      "source_path": "studio/dimension-visualisation-projection.md",
+      "source_path": "dimension-visualisation-projection.md",
       "viewer_url": "/docs/?scope=studio&doc=dimension-visualisation-projection",
       "content_url": "/assets/data/docs/scopes/studio/by-id/dimension-visualisation-projection.json"
     },
@@ -1185,7 +1185,7 @@
       "last_updated": "2026-04-16",
       "parent_id": "studio",
       "sort_order": 260,
-      "source_path": "studio/tiered-dimension-policy.md",
+      "source_path": "tiered-dimension-policy.md",
       "viewer_url": "/docs/?scope=studio&doc=tiered-dimension-policy",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tiered-dimension-policy.json"
     },
@@ -1196,7 +1196,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 1000,
-      "source_path": "search/search-change-log-guidance.md",
+      "source_path": "search-change-log-guidance.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log-guidance",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log-guidance.json"
     },
@@ -1207,7 +1207,7 @@
       "last_updated": "2026-03-31",
       "parent_id": "search",
       "sort_order": 1010,
-      "source_path": "search/search-change-log.md",
+      "source_path": "search-change-log.md",
       "viewer_url": "/docs/?scope=studio&doc=search-change-log",
       "content_url": "/assets/data/docs/scopes/studio/by-id/search-change-log.json"
     }

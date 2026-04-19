@@ -27,6 +27,7 @@ sort_order: 110
 
 ## 2026-04-19
 
+- flattened the Studio docs source tree into `_docs_src/*.md`, updated the shared docs-builder contract to reject nested Markdown docs, and aligned docs guidance and management planning with the new flat-source model
 - added a separate **[Studio UI Polish](/docs/?scope=studio&doc=new-pipeline-studio-ui-polish)** punch-list doc for cosmetic and small interaction fixes, so UI cleanup can be batched without expanding the main implementation plan
 - folded the separate Studio UI polish punch list into **[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)** so IAB issue capture, triage, one-off fixes, and permanent Studio UI rules now live in one local-workflow document
 - added a new **[UI Requests](/docs/?scope=studio&doc=ui-requests)** docs section for UI-driven feature specs and task breakdowns, seeded with a shared Docs Viewer favourites request covering browser-style bookmark pills for both `/docs/` and `/library/`

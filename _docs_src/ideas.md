@@ -1,7 +1,7 @@
 ---
 doc_id: ideas
 title: Ideas
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 20
 published: false
@@ -11,7 +11,7 @@ published: false
 
 This file is the entry point for unplanned proposals and architecture-direction notes.
 
-Use `_docs_src/_dev/backlog.md` for work that is expected to be done.
+Use `_docs_src/backlog.md` for work that is expected to be done.
 
 Use this doc when:
 
