@@ -3,17 +3,39 @@ doc_id: docs-viewer-management
 title: Docs Viewer Management
 last_updated: 2026-04-19
 parent_id: ui-requests
-sort_order: 11
+sort_order: 21
 ---
 # Docs Viewer Management
 
 Status:
 
-- Phase 1 contract defined
-- Studio source flattening implemented
-- localhost write service implemented
-- first-pass manage-mode UI implemented for create/archive/delete
-- drag/drop and richer edit flows remain follow-on work
+- Phase 1 implemented: flat Studio source layout and management contract
+- Phase 2 implemented: localhost write service plus manage-mode create/archive/delete
+- Phase 3 implemented: leaf-doc drag/drop move with front-matter-only tree updates
+- follow-on work remains for richer edit flows such as inline metadata editing
+
+## Implementation Status
+
+Implemented now:
+
+- `_docs_src` flattened for Studio docs management
+- dedicated localhost docs-management server added at `scripts/docs/docs_management_server.py`
+- shared manage mode enabled for both `/docs/` and `/library/` behind `?mode=manage`
+- create, archive, delete-preview, and delete-apply implemented
+- drag/drop move implemented for leaf docs only
+- dropping on a visible doc moves the dragged doc after that doc
+- dropping on a collapsed folder moves the dragged doc into that folder as its last child
+- source writes remain front-matter-only; files do not move on disk
+- move/create-after-selected use sparse `sort_order` increments without renumbering siblings
+- move rebuilds docs payloads only; create/archive/delete rebuild docs payloads plus docs search
+- docs-management backups are operation-scoped rather than full-scope snapshots
+
+Not implemented yet:
+
+- dragging folders or any doc with child docs
+- inline title/front-matter editing in the viewer
+- rename flows beyond create-time title input
+- hosted-site or multi-user write behavior
 
 ## Summary
 
@@ -77,10 +99,6 @@ Included:
 - source metadata updates needed for supported management actions
 - validation for filename and `doc_id` uniqueness
 - tree operations that affect `parent_id` and `sort_order`
-
-Potentially included, but needs a decision:
-
-- drag-and-drop tree reordering and reparenting
 
 Excluded for the first implementation unless later promoted:
 
@@ -155,9 +173,7 @@ Current Phase 1 answers are captured in the contract above and in the decision l
 
 ## Recommended Initial Narrowing
 
-To reduce implementation risk, a first pass should probably avoid drag/drop until the write semantics are stable.
-
-Safer first pass:
+This document started with a narrower first pass:
 
 - show management toolbar behind a query param
 - support `new`
@@ -166,7 +182,7 @@ Safer first pass:
 - support metadata validation
 - defer drag/drop reorder/reparent until command semantics are proven
 
-This keeps the first implementation focused on explicit commands rather than high-risk tree mutation UX.
+That narrower sequence has now been completed and extended with a leaf-doc drag/drop move flow.
 
 ## Phase 1 Contract
 
@@ -487,12 +503,21 @@ Flattening is no longer optional work here: it is a prerequisite for Studio docs
 - implement the local service and backups for every write batch
 - add delete preview with inbound reference reporting
 
+Status:
+
+- implemented
+
 ### Phase 3
 
 - evaluate drag/drop reorder and reparent
 - evaluate whether folder moves should exist at all
 - implement `POST /docs/move` for front-matter-only tree moves
 - add manage-mode drag/drop for leaf docs in the shared docs index
+
+Status:
+
+- implemented as a leaf-doc-only move flow
+- folders and docs with children remain non-draggable by design
 
 ## Decision Log
 

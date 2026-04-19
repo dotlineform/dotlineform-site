@@ -1,51 +1,447 @@
 ---
 doc_id: site-change-log
-title: "Site Change Log"
+title: Site Change Log
 last_updated: 2026-04-19
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
 
-## 2026-04-18
+## [2026-04-19] Flattened the Studio docs source tree for Docs Viewer management
 
-- completed Phase 9 internal generator refactor: the live JSON rebuild path no longer materializes `works.xlsx`, `generate_work_pages.py` now rebuilds from canonical source records with an in-memory compatibility projection, and JSON-source write runs now persist mutable source updates directly back into canonical catalogue JSON
-- completed Phase 8 local-media generation work: scoped rebuilds now run a bounded local thumbnail-generation step for works, work details, and moments, readiness now distinguishes current media from pending local derivative generation, build preview now surfaces local-media state, and Build Activity now records generated local media alongside rebuild outcomes
-- completed Phase 6 preview-media work: work and detail editors now show compact current-record previews in the summary rail, work-detail rows on the work editor now use thumbnail-led navigation, and focused preview states now distinguish missing generated preview from missing source media
-- completed Phase 5 media/prose readiness work: work, series, and detail editors now surface source readiness in the summary rail, build preview now carries readiness state, work and series now offer narrow `Import prose + rebuild` actions, and detail preview now resolves its own source media path
-- completed Phase 4 activity/build reporting work: `Catalogue Activity` now stays source-side, `Build Activity` now carries rebuild outcomes, both pages now use sortable operational lists with explicit scope/result columns, and activity rows now link back into the relevant editor or next workflow route
-- completed Phase 3 catalogue UI consistency work: the Catalogue dashboard now uses grouped directional links, Catalogue-domain pages now share a cross-linked page-nav strip, metadata editors use the left-label single-column form layout, work-file and work-link editors can be opened directly from dashboard search, and Catalogue Status now sorts by header and links into all current editor families
-- added the Phase 2 moments import flow at `/studio/catalogue-moment-import/`, with explicit source-file preview/apply, targeted moment rebuilds, catalogue-search rebuild, and first-pass activity/build reporting without folder scanning or srcset generation
-- implemented Phase 1 Studio shell foundations: the public site nav now stays user-facing, Studio gets its own admin nav (`Catalogue`, `Library`, `Analytics`, `Search`, `Docs`), `/studio/` is now a four-panel landing page, new domain dashboards live under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`, and Studio docs now include a local `Rebuild docs` button beside the shared search field
-- added the follow-on planning doc [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan) for post-Phase-15 workflow refinement, media/prose handling, activity improvements, Studio landing-page redesign, internal generator cleanup, and end-to-end testing preparation
-- updated `AGENTS.md` to reflect the live JSON-led catalogue workflow, the retired workbook-led entrypoints, and the current scoped JSON rebuild path
-- added the Phase 12 workbook import flow at `/studio/bulk-add-work/`, with one-way preview/apply import from `data/works.xlsx` into canonical JSON for new works and new work details
-- added the Phase 11 work-file and work-link editing flow, including summaries on `/studio/catalogue-work/`, focused create/edit pages, canonical `work_files.json` and `work_links.json` write endpoints, and parent-work scoped rebuild support
-- extended the derived catalogue lookup layer with focused work-file and work-link records so Studio can open those editors without loading full source maps
-- updated Studio runtime/docs routing and local save-flow docs for the new work-file and work-link surfaces
+**Status:** implemented
 
-## 2026-04-19
+**Area:** Docs Viewer / docs infrastructure
 
-- added the first local Docs Viewer management pass: a dedicated localhost docs-management server now supports create/archive/delete for flat source docs, `/docs/` and `/library/` now expose manage-mode controls behind `?mode=manage`, and successful writes rebuild both docs payloads and docs-scope search artifacts
-- flattened the Studio docs source tree into `_docs_src/*.md`, updated the shared docs-builder contract to reject nested Markdown docs, and aligned docs guidance and management planning with the new flat-source model
-- added a separate **[Studio UI Polish](/docs/?scope=studio&doc=new-pipeline-studio-ui-polish)** punch-list doc for cosmetic and small interaction fixes, so UI cleanup can be batched without expanding the main implementation plan
-- folded the separate Studio UI polish punch list into **[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)** so IAB issue capture, triage, one-off fixes, and permanent Studio UI rules now live in one local-workflow document
-- added a new **[UI Requests](/docs/?scope=studio&doc=ui-requests)** docs section for UI-driven feature specs and task breakdowns, seeded with a shared Docs Viewer favourites request covering browser-style bookmark pills for both `/docs/` and `/library/`
-- completed Phase 11 execution-prep work: added a separate Studio end-to-end checklist document with prerequisites, manual/Codex execution split, scenario coverage across the implemented Studio routes, public-runtime follow-through checks, responsive checks, and a failure-triage model
-- completed Phase 10 generator cleanup work: `generate_work_pages.py` now carries only the internal JSON-source runtime path, the dead workbook branch and workbook-oriented runtime messaging were removed, the remaining in-memory compatibility layer is explicit, and moment-scoped rebuilds now call the same internal generator entry boundary as work and series rebuilds
-- completed the pre-Phase 10 bulk-import follow-up: the workbook path is now configured in `_data/pipeline.json` and points to `data/works_bulk_import.xlsx`, the Studio bulk-import UI and write server no longer assume `data/works.xlsx`, and the reduced workbook was checked against the importer schema with all retained `Works` and `WorkDetails` headers confirmed as eligible import fields
+**Summary:**
+Flattened Studio docs into `_docs_src/*.md` and aligned the builder and management planning with that flat-source model.
 
-## 2026-04-17
+**Reason:**
+Viewer-side docs management depends on front-matter-driven hierarchy rather than filesystem folders. Keeping Studio docs nested on disk would make tree edits more confusing and harder to validate.
 
-- added the Phase 8 derived catalogue lookup payloads and switched the catalogue editors from full-source browser loads to lightweight search indexes plus focused per-record lookup JSON
-- added the Phase 7 series editor at `/studio/catalogue-series/`, including canonical `series.json` save flow plus atomic membership writes into `works.json`
-- added series-scoped JSON rebuild support so series edits rebuild the current series, affected works, aggregate indexes, and catalogue search
-- added the Phase 6 work detail editor at `/studio/catalogue-work-detail/`, including canonical `work_details.json` save flow and parent-work scoped rebuild
-- added grouped work-detail navigation to `/studio/catalogue-work/`, capped at 10 visible rows per section with per-work detail search by id
-- added the Phase 5 scoped JSON-source rebuild path for work edits, including a local preview/apply flow and `Save + Rebuild` on `/studio/catalogue-work/`
-- added `/studio/catalogue-work/` as the first canonical catalogue source editor for single-work metadata
-- extended Studio transport/config wiring for the catalogue work editor and separate catalogue local-service health probing
-- updated the catalogue write server response to return the normalized saved record and saved timestamp for editor baseline refresh
+**Effect:**
+Studio docs now live directly under `_docs_src/`, the shared docs-builder contract rejects nested Markdown docs, and Docs Viewer management can treat the visible tree as metadata-only.
+
+**Affected files/docs:**
+- `_docs_src/*.md`
+- `scripts/build_docs.rb`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Viewer Source Organisation](/docs/?scope=studio&doc=docs-viewer-source-organisation)
+
+**Notes:**
+This was the enabling storage change for local Docs Viewer management.
+
+## [2026-04-19] Consolidated Studio UI triage into rules and UI requests docs
+
+**Status:** implemented
+
+**Area:** Studio UI workflow
+
+**Summary:**
+Replaced the temporary UI polish punch-list workflow with a permanent Studio UI rules log and a dedicated UI requests section.
+
+**Reason:**
+IAB-driven UI work needs a durable way to distinguish one-off fixes from permanent rules, and the older punch-list format overlapped with that goal.
+
+**Effect:**
+[Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) now captures issue triage and systemic rules, while [UI Requests](/docs/?scope=studio&doc=ui-requests) holds UI feature specs and task docs such as the Docs Viewer favourites request.
+
+**Affected files/docs:**
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [UI Requests](/docs/?scope=studio&doc=ui-requests)
+- [Site Docs](/docs/?scope=studio&doc=site-docs)
+
+**Notes:**
+This establishes the standing local-Codex UI workflow in place of PR-based tracking.
+
+## [2026-04-19] Added shared Docs Viewer favourites for docs and library
+
+**Status:** implemented
+
+**Area:** Docs Viewer
+
+**Summary:**
+Added browser-style document favourites shared by `/docs/` and `/library/`.
+
+**Reason:**
+Frequently used docs needed a quicker return path than the tree alone, especially once the shared viewer started carrying search and management controls.
+
+**Effect:**
+The shared Docs Viewer now supports IndexedDB-backed favourites, star-based add/remove, compact editable bookmark pills, and a full-width viewer-level controls band above the index and content panels.
+
+**Affected files/docs:**
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- [Docs Viewer Favourites Spec](/docs/?scope=studio&doc=docs-viewer-favourites-spec)
+- [Docs Viewer Favourites Task](/docs/?scope=studio&doc=docs-viewer-favourites-task)
+
+**Notes:**
+Private browsing still limits persistence, so this remains a browser-local feature rather than a hosted user-account feature.
+
+## [2026-04-19] Implemented local Docs Viewer management mode
+
+**Status:** implemented
+
+**Area:** Docs Viewer / local server
+
+**Summary:**
+Added the first local-only management mode for the shared Docs Viewer.
+
+**Reason:**
+Managing docs directly from the viewer is faster than editing source files by hand, but it needs an explicit local write boundary and a clear opt-in mode.
+
+**Effect:**
+`/docs/` and `/library/` now expose manage mode behind `?mode=manage`, backed by `scripts/docs/docs_management_server.py` for create, archive, delete-preview, and delete-apply on flat source docs.
+
+**Affected files/docs:**
+- `scripts/docs/docs_management_server.py`
+- `_includes/docs_viewer_shell.html`
+- `assets/js/docs-viewer.js`
+- `bin/dev-studio`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Notes:**
+The feature is local-only and fails closed when the docs-management server is unavailable.
+
+## [2026-04-19] Hardened Docs Viewer management reloads and move behavior
+
+**Status:** implemented
+
+**Area:** Docs Viewer / local server
+
+**Summary:**
+Refined Docs Viewer management so local development writes refresh reliably and drag/drop moves stay low-noise.
+
+**Reason:**
+The Jekyll dev server could continue serving stale docs assets after local writes, and early move behavior created too much sort-order and backup noise.
+
+**Effect:**
+Post-write reloads now fetch fresh docs/search payloads from the localhost docs-management server, create inserts after the currently selected doc, delete clears its completion banner when applied, backups are operation-scoped, drag/drop supports leaf-doc-only front-matter moves, sibling sort orders are left unchanged, and move skips search-index rebuilds.
+
+**Affected files/docs:**
+- `scripts/docs/docs_management_server.py`
+- `assets/js/docs-viewer.js`
+- `assets/css/main.css`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+
+**Notes:**
+Only leaf docs are draggable; folders and docs with children remain fixed.
+
+## [2026-04-19] Added Studio execution-prep coverage for the implemented routes
+
+**Status:** implemented
+
+**Area:** Studio testing workflow
+
+**Summary:**
+Added a dedicated Studio execution-prep checklist for the implemented Studio routes.
+
+**Reason:**
+The Studio surface had grown large enough that ad hoc testing no longer gave a reliable view of route coverage or failure triage.
+
+**Effect:**
+The execution-prep docs now spell out prerequisites, manual versus Codex execution, route coverage, public-runtime follow-through checks, responsive checks, and a failure-triage model.
+
+**Affected files/docs:**
+- [Studio End-To-End Checklist](/docs/?scope=studio&doc=new-pipeline-studio-end-to-end-checklist)
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+
+**Notes:**
+This is planning and operational guidance rather than a runtime feature.
+
+## [2026-04-19] Completed internal generator cleanup for the JSON-led workflow
+
+**Status:** implemented
+
+**Area:** catalogue pipeline
+
+**Summary:**
+Removed the remaining workbook-oriented runtime path from the internal generator flow and aligned the bulk-import workbook configuration.
+
+**Reason:**
+The live catalogue workflow is now JSON-led, so the residual workbook branch and workbook-specific defaults were creating unnecessary complexity and stale assumptions.
+
+**Effect:**
+`generate_work_pages.py` now runs only the internal JSON-source path, moment-scoped rebuilds share that same internal boundary, `_data/pipeline.json` now points bulk import at `data/works_bulk_import.xlsx`, and the importer no longer assumes `data/works.xlsx`.
+
+**Affected files/docs:**
+- `scripts/generate_work_pages.py`
+- `_data/pipeline.json`
+- `/studio/bulk-add-work/`
+- `AGENTS.md`
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+
+**Notes:**
+This closes out the workbook-oriented runtime assumptions without changing the hosted public site model.
+
+## [2026-04-18] Implemented Studio shell foundations for the admin surface
+
+**Status:** implemented
+
+**Area:** Studio shell
+
+**Summary:**
+Added the first dedicated Studio shell and dashboard structure.
+
+**Reason:**
+Studio needed its own navigation and landing surface so internal tools could grow without distorting the public site navigation.
+
+**Effect:**
+The public nav stays user-facing, Studio now has its own admin nav, `/studio/` is a four-panel landing page, and domain dashboards now live under `/studio/catalogue/`, `/studio/library/`, `/studio/analytics/`, and `/studio/search/`.
+
+**Affected files/docs:**
+- `/studio/`
+- `/studio/catalogue/`
+- `/studio/library/`
+- `/studio/analytics/`
+- `/studio/search/`
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+
+**Notes:**
+Studio docs also gained a local `Rebuild docs` control alongside the shared docs viewer search field.
+
+## [2026-04-18] Added the Studio moment import flow
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added the dedicated moment import workflow at `/studio/catalogue-moment-import/`.
+
+**Reason:**
+Moments needed a scoped import path that could preview and apply source-file changes without running a broader catalogue maintenance flow.
+
+**Effect:**
+The moment import UI now supports explicit source-file preview/apply, targeted moment rebuilds, catalogue-search rebuild, and first-pass activity/build reporting without folder scanning or srcset generation.
+
+**Affected files/docs:**
+- `/studio/catalogue-moment-import/`
+- [Catalogue Moment Import](/docs/?scope=studio&doc=catalogue-moment-import)
+
+**Notes:**
+This was Phase 2 of the Studio implementation sequence.
+
+## [2026-04-18] Added work-file and work-link editing to the Studio catalogue
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Extended the catalogue editor flow with work-file and work-link editing surfaces.
+
+**Reason:**
+Work files and work links needed the same source-backed local editing model as works and details.
+
+**Effect:**
+`/studio/catalogue-work/` now links into focused create/edit surfaces for work files and work links, canonical `work_files.json` and `work_links.json` now have local write endpoints, and the derived catalogue lookup layer can open those editors without loading the full source set.
+
+**Affected files/docs:**
+- `/studio/catalogue-work/`
+- `work_files.json`
+- `work_links.json`
+- [Work Files](/docs/?scope=studio&doc=catalogue-work-files)
+- [Work Links](/docs/?scope=studio&doc=catalogue-work-links)
+
+**Notes:**
+The surrounding Studio runtime/docs routing and local save-flow docs were updated to match these new surfaces.
+
+## [2026-04-18] Added workbook-backed bulk work import for new works and details
+
+**Status:** implemented
+
+**Area:** Studio import workflow
+
+**Summary:**
+Added the bulk work import flow at `/studio/bulk-add-work/`.
+
+**Reason:**
+Even in the JSON-led catalogue workflow, a bounded import path is still useful for bringing in batches of new works and work details from workbook data.
+
+**Effect:**
+The bulk import UI now supports one-way preview/apply import from the configured workbook source into canonical JSON for new works and new work details.
+
+**Affected files/docs:**
+- `/studio/bulk-add-work/`
+- `_data/pipeline.json`
+- [Bulk Add Work](/docs/?scope=studio&doc=bulk-add-work)
+
+**Notes:**
+Later follow-up work moved the workbook path to `data/works_bulk_import.xlsx`.
+
+## [2026-04-18] Completed Studio catalogue UI consistency and operational reporting refinements
+
+**Status:** implemented
+
+**Area:** Studio catalogue UI
+
+**Summary:**
+Refined the catalogue admin UI with more consistent navigation, layout, and reporting surfaces.
+
+**Reason:**
+As more Studio routes were added, the catalogue domain needed a clearer internal navigation model and better operational visibility.
+
+**Effect:**
+The Catalogue dashboard now uses grouped directional links, catalogue-domain pages share a cross-linked page nav, metadata editors use the left-label single-column layout, Catalogue Status sorts by header, work-file and work-link editors can be opened from dashboard search, `Catalogue Activity` remains source-side, `Build Activity` now records rebuild outcomes, and both pages use sortable operational lists with explicit scope/result columns and links back into the relevant workflow routes.
+
+**Affected files/docs:**
+- `/studio/catalogue/`
+- `/studio/catalogue-status/`
+- `/studio/catalogue-activity/`
+- `/studio/build-activity/`
+- [Catalogue Status](/docs/?scope=studio&doc=catalogue-status)
+- [Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+
+**Notes:**
+This covers the Phase 3 and Phase 4 UI/reporting refinements in the Studio plan.
+
+## [2026-04-18] Completed source-readiness, preview-media, and local-media generation refinements
+
+**Status:** implemented
+
+**Area:** Studio media workflow
+
+**Summary:**
+Extended Studio to report source readiness, show focused preview media, and surface local derivative generation state.
+
+**Reason:**
+Editing metadata alone was not enough once Studio started coordinating source prose, source media, generated previews, and local derivative generation.
+
+**Effect:**
+Work, series, and detail editors now surface source readiness in the summary rail, work and series offer narrow `Import prose + rebuild` actions, detail preview resolves its own source media path, work and detail editors show compact current-record previews, work-detail rows on the work editor use thumbnail-led navigation, scoped rebuilds run a bounded local thumbnail-generation step for works, work details, and moments, and Build Activity records generated local media alongside rebuild outcomes.
+
+**Affected files/docs:**
+- `/studio/catalogue-work/`
+- `/studio/catalogue-work-detail/`
+- `/studio/catalogue-series/`
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+- [Build Activity](/docs/?scope=studio&doc=build-activity)
+
+**Notes:**
+This entry covers the later media/readiness refinements that followed the first editor surfaces.
+
+## [2026-04-18] Completed internal generator refactor for live JSON rebuilds
+
+**Status:** implemented
+
+**Area:** catalogue generator
+
+**Summary:**
+Refactored the internal generator so live JSON rebuilds no longer materialize `works.xlsx`.
+
+**Reason:**
+The live rebuild path needed to align with canonical JSON source records instead of continuing to depend on an intermediate workbook materialization step.
+
+**Effect:**
+`generate_work_pages.py` now rebuilds from canonical source records with an explicit in-memory compatibility projection, and JSON-source write runs now persist mutable source updates back into canonical catalogue JSON rather than round-tripping through a workbook file.
+
+**Affected files/docs:**
+- `scripts/generate_work_pages.py`
+- [Generate Work Pages](/docs/?scope=studio&doc=scripts-generate-work-pages)
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+
+**Notes:**
+`AGENTS.md` was updated to reflect the live JSON-led workflow and retire the older workbook-led entrypoint assumptions.
+
+## [2026-04-17] Added derived catalogue lookup payloads for lightweight Studio editors
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added the derived lookup payload layer used by the Studio editors.
+
+**Reason:**
+Loading the full catalogue source set in the browser was too heavy for focused editor routes that only need lightweight search data plus a current record.
+
+**Effect:**
+Studio editors now use lightweight search indexes plus focused per-record lookup JSON rather than loading the full source browser payload.
+
+**Affected files/docs:**
+- derived catalogue lookup JSON under `assets/studio/data/`
+- [Catalogue Search](/docs/?scope=studio&doc=search)
+- [Studio Implementation Plan](/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan)
+
+**Notes:**
+Later editor surfaces built on this lookup layer rather than on full-source browser loads.
+
+## [2026-04-17] Added the Studio series editor and series-scoped rebuild flow
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added the first series editor route for the JSON-led catalogue workflow.
+
+**Reason:**
+Series-level metadata and membership needed the same local editing and scoped rebuild model as individual works.
+
+**Effect:**
+`/studio/catalogue-series/` now supports canonical `series.json` save flow, atomic membership writes into `works.json`, and series-scoped rebuilds for the current series, affected works, aggregate indexes, and catalogue search.
+
+**Affected files/docs:**
+- `/studio/catalogue-series/`
+- `series.json`
+- `works.json`
+- [Catalogue Series](/docs/?scope=studio&doc=catalogue-series)
+
+**Notes:**
+This was the first series-specific editing surface in Studio.
+
+## [2026-04-17] Added the work detail editor and grouped work-detail navigation
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added the work detail editor and integrated grouped detail navigation into the work editor.
+
+**Reason:**
+Work details needed their own source-backed edit surface while still being easy to reach from the parent work context.
+
+**Effect:**
+`/studio/catalogue-work-detail/` now supports canonical `work_details.json` save flow and parent-work scoped rebuilds, while `/studio/catalogue-work/` shows grouped work-detail navigation capped at ten visible rows per section with per-work detail search by id.
+
+**Affected files/docs:**
+- `/studio/catalogue-work-detail/`
+- `/studio/catalogue-work/`
+- `work_details.json`
+- [Catalogue Work Detail](/docs/?scope=studio&doc=catalogue-work-detail)
+
+**Notes:**
+This built on the earlier single-work editor and scoped JSON rebuild path.
+
+## [2026-04-17] Added the first canonical work editor and scoped JSON rebuild path
+
+**Status:** implemented
+
+**Area:** Studio catalogue pipeline
+
+**Summary:**
+Added the first canonical single-work editor together with the scoped JSON-source rebuild flow.
+
+**Reason:**
+Studio needed a practical proof that individual work metadata could be edited safely against canonical JSON without relying on workbook editing.
+
+**Effect:**
+`/studio/catalogue-work/` became the first canonical work metadata editor, local preview/apply plus `Save + Rebuild` were added for work edits, Studio transport/config wiring gained separate catalogue local-service health probing, and the catalogue write server response now returns the normalized saved record plus saved timestamp for editor baseline refresh.
+
+**Affected files/docs:**
+- `/studio/catalogue-work/`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Work](/docs/?scope=studio&doc=catalogue-work)
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
+**Notes:**
+This was the first end-to-end canonical JSON editor in the Studio catalogue workflow.
 
 ## [2026-04-17] Added catalogue status and activity Studio pages
 
