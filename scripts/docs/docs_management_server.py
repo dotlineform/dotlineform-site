@@ -386,15 +386,14 @@ def make_backup_bundle(
     return bundle_dir
 
 
-def rebuild_scope_outputs(repo_root: Path, scope: str) -> Dict[str, Any]:
+def rebuild_scope_outputs(repo_root: Path, scope: str, include_search: bool = True) -> Dict[str, Any]:
     bundle_bin = detect_bundle_bin()
     if not bundle_bin:
         raise RuntimeError("bundle executable not found")
 
-    commands = [
-        [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"],
-        [bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"],
-    ]
+    commands = [[bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", scope, "--write"]]
+    if include_search:
+        commands.append([bundle_bin, "exec", "ruby", "scripts/build_search.rb", "--scope", scope, "--write"])
     steps = []
     for command in commands:
         completed = subprocess.run(
@@ -731,7 +730,7 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
         )
         for doc, rewritten_source in rewrites:
             write_text_atomic(doc.path, rewritten_source)
-        rebuild = rebuild_scope_outputs(repo_root, scope)
+        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=False)
         log_event(
             repo_root,
             "docs-move",

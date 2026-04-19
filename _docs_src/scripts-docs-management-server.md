@@ -82,6 +82,7 @@ Move behavior:
 - moves rewrite front matter only and never move files on disk
 - moves update only the dragged doc's `sort_order` and `parent_id`
 - sibling `sort_order` values are left unchanged to keep write noise low
+- moves rebuild docs payloads only and do not rebuild the docs search index
 
 `POST /docs/archive` expects:
 
