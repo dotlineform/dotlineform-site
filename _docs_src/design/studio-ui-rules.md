@@ -73,6 +73,17 @@ Use this sequence for Studio UI work:
    - mark it `adopted` if it became a permanent Studio rule
 5. Record the files changed and the local verification method.
 
+## Standing Instruction
+
+For every Studio UI issue reported and fixed:
+
+1. Fix the issue.
+2. Decide whether it is `one-off` or `systemic`.
+3. Update this document with a new or amended entry.
+4. Record the route, issue, triage, reasoning, files changed, verification method, and any permanent rule adopted.
+5. If the issue is systemic, prefer changing the shared primitive, token, or pattern rather than adding a page-specific workaround.
+6. Rebuild docs if this document changed.
+
 ## Working Rule
 
 Use this decision test:

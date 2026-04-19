@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-19T09:12:29Z",
+  "generated_at": "2026-04-19T10:28:19Z",
   "docs": [
     {
       "scope": "studio",
       "doc_id": "site-docs",
       "title": "Site Docs",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 0,
       "source_path": "site-docs.md",
@@ -77,6 +77,17 @@
       "source_path": "scripts/scripts-docs-builder.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-docs-builder",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-docs-builder.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-docs-viewer-favourites-spec",
+      "title": "Docs Viewer Favourites Spec",
+      "last_updated": "2026-04-19",
+      "parent_id": "ui-requests",
+      "sort_order": 10,
+      "source_path": "ui-requests/docs-viewer-favourites-spec.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-spec",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-spec.json"
     },
     {
       "scope": "studio",
@@ -157,6 +168,17 @@
     },
     {
       "scope": "studio",
+      "doc_id": "ui-requests",
+      "title": "UI Requests",
+      "last_updated": "2026-04-19",
+      "parent_id": "",
+      "sort_order": 15,
+      "source_path": "ui-requests/ui-requests.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-requests",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-requests.json"
+    },
+    {
+      "scope": "studio",
       "doc_id": "architecture",
       "title": "Architecture",
       "last_updated": "2026-03-31",
@@ -187,6 +209,17 @@
       "source_path": "scripts/scripts-main-pipeline.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-main-pipeline",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-main-pipeline.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-request-docs-viewer-favourites-task",
+      "title": "Docs Viewer Favourites Task",
+      "last_updated": "2026-04-19",
+      "parent_id": "ui-requests",
+      "sort_order": 20,
+      "source_path": "ui-requests/docs-viewer-favourites-task.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-request-docs-viewer-favourites-task.json"
     },
     {
       "scope": "studio",
@@ -643,7 +676,7 @@
       "scope": "studio",
       "doc_id": "docs-viewer",
       "title": "Docs Viewer",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "",
       "sort_order": 40,
       "source_path": "docs-viewer/docs-viewer.md",

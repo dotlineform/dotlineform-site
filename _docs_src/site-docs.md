@@ -1,7 +1,7 @@
 ---
 doc_id: site-docs
 title: Site Docs
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: ""
 sort_order: 0
 ---
@@ -18,6 +18,8 @@ Use it as the default entry point for `/docs/`.
   Studio routes, page wiring, and Studio-specific behavior.
 - **[Design](/docs/?scope=studio&doc=design)**
   site-wide UI rules, docs-viewer/search UI standards, Studio UI patterns, and CSS guidance.
+- **[UI Requests](/docs/?scope=studio&doc=ui-requests)**
+  working specs and task docs for UI-driven feature requests.
 - **[Architecture](/docs/?scope=studio&doc=architecture)**
   route/runtime building blocks, shared shell behavior, and generated-artifact flow into the live site.
 - **[Config](/docs/?scope=studio&doc=config)**
