@@ -276,6 +276,7 @@ input.tagStudio__input {
 }
 
 .tagStudio__button {
+  box-sizing: border-box;
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
   color: inherit;
@@ -288,6 +289,8 @@ input.tagStudio__input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -1554,6 +1557,16 @@ input.tagStudio__input {
   margin-top: 1rem;
 }
 
+.catalogueWorkDetails__actions {
+  display: flex;
+  align-items: center;
+  flex: 1 1 26rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
 .catalogueWorkDetails__searchWrap {
   flex: 0 1 18rem;
   min-width: 0;
@@ -1685,6 +1698,10 @@ input.tagStudio__input {
   .catalogueWorkDetails__row {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.2rem;
+  }
+
+  .catalogueWorkDetails__actions {
+    justify-content: flex-start;
   }
 
   .catalogueSeriesMembers__row {

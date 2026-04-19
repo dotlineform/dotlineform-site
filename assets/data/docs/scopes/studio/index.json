@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-18T23:16:15Z",
+  "generated_at": "2026-04-19T09:12:29Z",
   "docs": [
     {
       "scope": "studio",
@@ -275,6 +275,17 @@
       "source_path": "design/studio-ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-framework.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-rules",
+      "title": "Studio UI Rules And Decision Log",
+      "last_updated": "2026-04-19",
+      "parent_id": "design",
+      "sort_order": 21,
+      "source_path": "design/studio-ui-rules.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-rules",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-rules.json"
     },
     {
       "scope": "studio",

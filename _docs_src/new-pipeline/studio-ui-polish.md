@@ -8,61 +8,19 @@ sort_order: 61
 
 # Studio UI Polish
 
-This document is the punch list for cosmetic and small interaction fixes across Studio.
+This document has been folded into [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules).
 
-Use it for:
+Use [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) for:
 
-- spacing issues
-- alignment issues
-- inconsistent button or input styling
-- minor copy/signposting fixes
-- thumbnail/preview presentation fixes
-- mobile-only or desktop-only layout issues
+- open UI issues captured from IAB or local browser review
+- triage notes
+- one-off UI fixes
+- permanent Studio UI rules
+- local verification notes
 
-Do not use it for:
+This page remains only as a compatibility pointer for older docs links.
 
-- architectural changes
-- workflow redesign
-- new feature scope
-- source-model or generator changes
+## Status
 
-## How To Use This Doc
-
-Add each issue as one short item with:
-
-- route
-- problem
-- desired change
-- priority
-- viewport
-- screenshot reference if helpful
-
-Keep items small enough that several can be batched into one UI polish pass.
-
-## Status Labels
-
-Use one of:
-
-- `open`
-- `in progress`
-- `done`
-- `deferred`
-
-## Item Template
-
-```text
-### UI-###
-
-- status: open
-- route:
-- priority: low | medium | high
-- viewport: desktop | mobile | both
-- problem:
-- desired change:
-- screenshot:
-- notes:
-```
-
-## Current Items
-
-Add new items below this line.
+- retired
+- folded into the Studio UI rules/log workflow on 2026-04-19
