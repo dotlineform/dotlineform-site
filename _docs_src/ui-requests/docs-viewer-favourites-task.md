@@ -124,8 +124,11 @@ Likely scope-owned routes to verify:
 ## Open Decisions
 
 - whether rename mode is entered by double-click, keyboard shortcut, or a dedicated small edit affordance
+A: ideal: right-click, 'rename'.
 - whether bookmark ordering should remain insertion order or move most-recently-added to the front
+A: insertion order
 - whether the star action should remove an existing favourite directly or open a tiny confirm-free toggle flow
+A: remove directly (star is effectively a toggle)
 
 ## Deferred Follow-Up
 
