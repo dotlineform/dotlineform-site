@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-36268bf3d49c87b11a25752a88be5689",
-    "generated_at_utc": "2026-04-19T19:54:18Z",
+    "version": "blake2b-d4013fc2c08089e9c068b30663c50adb",
+    "generated_at_utc": "2026-04-19T21:07:44Z",
     "count": 111
   },
   "entries": [
@@ -381,7 +381,7 @@
     {
       "id": "ui-request-docs-viewer-favourites-task",
       "kind": "doc",
-      "title": "Docs Viewer Favourites Task",
+      "title": "Docs Viewer Favourites",
       "href": "/docs/?scope=studio&doc=ui-request-docs-viewer-favourites-task",
       "last_updated": "2026-04-19",
       "parent_id": "ui-requests",
@@ -395,7 +395,7 @@
         "viewer",
         "favourites",
         "task",
-        "docs viewer favourites task",
+        "docs viewer favourites",
         "ui requests",
         "requests",
         "2026-04-19",
@@ -403,7 +403,7 @@
         "04",
         "19"
       ],
-      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites task ui requests requests 2026-04-19 2026 04 19"
+      "search_text": "ui-request-docs-viewer-favourites-task ui request docs viewer favourites task docs viewer favourites ui requests requests 2026-04-19 2026 04 19"
     },
     {
       "id": "config-pipeline-json",

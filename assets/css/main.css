@@ -1096,6 +1096,8 @@ th{ background: var(--panel-2); }
   color: var(--text);
   text-decoration: none;
   line-height: var(--line-snug);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .docsViewer__navLink:visited{
@@ -1132,6 +1134,162 @@ th{ background: var(--panel-2); }
 .docsViewer__navRow.is-drop-inside{
   background: color-mix(in srgb, var(--panel-2) 72%, transparent);
   box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.docsViewer__contextMenu{
+  position: fixed;
+  z-index: 30;
+  min-width: 11rem;
+  padding: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  background: var(--panel);
+  box-shadow: 0 10px 25px color-mix(in srgb, var(--text) 12%, transparent);
+}
+
+.docsViewer__contextMenu[hidden]{
+  display: none;
+}
+
+.docsViewer__contextDivider{
+  height: 1px;
+  margin: 0.22rem 0.2rem;
+  background: var(--border);
+}
+
+.docsViewer__contextAction{
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0.48rem 0.65rem;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+  text-align: left;
+  cursor: pointer;
+}
+
+.docsViewer__contextAction:hover,
+.docsViewer__contextAction:focus-visible{
+  background: var(--panel-2);
+  outline: none;
+}
+
+.docsViewer__modal{
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+}
+
+.docsViewer__modalBackdrop{
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.docsViewer__modalCard{
+  position: relative;
+  z-index: 1;
+  width: min(38rem, calc(100vw - 2rem));
+  margin: 8vh auto 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.14);
+  padding: 0.95rem;
+}
+
+.docsViewer__modalHeader{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.docsViewer__modalHeaderCopy{
+  min-width: 0;
+}
+
+.docsViewer__modalTitle{
+  margin: 0;
+  font-size: var(--font-h3);
+  line-height: var(--line-snug);
+}
+
+.docsViewer__modalMeta{
+  margin: 0.3rem 0 0;
+}
+
+.docsViewer__modalClose{
+  appearance: none;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  border-radius: 999px;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  line-height: 1;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.docsViewer__modalForm{
+  display: grid;
+  gap: 0.9rem;
+}
+
+.docsViewer__field{
+  display: grid;
+  gap: 0.28rem;
+}
+
+.docsViewer__fieldLabel{
+  font-size: 1rem;
+  line-height: var(--line-snug);
+  color: var(--text);
+}
+
+.docsViewer__fieldInput{
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--panel);
+  color: var(--text);
+  padding: 0.48rem 0.55rem;
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+  max-width: 100%;
+}
+
+select.docsViewer__fieldInput{
+  height: 2rem;
+  min-height: 2rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.docsViewer__fieldInput:focus-visible,
+.docsViewer__modalClose:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewer__modalNote{
+  margin: -0.2rem 0 0;
+}
+
+.docsViewer__modalActions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
 }
 
 .docsViewer__main{

@@ -30,6 +30,7 @@
       <div class="docsViewer__manageActions">
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageRebuildButton">Rebuild docs</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageNewButton">New</button>
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageEditButton">Edit</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageArchiveButton">Archive</button>
         <button class="docsViewer__actionButton" type="button" id="docsViewerManageDeleteButton">Delete</button>
       </div>
@@ -44,6 +45,44 @@
       <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
     </div>
   </aside>
+  <div class="docsViewer__contextMenu" id="docsViewerContextMenu" hidden>
+    <button class="docsViewer__contextAction" type="button" data-context-action="open">Open</button>
+    <button class="docsViewer__contextAction" type="button" data-context-action="open-vscode">Open In VS Code</button>
+    <div class="docsViewer__contextDivider" aria-hidden="true"></div>
+    <button class="docsViewer__contextAction" type="button" data-context-action="new-sibling">New Sibling</button>
+    <button class="docsViewer__contextAction" type="button" data-context-action="new-child">New Child</button>
+  </div>
+  <div class="docsViewer__modal" id="docsViewerMetadataModal" hidden>
+    <div class="docsViewer__modalBackdrop" data-metadata-close="true"></div>
+    <div class="docsViewer__modalCard" role="dialog" aria-modal="true" aria-labelledby="docsViewerMetadataHeading">
+      <div class="docsViewer__modalHeader">
+        <div class="docsViewer__modalHeaderCopy">
+          <h2 class="docsViewer__modalTitle" id="docsViewerMetadataHeading">Edit metadata</h2>
+          <p class="docsViewer__modalMeta muted small" id="docsViewerMetadataDocId"></p>
+        </div>
+        <button class="docsViewer__modalClose" type="button" id="docsViewerMetadataCloseButton" aria-label="Close metadata editor">×</button>
+      </div>
+      <form class="docsViewer__modalForm" id="docsViewerMetadataForm">
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">title</span>
+          <input class="docsViewer__fieldInput" id="docsViewerMetadataTitleInput" name="title" type="text" autocomplete="off" spellcheck="false" required>
+        </label>
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">parent</span>
+          <select class="docsViewer__fieldInput" id="docsViewerMetadataParentInput" name="parent_id"></select>
+        </label>
+        <label class="docsViewer__field">
+          <span class="docsViewer__fieldLabel">sort order</span>
+          <input class="docsViewer__fieldInput" id="docsViewerMetadataSortOrderInput" name="sort_order" type="number" step="1" inputmode="numeric" placeholder="blank">
+        </label>
+        <p class="docsViewer__modalNote muted small" id="docsViewerMetadataNote">Blank sort order leaves the doc unordered.</p>
+        <div class="docsViewer__modalActions">
+          <button class="docsViewer__actionButton" type="button" id="docsViewerMetadataCancelButton">Cancel</button>
+          <button class="docsViewer__actionButton" type="submit" id="docsViewerMetadataSaveButton">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <article class="docsViewer__main" aria-live="polite">
     <div class="docsViewer__meta" id="docsViewerMeta" hidden>

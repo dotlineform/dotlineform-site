@@ -10,6 +10,7 @@
   var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
   var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
   var content = document.getElementById("docsViewerContent");
+  var contextMenu = document.getElementById("docsViewerContextMenu");
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
   var more = document.getElementById("docsViewerMore");
@@ -18,8 +19,18 @@
   var manageNote = document.getElementById("docsViewerManageNote");
   var manageRebuildButton = document.getElementById("docsViewerManageRebuildButton");
   var manageNewButton = document.getElementById("docsViewerManageNewButton");
+  var manageEditButton = document.getElementById("docsViewerManageEditButton");
   var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
   var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
+  var metadataModal = document.getElementById("docsViewerMetadataModal");
+  var metadataForm = document.getElementById("docsViewerMetadataForm");
+  var metadataDocId = document.getElementById("docsViewerMetadataDocId");
+  var metadataTitleInput = document.getElementById("docsViewerMetadataTitleInput");
+  var metadataParentInput = document.getElementById("docsViewerMetadataParentInput");
+  var metadataSortOrderInput = document.getElementById("docsViewerMetadataSortOrderInput");
+  var metadataCloseButton = document.getElementById("docsViewerMetadataCloseButton");
+  var metadataCancelButton = document.getElementById("docsViewerMetadataCancelButton");
+  var metadataSaveButton = document.getElementById("docsViewerMetadataSaveButton");
 
   var indexUrl = appendAssetVersion(root.dataset.indexUrl);
   var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
@@ -72,7 +83,10 @@
     reloadExpectedDocId: "",
     dragDocId: "",
     dropTargetDocId: "",
-    dropPosition: ""
+    dropPosition: "",
+    contextMenuDocId: "",
+    metadataEditingDocId: "",
+    metadataRestoreFocusId: ""
   };
 
   function sortKey(doc) {
@@ -658,6 +672,10 @@
     return state.docsById.get(state.selectedDocId) || null;
   }
 
+  function currentContextMenuDoc() {
+    return state.docsById.get(state.contextMenuDocId) || null;
+  }
+
   function docChildren(docId) {
     return state.childrenByParent.get(docId) || [];
   }
@@ -701,6 +719,101 @@
     state.dropTargetDocId = "";
     state.dropPosition = "";
     updateNavDragState();
+  }
+
+  function contextMenuEnabled() {
+    return state.managementMode && state.managementAvailable;
+  }
+
+  function metadataModalOpen() {
+    return Boolean(metadataModal && !metadataModal.hidden);
+  }
+
+  function hideContextMenu() {
+    state.contextMenuDocId = "";
+    if (contextMenu) {
+      contextMenu.hidden = true;
+      contextMenu.style.left = "";
+      contextMenu.style.top = "";
+    }
+  }
+
+  function showContextMenu(docId, clientX, clientY) {
+    if (!contextMenu || !contextMenuEnabled()) return;
+    state.contextMenuDocId = docId;
+    contextMenu.hidden = false;
+    contextMenu.style.left = "0px";
+    contextMenu.style.top = "0px";
+    var menuRect = contextMenu.getBoundingClientRect();
+    var maxLeft = Math.max(8, window.innerWidth - menuRect.width - 8);
+    var maxTop = Math.max(8, window.innerHeight - menuRect.height - 8);
+    contextMenu.style.left = Math.min(clientX, maxLeft) + "px";
+    contextMenu.style.top = Math.min(clientY, maxTop) + "px";
+  }
+
+  function collectDescendantDocIds(docId, bucket) {
+    docChildren(docId).forEach(function (child) {
+      if (bucket.has(child.doc_id)) return;
+      bucket.add(child.doc_id);
+      collectDescendantDocIds(child.doc_id, bucket);
+    });
+    return bucket;
+  }
+
+  function metadataParentOptions(doc) {
+    var blockedIds = collectDescendantDocIds(doc.doc_id, new Set([doc.doc_id]));
+    var options = [{ value: "", label: "Root" }];
+    function pushChildren(parentId, depth) {
+      (state.childrenByParent.get(parentId) || []).forEach(function (candidate) {
+        if (!blockedIds.has(candidate.doc_id)) {
+          options.push({
+            value: candidate.doc_id,
+            label: (depth > 0 ? new Array(depth + 1).join("— ") : "") + candidate.title
+          });
+        }
+        pushChildren(candidate.doc_id, depth + 1);
+      });
+    }
+    pushChildren("", 0);
+    return options;
+  }
+
+  function closeMetadataModal() {
+    if (!metadataModal) return;
+    metadataModal.hidden = true;
+    state.metadataEditingDocId = "";
+    var restoreDocId = state.metadataRestoreFocusId;
+    state.metadataRestoreFocusId = "";
+    if (!restoreDocId || !nav) return;
+    var target = nav.querySelector('[data-doc-row-id="' + cssEscape(restoreDocId) + '"] .docsViewer__navLink');
+    if (target) target.focus();
+  }
+
+  function openMetadataModal() {
+    var doc = currentSelectedDoc();
+    if (!doc || !metadataModal || !metadataForm || !metadataTitleInput || !metadataParentInput || !metadataSortOrderInput) return;
+    if (doc.doc_id === "_archive") return;
+
+    hideContextMenu();
+    state.metadataEditingDocId = doc.doc_id;
+    state.metadataRestoreFocusId = doc.doc_id;
+    if (metadataDocId) {
+      metadataDocId.textContent = doc.doc_id;
+    }
+
+    metadataTitleInput.value = doc.title || "";
+    metadataSortOrderInput.value = doc.sort_order == null ? "" : String(doc.sort_order);
+    metadataSortOrderInput.min = "0";
+    metadataParentInput.innerHTML = metadataParentOptions(doc).map(function (option) {
+      var selected = option.value === (doc.parent_id || "") ? ' selected' : "";
+      return '<option value="' + escapeHtml(option.value) + '"' + selected + '>' + escapeHtml(option.label) + "</option>";
+    }).join("");
+
+    metadataModal.hidden = false;
+    window.requestAnimationFrame(function () {
+      metadataTitleInput.focus();
+      metadataTitleInput.select();
+    });
   }
 
   function updateNavDragState() {
@@ -768,10 +881,16 @@
       manageNote.classList.toggle("is-error", noteIsError);
     }
 
-    if (!manageRebuildButton || !manageNewButton || !manageArchiveButton || !manageDeleteButton) return;
+    if (!manageRebuildButton || !manageNewButton || !manageEditButton || !manageArchiveButton || !manageDeleteButton) return;
 
     var doc = currentSelectedDoc();
     var reserved = Boolean(doc && doc.doc_id === "_archive");
+    var editDisabled = (
+      state.managementBusy ||
+      !doc ||
+      state.searchRouteActive ||
+      reserved
+    );
     var archiveDisabled = (
       state.managementBusy ||
       !doc ||
@@ -789,8 +908,12 @@
 
     manageRebuildButton.disabled = state.managementBusy || !state.managementAvailable;
     manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
+    manageEditButton.disabled = !state.managementAvailable || editDisabled;
     manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
     manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
+    if (metadataSaveButton) {
+      metadataSaveButton.disabled = state.managementBusy;
+    }
   }
 
   function fetchManagementJson(path, method, payload) {
@@ -899,6 +1022,90 @@
       .catch(function (error) {
         setManagementMessage(error.message || "Create failed.", true);
         setStatus(error.message || "Create failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleCreateRelatedDoc(kind) {
+    var baseDoc = currentContextMenuDoc();
+    if (!baseDoc) return;
+
+    var titleInput = window.prompt(kind === "child" ? "New child title" : "New sibling title", "New Doc");
+    if (titleInput == null) return;
+
+    var title = String(titleInput || "").trim() || "New Doc";
+    var payload = {
+      scope: viewerScope,
+      title: title
+    };
+    if (kind === "child") {
+      payload.parent_id = baseDoc.doc_id;
+    } else {
+      payload.after_doc_id = baseDoc.doc_id;
+    }
+
+    state.managementBusy = true;
+    hideContextMenu();
+    setManagementMessage("Creating doc...", false);
+    setStatus("Creating doc...", false);
+
+    fetchManagementJson("/docs/create", "POST", payload)
+      .then(function (response) {
+        setManagementMessage(response.summary_text || "Doc created.", false);
+        return reloadDocsIndex(response.doc_id, response.summary_text || "Doc created.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Create failed.", true);
+        setStatus(error.message || "Create failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleEditMetadataSubmit() {
+    var doc = state.metadataEditingDocId ? state.docsById.get(state.metadataEditingDocId) : currentSelectedDoc();
+    if (!doc || !metadataTitleInput || !metadataParentInput || !metadataSortOrderInput) return;
+
+    var title = String(metadataTitleInput.value || "").trim();
+    if (!title) {
+      metadataTitleInput.focus();
+      return;
+    }
+
+    var parentId = String(metadataParentInput.value || "").trim();
+    var sortOrderText = String(metadataSortOrderInput.value || "").trim();
+    if (sortOrderText && Number(sortOrderText) < 0) {
+      setManagementMessage("sort_order must be zero or greater.", true);
+      setStatus("sort_order must be zero or greater.", true);
+      metadataSortOrderInput.focus();
+      return;
+    }
+    var payload = {
+      scope: viewerScope,
+      doc_id: doc.doc_id,
+      title: title,
+      parent_id: parentId,
+      sort_order: sortOrderText
+    };
+
+    state.managementBusy = true;
+    setManagementMessage("Saving metadata for " + doc.title + "...", false);
+    setStatus("Saving metadata for " + doc.title + "...", false);
+
+    fetchManagementJson("/docs/update-metadata", "POST", payload)
+      .then(function (response) {
+        closeMetadataModal();
+        setManagementMessage(response.summary_text || "Metadata saved.", false);
+        return reloadDocsIndex(doc.doc_id, response.summary_text || "Metadata saved.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Metadata update failed.", true);
+        setStatus(error.message || "Metadata update failed.", true);
       })
       .finally(function () {
         state.managementBusy = false;
@@ -1055,6 +1262,35 @@
       });
   }
 
+  function handleOpenSource(editor) {
+    var docId = state.contextMenuDocId;
+    var doc = state.docsById.get(docId);
+    if (!doc) return;
+
+    state.managementBusy = true;
+    hideContextMenu();
+    setManagementMessage("Opening source for " + doc.title + "...", false);
+    setStatus("Opening source for " + doc.title + "...", false);
+
+    fetchManagementJson("/docs/open-source", "POST", {
+      scope: viewerScope,
+      doc_id: doc.doc_id,
+      editor: editor === "vscode" ? "vscode" : "default"
+    })
+      .then(function () {
+        setManagementMessage("", false);
+        setStatus("", false);
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Open source failed.", true);
+        setStatus(error.message || "Open source failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
   function scrollToHash(hash) {
     if (!hash) {
       window.scrollTo({ top: 0, behavior: "auto" });
@@ -1199,9 +1435,31 @@
 
   function bindLinkInterception() {
     if (nav) {
+      nav.addEventListener("mousedown", function (event) {
+        var row = event.target.closest("[data-doc-row-id]");
+        if (!row || !contextMenuEnabled() || event.button !== 2) return;
+        event.preventDefault();
+        if (window.getSelection) {
+          var selection = window.getSelection();
+          if (selection) selection.removeAllRanges();
+        }
+      });
+
+      nav.addEventListener("contextmenu", function (event) {
+        var row = event.target.closest("[data-doc-row-id]");
+        if (!row || !contextMenuEnabled()) return;
+        event.preventDefault();
+        if (window.getSelection) {
+          var selection = window.getSelection();
+          if (selection) selection.removeAllRanges();
+        }
+        showContextMenu(row.dataset.docRowId || "", event.clientX, event.clientY);
+      });
+
       nav.addEventListener("dragstart", function (event) {
         var dragHandle = event.target.closest("[data-drag-doc-id]");
         if (!dragHandle || !managementDragEnabled()) return;
+        hideContextMenu();
         state.dragDocId = dragHandle.dataset.dragDocId || "";
         state.dropTargetDocId = "";
         state.dropPosition = "";
@@ -1269,6 +1527,17 @@
     }
 
     root.addEventListener("click", function (event) {
+      if (contextMenu && !event.target.closest("#docsViewerContextMenu")) {
+        hideContextMenu();
+      }
+      if (metadataModalOpen()) {
+        var closeTrigger = event.target.closest("[data-metadata-close]");
+        if (closeTrigger) {
+          event.preventDefault();
+          closeMetadataModal();
+          return;
+        }
+      }
       var toggle = event.target.closest("[data-toggle-doc-id]");
       if (toggle) {
         var toggleDocId = toggle.dataset.toggleDocId;
@@ -1299,6 +1568,7 @@
 
     if (bookmarkToggle) {
       bookmarkToggle.addEventListener("click", function () {
+        hideContextMenu();
         toggleCurrentBookmark();
       });
     }
@@ -1362,27 +1632,85 @@
 
     if (manageRebuildButton) {
       manageRebuildButton.addEventListener("click", function () {
+        hideContextMenu();
         handleRebuildDocs();
       });
     }
 
     if (manageNewButton) {
       manageNewButton.addEventListener("click", function () {
+        hideContextMenu();
         handleCreateDoc();
+      });
+    }
+
+    if (manageEditButton) {
+      manageEditButton.addEventListener("click", function () {
+        openMetadataModal();
       });
     }
 
     if (manageArchiveButton) {
       manageArchiveButton.addEventListener("click", function () {
+        hideContextMenu();
         handleArchiveDoc();
       });
     }
 
     if (manageDeleteButton) {
       manageDeleteButton.addEventListener("click", function () {
+        hideContextMenu();
         handleDeleteDoc();
       });
     }
+
+    if (contextMenu) {
+      contextMenu.addEventListener("click", function (event) {
+        var action = event.target.closest("[data-context-action]");
+        if (!action) return;
+        if (action.dataset.contextAction === "new-sibling") {
+          handleCreateRelatedDoc("sibling");
+          return;
+        }
+        if (action.dataset.contextAction === "new-child") {
+          handleCreateRelatedDoc("child");
+          return;
+        }
+        if (action.dataset.contextAction === "open-vscode") {
+          handleOpenSource("vscode");
+          return;
+        }
+        if (action.dataset.contextAction === "open") {
+          handleOpenSource("default");
+        }
+      });
+    }
+
+    if (metadataCloseButton) {
+      metadataCloseButton.addEventListener("click", function () {
+        closeMetadataModal();
+      });
+    }
+
+    if (metadataCancelButton) {
+      metadataCancelButton.addEventListener("click", function () {
+        closeMetadataModal();
+      });
+    }
+
+    if (metadataForm) {
+      metadataForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        handleEditMetadataSubmit();
+      });
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && metadataModalOpen()) {
+        event.preventDefault();
+        closeMetadataModal();
+      }
+    });
 
     if (searchEnabled) {
       more.addEventListener("click", function (event) {
@@ -1712,8 +2040,17 @@
 
   window.addEventListener("popstate", function () {
     if (state.docs.length === 0) return;
+    hideContextMenu();
     cancelSearchDebounce();
     applyCurrentRoute({ historyMode: "none", hash: getCurrentHash() });
+  });
+
+  window.addEventListener("scroll", hideContextMenu, { passive: true });
+  window.addEventListener("resize", hideContextMenu);
+  window.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      hideContextMenu();
+    }
   });
 
   bindLinkInterception();

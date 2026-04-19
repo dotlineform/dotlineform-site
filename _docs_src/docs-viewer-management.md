@@ -12,7 +12,9 @@ Status:
 - Phase 1 implemented: flat Studio source layout and management contract
 - Phase 2 implemented: localhost write service plus manage-mode create/archive/delete
 - Phase 3 implemented: leaf-doc drag/drop move with front-matter-only tree updates
-- follow-on work remains for richer edit flows such as inline metadata editing
+- Phase 4 implemented: current-doc metadata edit modal for `title`, `parent_id`, and `sort_order`
+- Phase 5 implemented: right-click contextual creation for `New Sibling` and `New Child`
+- current follow-on work is optional rather than required for the local management surface
 
 ## Implementation Status
 
@@ -29,53 +31,68 @@ Implemented now:
 - move/create-after-selected use sparse `sort_order` increments without renumbering siblings
 - move rebuilds docs payloads only; create/archive/delete rebuild docs payloads plus docs search
 - docs-management backups are operation-scoped rather than full-scope snapshots
+- `Open Source` is available from a manage-mode right-click menu on doc rows
+- right-click `Open Source` currently exposes:
+  - `Open`
+  - `Open In VS Code`
+- right-click create actions now expose:
+  - `New Sibling`
+  - `New Child`
+- `Edit` is available for the current doc in the manage toolbar
+- metadata edit opens in a modal and currently supports:
+  - `title`
+  - `parent_id`
+  - `sort_order`
+- title edits do not mutate `doc_id` or filename
+- metadata edits validate parentage and reject self-parent or descendant-parent cycles
+- metadata edits rebuild docs payloads, and rebuild docs search only when the title changes
 
 Not implemented yet:
 
 - dragging folders or any doc with child docs
-- inline title/front-matter editing in the viewer
-- rename flows beyond create-time title input
 - hosted-site or multi-user write behavior
 
 ## Suggested Follow-On Features
 
-Recommended next steps if this stays a docs management surface rather than becoming a full document editor:
+Current state:
 
-- add a small metadata edit action for the current doc:
-  - `title`
-  - `parent_id`
-  - `sort_order`
-  - optionally `published`
-- add explicit `New Sibling` and `New Child` actions so placement can be chosen directly without relying only on drag/drop
-- add a lightweight recent-ops or restore view backed by the existing backup bundles
-- improve drag/drop affordances with clearer drop hints and a short manage-mode helper note
-- add guided `_archive` setup when archive is unavailable because the reserved doc does not exist
-- surface move/archive/delete preview details more clearly in the UI rather than relying only on confirm prompts
-- add `Open Source` for the current doc:
-  - local-only
-  - resolves the current doc's `.md` path through the docs-management server
-  - opens the file in the local machine's default Markdown editor
-  - returns the resolved path as fallback if launch fails
-- optionally add `Reveal In Finder` alongside `Open Source`
+- no further follow-on feature is currently committed
+- the local management surface now covers the originally confirmed workflow:
+  - `Open`
+  - `Open In VS Code`
+  - metadata edit for the current doc
+  - `New Sibling`
+  - `New Child`
+  - drag/drop move for leaf docs
+  - archive and delete
+
+Potential later areas, if promoted:
+
+- dragging folders or docs with child docs
+- a stronger modal/shareable shell for docs-viewer management actions if the surface grows
+- more explicit structured impact previews for archive/delete if native confirm flows become a limiting factor
 
 Recommended boundary:
 
 - use the viewer to manage structure and metadata
 - use a real editor to write document body content
+- keep docs management desktop/local only rather than designing a mobile management surface
 
-Features to avoid unless the product direction changes:
+Declined for now:
 
+- recent-ops or restore view backed by backup bundles
+- additional drag/drop hints or manage-mode helper copy
+- guided `_archive` setup flow
+- richer move/archive/delete preview UI
+- `Reveal In Finder`
 - inline markdown body editing
 - rich text editing
 - turning `/docs/` into a CMS
 - automatic cross-doc link rewriting
 
-Priority suggestion:
+Confirmed priority order:
 
-- first: `Open Source` and/or `Reveal In Finder`
-- second: current-doc metadata editing
-- third: `New Sibling` and `New Child`
-- fourth: backup restore or recent-ops visibility
+1. no further confirmed follow-on item is currently queued
 
 ## Summary
 
@@ -160,6 +177,7 @@ Excluded for the first implementation unless later promoted:
 
 - management mode is for local admin/developer use only
 - the feature is unavailable on the static hosted site
+- the feature does not need to be exposed in mobile environments
 - the current shared Docs Viewer model should remain shared unless management mode forces a deeper fork
 - source docs remain file-backed under `_docs_src`
 - `library` remains part of the same shared runtime, but its source root is already flat under `_docs_library_src/`
@@ -280,6 +298,12 @@ If `mode=manage` is present but the local server is unavailable, the viewer must
 - stay read-only
 - show a clear `server unavailable` message in the viewer-level control area
 - avoid rendering controls that imply writes will succeed
+
+Mobile note:
+
+- docs management is not intended as a mobile-admin surface
+- mobile environments are not expected to have the required local server
+- right-click-driven management actions do not need mobile equivalents
 
 ### Local Write Boundary
 

@@ -12,6 +12,8 @@ Endpoints:
   GET /health
   GET /capabilities
   POST /docs/rebuild
+  POST /docs/open-source
+  POST /docs/update-metadata
   POST /docs/create
   POST /docs/move
   POST /docs/archive
@@ -64,6 +66,7 @@ SCOPE_ROOTS = {
 RESERVED_DOC_IDS = {"_archive"}
 BACKUPS_REL_DIR = Path("var/docs/backups")
 LOGS_REL_DIR = Path("var/docs/logs")
+DEFAULT_MARKDOWN_APP_ENV = "DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP"
 
 
 @dataclass
@@ -113,6 +116,17 @@ def detect_repo_root(explicit_root: str) -> Path:
             return found
 
     raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
+
+
+def detect_preferred_markdown_app() -> Optional[str]:
+    configured = os.environ.get(DEFAULT_MARKDOWN_APP_ENV, "").strip()
+    if configured:
+        return configured
+
+    for app_name in ["MarkEdit", "Typora", "Marked 2", "Marked"]:
+        if (Path("/Applications") / f"{app_name}.app").exists():
+            return app_name
+    return None
 
 
 def detect_bundle_bin() -> Optional[str]:
@@ -337,6 +351,23 @@ def create_sort_order_after(docs: list[ScopeDoc], after_doc: ScopeDoc) -> int:
     return current_order + 1
 
 
+def descendant_doc_ids(docs: list[ScopeDoc], doc_id: str) -> set[str]:
+    children_by_parent: dict[str, list[ScopeDoc]] = {}
+    for doc in docs:
+        children_by_parent.setdefault(doc.parent_id, []).append(doc)
+
+    seen: set[str] = set()
+    stack = [doc_id]
+    while stack:
+        current = stack.pop()
+        for child in children_by_parent.get(current, []):
+            if child.doc_id in seen:
+                continue
+            seen.add(child.doc_id)
+            stack.append(child.doc_id)
+    return seen
+
+
 def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
     updated_front_matter = dict(doc.front_matter)
     updated_front_matter.update(front_matter_updates)
@@ -489,6 +520,65 @@ def query_param(handler: BaseHTTPRequestHandler, name: str) -> str:
     parsed = urlparse(handler.path)
     values = parse_qs(parsed.query).get(name, [])
     return str(values[0] if values else "").strip()
+
+
+def open_source_doc(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    doc_id = str(body.get("doc_id") or "").strip()
+    editor = str(body.get("editor") or "default").strip().lower()
+    if not doc_id:
+        raise ValueError("doc_id is required")
+    if editor not in {"default", "vscode"}:
+        raise ValueError("editor must be `default` or `vscode`")
+
+    docs = load_scope_docs(repo_root, scope)
+    target = next((doc for doc in docs if doc.doc_id == doc_id), None)
+    if target is None:
+        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+
+    preferred_app = detect_preferred_markdown_app()
+
+    if editor == "vscode":
+        command = ["open", "-a", "Visual Studio Code", str(target.path)]
+    else:
+        if preferred_app:
+            command = ["open", "-a", preferred_app, str(target.path)]
+        else:
+            command = ["open", str(target.path)]
+
+    if not dry_run:
+        completed = subprocess.run(
+            command,
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if completed.returncode != 0:
+            detail = completed.stderr.strip() or completed.stdout.strip() or f"exit {completed.returncode}"
+            raise RuntimeError(f"open source failed: {detail}")
+        log_event(
+            repo_root,
+            "docs-open-source",
+            {
+                "scope": scope,
+                "doc_id": target.doc_id,
+                "editor": editor,
+                "preferred_app": preferred_app if editor == "default" else "",
+                "path": relative_path(repo_root, target.path),
+            },
+        )
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_id": target.doc_id,
+        "editor": editor,
+        "preferred_app": preferred_app if editor == "default" else "",
+        "path": relative_path(repo_root, target.path),
+        "summary_text": f"Opened {target.doc_id} source.",
+        "dry_run": dry_run,
+    }
 
 
 def preview_delete(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
@@ -691,6 +781,122 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
             "sort_order": sort_order,
         },
         "summary_text": f"Created {doc_id}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "dry_run": dry_run,
+    }
+
+
+def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    doc_id = str(body.get("doc_id") or "").strip()
+    if not doc_id:
+        raise ValueError("doc_id is required")
+
+    docs = load_scope_docs(repo_root, scope)
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    target = docs_by_id.get(doc_id)
+    if target is None:
+        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+    if target.doc_id in RESERVED_DOC_IDS:
+        raise ValueError(f"{target.doc_id} is a reserved system doc and cannot be edited")
+
+    title = str(body.get("title") or "").strip()
+    if not title:
+        raise ValueError("title is required")
+
+    parent_id = str(body.get("parent_id") or "").strip()
+    if parent_id == target.doc_id:
+        raise ValueError("parent_id cannot be the current doc")
+    if parent_id and parent_id not in docs_by_id:
+        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
+    if parent_id and parent_id in descendant_doc_ids(docs, target.doc_id):
+        raise ValueError("parent_id cannot be a child or descendant of the current doc")
+
+    raw_sort_order = body.get("sort_order")
+    if raw_sort_order in {None, ""}:
+        sort_order = None
+    else:
+        try:
+            sort_order = int(raw_sort_order)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("sort_order must be an integer or blank") from exc
+        if sort_order < 0:
+            raise ValueError("sort_order must be zero or greater")
+
+    title_changed = title != target.title
+    parent_changed = parent_id != target.parent_id
+    sort_changed = sort_order != target.sort_order
+    if not (title_changed or parent_changed or sort_changed):
+        return {
+            "ok": True,
+            "scope": scope,
+            "doc_id": target.doc_id,
+            "path": relative_path(repo_root, target.path),
+            "record": {
+                "doc_id": target.doc_id,
+                "title": target.title,
+                "parent_id": target.parent_id,
+                "sort_order": target.sort_order,
+            },
+            "summary_text": f"No metadata changes for {target.doc_id}.",
+            "dry_run": dry_run,
+        }
+
+    updated_front_matter = dict(target.front_matter)
+    updated_front_matter["title"] = title
+    updated_front_matter["last_updated"] = current_date()
+    updated_front_matter["parent_id"] = parent_id
+    if sort_order is None:
+        updated_front_matter.pop("sort_order", None)
+    else:
+        updated_front_matter["sort_order"] = sort_order
+
+    rewritten_source = format_source(updated_front_matter, target.body)
+    backup_dir = None
+    rebuild = None
+    if not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "update-metadata",
+            [target],
+            {
+                "doc_id": target.doc_id,
+                "from_title": target.title,
+                "to_title": title,
+                "from_parent_id": target.parent_id,
+                "to_parent_id": parent_id,
+                "from_sort_order": target.sort_order,
+                "to_sort_order": sort_order,
+            },
+        )
+        write_text_atomic(target.path, rewritten_source)
+        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=title_changed)
+        log_event(
+            repo_root,
+            "docs-update-metadata",
+            {
+                "scope": scope,
+                "doc_id": target.doc_id,
+                "title_changed": title_changed,
+                "parent_changed": parent_changed,
+                "sort_changed": sort_changed,
+            },
+        )
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_id": target.doc_id,
+        "path": relative_path(repo_root, target.path),
+        "record": {
+            "doc_id": target.doc_id,
+            "title": title,
+            "parent_id": parent_id,
+            "sort_order": sort_order,
+        },
+        "summary_text": f"Updated metadata for {target.doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "dry_run": dry_run,
@@ -1011,6 +1217,14 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             body = parse_json_body(self)
             repo_root = self.app["repo_root"]
             dry_run = self.app["dry_run"]
+            if self.path == "/docs/open-source":
+                payload = open_source_doc(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/update-metadata":
+                payload = handle_update_metadata(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
             if self.path == "/docs/create":
                 payload = handle_create(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)

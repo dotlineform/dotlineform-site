@@ -26,6 +26,8 @@ Exposed endpoints:
 - `GET /health`
 - `GET /capabilities`
 - `POST /docs/rebuild`
+- `POST /docs/open-source`
+- `POST /docs/update-metadata`
 - `POST /docs/create`
 - `POST /docs/move`
 - `POST /docs/archive`
@@ -75,6 +77,49 @@ Rebuild behavior:
 - rebuilds generated docs payloads for Studio and Library
 - rebuilds docs-search artifacts for Studio and Library
 - is intended for local manage mode rather than the public hosted site
+
+`POST /docs/open-source` expects:
+
+```json
+{
+  "scope": "studio",
+  "doc_id": "docs-viewer-management",
+  "editor": "default"
+}
+```
+
+Open-source behavior:
+
+- resolves the source Markdown path for the current doc within the current scope
+- `editor: "default"` opens the file in the preferred Markdown app for the local machine
+- the server first checks `DOCS_MANAGEMENT_DEFAULT_MARKDOWN_APP`
+- if that env var is unset, it currently prefers `MarkEdit`, then `Typora`, then `Marked 2`, then `Marked` when installed
+- if none of those apps are present, it falls back to plain `open`, which follows macOS Launch Services defaults
+- `editor: "vscode"` opens the file in Visual Studio Code
+- intended for use from the manage-mode right-click menu on doc rows
+
+`POST /docs/update-metadata` expects:
+
+```json
+{
+  "scope": "studio",
+  "doc_id": "docs-viewer-management",
+  "title": "Docs Viewer Management",
+  "parent_id": "ui-requests",
+  "sort_order": 21
+}
+```
+
+Metadata-update behavior:
+
+- updates only front matter; body content and filename remain unchanged
+- currently supports `title`, `parent_id`, and `sort_order`
+- title changes do not mutate `doc_id` or filename
+- `parent_id` may be blank for root, but must otherwise resolve inside the same scope
+- `parent_id` cannot point at the current doc or any of its descendants
+- `sort_order` accepts a non-negative integer or blank
+- always rebuilds docs payloads for the scope
+- rebuilds docs search only when the title changed
 
 `POST /docs/move` expects:
 
