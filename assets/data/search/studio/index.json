@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-8c44257a40046fa13a4d3b84afddc01a",
-    "generated_at_utc": "2026-04-19T17:28:51Z",
-    "count": 112
+    "version": "blake2b-c02b1488ab7d8b6d72ac4c7fcab30fce",
+    "generated_at_utc": "2026-04-19T18:02:28Z",
+    "count": 111
   },
   "entries": [
     {
@@ -2423,25 +2423,6 @@
         "16"
       ],
       "search_text": "experimental-dimension-framework experimental dimension framework experimental dimension framework studio 2026-04-16 2026 04 16"
-    },
-    {
-      "id": "new-doc",
-      "kind": "doc",
-      "title": "New Doc",
-      "href": "/docs/?scope=studio&doc=new-doc",
-      "last_updated": "2026-04-19",
-      "display_meta": "2026-04-19",
-      "search_terms": [
-        "new-doc",
-        "new",
-        "doc",
-        "new doc",
-        "2026-04-19",
-        "2026",
-        "04",
-        "19"
-      ],
-      "search_text": "new-doc new doc new doc 2026-04-19 2026 04 19"
     },
     {
       "id": "dimension-visualisation-projection",

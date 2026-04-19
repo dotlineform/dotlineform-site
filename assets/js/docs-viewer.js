@@ -35,6 +35,8 @@
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
   var MANAGEMENT_MODE = "manage";
+  var RELOAD_RETRY_ATTEMPTS = 12;
+  var RELOAD_RETRY_DELAY_MS = 250;
   var bookmarkScope = viewerScope || viewerPathname || "docs";
 
   var state = {
@@ -64,7 +66,9 @@
     managementBusy: false,
     managementCapabilities: null,
     managementMessage: "",
-    managementMessageIsError: false
+    managementMessageIsError: false,
+    reloadNonce: "",
+    reloadExpectedDocId: ""
   };
 
   function sortKey(doc) {
@@ -784,6 +788,8 @@
     state.searchEntries = [];
     state.searchLoaded = false;
     state.searchRequestPromise = null;
+    state.reloadNonce = String(Date.now());
+    state.reloadExpectedDocId = String(targetDocId || "").trim();
     state.searchQuery = "";
     state.searchVisibleCount = SEARCH_BATCH_SIZE;
     state.searchRouteActive = false;
@@ -1040,17 +1046,16 @@
     var requestId = state.requestId + 1;
     state.requestId = requestId;
 
-    window
-      .fetch(appendAssetVersion(doc.content_url), { headers: { Accept: "application/json" } })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error("Failed to load " + doc.content_url + " (" + response.status + ")");
-        }
-        return response.json();
-      })
+    fetchJsonWithRetry(
+      doc.content_url,
+      "Failed to load " + doc.content_url,
+      managementReloadPath("/docs/doc", { scope: viewerScope, doc_id: docId })
+    )
       .then(function (payload) {
         if (state.requestId !== requestId) return;
         state.payloadCache.set(docId, payload);
+        state.reloadNonce = "";
+        state.reloadExpectedDocId = "";
         renderPayload(doc, payload, hash);
       })
       .catch(function (error) {
@@ -1300,18 +1305,12 @@
   }
 
   function loadIndex() {
-    return window
-      .fetch(indexUrl, { headers: { Accept: "application/json" } })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error("Failed to load docs index (" + response.status + ")");
-        }
-        return response.json();
-      })
+    return fetchIndexWithRetry()
       .then(function (payload) {
         initializeIndex(payload);
       })
       .catch(function (error) {
+        state.reloadExpectedDocId = "";
         setStatus(error.message || "Failed to load docs index.", true);
         hideDocPane();
         content.textContent = "";
@@ -1330,14 +1329,11 @@
       return state.searchRequestPromise;
     }
 
-    state.searchRequestPromise = window
-      .fetch(searchIndexUrl, { headers: { Accept: "application/json" } })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error("Failed to load search data (" + response.status + ")");
-        }
-        return response.json();
-      })
+    state.searchRequestPromise = fetchJsonWithRetry(
+      searchIndexUrl,
+      "Failed to load search data",
+      managementReloadPath("/docs/search", { scope: viewerScope })
+    )
       .then(function (payload) {
         state.searchEntries = normalizeSearchEntries(payload && Array.isArray(payload.entries) ? payload.entries : []);
         state.searchLoaded = true;
@@ -1540,6 +1536,111 @@
 
     var separator = cleanUrl.indexOf("?") >= 0 ? "&" : "?";
     return cleanUrl + separator + "v=" + encodeURIComponent(assetVersion);
+  }
+
+  function requestUrl(url) {
+    var nextUrl = appendAssetVersion(url);
+    if (!state.reloadNonce) {
+      return nextUrl;
+    }
+    var separator = nextUrl.indexOf("?") >= 0 ? "&" : "?";
+    return nextUrl + separator + "reload=" + encodeURIComponent(state.reloadNonce);
+  }
+
+  function requestOptions() {
+    return {
+      headers: { Accept: "application/json" },
+      cache: state.reloadNonce ? "no-store" : "default"
+    };
+  }
+
+  function waitForReloadRetry() {
+    return new Promise(function (resolve) {
+      window.setTimeout(resolve, RELOAD_RETRY_DELAY_MS);
+    });
+  }
+
+  function shouldRetryReload(error, attempt) {
+    if (!state.reloadNonce) return false;
+    if (attempt >= RELOAD_RETRY_ATTEMPTS - 1) return false;
+    if (error && (error.status === 404 || error.status === 500 || error.status === 503)) {
+      return true;
+    }
+    return Boolean(error && /failed to fetch/i.test(String(error.message || "")));
+  }
+
+  function fetchJsonOnce(url, failureLabel, reloadPath) {
+    var fetchUrl = requestUrl(url);
+    var options = requestOptions();
+    if (state.reloadNonce && reloadPath && state.managementAvailable && managementBaseUrl) {
+      fetchUrl = managementBaseUrl + reloadPath;
+      options = {
+        headers: { Accept: "application/json" }
+      };
+    }
+    return window.fetch(fetchUrl, options)
+      .then(function (response) {
+        if (!response.ok) {
+          var httpError = new Error(failureLabel + " (" + response.status + ")");
+          httpError.status = response.status;
+          throw httpError;
+        }
+        return response.json();
+      });
+  }
+
+  function fetchJsonWithRetry(url, failureLabel, reloadPath, attempt) {
+    var currentAttempt = typeof attempt === "number" ? attempt : 0;
+    return fetchJsonOnce(url, failureLabel, reloadPath).catch(function (error) {
+      if (!shouldRetryReload(error, currentAttempt)) {
+        throw error;
+      }
+      return waitForReloadRetry().then(function () {
+        return fetchJsonWithRetry(url, failureLabel, reloadPath, currentAttempt + 1);
+      });
+    });
+  }
+
+  function indexIncludesExpectedDoc(payload) {
+    if (!state.reloadExpectedDocId) return true;
+    var docs = payload && Array.isArray(payload.docs) ? payload.docs : [];
+    return docs.some(function (doc) {
+      return doc && doc.doc_id === state.reloadExpectedDocId;
+    });
+  }
+
+  function fetchIndexWithRetry(attempt) {
+    var currentAttempt = typeof attempt === "number" ? attempt : 0;
+    return fetchJsonWithRetry(
+      indexUrl,
+      "Failed to load docs index",
+      managementReloadPath("/docs/index", { scope: viewerScope }),
+      currentAttempt
+    )
+      .then(function (payload) {
+        if (indexIncludesExpectedDoc(payload)) {
+          return payload;
+        }
+        if (!state.reloadNonce || currentAttempt >= RELOAD_RETRY_ATTEMPTS - 1) {
+          var missingError = new Error("Updated docs index is missing " + state.reloadExpectedDocId + ".");
+          missingError.status = 404;
+          throw missingError;
+        }
+        return waitForReloadRetry().then(function () {
+          return fetchIndexWithRetry(currentAttempt + 1);
+        });
+      });
+  }
+
+  function managementReloadPath(path, params) {
+    if (!path || !params) return "";
+    var query = [];
+    Object.keys(params).forEach(function (key) {
+      var value = String(params[key] || "").trim();
+      if (!value) return;
+      query.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+    });
+    return query.length ? path + "?" + query.join("&") : path;
   }
 
   function readAssetVersion() {

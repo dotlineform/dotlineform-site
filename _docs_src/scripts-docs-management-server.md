@@ -117,7 +117,11 @@ Apply behavior:
   - `_docs_library_src/*.md`
   - `var/docs/backups/`
   - `var/docs/logs/`
-- full-scope backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
+- timestamped backup bundles are created under `var/docs/backups/` before each non-dry-run write batch
+- backups are operation-scoped rather than full-scope:
+  - `create` writes a manifest-only backup bundle
+  - `archive` backs up only the touched doc before rewrite
+  - `delete` backs up only the deleted doc before removal
 
 ## Operational Notes
 

@@ -40,7 +40,7 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Dict, Optional
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 SCRIPTS_DIR = Path(__file__).resolve().parents[1]
 if str(SCRIPTS_DIR) not in sys.path:
@@ -54,6 +54,7 @@ FRONT_MATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 INTEGER_PATTERN = re.compile(r"^-?\d+$")
 SLUG_SEP_PATTERN = re.compile(r"[^a-z0-9]+")
 SAFE_PLAIN_PATTERN = re.compile(r"^[A-Za-z0-9._/-]+$")
+SAFE_DOC_ID_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 SCOPE_ROOTS = {
     "studio": Path("_docs_src"),
     "library": Path("_docs_library_src"),
@@ -326,7 +327,13 @@ def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:
     return candidate
 
 
-def make_backup_bundle(repo_root: Path, scope: str, operation: str, docs: list[ScopeDoc]) -> Path:
+def make_backup_bundle(
+    repo_root: Path,
+    scope: str,
+    operation: str,
+    docs: list[ScopeDoc],
+    metadata: Optional[Dict[str, Any]] = None,
+) -> Path:
     bundle_dir = repo_root / BACKUPS_REL_DIR / f"{backup_stamp_now()}-{scope}-{operation}"
     bundle_dir.mkdir(parents=True, exist_ok=True)
     manifest = {
@@ -334,8 +341,18 @@ def make_backup_bundle(repo_root: Path, scope: str, operation: str, docs: list[S
         "scope": scope,
         "operation": operation,
         "count": len(docs),
-        "files": [doc.path.name for doc in docs],
+        "files": [
+            {
+                "doc_id": doc.doc_id,
+                "title": doc.title,
+                "path": relative_path(repo_root, doc.path),
+                "filename": doc.path.name,
+            }
+            for doc in docs
+        ],
     }
+    if metadata:
+        manifest["metadata"] = metadata
     write_text_atomic(bundle_dir / "manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
     for doc in docs:
         shutil.copy2(doc.path, bundle_dir / doc.path.name)
@@ -379,6 +396,35 @@ def rebuild_scope_outputs(repo_root: Path, scope: str) -> Dict[str, Any]:
 
 def relative_path(repo_root: Path, path: Path) -> str:
     return path.resolve().relative_to(repo_root.resolve()).as_posix()
+
+
+def generated_docs_index_path(repo_root: Path, scope: str) -> Path:
+    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "index.json"
+
+
+def generated_doc_payload_path(repo_root: Path, scope: str, doc_id: str) -> Path:
+    if not SAFE_DOC_ID_PATTERN.match(doc_id):
+        raise ValueError("doc_id contains unsupported characters")
+    return repo_root / "assets" / "data" / "docs" / "scopes" / scope / "by-id" / f"{doc_id}.json"
+
+
+def generated_search_index_path(repo_root: Path, scope: str) -> Path:
+    return repo_root / "assets" / "data" / "search" / scope / "index.json"
+
+
+def read_generated_json(path: Path, label: str) -> Dict[str, Any]:
+    if not path.exists():
+        raise FileNotFoundError(f"{label} not found: {path.name}")
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise RuntimeError(f"{label} is not valid JSON: {path.name}") from exc
+
+
+def query_param(handler: BaseHTTPRequestHandler, name: str) -> str:
+    parsed = urlparse(handler.path)
+    values = parse_qs(parsed.query).get(name, [])
+    return str(values[0] if values else "").strip()
 
 
 def preview_delete(repo_root: Path, scope: str, doc_id: str) -> Dict[str, Any]:
@@ -536,7 +582,19 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
     backup_dir = None
     rebuild = None
     if not dry_run:
-        backup_dir = make_backup_bundle(repo_root, scope, "create", docs)
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "create",
+            [],
+            {
+                "doc_id": doc_id,
+                "title": title,
+                "path": relative_path(repo_root, target_path),
+                "parent_id": parent_id,
+                "sort_order": sort_order,
+            },
+        )
         write_text_atomic(target_path, source_text)
         rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
@@ -601,7 +659,19 @@ def handle_archive(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict
     backup_dir = None
     rebuild = None
     if not dry_run:
-        backup_dir = make_backup_bundle(repo_root, scope, "archive", docs)
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "archive",
+            [target],
+            {
+                "doc_id": target.doc_id,
+                "from_parent_id": target.parent_id,
+                "to_parent_id": "_archive",
+                "from_sort_order": target.sort_order,
+                "to_sort_order": next_order,
+            },
+        )
         write_text_atomic(target.path, format_source(updated_front_matter, target.body))
         rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
@@ -647,7 +717,17 @@ def handle_delete_apply(repo_root: Path, body: Dict[str, Any], dry_run: bool) ->
     backup_dir = None
     rebuild = None
     if not dry_run:
-        backup_dir = make_backup_bundle(repo_root, scope, "delete", docs)
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "delete",
+            [target],
+            {
+                "doc_id": target.doc_id,
+                "warnings": preview["warnings"],
+                "inbound_ref_count": len(preview["inbound_refs"]),
+            },
+        )
         target.path.unlink()
         rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
@@ -695,21 +775,56 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self) -> None:  # noqa: N802
-        if self.path == "/health":
-            write_response(
-                self,
-                HTTPStatus.OK,
-                {
-                    "ok": True,
-                    "service": "docs_management",
-                    "dry_run": self.app["dry_run"],
-                },
-            )
-            return
-        if self.path == "/capabilities":
-            write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
-            return
-        error_response(self, HTTPStatus.NOT_FOUND, "Not found")
+        try:
+            if self.path == "/health":
+                write_response(
+                    self,
+                    HTTPStatus.OK,
+                    {
+                        "ok": True,
+                        "service": "docs_management",
+                        "dry_run": self.app["dry_run"],
+                    },
+                )
+                return
+            if self.path == "/capabilities":
+                write_response(self, HTTPStatus.OK, capabilities_payload(self.app["repo_root"]))
+                return
+            parsed = urlparse(self.path)
+            if parsed.path == "/docs/index":
+                scope = normalize_scope(query_param(self, "scope"))
+                payload = read_generated_json(
+                    generated_docs_index_path(self.app["repo_root"], scope),
+                    f"generated docs index for {scope}",
+                )
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if parsed.path == "/docs/doc":
+                scope = normalize_scope(query_param(self, "scope"))
+                doc_id = query_param(self, "doc_id")
+                if not doc_id:
+                    raise ValueError("doc_id is required")
+                payload = read_generated_json(
+                    generated_doc_payload_path(self.app["repo_root"], scope, doc_id),
+                    f"generated doc payload for {doc_id}",
+                )
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if parsed.path == "/docs/search":
+                scope = normalize_scope(query_param(self, "scope"))
+                payload = read_generated_json(
+                    generated_search_index_path(self.app["repo_root"], scope),
+                    f"generated search index for {scope}",
+                )
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            error_response(self, HTTPStatus.NOT_FOUND, "Not found")
+        except FileNotFoundError as error:
+            error_response(self, HTTPStatus.NOT_FOUND, str(error))
+        except ValueError as error:
+            error_response(self, HTTPStatus.BAD_REQUEST, str(error))
+        except RuntimeError as error:
+            error_response(self, HTTPStatus.INTERNAL_SERVER_ERROR, str(error))
 
     def do_POST(self) -> None:  # noqa: N802
         origin = self.headers.get("Origin", "")
