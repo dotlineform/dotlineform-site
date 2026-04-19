@@ -7,6 +7,53 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-19] Added the first UI catalogue and screenshot asset folders
+
+**Status:** implemented
+
+**Area:** design system / docs structure
+
+**Summary:**
+Added a dedicated UI catalogue parent doc with first-pass primitive child docs and matching versioned asset folders for screenshots and visual references.
+
+**Reason:**
+Shared primitives were becoming hard to keep visible inside larger framework docs, and visual component guidance needs a stable home for screenshots as the catalogue grows.
+
+**Effect:**
+[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) now sits under [Design](/docs/?scope=studio&doc=design), the first primitive docs cover `panel`, `button`, `input`, `list shell`, `toolbar`, and `modal shell`, and screenshot assets now have dedicated repo paths under `assets/docs/ui-catalogue/`.
+
+**Affected files/docs:**
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Design](/docs/?scope=studio&doc=design)
+- `assets/docs/ui-catalogue/`
+
+**Notes:**
+This establishes the structure for future per-primitive and more complex component docs.
+
+## [2026-04-19] Revisited the CSS refactor strategy and restored it to the active design docs
+
+**Status:** implemented
+
+**Area:** design system / CSS governance
+
+**Summary:**
+Updated the CSS refactor guidance so it reflects the current UI-system direction rather than an older point-in-time cleanup note.
+
+**Reason:**
+The original refactor doc had drifted out of view during newer work and its `last_updated` date no longer reflected the fact that it had been revisited conceptually.
+
+**Effect:**
+[CSS Refactor](/docs/?scope=studio&doc=css-refactor) now records the current strategy: formalize tokens, primitives, compositions, and behavior boundaries first; avoid defaulting passive visual shells to JS web components; and keep the document visible from [Design](/docs/?scope=studio&doc=design).
+
+**Affected files/docs:**
+- [CSS Refactor](/docs/?scope=studio&doc=css-refactor)
+- [Design](/docs/?scope=studio&doc=design)
+- [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+
+**Notes:**
+This is documentation and governance work, not a runtime UI change.
+
 ## [2026-04-19] Flattened the Studio docs source tree for Docs Viewer management
 
 **Status:** implemented

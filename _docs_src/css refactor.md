@@ -1,103 +1,167 @@
 ---
 doc_id: css-refactor
 title: "CSS Refactor"
-last_updated: 2026-03-31
+last_updated: 2026-04-19
 parent_id: design
 sort_order: 60
 ---
-Tackle it as a controlled design-system cleanup, not a general “make CSS nicer” pass.
+# CSS Refactor
 
-The core problem is probably not just file length. It’s that the codebase has too many one-off decisions:
+This is the active cleanup strategy for the shared UI layer.
+
+Treat it as a controlled design-system refactor, not a general “make CSS nicer” pass.
+
+The core problem is not just stylesheet size. The main sources of friction are:
+
 - raw values like `12px` or ad hoc colors
 - page-specific selectors solving the same visual problem differently
-- primitives that exist informally but are not enforced
+- shared elements being designed and modified at the same time as page layout
+- primitives that exist in practice but are not enforced tightly enough
 
-I would do it in this order.
+## Current Position
 
-**1. Freeze the foundations**
-Start by defining the tokens and rules you actually want to keep using:
-- typography tokens
-- color tokens
-- spacing tokens
-- radius, border, shadow, z-index, breakpoints
-- a small set of semantic aliases like `--font-size-body-sm`, `--color-text-muted`, `--surface-panel`
+The repo already has useful foundations:
 
-Important point: don’t write a big abstract style guide first. Build a small “living foundation” in CSS and a short doc while you refactor.
+- `assets/css/main.css` for site-wide tokens
+- `assets/studio/css/studio.css` for Studio tokens and shared primitives
+- [UI Framework](/docs/?scope=studio&doc=ui-framework) for site-wide UI contract boundaries
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for shared Studio primitives and modal patterns
+- [CSS Primitives](/docs/?scope=studio&doc=css-primitives) for the shared CSS contract
 
-**2. Audit before rewriting**
-Do a quick inventory of the values and patterns that are currently duplicated:
-- every raw `font-size`
-- every raw color
-- repeated border/radius/shadow declarations
-- repeated list/table/card/filter/toolbar/modal patterns
+So the next step is not a broad rewrite and not a default move to JS web components.
 
-This gives you the high-value targets. You already know `font-size` is one. Colors are likely next. After that, spacing and panel/list shells are usually where redundancy hides.
+The immediate need is to make the UI vocabulary more formal and harder to drift away from.
 
-**3. Standardize primitives, not pages**
-Don’t start page-by-page with arbitrary cleanup. First define a handful of reusable patterns:
-- text scale
+## Formalize The UI Vocabulary
+
+Define and maintain a small approved set of layers:
+
+- tokens
+- primitives
+- compositions
+- behaviors
+
+### Tokens
+
+Lock the foundations first:
+
+- typography scale
+- color, surface, and border tokens
+- spacing, radius, shadow, and measure tokens
+- a small semantic alias layer such as `--surface-panel`, `--text-muted`, and approved control sizing tokens
+
+### Primitives
+
+Define a small stable set of reusable building blocks:
+
 - panel
 - button
 - input
+- pill / chip
+- message / status block
 - list shell
-- chip/tag
-- toolbar/filter row
-- form row
-- modal shell
 
-For your “lists” example, define maybe 3-4 approved list patterns only:
-- content list
-- data list
-- chip list
-- grouped list
+These should have canonical markup and styling rules, not just “similar-looking examples”.
 
-Then migrate existing pages onto those patterns instead of inventing per-page list CSS.
+### Compositions
 
-**4. Migrate one concern at a time**
-Best sequence:
+Define a few approved higher-level patterns:
+
+- editor panel
+- toolbar / action row
+- filter row
+- split view
+- confirm modal
+- grouped data list
+
+Rule:
+
+- pages should compose approved primitives and compositions
+- if a page needs a new shared element, define or update the primitive first
+- avoid inventing page-local versions of shared UI during page layout work
+
+## Web Components Boundary
+
+Native custom elements may be useful, but they are not the first lever.
+
+Use plain HTML plus shared CSS and template/includes for:
+
+- visual shells such as panels, cards, simple list wrappers, and content sections
+
+Consider native web components only for repeated stateful widgets such as:
+
+- modal controllers
+- tag pickers
+- search/filter widgets
+- viewer controls
+- other repeated interactive modules with internal state and event handling
+
+For this site, do not start by turning a passive shell like `panel` into a JS component. That adds ceremony without solving the main problem.
+
+If custom elements are introduced, prefer light DOM unless there is a strong reason to isolate styling. The current site already depends heavily on shared tokens and global theming.
+
+## Migration Order
+
+Work in this sequence:
+
+1. freeze the token layer
+2. audit duplicated raw values and repeated UI patterns
+3. finalize the approved primitive and composition inventory
+4. migrate one concern at a time
+5. add guardrails so drift does not regrow
+
+Do not mix multiple refactor concerns in one pass. Keep rollback boundaries clear.
+
+## One-Concern-At-A-Time Sequence
+
+Use this order:
+
 1. typography tokens and font-size cleanup
 2. color tokens
-3. spacing/radius/border/shadow cleanup
-4. shared layout primitives
-5. page-by-page removal of now-redundant selectors
+3. spacing, radius, border, and shadow cleanup
+4. shared layout primitives and compositions
+5. page-by-page removal of redundant selectors
 
-Do not mix all of those in one pass. If you do, you’ll lose the rollback boundary and won’t know what caused regressions.
+Do not redesign components while doing token cleanup. First stabilize the shared contract, then migrate callers onto it.
 
-**5. Add guardrails**
-Once a token family is in place, stop the codebase from drifting back:
-- add a lint rule or check for raw `font-size: 12px` style declarations outside approved files
-- do the same for raw hex colors
-- optionally add a small audit script that reports new raw values
+## Guardrails
 
-That matters more than the initial cleanup. Otherwise the redundancy just regrows.
+Once a token family or primitive is standardized, add checks so the codebase does not slide back:
 
-**6. Measure success structurally**
-The goal is not “smaller CSS” by itself. The better signals are:
+- audit raw `font-size` declarations outside approved token files
+- audit raw hex colors outside approved token files
+- audit repeated border, radius, and shadow literals
+- audit new page-specific selectors that recreate an existing primitive
+
+The initial cleanup matters less than preventing drift from returning.
+
+## Success Criteria
+
+The goal is not just smaller CSS. Better structural signals are:
+
 - fewer raw values
 - fewer page-specific selectors for shared UI
-- more selectors composed from shared primitives
-- easier to restyle the whole site by changing tokens
-- file size reduction as a side effect
+- more pages composed from shared primitives
+- clearer expectations for recurring elements such as `panel`, `toolbar`, and `list shell`
+- easier global restyling by changing tokens rather than rewriting page CSS
 
-My recommendation for the immediate next step:
-- do a token audit for typography and color across `main.css` and `studio.css`
-- create the final token set
-- migrate only those two concerns first
-- then review what repeated UI patterns remain, especially lists/panels/toolbars
+## Immediate Next Steps
 
-If you want, I can take the next practical step and do the audit pass first: extract the current raw `font-size` and color values from both CSS files and turn that into a cleanup plan.
+The current next step should be:
 
-I added a repeatable audit script at `scripts/css_token_audit.py`, generated the current snapshot in [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest), and documented it in [CSS Token Audit](/docs/?scope=studio&doc=scripts-css-token-audit). Verification was just the script run: `python3 scripts/css_token_audit.py`.
+1. re-run the token audit across `main.css` and `studio.css`
+2. finalize the shared text scale and color/token aliases
+3. write down the canonical contract for the first primitive set:
+   `panel`, `button`, `input`, `list shell`, `toolbar`, `modal shell`
+4. migrate typography first, without redesigning page layouts
+5. only then decide whether any repeated interactive widget actually merits a native custom element
 
-What the audit says is useful:
-- `main.css` has a typography drift problem more than a color problem. The biggest hotspot is `12px` used 12 times, plus smaller clusters at `13px`, `0.88rem`, `0.9rem`, `0.95rem`, and one `16px` lede.
-- `studio.css` has a compressed-but-messy UI text scale: `0.78rem` 12 times, `0.82rem` 9 times, `0.86rem` 5 times, `0.83rem` 3 times. That is almost certainly too many near-duplicate sizes for a ~10-page site.
-- Color is less urgent in `main.css`: only a handful of direct literals remain outside the theme tokens. `studio.css` is more mixed: the palette is tokenized at the top, but several component rules still hardcode values like `#fff`, `#1f1f1f`, `#d2d2d2`, and the weight-dot fills.
+## Audit Status
 
-So the first real cleanup pass should be typography only, not lists or colors yet:
-1. Finalize a shared text scale and decide whether `13px` survives or gets eliminated.
-2. Add a small Studio typography alias layer so `0.78/0.82/0.83/0.86/0.88/0.9` collapse into a controlled set.
-3. Replace repeated literals in `main.css` and `studio.css` with those tokens, without redesigning components yet.
-4. Re-run [CSS Audit Latest](/docs/?scope=studio&doc=css-audit-latest) and only then start the color pass.
+The earlier audit direction is still sound:
 
-If you want, I can take that next pass now and do the typography-token consolidation only.
+- `main.css` shows typography drift more than color drift
+- `studio.css` has too many near-duplicate UI text sizes
+- several Studio rules still hardcode values that should become tokens or semantic aliases
+
+So the first real cleanup pass should still be typography before color or broader layout work.
