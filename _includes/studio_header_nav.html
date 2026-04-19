@@ -16,7 +16,7 @@
     {%- assign studio_domain = 'catalogue' -%}
   {%- elsif studio_url == '/studio/catalogue/' or studio_url contains '/studio/catalogue-' -%}
     {%- assign studio_domain = 'catalogue' -%}
-  {%- elsif studio_url contains '/studio/tag-' or studio_url contains '/studio/series-tag-' or studio_url == '/studio/series-tags/' -%}
+  {%- elsif studio_url contains '/studio/tag-' or studio_url contains '/studio/series-tag-' or studio_url == '/studio/series-tags/' or studio_url contains '/studio/ui-catalogue/' -%}
     {%- assign studio_domain = 'analytics' -%}
   {%- endif -%}
 {%- endif -%}

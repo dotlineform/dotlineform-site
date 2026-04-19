@@ -23,3 +23,8 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
     <p>Configure and manage site search.</p>
   </a>
 </section>
+
+<section aria-labelledby="studioResourcesHeading">
+  <h3 id="studioResourcesHeading">Resources</h3>
+  <p><a href="{{ '/studio/ui-catalogue/' | relative_url }}">UI Catalogue</a></p>
+</section>

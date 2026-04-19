@@ -165,6 +165,10 @@
   align-content: start;
 }
 
+.tagStudio__panel--compact {
+  padding: var(--studio-surface-padding-md);
+}
+
 .tagStudioEditorSection {
   display: grid;
   gap: var(--studio-shell-gap-sm);
@@ -519,6 +523,130 @@ input.tagStudio__input {
 .tagStudio__chipList--stack {
   flex-direction: column;
   align-items: flex-start;
+}
+
+.studioUiCataloguePage,
+.studioUiPrimitivePage {
+  display: grid;
+  gap: 1rem;
+}
+
+.studioUiCataloguePage__intro,
+.studioUiPrimitivePage__intro,
+.studioUiCatalogueIndex__summary,
+.studioUiPrimitivePage__sectionSummary,
+.studioUiPrimitiveExample__summary {
+  margin: 0;
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.studioUiPrimitivePage__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: var(--font-caption);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted, var(--studio-muted));
+}
+
+.studioUiCatalogueIndex,
+.studioUiPrimitivePage__live,
+.studioUiPrimitivePage__code,
+.studioUiPrimitivePage__notes {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.studioUiCatalogueIndex__header,
+.studioUiPrimitivePage__sectionHeader,
+.studioUiPrimitiveExample__header {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.studioUiCatalogueIndex__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.studioUiCatalogueIndex__item {
+  display: grid;
+  gap: 0.12rem;
+  border: 1px solid var(--line, var(--studio-line));
+  border-radius: var(--studio-radius-md);
+  padding: 0.7rem 0.8rem;
+  background: var(--surface, var(--studio-surface));
+  text-decoration: none;
+  color: inherit;
+}
+
+.studioUiCatalogueIndex__title {
+  font-size: var(--font-body);
+}
+
+.studioUiCatalogueIndex__meta {
+  color: var(--muted, var(--studio-muted-body));
+  font-size: var(--font-small);
+}
+
+.studioUiPrimitiveDemo {
+  display: grid;
+  gap: 0.9rem;
+}
+
+@media (min-width: 960px) {
+  .studioUiPrimitiveDemo {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.studioUiPrimitiveExample {
+  display: grid;
+  gap: 0.55rem;
+  align-content: start;
+}
+
+.studioUiPrimitiveExample__title,
+.studioUiPrimitiveCodeList__title,
+.studioUiPrimitivePanelDemo__heading {
+  margin: 0;
+  font-size: var(--font-small);
+}
+
+.studioUiPrimitivePanelDemo {
+  display: grid;
+  gap: 0.6rem;
+  min-height: 100%;
+}
+
+.studioUiPrimitivePanelDemo__body {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--muted, var(--studio-muted-body));
+}
+
+.studioUiPrimitivePanelDemo__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.studioUiPrimitiveCodeList {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.studioUiPrimitiveCodeList__item {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.studioUiPrimitivePage__notesBody > :last-child {
+  margin-bottom: 0;
 }
 
 .tagStudioGroups {
