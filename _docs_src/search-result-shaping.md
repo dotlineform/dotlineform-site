@@ -3,7 +3,7 @@ doc_id: search-result-shaping
 title: "Search Result Shaping"
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 290
+sort_order: 280
 published: false
 ---
 # Search Result Shaping

@@ -3,7 +3,7 @@ doc_id: search-config-implementation-note
 title: "Search Config Implementation Note"
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 250
+sort_order: 240
 published: false
 ---
 # Search Config Implementation Note

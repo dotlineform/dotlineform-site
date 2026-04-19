@@ -3,7 +3,7 @@ doc_id: _archive
 title: Archive
 last_updated: 2026-04-18
 parent_id: ""
-sort_order: 210
+sort_order: 200
 ---
 # Archive
 

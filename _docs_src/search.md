@@ -3,7 +3,7 @@ doc_id: search
 title: Search
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 190
+sort_order: 180
 ---
 # Search
 

@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-build-catalogue-json
-title: Scoped JSON Catalogue Build
+title: "Scoped JSON Catalogue Build"
 last_updated: 2026-04-18
 parent_id: scripts
-sort_order: 55
+sort_order: 70
 ---
-
 # Scoped JSON Catalogue Build
 
 Script:

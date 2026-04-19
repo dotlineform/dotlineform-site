@@ -3,7 +3,7 @@ doc_id: ideas
 title: Ideas
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 100
+sort_order: 90
 published: false
 ---
 # Ideas

@@ -1,11 +1,10 @@
 ---
 doc_id: studio-ui-rules
-title: Studio UI Rules And Decision Log
+title: "Studio UI Rules And Decision Log"
 last_updated: 2026-04-19
 parent_id: design
-sort_order: 21
+sort_order: 30
 ---
-
 # Studio UI Rules And Decision Log
 
 This document is the working record for Studio UI issues, decisions, and permanent standards that emerge from real fixes.

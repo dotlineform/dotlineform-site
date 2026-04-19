@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-srcset-builder
-title: Srcset Builder
+title: "Srcset Builder"
 last_updated: 2026-03-31
 parent_id: scripts
-sort_order: 40
+sort_order: 50
 ---
-
 # Srcset Builder
 
 Stable shell entrypoint:

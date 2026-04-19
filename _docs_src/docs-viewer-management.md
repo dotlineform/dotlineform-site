@@ -3,7 +3,7 @@ doc_id: docs-viewer-management
 title: "Docs Viewer Management"
 last_updated: 2026-04-19
 parent_id: ui-requests
-sort_order: 20
+sort_order: 30
 ---
 # Docs Viewer Management
 
@@ -317,7 +317,8 @@ Recommended sort-order rule for append operations:
 
 - prefer sparse ordering
 - append new docs at the end of the sibling list using the next available integer slot
-- add a sibling-renumber step only when required to resolve conflicts deterministically
+- when inserting after a visible doc, prefer a simple integer increment for the new doc only
+- do not renumber sibling docs automatically in v1
 
 ### `archive` Command
 
@@ -514,7 +515,7 @@ If a doc is reparented in the viewer, does only parent_id change, or should the 
 A: file doesn't move on disk (flat structure).
 
 If sort_order changes by drag/drop, should the system renumber sibling items automatically or preserve sparse numbering?  
-A: currently, user (i.e. me) would preserve sparse numbering and pick a suitable mid-range sort_order. however a renumber siblings loop should be implemented to guarantee no conflicts ever happen. 
+A: preserve sparse numbering. use a simple integer increment for the moved doc and do not renumber siblings automatically, because that creates too much change noise. 
 
 What does archive mean?  
 A: parent_id becomes doc_id: _archive. so it moves to the Archive folder in Doc Viewer, as the last sibling. file remains unmoved in _docs_src. published remains true, so that it is still viewable.

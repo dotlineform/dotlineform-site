@@ -3,7 +3,7 @@ doc_id: site-change-log
 title: "Site Change Log"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 280
+sort_order: 270
 ---
 # Site Change Log
 

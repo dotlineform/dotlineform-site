@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-css-token-audit
-title: CSS Token Audit
+title: "CSS Token Audit"
 last_updated: 2026-03-31
 parent_id: scripts
-sort_order: 80
+sort_order: 120
 ---
-
 # CSS Token Audit
 
 Script:

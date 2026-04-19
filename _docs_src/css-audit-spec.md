@@ -1,11 +1,10 @@
 ---
 doc_id: css-audit-spec
-title: CSS Audit Spec (v1)
+title: "CSS Audit Spec (v1)"
 last_updated: 2026-03-31
 parent_id: design
-sort_order: 40
+sort_order: 50
 ---
-
 # CSS Audit Spec (v1)
 
 ## Goal

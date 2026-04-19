@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-cloud-environments
-title: Cloud Environments
+title: "Cloud Environments"
 last_updated: 2026-04-14
 parent_id: scripts
-sort_order: 35
+sort_order: 40
 ---
-
 # Cloud Environments (Codex + Codespaces + R2)
 
 This guide defines a practical cloud-native setup for this repo while preserving the current local workflow.

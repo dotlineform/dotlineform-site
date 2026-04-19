@@ -1019,8 +1019,8 @@
       position: position
     })
       .then(function (payload) {
-        setManagementMessage(payload.summary_text || "Doc moved.", false);
-        return reloadDocsIndex(movingDoc.doc_id, payload.summary_text || "Doc moved.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(movingDoc.doc_id, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Move failed.", true);

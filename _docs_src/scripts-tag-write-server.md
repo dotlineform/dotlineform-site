@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-tag-write-server
-title: Tag Write Server
+title: "Tag Write Server"
 last_updated: 2026-03-31
 parent_id: scripts
-sort_order: 70
+sort_order: 90
 ---
-
 # Tag Write Server
 
 Script:

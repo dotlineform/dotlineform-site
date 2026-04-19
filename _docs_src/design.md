@@ -3,7 +3,7 @@ doc_id: design
 title: Design
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 60
+sort_order: 40
 ---
 # Design
 

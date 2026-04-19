@@ -1,11 +1,10 @@
 ---
 doc_id: css-refactor
-title: CSS Refactor
+title: "CSS Refactor"
 last_updated: 2026-03-31
 parent_id: design
-sort_order: 50
+sort_order: 60
 ---
-
 Tackle it as a controlled design-system cleanup, not a general “make CSS nicer” pass.
 
 The core problem is probably not just file length. It’s that the codebase has too many one-off decisions:

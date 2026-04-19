@@ -1,11 +1,10 @@
 ---
 doc_id: css-primitives
-title: CSS Primitives
+title: "CSS Primitives"
 last_updated: 2026-03-31
 parent_id: design
-sort_order: 30
+sort_order: 40
 ---
-
 # CSS Primitives
 
 This document defines the current shared CSS contract for the site and Studio.

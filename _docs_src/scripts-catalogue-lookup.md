@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-catalogue-lookup
-title: Catalogue Lookup Export
+title: "Catalogue Lookup Export"
 last_updated: 2026-04-17
 parent_id: scripts
-sort_order: 72
+sort_order: 110
 ---
-
 # Catalogue Lookup Export
 
 Script:

@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-delete-moment
-title: Delete Moment
+title: "Delete Moment"
 last_updated: 2026-04-01
 parent_id: scripts
-sort_order: 70
+sort_order: 80
 ---
-
 # Delete Moment
 
 Script:

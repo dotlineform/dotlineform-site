@@ -3,7 +3,7 @@ doc_id: design-backlog
 title: "Design Backlog"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 200
+sort_order: 190
 published: false
 ---
 # Design Backlog

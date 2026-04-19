@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-docs-management-server
-title: Docs Management Server
+title: "Docs Management Server"
 last_updated: 2026-04-19
 parent_id: scripts
-sort_order: 12
+sort_order: 10
 ---
-
 # Docs Management Server
 
 Script:
@@ -81,7 +80,8 @@ Move behavior:
 - `position: "inside"` places the dragged doc as the last child of the target doc
 - only leaf docs can move; docs with child docs are rejected
 - moves rewrite front matter only and never move files on disk
-- sibling `sort_order` values are renumbered deterministically when needed to keep ordering valid
+- moves update only the dragged doc's `sort_order` and `parent_id`
+- sibling `sort_order` values are left unchanged to keep write noise low
 
 `POST /docs/archive` expects:
 

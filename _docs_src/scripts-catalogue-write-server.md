@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-catalogue-write-server
-title: Catalogue Write Server
+title: "Catalogue Write Server"
 last_updated: 2026-04-18
 parent_id: scripts
-sort_order: 71
+sort_order: 100
 ---
-
 # Catalogue Write Server
 
 Script:

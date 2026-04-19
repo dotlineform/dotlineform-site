@@ -1,11 +1,10 @@
 ---
 doc_id: scripts-catalogue-source
-title: Catalogue Source Utilities
+title: "Catalogue Source Utilities"
 last_updated: 2026-04-18
 parent_id: scripts
-sort_order: 55
+sort_order: 60
 ---
-
 # Catalogue Source Utilities
 
 These utilities validate and compare the canonical catalogue source JSON.

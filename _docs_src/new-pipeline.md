@@ -3,7 +3,7 @@ doc_id: new-pipeline
 title: "New Cat Pipeline"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 180
+sort_order: 170
 ---
 # New Catalogue Pipeline
 

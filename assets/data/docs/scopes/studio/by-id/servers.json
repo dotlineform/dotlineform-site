@@ -4,7 +4,7 @@
   "title": "Servers",
   "last_updated": "2026-04-17",
   "parent_id": "",
-  "sort_order": 150,
+  "sort_order": 140,
   "source_path": "servers.md",
   "viewer_url": "/docs/?scope=studio&doc=servers",
   "content_html": "<h1 id=\"servers\">Servers</h1>\n\n<p>This section documents local server processes used by Studio and build tooling.</p>\n\n<p>Use this section for:</p>\n\n<ul>\n  <li>local server architecture and boundaries</li>\n  <li>route namespace decisions</li>\n  <li>shared security rules for localhost APIs</li>\n  <li>the target shape for future Studio server requirements</li>\n</ul>\n\n<p>Keep command-level usage in <strong><a href=\"/docs/?scope=studio&doc=scripts\">Scripts</a></strong>. Script docs should describe how to run a server, its flags, and its current endpoints. Server docs should describe why the server boundary exists and how the pieces should evolve.</p>\n\n<p>Read this section in this order:</p>\n\n<ol>\n  <li><strong><a href=\"/docs/?scope=studio&doc=local-studio-server-architecture\">Local Studio Server Architecture</a></strong></li>\n</ol>\n\n<p>Current local server scripts:</p>\n\n<ul>\n  <li><strong><a href=\"/docs/?scope=studio&doc=scripts-tag-write-server\">Tag Write Server</a></strong></li>\n  <li><strong><a href=\"/docs/?scope=studio&doc=scripts-catalogue-write-server\">Catalogue Write Server</a></strong></li>\n</ul>\n"

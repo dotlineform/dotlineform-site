@@ -3,7 +3,7 @@ doc_id: config
 title: Config
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 130
+sort_order: 120
 ---
 # Config
 
