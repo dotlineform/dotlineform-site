@@ -13,6 +13,12 @@
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
   var more = document.getElementById("docsViewerMore");
+  var manageRow = document.getElementById("docsViewerManageRow");
+  var manageActions = manageRow ? manageRow.querySelector(".docsViewer__manageActions") : null;
+  var manageNote = document.getElementById("docsViewerManageNote");
+  var manageNewButton = document.getElementById("docsViewerManageNewButton");
+  var manageArchiveButton = document.getElementById("docsViewerManageArchiveButton");
+  var manageDeleteButton = document.getElementById("docsViewerManageDeleteButton");
 
   var indexUrl = appendAssetVersion(root.dataset.indexUrl);
   var viewerBaseUrl = root.dataset.viewerBaseUrl || "/docs/";
@@ -22,11 +28,13 @@
   var viewerPathname = new URL(viewerBaseUrl, window.location.origin).pathname;
   var searchIndexUrl = appendAssetVersion(root.dataset.searchIndexUrl);
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
+  var managementBaseUrl = String(root.dataset.managementBaseUrl || "").trim().replace(/\/+$/, "");
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
   var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
   var BOOKMARK_DB_VERSION = 1;
   var BOOKMARK_STORE_NAME = "favorites";
+  var MANAGEMENT_MODE = "manage";
   var bookmarkScope = viewerScope || viewerPathname || "docs";
 
   var state = {
@@ -49,7 +57,14 @@
     bookmarkDbPromise: null,
     bookmarkSupport: Boolean(window.indexedDB),
     editingBookmarkKey: "",
-    pendingBookmarkFocusKey: ""
+    pendingBookmarkFocusKey: "",
+    managementMode: false,
+    managementChecked: false,
+    managementAvailable: false,
+    managementBusy: false,
+    managementCapabilities: null,
+    managementMessage: "",
+    managementMessageIsError: false
   };
 
   function sortKey(doc) {
@@ -81,6 +96,10 @@
 
   function getCurrentQuery() {
     return (new URLSearchParams(window.location.search).get("q") || "").trim();
+  }
+
+  function getCurrentMode() {
+    return new URLSearchParams(window.location.search).get("mode") || "";
   }
 
   function hasCanonicalScopeInUrl() {
@@ -451,6 +470,9 @@
     if (includeScopeParam && viewerScope) {
       url.searchParams.set("scope", viewerScope);
     }
+    if (state.managementMode) {
+      url.searchParams.set("mode", MANAGEMENT_MODE);
+    }
     url.searchParams.set("doc", docId);
     if (typeof query === "string" && query.trim()) {
       url.searchParams.set("q", query.trim());
@@ -607,6 +629,308 @@
     status.classList.toggle("is-error", Boolean(isError));
   }
 
+  function setManagementMessage(message, isError) {
+    state.managementMessage = String(message || "");
+    state.managementMessageIsError = Boolean(isError);
+    renderManagementUi();
+  }
+
+  function scopeManagementCapabilities() {
+    if (!state.managementCapabilities || !state.managementCapabilities.scopes) return null;
+    return state.managementCapabilities.scopes[viewerScope] || null;
+  }
+
+  function currentSelectedDoc() {
+    return state.docsById.get(state.selectedDocId) || null;
+  }
+
+  function managementArchiveAvailable() {
+    var scopeCaps = scopeManagementCapabilities();
+    return Boolean(scopeCaps && scopeCaps.archive_available);
+  }
+
+  function managementNoteText() {
+    if (state.managementMessage) return state.managementMessage;
+    if (state.searchRouteActive) {
+      return "Clear search to archive or delete the current doc.";
+    }
+    if (!managementArchiveAvailable()) {
+      return "Archive is unavailable for this scope until `_archive` exists.";
+    }
+    return "Manage mode is local-only and writes through the docs-management server.";
+  }
+
+  function renderManagementUi() {
+    if (!manageRow) return;
+
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    if (!state.managementMode) {
+      manageRow.hidden = true;
+      return;
+    }
+
+    manageRow.hidden = false;
+    if (manageActions) {
+      manageActions.hidden = !state.managementChecked || !state.managementAvailable;
+    }
+
+    if (manageNote) {
+      var noteText = "";
+      var noteIsError = false;
+      if (!state.managementChecked) {
+        noteText = "Checking manage mode...";
+      } else if (!state.managementAvailable) {
+        noteText = "Manage mode unavailable: local docs server unavailable for this scope.";
+        noteIsError = true;
+      } else {
+        noteText = managementNoteText();
+        noteIsError = state.managementMessageIsError;
+      }
+      manageNote.textContent = noteText;
+      manageNote.classList.toggle("is-error", noteIsError);
+    }
+
+    if (!manageNewButton || !manageArchiveButton || !manageDeleteButton) return;
+
+    var doc = currentSelectedDoc();
+    var reserved = Boolean(doc && doc.doc_id === "_archive");
+    var archiveDisabled = (
+      state.managementBusy ||
+      !doc ||
+      state.searchRouteActive ||
+      !managementArchiveAvailable() ||
+      reserved ||
+      doc.parent_id === "_archive"
+    );
+    var deleteDisabled = (
+      state.managementBusy ||
+      !doc ||
+      state.searchRouteActive ||
+      reserved
+    );
+
+    manageNewButton.disabled = state.managementBusy || !state.managementAvailable;
+    manageArchiveButton.disabled = !state.managementAvailable || archiveDisabled;
+    manageDeleteButton.disabled = !state.managementAvailable || deleteDisabled;
+  }
+
+  function fetchManagementJson(path, method, payload) {
+    if (!managementBaseUrl) {
+      return Promise.reject(new Error("Local docs-management server is not configured."));
+    }
+
+    var options = {
+      method: method || "GET",
+      headers: {
+        Accept: "application/json"
+      }
+    };
+    if (payload !== undefined) {
+      options.headers["Content-Type"] = "application/json";
+      options.body = JSON.stringify(payload);
+    }
+
+    return window.fetch(managementBaseUrl + path, options).then(function (response) {
+      return response.json().catch(function () {
+        throw new Error("HTTP " + response.status);
+      }).then(function (responsePayload) {
+        if (!response.ok || !responsePayload || !responsePayload.ok) {
+          throw new Error(responsePayload && responsePayload.error ? responsePayload.error : "HTTP " + response.status);
+        }
+        return responsePayload;
+      });
+    });
+  }
+
+  function initializeManagement() {
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
+    renderManagementUi();
+    if (!state.managementMode) return;
+
+    if (!managementBaseUrl) {
+      state.managementChecked = true;
+      state.managementAvailable = false;
+      renderManagementUi();
+      return;
+    }
+
+    fetchManagementJson("/capabilities", "GET")
+      .then(function (payload) {
+        var scopeCaps = payload && payload.capabilities && payload.capabilities.scopes
+          ? payload.capabilities.scopes[viewerScope]
+          : null;
+        state.managementCapabilities = payload.capabilities || null;
+        state.managementChecked = true;
+        state.managementAvailable = Boolean(scopeCaps && scopeCaps.available);
+        renderManagementUi();
+      })
+      .catch(function () {
+        state.managementCapabilities = null;
+        state.managementChecked = true;
+        state.managementAvailable = false;
+        renderManagementUi();
+      });
+  }
+
+  function defaultCreateParentId() {
+    var doc = currentSelectedDoc();
+    if (!doc) return "";
+    var hasChildren = (state.childrenByParent.get(doc.doc_id) || []).length > 0;
+    return hasChildren ? doc.doc_id : (doc.parent_id || "");
+  }
+
+  function reloadDocsIndex(targetDocId, summaryText) {
+    state.payloadCache.clear();
+    state.searchEntries = [];
+    state.searchLoaded = false;
+    state.searchRequestPromise = null;
+    state.searchQuery = "";
+    state.searchVisibleCount = SEARCH_BATCH_SIZE;
+    state.searchRouteActive = false;
+    cancelSearchDebounce();
+    if (searchInput) {
+      searchInput.value = "";
+    }
+
+    if (targetDocId) {
+      setHistory(targetDocId, "", "", "replace");
+    }
+
+    return loadIndex().then(function () {
+      setStatus(summaryText || "Docs updated.", false);
+      renderManagementUi();
+    });
+  }
+
+  function handleCreateDoc() {
+    var titleInput = window.prompt("New doc title", "New Doc");
+    if (titleInput == null) return;
+
+    var title = String(titleInput || "").trim() || "New Doc";
+    var parentInput = window.prompt("Parent doc id (blank for top-level)", defaultCreateParentId());
+    if (parentInput == null) return;
+    var parentId = String(parentInput || "").trim();
+
+    state.managementBusy = true;
+    setManagementMessage("Creating doc...", false);
+    setStatus("Creating doc...", false);
+
+    fetchManagementJson("/docs/create", "POST", {
+      scope: viewerScope,
+      title: title,
+      parent_id: parentId
+    })
+      .then(function (payload) {
+        setManagementMessage(payload.summary_text || "Doc created.", false);
+        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc created.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Create failed.", true);
+        setStatus(error.message || "Create failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleArchiveDoc() {
+    var doc = currentSelectedDoc();
+    if (!doc) return;
+    if (!window.confirm("Archive " + doc.title + "?")) return;
+
+    state.managementBusy = true;
+    setManagementMessage("Archiving " + doc.title + "...", false);
+    setStatus("Archiving " + doc.title + "...", false);
+
+    fetchManagementJson("/docs/archive", "POST", {
+      scope: viewerScope,
+      doc_id: doc.doc_id
+    })
+      .then(function (payload) {
+        setManagementMessage(payload.summary_text || "Doc archived.", false);
+        return reloadDocsIndex(payload.doc_id, payload.summary_text || "Doc archived.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Archive failed.", true);
+        setStatus(error.message || "Archive failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function buildDeleteConfirmation(preview) {
+    var lines = ["Delete " + preview.title + "?"];
+    if (Array.isArray(preview.warnings) && preview.warnings.length) {
+      lines.push("");
+      lines.push("Warnings:");
+      preview.warnings.forEach(function (item) {
+        lines.push("- " + item);
+      });
+    }
+    if (Array.isArray(preview.inbound_refs) && preview.inbound_refs.length) {
+      lines.push("");
+      lines.push("Inbound refs:");
+      preview.inbound_refs.slice(0, 6).forEach(function (item) {
+        lines.push("- " + item.doc_id);
+      });
+      if (preview.inbound_refs.length > 6) {
+        lines.push("- +" + (preview.inbound_refs.length - 6) + " more");
+      }
+    }
+    return lines.join("\n");
+  }
+
+  function handleDeleteDoc() {
+    var doc = currentSelectedDoc();
+    if (!doc) return;
+
+    state.managementBusy = true;
+    setManagementMessage("Checking delete impact for " + doc.title + "...", false);
+    setStatus("Checking delete impact for " + doc.title + "...", false);
+
+    fetchManagementJson("/docs/delete-preview", "POST", {
+      scope: viewerScope,
+      doc_id: doc.doc_id
+    })
+      .then(function (preview) {
+        if (!preview.allowed) {
+          var blockerText = (preview.blockers || []).join("; ") || "Delete is blocked.";
+          setManagementMessage(blockerText, true);
+          setStatus(blockerText, true);
+          return null;
+        }
+        if (!window.confirm(buildDeleteConfirmation(preview))) {
+          setManagementMessage("", false);
+          setStatus("", false);
+          return null;
+        }
+        setManagementMessage("Deleting " + doc.title + "...", false);
+        setStatus("Deleting " + doc.title + "...", false);
+        return fetchManagementJson("/docs/delete-apply", "POST", {
+          scope: viewerScope,
+          doc_id: doc.doc_id,
+          confirm: true
+        });
+      })
+      .then(function (payload) {
+        if (!payload) return;
+        var fallbackDocId = doc.parent_id || defaultRouteDocId || defaultDocId();
+        setManagementMessage(payload.summary_text || "Doc deleted.", false);
+        return reloadDocsIndex(fallbackDocId, payload.summary_text || "Doc deleted.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Delete failed.", true);
+        setStatus(error.message || "Delete failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
   function scrollToHash(hash) {
     if (!hash) {
       window.scrollTo({ top: 0, behavior: "auto" });
@@ -641,6 +965,7 @@
     state.selectedDocId = doc.doc_id;
     renderSidebar();
     renderBookmarkUi();
+    renderManagementUi();
 
     if (hasActiveQuery()) {
       renderSearchMode();
@@ -689,6 +1014,7 @@
       results.innerHTML = "";
       more.innerHTML = "";
       more.hidden = true;
+      renderManagementUi();
       return;
     }
 
@@ -841,6 +1167,24 @@
       });
     }
 
+    if (manageNewButton) {
+      manageNewButton.addEventListener("click", function () {
+        handleCreateDoc();
+      });
+    }
+
+    if (manageArchiveButton) {
+      manageArchiveButton.addEventListener("click", function () {
+        handleArchiveDoc();
+      });
+    }
+
+    if (manageDeleteButton) {
+      manageDeleteButton.addEventListener("click", function () {
+        handleDeleteDoc();
+      });
+    }
+
     if (searchEnabled) {
       more.addEventListener("click", function (event) {
         var button = event.target.closest("button[data-role='more']");
@@ -928,6 +1272,7 @@
     var query = getCurrentQuery();
     state.searchQuery = query;
     state.searchRouteActive = hasActiveQuery(query);
+    state.managementMode = getCurrentMode() === MANAGEMENT_MODE;
     state.selectedDocId = docId;
     if (searchInput) {
       searchInput.value = query;
@@ -936,6 +1281,7 @@
     expandTrail(docId);
     renderSidebar();
     renderBookmarkUi();
+    renderManagementUi();
 
     if (route.corrected || !hasCanonicalScopeInUrl()) {
       setHistory(docId, "", query, "replace");
@@ -954,7 +1300,7 @@
   }
 
   function loadIndex() {
-    window
+    return window
       .fetch(indexUrl, { headers: { Accept: "application/json" } })
       .then(function (response) {
         if (!response.ok) {
@@ -969,6 +1315,7 @@
         setStatus(error.message || "Failed to load docs index.", true);
         hideDocPane();
         content.textContent = "";
+        throw error;
       });
   }
 
@@ -1181,7 +1528,8 @@
 
   bindLinkInterception();
   initializeBookmarks();
-  loadIndex();
+  initializeManagement();
+  loadIndex().catch(function () {});
 
   function appendAssetVersion(url) {
     var cleanUrl = String(url || "");

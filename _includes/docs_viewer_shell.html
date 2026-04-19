@@ -7,6 +7,7 @@
   data-include-scope-param="{{ include.include_scope_param | default: false }}"
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
+  data-management-base-url="{{ include.management_base_url | default: '' }}"
 >
   <div class="docsViewer__controls">
     {%- if include.search_index_url -%}
@@ -30,6 +31,14 @@
       {%- endif -%}
     </div>
     {%- endif -%}
+    <div class="docsViewer__manageRow" id="docsViewerManageRow" hidden>
+      <div class="docsViewer__manageActions">
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageNewButton">New</button>
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageArchiveButton">Archive</button>
+        <button class="docsViewer__actionButton" type="button" id="docsViewerManageDeleteButton">Delete</button>
+      </div>
+      <p class="docsViewer__manageNote muted small" id="docsViewerManageNote"></p>
+    </div>
     <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
     <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
   </div>

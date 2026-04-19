@@ -1126,6 +1126,34 @@ th{ background: var(--panel-2); }
   gap: 0.65rem;
 }
 
+.docsViewer__manageRow{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 0.9rem;
+}
+
+.docsViewer__manageRow[hidden]{
+  display: none;
+}
+
+.docsViewer__manageActions{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.docsViewer__manageNote{
+  margin: 0;
+  flex: 1 1 18rem;
+}
+
+.docsViewer__manageNote.is-error{
+  color: var(--link-hover);
+}
+
 .docsViewer__search{
   flex: 1 1 18rem;
   min-width: 0;
