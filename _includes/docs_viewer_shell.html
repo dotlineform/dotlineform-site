@@ -8,6 +8,32 @@
   data-default-doc-id="{{ include.default_doc_id | default: '' }}"
   data-search-index-url="{{ include.search_index_url | default: '' }}"
 >
+  <div class="docsViewer__controls">
+    {%- if include.search_index_url -%}
+    <div class="docsViewer__searchRow">
+      <div class="docsViewer__search">
+        <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
+        <input
+          class="docsViewer__searchInput"
+          id="docsViewerSearchInput"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="{{ include.search_placeholder | default: 'search docs' }}"
+          aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
+        >
+      </div>
+      {%- if include.show_rebuild_button -%}
+      <button class="docsViewer__actionButton" type="button" id="docsViewerRebuildButton">
+        {{ include.rebuild_button_label | default: 'Rebuild docs' }}
+      </button>
+      {%- endif -%}
+    </div>
+    {%- endif -%}
+    <div class="docsViewer__bookmarkRow" id="docsViewerBookmarkRow" hidden></div>
+    <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
+  </div>
+
   <aside class="docsViewer__sidebar" aria-label="Docs index">
     <div class="docsViewer__sidebarInner">
       <nav class="docsViewer__nav" id="docsViewerNav" aria-label="Docs tree"></nav>
@@ -15,33 +41,14 @@
   </aside>
 
   <article class="docsViewer__main" aria-live="polite">
-    <div class="docsViewer__mainHeader">
-      {%- if include.search_index_url -%}
-      <div class="docsViewer__searchRow">
-        <div class="docsViewer__search">
-          <label class="visually-hidden" for="docsViewerSearchInput">{{ include.search_aria_label | default: 'Search docs' }}</label>
-          <input
-            class="docsViewer__searchInput"
-            id="docsViewerSearchInput"
-            type="search"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="{{ include.search_placeholder | default: 'search docs' }}"
-            aria-label="{{ include.search_aria_label | default: 'Search docs' }}"
-          >
-        </div>
-        {%- if include.show_rebuild_button -%}
-        <button class="docsViewer__actionButton" type="button" id="docsViewerRebuildButton">
-          {{ include.rebuild_button_label | default: 'Rebuild docs' }}
-        </button>
-        {%- endif -%}
-      </div>
-      {%- endif -%}
-      <p class="docsViewer__status muted small" id="docsViewerStatus">Loading docs...</p>
-    </div>
     <div class="docsViewer__meta" id="docsViewerMeta" hidden>
-      <p class="docsViewer__path small" id="docsViewerPath"></p>
-      <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
+      <div class="docsViewer__metaRow">
+        <div class="docsViewer__metaCopy">
+          <p class="docsViewer__path small" id="docsViewerPath"></p>
+          <p class="docsViewer__updated muted small" id="docsViewerUpdated"></p>
+        </div>
+        <button class="docsViewer__bookmarkToggle" id="docsViewerBookmarkToggle" type="button" hidden aria-label="Add bookmark" aria-pressed="false" title="Add bookmark">☆</button>
+      </div>
     </div>
     <div class="docsViewer__content content" id="docsViewerContent">
       <noscript>This docs viewer requires JavaScript to load the generated docs index.</noscript>

@@ -1008,8 +1008,15 @@ th{ background: var(--panel-2); }
 .docsViewer{
   display: grid;
   grid-template-columns: minmax(220px, 260px) minmax(0, 1fr);
-  gap: var(--space-5);
+  column-gap: var(--space-5);
+  row-gap: var(--space-3);
   align-items: start;
+}
+
+.docsViewer__controls{
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .docsViewer__sidebar{
@@ -1112,12 +1119,6 @@ th{ background: var(--panel-2); }
   min-width: 0;
 }
 
-.docsViewer__mainHeader{
-  display: grid;
-  gap: 0.75rem;
-  margin: 0 0 var(--space-2);
-}
-
 .docsViewer__searchRow{
   display: flex;
   flex-wrap: wrap;
@@ -1127,7 +1128,7 @@ th{ background: var(--panel-2); }
 
 .docsViewer__search{
   flex: 1 1 18rem;
-  max-width: var(--content-measure);
+  min-width: 0;
 }
 
 .docsViewer__searchInput{
@@ -1186,9 +1187,35 @@ th{ background: var(--panel-2); }
   color: var(--link-hover);
 }
 
+.docsViewer__bookmarkRow{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem;
+  width: 100%;
+  margin: 0;
+}
+
+.docsViewer__bookmarkRow[hidden]{
+  display: none;
+}
+
 .docsViewer__meta{
   max-width: var(--content-measure);
   margin: 0 0 var(--space-4);
+}
+
+.docsViewer__metaRow{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.docsViewer__metaCopy{
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  gap: 0.2rem;
 }
 
 .docsViewer__path,
@@ -1205,6 +1232,124 @@ th{ background: var(--panel-2); }
 
 .docsViewer__pathSep{
   color: var(--muted);
+}
+
+.docsViewer__bookmarkToggle{
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.docsViewer__bookmarkToggle:hover{
+  background: var(--panel-2);
+}
+
+.docsViewer__bookmarkToggle:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewer__bookmarkToggle.is-active{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+}
+
+.docsViewer__bookmarkPill{
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.16rem;
+  min-height: 1.8rem;
+  max-width: min(100%, 18rem);
+  padding: 0.08rem 0.22rem 0.08rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.docsViewer__bookmarkPill.is-active{
+  border-color: var(--border-strong);
+  background: var(--panel-2);
+}
+
+.docsViewer__bookmarkOpen,
+.docsViewer__bookmarkRemove{
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.docsViewer__bookmarkOpen{
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  cursor: pointer;
+}
+
+.docsViewer__bookmarkOpen:hover .docsViewer__bookmarkLabel,
+.docsViewer__bookmarkOpen:focus-visible .docsViewer__bookmarkLabel{
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.docsViewer__bookmarkOpen:focus-visible,
+.docsViewer__bookmarkRemove:focus-visible,
+.docsViewer__bookmarkInput:focus-visible{
+  outline: 2px solid var(--border-strong);
+  outline-offset: 2px;
+}
+
+.docsViewer__bookmarkLabel{
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.docsViewer__bookmarkInput{
+  width: min(100%, 11rem);
+  min-width: 4rem;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--font-small);
+  line-height: var(--line-snug);
+}
+
+.docsViewer__bookmarkInput:focus{
+  outline: none;
+}
+
+.docsViewer__bookmarkRemove{
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1rem;
+  padding: 0 0.12rem;
+  line-height: 1;
+  cursor: pointer;
 }
 
 .docsViewer__content{
@@ -1304,6 +1449,10 @@ th{ background: var(--panel-2); }
 
   .docsViewer__sidebarInner{
     position: static;
+  }
+
+  .docsViewer__metaRow{
+    align-items: stretch;
   }
 }
 

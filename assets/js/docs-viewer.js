@@ -7,6 +7,8 @@
   var meta = document.getElementById("docsViewerMeta");
   var pathEl = document.getElementById("docsViewerPath");
   var updatedEl = document.getElementById("docsViewerUpdated");
+  var bookmarkRow = document.getElementById("docsViewerBookmarkRow");
+  var bookmarkToggle = document.getElementById("docsViewerBookmarkToggle");
   var content = document.getElementById("docsViewerContent");
   var searchInput = document.getElementById("docsViewerSearchInput");
   var results = document.getElementById("docsViewerResults");
@@ -22,6 +24,10 @@
   var searchEnabled = Boolean(searchInput && results && more && searchIndexUrl);
   var SEARCH_BATCH_SIZE = 50;
   var SEARCH_DEBOUNCE_MS = 140;
+  var BOOKMARK_DB_NAME = "dotlineform-docs-viewer";
+  var BOOKMARK_DB_VERSION = 1;
+  var BOOKMARK_STORE_NAME = "favorites";
+  var bookmarkScope = viewerScope || viewerPathname || "docs";
 
   var state = {
     docs: [],
@@ -37,7 +43,13 @@
     searchQuery: "",
     searchVisibleCount: SEARCH_BATCH_SIZE,
     searchDebounceId: null,
-    searchRouteActive: false
+    searchRouteActive: false,
+    bookmarks: [],
+    bookmarksLoaded: false,
+    bookmarkDbPromise: null,
+    bookmarkSupport: Boolean(window.indexedDB),
+    editingBookmarkKey: "",
+    pendingBookmarkFocusKey: ""
   };
 
   function sortKey(doc) {
@@ -78,6 +90,360 @@
 
   function hasActiveQuery(query) {
     return Boolean(normalize(typeof query === "string" ? query : state.searchQuery));
+  }
+
+  function bookmarkKey(scope, docId) {
+    return String(scope || "") + "::" + String(docId || "");
+  }
+
+  function isoNow() {
+    return new Date().toISOString();
+  }
+
+  function compareBookmarks(left, right) {
+    var leftOrder = typeof left.order === "number" ? left.order : 0;
+    var rightOrder = typeof right.order === "number" ? right.order : 0;
+    if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+    return String(left.created_at_utc || "").localeCompare(String(right.created_at_utc || ""));
+  }
+
+  function normalizeBookmarkRecord(record) {
+    if (!record || typeof record !== "object") return null;
+    var scope = String(record.scope || "").trim();
+    var docId = String(record.doc_id || "").trim();
+    if (!scope || !docId) return null;
+    var defaultTitle = String(record.default_title || record.label || docId).trim() || docId;
+    return {
+      key: bookmarkKey(scope, docId),
+      scope: scope,
+      doc_id: docId,
+      label: String(record.label || defaultTitle).trim() || defaultTitle,
+      default_title: defaultTitle,
+      created_at_utc: String(record.created_at_utc || record.updated_at_utc || isoNow()),
+      updated_at_utc: String(record.updated_at_utc || record.created_at_utc || isoNow()),
+      order: typeof record.order === "number" ? record.order : 0
+    };
+  }
+
+  function getScopeBookmarks() {
+    return state.bookmarks
+      .filter(function (record) { return record.scope === bookmarkScope; })
+      .sort(compareBookmarks);
+  }
+
+  function getBookmarkForDoc(docId) {
+    return findBookmarkByKey(bookmarkKey(bookmarkScope, docId));
+  }
+
+  function findBookmarkByKey(key) {
+    for (var i = 0; i < state.bookmarks.length; i += 1) {
+      if (state.bookmarks[i].key === key) return state.bookmarks[i];
+    }
+    return null;
+  }
+
+  function nextBookmarkOrder() {
+    var bookmarks = getScopeBookmarks();
+    if (!bookmarks.length) return 1;
+    return bookmarks[bookmarks.length - 1].order + 1;
+  }
+
+  function defaultBookmarkLabel(doc) {
+    if (!doc) return "";
+    return String(doc.title || doc.doc_id || "").trim();
+  }
+
+  function upsertBookmarkState(record) {
+    var normalized = normalizeBookmarkRecord(record);
+    if (!normalized) return;
+    var next = [];
+    var found = false;
+    state.bookmarks.forEach(function (entry) {
+      if (entry.key === normalized.key) {
+        next.push(normalized);
+        found = true;
+      } else {
+        next.push(entry);
+      }
+    });
+    if (!found) {
+      next.push(normalized);
+    }
+    state.bookmarks = next.sort(compareBookmarks);
+  }
+
+  function removeBookmarkState(key) {
+    state.bookmarks = state.bookmarks.filter(function (entry) {
+      return entry.key !== key;
+    });
+    if (state.editingBookmarkKey === key) {
+      state.editingBookmarkKey = "";
+      state.pendingBookmarkFocusKey = "";
+    }
+  }
+
+  function renderBookmarkUi() {
+    renderBookmarkToggle();
+    renderBookmarkRow();
+  }
+
+  function renderBookmarkToggle() {
+    if (!bookmarkToggle) return;
+    var doc = state.docsById.get(state.selectedDocId);
+    var canShow = Boolean(doc) && state.bookmarksLoaded && state.bookmarkSupport && !state.searchRouteActive;
+    bookmarkToggle.hidden = !canShow;
+    if (!canShow) return;
+
+    var record = getBookmarkForDoc(doc.doc_id);
+    var active = Boolean(record);
+    bookmarkToggle.classList.toggle("is-active", active);
+    bookmarkToggle.textContent = active ? "★" : "☆";
+    bookmarkToggle.setAttribute("aria-pressed", active ? "true" : "false");
+    bookmarkToggle.setAttribute("aria-label", active ? "Remove bookmark" : "Add bookmark");
+    bookmarkToggle.title = active ? "Remove bookmark" : "Add bookmark";
+  }
+
+  function renderBookmarkRow() {
+    if (!bookmarkRow) return;
+    if (!state.bookmarksLoaded || !state.bookmarkSupport) {
+      bookmarkRow.hidden = true;
+      bookmarkRow.innerHTML = "";
+      return;
+    }
+
+    var bookmarks = getScopeBookmarks();
+    if (!bookmarks.length) {
+      bookmarkRow.hidden = true;
+      bookmarkRow.innerHTML = "";
+      return;
+    }
+
+    bookmarkRow.hidden = false;
+    bookmarkRow.innerHTML = bookmarks.map(function (record) {
+      var isActive = record.doc_id === state.selectedDocId;
+      var isEditing = record.key === state.editingBookmarkKey;
+      var pillClass = "docsViewer__bookmarkPill" + (isActive ? " is-active" : "");
+      if (isEditing) {
+        return (
+          '<div class="' + pillClass + '" data-bookmark-key="' + escapeHtml(record.key) + '">' +
+            '<input class="docsViewer__bookmarkInput" type="text" value="' + escapeHtml(record.label || record.default_title || record.doc_id) + '" data-bookmark-input="' + escapeHtml(record.key) + '" aria-label="Rename bookmark">' +
+            '<button type="button" class="docsViewer__bookmarkRemove" data-bookmark-remove="' + escapeHtml(record.key) + '" aria-label="Remove bookmark">x</button>' +
+          '</div>'
+        );
+      }
+      return (
+        '<div class="' + pillClass + '" data-bookmark-key="' + escapeHtml(record.key) + '">' +
+          '<button type="button" class="docsViewer__bookmarkOpen" data-bookmark-open="' + escapeHtml(record.doc_id) + '" title="Open bookmark. Right-click to rename." aria-current="' + (isActive ? "page" : "false") + '">' +
+            '<span class="docsViewer__bookmarkLabel">' + escapeHtml(record.label || record.default_title || record.doc_id) + '</span>' +
+          '</button>' +
+          '<button type="button" class="docsViewer__bookmarkRemove" data-bookmark-remove="' + escapeHtml(record.key) + '" aria-label="Remove bookmark">x</button>' +
+        '</div>'
+      );
+    }).join("");
+
+    if (state.pendingBookmarkFocusKey) {
+      var focusTarget = bookmarkRow.querySelector('[data-bookmark-input="' + cssEscape(state.pendingBookmarkFocusKey) + '"]');
+      if (focusTarget) {
+        window.requestAnimationFrame(function () {
+          focusTarget.focus();
+          focusTarget.select();
+        });
+      }
+      state.pendingBookmarkFocusKey = "";
+    }
+  }
+
+  function openBookmarksDb() {
+    if (!state.bookmarkSupport) {
+      return Promise.reject(new Error("Bookmarks unavailable in this browser."));
+    }
+    if (state.bookmarkDbPromise) {
+      return state.bookmarkDbPromise;
+    }
+
+    state.bookmarkDbPromise = new Promise(function (resolve, reject) {
+      var request = window.indexedDB.open(BOOKMARK_DB_NAME, BOOKMARK_DB_VERSION);
+
+      request.onupgradeneeded = function () {
+        var db = request.result;
+        if (!db.objectStoreNames.contains(BOOKMARK_STORE_NAME)) {
+          db.createObjectStore(BOOKMARK_STORE_NAME, { keyPath: "key" });
+        }
+      };
+
+      request.onsuccess = function () {
+        var db = request.result;
+        db.onversionchange = function () {
+          db.close();
+          state.bookmarkDbPromise = null;
+        };
+        resolve(db);
+      };
+
+      request.onerror = function () {
+        reject(request.error || new Error("Failed to open bookmark storage."));
+      };
+    }).catch(function (error) {
+      state.bookmarkSupport = false;
+      renderBookmarkUi();
+      throw error;
+    });
+
+    return state.bookmarkDbPromise;
+  }
+
+  function loadBookmarks() {
+    return openBookmarksDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(BOOKMARK_STORE_NAME, "readonly");
+        var store = tx.objectStore(BOOKMARK_STORE_NAME);
+        var request = store.getAll();
+        request.onsuccess = function () {
+          var records = Array.isArray(request.result) ? request.result.map(normalizeBookmarkRecord).filter(Boolean) : [];
+          resolve(records);
+        };
+        request.onerror = function () {
+          reject(request.error || new Error("Failed to load bookmarks."));
+        };
+      });
+    });
+  }
+
+  function persistBookmark(record) {
+    return openBookmarksDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(BOOKMARK_STORE_NAME, "readwrite");
+        tx.oncomplete = function () { resolve(record); };
+        tx.onerror = function () { reject(tx.error || new Error("Failed to save bookmark.")); };
+        tx.objectStore(BOOKMARK_STORE_NAME).put(record);
+      });
+    });
+  }
+
+  function deleteBookmarkRecord(key) {
+    return openBookmarksDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction(BOOKMARK_STORE_NAME, "readwrite");
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error || new Error("Failed to remove bookmark.")); };
+        tx.objectStore(BOOKMARK_STORE_NAME).delete(key);
+      });
+    });
+  }
+
+  function initializeBookmarks() {
+    if (!state.bookmarkSupport) {
+      state.bookmarksLoaded = true;
+      renderBookmarkUi();
+      return;
+    }
+
+    loadBookmarks()
+      .then(function (records) {
+        state.bookmarks = records;
+        state.bookmarksLoaded = true;
+        renderBookmarkUi();
+      })
+      .catch(function () {
+        state.bookmarks = [];
+        state.bookmarksLoaded = true;
+        renderBookmarkUi();
+      });
+  }
+
+  function addBookmarkForDoc(doc) {
+    if (!doc || !state.bookmarkSupport) return;
+    var now = isoNow();
+    var record = normalizeBookmarkRecord({
+      scope: bookmarkScope,
+      doc_id: doc.doc_id,
+      label: defaultBookmarkLabel(doc),
+      default_title: defaultBookmarkLabel(doc),
+      created_at_utc: now,
+      updated_at_utc: now,
+      order: nextBookmarkOrder()
+    });
+    upsertBookmarkState(record);
+    renderBookmarkUi();
+    persistBookmark(record).catch(function (error) {
+      removeBookmarkState(record.key);
+      renderBookmarkUi();
+      setStatus(error.message || "Failed to save bookmark.", true);
+    });
+  }
+
+  function removeBookmarkByKey(key) {
+    var record = key ? findBookmarkByKey(key) : null;
+    if (!record) return;
+    removeBookmarkState(key);
+    renderBookmarkUi();
+    deleteBookmarkRecord(key).catch(function (error) {
+      upsertBookmarkState(record);
+      renderBookmarkUi();
+      setStatus(error.message || "Failed to remove bookmark.", true);
+    });
+  }
+
+  function toggleCurrentBookmark() {
+    var doc = state.docsById.get(state.selectedDocId);
+    if (!doc || !state.bookmarksLoaded || !state.bookmarkSupport) return;
+    var existing = getBookmarkForDoc(doc.doc_id);
+    if (existing) {
+      removeBookmarkByKey(existing.key);
+      return;
+    }
+    addBookmarkForDoc(doc);
+  }
+
+  function startBookmarkRename(key) {
+    if (!key) return;
+    state.editingBookmarkKey = key;
+    state.pendingBookmarkFocusKey = key;
+    renderBookmarkRow();
+  }
+
+  function finishBookmarkRename(key, nextValue, cancel) {
+    var record = key ? findBookmarkByKey(key) : null;
+    if (!record) {
+      state.editingBookmarkKey = "";
+      state.pendingBookmarkFocusKey = "";
+      renderBookmarkRow();
+      return;
+    }
+
+    if (cancel) {
+      state.editingBookmarkKey = "";
+      state.pendingBookmarkFocusKey = "";
+      renderBookmarkRow();
+      return;
+    }
+
+    var nextLabel = String(nextValue || "").trim() || record.default_title || record.doc_id;
+    state.editingBookmarkKey = "";
+    state.pendingBookmarkFocusKey = "";
+    if (nextLabel === record.label) {
+      renderBookmarkRow();
+      return;
+    }
+
+    var updated = normalizeBookmarkRecord({
+      key: record.key,
+      scope: record.scope,
+      doc_id: record.doc_id,
+      label: nextLabel,
+      default_title: record.default_title,
+      created_at_utc: record.created_at_utc,
+      updated_at_utc: isoNow(),
+      order: record.order
+    });
+
+    upsertBookmarkState(updated);
+    renderBookmarkUi();
+    persistBookmark(updated).catch(function (error) {
+      upsertBookmarkState(record);
+      renderBookmarkUi();
+      setStatus(error.message || "Failed to rename bookmark.", true);
+    });
   }
 
   function viewerUrl(docId, hash, query) {
@@ -232,6 +598,7 @@
       updatedEl.hidden = true;
     }
     meta.hidden = false;
+    renderBookmarkToggle();
   }
 
   function setStatus(message, isError) {
@@ -255,6 +622,7 @@
   function hideDocPane() {
     meta.hidden = true;
     content.hidden = true;
+    renderBookmarkToggle();
   }
 
   function showDocPane() {
@@ -272,6 +640,7 @@
   function renderPayload(doc, payload, hash) {
     state.selectedDocId = doc.doc_id;
     renderSidebar();
+    renderBookmarkUi();
 
     if (hasActiveQuery()) {
       renderSearchMode();
@@ -327,6 +696,7 @@
     if (shouldExpandTrail) {
       expandTrail(docId);
     }
+    renderBookmarkUi();
 
     setHistory(docId, hash, "", mode);
 
@@ -408,6 +778,69 @@
       loadDoc(route.docId, { historyMode: "push", hash: route.hash });
     });
 
+    if (bookmarkToggle) {
+      bookmarkToggle.addEventListener("click", function () {
+        toggleCurrentBookmark();
+      });
+    }
+
+    if (bookmarkRow) {
+      bookmarkRow.addEventListener("click", function (event) {
+        var removeButton = event.target.closest("[data-bookmark-remove]");
+        if (removeButton) {
+          event.preventDefault();
+          removeBookmarkByKey(removeButton.dataset.bookmarkRemove);
+          return;
+        }
+
+        var openButton = event.target.closest("[data-bookmark-open]");
+        if (openButton) {
+          event.preventDefault();
+          var targetDocId = openButton.dataset.bookmarkOpen;
+          if (!targetDocId) return;
+          cancelSearchDebounce();
+          state.searchQuery = "";
+          state.searchVisibleCount = SEARCH_BATCH_SIZE;
+          if (searchInput) {
+            searchInput.value = "";
+          }
+          loadDoc(targetDocId, { historyMode: "push", hash: "" });
+        }
+      });
+
+      bookmarkRow.addEventListener("contextmenu", function (event) {
+        var openButton = event.target.closest("[data-bookmark-open]");
+        if (!openButton) return;
+        event.preventDefault();
+        startBookmarkRename(bookmarkKey(bookmarkScope, openButton.dataset.bookmarkOpen));
+      });
+
+      bookmarkRow.addEventListener("keydown", function (event) {
+        var openButton = event.target.closest("[data-bookmark-open]");
+        if (openButton && event.key === "F2") {
+          event.preventDefault();
+          startBookmarkRename(bookmarkKey(bookmarkScope, openButton.dataset.bookmarkOpen));
+          return;
+        }
+
+        var input = event.target.closest("[data-bookmark-input]");
+        if (!input) return;
+        if (event.key === "Enter") {
+          event.preventDefault();
+          finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+        } else if (event.key === "Escape") {
+          event.preventDefault();
+          finishBookmarkRename(input.dataset.bookmarkInput, input.value, true);
+        }
+      });
+
+      bookmarkRow.addEventListener("focusout", function (event) {
+        var input = event.target.closest("[data-bookmark-input]");
+        if (!input) return;
+        finishBookmarkRename(input.dataset.bookmarkInput, input.value, false);
+      });
+    }
+
     if (searchEnabled) {
       more.addEventListener("click", function (event) {
         var button = event.target.closest("button[data-role='more']");
@@ -474,6 +907,7 @@
     state.childrenByParent = buildChildrenMap(state.docs);
 
     renderSidebar();
+    renderBookmarkUi();
 
     if (state.docs.length === 0) {
       setStatus("No docs available.", true);
@@ -501,6 +935,7 @@
 
     expandTrail(docId);
     renderSidebar();
+    renderBookmarkUi();
 
     if (route.corrected || !hasCanonicalScopeInUrl()) {
       setHistory(docId, "", query, "replace");
@@ -745,6 +1180,7 @@
   });
 
   bindLinkInterception();
+  initializeBookmarks();
   loadIndex();
 
   function appendAssetVersion(url) {
@@ -779,5 +1215,12 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === "function") {
+      return window.CSS.escape(String(value || ""));
+    }
+    return String(value || "").replace(/["\\]/g, "\\$&");
   }
 })();
