@@ -102,6 +102,7 @@
     - `    browser.close()`
     - `PY`
   - installed browsers currently live under `~/Library/Caches/ms-playwright/`
+- If Chromium launch fails in the Codex app sandbox, retry the same Playwright browser check with escalated permissions before treating it as a product or runtime issue.
 - Avoid the raw Edge headless fallback unless Playwright is unavailable; Edge can trigger crash-report noise on this machine.
 - Always define targeted verification for both:
   - Codex-run checks
