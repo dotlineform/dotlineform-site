@@ -68,7 +68,10 @@
     managementMessage: "",
     managementMessageIsError: false,
     reloadNonce: "",
-    reloadExpectedDocId: ""
+    reloadExpectedDocId: "",
+    dragDocId: "",
+    dropTargetDocId: "",
+    dropPosition: ""
   };
 
   function sortKey(doc) {
@@ -536,6 +539,7 @@
     }
 
     nav.appendChild(renderNavList(""));
+    updateNavDragState();
   }
 
   function renderNavList(parentId) {
@@ -548,7 +552,8 @@
       item.className = "docsViewer__navItem";
       var row = document.createElement("div");
       row.className = "docsViewer__navRow";
-      var children = state.childrenByParent.get(doc.doc_id) || [];
+      row.dataset.docRowId = doc.doc_id;
+      var children = docChildren(doc.doc_id);
       var hasChildren = children.length > 0;
 
       if (hasChildren) {
@@ -576,6 +581,10 @@
       }
       link.href = viewerUrl(doc.doc_id);
       link.dataset.docId = doc.doc_id;
+      if (canDragDoc(doc)) {
+        link.draggable = true;
+        link.dataset.dragDocId = doc.doc_id;
+      }
       link.textContent = doc.title;
       row.appendChild(link);
       item.appendChild(row);
@@ -646,6 +655,70 @@
 
   function currentSelectedDoc() {
     return state.docsById.get(state.selectedDocId) || null;
+  }
+
+  function docChildren(docId) {
+    return state.childrenByParent.get(docId) || [];
+  }
+
+  function docHasChildren(docId) {
+    return docChildren(docId).length > 0;
+  }
+
+  function managementDragEnabled() {
+    return state.managementMode && state.managementAvailable && !state.managementBusy && !state.searchRouteActive;
+  }
+
+  function canDragDoc(doc) {
+    if (!managementDragEnabled() || !doc) return false;
+    if (doc.doc_id === "_archive") return false;
+    return !docHasChildren(doc.doc_id);
+  }
+
+  function dropPositionForDoc(docId) {
+    if (!managementDragEnabled()) return "";
+    if (!docId || !state.docsById.has(docId)) return "";
+    if (state.dragDocId === docId) return "";
+    if (docHasChildren(docId) && !state.expandedDocIds.has(docId)) {
+      return "inside";
+    }
+    return "after";
+  }
+
+  function canDropOnDoc(docId) {
+    if (!state.dragDocId || !managementDragEnabled()) return false;
+    var dragDoc = state.docsById.get(state.dragDocId);
+    var targetDoc = state.docsById.get(docId);
+    if (!dragDoc || !targetDoc) return false;
+    if (!canDragDoc(dragDoc)) return false;
+    if (dragDoc.doc_id === targetDoc.doc_id) return false;
+    return Boolean(dropPositionForDoc(docId));
+  }
+
+  function clearDragState() {
+    state.dragDocId = "";
+    state.dropTargetDocId = "";
+    state.dropPosition = "";
+    updateNavDragState();
+  }
+
+  function updateNavDragState() {
+    if (!nav) return;
+    nav.querySelectorAll(".docsViewer__navRow").forEach(function (row) {
+      row.classList.remove("is-dragging", "is-drop-after", "is-drop-inside");
+    });
+    if (state.dragDocId) {
+      var dragRow = nav.querySelector('[data-doc-row-id="' + cssEscape(state.dragDocId) + '"]');
+      if (dragRow) {
+        dragRow.classList.add("is-dragging");
+      }
+    }
+    if (state.dropTargetDocId && state.dropPosition) {
+      var dropRow = nav.querySelector('[data-doc-row-id="' + cssEscape(state.dropTargetDocId) + '"]');
+      if (dropRow) {
+        dropRow.classList.add(state.dropPosition === "inside" ? "is-drop-inside" : "is-drop-after");
+      }
+    }
   }
 
   function managementArchiveAvailable() {
@@ -776,13 +849,6 @@
       });
   }
 
-  function defaultCreateParentId() {
-    var doc = currentSelectedDoc();
-    if (!doc) return "";
-    var hasChildren = (state.childrenByParent.get(doc.doc_id) || []).length > 0;
-    return hasChildren ? doc.doc_id : (doc.parent_id || "");
-  }
-
   function reloadDocsIndex(targetDocId, summaryText) {
     state.payloadCache.clear();
     state.searchEntries = [];
@@ -803,7 +869,7 @@
     }
 
     return loadIndex().then(function () {
-      setStatus(summaryText || "Docs updated.", false);
+      setStatus(summaryText ? summaryText : "", false);
       renderManagementUi();
     });
   }
@@ -813,9 +879,7 @@
     if (titleInput == null) return;
 
     var title = String(titleInput || "").trim() || "New Doc";
-    var parentInput = window.prompt("Parent doc id (blank for top-level)", defaultCreateParentId());
-    if (parentInput == null) return;
-    var parentId = String(parentInput || "").trim();
+    var currentDoc = currentSelectedDoc();
 
     state.managementBusy = true;
     setManagementMessage("Creating doc...", false);
@@ -824,7 +888,7 @@
     fetchManagementJson("/docs/create", "POST", {
       scope: viewerScope,
       title: title,
-      parent_id: parentId
+      after_doc_id: currentDoc ? currentDoc.doc_id : ""
     })
       .then(function (payload) {
         setManagementMessage(payload.summary_text || "Doc created.", false);
@@ -924,12 +988,43 @@
       .then(function (payload) {
         if (!payload) return;
         var fallbackDocId = doc.parent_id || defaultRouteDocId || defaultDocId();
-        setManagementMessage(payload.summary_text || "Doc deleted.", false);
-        return reloadDocsIndex(fallbackDocId, payload.summary_text || "Doc deleted.");
+        setManagementMessage("", false);
+        return reloadDocsIndex(fallbackDocId, "");
       })
       .catch(function (error) {
         setManagementMessage(error.message || "Delete failed.", true);
         setStatus(error.message || "Delete failed.", true);
+      })
+      .finally(function () {
+        state.managementBusy = false;
+        renderManagementUi();
+      });
+  }
+
+  function handleMoveDoc(docId, targetDocId, position) {
+    if (!docId || !targetDocId || !position) return;
+    var movingDoc = state.docsById.get(docId);
+    var targetDoc = state.docsById.get(targetDocId);
+    if (!movingDoc || !targetDoc) return;
+
+    state.managementBusy = true;
+    clearDragState();
+    setManagementMessage("Moving " + movingDoc.title + "...", false);
+    setStatus("Moving " + movingDoc.title + "...", false);
+
+    fetchManagementJson("/docs/move", "POST", {
+      scope: viewerScope,
+      doc_id: movingDoc.doc_id,
+      target_doc_id: targetDoc.doc_id,
+      position: position
+    })
+      .then(function (payload) {
+        setManagementMessage(payload.summary_text || "Doc moved.", false);
+        return reloadDocsIndex(movingDoc.doc_id, payload.summary_text || "Doc moved.");
+      })
+      .catch(function (error) {
+        setManagementMessage(error.message || "Move failed.", true);
+        setStatus(error.message || "Move failed.", true);
       })
       .finally(function () {
         state.managementBusy = false;
@@ -1080,6 +1175,76 @@
   }
 
   function bindLinkInterception() {
+    if (nav) {
+      nav.addEventListener("dragstart", function (event) {
+        var dragHandle = event.target.closest("[data-drag-doc-id]");
+        if (!dragHandle || !managementDragEnabled()) return;
+        state.dragDocId = dragHandle.dataset.dragDocId || "";
+        state.dropTargetDocId = "";
+        state.dropPosition = "";
+        if (event.dataTransfer) {
+          event.dataTransfer.effectAllowed = "move";
+          event.dataTransfer.setData("text/plain", state.dragDocId);
+        }
+        updateNavDragState();
+      });
+
+      nav.addEventListener("dragover", function (event) {
+        var row = event.target.closest("[data-doc-row-id]");
+        if (!row) {
+          if (state.dropTargetDocId || state.dropPosition) {
+            state.dropTargetDocId = "";
+            state.dropPosition = "";
+            updateNavDragState();
+          }
+          return;
+        }
+
+        var targetDocId = row.dataset.docRowId || "";
+        if (!canDropOnDoc(targetDocId)) {
+          if (state.dropTargetDocId || state.dropPosition) {
+            state.dropTargetDocId = "";
+            state.dropPosition = "";
+            updateNavDragState();
+          }
+          return;
+        }
+
+        event.preventDefault();
+        if (event.dataTransfer) {
+          event.dataTransfer.dropEffect = "move";
+        }
+        var nextPosition = dropPositionForDoc(targetDocId);
+        if (state.dropTargetDocId !== targetDocId || state.dropPosition !== nextPosition) {
+          state.dropTargetDocId = targetDocId;
+          state.dropPosition = nextPosition;
+          updateNavDragState();
+        }
+      });
+
+      nav.addEventListener("drop", function (event) {
+        var row = event.target.closest("[data-doc-row-id]");
+        if (!row) {
+          clearDragState();
+          return;
+        }
+        var targetDocId = row.dataset.docRowId || "";
+        var position = dropPositionForDoc(targetDocId);
+        if (!canDropOnDoc(targetDocId) || !position) {
+          clearDragState();
+          return;
+        }
+        event.preventDefault();
+        var movingDocId = state.dragDocId;
+        clearDragState();
+        handleMoveDoc(movingDocId, targetDocId, position);
+      });
+
+      nav.addEventListener("dragend", function () {
+        clearDragState();
+      });
+    }
+
     root.addEventListener("click", function (event) {
       var toggle = event.target.closest("[data-toggle-doc-id]");
       if (toggle) {

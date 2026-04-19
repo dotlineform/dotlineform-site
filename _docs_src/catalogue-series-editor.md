@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-series-editor
-title: Catalogue Series Editor
+title: "Catalogue Series Editor"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 36
+sort_order: 120
 ---
-
 # Catalogue Series Editor
 
 Route:

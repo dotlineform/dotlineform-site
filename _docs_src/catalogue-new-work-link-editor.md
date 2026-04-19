@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-new-work-link-editor
-title: New Catalogue Work Link
+title: "New Catalogue Work Link"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 39
+sort_order: 170
 ---
-
 # New Catalogue Work Link
 
 Route:

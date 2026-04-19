@@ -1,11 +1,10 @@
 ---
 doc_id: docs-viewer
-title: Docs Viewer
+title: "Docs Viewer"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 40
+sort_order: 170
 ---
-
 # Docs Viewer
 
 The Docs Viewer is the shared documentation module used by the site's docs-domain routes.

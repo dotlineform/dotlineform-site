@@ -3,9 +3,8 @@ doc_id: search
 title: Search
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 50
+sort_order: 190
 ---
-
 # Search
 
 This section describes the current search implementation.

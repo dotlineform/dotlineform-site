@@ -1,11 +1,10 @@
 ---
 doc_id: site-docs
-title: Site Docs
+title: "Site Docs"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 0
+sort_order: 10
 ---
-
 # Site Docs
 
 This is the top-level map for the current site documentation.

@@ -1,12 +1,11 @@
 ---
 doc_id: search-result-shaping-json
-title: Search Result Shaping draft JSON
+title: "Search Result Shaping draft JSON"
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 10
+sort_order: 70
 published: false
 ---
-
 ## Draft JSON
 
 file: search-result-shaping.json

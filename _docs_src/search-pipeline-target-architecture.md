@@ -1,12 +1,11 @@
 ---
 doc_id: search-pipeline-target-architecture
-title: Search Pipeline Target Architecture
+title: "Search Pipeline Target Architecture"
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 102
+sort_order: 260
 published: false
 ---
-
 # Search Pipeline Target Architecture
 
 ## Purpose

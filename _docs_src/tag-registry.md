@@ -1,11 +1,10 @@
 ---
 doc_id: tag-registry
-title: Tag Registry
+title: "Tag Registry"
 last_updated: 2026-03-31
 parent_id: studio
-sort_order: 40
+sort_order: 180
 ---
-
 # Tag Registry
 
 Route:

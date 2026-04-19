@@ -1,11 +1,10 @@
 ---
 doc_id: tag-editor
-title: Tag Editor
+title: "Tag Editor"
 last_updated: 2026-03-31
 parent_id: studio
-sort_order: 70
+sort_order: 220
 ---
-
 # Tag Editor
 
 Route:

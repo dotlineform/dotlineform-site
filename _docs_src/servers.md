@@ -3,9 +3,8 @@ doc_id: servers
 title: Servers
 last_updated: 2026-04-17
 parent_id: ""
-sort_order: 33
+sort_order: 150
 ---
-
 # Servers
 
 This section documents local server processes used by Studio and build tooling.

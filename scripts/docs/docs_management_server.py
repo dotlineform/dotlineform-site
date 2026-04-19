@@ -12,6 +12,7 @@ Endpoints:
   GET /health
   GET /capabilities
   POST /docs/create
+  POST /docs/move
   POST /docs/archive
   POST /docs/delete-preview
   POST /docs/delete-apply
@@ -315,6 +316,61 @@ def next_sort_order(docs: list[ScopeDoc], parent_id: str) -> int:
     return max(sibling_orders) + 10
 
 
+def scope_doc_sort_key(doc: ScopeDoc) -> tuple[Any, ...]:
+    return (
+        doc.sort_order is None,
+        0 if doc.sort_order is None else doc.sort_order,
+        doc.title.lower(),
+        doc.doc_id,
+    )
+
+
+def sorted_siblings(docs: list[ScopeDoc], parent_id: str) -> list[ScopeDoc]:
+    return sorted((doc for doc in docs if doc.parent_id == parent_id), key=scope_doc_sort_key)
+
+
+def create_sort_order_after(docs: list[ScopeDoc], after_doc: ScopeDoc) -> tuple[int, list[tuple[ScopeDoc, str]]]:
+    siblings = sorted_siblings(docs, after_doc.parent_id)
+    if not siblings:
+        return 10, []
+
+    after_index = next((index for index, doc in enumerate(siblings) if doc.doc_id == after_doc.doc_id), -1)
+    if after_index < 0:
+        return next_sort_order(docs, after_doc.parent_id), []
+
+    current_order = after_doc.sort_order if isinstance(after_doc.sort_order, int) else None
+    next_doc = siblings[after_index + 1] if after_index + 1 < len(siblings) else None
+    next_order = next_doc.sort_order if next_doc and isinstance(next_doc.sort_order, int) else None
+
+    if current_order is not None:
+        if next_order is None:
+            return current_order + 10, []
+        if next_order - current_order > 1:
+            return current_order + 1, []
+
+    rewrites: list[tuple[ScopeDoc, str]] = []
+    selected_order = None
+    for index, sibling in enumerate(siblings):
+        normalized_order = (index + 1) * 10
+        if sibling.doc_id == after_doc.doc_id:
+            selected_order = normalized_order
+        if sibling.sort_order == normalized_order:
+            continue
+        updated_front_matter = dict(sibling.front_matter)
+        updated_front_matter["sort_order"] = normalized_order
+        rewrites.append((sibling, format_source(updated_front_matter, sibling.body)))
+
+    if selected_order is None:
+        return next_sort_order(docs, after_doc.parent_id), rewrites
+    return selected_order + 5, rewrites
+
+
+def rewrite_doc_source(doc: ScopeDoc, front_matter_updates: Dict[str, Any]) -> str:
+    updated_front_matter = dict(doc.front_matter)
+    updated_front_matter.update(front_matter_updates)
+    return format_source(updated_front_matter, doc.body)
+
+
 def ensure_unique_stem(docs: list[ScopeDoc], title: str) -> str:
     base = slugify(title)
     existing_stems = {doc.path.stem for doc in docs}
@@ -553,13 +609,21 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
     scope = normalize_scope(body.get("scope"))
     docs = load_scope_docs(repo_root, scope)
     title = str(body.get("title") or "New Doc").strip() or "New Doc"
-    parent_id = str(body.get("parent_id") or "").strip()
     docs_by_id = {doc.doc_id: doc for doc in docs}
-    if parent_id and parent_id not in docs_by_id:
-        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
-
     raw_sort_order = body.get("sort_order")
-    if raw_sort_order in {None, ""}:
+    after_doc_id = str(body.get("after_doc_id") or "").strip()
+    parent_id = str(body.get("parent_id") or "").strip()
+    create_rewrites: list[tuple[ScopeDoc, str]] = []
+
+    if after_doc_id:
+        after_doc = docs_by_id.get(after_doc_id)
+        if after_doc is None:
+            raise ValueError(f"Unknown after_doc_id {after_doc_id!r} for scope {scope}")
+        parent_id = after_doc.parent_id
+        sort_order, create_rewrites = create_sort_order_after(docs, after_doc)
+    elif parent_id and parent_id not in docs_by_id:
+        raise ValueError(f"Unknown parent_id {parent_id!r} for scope {scope}")
+    elif raw_sort_order in {None, ""}:
         sort_order = next_sort_order(docs, parent_id)
     else:
         try:
@@ -586,15 +650,19 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
             repo_root,
             scope,
             "create",
-            [],
+            [rewrite_doc for rewrite_doc, _ in create_rewrites],
             {
                 "doc_id": doc_id,
                 "title": title,
                 "path": relative_path(repo_root, target_path),
                 "parent_id": parent_id,
                 "sort_order": sort_order,
+                "after_doc_id": after_doc_id,
+                "reordered_doc_ids": [rewrite_doc.doc_id for rewrite_doc, _ in create_rewrites],
             },
         )
+        for rewrite_doc, rewritten_source in create_rewrites:
+            write_text_atomic(rewrite_doc.path, rewritten_source)
         write_text_atomic(target_path, source_text)
         rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
@@ -619,6 +687,109 @@ def handle_create(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[
             "sort_order": sort_order,
         },
         "summary_text": f"Created {doc_id}.",
+        "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
+        "rebuild": rebuild,
+        "dry_run": dry_run,
+    }
+
+
+def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[str, Any]:
+    scope = normalize_scope(body.get("scope"))
+    doc_id = str(body.get("doc_id") or "").strip()
+    target_doc_id = str(body.get("target_doc_id") or "").strip()
+    position = str(body.get("position") or "after").strip().lower()
+    if not doc_id:
+        raise ValueError("doc_id is required")
+    if not target_doc_id:
+        raise ValueError("target_doc_id is required")
+    if position not in {"after", "inside"}:
+        raise ValueError("position must be `after` or `inside`")
+
+    docs = load_scope_docs(repo_root, scope)
+    docs_by_id = {doc.doc_id: doc for doc in docs}
+    moving_doc = docs_by_id.get(doc_id)
+    target_doc = docs_by_id.get(target_doc_id)
+    if moving_doc is None:
+        raise FileNotFoundError(f"doc {doc_id!r} not found in scope {scope}")
+    if target_doc is None:
+        raise FileNotFoundError(f"target_doc_id {target_doc_id!r} not found in scope {scope}")
+    if moving_doc.doc_id in RESERVED_DOC_IDS:
+        raise ValueError(f"{moving_doc.doc_id} is a reserved system doc and cannot be moved")
+    if moving_doc.doc_id == target_doc.doc_id:
+        raise ValueError("doc cannot be moved onto itself")
+    if any(doc.parent_id == moving_doc.doc_id for doc in docs):
+        raise ValueError(f"{moving_doc.doc_id} has child docs and cannot be moved")
+
+    remaining_docs = [doc for doc in docs if doc.doc_id != moving_doc.doc_id]
+    if position == "inside":
+        next_parent_id = target_doc.doc_id
+        ordered_docs = sorted_siblings(remaining_docs, next_parent_id) + [moving_doc]
+    else:
+        next_parent_id = target_doc.parent_id
+        ordered_docs = sorted_siblings(remaining_docs, next_parent_id)
+        target_index = next((index for index, doc in enumerate(ordered_docs) if doc.doc_id == target_doc.doc_id), -1)
+        if target_index < 0:
+            raise ValueError(f"target_doc_id {target_doc.doc_id!r} is not addressable in its sibling list")
+        ordered_docs.insert(target_index + 1, moving_doc)
+
+    rewrites: list[tuple[ScopeDoc, str]] = []
+    touched_docs: list[ScopeDoc] = []
+    for index, doc in enumerate(ordered_docs):
+        next_order = (index + 1) * 10
+        next_parent = next_parent_id if doc.doc_id == moving_doc.doc_id else doc.parent_id
+        if doc.sort_order == next_order and doc.parent_id == next_parent:
+            continue
+        rewrites.append((doc, rewrite_doc_source(doc, {"parent_id": next_parent, "sort_order": next_order})))
+        touched_docs.append(doc)
+
+    backup_dir = None
+    rebuild = None
+    if not dry_run:
+        backup_dir = make_backup_bundle(
+            repo_root,
+            scope,
+            "move",
+            touched_docs,
+            {
+                "doc_id": moving_doc.doc_id,
+                "target_doc_id": target_doc.doc_id,
+                "position": position,
+                "parent_id": next_parent_id,
+                "rewritten_doc_ids": [doc.doc_id for doc in touched_docs],
+            },
+        )
+        for doc, rewritten_source in rewrites:
+            write_text_atomic(doc.path, rewritten_source)
+        rebuild = rebuild_scope_outputs(repo_root, scope)
+        log_event(
+            repo_root,
+            "docs-move",
+            {
+                "scope": scope,
+                "doc_id": moving_doc.doc_id,
+                "target_doc_id": target_doc.doc_id,
+                "position": position,
+                "parent_id": next_parent_id,
+                "rewritten_doc_ids": [doc.doc_id for doc in touched_docs],
+            },
+        )
+
+    moved_record = next(
+        {
+            "doc_id": doc.doc_id,
+            "parent_id": next_parent_id,
+            "sort_order": (index + 1) * 10,
+        }
+        for index, doc in enumerate(ordered_docs)
+        if doc.doc_id == moving_doc.doc_id
+    )
+
+    return {
+        "ok": True,
+        "scope": scope,
+        "doc_id": moving_doc.doc_id,
+        "record": moved_record,
+        "summary_text": f"Moved {moving_doc.doc_id}.",
         "backup_dir": relative_path(repo_root, backup_dir) if backup_dir else "",
         "rebuild": rebuild,
         "dry_run": dry_run,
@@ -838,6 +1009,10 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
             dry_run = self.app["dry_run"]
             if self.path == "/docs/create":
                 payload = handle_create(repo_root, body, dry_run)
+                write_response(self, HTTPStatus.OK, payload)
+                return
+            if self.path == "/docs/move":
+                payload = handle_move(repo_root, body, dry_run)
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/archive":

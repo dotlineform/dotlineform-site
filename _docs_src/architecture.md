@@ -3,9 +3,8 @@ doc_id: architecture
 title: Architecture
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 20
+sort_order: 90
 ---
-
 # Architecture
 
 This section describes the current site building blocks and runtime boundaries.

@@ -4,7 +4,7 @@
   "title": "Archive",
   "last_updated": "2026-04-18",
   "parent_id": "",
-  "sort_order": 90,
+  "sort_order": 210,
   "source_path": "archive.md",
   "viewer_url": "/docs/?scope=studio&doc=_archive",
   "content_html": "<h1 id=\"archive\">Archive</h1>\n\n<p>This section keeps deprecated or superseded docs that remain useful as historical reference.</p>\n\n<p>Active workflow guidance should come from the current top-level sections such as <a href=\"/docs/?scope=studio&doc=scripts\">Scripts</a>, <a href=\"/docs/?scope=studio&doc=new-pipeline\">New Catalogue Pipeline</a>, and <a href=\"/docs/?scope=studio&doc=studio\">Studio</a>.</p>\n"

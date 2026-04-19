@@ -4,7 +4,7 @@
   "title": "LLM",
   "last_updated": "2026-04-16",
   "parent_id": "",
-  "sort_order": 35,
+  "sort_order": 160,
   "source_path": "llm.md",
   "viewer_url": "/docs/?scope=studio&doc=llm",
   "content_html": "<h1 id=\"llm-integration\">LLM Integration</h1>\n\n<p>This section describes calling LLM API to support tagging and scoring decisions.</p>\n"

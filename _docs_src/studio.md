@@ -3,9 +3,8 @@ doc_id: studio
 title: Studio
 last_updated: 2026-04-18
 parent_id: ""
-sort_order: 5
+sort_order: 40
 ---
-
 # Studio
 
 This section documents the Studio routes used to review and edit site data, catalogue records, and related operational workflows.

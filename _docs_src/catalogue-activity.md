@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-activity
-title: Catalogue Activity
+title: "Catalogue Activity"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 34
+sort_order: 60
 ---
-
 # Catalogue Activity
 
 This document describes the Studio page at `/studio/catalogue-activity/`.

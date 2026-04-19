@@ -1,11 +1,10 @@
 ---
 doc_id: docs-viewer-management
-title: Docs Viewer Management
+title: "Docs Viewer Management"
 last_updated: 2026-04-19
 parent_id: ui-requests
-sort_order: 100
+sort_order: 20
 ---
-
 # Docs Viewer Management
 
 Status:
@@ -491,6 +490,8 @@ Flattening is no longer optional work here: it is a prerequisite for Studio docs
 
 - evaluate drag/drop reorder and reparent
 - evaluate whether folder moves should exist at all
+- implement `POST /docs/move` for front-matter-only tree moves
+- add manage-mode drag/drop for leaf docs in the shared docs index
 
 ## Decision Log
 

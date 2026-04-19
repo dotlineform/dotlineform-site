@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-new-series-editor
-title: New Catalogue Series
+title: "New Catalogue Series"
 last_updated: 2026-04-17
 parent_id: studio
-sort_order: 37
+sort_order: 140
 ---
-
 # New Catalogue Series
 
 Route:

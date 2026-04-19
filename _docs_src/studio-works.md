@@ -1,11 +1,10 @@
 ---
 doc_id: studio-works
-title: Studio Works
+title: "Studio Works"
 last_updated: 2026-04-01
 parent_id: studio
-sort_order: 80
+sort_order: 230
 ---
-
 # Studio Works
 
 Route:

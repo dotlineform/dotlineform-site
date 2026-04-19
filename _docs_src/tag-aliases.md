@@ -1,11 +1,10 @@
 ---
 doc_id: tag-aliases
-title: Tag Aliases
+title: "Tag Aliases"
 last_updated: 2026-03-31
 parent_id: studio
-sort_order: 50
+sort_order: 200
 ---
-
 # Tag Aliases
 
 Route:

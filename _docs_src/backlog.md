@@ -3,10 +3,9 @@ doc_id: backlog
 title: Backlog
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 10
+sort_order: 50
 published: false
 ---
-
 # Backlog
 
 This file tracks active implementation backlog items that are not part of the current published docs set.

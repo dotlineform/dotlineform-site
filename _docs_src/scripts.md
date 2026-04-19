@@ -3,9 +3,8 @@ doc_id: scripts
 title: Scripts
 last_updated: 2026-04-18
 parent_id: ""
-sort_order: 30
+sort_order: 140
 ---
-
 # Scripts
 
 This section describes the active repo scripts used to maintain site data.

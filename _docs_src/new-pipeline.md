@@ -1,11 +1,10 @@
 ---
 doc_id: new-pipeline
-title: New Cat Pipeline
+title: "New Cat Pipeline"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 40
+sort_order: 180
 ---
-
 # New Catalogue Pipeline
 
 This section describes the active catalogue workflow: local Studio maintenance backed by canonical JSON source files.

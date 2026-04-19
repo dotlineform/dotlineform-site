@@ -1,11 +1,10 @@
 ---
 doc_id: series-tags
-title: Series Tags
+title: "Series Tags"
 last_updated: 2026-03-31
 parent_id: studio
-sort_order: 60
+sort_order: 210
 ---
-
 # Series Tags
 
 Route:

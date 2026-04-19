@@ -3,9 +3,8 @@ doc_id: design
 title: Design
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 10
+sort_order: 60
 ---
-
 # Design
 
 This section covers the current visual and interaction standards for the site.

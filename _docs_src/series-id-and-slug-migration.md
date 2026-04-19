@@ -1,12 +1,11 @@
 ---
 doc_id: series-id-and-slug-migration
-title: Series ID Migration
+title: "Series ID Migration"
 last_updated: 2026-04-01
 parent_id: ""
-sort_order: 103
+sort_order: 270
 published: false
 ---
-
 # Series ID Migration
 
 ## Purpose

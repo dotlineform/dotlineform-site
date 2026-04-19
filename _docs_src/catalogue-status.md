@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-status
-title: Catalogue Status
+title: "Catalogue Status"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 33
+sort_order: 50
 ---
-
 # Catalogue Status
 
 This document describes the Studio page at `/studio/catalogue-status/`.

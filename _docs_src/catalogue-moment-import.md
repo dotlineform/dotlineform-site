@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-moment-import
-title: Catalogue Moment Import
+title: "Catalogue Moment Import"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 45
+sort_order: 190
 ---
-
 # Catalogue Moment Import
 
 This page adds the first Studio-backed moments workflow.

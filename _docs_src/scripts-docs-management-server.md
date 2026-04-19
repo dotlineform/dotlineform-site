@@ -27,6 +27,7 @@ Exposed endpoints:
 - `GET /health`
 - `GET /capabilities`
 - `POST /docs/create`
+- `POST /docs/move`
 - `POST /docs/archive`
 - `POST /docs/delete-preview`
 - `POST /docs/delete-apply`
@@ -50,7 +51,7 @@ Current behavior:
 {
   "scope": "studio",
   "title": "New Doc",
-  "parent_id": ""
+  "after_doc_id": "docs-viewer-management"
 }
 ```
 
@@ -59,8 +60,28 @@ Request behavior:
 - `scope` must be `studio` or `library`
 - `title` defaults to `New Doc` when omitted or blank
 - `doc_id` and filename stem are generated from the title and made unique with `-2`, `-3`, and so on
-- `parent_id`, when present, must resolve inside the same scope
-- `sort_order` appends as the last sibling when omitted
+- `after_doc_id`, when present, inserts the new doc after the referenced doc and reuses that doc's `parent_id`
+- `parent_id`, when present without `after_doc_id`, must resolve inside the same scope
+- `sort_order` appends as the last sibling when both `after_doc_id` and explicit `sort_order` are omitted
+
+`POST /docs/move` expects:
+
+```json
+{
+  "scope": "studio",
+  "doc_id": "docs-viewer-management",
+  "target_doc_id": "scripts-docs-management-server",
+  "position": "after"
+}
+```
+
+Move behavior:
+
+- `position: "after"` places the dragged doc immediately after the target doc and adopts the target doc's `parent_id`
+- `position: "inside"` places the dragged doc as the last child of the target doc
+- only leaf docs can move; docs with child docs are rejected
+- moves rewrite front matter only and never move files on disk
+- sibling `sort_order` values are renumbered deterministically when needed to keep ordering valid
 
 `POST /docs/archive` expects:
 

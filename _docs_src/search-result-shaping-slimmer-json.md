@@ -1,12 +1,11 @@
 ---
 doc_id: search-result-shaping-json-slimmer
-title: Search Result Shaping draft slimmer JSON
+title: "Search Result Shaping draft slimmer JSON"
 last_updated: 2026-03-30
 parent_id: ""
-sort_order: 20
+sort_order: 110
 published: false
 ---
-
 ## Slimmer JSON
 
 file: search-result-shaping-slimmer.json

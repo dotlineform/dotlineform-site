@@ -1,9 +1,9 @@
 ---
 doc_id: experimental-dimension-framework
-title: Experimental Dimension Framework
+title: "Experimental Dimension Framework"
 last_updated: 2026-04-16
 parent_id: studio
-sort_order: 210
+sort_order: 250
 ---
 # Experimental Dimension Framework
 Draft v1 for UI, Data Model, and Representation Testing

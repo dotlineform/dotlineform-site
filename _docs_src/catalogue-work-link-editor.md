@@ -1,11 +1,10 @@
 ---
 doc_id: catalogue-work-link-editor
-title: Catalogue Work Link Editor
+title: "Catalogue Work Link Editor"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 38
+sort_order: 160
 ---
-
 # Catalogue Work Link Editor
 
 Route:

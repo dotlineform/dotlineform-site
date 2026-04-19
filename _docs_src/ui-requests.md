@@ -1,11 +1,10 @@
 ---
 doc_id: ui-requests
-title: UI Requests
+title: "UI Requests"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 15
+sort_order: 80
 ---
-
 # UI Requests
 
 This section stores UI-driven feature requests, working specs, and task breakdowns.

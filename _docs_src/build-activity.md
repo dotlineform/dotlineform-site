@@ -1,11 +1,10 @@
 ---
 doc_id: build-activity
-title: Build Activity
+title: "Build Activity"
 last_updated: 2026-04-18
 parent_id: studio
-sort_order: 35
+sort_order: 90
 ---
-
 # Build Activity
 
 This document describes the current Studio page at `/studio/build-activity/`.

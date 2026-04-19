@@ -1,11 +1,10 @@
 ---
 doc_id: site-change-log
-title: Site Change Log
+title: "Site Change Log"
 last_updated: 2026-04-19
 parent_id: ""
-sort_order: 110
+sort_order: 280
 ---
-
 # Site Change Log
 
 ## 2026-04-18

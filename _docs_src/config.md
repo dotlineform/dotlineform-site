@@ -3,9 +3,8 @@ doc_id: config
 title: Config
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 25
+sort_order: 130
 ---
-
 # Config
 
 This section documents the checked-in configuration artifacts that the current site and build scripts load directly.

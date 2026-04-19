@@ -1,12 +1,11 @@
 ---
 doc_id: search-result-shaping
-title: Search Result Shaping
+title: "Search Result Shaping"
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 200
+sort_order: 290
 published: false
 ---
-
 # Search Result Shaping
 
 ## Purpose

@@ -1,11 +1,10 @@
 ---
 doc_id: data-models
-title: Data Models
+title: "Data Models"
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 23
+sort_order: 120
 ---
-
 # Data Models
 
 This section is the main reference for the site’s current checked-in data contracts.

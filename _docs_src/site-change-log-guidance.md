@@ -1,11 +1,10 @@
 ---
 doc_id: site-change-log-guidance
-title: Site Change Log Guidance
+title: "Site Change Log Guidance"
 last_updated: 2026-03-31
 parent_id: ""
-sort_order: 100
+sort_order: 240
 ---
-
 # Site Change Log Guidance
 
 ## Purpose
