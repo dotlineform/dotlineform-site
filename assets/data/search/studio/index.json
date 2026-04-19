@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-cd0caf18026bb069d3b47131e07409ae",
-    "generated_at_utc": "2026-04-19T18:59:25Z",
+    "version": "blake2b-0e1beb56d000383b1b7f2457d5aae844",
+    "generated_at_utc": "2026-04-19T19:00:47Z",
     "count": 111
   },
   "entries": [
@@ -304,6 +304,31 @@
         "31"
       ],
       "search_text": "ui-framework ui framework ui framework design 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "docs-viewer-management",
+      "kind": "doc",
+      "title": "Docs Viewer Management",
+      "href": "/docs/?scope=studio&doc=docs-viewer-management",
+      "last_updated": "2026-04-19",
+      "parent_id": "ui-requests",
+      "parent_title": "UI Requests",
+      "display_meta": "2026-04-19 • UI Requests",
+      "search_terms": [
+        "docs-viewer-management",
+        "docs",
+        "viewer",
+        "management",
+        "docs viewer management",
+        "ui requests",
+        "ui",
+        "requests",
+        "2026-04-19",
+        "2026",
+        "04",
+        "19"
+      ],
+      "search_text": "docs-viewer-management docs viewer management docs viewer management ui requests ui requests 2026-04-19 2026 04 19"
     },
     {
       "id": "data-models-catalogue",
@@ -629,31 +654,6 @@
         "18"
       ],
       "search_text": "scripts-copy-draft-media scripts copy draft media deprecated: copy draft media deprecated archive 2026-04-18 2026 04 18"
-    },
-    {
-      "id": "docs-viewer-management",
-      "kind": "doc",
-      "title": "Docs Viewer Management",
-      "href": "/docs/?scope=studio&doc=docs-viewer-management",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-requests",
-      "parent_title": "UI Requests",
-      "display_meta": "2026-04-19 • UI Requests",
-      "search_terms": [
-        "docs-viewer-management",
-        "docs",
-        "viewer",
-        "management",
-        "docs viewer management",
-        "ui requests",
-        "ui",
-        "requests",
-        "2026-04-19",
-        "2026",
-        "04",
-        "19"
-      ],
-      "search_text": "docs-viewer-management docs viewer management docs viewer management ui requests ui requests 2026-04-19 2026 04 19"
     },
     {
       "id": "docs-viewer-runtime-boundary",
