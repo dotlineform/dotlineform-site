@@ -111,6 +111,56 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-007
+
+- status: adopted
+- route: `/studio/`
+- issue: the Studio landing page needed real panel-background image assignments, but the chosen source width is a design-time decision that should stay visible and adjustable rather than being embedded as hardcoded width-specific filenames in the page markup. The data shape also needed to make clear that a route can share a default width without forcing every panel to use the same source size, and that the asset naming convention is deliberate.
+- triage: systemic
+- reasoning: the image-fit behavior belongs to the primitive, while the chosen source asset and width belong to the page composition. On Jekyll-rendered pages, that design choice should be expressed through shared data so future panel-size changes do not require searching for scattered literal filenames.
+- permanent rule: keep Jekyll-rendered Studio panel-link background-image selections in shared page data such as `_data/studio_panel_images.json`. Treat widths like `800` or `1200` as explicit design variables for the route, not implicit primitive defaults. Use a page-level default width plus optional per-panel overrides, and keep the asset filename pattern explicit as `{asset_id}-{variant}-{width}.{format}`.
+- enforcement point: `_data/studio_panel_images.json`, `studio/index.md`, and the panel primitive notes/docs
+- files changed:
+  - `_data/studio_panel_images.json`
+  - `studio/index.md`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/config-studio-config-json.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/` on desktop and mobile
+  - confirm all four landing panels render with background images from `assets/studio/img/panel-backgrounds/`
+  - confirm the page markup reads the chosen image width from `_data/studio_panel_images.json`
+- follow-up:
+  - if another Jekyll-rendered landing/dashboard page adopts image panels, add its route-specific image choices to the same data file or a closely related shared data source
+
+## UI Rule Log 2026-04-20 / UI-006
+
+- status: adopted
+- route: `/studio/ui-catalogue/panel/`
+- issue: the image-fill panel-link example had drifted into treating white text as the default primitive behavior, even though dark text is the site-wide default. The catalogue also was not yet showing the contrast override as an explicit reusable code pattern.
+- triage: systemic
+- reasoning: the image-fill behavior and the contrast treatment are different concerns. The primitive should stay neutral by default and the working reference should show common design-led overrides in code when they materially affect how the primitive is applied on real pages.
+- permanent rule: `tagStudio__panelLink--image` keeps the default dark text and centered `cover` image behavior. Use `tagStudio__panelLink--imageContrast` as the explicit override when a selected image needs white text and a stronger overlay. Studio panel-link background images should be selected at design time from `assets/studio/img/panel-backgrounds/`.
+- enforcement point: `.tagStudio__panelLink--image` and `.tagStudio__panelLink--imageContrast` in `assets/studio/css/studio.css`, plus the panel primitive examples and notes
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `assets/studio/img/panel-backgrounds/.gitkeep`
+  - `studio/ui-catalogue/panel/index.md`
+  - `_includes/studio_ui_catalogue_panel_demo.html`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/ui-catalogue/panel/` and confirm the base image panel keeps dark text
+  - confirm the contrast override example uses white text and a stronger overlay
+  - confirm the code samples show both the neutral image variant and the explicit contrast override
+- follow-up:
+  - add actual design-time background image files under `assets/studio/img/panel-backgrounds/` before wiring image panels onto live Studio routes
 ## UI Rule Log 2026-04-20 / UI-005
 
 - status: adopted
@@ -126,7 +176,6 @@ Add new entries at the top of this section.
   - `_includes/ui_catalogue_notes/panel.md`
   - `_docs_src/ui-catalogue.md`
   - `_docs_src/studio-ui-framework.md`
-  - `_docs_src/ui-primitive-panel.md`
   - `_docs_src/studio-ui-rules.md`
   - `_docs_src/site-change-log.md`
 - local verification:
@@ -156,7 +205,7 @@ Add new entries at the top of this section.
   - `_includes/studio_ui_catalogue_panel_demo.html`
   - `_includes/ui_catalogue_notes/panel.md`
   - `_docs_src/studio-ui-framework.md`
-  - `_docs_src/ui-primitive-panel.md`
+  - `_docs_src/ui-catalogue.md`
 - local verification:
   - inspect `/studio/`, `/studio/analytics/`, `/studio/library/`, and `/studio/search/`
   - confirm the clickable panels share one fixed-height treatment
@@ -178,7 +227,6 @@ Add new entries at the top of this section.
   - `_docs_src/ui-catalogue.md`
   - `_docs_src/studio-ui-framework.md`
   - `_docs_src/studio-ui-rules.md`
-  - `_docs_src/ui-primitive-panel.md`
   - `studio/ui-catalogue/panel/index.md`
   - `_includes/studio_ui_catalogue_panel_demo.html`
   - `_includes/ui_catalogue_notes/panel.md`
@@ -206,7 +254,7 @@ Add new entries at the top of this section.
   - `_includes/ui_catalogue_notes/panel.md`
   - `assets/studio/css/studio.css`
   - `_docs_src/studio-ui-framework.md`
-  - `_docs_src/ui-primitive-panel.md`
+  - `_docs_src/ui-catalogue.md`
 - local verification:
   - build the site to a separate destination
   - inspect `/studio/ui-catalogue/panel/` on desktop and mobile widths

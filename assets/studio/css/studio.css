@@ -225,9 +225,7 @@ a.tagStudio__panelLink:focus-visible {
 }
 
 .tagStudio__panelLink--image {
-  color: #fff;
-  border-color: color-mix(in srgb, #fff 32%, transparent);
-  background: var(--studio-primary);
+  background: var(--studio-surface);
 }
 
 .tagStudio__panelLink--image::before,
@@ -248,18 +246,40 @@ a.tagStudio__panelLink:focus-visible {
 .tagStudio__panelLink--image::after {
   background: var(
     --panel-image-overlay,
-    linear-gradient(180deg, rgba(15, 18, 24, 0.18) 0%, rgba(15, 18, 24, 0.7) 100%)
+    linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.78) 100%)
   );
   z-index: 0;
 }
 
 .tagStudio__panelLink--image:hover {
+  background: var(--studio-surface-subtle);
+}
+
+.tagStudio__panelLink--imageContrast {
+  color: #fff;
+  border-color: color-mix(in srgb, #fff 32%, transparent);
+  background: var(--studio-primary);
+}
+
+.tagStudio__panelLink--imageContrast::after {
+  background: var(
+    --panel-image-overlay,
+    linear-gradient(180deg, rgba(15, 18, 24, 0.18) 0%, rgba(15, 18, 24, 0.7) 100%)
+  );
+}
+
+.tagStudio__panelLink--imageContrast:hover {
   border-color: color-mix(in srgb, #fff 55%, transparent);
   background: var(--studio-primary);
 }
 
-.tagStudio__panelLink--image > p {
+.tagStudio__panelLink--imageContrast > p {
   color: rgba(255, 255, 255, 0.88);
+}
+
+.tagStudio__panelLink--imageContrast > h3,
+.tagStudio__panelLink--imageContrast > h4 {
+  color: #fff;
 }
 
 .tagStudioEditorSection {

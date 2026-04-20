@@ -1,0 +1,30 @@
+{
+  "studio_home": {
+    "base_path": "/assets/studio/img/panel-backgrounds",
+    "format": "webp",
+    "filename_pattern": "{asset_id}-{variant}-{width}.{format}",
+    "default_width": 800,
+    "panels": {
+      "catalogue": {
+        "asset_id": "01007",
+        "variant": "primary",
+        "width": 800
+      },
+      "library": {
+        "asset_id": "01008",
+        "variant": "primary",
+        "width": 800
+      },
+      "analytics": {
+        "asset_id": "01009",
+        "variant": "primary",
+        "width": 800
+      },
+      "search": {
+        "asset_id": "01010",
+        "variant": "primary",
+        "width": 800
+      }
+    }
+  }
+}

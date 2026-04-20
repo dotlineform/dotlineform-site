@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-20T13:59:39Z",
+  "generated_at": "2026-04-20T17:20:43Z",
   "docs": [
     {
       "scope": "studio",
@@ -146,17 +146,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-primitive-panel",
-      "title": "UI Primitive: Panel",
-      "last_updated": "2026-04-20",
-      "parent_id": "ui-catalogue",
-      "sort_order": 10,
-      "source_path": "ui-primitive-panel.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-panel",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-panel.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "data-models-catalogue",
       "title": "Catalogue Scope",
       "last_updated": "2026-04-01",
@@ -300,17 +289,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-primitive-button",
-      "title": "UI Primitive: Button",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 20,
-      "source_path": "ui-primitive-button.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-button",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-button.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "docs-viewer-management",
       "title": "Docs Viewer Management",
       "last_updated": "2026-04-19",
@@ -443,17 +421,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-primitive-input",
-      "title": "UI Primitive: Input",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 30,
-      "source_path": "ui-primitive-input.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-input",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-input.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "new-pipeline-web-system-spec",
       "title": "Web System Specification",
       "last_updated": "2026-04-17",
@@ -553,17 +520,6 @@
     },
     {
       "scope": "studio",
-      "doc_id": "ui-primitive-list-shell",
-      "title": "UI Primitive: List Shell",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 40,
-      "source_path": "ui-primitive-list-shell.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-list-shell",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-list-shell.json"
-    },
-    {
-      "scope": "studio",
       "doc_id": "catalogue-status",
       "title": "Catalogue Status",
       "last_updated": "2026-04-18",
@@ -638,17 +594,6 @@
       "source_path": "studio-implementation-plan.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-implementation-plan",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-implementation-plan.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-primitive-toolbar",
-      "title": "UI Primitive: Toolbar",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 50,
-      "source_path": "ui-primitive-toolbar.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-toolbar",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-toolbar.json"
     },
     {
       "scope": "studio",
@@ -737,17 +682,6 @@
       "source_path": "studio-e2e-checklist.md",
       "viewer_url": "/docs/?scope=studio&doc=new-pipeline-studio-e2e-checklist",
       "content_url": "/assets/data/docs/scopes/studio/by-id/new-pipeline-studio-e2e-checklist.json"
-    },
-    {
-      "scope": "studio",
-      "doc_id": "ui-primitive-modal-shell",
-      "title": "UI Primitive: Modal Shell",
-      "last_updated": "2026-04-19",
-      "parent_id": "ui-catalogue",
-      "sort_order": 60,
-      "source_path": "ui-primitive-modal-shell.md",
-      "viewer_url": "/docs/?scope=studio&doc=ui-primitive-modal-shell",
-      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-primitive-modal-shell.json"
     },
     {
       "scope": "studio",

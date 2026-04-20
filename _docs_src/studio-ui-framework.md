@@ -71,6 +71,9 @@ Primitive catalogue rule:
 - Primitive variants should stack vertically by default so each shell edge can be inspected without cross-column alignment noise.
 - Primitive notes should record implementation constraints, known failure modes, and composition warnings rather than purpose-only prose.
 - Primitive definitions should also record design guidance when a layout or sizing choice materially affects correct reuse.
+- Primitive code samples should include common design-led overrides when those overrides are part of normal deliberate reuse.
+- When a Jekyll-rendered Studio page chooses design-time panel-link background images, keep the asset-width choice in shared page data rather than hardcoding width-specific filenames inline.
+- Use a page-level default width plus optional per-panel width overrides for those image choices, and keep the asset naming convention explicit in the docs.
 - If a primitive can validly compose with itself, add that self-composition case to the catalogue and fix the shared primitive or shared composition contract when the result is weak.
 - When a panel is used as a full-area navigation target, define that as an explicit shared variation with fixed design-time height rather than allowing route-local card patterns to drift independently.
 

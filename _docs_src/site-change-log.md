@@ -7,6 +7,60 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Applied config-backed panel background images to the Studio landing page
+
+**Status:** implemented
+
+**Area:** design system / Studio landing page
+
+**Summary:**
+Assigned the new `01007` to `01010` image assets to the four `/studio/` landing panels and moved the chosen source-width decision into shared Jekyll data instead of embedding width-specific filenames directly in the page markup.
+
+**Reason:**
+The panel primitive owns image-fit behavior, but the chosen source image and width remain a design-time composition decision. That route-level choice needs to stay visible and adjustable rather than turning `800` into a hidden primitive default.
+
+**Effect:**
+`/studio/` now uses the image-fill panel-link variation for all four landing panels, and the selected background-image width is configured through `_data/studio_panel_images.json`.
+
+**Affected files/docs:**
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- [Studio Config JSON](/docs/?scope=studio&doc=config-studio-config-json)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- `_data/studio_panel_images.json`
+- `studio/index.md`
+
+**Notes:**
+The chosen width is route data, not a primitive default. The data shape supports a route-wide default plus per-panel overrides, and the expected filename pattern is `{asset_id}-{variant}-{width}.{format}`.
+
+## [2026-04-20] Split the image panel-link baseline from its contrast override
+
+**Status:** implemented
+
+**Area:** design system / primitive guidance
+
+**Summary:**
+Adjusted the shared image panel-link variation so it keeps the standard dark text by default, added an explicit contrast override for darker images, and created a dedicated Studio asset folder for design-time panel background images.
+
+**Reason:**
+The first image-panel demo had implicitly made white text look like the primitive default. That was inconsistent with the rest of the site and hid an important distinction between the base image-fill behavior and a common contrast override.
+
+**Effect:**
+`tagStudio__panelLink--image` now remains a neutral image-fill variation with centered `cover` behavior, `tagStudio__panelLink--imageContrast` is the explicit white-text override for darker images, the panel primitive page shows both code samples, and Studio background images now have a dedicated asset folder at `assets/studio/img/panel-backgrounds/`.
+
+**Affected files/docs:**
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/css/studio.css`
+- `assets/studio/img/panel-backgrounds/.gitkeep`
+- `studio/ui-catalogue/panel/index.md`
+- `_includes/studio_ui_catalogue_panel_demo.html`
+- `_includes/ui_catalogue_notes/panel.md`
+
+**Notes:**
+Add real design-time image assets under `assets/studio/img/panel-backgrounds/` before adopting the image-panel variation on live Studio pages.
+
 ## [2026-04-20] Added design guidance to the panel primitive reference and refined the Studio landing composition
 
 **Status:** implemented
@@ -24,7 +78,6 @@ Panel-link copy now wraps to the panel width itself, the `/studio/` entry cards 
 
 **Affected files/docs:**
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `assets/studio/css/studio.css`
@@ -49,7 +102,7 @@ The same panel design had split into two duplicated route-local patterns, and th
 `/studio/`, `/studio/analytics/`, `/studio/library/`, and `/studio/search/` now use the same shared panel-link primitive. The panel height is fixed, hover/focus behavior still applies to the whole card, and the panel primitive reference now defines the image-fill option and short-copy requirement.
 
 **Affected files/docs:**
-- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `assets/studio/css/studio.css`
@@ -79,7 +132,6 @@ Nested panels are now documented as a supported panel composition, direct child 
 
 **Affected files/docs:**
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `studio/ui-catalogue/panel/index.md`
@@ -106,7 +158,7 @@ The original page nested the live panel examples inside outer panel shells, whic
 The panel catalogue page now shows the primitive on a neutral surface, implementation notes focus on concrete code-level warnings, and the Studio UI docs now define neutral-surface rendering as the default pattern for future primitive pages.
 
 **Affected files/docs:**
-- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - `studio/ui-catalogue/panel/index.md`

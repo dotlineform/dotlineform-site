@@ -69,15 +69,30 @@
   <section class="studioUiPrimitiveExample">
     <header class="studioUiPrimitiveExample__header">
       <h3 class="studioUiPrimitiveExample__title">Image Panel Link</h3>
-      <p class="studioUiPrimitiveExample__summary">Same fixed-height panel link with optional full-panel image fill.</p>
+      <p class="studioUiPrimitiveExample__summary">Base image-fill panel with the site-default dark text kept intact.</p>
     </header>
     <a
       class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image studioUiPrimitivePanelDemo"
       href="#"
-      style="--panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+      style="--panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}'); --panel-image-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0.82) 100%);"
     >
       <h4 class="studioUiPrimitivePanelDemo__heading">Image Panel Link</h4>
-      <p class="studioUiPrimitivePanelDemo__body">Short copy discipline keeps the fixed-height card readable without letting content change the panel size.</p>
+      <p class="studioUiPrimitivePanelDemo__body">Choose the image and any supporting light overlay at design time so the panel can keep the standard dark text treatment.</p>
+    </a>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Image Panel Link: Contrast Override</h3>
+      <p class="studioUiPrimitiveExample__summary">Common design-led override for darker or busier source images.</p>
+    </header>
+    <a
+      class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image tagStudio__panelLink--imageContrast studioUiPrimitivePanelDemo"
+      href="#"
+      style="--panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+    >
+      <h4 class="studioUiPrimitivePanelDemo__heading">Image Panel Link: Contrast Override</h4>
+      <p class="studioUiPrimitivePanelDemo__body">Add the contrast modifier when the chosen image needs white text and a stronger dark overlay to stay legible.</p>
     </a>
   </section>
 </div>

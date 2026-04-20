@@ -2,7 +2,7 @@
 layout: studio
 title: "UI Primitive: Panel"
 permalink: /studio/ui-catalogue/panel/
-studio_page_doc: /docs/?scope=studio&doc=ui-primitive-panel
+studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
 ui_catalogue_primitive: panel
 ---
 
@@ -42,15 +42,25 @@ ui_catalogue_primitive: panel
 {% capture image_link_markup %}<a
   class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image"
   href="#"
-  style="--panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+  style="--panel-image: url('{{ '/assets/studio/img/panel-backgrounds/example-light.webp' | relative_url }}'); --panel-image-overlay: linear-gradient(180deg, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0.82) 100%);"
 >
   <h4>Image Panel Link</h4>
-  <p>Optional image fill for feature-entry panels that still need the same fixed-height shell.</p>
+  <p>Optional image fill for feature-entry panels that keep the site-default dark text treatment.</p>
+</a>
+{% endcapture %}
+{% capture image_link_contrast_markup %}<a
+  class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image tagStudio__panelLink--imageContrast"
+  href="#"
+  style="--panel-image: url('{{ '/assets/studio/img/panel-backgrounds/example-dark.webp' | relative_url }}');"
+>
+  <h4>Image Panel Link: Contrast Override</h4>
+  <p>Use the contrast override when the selected image needs white text and a stronger dark overlay.</p>
 </a>
 {% endcapture %}
 
 <div class="tagStudioPage studioUiPrimitivePage">
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
+    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
     <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for the shared panel shell. Variants are shown on a neutral surface so nesting artifacts do not get mistaken for primitive defects.</p>
   </section>
@@ -93,6 +103,10 @@ ui_catalogue_primitive: panel
       <section class="studioUiPrimitiveCodeList__item">
         <h4 class="studioUiPrimitiveCodeList__title">Image Panel Link</h4>
         <pre><code>{{ image_link_markup | escape }}</code></pre>
+      </section>
+      <section class="studioUiPrimitiveCodeList__item">
+        <h4 class="studioUiPrimitiveCodeList__title">Image Panel Link: Contrast Override</h4>
+        <pre><code>{{ image_link_contrast_markup | escape }}</code></pre>
       </section>
     </div>
   </section>

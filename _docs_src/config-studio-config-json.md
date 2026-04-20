@@ -67,6 +67,9 @@ What does not stay here:
 
 - the code that normalizes, caches, and exposes these values
   that lives in **[Studio Config Loader JS](/docs/?scope=studio&doc=config-studio-config-js)**
+- Jekyll render-time design selections for static Studio pages such as landing-page panel background images
+  those should live in Jekyll data files such as `_data/studio_panel_images.json`, because page templates can read `site.data` directly at build time
+  that data may define a page-level default width plus per-panel width overrides, and should document the filename pattern used to derive each asset path
 - dedicated `/search/` runtime policy values such as debounce and result batching
   those live in **[Search Policy JSON](/docs/?scope=studio&doc=config-search-policy-json)**
 - local write-service endpoint URLs

@@ -11,6 +11,8 @@ This section is the working catalogue of shared UI elements.
 
 Use it to keep recurring elements visible as named, documented primitives rather than redesigning them inside page work.
 
+The docs-viewer role of this page is to explain the catalogue method and link out to the published primitive pages. Implementation details, code samples, and variant-specific notes should live on those published primitive pages rather than being duplicated here.
+
 ## Purpose
 
 The catalogue exists to separate:
@@ -21,18 +23,26 @@ The catalogue exists to separate:
 
 When a page uses a shared element such as a `panel` or `toolbar`, the expectation should come from this catalogue first.
 
-## First-Pass Primitive Set
+## Published Primitive Pages
 
-The initial catalogue covers:
+Current published primitive pages:
 
-- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
-- [UI Primitive: Button](/docs/?scope=studio&doc=ui-primitive-button)
-- [UI Primitive: Input](/docs/?scope=studio&doc=ui-primitive-input)
-- [UI Primitive: List Shell](/docs/?scope=studio&doc=ui-primitive-list-shell)
-- [UI Primitive: Toolbar](/docs/?scope=studio&doc=ui-primitive-toolbar)
-- [UI Primitive: Modal Shell](/docs/?scope=studio&doc=ui-primitive-modal-shell)
+- [Panel primitive page](/studio/ui-catalogue/panel/)
 
-These are the first primitives that should become predictable enough to reuse without re-designing them in each task.
+Add new links here when a primitive gets its own published reference page.
+
+## Primitive Scope
+
+The current first-pass primitive set still includes:
+
+- panel
+- button
+- input
+- list shell
+- toolbar
+- modal shell
+
+These remain the first primitives that should become predictable enough to reuse without re-designing them in each task, even if not all of them have published primitive pages yet.
 
 ## How To Use This Section
 
@@ -70,9 +80,9 @@ Reason:
 - surfacing those hidden fixes here is the point of the catalogue
 - for this project, future design clarity and shared-system reliability matter more than preserving accidental legacy behavior
 
-## Primitive Doc Structure
+## Primitive Page Structure
 
-Each primitive doc should stay simple but complete enough to guide implementation.
+Each published primitive page should stay simple but complete enough to guide implementation.
 
 The default structure is:
 
@@ -89,7 +99,15 @@ When a primitive can compose with itself, for example nested panels or stacked l
 
 Include design guidance when the success of a primitive depends not just on CSS behavior but also on how it should be composed, sized, or edited on a page.
 
-If a primitive grows more complex, add detail inside its own doc rather than expanding this index into a large framework document.
+Include common design-led overrides in the sample markup when those overrides are part of normal reuse rather than an edge case.
+
+If a primitive grows more complex, expand its published primitive page rather than rebuilding a second parallel doc in the docs viewer.
+
+## Broader Design Direction
+
+- use the docs viewer catalogue to explain the method, scope, and design direction of the primitive system
+- use the published primitive pages to hold implementation notes, canonical markup, common overrides, and code-facing warnings
+- prefer one implementation source of truth even when the docs viewer carries a higher-level summary
 
 ## Visual Reference Assets
 
@@ -120,6 +138,6 @@ If larger source captures need to exist separately, keep only optimized document
 
 ## Expansion Rule
 
-When a new shared element appears repeatedly, add a dedicated child doc here rather than folding it into a general CSS or framework note.
+When a new shared element appears repeatedly, add a published primitive page for it and link that page here rather than creating another parallel docs-viewer child doc.
 
 That keeps the viewer tree visible and scalable as the UI system grows.
