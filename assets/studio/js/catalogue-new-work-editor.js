@@ -295,7 +295,7 @@ async function init() {
   try {
     const config = await loadStudioConfig();
     state.config = config;
-    createButton.textContent = t(state, "create_button", "Create Draft Work");
+    createButton.textContent = t(state, "create_button", "Create");
 
     const [workPayload, seriesPayload, serverAvailable] = await Promise.all([
       loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),

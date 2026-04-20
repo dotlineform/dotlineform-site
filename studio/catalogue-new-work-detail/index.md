@@ -26,7 +26,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-new-work-detail-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">draft metadata</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueNewWorkDetailCreate">Create Draft Detail</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueNewWorkDetailCreate">Create</button>
         </div>
       </div>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueNewWorkDetailFields"></div>

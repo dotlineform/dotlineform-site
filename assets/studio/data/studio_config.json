@@ -571,8 +571,8 @@
       "create_result_success": "Created draft work {work_id}. Opening work editor…"
     },
     "catalogue_moment_import": {
-      "preview_button": "Preview Source File",
-      "import_button": "Import + Publish Moment",
+      "preview_button": "Preview",
+      "import_button": "Import",
       "save_mode_template": "Save mode: {mode}",
       "save_mode_local_server": "Local server",
       "save_mode_offline": "Unavailable",
@@ -677,6 +677,12 @@
       "create_status_success": "Created draft detail {detail_uid}.",
       "create_status_failed": "Draft detail create failed.",
       "create_result_success": "Created draft detail {detail_uid}. Opening detail editor…"
+    },
+    "catalogue_new_work_file_editor": {
+      "create_button": "Create"
+    },
+    "catalogue_new_work_link_editor": {
+      "create_button": "Create"
     },
     "catalogue_work_file_editor": {
       "search_placeholder": "find work file by id, filename, or work id",

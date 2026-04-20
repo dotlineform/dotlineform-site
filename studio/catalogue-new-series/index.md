@@ -26,7 +26,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-new-series-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">draft metadata</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueNewSeriesCreate">Create Draft Series</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueNewSeriesCreate">Create</button>
         </div>
       </div>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueNewSeriesFields"></div>

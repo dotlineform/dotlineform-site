@@ -7,6 +7,36 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Standardized the Studio create-page buttons
+
+**Status:** implemented
+
+**Area:** Studio / create editors / command buttons
+
+**Summary:**
+Standardized the five Studio create pages so their primary action now reads `Create`, uses the shared default width, and resolves from config rather than from older runtime fallback text.
+
+**Reason:**
+The create-page family had drifted into a mix of `Create Draft …` labels, and the new work-file/new work-link pages were still missing the `ui_text` config blocks that their runtimes already expected.
+
+**Effect:**
+`/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-work-file/`, `/studio/catalogue-new-work-link/`, and `/studio/catalogue-new-series/` now all show a standard-width `Create` button, with config-backed label support across the whole set.
+
+**Affected files/docs:**
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-new-work/index.md`
+- `studio/catalogue-new-work-detail/index.md`
+- `studio/catalogue-new-work-file/index.md`
+- `studio/catalogue-new-work-link/index.md`
+- `studio/catalogue-new-series/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/catalogue-new-work-editor.js`
+- `assets/studio/js/catalogue-new-work-detail-editor.js`
+- `assets/studio/js/catalogue-new-work-file-editor.js`
+- `assets/studio/js/catalogue-new-work-link-editor.js`
+- `assets/studio/js/catalogue-new-series-editor.js`
+
 ## [2026-04-20] Simplified the series member-work section
 
 **Status:** implemented

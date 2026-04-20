@@ -288,6 +288,9 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_rebuild_needed: "source changed; rebuild pending",
       summary_rebuild_current: "source and runtime not yet diverged in this session"
     },
+    catalogue_new_work_editor: {
+      create_button: "Create"
+    },
     catalogue_moment_import: {
       preview_button: "Preview Source File",
       import_button: "Import + Publish Moment",
@@ -373,6 +376,15 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_rebuild_needed: "source changed; rebuild pending",
       summary_rebuild_current: "source and runtime not yet diverged in this session"
     },
+    catalogue_new_work_detail_editor: {
+      create_button: "Create"
+    },
+    catalogue_new_work_file_editor: {
+      create_button: "Create"
+    },
+    catalogue_new_work_link_editor: {
+      create_button: "Create"
+    },
     catalogue_work_file_editor: {
       search_placeholder: "find work file by id, filename, or work id",
       open_button: "Open",
@@ -443,6 +455,9 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_member_count: "member works",
       summary_rebuild_needed: "source changed; rebuild pending",
       summary_rebuild_current: "source and runtime not yet diverged in this session"
+    },
+    catalogue_new_series_editor: {
+      create_button: "Create"
     },
     search: {
       load_failed_error: "Failed to load search data.",

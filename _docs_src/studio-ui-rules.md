@@ -166,6 +166,36 @@ Add new entries at the top of this section.
 - follow-up:
   - review whether `Make primary` should adopt a shared width rule separately rather than inferring it from this pass
 
+## UI Rule Log 2026-04-20 / UI-017
+
+- status: adopted
+- route: `/studio/catalogue-new-work/`, `/studio/catalogue-new-work-detail/`, `/studio/catalogue-new-work-file/`, `/studio/catalogue-new-work-link/`, `/studio/catalogue-new-series/`
+- issue: the Studio create-page family had drifted into a mix of older `Create Draft …` fallback labels, and some pages were missing the matching `ui_text` config blocks entirely. The create buttons also had not yet adopted the shared default width.
+- triage: systemic
+- reasoning: these routes form one family of create surfaces and should share one visible command contract. If the runtime reads `ui_text.<page_id>.create_button`, the config block should exist and the page should not depend on fallback text as the effective source of truth.
+- permanent rule: across Studio create pages, the primary create button should use the label `Create` and the shared default width. If a Studio runtime reads config-backed UI text, the corresponding `studio_config.json` and `studio-config.js` block must exist.
+- enforcement point: the five `studio/catalogue-new-*` page templates plus the matching create-page runtimes and config files under `assets/studio/`
+- files changed:
+  - `studio/catalogue-new-work/index.md`
+  - `studio/catalogue-new-work-detail/index.md`
+  - `studio/catalogue-new-work-file/index.md`
+  - `studio/catalogue-new-work-link/index.md`
+  - `studio/catalogue-new-series/index.md`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/js/catalogue-new-work-editor.js`
+  - `assets/studio/js/catalogue-new-work-detail-editor.js`
+  - `assets/studio/js/catalogue-new-work-file-editor.js`
+  - `assets/studio/js/catalogue-new-work-link-editor.js`
+  - `assets/studio/js/catalogue-new-series-editor.js`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect each create page and confirm the button label resolves as `Create`
+  - confirm each create button uses the shared default width
+- follow-up:
+  - leave the fuller create-page doc rewrite for the broader page review rather than updating those docs piecemeal here
+
 ## UI Rule Log 2026-04-20 / UI-014
 
 - status: adopted
