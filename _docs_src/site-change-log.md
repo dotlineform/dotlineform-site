@@ -7,6 +7,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Refined the button primitive to a minimal command-only contract
+
+**Status:** implemented
+
+**Area:** design system / UI catalogue
+
+**Summary:**
+Refined the first button primitive page so it treats buttons as commands only, removes navigation-style and toolbar-forward examples, and introduces the initial two-size and standard-width contract without forcing a full live-page sweep yet.
+
+**Reason:**
+The initial draft was still too broad. The clearer design direction is to keep buttons minimal, separate them from links and pills, and postpone toolbar decisions until that primitive is defined explicitly.
+
+**Effect:**
+The button primitive page now focuses on small and medium command buttons, default-width behavior, modal default-action emphasis, destructive commands without special styling, and the explicit warning not to use panels as button-group boundaries.
+
+**Affected files/docs:**
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/ui-catalogue/button/index.md`
+- `_includes/studio_ui_catalogue_button_demo.html`
+- `_includes/ui_catalogue_notes/button.md`
+- `assets/studio/css/studio.css`
+
+**Notes:**
+This still leaves a later consistency sweep for existing pages that use anchor-styled command buttons or longer labels such as `Save Tags`.
+
 ## [2026-04-20] Added the first shared button primitive page
 
 **Status:** implemented
@@ -20,7 +46,7 @@ Added `/studio/ui-catalogue/button/` as the first published reference page for s
 Current Studio pages already share one baseline button class, but the product still mixes together command buttons, toolbar subsets, modal actions, and pill-like controls conceptually. The first pass needed to establish the role boundary before visual refinement.
 
 **Effect:**
-The new button primitive page documents the shared command-button baseline, anchor-button usage, disabled state, modal action rows, and toolbar-button subset. The UI catalogue index now links to both the button and panel primitive pages.
+The new button primitive page established the first command-button scope and created a base page to refine further. The UI catalogue index now links to both the button and panel primitive pages.
 
 **Affected files/docs:**
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
@@ -31,7 +57,7 @@ The new button primitive page documents the shared command-button baseline, anch
 - `studio/ui-catalogue/index.md`
 
 **Notes:**
-This is intentionally a boundary-setting pass. Shared emphasis variants such as primary, secondary, and destructive are still to be defined after reviewing drift on live routes.
+This first draft was intentionally broad enough to expose drift. The later refinement on the same day narrowed it to a stricter command-only contract.
 
 ## [2026-04-20] Applied config-backed panel background images to the Studio landing page
 

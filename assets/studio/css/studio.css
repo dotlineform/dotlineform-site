@@ -11,6 +11,10 @@
   --studio-surface-padding-lg: 0.9rem;
   --studio-panel-link-height: 10rem;
   --studio-control-height: 2rem;
+  --studio-button-height-sm: 2rem;
+  --studio-button-height-md: 2.35rem;
+  --studio-button-width-sm: 5.75rem;
+  --studio-button-width-md: 6.5rem;
   --studio-shell-gap-sm: 0.45rem;
   --studio-shell-gap-md: 0.6rem;
   --studio-list-gap: 0.56rem;
@@ -394,21 +398,39 @@ input.tagStudio__input {
 
 .tagStudio__button {
   box-sizing: border-box;
+  --button-height: var(--studio-button-height-sm);
+  --button-font-size: var(--text-sm);
+  --button-default-width: var(--studio-button-width-sm);
   border: 1px solid var(--line, var(--studio-line-strong));
   background: var(--surface, var(--studio-surface));
   color: inherit;
   border-radius: var(--studio-radius-sm);
   padding: 0.42rem 0.7rem;
   font: inherit;
-  font-size: var(--font-small);
+  font-size: var(--button-font-size);
+  font-weight: 400;
   line-height: var(--line-snug);
-  min-height: var(--studio-control-height);
+  min-height: var(--button-height);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
+}
+
+.tagStudio__button--md {
+  --button-height: var(--studio-button-height-md);
+  --button-font-size: var(--text-md);
+  --button-default-width: var(--studio-button-width-md);
+}
+
+.tagStudio__button--defaultWidth {
+  min-inline-size: var(--button-default-width);
+}
+
+.tagStudio__button--defaultAction {
+  font-weight: 700;
 }
 
 .tagStudio__button:disabled {
@@ -761,7 +783,7 @@ input.tagStudio__input {
 }
 
 .studioUiPrimitiveButtonDemo__actions,
-.studioUiPrimitiveButtonDemo__toolbar {
+.studioUiPrimitiveButtonDemo__pair {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;

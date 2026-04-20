@@ -86,7 +86,8 @@ Button rule:
 
 - `tagStudio__button` is the shared command-button primitive for actions such as `Save`, `Import`, `New`, `OK`, and `Cancel`
 - clickable pill-like controls are not buttons in this system and should be defined through the pill primitive layer instead
-- toolbar buttons and modal action buttons should remain subsets of the shared button primitive unless their geometry contract truly diverges
+- buttons do not need to live inside a toolbar; toolbar is an optional composition primitive rather than part of the button contract
+- modal action buttons should remain subsets of the shared button primitive
 
 Use these as the default contract for:
 
