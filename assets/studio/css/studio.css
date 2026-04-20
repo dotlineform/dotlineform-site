@@ -350,6 +350,37 @@ a.tagStudio__panelLink:focus-visible {
   white-space: nowrap;
 }
 
+.tagStudio__editorActionGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 26rem) auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--studio-shell-gap-sm);
+}
+
+.tagStudio__editorActionGrid > .tagStudio__input {
+  grid-column: 1;
+  width: 100%;
+}
+
+.tagStudio__editorActionGrid > .tagStudio__button,
+.tagStudio__editorActionGrid > .tagStudio__saveMode {
+  white-space: nowrap;
+}
+
+.tagStudio__buttonFeedback {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.tagStudio__buttonFeedback--editor {
+  grid-column: 2 / -1;
+  justify-items: start;
+}
+
+.tagStudio__buttonFeedback--editor > * {
+  text-align: left;
+}
+
 .tagStudio__inputRow--work {
   align-items: center;
   flex-wrap: wrap;
@@ -794,6 +825,33 @@ input.tagStudio__input {
   margin-top: 0;
 }
 
+.studioUiPrimitiveButtonDemo__fieldGroup {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.studioUiPrimitiveButtonDemo__fieldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) max-content;
+  align-items: center;
+  gap: 0.45rem;
+  justify-content: start;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.studioUiPrimitiveButtonDemo__fieldGrid > .tagStudio__input {
+  width: 100%;
+}
+
+.studioUiPrimitiveButtonDemo__fieldGrid > .tagStudio__button {
+  justify-self: start;
+}
+
+.studioUiPrimitiveButtonDemo__fieldFeedback {
+  justify-items: start;
+}
+
 .studioUiPrimitiveCodeList {
   display: grid;
   gap: 0.8rem;
@@ -1131,6 +1189,10 @@ input.tagStudio__input {
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
+}
+
+.studioUiPrimitiveButtonDemo .tagStudioModal__actions.studioUiPrimitiveButtonDemo__modalActions {
+  justify-content: flex-start;
 }
 
 .tagStudioError {
@@ -1985,6 +2047,16 @@ input.tagStudio__input {
   .tagStudio__inputRow--editor .tagStudio__input {
     flex: 1 1 100%;
     width: 100%;
+  }
+
+  .tagStudio__editorActionGrid,
+  .studioUiPrimitiveButtonDemo__fieldGrid {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .tagStudio__buttonFeedback--editor {
+    grid-column: 1;
   }
 
   .tagStudioGroupRow {

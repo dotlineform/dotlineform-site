@@ -101,9 +101,6 @@ studio_page_doc: /docs/?scope=studio&doc=tag-editor
 
         <section class="tagStudioEditorSection tagStudioEditorSection--messages" data-role="message-section">
           <p class="tagStudio__contextHint" data-role="context-hint"></p>
-          <p class="tagStudio__status" data-role="status"></p>
-          <p class="tagStudio__saveWarning" data-role="save-warning"></p>
-          <p class="tagStudio__saveResult" data-role="save-result"></p>
         </section>
 
         <section class="tagStudioEditorSection tagStudioEditorSection--groups" data-role="groups-section">
@@ -111,7 +108,7 @@ studio_page_doc: /docs/?scope=studio&doc=tag-editor
         </section>
 
         <section class="tagStudioEditorSection tagStudioEditorSection--search" data-role="search-section">
-          <div class="tagStudio__inputRow tagStudio__inputRow--editor">
+          <div class="tagStudio__inputRow tagStudio__editorActionGrid">
             <input
               class="tagStudio__input"
               data-role="tag-input"
@@ -119,9 +116,14 @@ studio_page_doc: /docs/?scope=studio&doc=tag-editor
               autocomplete="off"
               placeholder="tag slug or alias"
             >
-            <button type="button" class="tagStudio__button" data-role="add-tag">Add</button>
-            <button type="button" class="tagStudio__button" data-role="save">Save Tags</button>
+            <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="add-tag">Add</button>
+            <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-role="save">Save</button>
             <span class="tagStudio__saveMode" data-role="save-mode"></span>
+            <div class="tagStudio__buttonFeedback tagStudio__buttonFeedback--editor">
+              <p class="tagStudio__status" data-role="status"></p>
+              <p class="tagStudio__saveWarning" data-role="save-warning"></p>
+              <p class="tagStudio__saveResult" data-role="save-result"></p>
+            </div>
           </div>
           <div class="tagStudio__popup tagStudio__popup--series" data-role="popup" hidden>
             <div class="tagStudio__popupInner tagStudio__popupInner--series" data-role="popup-list"></div>

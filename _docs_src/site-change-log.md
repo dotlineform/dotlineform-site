@@ -7,6 +7,58 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Moved button feedback to the local command area
+
+**Status:** implemented
+
+**Area:** design system / Studio command buttons
+
+**Summary:**
+Moved the series tag editor’s command feedback out of its distant shared message block and into a dedicated row directly below the `Add` / `Save` controls, then updated the button primitive page to make that placement rule explicit.
+
+**Reason:**
+Status and warning text for a button should read as part of the same command area. The earlier layout made the feedback feel detached from the related field and buttons, even though the bordered editor panel had room to expand and absorb the message naturally.
+
+**Effect:**
+`/studio/series-tag-editor/` now keeps `status`, `save warning`, and `save result` directly below the command row inside the editor panel, while the higher message section keeps only the broader context hint. The button primitive page now shows local feedback placement as part of the baseline command-button pattern.
+
+**Affected files/docs:**
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/series-tag-editor/index.md`
+- `assets/studio/css/studio.css`
+- `studio/ui-catalogue/button/index.md`
+- `_includes/studio_ui_catalogue_button_demo.html`
+- `_includes/ui_catalogue_notes/button.md`
+
+**Notes:**
+This keeps the generic page context hint separate from local command feedback. Modal feedback should be reviewed later against the same adjacency rule.
+
+## [2026-04-20] Applied the first live small-button field-row pattern
+
+**Status:** implemented
+
+**Area:** design system / Studio command buttons
+
+**Summary:**
+Updated the series tag editor so its input-adjacent `Add` and `Save` buttons adopt the small command-button pattern with shared default width, and revised the button primitive page so that same field-row pattern is shown explicitly.
+
+**Reason:**
+Buttons next to a field are the clearest real use case for the small button size. The primitive page needed that pattern made explicit, and the live page label `Save Tags` was longer than necessary for the shared width guidance.
+
+**Effect:**
+`/studio/series-tag-editor/` now uses `Add` and `Save` with the standard small/default-width button treatment, and the first button primitive example now shows the field-row use case rather than a standalone button.
+
+**Affected files/docs:**
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/series-tag-editor/index.md`
+- `studio/ui-catalogue/button/index.md`
+- `_includes/studio_ui_catalogue_button_demo.html`
+- `_includes/ui_catalogue_notes/button.md`
+
+**Notes:**
+This is the first live-page adoption of the new button contract. The wider button cleanup sweep can now use this field-row case as a reference.
+
 ## [2026-04-20] Refined the button primitive to a minimal command-only contract
 
 **Status:** implemented

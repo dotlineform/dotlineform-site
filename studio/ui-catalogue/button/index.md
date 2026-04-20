@@ -9,7 +9,15 @@ ui_catalogue_primitive: button
 <link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
 
 {% capture primitive_note_markdown %}{% include ui_catalogue_notes/button.md %}{% endcapture %}
-{% capture small_markup %}<button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Save</button>
+{% capture small_markup %}<div class="studioUiPrimitiveButtonDemo__fieldGroup">
+  <div class="studioUiPrimitiveButtonDemo__fieldGrid">
+    <input class="tagStudio__input" type="text" value="Shared field example">
+    <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Save</button>
+  </div>
+  <div class="tagStudio__buttonFeedback studioUiPrimitiveButtonDemo__fieldFeedback">
+    <p class="tagStudio__status" data-state="success">Saved.</p>
+  </div>
+</div>
 {% endcapture %}
 {% capture medium_markup %}<button class="tagStudio__button tagStudio__button--md tagStudio__button--defaultWidth" type="button">Save</button>
 {% endcapture %}
@@ -47,12 +55,12 @@ ui_catalogue_primitive: button
   <section class="studioUiPrimitivePage__code" aria-labelledby="studioUiPrimitiveCodeHeading">
     <div class="studioUiPrimitivePage__sectionHeader">
       <h3 class="tagStudio__heading" id="studioUiPrimitiveCodeHeading">Canonical Markup</h3>
-      <p class="studioUiPrimitivePage__sectionSummary">Copy these snippets as the current shared baseline for command buttons. Navigation actions such as <code>New Detail -&gt;</code> belong to a separate link pattern.</p>
+      <p class="studioUiPrimitivePage__sectionSummary">Copy these snippets as the current shared baseline for command buttons. Navigation actions such as <code>New Detail -&gt;</code> belong to a separate link pattern, and button feedback should stay local to the same command area.</p>
     </div>
 
     <div class="studioUiPrimitiveCodeList">
       <section class="studioUiPrimitiveCodeList__item">
-        <h4 class="studioUiPrimitiveCodeList__title">Small Command Button</h4>
+        <h4 class="studioUiPrimitiveCodeList__title">Small Button Next To A Field</h4>
         <pre><code>{{ small_markup | escape }}</code></pre>
       </section>
       <section class="studioUiPrimitiveCodeList__item">

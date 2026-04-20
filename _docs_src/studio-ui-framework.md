@@ -88,6 +88,7 @@ Button rule:
 - clickable pill-like controls are not buttons in this system and should be defined through the pill primitive layer instead
 - buttons do not need to live inside a toolbar; toolbar is an optional composition primitive rather than part of the button contract
 - modal action buttons should remain subsets of the shared button primitive
+- button-related status, warning, and success copy should stay adjacent to the related command area, either on the same row or in a dedicated row immediately below it
 
 Use these as the default contract for:
 
@@ -186,6 +187,7 @@ This pattern now covers:
 - message containers should remain transparent and borderless on pages and in modals
 - empty-state collapse for unused message blocks
 - the editor’s combined message-container presentation, where multiple lines can live inside one shared message section
+- command-specific feedback should stay local to the relevant command area rather than being routed into a distant generic message block
 
 ## Studio Modal Types
 

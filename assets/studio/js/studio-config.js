@@ -113,7 +113,7 @@ const DEFAULT_STUDIO_CONFIG = {
       work_input_placeholder: "work_id(s) in this series",
       tag_input_placeholder: "tag slug or alias",
       add_button: "Add",
-      save_button: "Save Tags",
+      save_button: "Save",
       save_mode_template: "Save mode: {mode}",
       save_mode_local_server: "Local server",
       save_mode_offline: "Offline session",

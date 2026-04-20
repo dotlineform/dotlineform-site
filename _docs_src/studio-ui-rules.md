@@ -111,6 +111,52 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-011
+
+- status: adopted
+- route: `/studio/series-tag-editor/`, `/studio/ui-catalogue/button/`
+- issue: the series tag editor’s button-related status and warning text was rendering in a shared message area far above the `Add` / `Save` controls, which made the feedback feel detached from the related field and commands.
+- triage: systemic
+- reasoning: command feedback belongs to the command area, not to a distant generic message block. The button primitive needs to state that placement rule explicitly, and the live series tag editor should follow it so the primitive page reflects a real page pattern.
+- permanent rule: button-related status, warning, and success copy must stay adjacent to the related command area. Place it on the same row only if space allows; otherwise put it in a dedicated row immediately below the relevant button row. Keep broader page context hints separate from local command feedback.
+- enforcement point: `studio/series-tag-editor/index.md`, `studio/ui-catalogue/button/index.md`, `_includes/studio_ui_catalogue_button_demo.html`, `_includes/ui_catalogue_notes/button.md`, and the button/message guidance in `studio-ui-framework.md`
+- files changed:
+  - `studio/series-tag-editor/index.md`
+  - `assets/studio/css/studio.css`
+  - `studio/ui-catalogue/button/index.md`
+  - `_includes/studio_ui_catalogue_button_demo.html`
+  - `_includes/ui_catalogue_notes/button.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/series-tag-editor/` on desktop and mobile and confirm the feedback row sits directly below the `Add` / `Save` row inside the editor panel
+  - inspect `/studio/ui-catalogue/button/` and confirm the first example and canonical markup show local button feedback placement
+- follow-up:
+  - review modal command feedback after the basic page sweep and apply the same adjacency rule where relevant
+
+## UI Rule Log 2026-04-20 / UI-010
+
+- status: adopted
+- route: `/studio/series-tag-editor/`, `/studio/ui-catalogue/button/`
+- issue: the series tag editor’s `Add` and `Save Tags` buttons sit directly beside the tag input field, which makes them the clearest live use case for the small command-button pattern. The label `Save Tags` also overstates the action relative to the button-width guidance.
+- triage: systemic
+- reasoning: this is the first direct live-page adoption of the new button contract, so the primitive page should show the same field-row pattern explicitly. The page fix and the primitive reference need to move together or the pattern stays abstract.
+- permanent rule: when a command button sits beside a text field in the same row, use the small button size and the standard default width unless a specific override is justified. Prefer the shortest accurate label that fits the shared width, for example `Save` rather than `Save Tags`.
+- enforcement point: `studio/series-tag-editor/index.md`, `studio/ui-catalogue/button/index.md`, and `_includes/ui_catalogue_notes/button.md`
+- files changed:
+  - `studio/series-tag-editor/index.md`
+  - `studio/ui-catalogue/button/index.md`
+  - `_includes/studio_ui_catalogue_button_demo.html`
+  - `_includes/ui_catalogue_notes/button.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/series-tag-editor/` and confirm `Add` and `Save` are the same default width beside the tag field
+  - inspect `/studio/ui-catalogue/button/` and confirm the first example now shows the field-row pattern explicitly
+- follow-up:
+  - use the same field-row rule when reviewing other input-adjacent buttons during the wider button sweep
+
 ## UI Rule Log 2026-04-20 / UI-009
 
 - status: adopted

@@ -1,13 +1,19 @@
 <div class="studioUiPrimitiveDemo">
   <section class="studioUiPrimitiveExample">
     <header class="studioUiPrimitiveExample__header">
-      <h3 class="studioUiPrimitiveExample__title">Small Command Button</h3>
-      <p class="studioUiPrimitiveExample__summary">Small is the compact default size for command actions.</p>
+      <h3 class="studioUiPrimitiveExample__title">Small Button Next To A Field</h3>
+      <p class="studioUiPrimitiveExample__summary">Primary use case for the small size: vertically aligned with a field in the same input row, with any button feedback kept directly below the command area.</p>
     </header>
     <div class="studioUiPrimitiveButtonDemo">
-      <p class="studioUiPrimitiveButtonDemo__body">Use for direct commands such as save, open, import, or create.</p>
-      <div class="studioUiPrimitiveButtonDemo__actions">
-        <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Save</button>
+      <p class="studioUiPrimitiveButtonDemo__body">Use when a command button sits beside an editable or non-editable text field and should share its row rhythm. Status or warning copy belongs immediately beside that command area, not in a distant shared message block.</p>
+      <div class="studioUiPrimitiveButtonDemo__fieldGroup">
+        <div class="studioUiPrimitiveButtonDemo__fieldGrid">
+          <input class="tagStudio__input" type="text" value="Shared field example">
+          <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Save</button>
+        </div>
+        <div class="tagStudio__buttonFeedback studioUiPrimitiveButtonDemo__fieldFeedback">
+          <p class="tagStudio__status" data-state="success">Saved.</p>
+        </div>
       </div>
     </div>
   </section>

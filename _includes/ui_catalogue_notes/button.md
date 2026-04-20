@@ -9,8 +9,10 @@
 
 1. The shared implementation is a neutral bordered button with stable radius, inline-flex centering, and no special destructive styling.
 2. The primitive now defines two sizes only: small and medium.
-3. The shared contract also defines a standard default width, but existing live Studio pages still need a later sweep to adopt it consistently.
-4. Disabled buttons keep the same geometry and currently communicate state mainly through muted text and the disabled cursor.
+3. The primary use case for the small size is a command button placed next to a text field in the same row.
+4. Button-related status, warning, and success messages should stay adjacent to the related command area, either on the same row or in a dedicated row immediately below it.
+5. The shared contract also defines a standard default width, but existing live Studio pages still need a later sweep to adopt it consistently.
+6. Disabled buttons keep the same geometry and currently communicate state mainly through muted text and the disabled cursor.
 
 ### Modal Actions
 
@@ -31,3 +33,9 @@
 3. Buttons should contain either text or an icon, not both.
 4. If buttons need grouping or a boundary, do not use a panel as the grouping device.
 5. Destructive actions should continue to use warning or confirmation prompts, but they do not need a special button style by default.
+
+### Feedback Placement
+
+1. If a button needs status, warning, or result copy, place that copy directly beside the related button row or immediately below it.
+2. Do not route button feedback into a distant shared message area when the button is associated with a specific field or local command group.
+3. On a row that already needs space for another control such as save mode, prefer a dedicated feedback row below the buttons rather than forcing the message into the same line.
