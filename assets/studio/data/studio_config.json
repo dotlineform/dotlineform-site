@@ -548,7 +548,7 @@
       "summary_rebuild_current": "source and runtime not yet diverged in this session"
     },
     "catalogue_new_work_editor": {
-      "create_button": "Create Draft Work",
+      "create_button": "Create",
       "save_mode_template": "Save mode: {mode}",
       "save_mode_local_server": "Local server",
       "save_mode_offline": "Unavailable",
@@ -656,7 +656,7 @@
       "summary_rebuild_current": "source and runtime not yet diverged in this session"
     },
     "catalogue_new_work_detail_editor": {
-      "create_button": "Create Draft Detail",
+      "create_button": "Create",
       "save_mode_template": "Save mode: {mode}",
       "save_mode_local_server": "Local server",
       "save_mode_offline": "Unavailable",
@@ -751,7 +751,7 @@
       "summary_rebuild_current": "source and runtime not yet diverged in this session"
     },
     "catalogue_new_series_editor": {
-      "create_button": "Create Draft Series",
+      "create_button": "Create",
       "save_mode_template": "Save mode: {mode}",
       "save_mode_local_server": "Local server",
       "save_mode_offline": "Unavailable",
