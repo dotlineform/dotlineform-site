@@ -9,6 +9,7 @@
   --studio-surface-padding-sm: 0.55rem;
   --studio-surface-padding-md: 0.6rem;
   --studio-surface-padding-lg: 0.9rem;
+  --studio-panel-link-height: 10rem;
   --studio-control-height: 2rem;
   --studio-shell-gap-sm: 0.45rem;
   --studio-shell-gap-md: 0.6rem;
@@ -172,6 +173,92 @@
 
 .tagStudio__panel--compact {
   padding: var(--studio-surface-padding-md);
+}
+
+a.tagStudio__panelLink {
+  box-sizing: border-box;
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  block-size: var(--panel-link-height, var(--studio-panel-link-height));
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+}
+
+a.tagStudio__panelLink:visited {
+  color: inherit;
+}
+
+a.tagStudio__panelLink:hover {
+  border-color: var(--studio-line-strong);
+  background: var(--studio-surface-subtle);
+  text-decoration: none;
+}
+
+a.tagStudio__panelLink:focus-visible {
+  outline: 2px solid var(--studio-line-strong);
+  outline-offset: 2px;
+  text-decoration: none;
+}
+
+.tagStudio__panelLink > * {
+  position: relative;
+  z-index: 1;
+}
+
+.tagStudio__panelLink > h3,
+.tagStudio__panelLink > h4,
+.tagStudio__panelLink > p {
+  margin: 0;
+}
+
+.tagStudio__panelLink > p {
+  max-width: 28ch;
+  color: var(--muted, var(--studio-muted-body));
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.tagStudio__panelLink--image {
+  color: #fff;
+  border-color: color-mix(in srgb, #fff 32%, transparent);
+  background: var(--studio-primary);
+}
+
+.tagStudio__panelLink--image::before,
+.tagStudio__panelLink--image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.tagStudio__panelLink--image::before {
+  background-image: var(--panel-image);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: 0;
+}
+
+.tagStudio__panelLink--image::after {
+  background: var(
+    --panel-image-overlay,
+    linear-gradient(180deg, rgba(15, 18, 24, 0.18) 0%, rgba(15, 18, 24, 0.7) 100%)
+  );
+  z-index: 0;
+}
+
+.tagStudio__panelLink--image:hover {
+  border-color: color-mix(in srgb, #fff 55%, transparent);
+  background: var(--studio-primary);
+}
+
+.tagStudio__panelLink--image > p {
+  color: rgba(255, 255, 255, 0.88);
 }
 
 .tagStudioEditorSection {

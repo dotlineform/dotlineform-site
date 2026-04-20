@@ -5,20 +5,22 @@ permalink: /studio/
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 ---
 
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
+
 <section class="studioHome" aria-label="Studio domains">
-  <a class="studioHome__panel" href="{{ '/studio/catalogue/' | relative_url }}">
+  <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/catalogue/' | relative_url }}">
     <h3>Catalogue</h3>
     <p>Publish and maintain the works portfolio.</p>
   </a>
-  <a class="studioHome__panel" href="{{ '/studio/library/' | relative_url }}">
+  <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/library/' | relative_url }}">
     <h3>Library</h3>
     <p>Publish reference and research documents.</p>
   </a>
-  <a class="studioHome__panel" href="{{ '/studio/analytics/' | relative_url }}">
+  <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/analytics/' | relative_url }}">
     <h3>Analytics</h3>
     <p>Tools to support the analysis and contextualisation of the portfolio.</p>
   </a>
-  <a class="studioHome__panel" href="{{ '/studio/search/' | relative_url }}">
+  <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/studio/search/' | relative_url }}">
     <h3>Search</h3>
     <p>Configure and manage site search.</p>
   </a>

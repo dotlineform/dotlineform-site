@@ -34,6 +34,20 @@ ui_catalogue_primitive: panel
   </div>
 </div>
 {% endcapture %}
+{% capture link_markup %}<a class="tagStudio__panel tagStudio__panelLink" href="#">
+  <h4>Panel Link</h4>
+  <p>Use for static navigation content when the whole panel should behave as one fixed-height click target.</p>
+</a>
+{% endcapture %}
+{% capture image_link_markup %}<a
+  class="tagStudio__panel tagStudio__panelLink tagStudio__panelLink--image"
+  href="#"
+  style="--panel-image: url('{{ '/assets/moments/img/blue-sky-thumb-192.webp' | relative_url }}');"
+>
+  <h4>Image Panel Link</h4>
+  <p>Optional image fill for feature-entry panels that still need the same fixed-height shell.</p>
+</a>
+{% endcapture %}
 
 <div class="tagStudioPage studioUiPrimitivePage">
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
@@ -71,6 +85,14 @@ ui_catalogue_primitive: panel
       <section class="studioUiPrimitiveCodeList__item">
         <h4 class="studioUiPrimitiveCodeList__title">Nested</h4>
         <pre><code>{{ nested_markup | escape }}</code></pre>
+      </section>
+      <section class="studioUiPrimitiveCodeList__item">
+        <h4 class="studioUiPrimitiveCodeList__title">Panel Link</h4>
+        <pre><code>{{ link_markup | escape }}</code></pre>
+      </section>
+      <section class="studioUiPrimitiveCodeList__item">
+        <h4 class="studioUiPrimitiveCodeList__title">Image Panel Link</h4>
+        <pre><code>{{ image_link_markup | escape }}</code></pre>
       </section>
     </div>
   </section>

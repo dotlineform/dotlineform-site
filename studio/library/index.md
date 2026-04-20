@@ -6,6 +6,8 @@ studio_domain: library
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
 ---
 
+<link rel="stylesheet" href="{{ '/assets/studio/css/studio.css' | relative_url }}">
+
 <div class="studioDashboard">
   <p class="studioDashboard__intro">Use the Library dashboard as the admin-facing entry surface for the published library, its guidance docs, and future maintenance workflows.</p>
 
@@ -23,15 +25,15 @@ studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library
       <p>The public library remains user-facing; this dashboard is the admin-facing route into that domain.</p>
     </div>
     <div class="studioCardGrid">
-      <a class="studioCardLink" href="{{ '/library/' | relative_url }}">
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/library/' | relative_url }}">
         <h4>Published library</h4>
         <p>Open the public library viewer in its user-facing context.</p>
       </a>
-      <a class="studioCardLink" href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-library' | relative_url }}">
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/docs/?scope=studio&doc=new-pipeline-refine-library' | relative_url }}">
         <h4>Library plan</h4>
         <p>Parallel planning stub for the Library domain and future Studio workflows.</p>
       </a>
-      <a class="studioCardLink" href="{{ '/docs/?scope=studio&doc=library' | relative_url }}">
+      <a class="tagStudio__panel tagStudio__panelLink" href="{{ '/docs/?scope=studio&doc=library' | relative_url }}">
         <h4>Library docs</h4>
         <p>Open the public-library documentation set from the shared docs viewer.</p>
       </a>

@@ -13,3 +13,10 @@
 
 - `tagStudio__panel--compact` only reduces padding. Do not use it to solve layout issues caused by unrelated parent layout decisions.
 - When checking a compact or nested panel on a real page, look for double borders, unclear hierarchy, or cramped spacing and resolve those in the shared panel contract where possible.
+
+### Panel Link Variation
+
+- Use `tagStudio__panel tagStudio__panelLink` for static-content navigation panels where the whole panel is the click target.
+- This variation uses a fixed design-time height via `--panel-link-height`. Content should be edited to fit the panel, not vice versa.
+- Short copy discipline is part of the contract. Do not rely on auto-growing panel height to accommodate longer dashboard copy.
+- Use `tagStudio__panelLink--image` with `--panel-image` when a full-panel background image is needed. The image is decorative support for the fixed panel shell, not a reason to change the click or sizing behavior.

@@ -7,6 +7,35 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Unified Studio landing/dashboard cards as a shared panel-link variation
+
+**Status:** implemented
+
+**Area:** design system / Studio dashboard UI
+
+**Summary:**
+Moved the clickable Studio landing page and analytics/library/search dashboard card styling out of the site-wide stylesheet and into the shared Studio primitive layer as a fixed-height panel-link variation with optional image fill.
+
+**Reason:**
+The same panel design had split into two duplicated route-local patterns, and the analytics/library/search version was auto-sizing to content instead of behaving like a deliberate design-time panel.
+
+**Effect:**
+`/studio/`, `/studio/analytics/`, `/studio/library/`, and `/studio/search/` now use the same shared panel-link primitive. The panel height is fixed, hover/focus behavior still applies to the whole card, and the panel primitive reference now defines the image-fill option and short-copy requirement.
+
+**Affected files/docs:**
+- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/css/studio.css`
+- `assets/css/main.css`
+- `studio/index.md`
+- `studio/analytics/index.md`
+- `studio/library/index.md`
+- `studio/search/index.md`
+
+**Notes:**
+This intentionally favors future design consistency over preserving the old content-fit dashboard card behavior.
+
 ## [2026-04-20] Added explicit nested-panel support and strengthened the primitive-catalogue method
 
 **Status:** implemented

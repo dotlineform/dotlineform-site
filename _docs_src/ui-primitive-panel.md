@@ -48,6 +48,7 @@ Expected variants:
 - compact panel
 - editor panel
 - nested panel composition
+- panel link / dashboard card
 - muted or secondary panel where needed
 
 Expected states:
@@ -64,6 +65,7 @@ Expected states:
 - if a panel needs a repeated internal layout, document that as a composition rather than changing the base primitive
 - nested panels are valid when a child group needs its own local containment inside a larger panel
 - if nested panels read poorly, fix the shared panel/composition contract before adding route-specific compensation
+- when a panel is used as a navigation card, keep the panel height fixed at design time and edit copy to fit the shell
 
 ## Current Implementation Notes
 
@@ -76,6 +78,8 @@ Current variant boundary:
 - `tagStudio__panel` owns the outer shell
 - `tagStudio__panel--compact` changes padding only
 - `tagStudio__panel--editor` changes internal layout rhythm only
+- `tagStudio__panelLink` turns the panel into a whole-area fixed-height navigation target
+- `tagStudio__panelLink--image` adds optional full-panel image fill without changing the fixed-height behavior
 
 Current composition support:
 
@@ -92,4 +96,5 @@ Add screenshots here for:
 
 - default panel treatment
 - compact/editor variants
+- panel-link and image-fill variants
 - examples from Studio or docs surfaces when relevant

@@ -370,43 +370,6 @@ th{ background: var(--panel-2); }
   gap: 1rem;
 }
 
-.studioHome__panel{
-  display: grid;
-  gap: 0.45rem;
-  min-height: 10rem;
-  padding: 1.15rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--panel);
-  color: var(--text);
-  text-decoration: none;
-}
-
-.studioHome__panel:visited{
-  color: var(--text);
-}
-
-.studioHome__panel:hover{
-  border-color: var(--border-strong);
-  background: var(--panel-2);
-  text-decoration: none;
-}
-
-.studioHome__panel:focus-visible{
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-  text-decoration: none;
-}
-
-.studioHome__panel h3,
-.studioHome__panel p{
-  margin: 0;
-}
-
-.studioHome__panel p{
-  max-width: 28ch;
-}
-
 .studioDashboard{
   display: grid;
   gap: 1.5rem;
@@ -560,40 +523,6 @@ th{ background: var(--panel-2); }
   align-items: start;
 }
 
-.studioCardLink{
-  display: grid;
-  align-content: start;
-  gap: 0.4rem;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--panel);
-  color: var(--text);
-  text-decoration: none;
-}
-
-.studioCardLink:visited{
-  color: var(--text);
-}
-
-.studioCardLink:hover{
-  border-color: var(--border-strong);
-  background: var(--panel-2);
-  text-decoration: none;
-}
-
-.studioCardLink:focus-visible{
-  outline: 2px solid var(--border-strong);
-  outline-offset: 2px;
-  text-decoration: none;
-}
-
-.studioCardLink h4,
-.studioCardLink p{
-  margin: 0;
-}
-
-.studioCardLink p,
 .studioInfoCard p{
   color: var(--muted);
 }

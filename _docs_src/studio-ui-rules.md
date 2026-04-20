@@ -111,6 +111,35 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-004
+
+- status: adopted
+- route: `/studio/`, `/studio/analytics/`, `/studio/library/`, `/studio/search/`
+- issue: the Studio landing page and the analytics/library/search dashboards were using two duplicated card-panel patterns. The analytics/library/search cards also sized themselves to content, which made panel height drift with copy instead of staying a deliberate design object.
+- triage: systemic
+- reasoning: these cards are a real panel variation, not a one-off page layout. Keeping them duplicated in `assets/css/main.css` would keep the primitive hidden and encourage local drift. The intended behavior is fixed-height, whole-panel-clickable static navigation with optional image fill.
+- permanent rule: clickable panel-navigation cards must use the shared Studio panel-link variation in `assets/studio/css/studio.css`. Their height is fixed at design time, and copy must be edited to fit the panel rather than stretching the panel to fit content.
+- enforcement point: `.tagStudio__panelLink` and `.tagStudio__panelLink--image` in `assets/studio/css/studio.css`
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `assets/css/main.css`
+  - `studio/index.md`
+  - `studio/analytics/index.md`
+  - `studio/library/index.md`
+  - `studio/search/index.md`
+  - `studio/ui-catalogue/panel/index.md`
+  - `_includes/studio_ui_catalogue_panel_demo.html`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/ui-primitive-panel.md`
+- local verification:
+  - inspect `/studio/`, `/studio/analytics/`, `/studio/library/`, and `/studio/search/`
+  - confirm the clickable panels share one fixed-height treatment
+  - confirm panel height stays stable when card copy differs slightly
+  - confirm hover/focus states still treat the whole panel as the click target
+- follow-up:
+  - if a future dashboard panel needs more room, add an explicit shared size modifier instead of letting content auto-size the card
+
 ## UI Rule Log 2026-04-20 / UI-003
 
 - status: adopted

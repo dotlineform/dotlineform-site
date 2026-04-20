@@ -47,6 +47,7 @@ Rule of thumb: if two Studio pages need the same visual treatment, the class sho
 Defined in `assets/studio/css/studio.css`:
 
 - `tagStudio__panel`
+- `tagStudio__panelLink`
 - `tagStudio__input`
 - `tagStudio__button`
 - `tagStudio__chip`
@@ -70,6 +71,7 @@ Primitive catalogue rule:
 - Primitive variants should stack vertically by default so each shell edge can be inspected without cross-column alignment noise.
 - Primitive notes should record implementation constraints, known failure modes, and composition warnings rather than purpose-only prose.
 - If a primitive can validly compose with itself, add that self-composition case to the catalogue and fix the shared primitive or shared composition contract when the result is weak.
+- When a panel is used as a full-area navigation target, define that as an explicit shared variation with fixed design-time height rather than allowing route-local card patterns to drift independently.
 
 Chip rule:
 
