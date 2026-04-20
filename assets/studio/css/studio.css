@@ -1930,8 +1930,21 @@ input.tagStudio__input {
   min-width: 0;
 }
 
+.catalogueWorkDetails__newLink {
+  justify-self: end;
+  color: inherit;
+  font-size: var(--font-small);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
+.catalogueWorkDetails__searchRow {
+  display: grid;
+  justify-content: start;
+}
+
 .catalogueWorkDetails__searchWrap {
-  flex: 0 1 18rem;
+  width: min(100%, 18rem);
   min-width: 0;
 }
 

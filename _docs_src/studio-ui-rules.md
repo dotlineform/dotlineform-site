@@ -111,6 +111,55 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-013
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: the detail/file/link navigation sections were still mixing navigation entry points with button styling, and the detail search field was always visible in the header even when no detail rows were hidden.
+- triage: systemic
+- reasoning: these sections are navigation surfaces, not command rows. The `new` actions should read as links, not buttons, and the detail search only adds value when the fixed per-section limit is hiding rows from the page. Moving the search below the heading also keeps the section header cleaner.
+- permanent rule: on navigation-summary sections, route-entry actions should render as links rather than command buttons. Per-section search should appear only when it is needed to reach items that are not already visible within the fixed on-page list limit.
+- enforcement point: `studio/catalogue-work/index.md`, `assets/studio/js/catalogue-work-editor.js`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, `assets/studio/css/studio.css`, and `_docs_src/catalogue-work-editor.md`
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/catalogue-work/?work=<id>` for a work with more than 10 detail rows and confirm the detail search appears below the section title
+  - inspect the same route for a work with 10-or-fewer detail rows and confirm the detail search is hidden
+  - confirm `new work detail →`, `new file →`, and `new link →` render as links rather than button-shaped controls
+- follow-up:
+  - when the site-wide link primitive is defined, review whether these route-entry links should adopt that shared treatment instead of keeping a page-local style
+
+## UI Rule Log 2026-04-20 / UI-012
+
+- status: adopted
+- route: `/studio/catalogue-work/`
+- issue: the work editor’s main action buttons were still using longer first-pass labels such as `Save Source`, `Save + Rebuild`, and `Delete Source`, and none of the actions in that editor panel were using the standard default button width.
+- triage: systemic
+- reasoning: within a partial-page editor panel, the small button size is already the right scale. The remaining drift was mainly label length and width consistency. The shorter labels also forced the doc to explain the current behavior more clearly, especially that `Rebuild` still saves current edits before running the scoped rebuild flow.
+- permanent rule: within a Studio editor panel, command buttons should prefer the small button size and the standard default width unless a specific override is justified. Use the shortest accurate labels that fit the shared width. If an action label becomes shorter but more behaviorally ambiguous, fix the supporting doc copy rather than re-expanding the label.
+- enforcement point: `studio/catalogue-work/index.md`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, `assets/studio/js/catalogue-work-editor.js`, and `_docs_src/catalogue-work-editor.md`
+- files changed:
+  - `studio/catalogue-work/index.md`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `_docs_src/catalogue-work-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/catalogue-work/` and confirm `Open`, `Save`, `Rebuild`, and `Delete` all use the standard button width
+  - confirm pressing `Enter` in the search input still opens the current work selection, and the `Open` button remains a small explicit alternative
+  - inspect `/docs/?scope=studio&doc=catalogue-work-editor` and confirm the save/rebuild roles are stated explicitly
+- follow-up:
+  - review the other catalogue editor pages later for the same label-width cleanup, but do not assume they should all rename their actions without checking the local docs
+
 ## UI Rule Log 2026-04-20 / UI-011
 
 - status: adopted

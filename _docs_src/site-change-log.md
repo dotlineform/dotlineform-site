@@ -7,6 +7,59 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Redesigned the catalogue work detail/file/link navigation headers
+
+**Status:** implemented
+
+**Area:** Studio work editor / navigation surfaces
+
+**Summary:**
+Moved the work-detail search below the `work details` heading and made it conditional on hidden rows, while changing the section entry actions to links: `new work detail →`, `new file →`, and `new link →`.
+
+**Reason:**
+These section actions are navigation, not commands, so button styling was misleading. The detail search box also added clutter when every detail row was already visible on the page.
+
+**Effect:**
+The `work details` header is cleaner, the search appears only when at least one grouped section exceeds the visible row limit, and the three `new` entry points now read as links rather than buttons. The related config keys were renamed from `*_button` to `*_link` to match that role change.
+
+**Affected files/docs:**
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-work/index.md`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/css/studio.css`
+
+**Notes:**
+This is still a route-local navigation-link treatment. A later shared link primitive may absorb it, but the button-to-link boundary is now explicit on this page.
+
+## [2026-04-20] Shortened and standardized the catalogue work editor action buttons
+
+**Status:** implemented
+
+**Area:** Studio work editor / command buttons
+
+**Summary:**
+Shortened the main action labels on `/studio/catalogue-work/` to `Save`, `Rebuild`, and `Delete`, applied the standard default width to those actions plus `Open`, and clarified the save/rebuild behavior in the work editor doc.
+
+**Reason:**
+The first-pass labels were functionally descriptive but too long for the new button contract. Once shortened, the doc also needed to say explicitly that `Rebuild` still saves current edits before running the scoped rebuild flow.
+
+**Effect:**
+The work editor’s main panel now uses small standard-width buttons consistently, and the supporting doc distinguishes `Save` from `Rebuild` more clearly. `Enter` in the search field still opens the current work selection, while `Open` remains an explicit button affordance.
+
+**Affected files/docs:**
+- [Catalogue Work Editor](/docs/?scope=studio&doc=catalogue-work-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-work/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/catalogue-work-editor.js`
+
+**Notes:**
+This is a targeted cleanup for the work editor only. Similar label/width cleanup on other catalogue editors should be reviewed separately rather than assumed automatically.
+
 ## [2026-04-20] Moved button feedback to the local command area
 
 **Status:** implemented

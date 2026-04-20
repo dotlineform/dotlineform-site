@@ -710,8 +710,10 @@ function renderWorkLinkRows(state, items) {
 }
 
 function updateDetailSections(state) {
-  if (!state.detailsResultsNode || !state.detailsMetaNode) return;
+  if (!state.detailsResultsNode || !state.detailsMetaNode || !state.detailSearchRowNode) return;
   if (!state.currentWorkId) {
+    if (state.detailSearchNode) state.detailSearchNode.value = "";
+    state.detailSearchRowNode.hidden = true;
     state.detailsMetaNode.textContent = "";
     state.detailsResultsNode.innerHTML = "";
     return;
@@ -719,13 +721,20 @@ function updateDetailSections(state) {
 
   const details = getWorkDetails(state, state.currentWorkId);
   if (!details.length) {
+    if (state.detailSearchNode) state.detailSearchNode.value = "";
+    state.detailSearchRowNode.hidden = true;
     state.detailsMetaNode.textContent = "";
     state.detailsResultsNode.innerHTML = `<p class="tagStudioForm__meta">${escapeHtml(t(state, "details_empty", "No work details for this work."))}</p>`;
     return;
   }
 
-  const query = normalizeText(state.detailSearchNode && state.detailSearchNode.value);
   const groups = groupWorkDetailsBySection(state, details);
+  const showDetailSearch = groups.some((group) => group.items.length > DETAIL_LIST_LIMIT);
+  if (!showDetailSearch && state.detailSearchNode) {
+    state.detailSearchNode.value = "";
+  }
+  state.detailSearchRowNode.hidden = !showDetailSearch;
+  const query = showDetailSearch ? normalizeText(state.detailSearchNode && state.detailSearchNode.value) : "";
   const blocks = [];
 
   if (query) {
@@ -1674,6 +1683,7 @@ async function init() {
   const buildImpactNode = document.getElementById("catalogueWorkBuildImpact");
   const detailsHeadingNode = document.getElementById("catalogueWorkDetailsHeading");
   const newDetailLinkNode = document.getElementById("catalogueWorkNewDetailLink");
+  const detailSearchRowNode = document.getElementById("catalogueWorkDetailsSearchRow");
   const detailSearchNode = document.getElementById("catalogueWorkDetailSearch");
   const detailsMetaNode = document.getElementById("catalogueWorkDetailsMeta");
   const detailsResultsNode = document.getElementById("catalogueWorkDetailsResults");
@@ -1698,7 +1708,7 @@ async function init() {
   const warningNode = document.getElementById("catalogueWorkWarning");
   const resultNode = document.getElementById("catalogueWorkResult");
   const metaNode = document.getElementById("catalogueWorkMeta");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !previewNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !detailsHeadingNode || !newDetailLinkNode || !detailSearchRowNode || !detailSearchNode || !detailsMetaNode || !detailsResultsNode || !filesHeadingNode || !newFileLinkNode || !filesMetaNode || !filesResultsNode || !linksHeadingNode || !newLinkLinkNode || !linksMetaNode || !linksResultsNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode) {
     return;
   }
 
@@ -1747,6 +1757,7 @@ async function init() {
     readinessNode,
     runtimeStateNode,
     buildImpactNode,
+    detailSearchRowNode,
     detailSearchNode,
     detailsMetaNode,
     detailsResultsNode,
@@ -1771,16 +1782,16 @@ async function init() {
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find work id(s): 00001, 00003-00005");
     detailsHeadingNode.textContent = t(state, "details_heading", "work details");
-    newDetailLinkNode.textContent = t(state, "details_new_button", "New Detail");
+    newDetailLinkNode.textContent = t(state, "details_new_link", "new work detail →");
     detailSearchNode.placeholder = t(state, "details_search_placeholder", "find detail by id");
     filesHeadingNode.textContent = t(state, "files_heading", "work files");
-    newFileLinkNode.textContent = t(state, "files_new_button", "New File");
+    newFileLinkNode.textContent = t(state, "files_new_link", "new file →");
     linksHeadingNode.textContent = t(state, "links_heading", "work links");
-    newLinkLinkNode.textContent = t(state, "links_new_button", "New Link");
+    newLinkLinkNode.textContent = t(state, "links_new_link", "new link →");
     openButton.textContent = t(state, "open_button", "Open");
-    saveButton.textContent = t(state, "save_button", "Save Source");
-    buildButton.textContent = t(state, "build_button", "Save + Rebuild");
-    deleteButton.textContent = t(state, "delete_button", "Delete Source");
+    saveButton.textContent = t(state, "save_button", "Save");
+    buildButton.textContent = t(state, "build_button", "Rebuild");
+    deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [worksPayload, seriesPayload, serverAvailable] = await Promise.all([
       loadStudioLookupJson(config, "catalogue_lookup_work_search", { cache: "no-store" }),

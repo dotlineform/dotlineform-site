@@ -69,7 +69,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
           <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkPopupList"></div>
         </div>
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueWorkOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkSaveMode"></span>
     </div>
 
@@ -84,9 +84,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">work metadata</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueWorkSave">Save Source</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkBuild">Save + Rebuild</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkDelete">Delete Source</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkBuild">Rebuild</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDelete">Delete</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkMeta"></p>
@@ -107,18 +107,18 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkDetailsHeading">work details</h2>
-      <div class="catalogueWorkDetails__actions">
-        <a class="tagStudio__button" id="catalogueWorkNewDetailLink" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}">New Detail</a>
-        <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">
-          <label class="visually-hidden" for="catalogueWorkDetailSearch">Find detail by id</label>
-          <input
-            type="text"
-            class="tagStudio__input"
-            id="catalogueWorkDetailSearch"
-            placeholder="find detail by id"
-            autocomplete="off"
-          >
-        </div>
+      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewDetailLink" href="{{ '/studio/catalogue-new-work-detail/' | relative_url }}">new work detail →</a>
+    </div>
+    <div class="catalogueWorkDetails__searchRow" id="catalogueWorkDetailsSearchRow" hidden>
+      <div class="tagStudioForm__searchWrap catalogueWorkDetails__searchWrap">
+        <label class="visually-hidden" for="catalogueWorkDetailSearch">Find detail by id</label>
+        <input
+          type="text"
+          class="tagStudio__input"
+          id="catalogueWorkDetailSearch"
+          placeholder="find detail by id"
+          autocomplete="off"
+        >
       </div>
     </div>
     <p class="tagStudioForm__meta" id="catalogueWorkDetailsMeta"></p>
@@ -128,7 +128,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkFilesHeading">work files</h2>
-      <a class="tagStudio__button" id="catalogueWorkNewFileLink" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}">New File</a>
+      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewFileLink" href="{{ '/studio/catalogue-new-work-file/' | relative_url }}">new file →</a>
     </div>
     <p class="tagStudioForm__meta" id="catalogueWorkFilesMeta"></p>
     <div class="catalogueWorkDetails__results" id="catalogueWorkFilesResults"></div>
@@ -137,7 +137,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-editor
   <section class="tagStudio__panel catalogueWorkDetails">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueWorkLinksHeading">work links</h2>
-      <a class="tagStudio__button" id="catalogueWorkNewLinkLink" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}">New Link</a>
+      <a class="catalogueWorkDetails__newLink" id="catalogueWorkNewLinkLink" href="{{ '/studio/catalogue-new-work-link/' | relative_url }}">new link →</a>
     </div>
     <p class="tagStudioForm__meta" id="catalogueWorkLinksMeta"></p>
     <div class="catalogueWorkDetails__results" id="catalogueWorkLinksResults"></div>

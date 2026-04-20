@@ -21,6 +21,7 @@ The first implementation covers:
 - search by `work_id`
 - open one work record
 - open multiple work records by comma-delimited `work_id` values and `start-end` ranges
+- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
 - edit ordered `series_ids`
 - bulk-edit core scalar metadata across the selected works
@@ -32,17 +33,17 @@ The first implementation covers:
 - cap visible detail rows at 10 per section
 - provide per-work detail search by `detail_uid`
 - link into the dedicated work detail editor
-- provide a direct `New Detail` entry point for the current work
+- provide a direct `new work detail →` entry link for the current work
 - list the current work's file records
 - list the current work's link records
 - link into the dedicated work-file and work-link editors
-- provide direct `New File` and `New Link` entry points for the current work
+- provide direct `new file →` and `new link →` entry links for the current work
 - validate basic field format before save
 - save source JSON only
 - preview the scoped rebuild impact for the current work
 - show work media and work prose readiness, including resolved source paths and missing-state guidance
 - run a narrow `Import prose + rebuild` action when the configured work prose file is ready
-- run `Save + Rebuild` through the local catalogue service
+- run `Rebuild` through the local catalogue service
 - delete one work source record in single-record mode
 - show saved-state feedback and rebuild-needed state after save
 
@@ -73,10 +74,19 @@ Current bulk-edit behavior:
 - an empty touched field clears that field across the selected works
 - `series_ids` accepts either a plain comma-delimited replacement list or only `+id` / `-id` diff entries
 - detail, file, and link sections are hidden while bulk mode is active
-- `Save + Rebuild` runs one scoped work rebuild per affected work scope after the bulk source save
+- `Rebuild` runs one scoped work rebuild per affected work scope after the bulk source save
 - delete is disabled in bulk mode
 
 ## Save Boundary
+
+Current action labels:
+
+- `Save`
+  writes source JSON only and leaves runtime rebuild pending
+- `Rebuild`
+  saves the current edited source state if needed, then runs the scoped rebuild flow
+- `Delete`
+  removes the current source record in single-record mode after preview/confirmation
 
 Current save/rebuild flow:
 
@@ -90,7 +100,7 @@ Current save/rebuild flow:
 8. `POST /catalogue/build-preview` reports the scoped rebuild impact for the saved work record
 9. the same preview now also carries work media/work prose readiness and source-path guidance
 10. the current-record rail resolves a compact work preview from the same public media naming conventions used by the public site
-11. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Save + Rebuild` or `Import prose + rebuild`
+11. `POST /catalogue/build-apply` runs scoped JSON-source generation plus catalogue search rebuild when the user chooses `Rebuild` or `Import prose + rebuild`
 
 Bulk save flow:
 
@@ -99,7 +109,7 @@ Bulk save flow:
 3. user edits only the fields that should apply across the selection
 4. `POST /catalogue/bulk-save` sends selected `work_id` values, expected hashes, scalar field updates, and optional series membership operations
 5. the local write server validates the combined source write, writes `works.json` once, refreshes lookup payloads, and returns changed counts plus rebuild targets
-6. `Save + Rebuild` then runs one scoped work rebuild per affected work target
+6. `Rebuild` then runs one scoped work rebuild per affected work target
 
 Delete flow:
 
@@ -124,6 +134,7 @@ Locked constraints for this phase:
 - grouping follows `project_subfolder`
 - each section shows at most 10 rows by default
 - the detail search box searches within the current work by `detail_uid`
+- the detail search box only appears when at least one section exceeds the fixed visible row limit
 - works with multiple detail sections render as multiple grouped lists
 - this area is navigation into the detail editor, not inline editing
 
@@ -136,7 +147,7 @@ Current behavior:
 - list current `WorkFiles` records for the work
 - list current `WorkLinks` records for the work
 - open focused file and link editors from each row
-- provide direct `New File` and `New Link` entry points from the current work
+- provide direct `new file →` and `new link →` entry links from the current work
 
 These areas are intentionally summary/navigation surfaces in this phase, not inline editors.
 
