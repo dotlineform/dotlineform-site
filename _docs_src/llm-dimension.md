@@ -1,6 +1,6 @@
 ---
 doc_id: llm-dimension
-title: LLM-Assisted Dimension Recommendation
+title: "LLM-Assisted Dimension Recommendation"
 last_updated: 2026-04-16
 parent_id: llm
 sort_order: 10

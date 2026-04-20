@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: New Catalogue Work Link
+title: "New Catalogue Work Link"
 permalink: /studio/catalogue-new-work-link/
 section: catalogue-new-work-link
 studio_page_doc: /docs/?scope=studio&doc=catalogue-new-work-link-editor

@@ -1,6 +1,6 @@
 ---
 doc_id: config-studio-config-js
-title: Studio Config Loader JS
+title: "Studio Config Loader JS"
 last_updated: 2026-04-01
 parent_id: config
 sort_order: 40

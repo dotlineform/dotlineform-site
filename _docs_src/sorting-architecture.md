@@ -1,6 +1,6 @@
 ---
 doc_id: sorting-architecture
-title: Sorting Architecture
+title: "Sorting Architecture"
 last_updated: 2026-03-31
 parent_id: architecture
 sort_order: 30

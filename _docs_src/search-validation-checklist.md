@@ -1,6 +1,6 @@
 ---
 doc_id: search-validation-checklist
-title: Search Validation Checklist
+title: "Search Validation Checklist"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 80

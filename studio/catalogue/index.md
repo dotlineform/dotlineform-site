@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Dashboard
+title: "Catalogue Dashboard"
 permalink: /studio/catalogue/
 studio_domain: catalogue
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan

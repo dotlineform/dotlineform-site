@@ -1,6 +1,6 @@
 ---
 doc_id: search-change-log-guidance
-title: Search Change Log Guidance
+title: "Search Change Log Guidance"
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 1000

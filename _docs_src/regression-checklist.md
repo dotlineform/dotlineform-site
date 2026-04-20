@@ -1,6 +1,6 @@
 ---
 doc_id: regression-checklist
-title: Studio Regression Checklist
+title: "Studio Regression Checklist"
 last_updated: 2026-03-28
 parent_id: _archive
 sort_order: 80

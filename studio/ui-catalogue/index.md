@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: UI Catalogue
+title: "UI Catalogue"
 permalink: /studio/ui-catalogue/
 studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
 ---

@@ -1,6 +1,6 @@
 ---
 doc_id: docs-viewer-management
-title: Docs Viewer Management
+title: "Docs Viewer Management"
 last_updated: 2026-04-19
 parent_id: ui-requests
 sort_order: 21

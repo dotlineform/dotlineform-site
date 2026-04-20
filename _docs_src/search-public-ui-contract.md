@@ -1,6 +1,6 @@
 ---
 doc_id: search-public-ui-contract
-title: Search Public UI Contract
+title: "Search Public UI Contract"
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 55

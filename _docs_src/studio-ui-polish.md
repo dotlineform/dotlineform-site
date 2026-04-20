@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-studio-ui-polish
-title: Studio UI Polish
+title: "Studio UI Polish"
 last_updated: 2026-04-19
 parent_id: new-pipeline
 sort_order: 61

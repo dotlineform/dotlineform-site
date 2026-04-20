@@ -1,6 +1,6 @@
 ---
 doc_id: config-search-policy-json
-title: Search Policy JSON
+title: "Search Policy JSON"
 last_updated: 2026-03-31
 parent_id: config
 sort_order: 50

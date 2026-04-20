@@ -1,6 +1,6 @@
 ---
 doc_id: search-ui-behaviour
-title: Search UI Behaviour
+title: "Search UI Behaviour"
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 60

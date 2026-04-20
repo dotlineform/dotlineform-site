@@ -1,6 +1,6 @@
 ---
 doc_id: studio-plan
-title: Implementation Plan
+title: "Implementation Plan"
 last_updated: 2026-03-28
 parent_id: _archive
 sort_order: 90

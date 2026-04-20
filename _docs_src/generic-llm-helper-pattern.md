@@ -1,6 +1,6 @@
 ---
 doc_id: generic-llm-helper-pattern
-title: Generic LLM Helper Pattern
+title: "Generic LLM Helper Pattern"
 last_updated: 2026-04-16
 parent_id: llm
 sort_order: 30

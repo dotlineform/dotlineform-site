@@ -1,6 +1,6 @@
 ---
 doc_id: search-normalisation-rules
-title: Search Normalisation Rules
+title: "Search Normalisation Rules"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 50

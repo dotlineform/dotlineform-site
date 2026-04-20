@@ -1,6 +1,6 @@
 ---
 doc_id: ui-framework
-title: UI Framework
+title: "UI Framework"
 last_updated: 2026-03-31
 parent_id: design
 sort_order: 10

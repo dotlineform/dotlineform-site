@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Analytics Dashboard
+title: "Analytics Dashboard"
 permalink: /studio/analytics/
 studio_domain: analytics
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-analytics

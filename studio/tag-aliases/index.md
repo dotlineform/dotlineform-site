@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Tag Aliases
+title: "Tag Aliases"
 permalink: /studio/tag-aliases/
 studio_page_doc: /docs/?scope=studio&doc=tag-aliases
 ---

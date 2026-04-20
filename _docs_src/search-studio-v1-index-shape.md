@@ -1,6 +1,6 @@
 ---
 doc_id: search-studio-v1-index-shape
-title: Docs Scope Index Shape
+title: "Docs Scope Index Shape"
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 75

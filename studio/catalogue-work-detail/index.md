@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Work Detail Editor
+title: "Catalogue Work Detail Editor"
 permalink: /studio/catalogue-work-detail/
 section: catalogue-work-detail
 studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor

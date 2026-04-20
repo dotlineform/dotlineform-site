@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: UI Primitive: Panel
+title: "UI Primitive: Panel"
 permalink: /studio/ui-catalogue/panel/
 studio_page_doc: /docs/?scope=studio&doc=ui-primitive-panel
 ui_catalogue_primitive: panel

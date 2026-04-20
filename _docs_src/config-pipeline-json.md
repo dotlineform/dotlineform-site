@@ -1,6 +1,6 @@
 ---
 doc_id: config-pipeline-json
-title: Pipeline Config JSON
+title: "Pipeline Config JSON"
 last_updated: 2026-03-31
 parent_id: config
 sort_order: 20

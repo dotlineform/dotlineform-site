@@ -1,6 +1,6 @@
 ---
 doc_id: studio-ui-framework
-title: Studio UI Framework
+title: "Studio UI Framework"
 last_updated: 2026-03-31
 parent_id: design
 sort_order: 20

@@ -1,6 +1,6 @@
 ---
 doc_id: data-models-library
-title: Library Scope
+title: "Library Scope"
 last_updated: 2026-03-31
 parent_id: data-models
 sort_order: 40

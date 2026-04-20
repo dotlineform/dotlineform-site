@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Search Dashboard
+title: "Search Dashboard"
 permalink: /studio/search/
 studio_domain: search
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-search

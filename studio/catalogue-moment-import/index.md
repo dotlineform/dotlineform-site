@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Moment Import
+title: "Catalogue Moment Import"
 permalink: /studio/catalogue-moment-import/
 section: catalogue-moment-import
 studio_domain: catalogue

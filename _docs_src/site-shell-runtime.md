@@ -1,6 +1,6 @@
 ---
 doc_id: site-shell-runtime
-title: Site Shell Runtime
+title: "Site Shell Runtime"
 last_updated: 2026-03-31
 parent_id: architecture
 sort_order: 20

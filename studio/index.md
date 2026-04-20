@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Studio
+title: "Studio"
 permalink: /studio/
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-studio-implementation-plan
 ---

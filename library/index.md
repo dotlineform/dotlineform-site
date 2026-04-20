@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Library
+title: "Library"
 section: library
 permalink: /library/
 ---

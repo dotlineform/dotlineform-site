@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Bulk Add Work
+title: "Bulk Add Work"
 permalink: /studio/bulk-add-work/
 section: bulk-add-work
 studio_page_doc: /docs/?scope=studio&doc=bulk-add-work

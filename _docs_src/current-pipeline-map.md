@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-current-pipeline-map
-title: Current Pipeline Map
+title: "Current Pipeline Map"
 last_updated: 2026-04-17
 parent_id: new-pipeline
 sort_order: 10

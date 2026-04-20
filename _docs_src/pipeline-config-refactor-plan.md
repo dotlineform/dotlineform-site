@@ -1,6 +1,6 @@
 ---
 doc_id: pipeline-config
-title: Pipeline Config Refactor Plan
+title: "Pipeline Config Refactor Plan"
 last_updated: 2026-03-29
 parent_id: _archive
 sort_order: 10

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: recently added
+title: "recently added"
 permalink: /recent/
 section: works
 ---

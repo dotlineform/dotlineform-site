@@ -1,6 +1,6 @@
 ---
 doc_id: tag-groups
-title: Tag Groups
+title: "Tag Groups"
 last_updated: 2026-03-31
 parent_id: studio
 sort_order: 30

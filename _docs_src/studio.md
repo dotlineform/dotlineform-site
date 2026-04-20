@@ -1,6 +1,6 @@
 ---
 doc_id: studio
-title: Studio
+title: "Studio"
 last_updated: 2026-04-18
 parent_id: ""
 sort_order: 20

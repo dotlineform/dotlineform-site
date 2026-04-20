@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Tag Groups
+title: "Tag Groups"
 permalink: /studio/tag-groups/
 studio_page_doc: /docs/?scope=studio&doc=tag-groups
 ---

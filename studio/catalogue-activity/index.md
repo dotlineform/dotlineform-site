@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Activity
+title: "Catalogue Activity"
 permalink: /studio/catalogue-activity/
 section: catalogue-activity
 studio_page_doc: /docs/?scope=studio&doc=catalogue-activity

@@ -1,6 +1,6 @@
 ---
 doc_id: _archive
-title: Archive
+title: "Archive"
 last_updated: 2026-04-19
 parent_id: ""
 sort_order: 200

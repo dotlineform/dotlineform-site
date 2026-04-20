@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: New Catalogue Series
+title: "New Catalogue Series"
 permalink: /studio/catalogue-new-series/
 section: catalogue-new-series
 studio_page_doc: /docs/?scope=studio&doc=catalogue-new-series-editor

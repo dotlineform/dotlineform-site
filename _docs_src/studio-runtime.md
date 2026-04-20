@@ -1,6 +1,6 @@
 ---
 doc_id: studio-runtime
-title: Studio Runtime
+title: "Studio Runtime"
 last_updated: 2026-04-18
 parent_id: studio
 sort_order: 10

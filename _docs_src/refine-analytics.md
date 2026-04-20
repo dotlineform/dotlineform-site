@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-refine-analytics
-title: Analytics Plan
+title: "Analytics Plan"
 last_updated: 2026-04-18
 parent_id: new-pipeline
 sort_order: 61

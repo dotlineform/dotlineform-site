@@ -1,6 +1,10 @@
 The panel is the default shared surface wrapper for grouped content in Studio.
 
-Use it when a section needs clear containment, stable spacing, and a predictable shell without becoming a full card system or a custom page-specific box.
+Use it when a section needs:
+
+- clear containment
+- stable spacing
+- a predictable shell without becoming a full card system or a custom page-specific box.
 
 For the first pass, keep the contract narrow:
 

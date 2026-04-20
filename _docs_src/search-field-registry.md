@@ -1,6 +1,6 @@
 ---
 doc_id: search-field-registry
-title: Search Field Registry
+title: "Search Field Registry"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 30

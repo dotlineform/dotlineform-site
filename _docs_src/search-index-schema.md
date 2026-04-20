@@ -1,6 +1,6 @@
 ---
 doc_id: search-index-schema
-title: Search Index Schema
+title: "Search Index Schema"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 20

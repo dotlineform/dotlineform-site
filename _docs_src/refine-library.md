@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-refine-library
-title: Library Plan
+title: "Library Plan"
 last_updated: 2026-04-18
 parent_id: new-pipeline
 sort_order: 60

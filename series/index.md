@@ -1,6 +1,6 @@
 ---
 layout: default
-title: works
+title: "works"
 section: series
 permalink: /series/
 ---

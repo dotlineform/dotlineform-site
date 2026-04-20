@@ -1,6 +1,6 @@
 ---
 doc_id: studio-config-and-save-flow
-title: Studio Config and Save Flow
+title: "Studio Config and Save Flow"
 last_updated: 2026-04-18
 parent_id: studio
 sort_order: 20

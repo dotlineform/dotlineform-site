@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Status
+title: "Catalogue Status"
 permalink: /studio/catalogue-status/
 section: catalogue-status
 studio_page_doc: /docs/?scope=studio&doc=catalogue-status

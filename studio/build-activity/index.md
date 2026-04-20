@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Build Activity
+title: "Build Activity"
 permalink: /studio/build-activity/
 section: build-activity
 studio_page_doc: /docs/?scope=studio&doc=build-activity

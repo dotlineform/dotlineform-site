@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Library Dashboard
+title: "Library Dashboard"
 permalink: /studio/library/
 studio_domain: library
 studio_page_doc: /docs/?scope=studio&doc=new-pipeline-refine-library

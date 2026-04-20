@@ -1,6 +1,6 @@
 ---
 doc_id: config-studio-config-json
-title: Studio Config JSON
+title: "Studio Config JSON"
 last_updated: 2026-04-17
 parent_id: config
 sort_order: 30

@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-source-model
-title: Source Model
+title: "Source Model"
 last_updated: 2026-04-17
 parent_id: new-pipeline
 sort_order: 20

@@ -1,6 +1,6 @@
 ---
 doc_id: data-models-catalogue
-title: Catalogue Scope
+title: "Catalogue Scope"
 last_updated: 2026-04-01
 parent_id: data-models
 sort_order: 20

@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Series Tags
+title: "Series Tags"
 permalink: /studio/series-tags/
 studio_page_doc: /docs/?scope=studio&doc=series-tags
 ---

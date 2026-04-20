@@ -1,6 +1,6 @@
 ---
 doc_id: data-models-studio
-title: Studio Scope
+title: "Studio Scope"
 last_updated: 2026-04-19
 parent_id: data-models
 sort_order: 30

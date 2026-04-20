@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Studio Works
+title: "Studio Works"
 permalink: /studio/studio-works/
 section: works
 studio_page_doc: /docs/?scope=studio&doc=studio-works

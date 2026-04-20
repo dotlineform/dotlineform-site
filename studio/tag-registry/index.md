@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Tag Registry
+title: "Tag Registry"
 permalink: /studio/tag-registry/
 studio_page_doc: /docs/?scope=studio&doc=tag-registry
 ---

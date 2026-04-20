@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Series Tag Editor
+title: "Series Tag Editor"
 permalink: /studio/series-tag-editor/
 section: works
 studio_page_doc: /docs/?scope=studio&doc=tag-editor

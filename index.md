@@ -1,6 +1,6 @@
 ---
 layout: default
-title: dotlineform
+title: "dotlineform"
 permalink: /
 section: series
 ---

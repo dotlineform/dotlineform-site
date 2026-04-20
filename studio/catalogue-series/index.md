@@ -1,6 +1,6 @@
 ---
 layout: studio
-title: Catalogue Series Editor
+title: "Catalogue Series Editor"
 permalink: /studio/catalogue-series/
 section: catalogue-series
 studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor

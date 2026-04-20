@@ -1,6 +1,6 @@
 ---
 doc_id: search-ranking-model
-title: Search Ranking Model
+title: "Search Ranking Model"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 40

@@ -1,6 +1,6 @@
 ---
 doc_id: new-pipeline-implementation-plan
-title: Implementation Plan
+title: "Implementation Plan"
 last_updated: 2026-04-18
 parent_id: new-pipeline
 sort_order: 40

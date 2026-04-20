@@ -1,6 +1,6 @@
 ---
 doc_id: scripts
-title: Scripts
+title: "Scripts"
 last_updated: 2026-04-18
 parent_id: ""
 sort_order: 130

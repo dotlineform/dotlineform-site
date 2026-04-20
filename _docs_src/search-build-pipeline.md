@@ -1,6 +1,6 @@
 ---
 doc_id: search-build-pipeline
-title: Search Build Pipeline
+title: "Search Build Pipeline"
 last_updated: 2026-04-01
 parent_id: search
 sort_order: 70

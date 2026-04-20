@@ -1,6 +1,6 @@
 ---
 doc_id: search-change-log
-title: Search Change Log
+title: "Search Change Log"
 last_updated: 2026-03-31
 parent_id: search
 sort_order: 1010

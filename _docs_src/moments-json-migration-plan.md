@@ -1,6 +1,6 @@
 ---
 doc_id: moments-json
-title: Moments JSON Migration Plan
+title: "Moments JSON Migration Plan"
 last_updated: 2026-03-29
 parent_id: _archive
 sort_order: 10
