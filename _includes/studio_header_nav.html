@@ -25,11 +25,14 @@
 {%- assign is_library_active = false -%}
 {%- assign is_analytics_active = false -%}
 {%- assign is_search_active = false -%}
+{%- assign is_studio_home_active = false -%}
+{%- if studio_url == '/studio/' -%}{%- assign is_studio_home_active = true -%}{%- endif -%}
 {%- if studio_domain == 'catalogue' -%}{%- assign is_catalogue_active = true -%}{%- endif -%}
 {%- if studio_domain == 'library' -%}{%- assign is_library_active = true -%}{%- endif -%}
 {%- if studio_domain == 'analytics' -%}{%- assign is_analytics_active = true -%}{%- endif -%}
 {%- if studio_domain == 'search' -%}{%- assign is_search_active = true -%}{%- endif -%}
 
+{% include nav_item.html label="studio" href='/studio/' class_name='nav-item nav-item--studio-home' is_current=is_studio_home_active is_active=is_studio_home_active %}
 {% include nav_item.html label="catalogue" href='/studio/catalogue/' class_name='nav-item' is_current=false is_active=is_catalogue_active %}
 {% include nav_item.html label="library" href='/studio/library/' class_name='nav-item' is_current=false is_active=is_library_active %}
 {% include nav_item.html label="analytics" href='/studio/analytics/' class_name='nav-item' is_current=false is_active=is_analytics_active %}

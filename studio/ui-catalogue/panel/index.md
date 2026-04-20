@@ -60,6 +60,7 @@ ui_catalogue_primitive: panel
 
 <div class="tagStudioPage studioUiPrimitivePage">
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
+    <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/studio/ui-catalogue/' | relative_url }}">&larr; ui catalogue</a></p>
     <p class="studioUiPrimitivePage__eyebrow"><a href="{{ '/docs/?scope=studio&doc=ui-catalogue' | relative_url }}">Docs viewer: UI Catalogue</a></p>
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
     <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for the shared panel shell. Variants are shown on a neutral surface so nesting artifacts do not get mistaken for primitive defects.</p>
