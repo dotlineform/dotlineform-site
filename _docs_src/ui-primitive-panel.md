@@ -1,7 +1,7 @@
 ---
 doc_id: ui-primitive-panel
 title: "UI Primitive: Panel"
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 parent_id: ui-catalogue
 sort_order: 10
 ---
@@ -47,6 +47,7 @@ Expected variants:
 - default panel
 - compact panel
 - editor panel
+- nested panel composition
 - muted or secondary panel where needed
 
 Expected states:
@@ -61,12 +62,25 @@ Expected states:
 - do not create page-local panel lookalikes when the shared primitive is sufficient
 - do not overload the panel with feature behavior; add behavior to the content inside it
 - if a panel needs a repeated internal layout, document that as a composition rather than changing the base primitive
+- nested panels are valid when a child group needs its own local containment inside a larger panel
+- if nested panels read poorly, fix the shared panel/composition contract before adding route-specific compensation
 
 ## Current Implementation Notes
 
 The current Studio baseline is the `tagStudio__panel` surface family in `assets/studio/css/studio.css`.
 
 This doc defines the concept more broadly than one class name, but existing implementations should converge on one shared contract rather than page-local alternatives.
+
+Current variant boundary:
+
+- `tagStudio__panel` owns the outer shell
+- `tagStudio__panel--compact` changes padding only
+- `tagStudio__panel--editor` changes internal layout rhythm only
+
+Current composition support:
+
+- direct child panels inside another `tagStudio__panel` now inherit a subordinate inner-surface treatment through the primitive itself
+- nested panels should still use deliberate markup; the shared primitive should carry the visual hierarchy rather than route-local overrides
 
 ## Visual References
 

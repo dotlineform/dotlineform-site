@@ -145,6 +145,11 @@
   padding: var(--studio-surface-padding-lg);
 }
 
+.tagStudio__panel > .tagStudio__panel {
+  --surface: var(--studio-surface-subtle);
+  --line: var(--studio-line-input);
+}
+
 .tagStudioPage__context,
 .tagStudio__panel,
 .tagStudio__popupInner,
@@ -557,6 +562,14 @@ input.tagStudio__input {
   gap: 0.9rem;
 }
 
+.studioUiPrimitivePage__live,
+.studioUiPrimitivePage__code,
+.studioUiPrimitivePage__notes {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
 .studioUiCatalogueIndex__header,
 .studioUiPrimitivePage__sectionHeader,
 .studioUiPrimitiveExample__header {
@@ -597,12 +610,6 @@ input.tagStudio__input {
   gap: 0.9rem;
 }
 
-@media (min-width: 960px) {
-  .studioUiPrimitiveDemo {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 .studioUiPrimitiveExample {
   display: grid;
   gap: 0.55rem;
@@ -619,7 +626,6 @@ input.tagStudio__input {
 .studioUiPrimitivePanelDemo {
   display: grid;
   gap: 0.6rem;
-  min-height: 100%;
 }
 
 .studioUiPrimitivePanelDemo__body {
@@ -647,6 +653,20 @@ input.tagStudio__input {
 
 .studioUiPrimitivePage__notesBody > :last-child {
   margin-bottom: 0;
+}
+
+.studioUiPrimitivePage__notesBody h3 {
+  margin: 0 0 0.35rem;
+  font-size: var(--font-small);
+}
+
+.studioUiPrimitivePage__notesBody h3:not(:first-child) {
+  margin-top: 0.9rem;
+}
+
+.studioUiPrimitivePage__notesBody ul {
+  margin: 0;
+  padding-left: 1.1rem;
 }
 
 .tagStudioGroups {

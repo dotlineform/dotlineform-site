@@ -1,11 +1,66 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-20] Added explicit nested-panel support and strengthened the primitive-catalogue method
+
+**Status:** implemented
+
+**Area:** design system / primitive governance
+
+**Summary:**
+Extended the panel primitive reference with a deliberate nested-panel variation and updated the catalogue docs so primitive pages are treated as shared-system pressure tests rather than protective demos.
+
+**Reason:**
+Container primitives can validly compose with themselves. If the catalogue hides that case or explains it away as surrounding-environment noise, live pages can keep accumulating one-off compensation that masks shared primitive defects.
+
+**Effect:**
+Nested panels are now documented as a supported panel composition, direct child panels inherit a subordinate inner-surface treatment from the shared primitive, and the UI catalogue docs now state that shared defects should be fixed at source even when that exposes legacy drift.
+
+**Affected files/docs:**
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/ui-catalogue/panel/index.md`
+- `_includes/studio_ui_catalogue_panel_demo.html`
+- `_includes/ui_catalogue_notes/panel.md`
+- `assets/studio/css/studio.css`
+
+**Notes:**
+This is an intentional shared-source change. A future cleanup pass should look for live pages that still compensate locally for panel composition.
+
+## [2026-04-20] Corrected the panel primitive reference template to use a neutral demo surface
+
+**Status:** implemented
+
+**Area:** design system / Studio UI catalogue
+
+**Summary:**
+Updated the first UI primitive reference so shared panels are shown without enclosing section panels and with vertically stacked variants.
+
+**Reason:**
+The original page nested the live panel examples inside outer panel shells, which made the editor variant look like it overlapped its container and blurred the line between a primitive defect and a page-composition problem.
+
+**Effect:**
+The panel catalogue page now shows the primitive on a neutral surface, implementation notes focus on concrete code-level warnings, and the Studio UI docs now define neutral-surface rendering as the default pattern for future primitive pages.
+
+**Affected files/docs:**
+- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/ui-catalogue/panel/index.md`
+- `_includes/studio_ui_catalogue_panel_demo.html`
+- `_includes/ui_catalogue_notes/panel.md`
+- `assets/studio/css/studio.css`
+
+**Notes:**
+This change improves the primitive-reference contract rather than changing the shared panel shell itself.
 
 ## [2026-04-19] Added the first UI catalogue and screenshot asset folders
 

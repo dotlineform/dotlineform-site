@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-framework
 title: "Studio UI Framework"
-last_updated: 2026-03-31
+last_updated: 2026-04-20
 parent_id: design
 sort_order: 20
 ---
@@ -63,6 +63,13 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudioModal`, `tagStudioModal__*`
 
 These are the baseline building blocks for all Studio pages.
+
+Primitive catalogue rule:
+
+- UI catalogue primitive pages should render the primitive on a neutral page surface rather than inside the same primitive again.
+- Primitive variants should stack vertically by default so each shell edge can be inspected without cross-column alignment noise.
+- Primitive notes should record implementation constraints, known failure modes, and composition warnings rather than purpose-only prose.
+- If a primitive can validly compose with itself, add that self-composition case to the catalogue and fix the shared primitive or shared composition contract when the result is weak.
 
 Chip rule:
 

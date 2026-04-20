@@ -25,25 +25,34 @@ ui_catalogue_primitive: panel
   <button class="tagStudio__button" type="button">Save</button>
 </div>
 {% endcapture %}
+{% capture nested_markup %}<div class="tagStudio__panel">
+  <h4>Parent Panel</h4>
+  <p>Grouped content can include a subordinate panel when the child section needs its own containment.</p>
+  <div class="tagStudio__panel tagStudio__panel--compact">
+    <h4>Nested Panel</h4>
+    <p>The nested panel should read as a secondary surface without page-local overrides.</p>
+  </div>
+</div>
+{% endcapture %}
 
 <div class="tagStudioPage studioUiPrimitivePage">
   <section class="tagStudioPage__context tagStudioPage__context--meta studioUiPrimitivePage__context">
     <p class="studioUiPrimitivePage__eyebrow">Live Primitive</p>
-    <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for the shared panel shell. The examples below use the real shared Studio classes rather than a demo-only imitation.</p>
+    <p class="studioUiPrimitivePage__intro">This page is the code-bound reference for the shared panel shell. Variants are shown on a neutral surface so nesting artifacts do not get mistaken for primitive defects.</p>
   </section>
 
-  <section class="tagStudio__panel studioUiPrimitivePage__live" aria-labelledby="studioUiPrimitiveLiveHeading">
+  <section class="studioUiPrimitivePage__live" aria-labelledby="studioUiPrimitiveLiveHeading">
     <div class="studioUiPrimitivePage__sectionHeader">
       <h3 class="tagStudio__heading" id="studioUiPrimitiveLiveHeading">Live Variants</h3>
-      <p class="studioUiPrimitivePage__sectionSummary">Use the shared shell first. Change internal content before changing outer chrome.</p>
+      <p class="studioUiPrimitivePage__sectionSummary">Each variant is rendered without an enclosing panel so the shared shell can be evaluated directly.</p>
     </div>
     {% include studio_ui_catalogue_panel_demo.html %}
   </section>
 
-  <section class="tagStudio__panel studioUiPrimitivePage__code" aria-labelledby="studioUiPrimitiveCodeHeading">
+  <section class="studioUiPrimitivePage__code" aria-labelledby="studioUiPrimitiveCodeHeading">
     <div class="studioUiPrimitivePage__sectionHeader">
       <h3 class="tagStudio__heading" id="studioUiPrimitiveCodeHeading">Canonical Markup</h3>
-      <p class="studioUiPrimitivePage__sectionSummary">Copy these snippets as the baseline implementation rather than rebuilding the shell by hand.</p>
+      <p class="studioUiPrimitivePage__sectionSummary">Copy these snippets as the baseline implementation and avoid wrapping them in another panel unless the composition explicitly calls for nested surfaces.</p>
     </div>
 
     <div class="studioUiPrimitiveCodeList">
@@ -59,13 +68,17 @@ ui_catalogue_primitive: panel
         <h4 class="studioUiPrimitiveCodeList__title">Editor</h4>
         <pre><code>{{ editor_markup | escape }}</code></pre>
       </section>
+      <section class="studioUiPrimitiveCodeList__item">
+        <h4 class="studioUiPrimitiveCodeList__title">Nested</h4>
+        <pre><code>{{ nested_markup | escape }}</code></pre>
+      </section>
     </div>
   </section>
 
-  <section class="tagStudio__panel studioUiPrimitivePage__notes" aria-labelledby="studioUiPrimitiveNotesHeading">
+  <section class="studioUiPrimitivePage__notes" aria-labelledby="studioUiPrimitiveNotesHeading">
     <div class="studioUiPrimitivePage__sectionHeader">
       <h3 class="tagStudio__heading" id="studioUiPrimitiveNotesHeading">Notes</h3>
-      <p class="studioUiPrimitivePage__sectionSummary">This copy comes from the markdown note source for the primitive.</p>
+      <p class="studioUiPrimitivePage__sectionSummary">Implementation points only.</p>
     </div>
     <div class="studioUiPrimitivePage__notesBody">
       {% if primitive_note_markdown and primitive_note_markdown != "" %}

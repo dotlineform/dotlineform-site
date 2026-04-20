@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 parent_id: design
 sort_order: 30
 ---
@@ -110,6 +110,57 @@ Use this decision test:
 ## Current Rules And Log
 
 Add new entries at the top of this section.
+
+## UI Rule Log 2026-04-20 / UI-003
+
+- status: adopted
+- route: `/studio/ui-catalogue/panel/`
+- issue: panel nesting is a real container use case, so treating the first apparent nested-shell problem as a pure demo-environment artifact would hide a shared composition requirement.
+- triage: systemic
+- reasoning: for this project, the primitive catalogue is meant to expose hidden one-off fixes in live pages. If a primitive fails in the catalogue but looks fine on a route, that route may simply be compensating for the primitive locally. The catalogue should pressure the shared source rather than preserve legacy behavior by default.
+- permanent rule: when a primitive can validly compose with itself, test that case in the catalogue and prefer fixing the primitive or shared composition contract over documenting page-local compensation. Future design reliability takes priority over preserving accidental legacy behavior.
+- enforcement point: `ui-catalogue.md`, primitive docs under `_docs_src/`, and shared primitive CSS when the failure is systemic
+- files changed:
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/ui-primitive-panel.md`
+  - `studio/ui-catalogue/panel/index.md`
+  - `_includes/studio_ui_catalogue_panel_demo.html`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `assets/studio/css/studio.css`
+- local verification:
+  - build docs payloads and the site to a separate destination
+  - inspect the nested panel example on `/studio/ui-catalogue/panel/`
+  - confirm the inner panel reads as subordinate containment without page-local overrides
+- follow-up:
+  - use the same rule when defining future primitives that can self-compose
+  - audit live pages for obsolete local compensation after shared primitive fixes land
+
+## UI Rule Log 2026-04-20 / UI-002
+
+- status: adopted
+- route: `/studio/ui-catalogue/panel/`
+- issue: the first panel primitive reference wrapped the live examples in outer `.tagStudio__panel` sections and arranged the variants in a horizontal comparison grid. That made the editor variant appear to overlap its container and made edge inspection noisy.
+- triage: systemic
+- reasoning: the visible defect came from the primitive catalogue template, not from the shared `tagStudio__panel--editor` variant itself. If the catalogue page introduces nested-shell artifacts, future page work can inherit false assumptions about which primitive is broken.
+- permanent rule: primitive catalogue pages must show shared primitives in a neutral wrapper by default, use vertical variant stacking, and keep notes focused on implementation constraints and composition warnings. When self-composition is a real use case, add it deliberately as its own variation rather than letting it appear accidentally through the page shell.
+- enforcement point: `studio/ui-catalogue/*`, `_includes/studio_ui_catalogue_*.html`, and the primitive-catalogue guidance in `studio-ui-framework.md`
+- files changed:
+  - `studio/ui-catalogue/panel/index.md`
+  - `_includes/studio_ui_catalogue_panel_demo.html`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/ui-primitive-panel.md`
+- local verification:
+  - build the site to a separate destination
+  - inspect `/studio/ui-catalogue/panel/` on desktop and mobile widths
+  - confirm each panel variant sits on a neutral surface with no enclosing panel shell
+  - confirm self-composition cases are shown only when intentionally added in the markup
+- follow-up:
+  - apply the same neutral-surface template to future primitive pages
+  - if a primitive still shows a defect after neutral rendering, fix the primitive rather than documenting around it
 
 ## UI Rule Log 2026-04-19 / UI-001
 

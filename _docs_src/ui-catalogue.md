@@ -1,7 +1,7 @@
 ---
 doc_id: ui-catalogue
 title: "UI Catalogue"
-last_updated: 2026-04-19
+last_updated: 2026-04-20
 parent_id: design
 sort_order: 25
 ---
@@ -55,6 +55,21 @@ Those still belong in:
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [UI Requests](/docs/?scope=studio&doc=ui-requests)
 
+## Working Method
+
+Use the catalogue as a primitive pressure test, not as a protective demo shell.
+
+- render primitives with the minimum harness needed to inspect them clearly
+- if a primitive fails here, prefer assuming the shared primitive or composition contract is incomplete
+- inspect live pages for one-off compensation before deciding the failure is page-specific
+- fix the shared primitive or shared composition pattern when possible, even if that exposes legacy page drift
+
+Reason:
+
+- a primitive that only works because live pages compensate for it is not reliable enough to reuse
+- surfacing those hidden fixes here is the point of the catalogue
+- for this project, future design clarity and shared-system reliability matter more than preserving accidental legacy behavior
+
 ## Primitive Doc Structure
 
 Each primitive doc should stay simple but complete enough to guide implementation.
@@ -68,6 +83,8 @@ The default structure is:
 - usage rules
 - implementation notes
 - visual references
+
+When a primitive can compose with itself, for example nested panels or stacked list shells, include that use case explicitly rather than treating it as an out-of-scope environment issue.
 
 If a primitive grows more complex, add detail inside its own doc rather than expanding this index into a large framework document.
 
