@@ -82,6 +82,12 @@ Chip rule:
 - `tagStudio__chip`, `tagStudio__keyPill`, and `tagStudio__popupPill` should share the same base pill geometry and height
 - only text-level state styling such as offline `local` / `delete` treatment should override that base
 
+Button rule:
+
+- `tagStudio__button` is the shared command-button primitive for actions such as `Save`, `Import`, `New`, `OK`, and `Cancel`
+- clickable pill-like controls are not buttons in this system and should be defined through the pill primitive layer instead
+- toolbar buttons and modal action buttons should remain subsets of the shared button primitive unless their geometry contract truly diverges
+
 Use these as the default contract for:
 
 - page and modal action buttons such as `Add`, `Save`, `Import`, `Create`, `OK`, and `Cancel`

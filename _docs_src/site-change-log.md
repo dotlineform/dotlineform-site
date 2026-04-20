@@ -7,6 +7,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Added the first shared button primitive page
+
+**Status:** implemented
+
+**Area:** design system / UI catalogue
+
+**Summary:**
+Added `/studio/ui-catalogue/button/` as the first published reference page for shared command buttons, using the same page template approach as the panel primitive while keeping the scope focused on command actions rather than pills.
+
+**Reason:**
+Current Studio pages already share one baseline button class, but the product still mixes together command buttons, toolbar subsets, modal actions, and pill-like controls conceptually. The first pass needed to establish the role boundary before visual refinement.
+
+**Effect:**
+The new button primitive page documents the shared command-button baseline, anchor-button usage, disabled state, modal action rows, and toolbar-button subset. The UI catalogue index now links to both the button and panel primitive pages.
+
+**Affected files/docs:**
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/ui-catalogue/button/index.md`
+- `_includes/studio_ui_catalogue_button_demo.html`
+- `_includes/ui_catalogue_notes/button.md`
+- `studio/ui-catalogue/index.md`
+
+**Notes:**
+This is intentionally a boundary-setting pass. Shared emphasis variants such as primary, secondary, and destructive are still to be defined after reviewing drift on live routes.
+
 ## [2026-04-20] Applied config-backed panel background images to the Studio landing page
 
 **Status:** implemented

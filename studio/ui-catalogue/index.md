@@ -19,6 +19,12 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
     </div>
     <ul class="studioUiCatalogueIndex__list">
       <li>
+        <a class="studioUiCatalogueIndex__item" href="{{ '/studio/ui-catalogue/button/' | relative_url }}">
+          <span class="studioUiCatalogueIndex__title">Button</span>
+          <span class="studioUiCatalogueIndex__meta">Live primitive page for shared command buttons, modal actions, and toolbar-button subsets.</span>
+        </a>
+      </li>
+      <li>
         <a class="studioUiCatalogueIndex__item" href="{{ '/studio/ui-catalogue/panel/' | relative_url }}">
           <span class="studioUiCatalogueIndex__title">Panel</span>
           <span class="studioUiCatalogueIndex__meta">Live primitive page with shared shell variants and markdown-backed notes.</span>

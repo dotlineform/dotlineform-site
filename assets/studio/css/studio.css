@@ -749,6 +749,29 @@ input.tagStudio__input {
   align-items: center;
 }
 
+.studioUiPrimitiveButtonDemo {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.studioUiPrimitiveButtonDemo__body {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--muted, var(--studio-muted-body));
+}
+
+.studioUiPrimitiveButtonDemo__actions,
+.studioUiPrimitiveButtonDemo__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.studioUiPrimitiveButtonDemo__modalActions {
+  margin-top: 0;
+}
+
 .studioUiPrimitiveCodeList {
   display: grid;
   gap: 0.8rem;

@@ -111,6 +111,30 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-008
+
+- status: adopted
+- route: `/studio/ui-catalogue/button/`
+- issue: Studio currently uses one shared command-button class across editor pages, modal actions, and toolbar-style action rows, but the role boundary is still blurry because clickable pills and docs-viewer management buttons sit nearby as similar-looking controls.
+- triage: systemic
+- reasoning: the button primitive needs to establish scope before visual refinement. The immediate problem is not missing color variants; it is unclear ownership of command buttons versus pills and toolbar subsets. The first primitive page should therefore capture the shared baseline and the drift explicitly, rather than pretending the emphasis system is already solved.
+- permanent rule: the button primitive covers command buttons only, including modal actions and toolbar-button subsets. Clickable pills are a separate primitive. Future icon-only toolbar buttons should derive their geometry from the shared command-button contract rather than creating a new control family.
+- enforcement point: `studio/ui-catalogue/button/index.md`, `_includes/studio_ui_catalogue_button_demo.html`, `_includes/ui_catalogue_notes/button.md`, and the shared `tagStudio__button` baseline in `assets/studio/css/studio.css`
+- files changed:
+  - `studio/ui-catalogue/button/index.md`
+  - `_includes/studio_ui_catalogue_button_demo.html`
+  - `_includes/ui_catalogue_notes/button.md`
+  - `studio/ui-catalogue/index.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/ui-catalogue/button/` on desktop and mobile
+  - confirm the page shows command-button baseline, anchor-button usage, disabled state, modal action row, and toolbar subset
+  - confirm notes explicitly exclude clickable pills from this primitive
+- follow-up:
+  - define shared emphasis variants for primary, secondary, and destructive command buttons once the current drift has been reviewed against real routes
+
 ## UI Rule Log 2026-04-20 / UI-007
 
 - status: adopted

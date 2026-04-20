@@ -27,6 +27,7 @@ When a page uses a shared element such as a `panel` or `toolbar`, the expectatio
 
 Current published primitive pages:
 
+- [Button primitive page](/studio/ui-catalogue/button/)
 - [Panel primitive page](/studio/ui-catalogue/panel/)
 
 Add new links here when a primitive gets its own published reference page.
