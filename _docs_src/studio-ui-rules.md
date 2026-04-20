@@ -196,6 +196,29 @@ Add new entries at the top of this section.
 - follow-up:
   - leave the fuller create-page doc rewrite for the broader page review rather than updating those docs piecemeal here
 
+## UI Rule Log 2026-04-20 / UI-018
+
+- status: adopted
+- route: `/studio/bulk-add-work/`
+- issue: the bulk import page runtime already used `getStudioText(..., "bulk_add_work.*")`, but there was no matching `ui_text.bulk_add_work` block, so the visible page copy and action labels were still coming from fallback strings. The action buttons also had not yet adopted the shared default width.
+- triage: systemic
+- reasoning: this is the same config-backed UI-copy issue already surfaced on other Studio pages. The bulk import page should follow the same rule: visible runtime copy comes from config, and shared command buttons use the shared width unless a later page review establishes a deliberate exception.
+- permanent rule: if a Studio runtime reads `ui_text.<scope>.*`, the matching config block must exist in both config sources and should include the visible runtime copy actually used by the page. On the bulk import page, action labels should stay concise and use the shared default button width.
+- enforcement point: `studio/bulk-add-work/index.md`, `assets/studio/js/bulk-add-work.js`, `assets/studio/data/studio_config.json`, and `assets/studio/js/studio-config.js`
+- files changed:
+  - `studio/bulk-add-work/index.md`
+  - `assets/studio/js/bulk-add-work.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/bulk-add-work/` and confirm the visible headings, labels, and status-capable copy resolve from config
+  - confirm the buttons read `Preview` and `Import`
+  - confirm both buttons use the shared default width
+- follow-up:
+  - leave the broader bulk-import page wording and structure review for a later pass
+
 ## UI Rule Log 2026-04-20 / UI-014
 
 - status: adopted

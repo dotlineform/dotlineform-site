@@ -7,6 +7,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Config-backed the bulk import action buttons
+
+**Status:** implemented
+
+**Area:** Studio / bulk import / command buttons
+
+**Summary:**
+Added the missing `ui_text.bulk_add_work` block so the bulk import page now sources its visible runtime copy from config, and shortened the action buttons to `Preview` and `Import` with the shared default width.
+
+**Reason:**
+The page runtime was already using `getStudioText` for `bulk_add_work.*`, but there was no matching config block, so the visible copy was still coming from fallback strings. The buttons also lagged behind the current width contract.
+
+**Effect:**
+`/studio/bulk-add-work/` now renders its visible runtime copy from config, and the `Preview` / `Import` buttons use the standard width.
+
+**Affected files/docs:**
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/bulk-add-work/index.md`
+- `assets/studio/js/bulk-add-work.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+
 ## [2026-04-20] Standardized the Studio create-page buttons
 
 **Status:** implemented

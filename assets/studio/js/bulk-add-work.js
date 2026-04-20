@@ -9,11 +9,6 @@ import {
 } from "./studio-transport.js";
 import { buildSaveModeText } from "./tag-studio-save.js";
 
-const MODE_LABELS = Object.freeze({
-  works: "works",
-  work_details: "work details"
-});
-
 function normalizeText(value) {
   return String(value == null ? "" : value).trim();
 }
@@ -38,6 +33,11 @@ function t(state, key, fallback, tokens = null) {
   return getStudioText(state.config, `bulk_add_work.${key}`, fallback, tokens);
 }
 
+function modeLabel(state, mode) {
+  if (mode === "work_details") return t(state, "mode_option_work_details", "work details");
+  return t(state, "mode_option_works", "works");
+}
+
 function workbookPath(state, preview = null) {
   if (preview && preview.workbook_path) return preview.workbook_path;
   return normalizeText(state.workbookPath) || "data/works_bulk_import.xlsx";
@@ -46,7 +46,7 @@ function workbookPath(state, preview = null) {
 function buildSummaryHtml(state, preview) {
   const summary = preview && preview.summary ? preview.summary : {};
   const fields = [
-    { label: t(state, "summary_mode", "mode"), value: MODE_LABELS[preview && preview.mode] || MODE_LABELS[state.mode] || state.mode },
+    { label: t(state, "summary_mode", "mode"), value: modeLabel(state, preview && preview.mode ? preview.mode : state.mode) },
     { label: t(state, "summary_workbook", "workbook"), value: workbookPath(state, preview) },
     { label: t(state, "summary_candidate_rows", "candidate rows"), value: String(Number(summary.candidate_rows) || 0) },
     { label: t(state, "summary_importable", "importable"), value: String(Number(summary.importable_count) || 0) },
@@ -231,6 +231,15 @@ async function applyImport(state) {
 async function init() {
   const root = document.getElementById("bulkAddWorkRoot");
   const loadingNode = document.getElementById("bulkAddWorkLoading");
+  const emptyNode = document.getElementById("bulkAddWorkEmpty");
+  const pageHeadingNode = document.getElementById("bulkAddWorkPageHeading");
+  const importHeadingNode = document.getElementById("bulkAddWorkImportHeading");
+  const modeLabelNode = document.getElementById("bulkAddWorkModeLabel");
+  const worksOptionNode = document.getElementById("bulkAddWorkModeWorks");
+  const workDetailsOptionNode = document.getElementById("bulkAddWorkModeWorkDetails");
+  const workbookLabelNode = document.getElementById("bulkAddWorkWorkbookLabel");
+  const summaryHeadingNode = document.getElementById("bulkAddWorkSummaryHeading");
+  const detailsHeadingNode = document.getElementById("bulkAddWorkDetailsHeading");
   const modeNode = document.getElementById("bulkAddWorkMode");
   const saveModeNode = document.getElementById("bulkAddWorkSaveMode");
   const contextNode = document.getElementById("bulkAddWorkContext");
@@ -242,7 +251,7 @@ async function init() {
   const previewDetailsNode = document.getElementById("bulkAddWorkPreviewDetails");
   const previewButton = document.getElementById("bulkAddWorkPreview");
   const applyButton = document.getElementById("bulkAddWorkApply");
-  if (!root || !loadingNode || !modeNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !workbookNode || !summaryNode || !previewDetailsNode || !previewButton || !applyButton) {
+  if (!root || !loadingNode || !emptyNode || !pageHeadingNode || !importHeadingNode || !modeLabelNode || !worksOptionNode || !workDetailsOptionNode || !workbookLabelNode || !summaryHeadingNode || !detailsHeadingNode || !modeNode || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !workbookNode || !summaryNode || !previewDetailsNode || !previewButton || !applyButton) {
     return;
   }
 
@@ -267,6 +276,18 @@ async function init() {
     const config = await loadStudioConfig();
     state.config = config;
     state.serverAvailable = Boolean(await probeCatalogueHealth());
+    pageHeadingNode.textContent = t(state, "page_heading", "bulk add work");
+    importHeadingNode.textContent = t(state, "import_heading", "import");
+    modeLabelNode.textContent = t(state, "mode_label", "mode");
+    worksOptionNode.textContent = t(state, "mode_option_works", "works");
+    workDetailsOptionNode.textContent = t(state, "mode_option_work_details", "work details");
+    workbookLabelNode.textContent = t(state, "workbook_label", "workbook");
+    summaryHeadingNode.textContent = t(state, "summary_heading", "preview summary");
+    detailsHeadingNode.textContent = t(state, "details_heading", "preview details");
+    loadingNode.textContent = t(state, "loading", "loading bulk add work…");
+    emptyNode.textContent = t(state, "empty_state", "");
+    previewButton.textContent = t(state, "preview_button", "Preview");
+    applyButton.textContent = t(state, "apply_button", "Import");
     saveModeNode.textContent = buildSaveModeText(config, state.serverAvailable ? "post" : "offline", (cfg, key, fallback, tokens) => getStudioText(cfg, `bulk_add_work.${key}`, fallback, tokens));
     workbookNode.textContent = state.workbookPath;
     setTextWithState(
