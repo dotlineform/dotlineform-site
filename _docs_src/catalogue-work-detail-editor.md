@@ -21,6 +21,7 @@ The first implementation covers:
 - search by `detail_uid`
 - open one work detail record
 - open multiple work detail records by comma-delimited detail ids and same-work detail ranges
+- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit `project_subfolder`
 - edit `project_filename`
 - edit `title`
@@ -30,7 +31,7 @@ The first implementation covers:
 - show detail media readiness, including the resolved expected source path and missing-state guidance
 - show a compact current-record image preview at the top of the summary rail
 - preview the scoped rebuild impact for the parent work
-- run `Save + Rebuild` through the local catalogue service
+- run `Rebuild` through the local catalogue service
 - delete one work-detail source record in single-record mode
 
 The rebuild remains work-scoped. Saving a detail and rebuilding regenerates the parent work outputs rather than introducing a separate detail-only planner.
@@ -48,10 +49,19 @@ Current bulk-edit behavior:
 
 - untouched fields preserve per-record values
 - an empty touched field clears that field across the selected details
-- `Save + Rebuild` runs one scoped parent-work rebuild per affected parent work
+- `Rebuild` runs one scoped parent-work rebuild per affected parent work
 - delete is disabled in bulk mode
 
 ## Save Boundary
+
+Current action labels:
+
+- `Save`
+  writes detail source JSON only and leaves parent-work rebuild pending
+- `Rebuild`
+  saves the current edited detail state if needed, then rebuilds the affected parent-work scope
+- `Delete`
+  removes the current detail source record in single-record mode after preview/confirmation
 
 Current save/rebuild flow:
 
@@ -72,7 +82,7 @@ Bulk save flow:
 2. page loads focused lookup records for the selected details and tracks each record hash
 3. `POST /catalogue/bulk-save` sends selected `detail_uid` values, expected hashes, and the touched field updates
 4. the local write server validates the combined source write, writes `work_details.json` once, refreshes lookup payloads, and returns changed counts plus parent-work rebuild targets
-5. `Save + Rebuild` then runs one scoped rebuild per affected parent work
+5. `Rebuild` then runs one scoped rebuild per affected parent work
 
 Delete flow:
 

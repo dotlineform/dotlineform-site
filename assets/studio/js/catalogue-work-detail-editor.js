@@ -1151,9 +1151,9 @@ async function init() {
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find detail id(s): 00001-001, 00001-003-005");
     openButton.textContent = t(state, "open_button", "Open");
-    saveButton.textContent = t(state, "save_button", "Save Source");
-    buildButton.textContent = t(state, "build_button", "Save + Rebuild");
-    deleteButton.textContent = t(state, "delete_button", "Delete Source");
+    saveButton.textContent = t(state, "save_button", "Save");
+    buildButton.textContent = t(state, "build_button", "Rebuild");
+    deleteButton.textContent = t(state, "delete_button", "Delete");
 
     const [detailsPayload, serverAvailable] = await Promise.all([
       loadStudioLookupJson(config, "catalogue_lookup_work_detail_search", { cache: "no-store" }),

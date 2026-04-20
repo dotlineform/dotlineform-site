@@ -45,7 +45,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
           <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkDetailPopupList"></div>
         </div>
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueWorkDetailOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkDetailSaveMode"></span>
     </div>
 
@@ -60,9 +60,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-detail-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">work detail metadata</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueWorkDetailSave">Save Source</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkDetailBuild">Save + Rebuild</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkDetailDelete">Delete Source</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailBuild">Rebuild</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkDetailDelete">Delete</button>
         </div>
       </div>
       <div class="tagStudioForm__fields catalogueWorkForm__fields" id="catalogueWorkDetailFields"></div>

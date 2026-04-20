@@ -7,6 +7,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Shortened and standardized the catalogue work-detail editor action buttons
+
+**Status:** implemented
+
+**Area:** Studio work-detail editor / command buttons
+
+**Summary:**
+Shortened the main action labels on `/studio/catalogue-work-detail/` to `Save`, `Rebuild`, and `Delete`, applied the standard default width to those actions plus `Open`, and clarified the save/rebuild behavior in the work-detail editor doc.
+
+**Reason:**
+The work-detail editor follows the same panel-level command pattern as the work editor, so its first-pass labels were unnecessarily long for the shared button contract. The shorter `Rebuild` label also needed explicit doc wording so its save-then-rebuild behavior stayed clear.
+
+**Effect:**
+The work-detail editor now uses the same small standard-width action row as the work editor, and the supporting doc distinguishes `Save` from `Rebuild` while noting that `Enter` in the search field is an alternative to clicking `Open`.
+
+**Affected files/docs:**
+- [Catalogue Work Detail Editor](/docs/?scope=studio&doc=catalogue-work-detail-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-work-detail/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+
+**Notes:**
+This keeps the work-detail editor aligned with the work editor button contract without assuming every other catalogue editor should be changed in the same way yet.
+
 ## [2026-04-20] Redesigned the catalogue work detail/file/link navigation headers
 
 **Status:** implemented

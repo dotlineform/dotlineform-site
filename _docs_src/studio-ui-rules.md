@@ -111,6 +111,30 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-014
+
+- status: adopted
+- route: `/studio/catalogue-work-detail/`
+- issue: the work-detail editor still used the longer first-pass action labels `Save Source`, `Save + Rebuild`, and `Delete Source`, and its main panel actions were not yet using the standard default button width.
+- triage: systemic
+- reasoning: this editor follows the same partial-page editor-panel pattern as the work editor, so the same small-size/default-width button contract should apply. Shortening the labels also required the doc to explain that `Rebuild` still saves current edits before rebuilding the affected parent-work scope.
+- permanent rule: on Studio editor panels such as the work and work-detail editors, command buttons should prefer the small size, the standard default width, and the shortest accurate labels that fit the shared width. If the shorter label hides important behavior, clarify the supporting doc rather than expanding the label again.
+- enforcement point: `studio/catalogue-work-detail/index.md`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, `assets/studio/js/catalogue-work-detail-editor.js`, and `_docs_src/catalogue-work-detail-editor.md`
+- files changed:
+  - `studio/catalogue-work-detail/index.md`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/js/catalogue-work-detail-editor.js`
+  - `_docs_src/catalogue-work-detail-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/catalogue-work-detail/` and confirm `Open`, `Save`, `Rebuild`, and `Delete` all use the standard button width
+  - confirm pressing `Enter` in the search input still opens the current detail selection
+  - inspect `/docs/?scope=studio&doc=catalogue-work-detail-editor` and confirm the save/rebuild roles are stated explicitly
+- follow-up:
+  - review the series/file/link editors separately rather than assuming every editor should rename its actions identically
+
 ## UI Rule Log 2026-04-20 / UI-013
 
 - status: adopted
