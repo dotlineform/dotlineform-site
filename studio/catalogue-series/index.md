@@ -61,6 +61,8 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
   <section class="tagStudio__panel catalogueSeriesMembers">
     <div class="tagStudio__headingRow">
       <h2 class="tagStudio__heading" id="catalogueSeriesMembersHeading">member works</h2>
+    </div>
+    <div class="tagStudio__headingRow catalogueSeriesMembers__searchRow" id="catalogueSeriesMemberSearchRow" hidden>
       <div class="tagStudioForm__searchWrap catalogueSeriesMembers__searchWrap">
         <label class="visually-hidden" for="catalogueSeriesMemberSearch">Find member work by id</label>
         <input
@@ -71,6 +73,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
           autocomplete="off"
         >
       </div>
+      <span class="tagStudioForm__meta" id="catalogueSeriesMemberSearchMeta"></span>
     </div>
     <div class="tagStudio__inputRow tagStudio__inputRow--editor">
       <div class="tagStudioForm__searchWrap catalogueSeriesMembers__searchWrap">
@@ -83,7 +86,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
           autocomplete="off"
         >
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueSeriesMemberAddButton">Add Work</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesMemberAddButton">Add</button>
       <span class="tagStudioForm__meta" id="catalogueSeriesMembersMeta"></span>
     </div>
     <p class="tagStudio__status" id="catalogueSeriesMembersStatus"></p>

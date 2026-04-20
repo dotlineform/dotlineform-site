@@ -26,7 +26,7 @@ The first implementation covers:
 - edit `primary_work_id`
 - list current member works
 - cap visible member rows at 10 by default
-- search current members by `work_id`
+- search current members by `work_id` when the list is truncated
 - add a work to the current series
 - remove a work from the current series
 - make the current series primary for a member work by moving it to the front of that work's `series_ids`
@@ -50,6 +50,8 @@ Locked constraints for this phase:
 - membership save does not sort a work's series list
 - the member list uses the same capped list pattern as the work-detail navigation surface
 - long member lists stay navigable through member search rather than rendering every row by default
+- the member search box sits below the section heading and is only shown when the member list is truncated
+- the `work_id` link is the navigation affordance for opening a member work; row action buttons stay focused on membership changes
 
 ## Save Boundary
 

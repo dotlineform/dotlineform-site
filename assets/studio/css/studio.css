@@ -1999,6 +1999,11 @@ input.tagStudio__input {
   min-width: 0;
 }
 
+.catalogueSeriesMembers__searchRow {
+  margin-top: 0.35rem;
+  align-items: center;
+}
+
 .catalogueSeriesMembers__results {
   display: grid;
   gap: 0.8rem;

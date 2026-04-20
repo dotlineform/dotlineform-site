@@ -479,9 +479,8 @@ function renderMemberRows(state, entries) {
           ${isPrimary ? `<span class="tagStudioForm__meta">${escapeHtml(t(state, "members_primary_badge", "primary"))}</span>` : ""}
         </div>
         <div class="catalogueSeriesMembers__actions">
-          <a class="tagStudio__button" href="${escapeHtml(workHref)}">${escapeHtml(t(state, "members_action_open", "Open work"))}</a>
           ${isPrimary ? "" : `<button type="button" class="tagStudio__button" data-member-primary="${escapeHtml(workId)}">${escapeHtml(t(state, "members_action_primary", "Make primary"))}</button>`}
-          <button type="button" class="tagStudio__button" data-member-remove="${escapeHtml(workId)}">${escapeHtml(t(state, "members_action_remove", "Remove"))}</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" data-member-remove="${escapeHtml(workId)}">${escapeHtml(t(state, "members_action_remove", "Remove"))}</button>
         </div>
       </div>
     `;
@@ -490,10 +489,14 @@ function renderMemberRows(state, entries) {
 
 function updateMemberList(state) {
   const members = getCurrentMemberEntries(state);
+  const truncated = members.length > MEMBER_LIST_LIMIT;
   const query = normalizeWorkId(state.memberSearchNode.value) || normalizeText(state.memberSearchNode.value).toLowerCase();
   const matches = query
     ? members.filter((entry) => entry.workId.includes(query) || normalizeText(entry.record && entry.record.title).toLowerCase().includes(String(query).toLowerCase()))
     : [];
+  const moreText = truncated
+    ? t(state, "members_more_count", "showing {visible} of {total}", { visible: String(MEMBER_LIST_LIMIT), total: String(members.length) })
+    : "";
 
   const blocks = [];
   if (query) {
@@ -508,20 +511,16 @@ function updateMemberList(state) {
     blocks.push(`<p class="tagStudioForm__meta">${escapeHtml(t(state, "members_empty", "No works currently belong to this series."))}</p>`);
   } else {
     const visible = members.slice(0, MEMBER_LIST_LIMIT);
-    const moreText = members.length > MEMBER_LIST_LIMIT
-      ? t(state, "members_more_count", "showing {visible} of {total}", { visible: String(visible.length), total: String(members.length) })
-      : "";
     blocks.push(`
       <section class="catalogueSeriesMembers__section">
-        <div class="tagStudio__headingRow">
-          <h3 class="tagStudioForm__key">${escapeHtml(t(state, "members_heading", "member works"))}</h3>
-          ${moreText ? `<span class="tagStudioForm__meta">${escapeHtml(moreText)}</span>` : ""}
-        </div>
         <div class="catalogueSeriesMembers__rows">${renderMemberRows(state, visible)}</div>
       </section>
     `);
   }
 
+  state.memberSearchRowNode.hidden = !truncated;
+  state.memberSearchMetaNode.textContent = moreText;
+  if (!truncated && state.memberSearchNode.value) state.memberSearchNode.value = "";
   state.membersMetaNode.textContent = members.length ? `${members.length} total` : "";
   state.membersResultsNode.innerHTML = blocks.join("");
 }
@@ -916,13 +915,15 @@ async function init() {
   const resultNode = document.getElementById("catalogueSeriesResult");
   const metaNode = document.getElementById("catalogueSeriesMeta");
   const membersHeadingNode = document.getElementById("catalogueSeriesMembersHeading");
+  const memberSearchRowNode = document.getElementById("catalogueSeriesMemberSearchRow");
   const memberSearchNode = document.getElementById("catalogueSeriesMemberSearch");
+  const memberSearchMetaNode = document.getElementById("catalogueSeriesMemberSearchMeta");
   const memberAddNode = document.getElementById("catalogueSeriesMemberAdd");
   const memberAddButton = document.getElementById("catalogueSeriesMemberAddButton");
   const membersMetaNode = document.getElementById("catalogueSeriesMembersMeta");
   const membersStatusNode = document.getElementById("catalogueSeriesMembersStatus");
   const membersResultsNode = document.getElementById("catalogueSeriesMembersResults");
-  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
+  if (!root || !loadingNode || !emptyNode || !fieldsNode || !readonlyNode || !summaryNode || !readinessNode || !runtimeStateNode || !buildImpactNode || !searchNode || !popupNode || !popupListNode || !openButton || !saveButton || !buildButton || !deleteButton || !saveModeNode || !contextNode || !statusNode || !warningNode || !resultNode || !metaNode || !membersHeadingNode || !memberSearchRowNode || !memberSearchNode || !memberSearchMetaNode || !memberAddNode || !memberAddButton || !membersMetaNode || !membersStatusNode || !membersResultsNode) {
     return;
   }
 
@@ -965,7 +966,9 @@ async function init() {
     runtimeStateNode,
     buildImpactNode,
     metaNode,
+    memberSearchRowNode,
     memberSearchNode,
+    memberSearchMetaNode,
     memberAddNode,
     membersMetaNode,
     membersStatusNode,
@@ -986,7 +989,7 @@ async function init() {
     membersHeadingNode.textContent = t(state, "members_heading", "member works");
     memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
     memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
-    memberAddButton.textContent = t(state, "members_add_button", "Add Work");
+    memberAddButton.textContent = t(state, "members_add_button", "Add");
 
     const [seriesPayload, worksPayload, serverAvailable] = await Promise.all([
       loadStudioLookupJson(config, "catalogue_lookup_series_search", { cache: "no-store" }),

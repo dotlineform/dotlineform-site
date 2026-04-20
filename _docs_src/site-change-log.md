@@ -7,6 +7,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Simplified the series member-work section
+
+**Status:** implemented
+
+**Area:** Studio / series editor / member works
+
+**Summary:**
+Removed the redundant `Open work` action from member rows, shortened `Add Work` to `Add`, moved the member search below the section heading, and only show that search when the capped member list is actually truncated.
+
+**Reason:**
+The section was duplicating both its heading and its navigation affordance, and it was showing a search field even when the on-page list was already complete. The membership controls also needed to align more closely with the current small-button/default-width rule.
+
+**Effect:**
+`/studio/catalogue-series/` now uses a single `member works` heading, the `work_id` link is the only navigation affordance to the work editor, `Add` and `Remove` use the shared default width, and the member search only appears when the list exceeds the visible cap.
+
+**Affected files/docs:**
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-series/index.md`
+- `assets/studio/js/catalogue-series-editor.js`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/css/studio.css`
+
 ## [2026-04-20] Standardized the remaining catalogue editor action rows
 
 **Status:** implemented

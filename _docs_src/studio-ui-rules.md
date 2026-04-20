@@ -141,6 +141,31 @@ Add new entries at the top of this section.
 - follow-up:
   - keep member-list and add-member controls on the series page out of this rule unless they are reviewed explicitly
 
+## UI Rule Log 2026-04-20 / UI-016
+
+- status: adopted
+- route: `/studio/catalogue-series/`
+- issue: the member-work section duplicated its own heading, exposed both a `work_id` link and an `Open work` button for the same navigation target, showed member search even when the capped list was not truncated, and had not aligned `Add Work` / `Remove` with the current default-width button standard.
+- triage: systemic
+- reasoning: this section mixes navigation and membership commands inside a capped list surface. Keeping one heading, one navigation affordance, and conditional search makes the section easier to read and matches the work-detail list pattern already adopted elsewhere.
+- permanent rule: in capped record lists, only show local search when the list is actually truncated. If a row already has a clear link to the target record, do not duplicate the same navigation inside the row action cluster. Keep row actions focused on local state changes.
+- enforcement point: `studio/catalogue-series/index.md`, `assets/studio/js/catalogue-series-editor.js`, `assets/studio/data/studio_config.json`, `assets/studio/js/studio-config.js`, and `_docs_src/catalogue-series-editor.md`
+- files changed:
+  - `studio/catalogue-series/index.md`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/css/studio.css`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/catalogue-series/?series=139` and confirm the section has one `member works` heading
+  - confirm the search row sits below the heading and only appears when more than 10 members are present
+  - confirm member rows use the `work_id` link for navigation and only keep membership action buttons
+- follow-up:
+  - review whether `Make primary` should adopt a shared width rule separately rather than inferring it from this pass
+
 ## UI Rule Log 2026-04-20 / UI-014
 
 - status: adopted
