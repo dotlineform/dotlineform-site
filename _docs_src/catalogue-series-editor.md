@@ -20,6 +20,7 @@ The first implementation covers:
 
 - search by series title with `series_id` shown in results
 - open one series record
+- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit core scalar metadata fields
 - edit `sort_fields`
 - edit `primary_work_id`
@@ -32,7 +33,7 @@ The first implementation covers:
 - preview the scoped rebuild impact for the current series
 - show series prose readiness, including the resolved primary-work prose path or the metadata dependency blocking it
 - run a narrow `Import prose + rebuild` action when the configured series prose file is ready
-- run `Save + Rebuild` through the local catalogue service
+- run `Rebuild` through the local catalogue service
 - delete one series source record and remove its membership from affected works
 
 Draft/publish rule:
@@ -52,6 +53,15 @@ Locked constraints for this phase:
 
 ## Save Boundary
 
+Current action labels:
+
+- `Save`
+  writes series source JSON and any changed work membership rows, then leaves runtime rebuild pending
+- `Rebuild`
+  saves the current edited series and membership state if needed, then rebuilds the affected series/work scope
+- `Delete`
+  removes the current series source record and its membership from affected work records after preview/confirmation
+
 Current save/rebuild flow:
 
 1. page loads derived series-search and work-search lookup payloads, not full canonical source maps
@@ -61,7 +71,7 @@ Current save/rebuild flow:
 5. the local write server validates the full source set, writes `series.json` and `works.json` atomically when needed, refreshes derived lookup payloads, and returns the normalized saved records
 6. the page reloads its focused series lookup payload
 7. `POST /catalogue/build-preview` reports the scoped rebuild impact for the series plus affected works and now also carries series prose readiness
-8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON for both `Save + Rebuild` and `Import prose + rebuild`
+8. `POST /catalogue/build-apply` rebuilds the current series, affected works, aggregate indexes, and catalogue search from canonical JSON for both `Rebuild` and `Import prose + rebuild`
 
 Delete flow:
 

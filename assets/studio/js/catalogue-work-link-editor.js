@@ -506,9 +506,9 @@ async function init() {
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find work link by id, label, URL, or work id");
     openButton.textContent = t(state, "open_button", "Open");
-    saveButton.textContent = t(state, "save_button", "Save Source");
-    buildButton.textContent = t(state, "build_button", "Save + Rebuild");
-    deleteButton.textContent = t(state, "delete_button", "Delete Source");
+    saveButton.textContent = t(state, "save_button", "Save");
+    buildButton.textContent = t(state, "build_button", "Rebuild");
+    deleteButton.textContent = t(state, "delete_button", "Delete");
     const [linksPayload, serverAvailable] = await Promise.all([
       fetchJson(getStudioDataPath(config, "catalogue_work_links"), { cache: "no-store" }),
       probeCatalogueHealth()

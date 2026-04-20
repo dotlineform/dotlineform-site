@@ -7,6 +7,38 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Standardized the remaining catalogue editor action rows
+
+**Status:** implemented
+
+**Area:** Studio editor family / command buttons
+
+**Summary:**
+Applied the same `Open` / `Save` / `Rebuild` / `Delete` label and width cleanup to the work-file, work-link, and series editors, and updated their docs so the shorter labels still describe the current save/rebuild behavior clearly.
+
+**Reason:**
+Those editors share the same partial-page action-row pattern as the work and work-detail editors. Leaving the older first-pass labels in place would keep obvious drift inside one editor family even after the button contract had been clarified elsewhere.
+
+**Effect:**
+`/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, and `/studio/catalogue-series/` now use small standard-width buttons with the shorter labels, `Enter` in each search field still acts as an alternative to clicking `Open`, and the supporting docs now distinguish `Save` from `Rebuild` explicitly.
+
+**Affected files/docs:**
+- [Catalogue Work File Editor](/docs/?scope=studio&doc=catalogue-work-file-editor)
+- [Catalogue Work Link Editor](/docs/?scope=studio&doc=catalogue-work-link-editor)
+- [Catalogue Series Editor](/docs/?scope=studio&doc=catalogue-series-editor)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `studio/catalogue-work-file/index.md`
+- `studio/catalogue-work-link/index.md`
+- `studio/catalogue-series/index.md`
+- `assets/studio/data/studio_config.json`
+- `assets/studio/js/studio-config.js`
+- `assets/studio/js/catalogue-work-file-editor.js`
+- `assets/studio/js/catalogue-work-link-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+
+**Notes:**
+This grouped pass is intentionally limited to the shared main action rows. The series page’s member-work controls remain separate and should be reviewed on their own terms later.
+
 ## [2026-04-20] Shortened and standardized the catalogue work-detail editor action buttons
 
 **Status:** implemented

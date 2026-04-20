@@ -373,6 +373,20 @@ const DEFAULT_STUDIO_CONFIG = {
       summary_rebuild_needed: "source changed; rebuild pending",
       summary_rebuild_current: "source and runtime not yet diverged in this session"
     },
+    catalogue_work_file_editor: {
+      search_placeholder: "find work file by id, filename, or work id",
+      open_button: "Open",
+      save_button: "Save",
+      build_button: "Rebuild",
+      delete_button: "Delete"
+    },
+    catalogue_work_link_editor: {
+      search_placeholder: "find work link by id, label, URL, or work id",
+      open_button: "Open",
+      save_button: "Save",
+      build_button: "Rebuild",
+      delete_button: "Delete"
+    },
     catalogue_series_editor: {
       load_failed_error: "Failed to load catalogue source data for the series editor.",
       search_placeholder: "find series by title",
@@ -381,8 +395,9 @@ const DEFAULT_STUDIO_CONFIG = {
       missing_series_param: "Search for a series by title.",
       unknown_series_error: "Unknown series id: {series_id}.",
       open_button: "Open",
-      save_button: "Save Source",
-      build_button: "Save + Rebuild",
+      save_button: "Save",
+      build_button: "Rebuild",
+      delete_button: "Delete",
       save_mode_template: "Save mode: {mode}",
       save_mode_local_server: "Local server",
       save_mode_offline: "Unavailable",

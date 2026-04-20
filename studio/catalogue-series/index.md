@@ -24,7 +24,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
           <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueSeriesPopupList"></div>
         </div>
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueSeriesOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueSeriesSaveMode"></span>
     </div>
 
@@ -39,9 +39,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-series-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">series metadata</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueSeriesSave">Save Source</button>
-          <button type="button" class="tagStudio__button" id="catalogueSeriesBuild">Save + Rebuild</button>
-          <button type="button" class="tagStudio__button" id="catalogueSeriesDelete">Delete Source</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesBuild">Rebuild</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueSeriesDelete">Delete</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueSeriesMeta"></p>

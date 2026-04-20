@@ -20,16 +20,26 @@ The first implementation covers:
 
 - search for a work-link record by link id, label, URL, or work id
 - open one work-link record from either the dashboard route or the work editor
+- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit `url`
 - edit `label`
 - edit `status`
 - edit `published_date`
 - show read-only ids
 - preview the scoped rebuild impact for the parent work
-- run `Save + Rebuild` through the local catalogue service
+- run `Rebuild` through the local catalogue service
 - delete one source record and return to the parent work editor
 
 ## Save Boundary
+
+Current action labels:
+
+- `Save`
+  writes work-link source JSON only and leaves parent-work rebuild pending
+- `Rebuild`
+  saves the current edited work-link state if needed, then rebuilds the affected parent-work scope
+- `Delete`
+  removes the current work-link source record and returns to the parent work editor
 
 Current save/rebuild flow:
 

@@ -24,7 +24,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-link-editor
           <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkLinkPopupList"></div>
         </div>
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueWorkLinkOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkLinkSaveMode"></span>
     </div>
 
@@ -39,9 +39,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-link-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">link record</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueWorkLinkSave">Save Source</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkLinkBuild">Save + Rebuild</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkLinkDelete">Delete Source</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkBuild">Rebuild</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkLinkDelete">Delete</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkLinkMeta"></p>

@@ -20,16 +20,26 @@ The first implementation covers:
 
 - search for a work-file record by file id, filename, label, or work id
 - open one work-file record from either the dashboard route or the work editor
+- open the current search value either by pressing `Enter` in the search input or by using the `Open` button
 - edit `filename`
 - edit `label`
 - edit `status`
 - edit `published_date`
 - show read-only ids
 - preview the scoped rebuild impact for the parent work
-- run `Save + Rebuild` through the local catalogue service
+- run `Rebuild` through the local catalogue service
 - delete one source record and return to the parent work editor
 
 ## Save Boundary
+
+Current action labels:
+
+- `Save`
+  writes work-file source JSON only and leaves parent-work rebuild pending
+- `Rebuild`
+  saves the current edited work-file state if needed, then rebuilds the affected parent-work scope
+- `Delete`
+  removes the current work-file source record and returns to the parent work editor
 
 Current save/rebuild flow:
 

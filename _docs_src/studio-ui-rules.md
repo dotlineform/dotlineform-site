@@ -111,6 +111,36 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-015
+
+- status: adopted
+- route: `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, `/studio/catalogue-series/`
+- issue: the remaining editor-family pages with the shared `Open` / `Save Source` / `Save + Rebuild` / `Delete Source` row still had the longer first-pass labels and had not yet adopted the standard default button width.
+- triage: systemic
+- reasoning: these pages use the same partial-page editor-panel pattern as the work and work-detail editors, so keeping one editor-family action-row contract is more important than treating each page as a separate styling decision. The shorter `Rebuild` label still needs explicit supporting docs because it continues to save current edits before rebuilding scoped runtime output.
+- permanent rule: across the catalogue editor family, the main editor action row should use the small button size, the standard default width, and the shortest accurate labels that fit that width. Document the save-then-rebuild behavior explicitly wherever `Rebuild` could otherwise be ambiguous.
+- enforcement point: `studio/catalogue-work-file/index.md`, `studio/catalogue-work-link/index.md`, `studio/catalogue-series/index.md`, the matching runtime/config files under `assets/studio/`, and the three editor docs under `_docs_src/`
+- files changed:
+  - `studio/catalogue-work-file/index.md`
+  - `studio/catalogue-work-link/index.md`
+  - `studio/catalogue-series/index.md`
+  - `assets/studio/data/studio_config.json`
+  - `assets/studio/js/studio-config.js`
+  - `assets/studio/js/catalogue-work-file-editor.js`
+  - `assets/studio/js/catalogue-work-link-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `_docs_src/catalogue-work-file-editor.md`
+  - `_docs_src/catalogue-work-link-editor.md`
+  - `_docs_src/catalogue-series-editor.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect each route and confirm `Open`, `Save`, `Rebuild`, and `Delete` all use the standard button width
+  - confirm pressing `Enter` in the search input still opens the current file/link/series selection
+  - inspect the related docs viewer pages and confirm the shorter labels are explained accurately
+- follow-up:
+  - keep member-list and add-member controls on the series page out of this rule unless they are reviewed explicitly
+
 ## UI Rule Log 2026-04-20 / UI-014
 
 - status: adopted

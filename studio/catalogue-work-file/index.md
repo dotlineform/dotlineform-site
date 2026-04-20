@@ -24,7 +24,7 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-file-editor
           <div class="tagStudio__popupInner tagStudio__popupInner--series" id="catalogueWorkFilePopupList"></div>
         </div>
       </div>
-      <button type="button" class="tagStudio__button" id="catalogueWorkFileOpen">Open</button>
+      <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileOpen">Open</button>
       <span class="tagStudio__saveMode" id="catalogueWorkFileSaveMode"></span>
     </div>
 
@@ -39,9 +39,9 @@ studio_page_doc: /docs/?scope=studio&doc=catalogue-work-file-editor
       <div class="tagStudio__headingRow">
         <h2 class="tagStudio__heading">file record</h2>
         <div class="catalogueWorkPage__actions">
-          <button type="button" class="tagStudio__button" id="catalogueWorkFileSave">Save Source</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkFileBuild">Save + Rebuild</button>
-          <button type="button" class="tagStudio__button" id="catalogueWorkFileDelete">Delete Source</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileSave">Save</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileBuild">Rebuild</button>
+          <button type="button" class="tagStudio__button tagStudio__button--defaultWidth" id="catalogueWorkFileDelete">Delete</button>
         </div>
       </div>
       <p class="tagStudioForm__meta" id="catalogueWorkFileMeta"></p>

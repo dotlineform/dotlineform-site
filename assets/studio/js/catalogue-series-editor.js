@@ -980,9 +980,9 @@ async function init() {
     state.config = config;
     searchNode.placeholder = t(state, "search_placeholder", "find series by title");
     openButton.textContent = t(state, "open_button", "Open");
-    saveButton.textContent = t(state, "save_button", "Save Source");
-    buildButton.textContent = t(state, "build_button", "Save + Rebuild");
-    deleteButton.textContent = t(state, "delete_button", "Delete Source");
+    saveButton.textContent = t(state, "save_button", "Save");
+    buildButton.textContent = t(state, "build_button", "Rebuild");
+    deleteButton.textContent = t(state, "delete_button", "Delete");
     membersHeadingNode.textContent = t(state, "members_heading", "member works");
     memberSearchNode.placeholder = t(state, "members_search_placeholder", "find member work by id");
     memberAddNode.placeholder = t(state, "members_add_placeholder", "add work by id");
