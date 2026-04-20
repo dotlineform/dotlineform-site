@@ -23,15 +23,17 @@ The public site nav remains user-facing and separate from this admin layer. Publ
 
 Related references:
 
+- **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for the short Studio UI implementation checklist and preflight
 - **[Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)** for Studio-specific UI patterns, naming rules, and modal behavior
 - **[UI Framework](/docs/?scope=studio&doc=ui-framework)** for site-wide interaction defaults, including shared docs-viewer and search UI standards
 - **[Docs Viewer](/docs/?scope=studio&doc=docs-viewer)** for the shared `/docs/` implementation that now hosts Studio documentation
 
 Read this section in this order:
 
-1. **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
-2. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
-3. Page-specific docs:
+1. **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for Studio UI preflight before implementing or revising a Studio page
+2. **[Studio Runtime](/docs/?scope=studio&doc=studio-runtime)** for the route shell, page wiring, and Docs Viewer integration
+3. **[Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)** for shared config, local-write behavior, and operational boundaries
+4. Page-specific docs:
    - **[Build Activity](/docs/?scope=studio&doc=build-activity)**
    - **[Catalogue Status](/docs/?scope=studio&doc=catalogue-status)**
    - **[Catalogue Activity](/docs/?scope=studio&doc=catalogue-activity)**

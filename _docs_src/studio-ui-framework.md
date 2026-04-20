@@ -10,6 +10,8 @@ sort_order: 20
 
 This document defines the shared Studio UI layer.
 
+Start with [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) before using this document. That short doc is the implementation preflight. This document is the deeper reference.
+
 It covers:
 
 - shared Studio naming boundaries
@@ -21,6 +23,7 @@ Site-wide interaction defaults, docs-viewer UI standards, and public-search UI s
 
 Related references:
 
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)

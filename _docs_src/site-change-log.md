@@ -7,6 +7,28 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Added a Studio UI preflight entry doc
+
+**Status:** implemented
+
+**Area:** Studio UI docs / implementation workflow
+
+**Summary:**
+Added [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) as a short Studio UI landing/preflight doc, then updated the longer framework docs and `AGENTS.md` to point to it as the first stop for Studio UI work.
+
+**Reason:**
+Recent Studio UI work exposed that the longer framework docs are useful as reference but weak as an operational entry point. Important implementation checks such as primitive reuse, config-backed copy, local-vs-systemic triage, and close-out steps were present in the docs set but not prominent enough at the moment of implementation.
+
+**Effect:**
+Studio UI work now has a short checklist-style entry doc that can be given to Codex directly, while the longer framework docs remain detailed reference material rather than the first place a task has to start.
+
+**Affected files/docs:**
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
+- [Design](/docs/?scope=studio&doc=design)
+- [Studio](/docs/?scope=studio&doc=studio)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- `AGENTS.md`
+
 ## [2026-04-20] Config-backed the bulk import action buttons
 
 **Status:** implemented

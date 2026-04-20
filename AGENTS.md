@@ -147,10 +147,11 @@
 
 ## Studio UI Guidance
 
+- `_docs_src/studio-ui-start.md` is the first-stop Studio UI implementation checklist. Use it first for Studio UI work, then follow its links into the longer reference docs as needed.
 - `_docs_src/ui-framework.md` defines the site-wide UI interaction defaults plus the docs-viewer and public-search UI standards.
 - `_docs_src/studio-ui-framework.md` defines the Studio shared UI contracts.
 - When fixing Studio UI issues, always update `_docs_src/studio-ui-rules.md` with triage and outcome, and promote repeated/shared issues into permanent rules.
-- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, use `_docs_src/studio-ui-framework.md` as the basis.
+- When asked to add a UI element to a Studio page, or to develop a new Studio UI pattern, start with `_docs_src/studio-ui-start.md` and then use `_docs_src/studio-ui-framework.md` as the deeper basis.
 - When asked to add a site UI interaction pattern such as navigation, paging, swipe behavior, docs-viewer UI, or public-search UI, use `_docs_src/ui-framework.md` as the basis.
 - If site-wide UI defaults change, update `_docs_src/ui-framework.md` in the same change.
 - If Studio UI definitions, scope, or shared naming boundaries change, update `_docs_src/studio-ui-framework.md` in the same change.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-20T21:56:08Z",
+  "generated_at": "2026-04-20T22:21:35Z",
   "docs": [
     {
       "scope": "studio",
@@ -143,6 +143,17 @@
       "source_path": "ui-framework.md",
       "viewer_url": "/docs/?scope=studio&doc=ui-framework",
       "content_url": "/assets/data/docs/scopes/studio/by-id/ui-framework.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "studio-ui-start",
+      "title": "Studio UI Start",
+      "last_updated": "2026-04-20",
+      "parent_id": "design",
+      "sort_order": 15,
+      "source_path": "studio-ui-start.md",
+      "viewer_url": "/docs/?scope=studio&doc=studio-ui-start",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/studio-ui-start.json"
     },
     {
       "scope": "studio",

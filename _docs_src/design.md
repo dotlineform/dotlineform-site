@@ -24,6 +24,7 @@ This section does not try to describe:
 
 Related references:
 
+- **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for the short Studio UI preflight and implementation checklist
 - **[UI Framework](/docs/?scope=studio&doc=ui-framework)** for the site-wide UI contract, docs-viewer UI standards, and public search UI standards
 - **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for the per-primitive visual catalogue and screenshot-backed references
 - **[Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)** for shared Studio naming boundaries, primitives, and modal patterns
@@ -34,7 +35,8 @@ Related references:
 Recommended reading order:
 
 1. [UI Framework](/docs/?scope=studio&doc=ui-framework)
-2. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-3. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) when working on Studio pages
-4. [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
-5. [CSS Refactor](/docs/?scope=studio&doc=css-refactor)
+2. [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) when working on Studio pages
+3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+4. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) as the deeper Studio reference
+5. [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
+6. [CSS Refactor](/docs/?scope=studio&doc=css-refactor)
