@@ -70,6 +70,7 @@ Primitive catalogue rule:
 - UI catalogue primitive pages should render the primitive on a neutral page surface rather than inside the same primitive again.
 - Primitive variants should stack vertically by default so each shell edge can be inspected without cross-column alignment noise.
 - Primitive notes should record implementation constraints, known failure modes, and composition warnings rather than purpose-only prose.
+- Primitive definitions should also record design guidance when a layout or sizing choice materially affects correct reuse.
 - If a primitive can validly compose with itself, add that self-composition case to the catalogue and fix the shared primitive or shared composition contract when the result is weak.
 - When a panel is used as a full-area navigation target, define that as an explicit shared variation with fixed design-time height rather than allowing route-local card patterns to drift independently.
 

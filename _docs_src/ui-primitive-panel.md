@@ -67,6 +67,19 @@ Expected states:
 - if nested panels read poorly, fix the shared panel/composition contract before adding route-specific compensation
 - when a panel is used as a navigation card, keep the panel height fixed at design time and edit copy to fit the shell
 
+## Design Guidance
+
+### Panel link copy
+
+- panel-link copy should wrap against the actual panel width, not an implicit inner text column
+- use short copy and treat line breaks as part of the visual composition
+- if the copy does not fit comfortably, edit the copy or choose a larger shared size variant rather than letting content resize the panel
+
+### Landing-page composition
+
+- for short-copy entry panels such as the `/studio/` landing page, prefer narrower centered columns rather than stretching cards to fill the whole available content width
+- use full-width or equal-fit dashboard grids only when the route has denser information architecture and the wider footprint is helping scanability rather than making the card feel sparse
+
 ## Current Implementation Notes
 
 The current Studio baseline is the `tagStudio__panel` surface family in `assets/studio/css/studio.css`.

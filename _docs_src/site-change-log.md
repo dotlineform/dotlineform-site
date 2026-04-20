@@ -7,6 +7,32 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-20] Added design guidance to the panel primitive reference and refined the Studio landing composition
+
+**Status:** implemented
+
+**Area:** design system / primitive guidance
+
+**Summary:**
+Extended the panel primitive reference so it records design guidance as well as technical behavior, removed the hidden text-width cap from the shared panel-link copy, and narrowed the `/studio/` landing-page card grid so the short-copy entry panels sit in centered columns.
+
+**Reason:**
+The panel-link variation is a working design reference, not just a technical spec. The old text measure made the copy look like it was wrapping inside an invisible container, and the full-width equal-fill landing-page grid made short-copy cards feel too stretched.
+
+**Effect:**
+Panel-link copy now wraps to the panel width itself, the `/studio/` entry cards use a narrower centered composition, and the primitive docs now explicitly include design guidance where sizing and composition choices affect correct reuse.
+
+**Affected files/docs:**
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [UI Primitive: Panel](/docs/?scope=studio&doc=ui-primitive-panel)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/css/studio.css`
+- `assets/css/main.css`
+
+**Notes:**
+This keeps the other dashboard routes on the shared fixed-height panel-link variation without redesigning their grid width.
+
 ## [2026-04-20] Unified Studio landing/dashboard cards as a shared panel-link variation
 
 **Status:** implemented

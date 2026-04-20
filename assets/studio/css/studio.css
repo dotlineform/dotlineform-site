@@ -215,7 +215,8 @@ a.tagStudio__panelLink:focus-visible {
 }
 
 .tagStudio__panelLink > p {
-  max-width: 28ch;
+  inline-size: 100%;
+  max-inline-size: 100%;
   color: var(--muted, var(--studio-muted-body));
   display: -webkit-box;
   -webkit-box-orient: vertical;

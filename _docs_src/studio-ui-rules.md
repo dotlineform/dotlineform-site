@@ -111,6 +111,31 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-20 / UI-005
+
+- status: adopted
+- route: `/studio/`, `/studio/ui-catalogue/panel/`
+- issue: the shared panel-link variation was constraining paragraph copy with an internal text-measure cap, which made the text look like it was wrapping inside an unspecified inner column. On the `/studio/` landing page, the equal-fill two-column layout also made the short-copy entry panels feel over-wide and visually sparse.
+- triage: systemic
+- reasoning: both issues affect how the primitive should be reused, not just how it is coded. The panel-link contract needs explicit design guidance as well as CSS behavior so the working reference can steer page composition instead of documenting code in isolation.
+- permanent rule: primitive definitions may include design guidance when layout choices materially affect correct reuse. For panel-link cards, copy should wrap to the panel width, and short-copy landing-page entry panels may use narrower centered columns instead of full-width equal-fill tracks.
+- enforcement point: `.tagStudio__panelLink` in `assets/studio/css/studio.css`, `/studio/` layout rules, and the panel primitive docs
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `assets/css/main.css`
+  - `_includes/ui_catalogue_notes/panel.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/ui-primitive-panel.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/` and confirm the entry panels are narrower and centered
+  - confirm panel-link copy wraps to the card width rather than an implicit inner measure
+  - inspect `/studio/ui-catalogue/panel/` and confirm the design-guidance notes are present
+- follow-up:
+  - if another panel-link route feels too sparse or too dense, adjust the shared composition guidance first before introducing route-local overrides
+
 ## UI Rule Log 2026-04-20 / UI-004
 
 - status: adopted

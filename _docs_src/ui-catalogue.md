@@ -82,9 +82,12 @@ The default structure is:
 - variants and states
 - usage rules
 - implementation notes
+- design guidance
 - visual references
 
 When a primitive can compose with itself, for example nested panels or stacked list shells, include that use case explicitly rather than treating it as an out-of-scope environment issue.
+
+Include design guidance when the success of a primitive depends not just on CSS behavior but also on how it should be composed, sized, or edited on a page.
 
 If a primitive grows more complex, add detail inside its own doc rather than expanding this index into a large framework document.
 

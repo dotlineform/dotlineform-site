@@ -20,3 +20,9 @@
 - This variation uses a fixed design-time height via `--panel-link-height`. Content should be edited to fit the panel, not vice versa.
 - Short copy discipline is part of the contract. Do not rely on auto-growing panel height to accommodate longer dashboard copy.
 - Use `tagStudio__panelLink--image` with `--panel-image` when a full-panel background image is needed. The image is decorative support for the fixed panel shell, not a reason to change the click or sizing behavior.
+
+### Design Guidance
+
+- Panel-link copy should wrap against the panel width itself. Do not add an internal text-measure cap that makes the copy look like it belongs to an invisible inner column.
+- For short-copy landing-page entry panels such as `/studio/`, prefer narrower centered columns rather than stretching the cards to fill the whole content area width.
+- For denser dashboard grids such as analytics/library/search, equal-fit grid tracks can still be appropriate as long as the panel height remains fixed and the copy stays short.
