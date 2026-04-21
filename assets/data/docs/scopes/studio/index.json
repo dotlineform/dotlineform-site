@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T19:14:28Z",
+  "generated_at": "2026-04-21T19:27:30Z",
   "docs": [
     {
       "scope": "studio",
@@ -1232,6 +1232,17 @@
       "source_path": "tiered-dimension-policy.md",
       "viewer_url": "/docs/?scope=studio&doc=tiered-dimension-policy",
       "content_url": "/assets/data/docs/scopes/studio/by-id/tiered-dimension-policy.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-audits",
+      "title": "UI Audits",
+      "last_updated": "2026-04-21",
+      "parent_id": "",
+      "sort_order": 275,
+      "source_path": "ui-audits.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-audits",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audits.json"
     },
     {
       "scope": "studio",
