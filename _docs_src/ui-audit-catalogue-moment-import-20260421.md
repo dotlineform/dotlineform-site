@@ -7,13 +7,29 @@ sort_order: 10
 ---
 # UI Audit: Catalogue Moment Import (2026-04-21)
 
-Page:
+`/studio/catalogue-moment-import/ : non-conforming`
 
-- `/studio/catalogue-moment-import/`
+## Remediation Status
 
-Outcome:
+- finding 1:
+  `open`
+  The preview summary still needs to switch from `tagStudioForm__readonly` to `tagStudio__input--readonlyDisplay`.
+- finding 2:
+  `open`
+  The page still depends on borrowed `catalogueWork*` layout composition.
+- cleanup completed:
+  - none yet
+- cleanup pending:
+  - switch the preview summary renderer to Readonly Display
+  - reassess whether any local summary-value styling becomes redundant after that change
+  - decide whether the route-level import/result-shell structure should remain local or move into a shared Studio composition
 
-- `non-conforming`
+## Open Decisions
+
+- decision:
+  Should the moment-import page grid, action row, and result-shell layout become a shared Studio composition rather than continuing to borrow `catalogueWork*` classes?
+- current owner/home:
+  This audit doc for now. Promote to [UI Requests](/docs/?scope=studio&doc=ui-requests) only if it becomes a real multi-route shared design/spec task rather than normal route remediation.
 
 ## Coverage Summary
 
@@ -66,28 +82,6 @@ Outcome:
   2. Decide whether the page grid, action row, and result-shell layout should become a shared Studio composition.
   3. If that shared composition is formalized, remove the borrowed `catalogueWork*` namespace from this route and any similar import-style pages.
 
-## Remediation Status
-
-- finding 1:
-  `open`
-  The preview summary still needs to switch from `tagStudioForm__readonly` to `tagStudio__input--readonlyDisplay`.
-- finding 2:
-  `open`
-  The page still depends on borrowed `catalogueWork*` layout composition.
-- cleanup completed:
-  - none yet
-- cleanup pending:
-  - switch the preview summary renderer to Readonly Display
-  - reassess whether any local summary-value styling becomes redundant after that change
-  - decide whether the route-level import/result-shell structure should remain local or move into a shared Studio composition
-
-## Open Decisions
-
-- decision:
-  Should the moment-import page grid, action row, and result-shell layout become a shared Studio composition rather than continuing to borrow `catalogueWork*` classes?
-- current owner/home:
-  This audit doc for now. Promote to [UI Requests](/docs/?scope=studio&doc=ui-requests) only if it becomes a real multi-route shared design/spec task rather than normal route remediation.
-
 ## Verification
 
 - routes checked:
@@ -109,3 +103,13 @@ Outcome:
 - blocked checks:
   - the local catalogue write service was unavailable during the audit, so preview/apply could not be exercised end-to-end
   - the live page therefore remained in its disabled state with the status message `Local catalogue server unavailable. Moment import is disabled.`
+
+## Process Notes
+
+- The audit process was usable as a real page review.
+- It successfully distinguished:
+  - a true covered-area non-conformance
+  - a genuine standards coverage gap
+  - blocked runtime verification
+  - cleanup that could happen now versus later
+- This audit now also serves as the first real example of the newer audit-doc structure, with remediation and open decisions surfaced before the coverage/finding details.

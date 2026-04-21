@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-d4013fc2c08089e9c068b30663c50adb",
-    "generated_at_utc": "2026-04-19T21:07:44Z",
-    "count": 111
+    "version": "blake2b-c4d6dc23f3937ab606ea5525d761436b",
+    "generated_at_utc": "2026-04-21T20:59:36Z",
+    "count": 117
   },
   "entries": [
     {
@@ -284,6 +284,33 @@
       "search_text": "studio-runtime studio runtime studio runtime 2026-04-18 2026 04 18"
     },
     {
+      "id": "ui-audit-catalogue-moment-import-20260421",
+      "kind": "doc",
+      "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
+      "href": "/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421",
+      "last_updated": "2026-04-21",
+      "parent_id": "ui-audits",
+      "parent_title": "UI Audits",
+      "display_meta": "2026-04-21 • UI Audits",
+      "search_terms": [
+        "ui-audit-catalogue-moment-import-20260421",
+        "ui",
+        "audit",
+        "catalogue",
+        "moment",
+        "import",
+        "20260421",
+        "ui audit: catalogue moment import (2026-04-21)",
+        "2026",
+        "04",
+        "21",
+        "ui audits",
+        "audits",
+        "2026-04-21"
+      ],
+      "search_text": "ui-audit-catalogue-moment-import-20260421 ui audit catalogue moment import 20260421 ui audit: catalogue moment import (2026-04-21) 2026 04 21 ui audits audits 2026-04-21"
+    },
+    {
       "id": "ui-framework",
       "kind": "doc",
       "title": "UI Framework",
@@ -304,6 +331,29 @@
         "31"
       ],
       "search_text": "ui-framework ui framework ui framework design 2026-03-31 2026 03 31"
+    },
+    {
+      "id": "studio-ui-start",
+      "kind": "doc",
+      "title": "Studio UI Start",
+      "href": "/docs/?scope=studio&doc=studio-ui-start",
+      "last_updated": "2026-04-21",
+      "parent_id": "design",
+      "parent_title": "Design",
+      "display_meta": "2026-04-21 • Design",
+      "search_terms": [
+        "studio-ui-start",
+        "studio",
+        "ui",
+        "start",
+        "studio ui start",
+        "design",
+        "2026-04-21",
+        "2026",
+        "04",
+        "21"
+      ],
+      "search_text": "studio-ui-start studio ui start studio ui start design 2026-04-21 2026 04 21"
     },
     {
       "id": "data-models-catalogue",
@@ -587,10 +637,10 @@
       "kind": "doc",
       "title": "Studio UI Framework",
       "href": "/docs/?scope=studio&doc=studio-ui-framework",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-21",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-03-31 • Design",
+      "display_meta": "2026-04-21 • Design",
       "search_terms": [
         "studio-ui-framework",
         "studio",
@@ -598,12 +648,12 @@
         "framework",
         "studio ui framework",
         "design",
-        "2026-03-31",
+        "2026-04-21",
         "2026",
-        "03",
-        "31"
+        "04",
+        "21"
       ],
-      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-03-31 2026 03 31"
+      "search_text": "studio-ui-framework studio ui framework studio ui framework design 2026-04-21 2026 04 21"
     },
     {
       "id": "docs-viewer-management",
@@ -629,6 +679,52 @@
         "19"
       ],
       "search_text": "docs-viewer-management docs viewer management docs viewer management ui requests ui requests 2026-04-19 2026 04 19"
+    },
+    {
+      "id": "studio-ui-conformance",
+      "kind": "doc",
+      "title": "Studio UI Conformance Spec",
+      "href": "/docs/?scope=studio&doc=studio-ui-conformance",
+      "last_updated": "2026-04-21",
+      "parent_id": "design",
+      "parent_title": "Design",
+      "display_meta": "2026-04-21 • Design",
+      "search_terms": [
+        "studio-ui-conformance",
+        "studio",
+        "ui",
+        "conformance",
+        "studio ui conformance spec",
+        "spec",
+        "design",
+        "2026-04-21",
+        "2026",
+        "04",
+        "21"
+      ],
+      "search_text": "studio-ui-conformance studio ui conformance studio ui conformance spec spec design 2026-04-21 2026 04 21"
+    },
+    {
+      "id": "ui-catalogue",
+      "kind": "doc",
+      "title": "UI Catalogue",
+      "href": "/docs/?scope=studio&doc=ui-catalogue",
+      "last_updated": "2026-04-21",
+      "parent_id": "design",
+      "parent_title": "Design",
+      "display_meta": "2026-04-21 • Design",
+      "search_terms": [
+        "ui-catalogue",
+        "ui",
+        "catalogue",
+        "ui catalogue",
+        "design",
+        "2026-04-21",
+        "2026",
+        "04",
+        "21"
+      ],
+      "search_text": "ui-catalogue ui catalogue ui catalogue design 2026-04-21 2026 04 21"
     },
     {
       "id": "scripts-copy-draft-media",
@@ -818,10 +914,10 @@
       "kind": "doc",
       "title": "Studio UI Rules And Decision Log",
       "href": "/docs/?scope=studio&doc=studio-ui-rules",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-21",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-04-19 • Design",
+      "display_meta": "2026-04-21 • Design",
       "search_terms": [
         "studio-ui-rules",
         "studio",
@@ -832,12 +928,12 @@
         "decision",
         "log",
         "design",
-        "2026-04-19",
+        "2026-04-21",
         "2026",
         "04",
-        "19"
+        "21"
       ],
-      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-19 2026 04 19"
+      "search_text": "studio-ui-rules studio ui rules studio ui rules and decision log and decision log design 2026-04-21 2026 04 21"
     },
     {
       "id": "tag-groups",
@@ -960,16 +1056,16 @@
       "kind": "doc",
       "title": "Design",
       "href": "/docs/?scope=studio&doc=design",
-      "last_updated": "2026-03-31",
-      "display_meta": "2026-03-31",
+      "last_updated": "2026-04-21",
+      "display_meta": "2026-04-21",
       "search_terms": [
         "design",
-        "2026-03-31",
+        "2026-04-21",
         "2026",
-        "03",
-        "31"
+        "04",
+        "21"
       ],
-      "search_text": "design 2026-03-31 2026 03 31"
+      "search_text": "design 2026-04-21 2026 04 21"
     },
     {
       "id": "new-pipeline-implementation-plan",
@@ -1302,22 +1398,22 @@
       "kind": "doc",
       "title": "CSS Refactor",
       "href": "/docs/?scope=studio&doc=css-refactor",
-      "last_updated": "2026-03-31",
+      "last_updated": "2026-04-19",
       "parent_id": "design",
       "parent_title": "Design",
-      "display_meta": "2026-03-31 • Design",
+      "display_meta": "2026-04-19 • Design",
       "search_terms": [
         "css-refactor",
         "css",
         "refactor",
         "css refactor",
         "design",
-        "2026-03-31",
+        "2026-04-19",
         "2026",
-        "03",
-        "31"
+        "04",
+        "19"
       ],
-      "search_text": "css-refactor css refactor css refactor design 2026-03-31 2026 03 31"
+      "search_text": "css-refactor css refactor css refactor design 2026-04-19 2026 04 19"
     },
     {
       "id": "scripts-delete-work",
@@ -1915,6 +2011,31 @@
       "search_text": "scripts-css-token-audit scripts css token audit css token audit 2026-03-31 2026 03 31"
     },
     {
+      "id": "site-request-docs-build-incremental",
+      "kind": "doc",
+      "title": "Docs Build Incremental Request",
+      "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
+      "last_updated": "2026-04-21",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-21 • Site Docs",
+      "search_terms": [
+        "site-request-docs-build-incremental",
+        "site",
+        "request",
+        "docs",
+        "build",
+        "incremental",
+        "docs build incremental request",
+        "site docs",
+        "2026-04-21",
+        "2026",
+        "04",
+        "21"
+      ],
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-21 2026 04 21"
+    },
+    {
       "id": "catalogue-work-file-editor",
       "kind": "doc",
       "title": "Catalogue Work File Editor",
@@ -2433,20 +2554,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-19",
-      "display_meta": "2026-04-19",
+      "last_updated": "2026-04-21",
+      "display_meta": "2026-04-21",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-19",
+        "2026-04-21",
         "2026",
         "04",
-        "19"
+        "21"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-19 2026 04 19"
+      "search_text": "site-change-log site change log site change log 2026-04-21 2026 04 21"
     },
     {
       "id": "tiered-dimension-policy",
@@ -2470,6 +2591,25 @@
         "16"
       ],
       "search_text": "tiered-dimension-policy tiered dimension policy tiered dimension policy studio 2026-04-16 2026 04 16"
+    },
+    {
+      "id": "ui-audits",
+      "kind": "doc",
+      "title": "UI Audits",
+      "href": "/docs/?scope=studio&doc=ui-audits",
+      "last_updated": "2026-04-21",
+      "display_meta": "2026-04-21",
+      "search_terms": [
+        "ui-audits",
+        "ui",
+        "audits",
+        "ui audits",
+        "2026-04-21",
+        "2026",
+        "04",
+        "21"
+      ],
+      "search_text": "ui-audits ui audits ui audits 2026-04-21 2026 04 21"
     },
     {
       "id": "search-change-log-guidance",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T20:33:33Z",
+  "generated_at": "2026-04-21T21:08:33Z",
   "docs": [
     {
       "scope": "studio",
@@ -957,6 +957,17 @@
       "source_path": "scripts-css-token-audit.md",
       "viewer_url": "/docs/?scope=studio&doc=scripts-css-token-audit",
       "content_url": "/assets/data/docs/scopes/studio/by-id/scripts-css-token-audit.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-docs-build-incremental",
+      "title": "Docs Build Incremental Request",
+      "last_updated": "2026-04-21",
+      "parent_id": "site-docs",
+      "sort_order": 120,
+      "source_path": "site-request-docs-build-incremental.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json"
     },
     {
       "scope": "studio",

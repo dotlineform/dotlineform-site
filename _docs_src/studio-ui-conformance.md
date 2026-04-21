@@ -125,7 +125,45 @@ Run the audit in this order:
 
 Every page-level conformance review should produce these sections:
 
-### 1. Coverage Summary
+### 1. Page Outcome
+
+Start with one compact line:
+
+- `/studio/example/ : non-conforming`
+
+### 2. Remediation Status
+
+Use the audit doc as the ongoing record of post-audit remediation for that page until the page is settled.
+
+Record:
+
+- which findings are still `open`
+- which findings are `in-progress`
+- which findings are `resolved`
+- which findings are `deferred`
+- what cleanup has actually been completed
+- what cleanup is still pending
+
+Do not use [Site Change Log](/docs/?scope=studio&doc=site-change-log) as the open remediation tracker.
+
+The site change log should record implemented outcomes only.
+
+### 3. Open Decisions
+
+Record unresolved decisions that should not be buried inside findings or cleanup notes.
+
+Use this section for:
+
+- page-level decisions that still affect the remediation path
+- shared-composition or shared-design questions exposed by the audit
+- unresolved decisions about whether a pattern should stay local or move into shared coverage
+
+Escalation rule:
+
+- keep the decision in the audit doc while it remains part of that page’s remediation path
+- move it into [UI Requests](/docs/?scope=studio&doc=ui-requests) only when it has become a real shared design/spec task rather than a normal page fix
+
+### 4. Coverage Summary
 
 List the page’s major UI areas and their coverage state.
 
@@ -138,7 +176,7 @@ Minimum categories:
 - list or result shells
 - route-specific compositions
 
-### 2. Findings
+### 5. Findings
 
 Each finding should include:
 
@@ -159,10 +197,10 @@ Each finding should include:
 - `why it matters`
 - `fixability`
   - `shared-now`
-  - `local-now`
-  - `blocked`
+- `local-now`
+- `blocked`
 
-### 3. Cleanup Opportunities
+### 6. Cleanup Opportunities
 
 If the audit identifies redundant implementation after a fix, record:
 
@@ -173,39 +211,7 @@ If the audit identifies redundant implementation after a fix, record:
 
 This section is required even when the page mostly conforms.
 
-### 4. Remediation Status
-
-Use the audit doc as the ongoing record of post-audit remediation for that page until the page is settled.
-
-Record:
-
-- which findings are still `open`
-- which findings are `in-progress`
-- which findings are `resolved`
-- which findings are `deferred`
-- what cleanup has actually been completed
-- what cleanup is still pending
-
-Do not use [Site Change Log](/docs/?scope=studio&doc=site-change-log) as the open remediation tracker.
-
-The site change log should record implemented outcomes only.
-
-### 5. Open Decisions
-
-Record unresolved decisions that should not be buried inside findings or cleanup notes.
-
-Use this section for:
-
-- page-level decisions that still affect the remediation path
-- shared-composition or shared-design questions exposed by the audit
-- unresolved decisions about whether a pattern should stay local or move into shared coverage
-
-Escalation rule:
-
-- keep the decision in the audit doc while it remains part of that page’s remediation path
-- move it into [UI Requests](/docs/?scope=studio&doc=ui-requests) only when it has become a real shared design/spec task rather than a normal page fix
-
-### 6. Verification
+### 7. Verification
 
 Record:
 
@@ -294,8 +300,18 @@ If a user or future Codex session asks to check whether page X conforms to Studi
 ## Recommended Output Template
 
 ```text
-Page: /studio/example/
-Outcome: conforming within current covered scope | non-conforming | blocked by coverage gaps
+Page outcome:
+- /studio/example/ : conforming within current covered scope | non-conforming | blocked by coverage gaps
+
+Remediation status:
+- finding 1:
+- finding 2:
+- cleanup completed:
+- cleanup pending:
+
+Open decisions:
+- decision:
+- current owner/home:
 
 Coverage summary:
 - buttons: authoritative
@@ -314,16 +330,6 @@ Cleanup opportunities:
 - redundant local CSS:
 - redundant local markup:
 - follow-up steps:
-
-Remediation status:
-- finding 1:
-- finding 2:
-- cleanup completed:
-- cleanup pending:
-
-Open decisions:
-- decision:
-- current owner/home:
 
 Verification:
 - desktop:
