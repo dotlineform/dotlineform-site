@@ -48,6 +48,8 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
+- After changing `_docs_src/` or `_docs_library_src/`, run `./scripts/build_docs.rb --write` to regenerate the docs-viewer JSON payloads under `assets/data/docs/scopes/...`.
+- Do not assume `jekyll build` alone updates docs-viewer content; use it only as a separate site verification step after the docs-data rebuild when needed.
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
 
@@ -173,6 +175,8 @@
 ## Studio Documentation
 
 - Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders.
+- The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs_src/` directly.
+- After changing `_docs_src/` or `_docs_library_src/`, run `./scripts/build_docs.rb --write` before treating the docs-viewer output as updated.
 - `_docs_src/studio.md` and its child docs are the central product/behavior docs for Studio features.
 - `_docs_src/search.md` and its child docs are the central product/behavior docs for search.
 - `_docs_src/data-models.md` and its child docs are the central schema and payload-contract docs for generated/runtime data artifacts and source-data records.
