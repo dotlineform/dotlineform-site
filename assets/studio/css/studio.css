@@ -404,14 +404,128 @@ a.tagStudio__panelLink:focus-visible {
   background: var(--surface, var(--studio-surface));
 }
 
+.tagStudio__input::placeholder {
+  color: var(--muted, var(--studio-muted));
+  opacity: 1;
+}
+
 input.tagStudio__input {
   min-height: var(--studio-control-height);
+  height: var(--studio-control-height);
+}
+
+select.tagStudio__input {
+  min-height: var(--studio-control-height);
+  height: var(--studio-control-height);
+}
+
+input.tagStudio__input:disabled,
+select.tagStudio__input:disabled,
+textarea.tagStudio__input:disabled {
+  color: var(--muted, var(--studio-muted));
+  background: var(--surface, var(--studio-surface));
+  cursor: not-allowed;
+}
+
+.tagStudio__input--defaultValue {
+  color: var(--muted, var(--studio-muted));
+}
+
+.tagStudio__input--readonlyDisplay {
+  background: transparent;
+  color: inherit;
+}
+
+span.tagStudio__input--readonlyDisplay {
+  min-height: var(--studio-control-height);
+  display: inline-flex;
+  align-items: center;
 }
 
 .tagStudio__input:focus {
   outline: none;
   border-color: var(--studio-focus);
   box-shadow: 0 0 0 2px var(--studio-focus-ring);
+}
+
+.tagStudioField {
+  --field-width: 18rem;
+  --field-label-width: 8rem;
+  display: grid;
+  gap: 0.22rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.tagStudioField__label {
+  font-size: var(--font-small);
+  color: var(--muted, var(--studio-muted));
+  text-transform: lowercase;
+}
+
+.tagStudioField__control {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.tagStudioField__control > .tagStudio__input {
+  flex: 0 1 var(--field-width);
+  width: min(100%, var(--field-width));
+  min-width: 0;
+}
+
+.tagStudioField--fill {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.tagStudioField--fill .tagStudioField__control {
+  width: 100%;
+}
+
+.tagStudioField--fill .tagStudioField__control > .tagStudio__input {
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.tagStudioField--inline,
+.tagStudioField--split {
+  align-items: center;
+}
+
+.tagStudioField--inline {
+  grid-template-columns: max-content auto;
+  gap: 0.45rem;
+}
+
+.tagStudioField--split {
+  grid-template-columns: minmax(0, var(--field-label-width)) auto;
+  column-gap: 0.6rem;
+}
+
+.tagStudioField--inline .tagStudioField__control,
+.tagStudioField--split .tagStudioField__control {
+  grid-column: 2;
+}
+
+.tagStudioField__stepButton {
+  min-inline-size: var(--studio-control-height);
+  padding-inline: 0;
+  line-height: 1;
+}
+
+.tagStudioField__incrementValue {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.tagStudioField__incrementValue::-webkit-outer-spin-button,
+.tagStudioField__incrementValue::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
 }
 
 .tagStudio__chipRemove,
@@ -850,6 +964,31 @@ input.tagStudio__input {
 
 .studioUiPrimitiveButtonDemo__fieldFeedback {
   justify-items: start;
+}
+
+.studioUiPrimitiveInputDemo {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.studioUiPrimitiveInputDemo__body {
+  margin: 0;
+  font-size: var(--font-small);
+  color: var(--muted, var(--studio-muted-body));
+}
+
+.studioUiPrimitiveInputDemo__controlRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.studioUiPrimitiveInputDemo__fillRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: 0.45rem;
+  align-items: center;
 }
 
 .studioUiPrimitiveCodeList {
@@ -1519,6 +1658,10 @@ input.tagStudio__input {
   gap: 0.22rem;
 }
 
+.tagStudioForm__field--topAligned {
+  align-items: start;
+}
+
 .tagStudioForm__label {
   font-size: var(--font-small);
   color: var(--muted, var(--studio-muted));
@@ -1742,12 +1885,20 @@ input.tagStudio__input {
   display: grid;
   grid-template-columns: minmax(9rem, 11rem) minmax(0, 1fr);
   gap: 0.2rem 1rem;
-  align-items: start;
+  align-items: center;
 }
 
 .catalogueWorkForm__field > .tagStudioForm__label {
   grid-column: 1;
-  padding-top: 0.45rem;
+  align-self: center;
+}
+
+.catalogueWorkForm__field--topAligned {
+  align-items: start;
+}
+
+.catalogueWorkForm__field--topAligned > .tagStudioForm__label {
+  align-self: start;
 }
 
 .catalogueWorkForm__field > .tagStudio__input,
@@ -2073,6 +2224,26 @@ input.tagStudio__input {
     width: 100%;
   }
 
+  .tagStudioField,
+  .tagStudioField__control {
+    width: 100%;
+  }
+
+  .studioUiPrimitiveInputDemo__fillRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tagStudioField--inline,
+  .tagStudioField--split {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.22rem;
+  }
+
+  .tagStudioField--inline .tagStudioField__control,
+  .tagStudioField--split .tagStudioField__control {
+    grid-column: auto;
+  }
+
   .tagStudio__buttonFeedback--editor {
     grid-column: 1;
   }
@@ -2295,6 +2466,7 @@ input.tagStudio__input {
   }
 
   .catalogueWorkForm__field > .tagStudioForm__label {
+    align-self: start;
     padding-top: 0;
   }
 

@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-framework
 title: "Studio UI Framework"
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 parent_id: design
 sort_order: 20
 ---
@@ -32,6 +32,8 @@ Related references:
 
 - `tagStudio__*`
   Shared Studio primitives such as buttons, inputs, chips, panels, popups, and modal shells.
+- `tagStudioField__*`
+  Shared input-field compositions such as label placement, width handling, and stepped value controls.
 - `tagStudioToolbar__*`
   Shared import/action toolbar pattern used by registry- and alias-style pages.
 - `tagStudioFilters__*`
@@ -52,6 +54,8 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__panel`
 - `tagStudio__panelLink`
 - `tagStudio__input`
+- `tagStudio__input--defaultValue`
+- `tagStudio__input--readonlyDisplay`
 - `tagStudio__button`
 - `tagStudio__chip`
 - `tagStudio__keyPill`
@@ -64,6 +68,8 @@ Defined in `assets/studio/css/studio.css`:
 - `tagStudio__popup`
 - `tagStudio__popupMore`
 - `tagStudio__popupInner`
+- `tagStudioField`, `tagStudioField--*`, `tagStudioField__*`
+- `tagStudioForm__field--topAligned`
 - `tagStudioModal`, `tagStudioModal__*`
 
 These are the baseline building blocks for all Studio pages.
@@ -98,6 +104,18 @@ Use these as the default contract for:
 - page and modal action buttons such as `Add`, `Save`, `Import`, `Create`, `OK`, and `Cancel`
 - text inputs and search inputs
 - modal action rows
+
+Input rule:
+
+- `tagStudio__input` is the shared field shell for text entry, native select controls, and readonly field display
+- use placeholder text for muted default text on text-like fields, and `tagStudio__input--defaultValue` when a control such as a select or readonly display needs the same muted default-value treatment
+- `tagStudioField` owns width, label placement, and add-on button composition rather than pushing that layout into the base input class
+- the default field width is `18rem`; use a local `--field-width` override for deliberate exceptions and `tagStudioField--fill` when the field should take the remaining row width
+- text inputs, selects, and stepped numeric controls should keep the same control height as the small Studio button
+- numeric data should still default to plain input boxes; do not infer step buttons or native number-widget UI from storage type alone
+- disabled means temporarily unavailable because another page state is incomplete; values that are always display-only should use `tagStudio__input--readonlyDisplay` instead of the disabled state
+- stepped value controls should use full-height small buttons rather than half-height split-arrow cells
+- in two-column Studio form rows, labels should be vertically centered with single-line controls and top-aligned only for multiline controls; prefer explicit alignment classes such as `tagStudioForm__field--topAligned` over padding offsets
 
 ### Toolbar pattern
 

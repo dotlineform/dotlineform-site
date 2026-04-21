@@ -1,11 +1,63 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-21] Clarified numeric field and label-alignment rules for Studio forms
+
+**Status:** implemented
+
+**Area:** Studio UI / shared form fields
+
+**Summary:**
+Updated the shared Studio form contract so numeric metadata fields now default to plain input boxes rather than native number widgets, and replaced the create/editor-family label-padding offset with an explicit centered-vs-top-aligned field-row rule.
+
+**Reason:**
+The earlier behavior was still letting storage type imply UI behavior. That was weak product guidance for Studio pages where numeric values are often just edited as plain text-box fields. The field-row label alignment also depended on local padding, which was visually fragile and did not state the real design rule clearly enough.
+
+**Effect:**
+The work/series editor family now keeps numeric fields visually plain unless a page explicitly needs step controls, and catalogue-style two-column form rows now center labels against single-line controls while leaving multiline rows top-aligned. The input primitive page now describes increment controls as opt-in rather than default numeric behavior.
+
+**Affected files/docs:**
+- [Input primitive page](/studio/ui-catalogue/input/)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/css/studio.css`
+- `assets/studio/js/catalogue-new-work-editor.js`
+- `assets/studio/js/catalogue-new-series-editor.js`
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+- `_includes/studio_ui_catalogue_input_demo.html`
+- `_includes/ui_catalogue_notes/input.md`
+
+## [2026-04-21] Added the Studio input primitive page
+
+**Status:** implemented
+
+**Area:** Studio UI / shared input primitive
+
+**Summary:**
+Published [Input primitive page](/studio/ui-catalogue/input/), added a shared `tagStudioField` composition layer for width and label layout, and documented both the disabled-vs-readonly-display split and the muted default-value treatment for field values.
+
+**Reason:**
+The UI catalogue already named `input` as a first-pass primitive, but there was no published reference page or shared field-composition contract. That left recurring decisions such as default width, fill behavior, label placement, dropdown reuse, stepped numeric adjustment, and always-readonly display at risk of drifting into route-local patterns.
+
+**Effect:**
+`/studio/ui-catalogue/input/` now gives the project one implementation reference for text fields, dropdowns, stepped numeric value assignment, readonly field display, and muted default-value states. The base `.tagStudio__input` class stays focused on the shared shell, while `tagStudioField` owns width, label, and add-on composition.
+
+**Affected files/docs:**
+- [Input primitive page](/studio/ui-catalogue/input/)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/css/studio.css`
+- `studio/ui-catalogue/index.md`
+- `_includes/studio_ui_catalogue_input_demo.html`
+- `_includes/ui_catalogue_notes/input.md`
 
 ## [2026-04-20] Added a Studio UI preflight entry doc
 

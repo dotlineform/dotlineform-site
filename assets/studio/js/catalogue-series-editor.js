@@ -156,6 +156,7 @@ function setPopupVisibility(state, visible) {
 function renderField(field, fieldsNode, state) {
   const wrapper = document.createElement("label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
+  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
   wrapper.htmlFor = `catalogueSeriesField-${field.key}`;
 
   const label = document.createElement("span");
@@ -180,8 +181,10 @@ function renderField(field, fieldsNode, state) {
   } else {
     input = document.createElement("input");
     input.className = "tagStudio__input";
-    input.type = field.type === "date" ? "date" : (field.type === "number" ? "number" : "text");
-    if (field.step) input.step = field.step;
+    input.type = field.type === "date" ? "date" : "text";
+    if (field.type === "number") {
+      input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
+    }
   }
 
   input.id = `catalogueSeriesField-${field.key}`;

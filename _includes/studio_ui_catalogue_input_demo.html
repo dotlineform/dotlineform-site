@@ -1,0 +1,139 @@
+<div class="studioUiPrimitiveDemo">
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Default Width</h3>
+      <p class="studioUiPrimitiveExample__summary">Base field width matches the small-button row rhythm used elsewhere in Studio.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">Use this as the unnamed default when the page already makes the field meaning obvious from nearby context.</p>
+      <div class="studioUiPrimitiveInputDemo__controlRow">
+        <div class="tagStudioField">
+          <div class="tagStudioField__control">
+            <input class="tagStudio__input" id="studioUiPrimitiveInputDefault" type="text" placeholder="80%">
+          </div>
+        </div>
+        <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Save</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Fill Width</h3>
+      <p class="studioUiPrimitiveExample__summary">Extend from the left edge when the field should take the remaining row width.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">Use the fill modifier when the input is the main editable surface in the row and surrounding controls should stay fixed-width.</p>
+      <div class="studioUiPrimitiveInputDemo__fillRow">
+        <div class="tagStudioField tagStudioField--fill">
+          <div class="tagStudioField__control">
+            <input class="tagStudio__input" id="studioUiPrimitiveInputFill" type="text" placeholder="Opacity for the current layer">
+          </div>
+        </div>
+        <button class="tagStudio__button tagStudio__button--defaultWidth" type="button">Apply</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Label Above</h3>
+      <p class="studioUiPrimitiveExample__summary">Default labelled form pattern for one field.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">Use the stacked label when the field needs a clear standalone name and extra vertical space is acceptable.</p>
+      <label class="tagStudioField" for="studioUiPrimitiveInputAbove">
+        <span class="tagStudioField__label">alpha</span>
+        <span class="tagStudioField__control">
+          <input class="tagStudio__input" id="studioUiPrimitiveInputAbove" type="text" placeholder="80%">
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Label Left</h3>
+      <p class="studioUiPrimitiveExample__summary">Compact inline label when the row already reads as one control group.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">This keeps label and value tightly coupled without introducing the stronger two-column form rhythm.</p>
+      <label class="tagStudioField tagStudioField--inline" for="studioUiPrimitiveInputInline">
+        <span class="tagStudioField__label">alpha</span>
+        <span class="tagStudioField__control">
+          <input class="tagStudio__input" id="studioUiPrimitiveInputInline" type="text" placeholder="80%">
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Two Columns With Dropdown</h3>
+      <p class="studioUiPrimitiveExample__summary">Use a stronger label column when several related controls need aligned names.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">The same field wrapper supports native select controls without changing the shared height or border rhythm.</p>
+      <label class="tagStudioField tagStudioField--split" for="studioUiPrimitiveInputSelect">
+        <span class="tagStudioField__label">preset</span>
+        <span class="tagStudioField__control">
+          <select class="tagStudio__input tagStudio__input--defaultValue" id="studioUiPrimitiveInputSelect">
+            <option selected>Alpha 80%</option>
+            <option>Alpha 100%</option>
+            <option>Alpha 60%</option>
+          </select>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Increment Control</h3>
+      <p class="studioUiPrimitiveExample__summary">Use only when explicit step controls are part of the task, not just because the stored value is numeric.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">Treat this as one value-assignment control. Numeric fields should still default to plain input boxes unless the page genuinely needs adjacent step actions.</p>
+      <div class="tagStudioField tagStudioField--inline">
+        <label class="tagStudioField__label" for="studioUiPrimitiveInputStep">alpha</label>
+        <div class="tagStudioField__control">
+          <button class="tagStudio__button tagStudioField__stepButton" type="button" aria-label="Decrease alpha">-</button>
+          <input class="tagStudio__input tagStudioField__incrementValue" id="studioUiPrimitiveInputStep" type="text" placeholder="80" inputmode="numeric">
+          <button class="tagStudio__button tagStudioField__stepButton" type="button" aria-label="Increase alpha">+</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Disabled</h3>
+      <p class="studioUiPrimitiveExample__summary">Disabled means temporarily unavailable because another page state is incomplete.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">The geometry stays stable, but the displayed value is muted to match the unavailable state.</p>
+      <label class="tagStudioField" for="studioUiPrimitiveInputDisabled">
+        <span class="tagStudioField__label">alpha</span>
+        <span class="tagStudioField__control">
+          <input class="tagStudio__input" id="studioUiPrimitiveInputDisabled" type="text" placeholder="Available after selecting a layer" disabled>
+        </span>
+      </label>
+    </div>
+  </section>
+
+  <section class="studioUiPrimitiveExample">
+    <header class="studioUiPrimitiveExample__header">
+      <h3 class="studioUiPrimitiveExample__title">Readonly Display</h3>
+      <p class="studioUiPrimitiveExample__summary">Always-readonly values keep normal text and lose the filled background.</p>
+    </header>
+    <div class="studioUiPrimitiveInputDemo">
+      <p class="studioUiPrimitiveInputDemo__body">Use this for values that are display-only by design. Do not use the disabled state when the field is not expected to become editable.</p>
+      <div class="tagStudioField tagStudioField--split">
+        <span class="tagStudioField__label">source alpha</span>
+        <div class="tagStudioField__control">
+          <span class="tagStudio__input tagStudio__input--readonlyDisplay tagStudio__input--defaultValue" id="studioUiPrimitiveInputReadonly">80%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

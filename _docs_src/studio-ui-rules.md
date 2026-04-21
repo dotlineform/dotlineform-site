@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-rules
 title: "Studio UI Rules And Decision Log"
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 parent_id: design
 sort_order: 30
 ---
@@ -110,6 +110,63 @@ Use this decision test:
 ## Current Rules And Log
 
 Add new entries at the top of this section.
+
+## UI Rule Log 2026-04-21 / UI-020
+
+- status: adopted
+- route: `/studio/catalogue-new-work/` and the shared work/series editor family
+- issue: numeric metadata fields were still being rendered as native `type="number"` widgets, and catalogue-form label alignment depended on local top padding rather than an explicit shared rule. That mixed an implementation assumption into the UI and left label placement vulnerable to drift.
+- triage: systemic
+- reasoning: the primitive contract should follow user intent, not storage type. A numeric value often still wants the plain text-box presentation. Likewise, label placement needs a stable shared rule: centered against single-line controls and top-aligned only for multiline ones. Padding-based compensation obscures that rule and becomes fragile over time.
+- permanent rule: across Studio form rows, numeric data should default to plain input boxes unless step controls are an explicit part of the interaction. In two-column field layouts, labels should be vertically centered with single-line controls and top-aligned only for multiline controls. Use explicit alignment classes rather than ad-hoc padding.
+- enforcement point: `assets/studio/css/studio.css`, the shared work/series editor renderers under `assets/studio/js/`, the input primitive page, and the Studio UI framework docs
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `assets/studio/js/catalogue-new-work-editor.js`
+  - `assets/studio/js/catalogue-new-series-editor.js`
+  - `assets/studio/js/catalogue-work-editor.js`
+  - `assets/studio/js/catalogue-series-editor.js`
+  - `studio/ui-catalogue/input/index.md`
+  - `_includes/studio_ui_catalogue_input_demo.html`
+  - `_includes/ui_catalogue_notes/input.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect `/studio/catalogue-new-work/` and `/studio/catalogue-new-series/` and confirm numeric fields still look like plain text boxes
+  - confirm single-line field labels are centered with their inputs
+  - confirm multiline field labels stay top-aligned
+  - inspect the input primitive page and confirm the increment example is clearly optional rather than implied by numeric data
+- follow-up:
+  - if a future Studio task genuinely needs step actions, add them deliberately as page intent rather than deriving them from schema type
+
+## UI Rule Log 2026-04-21 / UI-019
+
+- status: adopted
+- route: `/studio/ui-catalogue/input/`
+- issue: the Studio catalogue did not yet publish a shared input primitive page, so field width, label placement, stepped numeric controls, and the distinction between disabled and always-readonly values were still implicit and at risk of drifting route by route.
+- triage: systemic
+- reasoning: text fields, dropdowns, and stepped numeric controls all express the same user intent of assigning one field value. The stable shared contract is the field shell plus an explicit composition wrapper for width and label layout. Without that separation, future page work would either overload `.tagStudio__input` with layout behavior or keep reinventing local wrappers.
+- permanent rule: keep `.tagStudio__input` as the shared field shell and use `tagStudioField` for width, label placement, and add-on controls. Text inputs, selects, and stepped numeric controls should keep the same height as the small Studio button. Disabled means temporarily unavailable; values that are always display-only should use `tagStudio__input--readonlyDisplay` instead.
+- enforcement point: `assets/studio/css/studio.css`, `studio/ui-catalogue/input/index.md`, `_includes/studio_ui_catalogue_input_demo.html`, `_includes/ui_catalogue_notes/input.md`, and the shared Studio/UI catalogue docs
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `studio/ui-catalogue/index.md`
+  - `studio/ui-catalogue/input/index.md`
+  - `_includes/studio_ui_catalogue_input_demo.html`
+  - `_includes/ui_catalogue_notes/input.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - build the site to a separate destination
+  - inspect `/studio/ui-catalogue/input/` on desktop and mobile widths
+  - confirm text input, select, and increment controls share one row height
+  - confirm disabled and readonly-display states remain visually distinct
+- follow-up:
+  - adopt the shared field wrapper on live Studio routes only when a route review shows the current local field composition is drifting
+  - if a future field needs richer adornments, extend the shared field wrapper rather than pushing layout rules into `.tagStudio__input`
 
 ## UI Rule Log 2026-04-20 / UI-015
 

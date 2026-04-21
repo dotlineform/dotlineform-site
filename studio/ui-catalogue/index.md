@@ -25,6 +25,12 @@ studio_page_doc: /docs/?scope=studio&doc=ui-catalogue
         </a>
       </li>
       <li>
+        <a class="studioUiCatalogueIndex__item" href="{{ '/studio/ui-catalogue/input/' | relative_url }}">
+          <span class="studioUiCatalogueIndex__title">Input</span>
+          <span class="studioUiCatalogueIndex__meta">Live primitive page for text fields, dropdowns, stepped numeric assignment, and readonly field display.</span>
+        </a>
+      </li>
+      <li>
         <a class="studioUiCatalogueIndex__item" href="{{ '/studio/ui-catalogue/panel/' | relative_url }}">
           <span class="studioUiCatalogueIndex__title">Panel</span>
           <span class="studioUiCatalogueIndex__meta">Live primitive page with shared shell variants and markdown-backed notes.</span>

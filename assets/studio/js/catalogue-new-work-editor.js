@@ -75,6 +75,7 @@ function t(state, key, fallback, tokens = null) {
 function renderField(field, fieldsNode, state) {
   const wrapper = document.createElement("label");
   wrapper.className = "tagStudioForm__field catalogueWorkForm__field";
+  if (field.type === "textarea") wrapper.classList.add("tagStudioForm__field--topAligned", "catalogueWorkForm__field--topAligned");
   wrapper.htmlFor = `catalogueNewWorkField-${field.key}`;
 
   const label = document.createElement("span");
@@ -90,8 +91,10 @@ function renderField(field, fieldsNode, state) {
   } else {
     input = document.createElement("input");
     input.className = "tagStudio__input";
-    input.type = field.type === "number" ? "number" : "text";
-    if (field.step) input.step = field.step;
+    input.type = "text";
+    if (field.type === "number") {
+      input.inputMode = field.step && String(field.step).includes(".") ? "decimal" : "numeric";
+    }
   }
 
   input.id = `catalogueNewWorkField-${field.key}`;

@@ -1,7 +1,7 @@
 ---
 doc_id: ui-catalogue
 title: "UI Catalogue"
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 parent_id: design
 sort_order: 25
 ---
@@ -28,6 +28,7 @@ When a page uses a shared element such as a `panel` or `toolbar`, the expectatio
 Current published primitive pages:
 
 - [Button primitive page](/studio/ui-catalogue/button/)
+- [Input primitive page](/studio/ui-catalogue/input/)
 - [Panel primitive page](/studio/ui-catalogue/panel/)
 
 Add new links here when a primitive gets its own published reference page.
