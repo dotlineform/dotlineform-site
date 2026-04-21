@@ -53,8 +53,8 @@ echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
 echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
 echo
-echo "Building docs viewer data"
-"$BUNDLE_BIN" exec ruby scripts/build_docs.rb --write
+echo "Building Studio docs viewer data"
+"$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope studio --write
 echo "Building catalogue lookup data"
 "$PYTHON_BIN" scripts/export_catalogue_lookup.py --write
 echo

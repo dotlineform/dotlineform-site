@@ -9,8 +9,19 @@ sort_order: 120
 
 Status:
 
-- requested
-- not yet implemented
+- in progress
+
+## Task Status
+
+- Task 1. Define Scope-Rebuild Rules: decided and implemented for current local entrypoints
+- Task 2. Make Docs Payload Writes Incremental: implemented
+- Task 3. Define And Implement Stale-Output Cleanup: implemented
+- Task 4. Review Index-Metadata Churn: implemented
+- Task 5. Align Local Rebuild Entry Points: implemented
+- Task 6. Align Search Follow-Through: open
+- Task 7. Define `dev-studio` Live Rebuild Behavior: open
+- Task 8. Update Docs And Operating Guidance: in progress
+- Task 9. Verify And Close Out: pending
 
 ## Summary
 
@@ -47,7 +58,7 @@ The cleanup behavior is a real implementation concern, not just a warning note. 
 
 ## Current Behaviour
 
-Current implementation facts:
+Original implementation facts at request start:
 
 - `scripts/build_docs.rb --write` rebuilds the full selected docs scope and rewrites the full generated output set for that scope
 - by default it selects both `studio` and `library` when `--scope` is omitted
@@ -90,6 +101,10 @@ Excluded unless later promoted:
 
 ### Task 1. Define Scope-Rebuild Rules
 
+Status:
+
+- implemented
+
 Decide which local actions should rebuild which scope.
 
 The intended model is:
@@ -116,6 +131,10 @@ Reason:
 
 ### Task 2. Make Docs Payload Writes Incremental
 
+Status:
+
+- implemented
+
 Change the docs builder so it does not delete and recreate the entire generated scope output on every write.
 
 This task should apply consistently to all current docs scopes that use the shared builder.
@@ -132,6 +151,10 @@ Reason:
 - Jekyll should only see the docs payloads that actually changed, regardless of which docs scope is being rebuilt
 
 ### Task 3. Define And Implement Stale-Output Cleanup
+
+Status:
+
+- implemented
 
 Add explicit cleanup behavior for generated docs payloads that should no longer exist.
 
@@ -153,6 +176,10 @@ Reason:
 
 ### Task 4. Review Index-Metadata Churn
 
+Status:
+
+- implemented
+
 Decide whether the docs index should still force a write on no-op builds because of `generated_at`.
 
 Options to evaluate:
@@ -166,6 +193,10 @@ Reason:
 - index metadata currently guarantees at least one changed file even for no-op rebuilds
 
 ### Task 5. Align Local Rebuild Entry Points
+
+Status:
+
+- implemented
 
 Bring local tooling into line with the new rebuild contract.
 
@@ -182,19 +213,58 @@ Reason:
 
 ### Task 6. Align Search Follow-Through
 
+Status:
+
+- open
+
 Confirm when docs-search rebuilds are and are not required after docs rebuilds.
+
+Locked principle:
+
+- if a docs rebuild for a scope is treated as live, that scope's docs search should update automatically as part of the same user-facing action
+- search follow-through should not depend on the user remembering a second rebuild step
 
 Questions to settle:
 
-- should a docs rebuild endpoint optionally rebuild docs search for the same scope
-- should `bin/dev-studio` continue to rebuild docs only on startup
-- what is the intended contract when a new doc is added and should appear in inline docs search
+- which current user-facing rebuild actions should chain same-scope docs search automatically
+- whether any low-level script entrypoints should remain split for advanced/manual use
 
 Reason:
 
 - docs-viewer data and docs-search data are related but not identical outputs
 
-### Task 7. Update Docs And Operating Guidance
+### Task 7. Define `dev-studio` Live Rebuild Behavior
+
+Status:
+
+- open
+
+Assume `dev-studio` becomes the normal integrated local workflow.
+
+This task is about live local runner behavior, not about the principle that search should stay current.
+
+Questions to settle:
+
+- should `bin/dev-studio` still do a startup docs rebuild, or should that become optional
+- should `dev-studio` watch docs source roots and rebuild automatically while running
+- how should scope detection work for `_docs_src` vs `_docs_library_src`
+- how should live rebuilds avoid loops and redundant writes
+
+Preferred direction:
+
+- source-root watching, not watching generated outputs
+- same-scope docs rebuild plus same-scope docs-search rebuild while `dev-studio` is running
+- manual rebuild commands remain available as fallback tooling
+
+Reason:
+
+- the integrated dev runner behavior should be designed explicitly instead of being implied by ad hoc startup commands
+
+### Task 8. Update Docs And Operating Guidance
+
+Status:
+
+- in progress
 
 Update the relevant docs so the new behavior is visible and consistent.
 
@@ -209,7 +279,11 @@ Reason:
 
 - local behavior should be documented where the rebuild workflow is already described
 
-### Task 8. Verify And Close Out
+### Task 9. Verify And Close Out
+
+Status:
+
+- pending
 
 Required verification:
 
@@ -218,6 +292,7 @@ Required verification:
 - deleted or unpublished docs remove the corresponding generated payloads
 - docs viewer still loads correctly for `studio` and `library`
 - any intended docs-search follow-through still works
+- any intended `dev-studio` live rebuild behavior works without redundant rebuild loops
 
 Close-out should also record:
 
@@ -255,20 +330,17 @@ This request is complete when:
 - removed or unpublished docs do not leave stale generated payloads behind
 - index writes do not cause avoidable no-op churn
 - local rebuild entrypoints match the same contract
+- search follow-through is automatic for user-facing live rebuild actions in the current scope
 - docs and operating guidance describe the implemented behavior accurately
 
 ## Open Decisions
 
-- Should `bin/dev-studio` rebuild both docs scopes on startup, or only the scope most relevant to the local Studio workflow?
-- Should the Studio `Rebuild docs` action stay all-scope, become current-scope only, or expose a choice?
-- Should docs-search rebuild happen automatically for the same scope when docs content changes, or remain a separate explicit step?
-- What should replace or constrain the current `generated_at` behavior so it does not force avoidable index writes?
+- Which user-facing rebuild actions should automatically rebuild same-scope docs search?
+- Should `dev-studio` still do a startup docs rebuild, or should live source watching become the primary freshness mechanism?
+- What should the exact `dev-studio` watcher contract be for `_docs_src` and `_docs_library_src`?
 
 ## Open Issues
 
-- Incremental writes require an explicit orphan/stale-file cleanup strategy before implementation is safe.
-- Scope-specific rebuild rules must be aligned across scripts and local server endpoints, not changed in only one place.
-- Shared incremental-write behavior must not blur the operational separation between the `studio` and `library` docs corpora.
 - A no-op rebuild should be tested as a first-class verification case rather than assumed from code inspection.
 
 ## Related References

@@ -48,7 +48,12 @@
 - If `jekyll serve` or `bin/dev-studio` is already running, do not verify against the default `_site/` destination concurrently.
 - In that case, use a separate destination for one-off verification builds:
   - `/Users/dlf/.rbenv/shims/bundle exec jekyll build --quiet --destination /tmp/dlf-jekyll-build`
-- After changing `_docs_src/` or `_docs_library_src/`, run `./scripts/build_docs.rb --write` to regenerate the docs-viewer JSON payloads under `assets/data/docs/scopes/...`.
+- After changing `_docs_src/`, run `./scripts/build_docs.rb --scope studio --write` to regenerate the Studio docs-viewer JSON payloads under `assets/data/docs/scopes/studio/...`.
+- After changing `_docs_library_src/`, run `./scripts/build_docs.rb --scope library --write` to regenerate the library docs-viewer JSON payloads under `assets/data/docs/scopes/library/...`.
+- When docs search output must be kept live with docs changes, rebuild the matching scope explicitly:
+  - `./scripts/build_search.rb --scope studio --write`
+  - `./scripts/build_search.rb --scope library --write`
+- Do not assume all-scope rebuilds by default; treat `studio` and `library` as separate corpora and pass `--scope` explicitly unless the task intentionally requires both.
 - Do not assume `jekyll build` alone updates docs-viewer content; use it only as a separate site verification step after the docs-data rebuild when needed.
 - If a build fails with “Could not find bundler 2.6.9” or shows `/usr/bin/ruby`, rerun using the shim commands before reporting an issue.
 - Local shell should load rbenv (for interactive use), but Codex checks should still prefer explicit shim paths.
@@ -176,7 +181,12 @@
 
 - Docs source is now flat under `_docs_src/*.md`; section grouping comes from `doc_id`, `parent_id`, and top-level section docs rather than folders.
 - The docs viewer reads generated JSON from `assets/data/docs/scopes/...`, not `_docs_src/` directly.
-- After changing `_docs_src/` or `_docs_library_src/`, run `./scripts/build_docs.rb --write` before treating the docs-viewer output as updated.
+- After changing `_docs_src/`, run `./scripts/build_docs.rb --scope studio --write` before treating the Studio docs-viewer output as updated.
+- After changing `_docs_library_src/`, run `./scripts/build_docs.rb --scope library --write` before treating the library docs-viewer output as updated.
+- Prefer explicit scope for docs search rebuilds as well:
+  - `./scripts/build_search.rb --scope studio --write`
+  - `./scripts/build_search.rb --scope library --write`
+- Do not treat all-scope rebuilds as the default path; use them only when the task intentionally spans both corpora.
 - `_docs_src/studio.md` and its child docs are the central product/behavior docs for Studio features.
 - `_docs_src/search.md` and its child docs are the central product/behavior docs for search.
 - `_docs_src/data-models.md` and its child docs are the central schema and payload-contract docs for generated/runtime data artifacts and source-data records.

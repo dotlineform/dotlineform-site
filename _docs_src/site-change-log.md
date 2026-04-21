@@ -7,6 +7,51 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Aligned local docs rebuild entrypoints to explicit scope behavior
+
+**Status:** implemented
+
+**Area:** docs build pipeline / local development workflow
+
+**Summary:**
+Updated the local docs rebuild entrypoints so Studio-local actions now rebuild `studio` explicitly instead of defaulting to hidden all-scope docs rebuilds.
+
+**Reason:**
+After separating the docs corpora conceptually and making payload writes incremental, the remaining all-scope local entrypoints were still obscuring which docs scope was actually being rebuilt. That made the workflow harder to reason about and undercut the goal of reducing rebuild churn.
+
+**Effect:**
+`bin/dev-studio` now rebuilds Studio docs only on startup, the legacy Studio `/build-docs` endpoint defaults to `scope: studio` and accepts an explicit scope, and docs-viewer manage-mode rebuilds now rebuild the current viewer scope plus that scope's docs search.
+
+**Affected files/docs:**
+- `bin/dev-studio`
+- `scripts/studio/tag_write_server.py`
+- `scripts/docs/docs_management_server.py`
+- `assets/js/docs-viewer.js`
+- `assets/studio/js/studio-transport.js`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
+
+## [2026-04-21] Made docs payload writes incremental within each rebuilt scope
+
+**Status:** implemented
+
+**Area:** docs build pipeline / local development workflow
+
+**Summary:**
+Updated `scripts/build_docs.rb` so it now writes generated docs payloads incrementally within the rebuilt scope instead of deleting and recreating the full scope output tree on every write.
+
+**Reason:**
+The previous docs builder rewrote every generated docs JSON file for the selected scope, which made local Jekyll behave as if the whole docs corpus had changed even when only a small number of source docs were edited. That also made no-op rebuilds noisy and harder to interpret.
+
+**Effect:**
+Unchanged docs payloads are now skipped, changed payloads are rewritten, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope. This reduces local watcher churn while preserving correct generated output for the docs viewer.
+
+**Affected files/docs:**
+- `scripts/build_docs.rb`
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+
 ## [2026-04-21] Added remediation and open-decision sections to Studio UI audits
 
 **Status:** implemented

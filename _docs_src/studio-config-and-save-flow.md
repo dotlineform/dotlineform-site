@@ -1,7 +1,7 @@
 ---
 doc_id: studio-config-and-save-flow
 title: "Studio Config and Save Flow"
-last_updated: 2026-04-18
+last_updated: 2026-04-21
 parent_id: studio
 sort_order: 20
 ---
@@ -108,9 +108,9 @@ Current write endpoints include:
 Current non-catalogue local action behavior also includes:
 
 - `POST /build-docs` on the tag write service
-- this runs `scripts/build_docs.rb --write` from the repo root
-- the Studio docs viewer exposes that action beside the docs search input
-- Library docs reuse the same viewer shell but do not expose the rebuild control
+- this is now a Studio-scoped rebuild path and defaults to `scope: studio`
+- it runs `scripts/build_docs.rb --scope <scope> --write` from the repo root
+- the docs viewer manage-mode rebuild action uses the separate docs-management service and rebuilds the current docs scope plus that scope's docs search
 
 ## Save Modes
 
@@ -266,7 +266,7 @@ Use these references for the contracts:
 
 Current operational constraints:
 
-- `bin/dev-studio` rebuilds Docs Viewer data and derived catalogue lookup artifacts, but not docs-search artifacts
+- `bin/dev-studio` rebuilds Studio Docs Viewer data and derived catalogue lookup artifacts, but not docs-search artifacts
 - Studio route behavior depends on the current site build being present under Jekyll
 - `scripts/audit_site_consistency.py` is the script-level check for assignment drift against series/work indexes
 

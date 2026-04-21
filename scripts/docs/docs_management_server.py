@@ -1230,7 +1230,9 @@ class DocsManagementHandler(BaseHTTPRequestHandler):
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/rebuild":
-                payload = rebuild_all_docs_outputs(repo_root)
+                scope = normalize_scope(body.get("scope"))
+                payload = rebuild_scope_outputs(repo_root, scope)
+                payload["summary_text"] = f"Docs and docs search rebuilt for {scope}."
                 write_response(self, HTTPStatus.OK, payload)
                 return
             if self.path == "/docs/move":

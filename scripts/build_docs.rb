@@ -55,24 +55,28 @@ class DocsDataBuilder
     docs = load_docs
     validate_docs!(docs)
 
+    docs_index = docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc) }
     index_payload = {
-      generated_at: Time.now.utc.iso8601,
-      docs: docs.sort_by { |doc| doc_sort_key(doc) }.map { |doc| index_entry(doc) }
+      "generated_at" => effective_generated_at(docs_index),
+      "docs" => docs_index
     }
     item_payloads = docs.to_h { |doc| [doc.doc_id, item_entry(doc, docs)] }
+    write_plan = build_write_plan(index_payload, item_payloads)
 
     unless write
-      dry_run_summary(index_payload, item_payloads)
+      dry_run_summary(index_payload, item_payloads, write_plan)
       return {
         index_payload: index_payload,
-        item_payloads: item_payloads
+        item_payloads: item_payloads,
+        write_plan: write_plan
       }
     end
 
-    write_outputs(index_payload, item_payloads)
+    write_outputs(index_payload, item_payloads, write_plan)
     {
       index_payload: index_payload,
-      item_payloads: item_payloads
+      item_payloads: item_payloads,
+      write_plan: write_plan
     }
   end
 
@@ -186,29 +190,29 @@ class DocsDataBuilder
 
   def index_entry(doc)
     {
-      scope: doc.scope_id,
-      doc_id: doc.doc_id,
-      title: doc.title,
-      last_updated: doc.last_updated,
-      parent_id: doc.parent_id,
-      sort_order: doc.sort_order,
-      source_path: doc.source_path,
-      viewer_url: doc.viewer_url,
-      content_url: doc.content_url
+      "scope" => doc.scope_id,
+      "doc_id" => doc.doc_id,
+      "title" => doc.title,
+      "last_updated" => doc.last_updated,
+      "parent_id" => doc.parent_id,
+      "sort_order" => doc.sort_order,
+      "source_path" => doc.source_path,
+      "viewer_url" => doc.viewer_url,
+      "content_url" => doc.content_url
     }
   end
 
   def item_entry(doc, docs)
     {
-      scope: doc.scope_id,
-      doc_id: doc.doc_id,
-      title: doc.title,
-      last_updated: doc.last_updated,
-      parent_id: doc.parent_id,
-      sort_order: doc.sort_order,
-      source_path: doc.source_path,
-      viewer_url: doc.viewer_url,
-      content_html: rewrite_doc_links(
+      "scope" => doc.scope_id,
+      "doc_id" => doc.doc_id,
+      "title" => doc.title,
+      "last_updated" => doc.last_updated,
+      "parent_id" => doc.parent_id,
+      "sort_order" => doc.sort_order,
+      "source_path" => doc.source_path,
+      "viewer_url" => doc.viewer_url,
+      "content_html" => rewrite_doc_links(
         JekyllMarkdownRenderer.render_string(resolve_media_tokens(doc.body_markdown)),
         current_doc: doc,
         docs: docs
@@ -284,33 +288,107 @@ class DocsDataBuilder
     ]
   end
 
-  def write_outputs(index_payload, item_payloads)
-    write_payload_set(@output_dir, @items_dir, index_payload, item_payloads)
+  def effective_generated_at(docs_index)
+    existing_payload = load_json_file(@output_dir.join("index.json"))
+    return Time.now.utc.iso8601 unless existing_payload.is_a?(Hash)
+
+    existing_docs = existing_payload["docs"]
+    existing_generated_at = existing_payload["generated_at"].to_s
+    return Time.now.utc.iso8601 unless existing_docs == docs_index
+    return Time.now.utc.iso8601 if existing_generated_at.empty?
+
+    existing_generated_at
   end
 
-  def dry_run_summary(index_payload, item_payloads)
+  def write_outputs(index_payload, item_payloads, write_plan)
+    write_payload_set(@output_dir, @items_dir, index_payload, item_payloads, write_plan)
+  end
+
+  def dry_run_summary(index_payload, item_payloads, write_plan)
     puts "Dry run:"
     puts "  scope: #{@scope_id}"
     puts "  source: #{@source_dir}"
-    puts "  docs: #{index_payload.fetch(:docs).length}"
-    puts "  would write: #{@output_dir.join('index.json')}"
-    puts "  would write: #{item_payloads.length} files under #{@items_dir}"
+    puts "  docs: #{index_payload.fetch("docs").length}"
+    puts "  would write index: #{write_plan[:index_write] ? 1 : 0}"
+    puts "  would write doc payloads: #{write_plan[:changed_item_ids].length}"
+    puts "  would remove stale doc payloads: #{write_plan[:stale_item_ids].length}"
   end
 
-  def write_payload_set(output_dir, items_dir, index_payload, item_payloads, label: nil)
-    FileUtils.mkdir_p(items_dir)
-    FileUtils.rm_f(output_dir.join("index.json"))
-    FileUtils.rm_rf(items_dir)
+  def write_payload_set(output_dir, items_dir, index_payload, item_payloads, write_plan, label: nil)
+    FileUtils.mkdir_p(output_dir)
     FileUtils.mkdir_p(items_dir)
 
-    output_dir.join("index.json").write(JSON.pretty_generate(index_payload) + "\n")
-    item_payloads.each do |doc_id, payload|
-      items_dir.join("#{doc_id}.json").write(JSON.pretty_generate(payload) + "\n")
+    index_path = output_dir.join("index.json")
+    write_text(index_path, write_plan[:index_text]) if write_plan[:index_write]
+
+    write_plan[:changed_item_ids].each do |doc_id|
+      write_text(items_dir.join("#{doc_id}.json"), write_plan[:item_text_by_id].fetch(doc_id))
+    end
+
+    write_plan[:stale_item_ids].each do |doc_id|
+      FileUtils.rm_f(items_dir.join("#{doc_id}.json"))
     end
 
     prefix = label ? "#{label}: " : ""
-    puts "#{prefix}Wrote #{output_dir.join('index.json')}"
-    puts "#{prefix}Wrote #{item_payloads.length} doc payloads to #{items_dir}"
+    puts "#{prefix}Docs JSON done for scope #{@scope_id}."
+    puts "#{prefix}Index wrote: #{write_plan[:index_write] ? 1 : 0}. Path: #{index_path}"
+    puts "#{prefix}Doc payloads wrote: #{write_plan[:changed_item_ids].length}. Path: #{items_dir}"
+    puts "#{prefix}Doc payloads removed: #{write_plan[:stale_item_ids].length}. Path: #{items_dir}"
+  end
+
+  def build_write_plan(index_payload, item_payloads)
+    index_text = json_text(index_payload)
+    existing_index_text = read_text(@output_dir.join("index.json"))
+    changed_item_ids = []
+    item_text_by_id = {}
+
+    item_payloads.each do |doc_id, payload|
+      item_text = json_text(payload)
+      item_text_by_id[doc_id] = item_text
+      existing_item_text = read_text(@items_dir.join("#{doc_id}.json"))
+      changed_item_ids << doc_id if existing_item_text != item_text
+    end
+
+    existing_item_ids = existing_doc_payload_ids(@items_dir)
+    desired_item_ids = item_payloads.keys.sort
+
+    {
+      index_write: existing_index_text != index_text,
+      index_text: index_text,
+      changed_item_ids: changed_item_ids.sort,
+      stale_item_ids: (existing_item_ids - desired_item_ids).sort,
+      item_text_by_id: item_text_by_id
+    }
+  end
+
+  def existing_doc_payload_ids(items_dir)
+    return [] unless items_dir.exist?
+
+    Dir.glob(items_dir.join("*.json").to_s).sort.map do |file_path|
+      Pathname(file_path).basename(".json").to_s
+    end
+  end
+
+  def read_text(path)
+    return nil unless path.exist?
+
+    path.read
+  end
+
+  def write_text(path, text)
+    path.write(text)
+  end
+
+  def json_text(payload)
+    JSON.pretty_generate(payload) + "\n"
+  end
+
+  def load_json_file(path)
+    return nil unless path.exist?
+
+    JSON.parse(path.read)
+  rescue JSON::ParserError
+    nil
   end
 
   def output_url_base_for(output_dir)

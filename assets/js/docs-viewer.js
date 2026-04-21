@@ -1118,7 +1118,9 @@
     setManagementMessage("Rebuilding docs...", false);
     setStatus("Rebuilding docs...", false);
 
-    fetchManagementJson("/docs/rebuild", "POST", {})
+    fetchManagementJson("/docs/rebuild", "POST", {
+      scope: viewerScope
+    })
       .then(function (payload) {
         var targetDocId = state.selectedDocId || defaultRouteDocId || defaultDocId();
         setManagementMessage(payload.summary_text || "Docs rebuilt.", false);

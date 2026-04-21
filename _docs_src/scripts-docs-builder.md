@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
-last_updated: 2026-04-19
+last_updated: 2026-04-21
 parent_id: scripts
 sort_order: 20
 ---
@@ -41,6 +41,7 @@ Generated outputs:
 - resolves `[[media:...]]` tokens in doc bodies against `_config.yml` `media_base` before rendering
 - rewrites doc-to-doc links onto the scope-owned viewer route
 - writes one index payload plus one per-doc payload for each configured scope
+- writes incrementally: unchanged payloads are skipped, and stale per-doc payloads are removed when they no longer belong to the rebuilt scope
 
 ## Publishing Rules
 
@@ -117,10 +118,14 @@ Flags:
 
 ## Operational Notes
 
-- `bin/dev-studio` runs this builder once before starting Jekyll
+- `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll
 - if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs.rb --write`
-- the Studio docs viewer also exposes a local `Rebuild docs` button beside the Studio docs search field; that button calls the localhost Studio service, which runs the same builder command from the repo root
+- docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
 - changing only the docs data does not require any separate asset pipeline
+- current write behavior is incremental within the rebuilt scope:
+  - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
+  - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer publishes that doc
+- if you want a scope-specific rebuild, use `--scope studio` or `--scope library` explicitly
 
 Jekyll verification builds:
 

@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-c4d6dc23f3937ab606ea5525d761436b",
-    "generated_at_utc": "2026-04-21T20:59:36Z",
+    "version": "blake2b-faaf82b236da6aa5afc6a3ae317883d7",
+    "generated_at_utc": "2026-04-21T21:37:14Z",
     "count": 117
   },
   "entries": [
@@ -83,10 +83,10 @@
       "kind": "doc",
       "title": "Docs Management Server",
       "href": "/docs/?scope=studio&doc=scripts-docs-management-server",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-21",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-19 • Scripts",
+      "display_meta": "2026-04-21 • Scripts",
       "search_terms": [
         "scripts-docs-management-server",
         "scripts",
@@ -94,12 +94,12 @@
         "management",
         "server",
         "docs management server",
-        "2026-04-19",
+        "2026-04-21",
         "2026",
         "04",
-        "19"
+        "21"
       ],
-      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-19 2026 04 19"
+      "search_text": "scripts-docs-management-server scripts docs management server docs management server 2026-04-21 2026 04 21"
     },
     {
       "id": "ui-request-docs-viewer-favourites-spec",
@@ -410,10 +410,10 @@
       "kind": "doc",
       "title": "Docs Viewer Builder",
       "href": "/docs/?scope=studio&doc=scripts-docs-builder",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-21",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-19 • Scripts",
+      "display_meta": "2026-04-21 • Scripts",
       "search_terms": [
         "scripts-docs-builder",
         "scripts",
@@ -421,12 +421,12 @@
         "builder",
         "docs viewer builder",
         "viewer",
-        "2026-04-19",
+        "2026-04-21",
         "2026",
         "04",
-        "19"
+        "21"
       ],
-      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-19 2026 04 19"
+      "search_text": "scripts-docs-builder scripts docs builder docs viewer builder viewer 2026-04-21 2026 04 21"
     },
     {
       "id": "ui-request-docs-viewer-favourites-task",
@@ -613,10 +613,10 @@
       "kind": "doc",
       "title": "Studio Config and Save Flow",
       "href": "/docs/?scope=studio&doc=studio-config-and-save-flow",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-21",
       "parent_id": "studio",
       "parent_title": "Studio",
-      "display_meta": "2026-04-18 • Studio",
+      "display_meta": "2026-04-21 • Studio",
       "search_terms": [
         "studio-config-and-save-flow",
         "studio",
@@ -625,12 +625,12 @@
         "save",
         "flow",
         "studio config and save flow",
-        "2026-04-18",
+        "2026-04-21",
         "2026",
         "04",
-        "18"
+        "21"
       ],
-      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-04-18 2026 04 18"
+      "search_text": "studio-config-and-save-flow studio config and save flow studio config and save flow 2026-04-21 2026 04 21"
     },
     {
       "id": "studio-ui-framework",

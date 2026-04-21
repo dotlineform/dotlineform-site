@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T21:08:33Z",
+  "generated_at": "2026-04-21T21:31:52Z",
   "docs": [
     {
       "scope": "studio",
@@ -38,7 +38,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-management-server",
       "title": "Docs Management Server",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-21",
       "parent_id": "scripts",
       "sort_order": 10,
       "source_path": "scripts-docs-management-server.md",
@@ -192,7 +192,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-builder",
       "title": "Docs Viewer Builder",
-      "last_updated": "2026-04-19",
+      "last_updated": "2026-04-21",
       "parent_id": "scripts",
       "sort_order": 20,
       "source_path": "scripts-docs-builder.md",
@@ -291,7 +291,7 @@
       "scope": "studio",
       "doc_id": "studio-config-and-save-flow",
       "title": "Studio Config and Save Flow",
-      "last_updated": "2026-04-18",
+      "last_updated": "2026-04-21",
       "parent_id": "studio",
       "sort_order": 20,
       "source_path": "studio-config-and-save-flow.md",

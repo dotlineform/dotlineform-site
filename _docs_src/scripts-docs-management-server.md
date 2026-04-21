@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
-last_updated: 2026-04-19
+last_updated: 2026-04-21
 parent_id: scripts
 sort_order: 10
 ---
@@ -69,13 +69,16 @@ Request behavior:
 `POST /docs/rebuild` expects:
 
 ```json
-{}
+{
+  "scope": "studio"
+}
 ```
 
 Rebuild behavior:
 
-- rebuilds generated docs payloads for Studio and Library
-- rebuilds docs-search artifacts for Studio and Library
+- `scope` must be `studio` or `library`
+- rebuilds generated docs payloads for the requested scope
+- rebuilds the docs-search artifact for the requested scope
 - is intended for local manage mode rather than the public hosted site
 
 `POST /docs/open-source` expects:
