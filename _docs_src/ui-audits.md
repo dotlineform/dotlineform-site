@@ -75,7 +75,15 @@ Audit docs should follow the output structure defined in [Studio UI Conformance 
 - coverage summary
 - findings
 - cleanup opportunities
+- remediation status
+- open decisions
 - verification
+
+Working rule:
+
+- keep post-audit remediation progress in the audit doc itself
+- keep unresolved page or shared-design decisions visible in the audit doc until they are either resolved or promoted into a real shared request/spec task
+- do not use [Site Change Log](/docs/?scope=studio&doc=site-change-log) as the open-audit tracker
 
 ## Reading Order
 

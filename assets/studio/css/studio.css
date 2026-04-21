@@ -437,6 +437,11 @@ textarea.tagStudio__input:disabled {
   color: inherit;
 }
 
+span.tagStudio__input--readonlyDisplay.tagStudio__input--defaultValue,
+.tagStudio__input--readonlyDisplay.tagStudio__input--defaultValue {
+  color: var(--studio-default-value);
+}
+
 span.tagStudio__input--readonlyDisplay {
   min-height: var(--studio-control-height);
   display: inline-flex;

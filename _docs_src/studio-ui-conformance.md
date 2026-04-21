@@ -173,7 +173,39 @@ If the audit identifies redundant implementation after a fix, record:
 
 This section is required even when the page mostly conforms.
 
-### 4. Verification
+### 4. Remediation Status
+
+Use the audit doc as the ongoing record of post-audit remediation for that page until the page is settled.
+
+Record:
+
+- which findings are still `open`
+- which findings are `in-progress`
+- which findings are `resolved`
+- which findings are `deferred`
+- what cleanup has actually been completed
+- what cleanup is still pending
+
+Do not use [Site Change Log](/docs/?scope=studio&doc=site-change-log) as the open remediation tracker.
+
+The site change log should record implemented outcomes only.
+
+### 5. Open Decisions
+
+Record unresolved decisions that should not be buried inside findings or cleanup notes.
+
+Use this section for:
+
+- page-level decisions that still affect the remediation path
+- shared-composition or shared-design questions exposed by the audit
+- unresolved decisions about whether a pattern should stay local or move into shared coverage
+
+Escalation rule:
+
+- keep the decision in the audit doc while it remains part of that page’s remediation path
+- move it into [UI Requests](/docs/?scope=studio&doc=ui-requests) only when it has become a real shared design/spec task rather than a normal page fix
+
+### 6. Verification
 
 Record:
 
@@ -195,6 +227,12 @@ This keeps page audit records separate from:
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log), which records implementation history
 - [Design](/docs/?scope=studio&doc=design), which defines standards
 - [UI Requests](/docs/?scope=studio&doc=ui-requests), which records task/request specs
+
+Working rule:
+
+- keep post-audit remediation, cleanup progress, and unresolved decisions in the audit doc itself
+- use [Site Change Log](/docs/?scope=studio&doc=site-change-log) only when a change has actually been implemented
+- use [UI Requests](/docs/?scope=studio&doc=ui-requests) only when the audit exposes a real shared design task that needs its own spec or request doc
 
 ## What Should Be Flagged
 
@@ -276,6 +314,16 @@ Cleanup opportunities:
 - redundant local CSS:
 - redundant local markup:
 - follow-up steps:
+
+Remediation status:
+- finding 1:
+- finding 2:
+- cleanup completed:
+- cleanup pending:
+
+Open decisions:
+- decision:
+- current owner/home:
 
 Verification:
 - desktop:

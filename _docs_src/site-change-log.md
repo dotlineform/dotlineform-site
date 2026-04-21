@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Added remediation and open-decision sections to Studio UI audits
+
+**Status:** implemented
+
+**Area:** Studio UI docs / audit workflow
+
+**Summary:**
+Updated the Studio UI conformance process so audit docs now explicitly carry `Remediation Status` and `Open Decisions` sections, and updated the first real audit doc to use that structure.
+
+**Reason:**
+The audit process could record findings and cleanup, but it did not yet make clear where post-audit remediation and unresolved decisions should live. Without that, important follow-up work could be buried or drift into the site change log.
+
+**Effect:**
+Studio audit docs are now explicitly living records until a page is settled. Post-audit remediation stays in the audit doc, the site change log remains reserved for implemented outcomes, and only genuinely shared design/spec questions should move into [UI Requests](/docs/?scope=studio&doc=ui-requests).
+
+**Affected files/docs:**
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
+- [UI Audit: Catalogue Moment Import (2026-04-21)](/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-21] Lightened Studio default-text treatment for inputs
 
 **Status:** implemented
