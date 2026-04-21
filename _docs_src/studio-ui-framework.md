@@ -24,6 +24,7 @@ Site-wide interaction defaults, docs-viewer UI standards, and public-search UI s
 Related references:
 
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
 - [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)

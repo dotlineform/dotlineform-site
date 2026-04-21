@@ -111,6 +111,29 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-21 / UI-022
+
+- status: adopted
+- route: Studio UI audit workflow
+- issue: the current Studio UI docs were strong enough to guide implementation and individual fixes, but there was no single conformance contract that made “check whether page X conforms to the full Studio standards” a repeatable, properly scoped audit. That left coverage gaps, fixability, and cleanup follow-up too implicit.
+- triage: systemic
+- reasoning: once multiple shared primitives and permanent rules exist, page review should not depend only on memory or expert judgment. The repo needs one explicit audit contract that defines authoritative sources, coverage states, required finding categories, and cleanup expectations.
+- permanent rule: Studio page-level UI audits should use the shared conformance spec. Audit output must distinguish non-conformance from coverage gaps, report whether fixes belong in shared or local code, and record redundant CSS/markup cleanup that becomes possible after a fix.
+- enforcement point: `_docs_src/studio-ui-conformance.md`, plus signposting from `design.md`, `studio-ui-start.md`, `ui-catalogue.md`, and `studio-ui-framework.md`
+- files changed:
+  - `_docs_src/studio-ui-conformance.md`
+  - `_docs_src/design.md`
+  - `_docs_src/studio-ui-start.md`
+  - `_docs_src/ui-catalogue.md`
+  - `_docs_src/studio-ui-framework.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - inspect the docs viewer entries and confirm the conformance spec is reachable from the main Design/Studio UI entrypoints
+  - confirm the new doc defines coverage states, audit workflow, output requirements, and cleanup reporting
+- follow-up:
+  - add published primitive pages for list shell, toolbar, and modal shell so more pages can eventually qualify for full conformance rather than covered-scope conformance only
+
 ## UI Rule Log 2026-04-21 / UI-021
 
 - status: adopted

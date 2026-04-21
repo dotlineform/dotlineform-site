@@ -64,6 +64,7 @@ Do not use the catalogue for:
 Those still belong in:
 
 - [UI Framework](/docs/?scope=studio&doc=ui-framework)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 - [UI Requests](/docs/?scope=studio&doc=ui-requests)
 

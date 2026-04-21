@@ -1,7 +1,7 @@
 ---
 doc_id: design
 title: "Design"
-last_updated: 2026-04-19
+last_updated: 2026-04-21
 parent_id: ""
 sort_order: 40
 ---
@@ -27,6 +27,7 @@ Related references:
 - **[Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)** for the short Studio UI preflight and implementation checklist
 - **[UI Framework](/docs/?scope=studio&doc=ui-framework)** for the site-wide UI contract, docs-viewer UI standards, and public search UI standards
 - **[UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)** for the per-primitive visual catalogue and screenshot-backed references
+- **[Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)** for the page-audit contract, coverage model, and required conformance-report format
 - **[Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)** for shared Studio naming boundaries, primitives, and modal patterns
 - **[CSS Primitives](/docs/?scope=studio&doc=css-primitives)** for the shared CSS contract across the site and Studio
 - **[CSS Refactor](/docs/?scope=studio&doc=css-refactor)** for the active cleanup and migration strategy
@@ -36,7 +37,8 @@ Recommended reading order:
 
 1. [UI Framework](/docs/?scope=studio&doc=ui-framework)
 2. [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start) when working on Studio pages
-3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
-4. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) as the deeper Studio reference
-5. [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
-6. [CSS Refactor](/docs/?scope=studio&doc=css-refactor)
+3. [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) when the task is a page-level UI audit
+4. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+5. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) as the deeper Studio reference
+6. [CSS Primitives](/docs/?scope=studio&doc=css-primitives)
+7. [CSS Refactor](/docs/?scope=studio&doc=css-refactor)

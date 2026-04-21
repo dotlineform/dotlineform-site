@@ -1,7 +1,7 @@
 ---
 doc_id: studio-ui-start
 title: "Studio UI Start"
-last_updated: 2026-04-20
+last_updated: 2026-04-21
 parent_id: design
 sort_order: 15
 ---
@@ -55,6 +55,7 @@ Before adding or changing Studio UI:
 Relevant references:
 
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 
 ## UI Copy Check
@@ -101,6 +102,7 @@ If it is systemic:
 
 Relevant references:
 
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 
@@ -119,6 +121,7 @@ Before finishing Studio UI work:
 
 Use the detailed docs only as needed:
 
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) for page-level UI audits, coverage gaps, and required conformance reporting
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for Studio shared contracts and primitives
 - [UI Framework](/docs/?scope=studio&doc=ui-framework) for site-wide interaction defaults
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for primitive pages and implementation notes

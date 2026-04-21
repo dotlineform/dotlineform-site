@@ -7,6 +7,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Added a Studio UI conformance spec
+
+**Status:** implemented
+
+**Area:** Studio UI docs / audit workflow
+
+**Summary:**
+Added [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) so Studio page reviews now have an explicit audit contract covering authoritative sources, coverage states, finding categories, fixability, and cleanup reporting.
+
+**Reason:**
+The existing Studio UI docs were strong enough to guide implementation, but they did not yet make “check page X against full Studio design standards” a valid, repeatable audit. The missing piece was a conformance contract that distinguishes true non-conformance from coverage gaps and requires cleanup follow-up rather than stopping at the first visible fix.
+
+**Effect:**
+Studio UI work now has a dedicated page-level audit spec, and the main Design/Studio UI entry docs point to it directly. Reviewers can now report whether a page fully conforms, conforms only within covered scope, or is blocked by missing shared coverage, while also recording redundant code/CSS cleanup required after fixes.
+
+**Affected files/docs:**
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [Design](/docs/?scope=studio&doc=design)
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
+- [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-21] Standardized current-record panels on Readonly Display
 
 **Status:** implemented
