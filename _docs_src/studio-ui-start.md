@@ -56,6 +56,7 @@ Relevant references:
 
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 
 ## UI Copy Check
@@ -114,6 +115,7 @@ Before finishing Studio UI work:
 - update shared docs if the contract changed
 - update [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules) if the issue is systemic
 - update [Site Change Log](/docs/?scope=studio&doc=site-change-log) for meaningful Studio/site changes
+- save any formal page-level conformance review in [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - verify desktop and mobile behavior
 - run the sanitization scan on changed files
 
@@ -122,6 +124,7 @@ Before finishing Studio UI work:
 Use the detailed docs only as needed:
 
 - [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) for page-level UI audits, coverage gaps, and required conformance reporting
+- [UI Audits](/docs/?scope=studio&doc=ui-audits) for saved page-level conformance review outputs
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework) for Studio shared contracts and primitives
 - [UI Framework](/docs/?scope=studio&doc=ui-framework) for site-wide interaction defaults
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue) for primitive pages and implementation notes

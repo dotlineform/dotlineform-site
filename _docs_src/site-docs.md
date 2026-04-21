@@ -36,6 +36,8 @@ Use it as the default entry point for `/docs/`.
 
 - **[Site Change Log](/docs/?scope=studio&doc=site-change-log)**
   meaningful non-search site and Studio history.
+- **[UI Audits](/docs/?scope=studio&doc=ui-audits)**
+  saved page-level UI conformance reviews and follow-up audit records.
 - **[Site Change Log Guidance](/docs/?scope=studio&doc=site-change-log-guidance)**
   rules for maintaining the site change log.
 

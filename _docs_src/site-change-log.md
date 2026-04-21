@@ -7,6 +7,29 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Added a root UI Audits section for conformance outputs
+
+**Status:** implemented
+
+**Area:** Studio UI docs / audit records
+
+**Summary:**
+Added a new root [UI Audits](/docs/?scope=studio&doc=ui-audits) section and a standard `ui-audit-<page-key>-<yyyymmdd>` naming convention for saved page-level UI conformance reviews.
+
+**Reason:**
+The new Studio UI conformance spec defined how page audits should be judged, but it did not yet define where those audit outputs should live. That would have left review results scattered or implicit.
+
+**Effect:**
+Formal Studio UI audit outputs now have a stable docs-viewer home, separate from [Site Change Log](/docs/?scope=studio&doc=site-change-log) implementation history and the shared standards docs. The main Design and Studio entry points now signpost both how to run an audit and where to save it.
+
+**Affected files/docs:**
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [Design](/docs/?scope=studio&doc=design)
+- [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
+- [Site Docs](/docs/?scope=studio&doc=site-docs)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-21] Added a Studio UI conformance spec
 
 **Status:** implemented

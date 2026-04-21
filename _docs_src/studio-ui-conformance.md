@@ -25,6 +25,7 @@ Related references:
 - [Studio UI Start](/docs/?scope=studio&doc=studio-ui-start)
 - [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [UI Audits](/docs/?scope=studio&doc=ui-audits)
 - [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
 - [Site Change Log](/docs/?scope=studio&doc=site-change-log)
 
@@ -182,6 +183,19 @@ Record:
 - any code inspection used
 - any blocked verification path
 
+## Where Audit Output Lives
+
+Save page-level audit outputs in [UI Audits](/docs/?scope=studio&doc=ui-audits), using:
+
+- `doc_id: ui-audit-<page-key>-<yyyymmdd>`
+- source file: `_docs_src/ui-audit-<page-key>-<yyyymmdd>.md`
+
+This keeps page audit records separate from:
+
+- [Site Change Log](/docs/?scope=studio&doc=site-change-log), which records implementation history
+- [Design](/docs/?scope=studio&doc=design), which defines standards
+- [UI Requests](/docs/?scope=studio&doc=ui-requests), which records task/request specs
+
 ## What Should Be Flagged
 
 The audit must flag:
@@ -230,7 +244,8 @@ If a user or future Codex session asks to check whether page X conforms to Studi
 3. [UI Catalogue](/docs/?scope=studio&doc=ui-catalogue)
 4. [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
 5. [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
-6. the page-specific doc if one exists
+6. [UI Audits](/docs/?scope=studio&doc=ui-audits)
+7. the page-specific audit doc if one exists
 
 ## Recommended Output Template
 

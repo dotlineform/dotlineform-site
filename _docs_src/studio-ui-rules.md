@@ -111,6 +111,29 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-21 / UI-023
+
+- status: adopted
+- route: Studio UI audit record storage
+- issue: after adding the shared conformance spec, the repo still lacked a defined home and naming convention for the resulting page-level audit outputs. Without that, audit results would drift into ad hoc files or be lost in conversational history.
+- triage: systemic
+- reasoning: conformance reviews need durable, searchable records that are clearly separate from standards docs and change logs. A dedicated root docs-viewer section keeps audit evidence visible without conflating it with implementation history.
+- permanent rule: save formal page-level Studio UI conformance reviews under the root [UI Audits](/docs/?scope=studio&doc=ui-audits) section. Use `ui-audit-<page-key>-<yyyymmdd>` doc ids and file names unless a later shared rule replaces that convention.
+- enforcement point: `_docs_src/ui-audits.md` and `_docs_src/studio-ui-conformance.md`
+- files changed:
+  - `_docs_src/ui-audits.md`
+  - `_docs_src/studio-ui-conformance.md`
+  - `_docs_src/design.md`
+  - `_docs_src/studio-ui-start.md`
+  - `_docs_src/site-docs.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - confirm the new root-level section appears near the change log in docs navigation
+  - confirm the conformance spec now states where audit outputs should be saved
+- follow-up:
+  - create the first real page-audit doc using this convention once the next formal conformance review is run
+
 ## UI Rule Log 2026-04-21 / UI-022
 
 - status: adopted
