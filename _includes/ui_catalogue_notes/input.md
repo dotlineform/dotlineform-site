@@ -18,6 +18,7 @@
 2. Disabled fields keep their geometry but mute the displayed value.
 3. If a value is always read-only, use `tagStudio__input--readonlyDisplay` instead of `disabled` so the text stays normal while the background becomes transparent.
 4. If a page needs to show a visible default value in muted styling before the user edits it, use placeholder text for text-like fields and `tagStudio__input--defaultValue` for control types that do not support placeholder behavior cleanly.
+5. Default text should read lighter than normal muted labels and helper text, so it remains visibly distinct from entered content.
 
 ### Design Guidance
 

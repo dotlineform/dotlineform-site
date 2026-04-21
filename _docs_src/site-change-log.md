@@ -7,6 +7,45 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Lightened Studio default-text treatment for inputs
+
+**Status:** implemented
+
+**Area:** Studio UI / shared input contract
+
+**Summary:**
+Adjusted the shared Studio input styling so placeholder text, default-value displays, and disabled values now use a lighter dedicated default-text tone instead of the same muted color used for ordinary labels and helper text.
+
+**Reason:**
+Default text was too close in tone to entered content, especially on pages such as `/studio/catalogue-work/` where the work search placeholder sat beside native empty date fields whose browser-supplied date parts already appeared lighter.
+
+**Effect:**
+Search placeholders, file placeholders, disabled field values, and other default-value surfaces now read more clearly as unentered or unavailable state without washing out the normal muted label/meta layer.
+
+**Affected files/docs:**
+- `assets/studio/css/studio.css`
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
+## [2026-04-21] Clarified audit-outcome precedence for Studio UI conformance reviews
+
+**Status:** implemented
+
+**Area:** Studio UI docs / audit workflow
+
+**Summary:**
+Updated [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance) so `non-conforming` explicitly overrides `blocked by coverage gaps` whenever a page has a real covered-area standards failure.
+
+**Reason:**
+The conformance spec listed the available audit outcomes, but it did not explicitly define which outcome should win when a page had both real non-conformance and additional standards gaps. That ambiguity would have allowed inconsistent reporting.
+
+**Effect:**
+Studio page audits now have a clear outcome-precedence rule: report real covered-area failures as `non-conforming`, and report coverage gaps alongside them rather than using gaps to replace the result. `blocked by coverage gaps` is now reserved for coverage-only cases.
+
+**Affected files/docs:**
+- [Studio UI Conformance Spec](/docs/?scope=studio&doc=studio-ui-conformance)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+
 ## [2026-04-21] Added a root UI Audits section for conformance outputs
 
 **Status:** implemented

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-21T19:27:30Z",
+  "generated_at": "2026-04-21T20:01:56Z",
   "docs": [
     {
       "scope": "studio",
@@ -132,6 +132,17 @@
       "source_path": "studio-runtime.md",
       "viewer_url": "/docs/?scope=studio&doc=studio-runtime",
       "content_url": "/assets/data/docs/scopes/studio/by-id/studio-runtime.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "ui-audit-catalogue-moment-import-20260421",
+      "title": "UI Audit: Catalogue Moment Import (2026-04-21)",
+      "last_updated": "2026-04-21",
+      "parent_id": "ui-audits",
+      "sort_order": 10,
+      "source_path": "ui-audit-catalogue-moment-import-20260421.md",
+      "viewer_url": "/docs/?scope=studio&doc=ui-audit-catalogue-moment-import-20260421",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/ui-audit-catalogue-moment-import-20260421.json"
     },
     {
       "scope": "studio",

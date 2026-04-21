@@ -111,6 +111,47 @@ Use this decision test:
 
 Add new entries at the top of this section.
 
+## UI Rule Log 2026-04-21 / UI-025
+
+- status: adopted
+- route: Studio shared input default-text treatment
+- issue: Studio placeholder and default-value text was using the same muted tone as ordinary labels and helper text, which made default text too close to entered content. That was especially noticeable beside native empty date fields, whose browser-supplied placeholder parts already appear lighter.
+- triage: systemic
+- reasoning: default text is not the same semantic layer as ordinary muted UI copy. It needs a lighter dedicated tone so search placeholders, file placeholders, disabled values, and default-value displays all read clearly as unentered or unavailable state.
+- permanent rule: Studio inputs should use a dedicated lighter default-text tone for placeholder text, default-value displays, and disabled values. Do not reuse the ordinary muted label/meta tone for default text.
+- enforcement point: `assets/studio/css/studio.css`, `_docs_src/studio-ui-framework.md`, `_includes/ui_catalogue_notes/input.md`
+- files changed:
+  - `assets/studio/css/studio.css`
+  - `_docs_src/studio-ui-framework.md`
+  - `_includes/ui_catalogue_notes/input.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - confirm search placeholders on `/studio/catalogue-work/` are visibly lighter than entered text
+  - confirm the file placeholder on `/studio/catalogue-moment-import/` uses the same lighter default-text treatment
+  - confirm the input primitive page still demonstrates muted default text clearly
+- follow-up:
+  - none
+
+## UI Rule Log 2026-04-21 / UI-024
+
+- status: adopted
+- route: Studio UI audit outcome selection
+- issue: the conformance spec defined the possible page-audit outcomes, but it did not state which result should win when a page has both a real covered-area non-conformance and additional coverage gaps.
+- triage: systemic
+- reasoning: reviewers need one explicit precedence rule so outcome selection stays consistent. Without it, the same page could be reported as either `non-conforming` or `blocked by coverage gaps` depending on reviewer preference.
+- permanent rule: if a page has any real non-conformance in a covered area, the overall audit outcome is `non-conforming`. Coverage gaps must still be reported, but they do not replace or soften that result. Use `blocked by coverage gaps` only when the unresolved issues are coverage-only.
+- enforcement point: `_docs_src/studio-ui-conformance.md`
+- files changed:
+  - `_docs_src/studio-ui-conformance.md`
+  - `_docs_src/studio-ui-rules.md`
+  - `_docs_src/site-change-log.md`
+- local verification:
+  - confirm the conformance spec pass/fail section now defines outcome precedence explicitly
+  - confirm the rule log records the precedence rule as permanent guidance
+- follow-up:
+  - none
+
 ## UI Rule Log 2026-04-21 / UI-023
 
 - status: adopted

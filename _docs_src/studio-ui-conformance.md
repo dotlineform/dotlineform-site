@@ -235,6 +235,12 @@ Otherwise use one of these outcomes:
 - `non-conforming`
 - `blocked by coverage gaps`
 
+Outcome precedence:
+
+- if a page has any real non-conformance in a covered area, the overall outcome is `non-conforming`
+- report coverage gaps separately, but do not let them soften or replace a real covered-area failure
+- use `blocked by coverage gaps` only when the unresolved issues are coverage-only and there is no separate covered-area non-conformance
+
 ## Signposting Rule
 
 If a user or future Codex session asks to check whether page X conforms to Studio UI standards, the expected reading order is:

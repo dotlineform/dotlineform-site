@@ -51,6 +51,7 @@
   --studio-line-modal: #e0e0e0;
   --studio-line-input: #d6d6d6;
   --studio-muted: #666;
+  --studio-default-value: #8c8c8c;
   --studio-muted-soft: #6d6d6d;
   --studio-muted-body: #4a4a4a;
   --studio-focus: #5f8ffb;
@@ -405,7 +406,7 @@ a.tagStudio__panelLink:focus-visible {
 }
 
 .tagStudio__input::placeholder {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-default-value);
   opacity: 1;
 }
 
@@ -422,13 +423,13 @@ select.tagStudio__input {
 input.tagStudio__input:disabled,
 select.tagStudio__input:disabled,
 textarea.tagStudio__input:disabled {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-default-value);
   background: var(--surface, var(--studio-surface));
   cursor: not-allowed;
 }
 
 .tagStudio__input--defaultValue {
-  color: var(--muted, var(--studio-muted));
+  color: var(--studio-default-value);
 }
 
 .tagStudio__input--readonlyDisplay {
