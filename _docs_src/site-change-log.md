@@ -14,13 +14,13 @@ sort_order: 270
 **Area:** Studio UI / catalogue editor family
 
 **Summary:**
-Updated the catalogue editor family so the info-only current-record panels now use the Readonly Display treatment instead of the older muted readonly surface, including the displayed field values and the summary/readiness boxes inside those panels.
+Updated the catalogue editor family so the info-only current-record panels now use the Readonly Display treatment instead of the older muted readonly surface, and applied the same treatment to the workbook path and preview-summary values on `/studio/bulk-add-work/`.
 
 **Reason:**
 Those panels are display-only by design, so the older `tagStudioForm__readonly` styling was no longer the right semantic or visual treatment. Keeping it in place also left avoidable styling and font-size drift between work/detail/file/link/series editors and the newer input primitive contract.
 
 **Effect:**
-The current-record sections on the work, work-detail, work-file, work-link, and series editors now present one consistent information-display style: bordered shells with transparent backgrounds and normal text color, while still preserving links and structured readiness content inside the same surfaces.
+The current-record sections on the work, work-detail, work-file, work-link, and series editors now present one consistent information-display style: bordered shells with transparent backgrounds and normal text color, while still preserving links and structured readiness content inside the same surfaces. The bulk import page now uses that same treatment for its workbook path and preview-summary values.
 
 **Affected files/docs:**
 - [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
@@ -30,6 +30,8 @@ The current-record sections on the work, work-detail, work-file, work-link, and 
 - `assets/studio/js/catalogue-work-file-editor.js`
 - `assets/studio/js/catalogue-work-link-editor.js`
 - `assets/studio/js/catalogue-series-editor.js`
+ - `assets/studio/js/bulk-add-work.js`
+ - `studio/bulk-add-work/index.md`
 
 ## [2026-04-21] Clarified numeric field and label-alignment rules for Studio forms
 

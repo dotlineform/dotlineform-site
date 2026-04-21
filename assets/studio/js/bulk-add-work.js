@@ -56,7 +56,7 @@ function buildSummaryHtml(state, preview) {
   return fields.map((field) => `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(field.label)}</span>
-      <span class="tagStudio__input tagStudioForm__readonly">${escapeHtml(field.value)}</span>
+      <span class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(field.value)}</span>
     </div>
   `).join("");
 }

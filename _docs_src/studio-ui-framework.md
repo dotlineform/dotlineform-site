@@ -117,6 +117,7 @@ Input rule:
 - stepped value controls should use full-height small buttons rather than half-height split-arrow cells
 - in two-column Studio form rows, labels should be vertically centered with single-line controls and top-aligned only for multiline controls; prefer explicit alignment classes such as `tagStudioForm__field--topAligned` over padding offsets
 - info-only current-record panels in the catalogue editor family should use the Readonly Display treatment rather than the older muted `tagStudioForm__readonly` surface
+- the same Readonly Display treatment should be used for other display-only Studio summary/value surfaces such as import-workbook paths and preview summaries when they are not editable controls
 
 ### Toolbar pattern
 

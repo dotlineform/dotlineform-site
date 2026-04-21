@@ -114,23 +114,26 @@ Add new entries at the top of this section.
 ## UI Rule Log 2026-04-21 / UI-021
 
 - status: adopted
-- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, `/studio/catalogue-series/`
-- issue: the current-record panels in the catalogue editor family were still using the older muted `tagStudioForm__readonly` surface for info-only values, summary boxes, and readiness boxes. That now conflicts with the shared Readonly Display rule and creates styling/font-size drift within the same panel family.
+- route: `/studio/catalogue-work/`, `/studio/catalogue-work-detail/`, `/studio/catalogue-work-file/`, `/studio/catalogue-work-link/`, `/studio/catalogue-series/`, `/studio/bulk-add-work/`
+- issue: the current-record panels in the catalogue editor family, plus the bulk-add-work workbook/preview-summary values, were still using the older muted `tagStudioForm__readonly` surface for display-only values. That now conflicts with the shared Readonly Display rule and creates styling/font-size drift between related Studio info panels.
 - triage: systemic
-- reasoning: these panels are display-only by design. They are not temporarily unavailable inputs and they are not editable form surfaces. The clearer shared contract is the Readonly Display treatment: keep the field shell and border, remove the filled background, and keep normal text styling. Leaving the older readonly surface here would preserve a distinction that the product no longer intends.
-- permanent rule: in the catalogue editor family, info-only current-record panels should use the Readonly Display pattern for displayed field values, summary values, and readiness bodies. Reserve `tagStudioForm__readonly` for other cases only when a deliberately muted boxed surface is still part of the interaction design.
-- enforcement point: the current-record renderers in `assets/studio/js/catalogue-work-editor.js`, `catalogue-work-detail-editor.js`, `catalogue-work-file-editor.js`, `catalogue-work-link-editor.js`, and `catalogue-series-editor.js`, plus the shared Studio UI framework docs
+- reasoning: these surfaces are display-only by design. They are not temporarily unavailable inputs and they are not editable form surfaces. The clearer shared contract is the Readonly Display treatment: keep the field shell and border, remove the filled background, and keep normal text styling. Leaving the older readonly surface here would preserve a distinction that the product no longer intends.
+- permanent rule: display-only Studio value surfaces such as catalogue current-record panels, import-workbook paths, preview summaries, and readiness bodies should use the Readonly Display pattern. Reserve `tagStudioForm__readonly` for other cases only when a deliberately muted boxed surface is still part of the interaction design.
+- enforcement point: the current-record renderers in `assets/studio/js/catalogue-work-editor.js`, `catalogue-work-detail-editor.js`, `catalogue-work-file-editor.js`, `catalogue-work-link-editor.js`, `catalogue-series-editor.js`, the bulk import route/template, and the shared Studio UI framework docs
 - files changed:
   - `assets/studio/js/catalogue-work-editor.js`
   - `assets/studio/js/catalogue-work-detail-editor.js`
   - `assets/studio/js/catalogue-work-file-editor.js`
   - `assets/studio/js/catalogue-work-link-editor.js`
   - `assets/studio/js/catalogue-series-editor.js`
+  - `assets/studio/js/bulk-add-work.js`
+  - `studio/bulk-add-work/index.md`
   - `_docs_src/studio-ui-framework.md`
   - `_docs_src/studio-ui-rules.md`
   - `_docs_src/site-change-log.md`
 - local verification:
   - inspect each catalogue editor current-record panel and confirm the values use transparent Readonly Display shells rather than muted filled boxes
+  - inspect `/studio/bulk-add-work/` and confirm the workbook path and preview summary values use the same treatment
   - confirm links inside those display shells still inherit the surrounding text styling
   - confirm summary/readiness typography remains consistent across work, detail, file, link, and series editors
 - follow-up:

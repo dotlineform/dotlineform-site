@@ -41,7 +41,7 @@ studio_page_doc: /docs/?scope=studio&doc=bulk-add-work
         </label>
         <div class="tagStudioForm__field">
           <span class="tagStudioForm__label" id="bulkAddWorkWorkbookLabel">workbook</span>
-          <span class="tagStudio__input tagStudioForm__readonly" id="bulkAddWorkWorkbook">{{ bulk_import_workbook }}</span>
+          <span class="tagStudio__input tagStudio__input--readonlyDisplay" id="bulkAddWorkWorkbook">{{ bulk_import_workbook }}</span>
         </div>
       </div>
     </section>
