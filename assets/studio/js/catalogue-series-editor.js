@@ -124,7 +124,7 @@ function renderReadiness(state) {
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(title)}</span>
-        <div class="tagStudioForm__readonly catalogueReadiness__body">
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
           ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
           ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
@@ -212,8 +212,8 @@ function renderReadonlyField(field, readonlyNode, state) {
   label.textContent = field.label;
   wrapper.appendChild(label);
 
-  const value = document.createElement("span");
-  value.className = "tagStudio__input tagStudioForm__readonly";
+  const value = document.createElement("div");
+  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
   value.textContent = "—";
   wrapper.appendChild(value);
 
@@ -450,13 +450,13 @@ function updateSummary(state) {
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_public_link", "Open public series page"))}</span>
-      <span class="tagStudioForm__readonly">
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
         ${record ? `<a href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">${escapeHtml(record.series_id)}</a>` : "—"}
-      </span>
+      </div>
     </div>
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_member_count", "member works"))}</span>
-      <span class="tagStudioForm__readonly">${escapeHtml(String(memberCount))}</span>
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(String(memberCount))}</div>
     </div>
   `;
   state.runtimeStateNode.textContent = state.rebuildPending

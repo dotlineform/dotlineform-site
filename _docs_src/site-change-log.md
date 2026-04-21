@@ -7,6 +7,30 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-21] Standardized current-record panels on Readonly Display
+
+**Status:** implemented
+
+**Area:** Studio UI / catalogue editor family
+
+**Summary:**
+Updated the catalogue editor family so the info-only current-record panels now use the Readonly Display treatment instead of the older muted readonly surface, including the displayed field values and the summary/readiness boxes inside those panels.
+
+**Reason:**
+Those panels are display-only by design, so the older `tagStudioForm__readonly` styling was no longer the right semantic or visual treatment. Keeping it in place also left avoidable styling and font-size drift between work/detail/file/link/series editors and the newer input primitive contract.
+
+**Effect:**
+The current-record sections on the work, work-detail, work-file, work-link, and series editors now present one consistent information-display style: bordered shells with transparent backgrounds and normal text color, while still preserving links and structured readiness content inside the same surfaces.
+
+**Affected files/docs:**
+- [Studio UI Framework](/docs/?scope=studio&doc=studio-ui-framework)
+- [Studio UI Rules And Decision Log](/docs/?scope=studio&doc=studio-ui-rules)
+- `assets/studio/js/catalogue-work-editor.js`
+- `assets/studio/js/catalogue-work-detail-editor.js`
+- `assets/studio/js/catalogue-work-file-editor.js`
+- `assets/studio/js/catalogue-work-link-editor.js`
+- `assets/studio/js/catalogue-series-editor.js`
+
 ## [2026-04-21] Clarified numeric field and label-alignment rules for Studio forms
 
 **Status:** implemented

@@ -116,6 +116,7 @@ Input rule:
 - disabled means temporarily unavailable because another page state is incomplete; values that are always display-only should use `tagStudio__input--readonlyDisplay` instead of the disabled state
 - stepped value controls should use full-height small buttons rather than half-height split-arrow cells
 - in two-column Studio form rows, labels should be vertically centered with single-line controls and top-aligned only for multiline controls; prefer explicit alignment classes such as `tagStudioForm__field--topAligned` over padding offsets
+- info-only current-record panels in the catalogue editor family should use the Readonly Display treatment rather than the older muted `tagStudioForm__readonly` surface
 
 ### Toolbar pattern
 

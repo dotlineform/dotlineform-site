@@ -185,8 +185,8 @@ function renderReadonlyField(field, readonlyNode, state) {
   label.textContent = field.label;
   wrapper.appendChild(label);
 
-  const value = document.createElement("span");
-  value.className = "tagStudio__input tagStudioForm__readonly";
+  const value = document.createElement("div");
+  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
   wrapper.appendChild(value);
 
   readonlyNode.appendChild(wrapper);
@@ -289,9 +289,9 @@ function updateSummary(state) {
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_parent_work", "Open parent work editor"))}</span>
-      <span class="tagStudioForm__readonly">
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
         ${record ? `<a href="${escapeHtml(`${workEditorRoute}?work=${encodeURIComponent(record.work_id)}`)}">${escapeHtml(record.work_id)}</a>` : "—"}
-      </span>
+      </div>
     </div>
   `;
   state.runtimeStateNode.textContent = state.rebuildPending

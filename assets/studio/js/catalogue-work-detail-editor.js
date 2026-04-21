@@ -194,7 +194,7 @@ function renderReadiness(state) {
     return `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(title)}</span>
-        <div class="tagStudioForm__readonly catalogueReadiness__body">
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay catalogueReadiness__body">
           <span class="catalogueReadiness__summary" data-tone="${escapeHtml(tone)}">${escapeHtml(summary)}</span>
           ${sourcePath ? `<span class="tagStudioForm__meta catalogueReadiness__path">${escapeHtml(sourcePath)}</span>` : ""}
           ${nextStep ? `<span class="tagStudioForm__meta">${escapeHtml(nextStep)}</span>` : ""}
@@ -337,8 +337,8 @@ function renderReadonlyField(field, readonlyNode, state) {
   label.textContent = field.label;
   wrapper.appendChild(label);
 
-  const value = document.createElement("span");
-  value.className = "tagStudio__input tagStudioForm__readonly";
+  const value = document.createElement("div");
+  value.className = "tagStudio__input tagStudio__input--readonlyDisplay";
   value.dataset.readonlyField = field.key;
   value.textContent = "—";
   wrapper.appendChild(value);
@@ -546,15 +546,15 @@ function updateSummary(state) {
     state.summaryNode.innerHTML = `
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_selected", "selected details"))}</span>
-        <span class="tagStudioForm__readonly">${escapeHtml(formatSelectionList(state.bulkDetailUids) || "—")}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(formatSelectionList(state.bulkDetailUids) || "—")}</div>
       </div>
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_count", "record count"))}</span>
-        <span class="tagStudioForm__readonly">${escapeHtml(String(selectedCount || 0))}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(String(selectedCount || 0))}</div>
       </div>
       <div class="tagStudioForm__field">
         <span class="tagStudioForm__label">${escapeHtml(t(state, "bulk_summary_parent_count", "parent works"))}</span>
-        <span class="tagStudioForm__readonly">${escapeHtml(formatSelectionList(parentWorkIds) || "—")}</span>
+        <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(formatSelectionList(parentWorkIds) || "—")}</div>
       </div>
     `;
     state.runtimeStateNode.textContent = state.rebuildPending
@@ -573,19 +573,19 @@ function updateSummary(state) {
   state.summaryNode.innerHTML = `
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_public_link", "Open public detail page"))}</span>
-      <span class="tagStudioForm__readonly">
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
         ${record ? `<a href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">${escapeHtml(record.detail_uid)}</a>` : "—"}
-      </span>
+      </div>
     </div>
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_parent_link", "Open work editor"))}</span>
-      <span class="tagStudioForm__readonly">
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">
         ${record ? `<a href="${escapeHtml(workEditorHref)}">${escapeHtml(record.work_id)}</a>` : "—"}
-      </span>
+      </div>
     </div>
     <div class="tagStudioForm__field">
       <span class="tagStudioForm__label">${escapeHtml(t(state, "summary_section_label", "detail section"))}</span>
-      <span class="tagStudioForm__readonly">${escapeHtml(displayValue(record && record.project_subfolder))}</span>
+      <div class="tagStudio__input tagStudio__input--readonlyDisplay">${escapeHtml(displayValue(record && record.project_subfolder))}</div>
     </div>
   `;
 
