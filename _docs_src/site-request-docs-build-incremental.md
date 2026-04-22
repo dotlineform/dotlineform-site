@@ -1,7 +1,7 @@
 ---
 doc_id: site-request-docs-build-incremental
 title: "Docs Build Incremental Request"
-last_updated: 2026-04-23
+last_updated: 2026-04-22
 parent_id: site-docs
 sort_order: 120
 ---
@@ -9,7 +9,7 @@ sort_order: 120
 
 Status:
 
-- in progress
+- implemented
 
 ## Task Status
 
@@ -21,7 +21,7 @@ Status:
 - Task 6. Align Search Follow-Through: implemented
 - Task 7. Define `dev-studio` Live Rebuild Behavior: implemented
 - Task 8. Update Docs And Operating Guidance: implemented
-- Task 9. Verify And Close Out: pending
+- Task 9. Verify And Close Out: implemented
 
 ## Summary
 
@@ -290,7 +290,7 @@ Reason:
 
 Status:
 
-- pending
+- implemented
 
 Required verification:
 
@@ -301,11 +301,38 @@ Required verification:
 - any intended docs-search follow-through still works
 - any intended `dev-studio` live rebuild behavior works without redundant rebuild loops
 
+Verification completed:
+
+- no-op `studio` and `library` docs rebuilds wrote nothing beyond the minimum intended outputs
+- single-doc source edits were observed through same-scope rebuild behavior in the docs watcher
+- stale payload cleanup behavior had already been verified earlier in the implementation work
+- docs viewer routing and click behavior were rechecked for both `studio` and `library`
+- same-scope docs-search follow-through was verified for live docs-management actions and watcher-driven rebuilds
+- `dev-studio` live rebuild behavior was verified with source-root watching and no generated-output watch loops
+- reserved `_archive` handling was verified in both scopes:
+  - `studio` routes to the first archived child doc
+  - `library` currently has no archived children, so direct routes and viewer links fall back to the scope default doc
+
 Close-out should also record:
 
 - cleanup actually completed
 - any redundant old rebuild code removed
 - any remaining follow-on work or deferred decisions
+
+Close-out summary:
+
+- incremental same-scope docs payload writes are in place
+- stale generated payload cleanup for removed or unpublished docs is in place
+- same-scope docs-search follow-through is in place for live docs-management actions
+- `bin/dev-studio` now supports same-scope live docs/docs-search rebuilds while running
+- legacy live rebuild ambiguity was reduced by deprecating the older Studio tag-server `POST /build-docs` path
+- `_archive` remains a reserved structural doc id rather than becoming a normal loadable page or a renamed id
+
+Deferred follow-on work:
+
+- no dedicated empty Archive placeholder is needed; empty Archive buckets should continue to fall back to the scope default doc
+- `bin/dev-studio` startup docs/docs-search rebuilds should move to an opt-in model rather than default startup behavior
+- `bin/dev-studio` should fail faster and more clearly on port/process collisions so stale local servers are easier to detect
 
 ## Risks And Dependencies
 

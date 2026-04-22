@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-edb244d1597b966baedee2246ed36e08",
-    "generated_at_utc": "2026-04-22T17:32:56Z",
+    "version": "blake2b-b7eb242d815f5bbd0cf473cad5f34084",
+    "generated_at_utc": "2026-04-22T18:15:09Z",
     "count": 118
   },
   "entries": [
@@ -2062,10 +2062,10 @@
       "kind": "doc",
       "title": "Docs Build Incremental Request",
       "href": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "site-docs",
       "parent_title": "Site Docs",
-      "display_meta": "2026-04-23 • Site Docs",
+      "display_meta": "2026-04-22 • Site Docs",
       "search_terms": [
         "site-request-docs-build-incremental",
         "site",
@@ -2075,12 +2075,12 @@
         "incremental",
         "docs build incremental request",
         "site docs",
-        "2026-04-23",
+        "2026-04-22",
         "2026",
         "04",
-        "23"
+        "22"
       ],
-      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-23 2026 04 23"
+      "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-22 2026 04 22"
     },
     {
       "id": "catalogue-work-file-editor",
