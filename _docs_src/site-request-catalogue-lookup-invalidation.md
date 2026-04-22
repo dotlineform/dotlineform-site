@@ -203,7 +203,7 @@ Implemented outcome:
 
 Status:
 
-- in progress
+- implemented
 
 Document which source fields appear in which lookup or search payloads and use that mapping to populate the registry.
 
@@ -232,7 +232,16 @@ Current Task 2 progress:
 - the server now contains an initial explicit moment-field invalidation registry alongside the work-field registry
 - current moment mapping treats `title`, `date`, and `date_display` as affecting the focused moment record, `moments_index.json`, and catalogue search
 - current moment mapping treats `status`, `published_date`, `image_alt`, and `source_image_file` as affecting the focused moment record only
-- detail, file, link, and series payload dependency mapping still remains to be completed before Task 2 can be closed
+
+Implemented outcome:
+
+- work save fields now map to actual downstream lookup dependencies, including title-driven summaries in related detail/file/link lookup records
+- detail save fields now map to `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records where detail sections are embedded
+- work-file save fields now map to `work_files/<file_uid>.json` and related work lookup records where file summaries are embedded
+- work-link save fields now map to `work_links/<link_uid>.json` and related work lookup records where link summaries are embedded
+- series save fields now map to `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the current series title
+- moment fields now map to per-moment JSON, `assets/data/moments_index.json`, and current catalogue search entries
+- unknown fields still collapse to `full`, preserving the current safe fallback
 
 ### Task 3. Define First-Phase Incremental Scope
 

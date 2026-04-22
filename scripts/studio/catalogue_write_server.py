@@ -231,7 +231,14 @@ WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
     },
     "title": {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
-        "artifacts": ["work_record", "work_search", "related_series_records"],
+        "artifacts": [
+            "work_record",
+            "work_search",
+            "related_series_records",
+            "related_work_detail_records",
+            "related_work_file_records",
+            "related_work_link_records",
+        ],
     },
     "year_display": {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
@@ -244,6 +251,164 @@ WORK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "series_ids": {
         "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
         "artifacts": ["work_record", "work_search", "related_series_records"],
+    },
+}
+
+# Canonical invalidation registry for work-detail source fields.
+# Derived artifacts come from `assets/studio/data/catalogue_lookup/work_details/<detail_uid>.json`,
+# `assets/studio/data/catalogue_lookup/work_detail_search.json`, and the focused
+# work lookup record where detail sections are embedded.
+DETAIL_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "project_filename": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_detail_record"],
+    },
+    "published_date": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_detail_record"],
+    },
+    "height_px": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_detail_record"],
+    },
+    "width_px": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_detail_record"],
+    },
+    "title": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
+    },
+    "status": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
+    },
+    "project_subfolder": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "related_work_records"],
+    },
+    "detail_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
+    },
+    "work_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
+    },
+    "detail_uid": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_detail_record", "work_detail_search", "related_work_records"],
+    },
+}
+
+# Canonical invalidation registry for work-file source fields.
+# Derived artifacts come from `assets/studio/data/catalogue_lookup/work_files/<file_uid>.json`
+# and the focused work lookup record where work-file summaries are embedded.
+WORK_FILE_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "published_date": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_file_record"],
+    },
+    "filename": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_file_record", "related_work_records"],
+    },
+    "label": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_file_record", "related_work_records"],
+    },
+    "status": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_file_record", "related_work_records"],
+    },
+    "work_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_file_record", "related_work_records"],
+    },
+    "file_uid": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_file_record", "related_work_records"],
+    },
+}
+
+# Canonical invalidation registry for work-link source fields.
+# Derived artifacts come from `assets/studio/data/catalogue_lookup/work_links/<link_uid>.json`
+# and the focused work lookup record where work-link summaries are embedded.
+WORK_LINK_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "published_date": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["work_link_record"],
+    },
+    "url": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_link_record", "related_work_records"],
+    },
+    "label": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_link_record", "related_work_records"],
+    },
+    "status": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_link_record", "related_work_records"],
+    },
+    "work_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_link_record", "related_work_records"],
+    },
+    "link_uid": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["work_link_record", "related_work_records"],
+    },
+}
+
+# Canonical invalidation registry for series source fields.
+# Derived artifacts come from `assets/studio/data/catalogue_lookup/series/<series_id>.json`,
+# `assets/studio/data/catalogue_lookup/series_search.json`, and work lookup records where
+# `series_summary` embeds the current series title.
+SERIES_LOOKUP_INVALIDATION_REGISTRY: Dict[str, Dict[str, Any]] = {
+    "year": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "year_display": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "series_type": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "published_date": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "series_prose_file": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "notes": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "sort_fields": {
+        "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
+        "artifacts": ["series_record"],
+    },
+    "title": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["series_record", "series_search", "related_work_records"],
+    },
+    "status": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["series_record", "series_search"],
+    },
+    "primary_work_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["series_record", "series_search"],
+    },
+    "series_id": {
+        "class": LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD,
+        "artifacts": ["series_record", "series_search", "related_work_records"],
     },
 }
 
@@ -389,7 +554,10 @@ def normalize_detail_uid_value(value: Any) -> str:
     return f"{work_id}-{detail_id}"
 
 
-def work_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+def lookup_invalidation_for_fields(
+    changed_field_names: list[str],
+    registry: Mapping[str, Mapping[str, Any]],
+) -> Dict[str, Any]:
     changed = sorted({str(name).strip() for name in changed_field_names if str(name).strip()})
     if not changed:
         return {
@@ -404,7 +572,7 @@ def work_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[
     unknown_fields: list[str] = []
 
     for field_name in changed:
-        entry = WORK_LOOKUP_INVALIDATION_REGISTRY.get(field_name)
+        entry = registry.get(field_name)
         if not entry:
             unknown_fields.append(field_name)
             invalidation_class = LOOKUP_INVALIDATION_FULL
@@ -424,43 +592,30 @@ def work_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[
         "fields": changed,
         "unknown_fields": unknown_fields,
     }
+
+
+def work_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, WORK_LOOKUP_INVALIDATION_REGISTRY)
+
+
+def detail_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, DETAIL_LOOKUP_INVALIDATION_REGISTRY)
+
+
+def work_file_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, WORK_FILE_LOOKUP_INVALIDATION_REGISTRY)
+
+
+def work_link_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, WORK_LINK_LOOKUP_INVALIDATION_REGISTRY)
+
+
+def series_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
+    return lookup_invalidation_for_fields(changed_field_names, SERIES_LOOKUP_INVALIDATION_REGISTRY)
 
 
 def moment_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
-    changed = sorted({str(name).strip() for name in changed_field_names if str(name).strip()})
-    if not changed:
-        return {
-            "class": LOOKUP_INVALIDATION_SINGLE_RECORD,
-            "artifacts": [],
-            "fields": [],
-            "unknown_fields": [],
-        }
-
-    invalidation_class = LOOKUP_INVALIDATION_SINGLE_RECORD
-    artifacts: set[str] = set()
-    unknown_fields: list[str] = []
-
-    for field_name in changed:
-        entry = MOMENT_LOOKUP_INVALIDATION_REGISTRY.get(field_name)
-        if not entry:
-            unknown_fields.append(field_name)
-            invalidation_class = LOOKUP_INVALIDATION_FULL
-            continue
-        entry_class = str(entry.get("class") or LOOKUP_INVALIDATION_FULL)
-        if LOOKUP_INVALIDATION_PRIORITY.get(entry_class, LOOKUP_INVALIDATION_PRIORITY[LOOKUP_INVALIDATION_FULL]) > LOOKUP_INVALIDATION_PRIORITY[invalidation_class]:
-            invalidation_class = entry_class
-        for artifact in entry.get("artifacts") or []:
-            artifacts.add(str(artifact))
-
-    if unknown_fields:
-        artifacts.add("full_lookup_refresh")
-
-    return {
-        "class": invalidation_class,
-        "artifacts": sorted(artifacts),
-        "fields": changed,
-        "unknown_fields": unknown_fields,
-    }
+    return lookup_invalidation_for_fields(changed_field_names, MOMENT_LOOKUP_INVALIDATION_REGISTRY)
 
 
 def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:

@@ -192,6 +192,11 @@ Follow-on direction:
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
 - the first work-field invalidation registry now lives in server code; a later task will decide whether that registry should remain in code or move into JSON/config
 - the current dependency mapping now also explicitly includes moments, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
+- the current registry now also maps detail, file, link, and series fields to their actual derived outputs:
+  - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records
+  - file fields can affect `work_files/<file_uid>.json` and related work lookup records
+  - link fields can affect `work_links/<link_uid>.json` and related work lookup records
+  - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:

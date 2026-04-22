@@ -7,6 +7,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Completed Task 2 dependency mapping for catalogue invalidation registries
+
+**Status:** implemented
+
+**Area:** catalogue write server / lookup invalidation planning
+
+**Summary:**
+Completed the current dependency-mapping pass for the invalidation registries by adding explicit detail, work-file, work-link, and series field mappings, and by tightening the earlier work and moment mappings to reflect the actual derived payloads they feed.
+
+**Reason:**
+Task 2 needed to move beyond the initial work/moment foundation and capture the current payload dependencies for every saveable catalogue record family. Without that, later incremental routing would still be based partly on intuition rather than the actual lookup/search builder outputs.
+
+**Effect:**
+The write server now contains explicit field-to-artifact mappings for work, detail, work-file, work-link, series, and moment records. Unknown fields still collapse to `full`, and runtime refresh behavior is still unchanged for now. The next task can route actual writes through this now-complete registry set instead of having to discover the dependency surface at the same time.
+
+**Affected files/docs:**
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Expanded catalogue invalidation mapping to include moments
 
 **Status:** implemented
