@@ -388,7 +388,7 @@ Implemented outcome:
 
 Status:
 
-- in progress
+- implemented
 
 Verify at least:
 
@@ -408,13 +408,24 @@ Current Task 7 progress:
   - used `single-record`
   - rewrote only `works/00001.json`
   - left `work_search.json` unchanged
+- verified live `width_cm` edit on work `00001`:
+  - used `single-record`
+  - rewrote only `works/00001.json`
+  - left `work_search.json` and related series lookup unchanged
 - verified live `title` edit on work `00160`:
   - used `targeted-multi-record`
   - rewrote the focused work lookup record, `work_search.json`, related series lookup record, related detail lookup records, and related file lookup records
 - verified live `series_ids` edit on work `00160`:
   - used `targeted-multi-record`
   - rewrote the focused work lookup record, `work_search.json`, and old/new related series lookup records
-- dimension-change verification and bulk-operation verification still remain before Task 7 can be closed
+- verified live work bulk save on `00001`:
+  - still used the full refresh path
+  - rewrote the focused work lookup record, unrelated work lookup records, `work_search.json`, and unrelated series lookup records
+
+Implemented outcome:
+
+- representative `single-record`, `targeted-multi-record`, and bulk `full` cases are now verified live
+- source records used during the smoke tests were restored afterward
 
 ### Task 8. Extend Or Freeze
 
