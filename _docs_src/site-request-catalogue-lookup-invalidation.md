@@ -247,7 +247,7 @@ Implemented outcome:
 
 Status:
 
-- planned
+- implemented
 
 Choose the first safe implementation slice.
 
@@ -261,6 +261,35 @@ Recommended first slice:
 Reason:
 
 - this gives immediate wins for common edits such as `notes`, dimensions, and storage fields without widening risk too early
+
+Locked first-phase scope:
+
+- route only `POST /catalogue/work/save` through incremental invalidation first
+- allow `single-record` incremental behavior only for these work fields:
+  - `published_date`
+  - `project_folder`
+  - `project_filename`
+  - `year`
+  - `medium_type`
+  - `medium_caption`
+  - `duration`
+  - `height_cm`
+  - `width_cm`
+  - `depth_cm`
+  - `storage_location`
+  - `work_prose_file`
+  - `notes`
+  - `provenance`
+  - `artist`
+- keep `title`, `year_display`, `status`, and `series_ids` on `full` fallback for the first live pass even though they are already mapped in the registry
+- keep detail, file, link, and series writes on `full` fallback for the first live pass
+- keep moment routing deferred to the next pass after work-save incremental routing lands
+
+Why this scope is locked:
+
+- it captures the highest-confidence quick wins
+- it avoids needing scoped writers for search, related series records, or embedded child summaries in the first implementation
+- it keeps the first runtime verification slice small enough to trust
 
 ### Task 4. Add Scoped Lookup Writers
 

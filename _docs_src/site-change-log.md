@@ -7,6 +7,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Locked the first live incremental scope for catalogue lookup invalidation
+
+**Status:** implemented
+
+**Area:** catalogue write server / lookup invalidation planning
+
+**Summary:**
+Locked the first live incremental invalidation slice so the initial runtime rollout will target only `POST /catalogue/work/save` and only work fields already classified as `single-record`.
+
+**Reason:**
+The registry and dependency mapping are now broad enough to support many future paths, but the first runtime rollout needs to stay narrow enough to trust. The safest first slice is the obvious local work-field edits that do not currently require search, series, or embedded child-summary updates.
+
+**Effect:**
+The request/docs now treat Task 3 as implemented and fix the first runtime scope to simple work-save fields such as `notes`, dimensions, storage, and related work-only metadata. Broader work fields plus detail/file/link/series/moment writes remain explicit later tasks rather than implicit part of the first live rollout.
+
+**Affected files/docs:**
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Completed Task 2 dependency mapping for catalogue invalidation registries
 
 **Status:** implemented

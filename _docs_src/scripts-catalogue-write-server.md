@@ -197,6 +197,11 @@ Follow-on direction:
   - file fields can affect `work_files/<file_uid>.json` and related work lookup records
   - link fields can affect `work_links/<link_uid>.json` and related work lookup records
   - series fields can affect `series/<series_id>.json`, `series_search.json`, and related work lookup records where `series_summary` embeds the series title
+- the locked first live incremental slice is narrower than the full registry:
+  - start with `POST /catalogue/work/save` only
+  - allow incremental writes only for work fields currently classified as `single-record`
+  - keep work `title`, `year_display`, `status`, and `series_ids` on `full` fallback for the first live pass
+  - keep detail, file, link, series, and moment writes on `full` fallback until later tasks
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:
