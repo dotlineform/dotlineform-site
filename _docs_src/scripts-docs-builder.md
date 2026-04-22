@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-builder
 title: "Docs Viewer Builder"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: scripts
 sort_order: 20
 ---
@@ -121,6 +121,8 @@ Flags:
 - `bin/dev-studio` currently runs this builder for the `studio` scope once before starting Jekyll
 - if you edit `_docs_src/` or `_docs_library_src/` while the dev runner is already running, re-run `./scripts/build_docs.rb --write`
 - docs viewer manage mode rebuilds the current docs scope through the localhost docs-management service
+- manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
+- live docs-management actions chain same-scope docs search through the docs-management service rather than through `build_docs.rb` itself
 - changing only the docs data does not require any separate asset pipeline
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten

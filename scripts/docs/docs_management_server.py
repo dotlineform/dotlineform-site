@@ -872,7 +872,7 @@ def handle_update_metadata(repo_root: Path, body: Dict[str, Any], dry_run: bool)
             },
         )
         write_text_atomic(target.path, rewritten_source)
-        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=title_changed)
+        rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
             repo_root,
             "docs-update-metadata",
@@ -974,7 +974,7 @@ def handle_move(repo_root: Path, body: Dict[str, Any], dry_run: bool) -> Dict[st
         )
         for doc, rewritten_source in rewrites:
             write_text_atomic(doc.path, rewritten_source)
-        rebuild = rebuild_scope_outputs(repo_root, scope, include_search=False)
+        rebuild = rebuild_scope_outputs(repo_root, scope)
         log_event(
             repo_root,
             "docs-move",

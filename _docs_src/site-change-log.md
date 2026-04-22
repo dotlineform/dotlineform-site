@@ -1,11 +1,37 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-22] Aligned live docs-management writes with docs-search follow-through and deprecated legacy `/build-docs`
+
+**Status:** implemented
+
+**Area:** docs build pipeline / local development workflow
+
+**Summary:**
+Updated the local docs-management flow so successful docs-management writes now rebuild same-scope docs search consistently, and deprecated the older Studio tag-server `POST /build-docs` endpoint from the live docs workflow.
+
+**Reason:**
+After the docs payload builder became incremental and the main rebuild entrypoints became scope-explicit, the remaining inconsistency was search follow-through. Some live docs-management actions could still leave docs search stale, and the legacy tag-server rebuild path kept the workflow boundary ambiguous.
+
+**Effect:**
+Docs create, move, archive, delete, metadata edit, and explicit docs rebuild actions now keep the current scope's docs payloads and docs-search artifact aligned through the docs-management service. The legacy `POST /build-docs` path now returns a deprecation error instead of acting as a parallel live rebuild path.
+
+**Affected files/docs:**
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/tag_write_server.py`
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
+- [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)
+- [Studio Config and Save Flow](/docs/?scope=studio&doc=studio-config-and-save-flow)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Search Change Log](/docs/?scope=studio&doc=search-change-log)
+- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 
 ## [2026-04-21] Aligned local docs rebuild entrypoints to explicit scope behavior
 

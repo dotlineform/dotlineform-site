@@ -1,7 +1,7 @@
 ---
 doc_id: docs-viewer-management
 title: "Docs Viewer Management"
-last_updated: 2026-04-19
+last_updated: 2026-04-22
 parent_id: ui-requests
 sort_order: 21
 ---
@@ -29,7 +29,7 @@ Implemented now:
 - dropping on a collapsed folder moves the dragged doc into that folder as its last child
 - source writes remain front-matter-only; files do not move on disk
 - move/create-after-selected use sparse `sort_order` increments without renumbering siblings
-- move rebuilds docs payloads only; create/archive/delete rebuild docs payloads plus docs search
+- create, move, archive, delete, and metadata edits rebuild docs payloads plus same-scope docs search
 - docs-management backups are operation-scoped rather than full-scope snapshots
 - `Open Source` is available from a manage-mode right-click menu on doc rows
 - right-click `Open Source` currently exposes:
@@ -45,7 +45,7 @@ Implemented now:
   - `sort_order`
 - title edits do not mutate `doc_id` or filename
 - metadata edits validate parentage and reject self-parent or descendant-parent cycles
-- metadata edits rebuild docs payloads, and rebuild docs search only when the title changes
+- metadata edits rebuild docs payloads plus same-scope docs search
 
 Not implemented yet:
 

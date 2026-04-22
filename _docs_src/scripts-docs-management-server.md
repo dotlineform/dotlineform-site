@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-management-server
 title: "Docs Management Server"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: scripts
 sort_order: 10
 ---
@@ -122,7 +122,7 @@ Metadata-update behavior:
 - `parent_id` cannot point at the current doc or any of its descendants
 - `sort_order` accepts a non-negative integer or blank
 - always rebuilds docs payloads for the scope
-- rebuilds docs search only when the title changed
+- always rebuilds the same-scope docs-search artifact after a successful write
 
 `POST /docs/move` expects:
 
@@ -143,7 +143,7 @@ Move behavior:
 - moves rewrite front matter only and never move files on disk
 - moves update only the dragged doc's `sort_order` and `parent_id`
 - sibling `sort_order` values are left unchanged to keep write noise low
-- moves rebuild docs payloads only and do not rebuild the docs search index
+- successful moves rebuild the current scope docs payloads and docs-search artifact
 
 `POST /docs/archive` expects:
 

@@ -123,52 +123,6 @@ def detect_repo_root(explicit_root: str) -> Path:
     raise SystemExit("Could not auto-detect repo root. Pass --repo-root.")
 
 
-def detect_bundle_bin() -> Optional[str]:
-    rbenv_bundle = Path.home() / ".rbenv" / "shims" / "bundle"
-    if rbenv_bundle.exists() and os.access(rbenv_bundle, os.X_OK):
-        return str(rbenv_bundle)
-
-    return shutil.which("bundle")
-
-
-def rebuild_docs_payload(repo_root: Path, scope: str = "studio") -> Dict[str, Any]:
-    bundle_bin = detect_bundle_bin()
-    if not bundle_bin:
-        raise ValueError("bundle executable not found")
-
-    normalized_scope = str(scope or "").strip().lower()
-    if normalized_scope not in {"studio", "library"}:
-        raise ValueError("scope must be one of: studio, library")
-
-    command = [bundle_bin, "exec", "ruby", "scripts/build_docs.rb", "--scope", normalized_scope, "--write"]
-    completed = subprocess.run(
-        command,
-        cwd=str(repo_root),
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    stdout = completed.stdout.strip()
-    stderr = completed.stderr.strip()
-
-    if completed.returncode != 0:
-        detail = stderr or stdout or f"exit {completed.returncode}"
-        raise RuntimeError(f"docs rebuild failed: {detail}")
-
-    summary_text = f"Docs rebuilt for {normalized_scope}."
-    if stdout:
-        summary_text = f"{summary_text} {stdout.splitlines()[-1]}"
-
-    return {
-        "ok": True,
-        "scope": normalized_scope,
-        "summary_text": summary_text,
-        "command": " ".join(command),
-        "stdout": stdout,
-        "stderr": stderr,
-    }
-
-
 def allowed_origin(origin: str) -> Optional[str]:
     if not origin:
         return None
@@ -2054,7 +2008,14 @@ class Handler(BaseHTTPRequestHandler):
                 self._handle_save_tags(allowed)
                 return
             if self.path == "/build-docs":
-                self._handle_build_docs(allowed)
+                self._send_json(
+                    HTTPStatus.GONE,
+                    {
+                        "ok": False,
+                        "error": "`/build-docs` is deprecated. Use the Docs Management Server `POST /docs/rebuild` path for live docs rebuilds.",
+                    },
+                    allowed,
+                )
                 return
             if self.path == "/import-tag-assignments-preview":
                 self._handle_import_tag_assignments(allowed, preview=True)
@@ -2172,32 +2133,6 @@ class Handler(BaseHTTPRequestHandler):
                 "tag_count": response_payload["tag_count"],
                 "deleted": deleted,
                 "dry_run": self.server.dry_run,
-            },
-        )
-        self._send_json(HTTPStatus.OK, response_payload, allowed)
-
-    def _handle_build_docs(self, allowed: Optional[str]) -> None:
-        body = self._read_json_body()
-        scope = str(body.get("scope") or "studio").strip().lower()
-
-        if self.server.dry_run:
-            response_payload = {
-                "ok": True,
-                "dry_run": True,
-                "scope": scope,
-                "summary_text": f"Dry run: would execute {scope} docs rebuild.",
-            }
-            self.server.log_event("build_docs", {"dry_run": True, "scope": scope})
-            self._send_json(HTTPStatus.OK, response_payload, allowed)
-            return
-
-        response_payload = rebuild_docs_payload(self.server.repo_root, scope=scope)
-        self.server.log_event(
-            "build_docs",
-            {
-                "dry_run": False,
-                "scope": scope,
-                "summary_text": response_payload.get("summary_text", ""),
             },
         )
         self._send_json(HTTPStatus.OK, response_payload, allowed)

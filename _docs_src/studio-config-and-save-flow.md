@@ -1,7 +1,7 @@
 ---
 doc_id: studio-config-and-save-flow
 title: "Studio Config and Save Flow"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: studio
 sort_order: 20
 ---
@@ -68,7 +68,6 @@ Current responsibilities include:
 Current write endpoints include:
 
 - `/health`
-- `/build-docs`
 - `/save-tags`
 - `/import-tag-assignments-preview`
 - `/import-tag-assignments`
@@ -107,10 +106,8 @@ Current write endpoints include:
 
 Current non-catalogue local action behavior also includes:
 
-- `POST /build-docs` on the tag write service
-- this is now a Studio-scoped rebuild path and defaults to `scope: studio`
-- it runs `scripts/build_docs.rb --scope <scope> --write` from the repo root
 - the docs viewer manage-mode rebuild action uses the separate docs-management service and rebuilds the current docs scope plus that scope's docs search
+- the legacy `POST /build-docs` path on the tag write service is deprecated and no longer part of the live docs workflow
 
 ## Save Modes
 

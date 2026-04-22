@@ -1,7 +1,7 @@
 ---
 doc_id: search-build-pipeline
 title: "Search Build Pipeline"
-last_updated: 2026-04-01
+last_updated: 2026-04-22
 parent_id: search
 sort_order: 70
 ---
@@ -276,6 +276,10 @@ Current derived search support fields:
 
 - consumed by inline docs search on `/docs/`
 - not consumed by the dedicated `/search/` page
+- manual docs rebuilds remain split:
+  - `./scripts/build_docs.rb --scope studio --write`
+  - `./scripts/build_search.rb --scope studio --write`
+- live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
 
 ## Library Scope
 
@@ -327,6 +331,10 @@ Current builder behaviour for Library:
 
 - consumed by inline docs search on `/library/`
 - not consumed by the dedicated `/search/` page
+- manual docs rebuilds remain split:
+  - `./scripts/build_docs.rb --scope library --write`
+  - `./scripts/build_search.rb --scope library --write`
+- live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
 
 ## Related Documents
 

@@ -1,12 +1,34 @@
 ---
 doc_id: search-change-log
 title: "Search Change Log"
-last_updated: 2026-03-31
+last_updated: 2026-04-22
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-22] Aligned live docs-management writes with same-scope docs-search rebuilds
+
+**Status:** implemented
+
+**Area:** docs-domain search build flow
+
+**Summary:**  
+Updated the local docs-management flow so successful docs writes now rebuild same-scope docs search consistently, and deprecated the older Studio tag-server `/build-docs` path from the live docs workflow.
+
+**Reason:**  
+The docs viewer and docs search are separate generated artifacts, but live docs-management actions should not leave them out of sync or depend on the operator remembering a second rebuild step.
+
+**Effect:**  
+Docs create, move, archive, delete, metadata edit, and explicit docs rebuild actions now keep the current scope's docs-viewer payloads and docs-search artifact aligned through the docs-management service. Low-level manual commands remain split as `build_docs.rb` and `build_search.rb`.
+
+**Affected files/docs:**  
+- `scripts/docs/docs_management_server.py`
+- `scripts/studio/tag_write_server.py`
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Viewer Management](/docs/?scope=studio&doc=docs-viewer-management)
+- [Docs Management Server](/docs/?scope=studio&doc=scripts-docs-management-server)
 
 ## [2026-03-30] Removed dormant docs-domain branches from the dedicated `/search/` implementation
 

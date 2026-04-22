@@ -1,7 +1,7 @@
 ---
 doc_id: site-request-docs-build-incremental
 title: "Docs Build Incremental Request"
-last_updated: 2026-04-21
+last_updated: 2026-04-22
 parent_id: site-docs
 sort_order: 120
 ---
@@ -18,7 +18,7 @@ Status:
 - Task 3. Define And Implement Stale-Output Cleanup: implemented
 - Task 4. Review Index-Metadata Churn: implemented
 - Task 5. Align Local Rebuild Entry Points: implemented
-- Task 6. Align Search Follow-Through: open
+- Task 6. Align Search Follow-Through: implemented
 - Task 7. Define `dev-studio` Live Rebuild Behavior: open
 - Task 8. Update Docs And Operating Guidance: in progress
 - Task 9. Verify And Close Out: pending
@@ -215,7 +215,7 @@ Reason:
 
 Status:
 
-- open
+- implemented
 
 Confirm when docs-search rebuilds are and are not required after docs rebuilds.
 
@@ -224,10 +224,13 @@ Locked principle:
 - if a docs rebuild for a scope is treated as live, that scope's docs search should update automatically as part of the same user-facing action
 - search follow-through should not depend on the user remembering a second rebuild step
 
-Questions to settle:
+Implemented decisions:
 
-- which current user-facing rebuild actions should chain same-scope docs search automatically
-- whether any low-level script entrypoints should remain split for advanced/manual use
+- user-facing live docs-management actions now rebuild same-scope docs search automatically
+- low-level manual builder entrypoints remain split for advanced/manual use:
+  - `./scripts/build_docs.rb --scope <scope> --write`
+  - `./scripts/build_search.rb --scope <scope> --write`
+- the legacy Studio tag-server `POST /build-docs` path is now deprecated and no longer part of the live docs workflow
 
 Reason:
 
@@ -335,7 +338,6 @@ This request is complete when:
 
 ## Open Decisions
 
-- Which user-facing rebuild actions should automatically rebuild same-scope docs search?
 - Should `dev-studio` still do a startup docs rebuild, or should live source watching become the primary freshness mechanism?
 - What should the exact `dev-studio` watcher contract be for `_docs_src` and `_docs_library_src`?
 
