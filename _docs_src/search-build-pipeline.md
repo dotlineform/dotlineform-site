@@ -280,7 +280,7 @@ Current derived search support fields:
   - `./scripts/build_docs.rb --scope studio --write`
   - `./scripts/build_search.rb --scope studio --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
-- `bin/dev-studio` now runs a startup `studio` docs-search rebuild and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
+- `bin/dev-studio` only runs startup `studio` docs-search rebuilds when `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, and then uses the Docs Live Rebuild Watcher to keep `_docs_src/*.md` changes aligned with `assets/data/search/studio/index.json`
 
 ## Library Scope
 
@@ -336,7 +336,8 @@ Current builder behaviour for Library:
   - `./scripts/build_docs.rb --scope library --write`
   - `./scripts/build_search.rb --scope library --write`
 - live docs-management actions rebuild the current docs scope and then rebuild same-scope docs search automatically
-- while `bin/dev-studio` is running, the Docs Live Rebuild Watcher also keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
+- if `DOCS_STARTUP_REBUILD_SCOPES` includes `library`, `bin/dev-studio` runs a startup `library` docs-search rebuild
+- while `bin/dev-studio` is running, the Docs Live Rebuild Watcher keeps `_docs_library_src/*.md` changes aligned with `assets/data/search/library/index.json`
 
 ## Related Documents
 

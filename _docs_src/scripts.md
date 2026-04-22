@@ -92,7 +92,7 @@ Catalogue/runtime maintenance:
 ## Script References
 
 - [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
-  Run the integrated local Studio development stack, including Jekyll, localhost write services, and startup data refreshes.
+  Run the integrated local Studio development stack, including Jekyll, localhost write services, optional startup docs refreshes, and live docs watching.
 - [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
   Watch docs source roots and rebuild same-scope docs payloads plus docs search during local development.
 - [Docs Viewer Builder](/docs/?scope=studio&doc=scripts-docs-builder)

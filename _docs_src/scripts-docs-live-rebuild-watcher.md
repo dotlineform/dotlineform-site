@@ -1,7 +1,7 @@
 ---
 doc_id: scripts-docs-live-rebuild-watcher
 title: "Docs Live Rebuild Watcher"
-last_updated: 2026-04-23
+last_updated: 2026-04-22
 parent_id: scripts
 sort_order: 18
 ---
@@ -83,7 +83,7 @@ It does this by comparing the current root-level `.md` file set, file mtimes, an
 ## Operational Notes
 
 - `bin/dev-studio` starts this watcher by default
-- `bin/dev-studio` still performs an explicit startup `studio` docs rebuild and `studio` docs-search rebuild before long-running services start
+- `bin/dev-studio` no longer performs a default startup docs/docs-search rebuild; startup rebuilds are opt-in through `DOCS_STARTUP_REBUILD_SCOPES`
 - manual rebuild commands remain available and are still the fallback path when you want explicit control
 - because the watcher rebuilds from source-root changes only, generated output writes do not loop back into new watcher-triggered rebuilds
 

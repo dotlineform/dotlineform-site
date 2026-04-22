@@ -174,8 +174,8 @@ This means Studio documentation changes must stay aligned with the shared Docs V
 
 What it runs before starting long-lived services:
 
-- `./scripts/build_docs.rb --scope studio --write`
-- `./scripts/build_search.rb --scope studio --write`
+- required port preflight for Jekyll and the local write services
+- optional docs/docs-search rebuilds for scopes listed in `DOCS_STARTUP_REBUILD_SCOPES`
 - `./scripts/export_catalogue_lookup.py --write`
 
 What it starts:

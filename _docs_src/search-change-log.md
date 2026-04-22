@@ -1,12 +1,33 @@
 ---
 doc_id: search-change-log
 title: "Search Change Log"
-last_updated: 2026-04-23
+last_updated: 2026-04-22
 parent_id: search
 sort_order: 1010
 ---
 
 # Search Change Log
+
+## [2026-04-22] Made `dev-studio` startup docs-search rebuilds opt-in
+
+**Status:** implemented
+
+**Area:** docs-domain search build flow
+
+**Summary:**  
+Updated `bin/dev-studio` so startup docs-search rebuilds now run only for scopes explicitly listed in `DOCS_STARTUP_REBUILD_SCOPES`.
+
+**Reason:**  
+The Docs Live Rebuild Watcher is now the normal same-scope live-sync path while the runner is active, so startup docs-search refreshes should be explicit rather than an implicit default for one scope.
+
+**Effect:**  
+`bin/dev-studio` now skips startup docs-search rebuilds unless `DOCS_STARTUP_REBUILD_SCOPES` includes `studio`, `library`, or both scopes. While the runner is active, watcher-driven same-scope docs-search rebuilds continue to keep `studio` and `library` search aligned with source edits.
+
+**Affected files/docs:**  
+- `bin/dev-studio`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
 
 ## [2026-04-22] Removed the reserved `_archive` docs node from docs-viewer search results
 

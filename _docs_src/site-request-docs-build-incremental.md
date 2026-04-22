@@ -22,6 +22,8 @@ Status:
 - Task 7. Define `dev-studio` Live Rebuild Behavior: implemented
 - Task 8. Update Docs And Operating Guidance: implemented
 - Task 9. Verify And Close Out: implemented
+- Task 10. Make `dev-studio` Startup Rebuilds Opt-In: implemented
+- Task 11. Add `dev-studio` Startup Port Preflight: implemented
 
 ## Summary
 
@@ -248,14 +250,13 @@ This task is about live local runner behavior, not about the principle that sear
 
 Implemented decisions:
 
-- `bin/dev-studio` keeps an explicit startup `studio` docs rebuild
-- `bin/dev-studio` now also runs an explicit startup `studio` docs-search rebuild
 - `bin/dev-studio` starts a local docs watcher while running
 - scope detection is source-root based:
   - `_docs_src/*.md` -> `studio`
   - `_docs_library_src/*.md` -> `library`
 - live rebuilds avoid loops by watching source roots only and ignoring generated outputs
 - same-scope rebuilds are debounced and serialized; if more source changes arrive during a rebuild, that scope is scheduled for one more pass
+- Task 10 later narrowed the startup side of this contract so startup docs/docs-search rebuilds are now opt-in rather than default
 
 Preferred direction:
 
@@ -327,12 +328,40 @@ Close-out summary:
 - `bin/dev-studio` now supports same-scope live docs/docs-search rebuilds while running
 - legacy live rebuild ambiguity was reduced by deprecating the older Studio tag-server `POST /build-docs` path
 - `_archive` remains a reserved structural doc id rather than becoming a normal loadable page or a renamed id
-
-Deferred follow-on work:
-
 - no dedicated empty Archive placeholder is needed; empty Archive buckets should continue to fall back to the scope default doc
-- `bin/dev-studio` startup docs/docs-search rebuilds should move to an opt-in model rather than default startup behavior
-- `bin/dev-studio` should fail faster and more clearly on port/process collisions so stale local servers are easier to detect
+
+### Task 10. Make `dev-studio` Startup Rebuilds Opt-In
+
+Status:
+
+- implemented
+
+Implemented decision:
+
+- `bin/dev-studio` no longer performs startup docs/docs-search rebuilds by default
+- startup docs/docs-search rebuilds now run only when `DOCS_STARTUP_REBUILD_SCOPES` is set
+- accepted startup rebuild scopes are `studio`, `library`, or `studio,library`
+- the Docs Live Rebuild Watcher remains the default live-sync path while the runner is active
+
+Reason:
+
+- neither docs scope should keep an implicit startup rebuild bias as the site matures and direct docs editing becomes the normal live workflow
+
+### Task 11. Add `dev-studio` Startup Port Preflight
+
+Status:
+
+- implemented
+
+Implemented decision:
+
+- `bin/dev-studio` now checks the Jekyll, Tag Write Server, Catalogue Write Server, and Docs Management Server ports before any rebuild work runs
+- the runner exits early if any required port is unavailable
+- the failure message names the affected service and the matching port override environment variable
+
+Reason:
+
+- stale local servers should be easier to detect before the runner does partial work or ends up in a misleading half-started state
 
 ## Risks And Dependencies
 

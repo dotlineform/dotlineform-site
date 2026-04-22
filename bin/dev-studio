@@ -19,8 +19,10 @@ fi
 
 JEKYLL_HOST="${JEKYLL_HOST:-127.0.0.1}"
 JEKYLL_PORT="${JEKYLL_PORT:-4000}"
+TAG_WRITE_PORT="${TAG_WRITE_PORT:-8787}"
 CATALOGUE_WRITE_PORT="${CATALOGUE_WRITE_PORT:-8788}"
 DOCS_MANAGEMENT_PORT="${DOCS_MANAGEMENT_PORT:-8789}"
+DOCS_STARTUP_REBUILD_SCOPES="${DOCS_STARTUP_REBUILD_SCOPES:-}"
 DOCS_WATCH_ENABLED="${DOCS_WATCH_ENABLED:-1}"
 DOCS_WATCH_POLL_SECONDS="${DOCS_WATCH_POLL_SECONDS:-1.0}"
 DOCS_WATCH_DEBOUNCE_SECONDS="${DOCS_WATCH_DEBOUNCE_SECONDS:-1.0}"
@@ -30,6 +32,99 @@ TAG_WRITE_PID=""
 CATALOGUE_WRITE_PID=""
 DOCS_MANAGEMENT_PID=""
 DOCS_WATCHER_PID=""
+STARTUP_DOC_SCOPES=()
+
+parse_startup_doc_scopes() {
+  local raw="$1"
+  local part
+  local token
+  local normalized
+  local seen_scopes=" "
+
+  STARTUP_DOC_SCOPES=()
+  if [ -z "$raw" ]; then
+    return 0
+  fi
+
+  IFS=',' read -r -a scope_parts <<< "$raw"
+  for part in "${scope_parts[@]}"; do
+    token="$(printf '%s' "$part" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+    normalized="$(printf '%s' "$token" | tr '[:upper:]' '[:lower:]')"
+    if [ -z "$normalized" ]; then
+      continue
+    fi
+
+    case "$normalized" in
+      studio|library)
+        if [[ "$seen_scopes" != *" $normalized "* ]]; then
+          STARTUP_DOC_SCOPES+=("$normalized")
+          seen_scopes="$seen_scopes$normalized "
+        fi
+        ;;
+      *)
+        echo "ERROR: Unsupported DOCS_STARTUP_REBUILD_SCOPES entry: $token" >&2
+        echo "Use a comma-separated list of: studio, library" >&2
+        exit 1
+        ;;
+    esac
+  done
+}
+
+port_available() {
+  local host="$1"
+  local port="$2"
+
+  "$PYTHON_BIN" - "$host" "$port" <<'PY'
+import socket
+import sys
+
+host = sys.argv[1]
+port = int(sys.argv[2])
+last_error = None
+
+try:
+    addrinfo = socket.getaddrinfo(
+        host, port, type=socket.SOCK_STREAM, flags=socket.AI_PASSIVE
+    )
+except OSError as exc:
+    print(exc, file=sys.stderr)
+    raise SystemExit(1)
+
+for family, socktype, proto, _canonname, sockaddr in addrinfo:
+    sock = socket.socket(family, socktype, proto)
+    try:
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        sock.bind(sockaddr)
+        raise SystemExit(0)
+    except OSError as exc:
+        last_error = exc
+    finally:
+        sock.close()
+
+if last_error is not None:
+    print(last_error, file=sys.stderr)
+raise SystemExit(1)
+PY
+}
+
+require_open_port() {
+  local service_name="$1"
+  local host="$2"
+  local port="$3"
+  local env_name="$4"
+
+  if port_available "$host" "$port"; then
+    return 0
+  fi
+
+  echo "ERROR: $service_name cannot start on $host:$port because the port is unavailable." >&2
+  if [ -n "$env_name" ]; then
+    echo "Set $env_name to a different port or stop the conflicting process, then rerun bin/dev-studio." >&2
+  else
+    echo "Stop the conflicting process, then rerun bin/dev-studio." >&2
+  fi
+  exit 1
+}
 
 cleanup() {
   trap - EXIT INT TERM
@@ -53,22 +148,46 @@ cleanup() {
 
 trap cleanup EXIT INT TERM
 
+parse_startup_doc_scopes "$DOCS_STARTUP_REBUILD_SCOPES"
+
 echo "Starting Studio development services from $ROOT_DIR"
 echo "Jekyll: http://$JEKYLL_HOST:$JEKYLL_PORT"
-echo "Tag Write Server: http://127.0.0.1:8787"
+echo "Tag Write Server: http://127.0.0.1:$TAG_WRITE_PORT"
 echo "Catalogue Write Server: http://127.0.0.1:$CATALOGUE_WRITE_PORT"
 echo "Docs Management Server: http://127.0.0.1:$DOCS_MANAGEMENT_PORT"
 echo "Series Tag Editor: http://$JEKYLL_HOST:$JEKYLL_PORT/studio/series-tag-editor/?series=<series_id>"
+if [ "${#STARTUP_DOC_SCOPES[@]}" -gt 0 ]; then
+  echo "Startup docs rebuild scopes: ${STARTUP_DOC_SCOPES[*]}"
+else
+  echo "Startup docs rebuild scopes: none"
+fi
 if [ "$DOCS_WATCH_ENABLED" != "0" ]; then
   echo "Docs Live Watcher: enabled (_docs_src + _docs_library_src)"
 else
   echo "Docs Live Watcher: disabled"
 fi
 echo
-echo "Building Studio docs viewer data"
-"$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope studio --write
-echo "Building Studio docs search data"
-"$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope studio --write
+
+require_open_port "Jekyll" "$JEKYLL_HOST" "$JEKYLL_PORT" "JEKYLL_PORT"
+require_open_port "Tag Write Server" "127.0.0.1" "$TAG_WRITE_PORT" "TAG_WRITE_PORT"
+require_open_port "Catalogue Write Server" "127.0.0.1" "$CATALOGUE_WRITE_PORT" "CATALOGUE_WRITE_PORT"
+require_open_port "Docs Management Server" "127.0.0.1" "$DOCS_MANAGEMENT_PORT" "DOCS_MANAGEMENT_PORT"
+
+if [ "${#STARTUP_DOC_SCOPES[@]}" -eq 0 ]; then
+  echo "Skipping startup docs/docs-search rebuilds"
+else
+  for scope in "${STARTUP_DOC_SCOPES[@]}"; do
+    if [ "$scope" = "studio" ]; then
+      scope_label="Studio"
+    else
+      scope_label="Library"
+    fi
+    echo "Building $scope_label docs viewer data"
+    "$BUNDLE_BIN" exec ruby scripts/build_docs.rb --scope "$scope" --write
+    echo "Building $scope_label docs search data"
+    "$BUNDLE_BIN" exec ruby scripts/build_search.rb --scope "$scope" --write
+  done
+fi
 echo "Building catalogue lookup data"
 "$PYTHON_BIN" scripts/export_catalogue_lookup.py --write
 echo
@@ -78,7 +197,7 @@ echo
 "$BUNDLE_BIN" exec jekyll serve --host "$JEKYLL_HOST" --port "$JEKYLL_PORT" &
 JEKYLL_PID=$!
 
-"$PYTHON_BIN" scripts/studio/tag_write_server.py &
+"$PYTHON_BIN" scripts/studio/tag_write_server.py --port "$TAG_WRITE_PORT" &
 TAG_WRITE_PID=$!
 
 "$PYTHON_BIN" scripts/studio/catalogue_write_server.py --port "$CATALOGUE_WRITE_PORT" &

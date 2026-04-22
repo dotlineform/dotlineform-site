@@ -2,8 +2,8 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-b7eb242d815f5bbd0cf473cad5f34084",
-    "generated_at_utc": "2026-04-22T18:15:09Z",
+    "version": "blake2b-12a9b3ff2699ad20256779e75c27bf30",
+    "generated_at_utc": "2026-04-22T18:22:34Z",
     "count": 118
   },
   "entries": [
@@ -337,10 +337,10 @@
       "kind": "doc",
       "title": "Dev Studio Runner",
       "href": "/docs/?scope=studio&doc=scripts-dev-studio",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-04-22 • Scripts",
       "search_terms": [
         "scripts-dev-studio",
         "scripts",
@@ -348,12 +348,12 @@
         "studio",
         "dev studio runner",
         "runner",
-        "2026-04-23",
+        "2026-04-22",
         "2026",
         "04",
-        "23"
+        "22"
       ],
-      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-23 2026 04 23"
+      "search_text": "scripts-dev-studio scripts dev studio dev studio runner runner 2026-04-22 2026 04 22"
     },
     {
       "id": "studio-ui-start",
@@ -383,10 +383,10 @@
       "kind": "doc",
       "title": "Docs Live Rebuild Watcher",
       "href": "/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "scripts",
       "parent_title": "Scripts",
-      "display_meta": "2026-04-23 • Scripts",
+      "display_meta": "2026-04-22 • Scripts",
       "search_terms": [
         "scripts-docs-live-rebuild-watcher",
         "scripts",
@@ -395,12 +395,12 @@
         "rebuild",
         "watcher",
         "docs live rebuild watcher",
-        "2026-04-23",
+        "2026-04-22",
         "2026",
         "04",
-        "23"
+        "22"
       ],
-      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-23 2026 04 23"
+      "search_text": "scripts-docs-live-rebuild-watcher scripts docs live rebuild watcher docs live rebuild watcher 2026-04-22 2026 04 22"
     },
     {
       "id": "data-models-catalogue",
@@ -2584,20 +2584,20 @@
       "kind": "doc",
       "title": "Site Change Log",
       "href": "/docs/?scope=studio&doc=site-change-log",
-      "last_updated": "2026-04-23",
-      "display_meta": "2026-04-23",
+      "last_updated": "2026-04-22",
+      "display_meta": "2026-04-22",
       "search_terms": [
         "site-change-log",
         "site",
         "change",
         "log",
         "site change log",
-        "2026-04-23",
+        "2026-04-22",
         "2026",
         "04",
-        "23"
+        "22"
       ],
-      "search_text": "site-change-log site change log site change log 2026-04-23 2026 04 23"
+      "search_text": "site-change-log site change log site change log 2026-04-22 2026 04 22"
     },
     {
       "id": "tiered-dimension-policy",
@@ -2669,22 +2669,22 @@
       "kind": "doc",
       "title": "Search Change Log",
       "href": "/docs/?scope=studio&doc=search-change-log",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "search",
       "parent_title": "Search",
-      "display_meta": "2026-04-23 • Search",
+      "display_meta": "2026-04-22 • Search",
       "search_terms": [
         "search-change-log",
         "search",
         "change",
         "log",
         "search change log",
-        "2026-04-23",
+        "2026-04-22",
         "2026",
         "04",
-        "23"
+        "22"
       ],
-      "search_text": "search-change-log search change log search change log 2026-04-23 2026 04 23"
+      "search_text": "search-change-log search change log search change log 2026-04-22 2026 04 22"
     }
   ]
 }

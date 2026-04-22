@@ -1,11 +1,34 @@
 ---
 doc_id: site-change-log
 title: "Site Change Log"
-last_updated: 2026-04-23
+last_updated: 2026-04-22
 parent_id: ""
 sort_order: 270
 ---
 # Site Change Log
+
+## [2026-04-22] Made `dev-studio` startup docs rebuilds opt-in and added startup port preflight
+
+**Status:** implemented
+
+**Area:** local development workflow / `bin/dev-studio`
+
+**Summary:**
+Updated `bin/dev-studio` so startup docs/docs-search rebuilds are now opt-in by scope, and so the runner checks its required local ports before doing rebuild work or starting long-running services.
+
+**Reason:**
+The docs watcher is now the normal live-sync path while the runner is active, so unconditional startup docs rebuilds are no longer the right default for either docs scope. The runner also needed clearer operational failure behavior when an older local server was still holding one of the required ports.
+
+**Effect:**
+`bin/dev-studio` now accepts `DOCS_STARTUP_REBUILD_SCOPES` with `studio`, `library`, or `studio,library` when an explicit startup docs/docs-search refresh is wanted, and otherwise skips startup docs/docs-search rebuilds. It also checks the Jekyll, Tag Write Server, Catalogue Write Server, and Docs Management Server ports before rebuilds run, then exits early with a clear override hint if any of those ports are unavailable.
+
+**Affected files/docs:**
+- `bin/dev-studio`
+- [Dev Studio Runner](/docs/?scope=studio&doc=scripts-dev-studio)
+- [Docs Live Rebuild Watcher](/docs/?scope=studio&doc=scripts-docs-live-rebuild-watcher)
+- [Search Build Pipeline](/docs/?scope=studio&doc=search-build-pipeline)
+- [Studio Runtime](/docs/?scope=studio&doc=studio-runtime)
+- [Docs Build Incremental Request](/docs/?scope=studio&doc=site-request-docs-build-incremental)
 
 ## [2026-04-22] Made the reserved `_archive` docs node structural and non-loadable
 

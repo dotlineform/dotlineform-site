@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-22T18:15:08Z",
+  "generated_at": "2026-04-22T18:22:33Z",
   "docs": [
     {
       "scope": "studio",
@@ -159,7 +159,7 @@
       "scope": "studio",
       "doc_id": "scripts-dev-studio",
       "title": "Dev Studio Runner",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "scripts",
       "sort_order": 15,
       "source_path": "scripts-dev-studio.md",
@@ -181,7 +181,7 @@
       "scope": "studio",
       "doc_id": "scripts-docs-live-rebuild-watcher",
       "title": "Docs Live Rebuild Watcher",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "scripts",
       "sort_order": 18,
       "source_path": "scripts-docs-live-rebuild-watcher.md",
@@ -1259,7 +1259,7 @@
       "scope": "studio",
       "doc_id": "site-change-log",
       "title": "Site Change Log",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "",
       "sort_order": 270,
       "source_path": "site-change-log.md",
@@ -1303,7 +1303,7 @@
       "scope": "studio",
       "doc_id": "search-change-log",
       "title": "Search Change Log",
-      "last_updated": "2026-04-23",
+      "last_updated": "2026-04-22",
       "parent_id": "search",
       "sort_order": 1010,
       "source_path": "search-change-log.md",
