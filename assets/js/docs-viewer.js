@@ -545,7 +545,15 @@
   }
 
   function viewerTargetDocId(docId) {
-    return resolveLoadableDocId(docId) || docId;
+    var targetDocId = resolveLoadableDocId(docId);
+    if (targetDocId) return targetDocId;
+
+    var doc = state.docsById.get(docId);
+    if (isNonLoadableDoc(doc)) {
+      return defaultDocId();
+    }
+
+    return docId;
   }
 
   function flattenRoots() {

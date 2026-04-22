@@ -20,7 +20,7 @@ Updated the docs viewer so the reserved `_archive` node now behaves as a structu
 The docs-management contract already treats `_archive` as a protected reserved `doc_id`, but the generated payload path for that id becomes `_archive.json`. Jekyll does not reliably publish that leading-underscore asset under `_site`, which caused a viewer 404 when the Archive node itself was opened.
 
 **Effect:**
-The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `_archive` as a result because it is a structural node rather than a viewable content page.
+The Archive row still exists in the tree and still owns archived children, but it is no longer treated as a normal loadable document target. Docs search also stops exposing `_archive` as a result because it is a structural node rather than a viewable content page. Empty Archive buckets now fall back to the scope's default doc instead of trying to load `_archive.json` through rendered viewer links.
 
 **Rejected options:**
 - renaming `_archive` to `archive`, because that would widen the change into the docs-management contract, archive API semantics, and existing source docs

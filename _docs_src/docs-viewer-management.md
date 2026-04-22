@@ -497,6 +497,7 @@ Drag/drop remains out of scope for implementation until the explicit command flo
 - archived docs remain discoverable in the normal docs tree under the Archive doc
 - `_archive` is a protected reserved system doc
 - the Archive doc is structural and non-loadable in the viewer; opening it routes to its first archived child doc
+- if there is no archived child doc yet, opening Archive falls back to the scope's default doc
 
 ### `delete`
 

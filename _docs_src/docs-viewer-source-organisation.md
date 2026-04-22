@@ -87,6 +87,7 @@ Current effect:
 - tree structure comes only from `doc_id`, `parent_id`, and `sort_order`
 - `_archive` remains meaningful as a reserved system doc in the viewer tree
 - `_archive` is structural in the viewer runtime and redirects to its first child doc instead of loading its own payload
+- if `_archive` has no children, viewer links and direct routes fall back to the scope's normal default doc
 
 Important builder consequence:
 
