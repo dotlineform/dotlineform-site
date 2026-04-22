@@ -9,7 +9,7 @@ sort_order: 130
 
 Status:
 
-- in progress
+- implemented
 
 ## Summary
 
@@ -472,19 +472,28 @@ Verification notes:
 
 Status:
 
-- planned
+- implemented
 
 Decide whether the invalidation registry should remain in code or move into JSON/config after the dependency model stabilizes.
 
-Initial decision:
+Decision:
 
-- keep the registry in code for the first implementation phase
+- keep the registry in code for the current implementation phase
 
 Reason:
 
-- the dependency model is still being discovered
+- the registry currently has one real consumer: the catalogue write server
+- the dependency model is still evolving at the edges, especially around full-fallback cases
 - code is easier to evolve safely while artifact targeting rules are still changing
-- externalizing too early would lock in a config schema before the real contract is proven
+- externalizing now would add schema and indirection without a clear second consumer
+
+Revisit trigger:
+
+- only reconsider JSON/config externalization if a second consumer appears, such as:
+  - a validation or audit tool
+  - a build/report surface
+  - a Studio/debug UI surface
+  - shared runtime logic outside the catalogue write server
 
 ## Completion Criteria
 

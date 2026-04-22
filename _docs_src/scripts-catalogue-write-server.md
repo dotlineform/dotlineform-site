@@ -194,7 +194,8 @@ Follow-on direction:
 
 - keep full lookup refresh as the fallback for complex cases
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
-- the first work-field invalidation registry now lives in server code; a later task will decide whether that registry should remain in code or move into JSON/config
+- the canonical invalidation registry currently lives in the write-server code by design
+- keep that registry in code unless a second consumer appears that justifies a shared JSON/config contract
 - the current dependency mapping now also explicitly includes moments, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
 - the current registry now also maps detail, file, link, and series fields to their actual derived outputs:
   - detail fields can affect `work_details/<detail_uid>.json`, `work_detail_search.json`, and related work lookup records

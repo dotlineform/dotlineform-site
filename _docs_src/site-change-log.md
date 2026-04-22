@@ -7,6 +7,25 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Closed the catalogue lookup invalidation request with an in-code registry decision
+
+**Status:** implemented
+
+**Area:** catalogue write server / catalogue lookup
+
+**Summary:**
+Closed the catalogue lookup invalidation request by explicitly keeping the invalidation registry in write-server code rather than moving it into JSON/config.
+
+**Reason:**
+The registry currently has one real consumer, and the remaining fallback rules are still operational rather than purely declarative. Externalizing now would add config schema and indirection without a clear payoff.
+
+**Effect:**
+The in-code registry is now the explicit canonical contract for catalogue lookup invalidation. JSON/config externalization is deferred unless a second consumer appears, such as a validation tool, reporting surface, or shared runtime outside the write server.
+
+**Affected files/docs:**
+- `_docs_src/site-request-catalogue-lookup-invalidation.md`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+
 ## [2026-04-22] Extended targeted lookup refresh to detail, file, link, and series saves
 
 **Status:** implemented
