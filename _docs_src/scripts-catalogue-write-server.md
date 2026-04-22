@@ -168,6 +168,7 @@ Current behavior after successful canonical writes:
 - the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
 - `POST /catalogue/work/save` now uses the invalidation registry for the first live incremental slice
 - when the changed work fields stay within the locked `single-record` first-pass set, the server rewrites only `works/<work_id>.json`
+- when work changes resolve to `targeted-multi-record`, the server rewrites only the focused derived payload set needed for those fields
 - other writes still use a full lookup refresh
 
 Why the current refresh is broad:
@@ -202,9 +203,9 @@ Follow-on direction:
 - the locked first live incremental slice is narrower than the full registry:
   - start with `POST /catalogue/work/save` only
   - allow incremental writes only for work fields currently classified as `single-record`
-  - keep work `title`, `year_display`, `status`, and `series_ids` on `full` fallback for the first live pass
+  - work `title`, `year_display`, `status`, and `series_ids` now use the targeted-multi-record path rather than `full`
   - keep detail, file, link, series, and moment writes on `full` fallback until later tasks
-- changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record` or `full`
+- changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record`, `targeted-multi-record`, or `full`
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:

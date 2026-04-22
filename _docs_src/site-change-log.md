@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Expanded the live work-save lookup refresh path to targeted multi-record updates
+
+**Status:** implemented
+
+**Area:** catalogue write server / catalogue lookup
+
+**Summary:**
+Extended the first live incremental lookup-refresh rollout so `POST /catalogue/work/save` now handles both locked `single-record` work fields and mapped `targeted-multi-record` work fields without dropping back to a full lookup rewrite.
+
+**Reason:**
+The first narrow rollout for simple work-only fields was stable. The next useful step was to use the already-mapped dependency registry to update the focused search, series, detail, and file lookup payloads needed for broader work edits such as `title` and `series_ids`.
+
+**Effect:**
+Work `title`, `year_display`, `status`, and `series_ids` changes now use targeted lookup writes instead of a full refresh. The lookup layer can now write focused work-search, series, detail, file, and link payloads, and work-save logs/responses now expose the chosen mode and targeted artifact set more clearly.
+
+**Affected files/docs:**
+- `scripts/catalogue_lookup.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Landed the first live incremental catalogue lookup refresh path
 
 **Status:** implemented

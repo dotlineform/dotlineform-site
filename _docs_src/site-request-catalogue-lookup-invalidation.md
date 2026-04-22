@@ -295,7 +295,7 @@ Why this scope is locked:
 
 Status:
 
-- in progress
+- implemented
 
 Extend the lookup build/write layer so it can write:
 
@@ -311,14 +311,22 @@ Reason:
 
 Current Task 4 progress:
 
+Implemented outcome:
+
 - the lookup layer can now build and write one focused work lookup record without rewriting the full corpus
-- focused search-payload and focused series-record writers are still later work
+- it can also now build and write:
+  - focused `work_search.json`
+  - focused `series/<series_id>.json`
+  - focused `work_details/<detail_uid>.json`
+  - focused `work_files/<file_uid>.json`
+  - focused `work_links/<link_uid>.json`
+- full refresh remains available as the fallback path
 
 ### Task 5. Route Work Save Through Invalidation Rules
 
 Status:
 
-- in progress
+- implemented
 
 Update `POST /catalogue/work/save` so it chooses:
 
@@ -334,15 +342,23 @@ Reason:
 
 Current Task 5 progress:
 
-- `POST /catalogue/work/save` now uses the work invalidation registry for the first live pass
-- `single-record` work-field saves use focused `works/<work_id>.json` refresh
-- broader work invalidation classes still fall back to `full` for now
+Implemented outcome:
+
+- `POST /catalogue/work/save` now routes through the work invalidation registry
+- locked first-pass `single-record` work-field saves use focused `works/<work_id>.json` refresh
+- `targeted-multi-record` work-field saves now use focused writers for:
+  - `work_search.json`
+  - related `series/<series_id>.json`
+  - related `work_details/<detail_uid>.json`
+  - related `work_files/<file_uid>.json`
+  - related `work_links/<link_uid>.json`
+- unknown or broader cases still fall back to `full`
 
 ### Task 6. Add Invalidation Logging
 
 Status:
 
-- planned
+- implemented
 
 Local logs should report:
 
@@ -356,14 +372,23 @@ Reason:
 
 Current Task 6 progress:
 
-- `catalogue_work_save` logs now include the chosen lookup refresh mode
-- changed work-save responses now include a `lookup_refresh` object with mode and targeted artifacts
+Implemented outcome:
+
+- `catalogue_work_save` logs now include:
+  - changed field set
+  - chosen lookup refresh mode
+  - targeted artifact list
+- `catalogue_lookup_refresh` logs now include:
+  - refresh mode
+  - targeted artifact list
+  - written count
+- changed work-save responses now include a `lookup_refresh` object with mode, invalidation class, targeted artifacts, and written count
 
 ### Task 7. Verify Representative Field Edits
 
 Status:
 
-- planned
+- in progress
 
 Verify at least:
 
@@ -376,6 +401,20 @@ Verify at least:
 Reason:
 
 - incremental invalidation is only useful if it is both narrower and still correct
+
+Current Task 7 progress:
+
+- verified live `notes` edit on work `00001`:
+  - used `single-record`
+  - rewrote only `works/00001.json`
+  - left `work_search.json` unchanged
+- verified live `title` edit on work `00160`:
+  - used `targeted-multi-record`
+  - rewrote the focused work lookup record, `work_search.json`, related series lookup record, related detail lookup records, and related file lookup records
+- verified live `series_ids` edit on work `00160`:
+  - used `targeted-multi-record`
+  - rewrote the focused work lookup record, `work_search.json`, and old/new related series lookup records
+- dimension-change verification and bulk-operation verification still remain before Task 7 can be closed
 
 ### Task 8. Extend Or Freeze
 

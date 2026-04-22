@@ -69,6 +69,7 @@ from catalogue_source import (  # noqa: E402
     load_json_file,
     normalize_source_record,
     normalize_status,
+    normalize_text,
     payload_for_map,
     records_from_json_source,
     safe_uid_fragment,
@@ -81,8 +82,18 @@ from catalogue_activity import append_catalogue_activity  # noqa: E402
 from catalogue_lookup import (  # noqa: E402
     DEFAULT_LOOKUP_DIR,
     build_and_write_catalogue_lookup,
+    build_series_lookup_payload,
+    build_work_detail_lookup_payload,
+    build_work_file_lookup_payload,
     build_work_lookup_payload,
+    build_work_link_lookup_payload,
+    build_work_search_payload,
+    write_detail_lookup_payload,
+    write_lookup_root_payload,
+    write_series_lookup_payload,
     write_work_lookup_payload,
+    write_work_file_lookup_payload,
+    write_work_link_lookup_payload,
 )
 from catalogue_json_build import (  # noqa: E402
     build_local_media_plan,
@@ -1704,7 +1715,9 @@ class Handler(BaseHTTPRequestHandler):
                 and set(fields_changed).issubset(locked_fields)
             )
             lookup_refresh_payload = {
-                "mode": "single-record" if use_single_record_lookup_refresh else "full",
+                "mode": "single-record" if use_single_record_lookup_refresh else (
+                    "targeted-multi-record" if invalidation["class"] == LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD else "full"
+                ),
                 "invalidation_class": invalidation["class"],
                 "artifacts": invalidation["artifacts"],
                 "unknown_fields": invalidation["unknown_fields"],
@@ -1725,16 +1738,22 @@ class Handler(BaseHTTPRequestHandler):
                 "changed": changed,
                 "changed_fields": fields_changed,
                 "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
+                "lookup_refresh_artifacts": lookup_refresh_payload.get("artifacts") if changed else [],
                 "dry_run": self.server.dry_run,
             },
         )
         if changed and not self.server.dry_run:
-            if lookup_refresh_payload.get("mode") == "single-record":
-                refresh_result = self._refresh_lookup_payload_for_work(work_id)
-            else:
-                refresh_result = self._refresh_lookup_payloads()
+            refresh_result = self._refresh_lookup_payloads_for_work_change(
+                work_id,
+                fields_changed,
+                current_record,
+                updated_record,
+            )
             response_payload["lookup_refresh"] = {
-                **lookup_refresh_payload,
+                "mode": refresh_result["mode"],
+                "invalidation_class": refresh_result["invalidation_class"],
+                "artifacts": refresh_result["artifacts"],
+                "unknown_fields": refresh_result["unknown_fields"],
                 "written_count": refresh_result["written_count"],
             }
             now_utc = utc_now()
@@ -3621,6 +3640,133 @@ class Handler(BaseHTTPRequestHandler):
             "artifacts": ["work_record"],
             "written_count": 1,
             "written_paths": [self.server.rel_path(written_path)],
+        }
+        self.server.log_event(
+            "catalogue_lookup_refresh",
+            {
+                "lookup_dir": self.server.rel_path(self.server.lookup_dir),
+                "mode": result["mode"],
+                "work_id": work_id,
+                "artifacts": result["artifacts"],
+                "written_count": result["written_count"],
+            },
+        )
+        return result
+
+    def _refresh_lookup_payloads_for_work_change(
+        self,
+        work_id: str,
+        fields_changed: list[str],
+        current_record: Mapping[str, Any],
+        updated_record: Mapping[str, Any],
+    ) -> Dict[str, Any]:
+        invalidation = work_lookup_invalidation_for_fields(fields_changed)
+        locked_fields = locked_first_pass_work_fields()
+        artifacts = list(invalidation["artifacts"])
+        use_single_record_lookup_refresh = (
+            invalidation["class"] == LOOKUP_INVALIDATION_SINGLE_RECORD
+            and set(fields_changed).issubset(locked_fields)
+        )
+        if use_single_record_lookup_refresh:
+            result = self._refresh_lookup_payload_for_work(work_id)
+            result["invalidation_class"] = invalidation["class"]
+            result["unknown_fields"] = invalidation["unknown_fields"]
+            return result
+
+        if invalidation["class"] != LOOKUP_INVALIDATION_TARGETED_MULTI_RECORD:
+            result = self._refresh_lookup_payloads()
+            result["invalidation_class"] = invalidation["class"]
+            result["unknown_fields"] = invalidation["unknown_fields"]
+            return result
+
+        source_records = records_from_json_source(self.server.source_dir)
+        written_paths: list[str] = []
+
+        if "work_record" in artifacts:
+            written_paths.append(
+                self.server.rel_path(
+                    write_work_lookup_payload(
+                        self.server.lookup_dir,
+                        work_id,
+                        build_work_lookup_payload(source_records, work_id),
+                    )
+                )
+            )
+
+        if "work_search" in artifacts:
+            written_paths.append(
+                self.server.rel_path(
+                    write_lookup_root_payload(
+                        self.server.lookup_dir,
+                        "work_search.json",
+                        build_work_search_payload(source_records),
+                    )
+                )
+            )
+
+        if "related_series_records" in artifacts:
+            related_series_ids = set(normalize_series_ids_value(current_record.get("series_ids")))
+            related_series_ids.update(normalize_series_ids_value(updated_record.get("series_ids")))
+            for series_id in sorted(related_series_ids):
+                written_paths.append(
+                    self.server.rel_path(
+                        write_series_lookup_payload(
+                            self.server.lookup_dir,
+                            series_id,
+                            build_series_lookup_payload(source_records, series_id),
+                        )
+                    )
+                )
+
+        if "related_work_detail_records" in artifacts:
+            for detail_uid, detail_record in source_records.work_details.items():
+                if normalize_text(detail_record.get("work_id")) != work_id:
+                    continue
+                written_paths.append(
+                    self.server.rel_path(
+                        write_detail_lookup_payload(
+                            self.server.lookup_dir,
+                            detail_uid,
+                            build_work_detail_lookup_payload(source_records, detail_uid),
+                        )
+                    )
+                )
+
+        if "related_work_file_records" in artifacts:
+            for file_uid, file_record in source_records.work_files.items():
+                if normalize_text(file_record.get("work_id")) != work_id:
+                    continue
+                written_paths.append(
+                    self.server.rel_path(
+                        write_work_file_lookup_payload(
+                            self.server.lookup_dir,
+                            file_uid,
+                            build_work_file_lookup_payload(source_records, file_uid),
+                        )
+                    )
+                )
+
+        if "related_work_link_records" in artifacts:
+            for link_uid, link_record in source_records.work_links.items():
+                if normalize_text(link_record.get("work_id")) != work_id:
+                    continue
+                written_paths.append(
+                    self.server.rel_path(
+                        write_work_link_lookup_payload(
+                            self.server.lookup_dir,
+                            link_uid,
+                            build_work_link_lookup_payload(source_records, link_uid),
+                        )
+                    )
+                )
+
+        result = {
+            "mode": "targeted-multi-record",
+            "artifacts": sorted(artifacts),
+            "written_count": len(written_paths),
+            "written_paths": written_paths,
+            "invalidation_class": invalidation["class"],
+            "unknown_fields": invalidation["unknown_fields"],
         }
         self.server.log_event(
             "catalogue_lookup_refresh",

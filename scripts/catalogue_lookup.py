@@ -129,6 +129,118 @@ def build_work_lookup_payload(records: CatalogueSourceRecords, work_id: str) -> 
     }
 
 
+def build_work_detail_lookup_payload(records: CatalogueSourceRecords, detail_uid: str) -> Dict[str, Any]:
+    record = records.work_details.get(detail_uid)
+    if not isinstance(record, Mapping):
+        raise KeyError(f"detail_uid not found: {detail_uid}")
+    work_id = normalize_text(record.get("work_id"))
+    work_record = records.works.get(work_id) or {}
+    return {
+        "header": {
+            "schema": SCHEMAS["work_detail_record"],
+        },
+        "work_detail": dict(record),
+        "record_hash": record_hash(record),
+        "work_summary": {
+            "work_id": work_id,
+            "title": normalize_text(work_record.get("title")),
+        },
+    }
+
+
+def build_work_file_lookup_payload(records: CatalogueSourceRecords, file_uid: str) -> Dict[str, Any]:
+    record = records.work_files.get(file_uid)
+    if not isinstance(record, Mapping):
+        raise KeyError(f"file_uid not found: {file_uid}")
+    work_id = normalize_text(record.get("work_id"))
+    work_record = records.works.get(work_id) or {}
+    return {
+        "header": {
+            "schema": SCHEMAS["work_file_record"],
+        },
+        "work_file": dict(record),
+        "record_hash": record_hash(record),
+        "work_summary": {
+            "work_id": work_id,
+            "title": normalize_text(work_record.get("title")),
+        },
+    }
+
+
+def build_work_link_lookup_payload(records: CatalogueSourceRecords, link_uid: str) -> Dict[str, Any]:
+    record = records.work_links.get(link_uid)
+    if not isinstance(record, Mapping):
+        raise KeyError(f"link_uid not found: {link_uid}")
+    work_id = normalize_text(record.get("work_id"))
+    work_record = records.works.get(work_id) or {}
+    return {
+        "header": {
+            "schema": SCHEMAS["work_link_record"],
+        },
+        "work_link": dict(record),
+        "record_hash": record_hash(record),
+        "work_summary": {
+            "work_id": work_id,
+            "title": normalize_text(work_record.get("title")),
+        },
+    }
+
+
+def build_series_lookup_payload(records: CatalogueSourceRecords, series_id: str) -> Dict[str, Any]:
+    record = records.series.get(series_id)
+    if not isinstance(record, Mapping):
+        raise KeyError(f"series_id not found: {series_id}")
+
+    members = []
+    for work_id, work_record in records.works.items():
+        series_ids = work_record.get("series_ids", [])
+        if not isinstance(series_ids, list) or series_id not in series_ids:
+            continue
+        members.append(
+            {
+                "work_id": work_id,
+                "title": normalize_text(work_record.get("title")),
+                "year_display": normalize_text(work_record.get("year_display")),
+                "status": normalize_text(work_record.get("status")),
+                "series_ids": list(series_ids),
+                "record_hash": record_hash(work_record),
+            }
+        )
+    members.sort(key=lambda item: item["work_id"])
+
+    return {
+        "header": {
+            "schema": SCHEMAS["series_record"],
+        },
+        "series": dict(record),
+        "record_hash": record_hash(record),
+        "member_works": members,
+    }
+
+
+def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
+    items = []
+    for work_id, record in records.works.items():
+        items.append(
+            {
+                "work_id": work_id,
+                "title": normalize_text(record.get("title")),
+                "year_display": normalize_text(record.get("year_display")),
+                "status": normalize_text(record.get("status")),
+                "series_ids": list(record.get("series_ids", [])) if isinstance(record.get("series_ids"), list) else [],
+                "record_hash": record_hash(record),
+            }
+        )
+    items.sort(key=lambda item: item["work_id"])
+    return {
+        "header": {
+            "schema": SCHEMAS["work_search"],
+            "count": len(items),
+        },
+        "items": items,
+    }
+
+
 def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str, Any]:
     work_search_items = []
     series_search_items = []
@@ -344,10 +456,49 @@ def build_and_write_catalogue_lookup(source_dir: Path, lookup_dir: Path) -> list
     return write_catalogue_lookup_payloads(lookup_dir, payloads)
 
 
+def write_lookup_root_payload(lookup_dir: Path, name: str, payload: Mapping[str, Any]) -> Path:
+    lookup_dir.mkdir(parents=True, exist_ok=True)
+    path = lookup_dir / name
+    _atomic_write_json(path, payload)
+    return path
+
+
 def write_work_lookup_payload(lookup_dir: Path, work_id: str, payload: Mapping[str, Any]) -> Path:
     works_dir = lookup_dir / "works"
     works_dir.mkdir(parents=True, exist_ok=True)
     path = works_dir / f"{work_id}.json"
+    _atomic_write_json(path, payload)
+    return path
+
+
+def write_detail_lookup_payload(lookup_dir: Path, detail_uid: str, payload: Mapping[str, Any]) -> Path:
+    target_dir = lookup_dir / "work_details"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"{detail_uid}.json"
+    _atomic_write_json(path, payload)
+    return path
+
+
+def write_work_file_lookup_payload(lookup_dir: Path, file_uid: str, payload: Mapping[str, Any]) -> Path:
+    target_dir = lookup_dir / "work_files"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"{file_uid}.json"
+    _atomic_write_json(path, payload)
+    return path
+
+
+def write_work_link_lookup_payload(lookup_dir: Path, link_uid: str, payload: Mapping[str, Any]) -> Path:
+    target_dir = lookup_dir / "work_links"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"{link_uid}.json"
+    _atomic_write_json(path, payload)
+    return path
+
+
+def write_series_lookup_payload(lookup_dir: Path, series_id: str, payload: Mapping[str, Any]) -> Path:
+    target_dir = lookup_dir / "series"
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path = target_dir / f"{series_id}.json"
     _atomic_write_json(path, payload)
     return path
 
