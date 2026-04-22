@@ -42,6 +42,7 @@ Current implementation facts at request start:
 - that builder re-derives the full lookup corpus under `assets/studio/data/catalogue_lookup/`
 - this happens even for narrow edits such as one work field changing on one record
 - Task 1 now adds the first explicit work-field invalidation registry in server code, but refresh behavior still defaults to full lookup refresh until later tasks route writes through that registry
+- Task 2 now explicitly includes moments as part of the catalogue invalidation surface, even though moment artifacts are generated outside `assets/studio/data/catalogue_lookup/`
 
 Current effect:
 
@@ -142,6 +143,23 @@ Reason:
 - these operations can affect multiple lookup families or introduce/remove ids
 - the first incremental pass should keep complexity bounded
 
+### Moment Dependency Notes
+
+Moments are part of the public catalogue surface even though they do not live in Studio catalogue lookup payloads.
+
+Current moment-derived artifact families:
+
+- `assets/moments/index/<moment_id>.json`
+- `assets/data/moments_index.json`
+- catalogue search entries built from `assets/data/moments_index.json`
+
+Current dependency notes:
+
+- `title`, `date`, and `date_display` affect the focused moment record, `moments_index.json`, and current catalogue search entries
+- `status`, `published_date`, `image_alt`, and `source_image_file` currently affect only the focused moment record
+- moments currently have no cross-record dependency set comparable to work/series membership
+- likely future search expansion is moment full-text search, so the registry must remain explicit and updatable rather than relying on today's narrower search field set
+
 ## Task List
 
 ### Task 1. Define The Invalidation Registry
@@ -185,7 +203,7 @@ Implemented outcome:
 
 Status:
 
-- planned
+- in progress
 
 Document which source fields appear in which lookup or search payloads and use that mapping to populate the registry.
 
@@ -199,11 +217,22 @@ Minimum payload families:
 - `work_files/<file_uid>.json`
 - `work_links/<link_uid>.json`
 - `series/<series_id>.json`
+- `assets/moments/index/<moment_id>.json`
+- `assets/data/moments_index.json`
+- catalogue search moment entries built from `assets/data/moments_index.json`
 
 Reason:
 
 - incremental invalidation should be based on actual payload dependencies, not intuition alone
 - fields that do not currently affect search may do so later, so dependency expansion should update the registry rather than rely on remembered prose rules
+- moments are part of the catalogue surface and should not be left outside the dependency model just because their artifacts are generated outside Studio lookup JSON
+
+Current Task 2 progress:
+
+- the server now contains an initial explicit moment-field invalidation registry alongside the work-field registry
+- current moment mapping treats `title`, `date`, and `date_display` as affecting the focused moment record, `moments_index.json`, and catalogue search
+- current moment mapping treats `status`, `published_date`, `image_alt`, and `source_image_file` as affecting the focused moment record only
+- detail, file, link, and series payload dependency mapping still remains to be completed before Task 2 can be closed
 
 ### Task 3. Define First-Phase Incremental Scope
 
@@ -217,6 +246,7 @@ Recommended first slice:
 
 - single-record work saves only
 - simple work fields first
+- simple moment writes immediately after work, because moments have no cross-record dependency graph
 - full fallback for everything else
 
 Reason:

@@ -180,12 +180,18 @@ Why the current refresh is broad:
   - the focused series lookup record
   - series search
   - member-work summaries across related work records
+- moments are part of the wider catalogue surface too, but their derived artifacts are:
+  - `assets/moments/index/<moment_id>.json`
+  - `assets/data/moments_index.json`
+  - catalogue search entries built from `assets/data/moments_index.json`
+  - they currently have no cross-record dependency graph comparable to work/series membership
 
 Follow-on direction:
 
 - keep full lookup refresh as the fallback for complex cases
 - add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
 - the first work-field invalidation registry now lives in server code; a later task will decide whether that registry should remain in code or move into JSON/config
+- the current dependency mapping now also explicitly includes moments, with `title`, `date`, and `date_display` treated as the fields that currently affect both moment runtime data and catalogue search
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:

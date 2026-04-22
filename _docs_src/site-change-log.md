@@ -7,6 +7,26 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Expanded catalogue invalidation mapping to include moments
+
+**Status:** implemented
+
+**Area:** catalogue write server / lookup invalidation planning
+
+**Summary:**
+Extended the new invalidation-registry foundation so Task 2 now explicitly includes moment-derived catalogue artifacts as part of the dependency model, rather than treating moments as outside scope because they do not live under Studio catalogue lookup JSON.
+
+**Reason:**
+Moments are part of the public catalogue and already participate in catalogue search. They are also much simpler than works and series because they currently have no cross-record dependency graph, which makes them a good early fit for the explicit registry approach.
+
+**Effect:**
+The write server now contains an initial moment-field invalidation registry, and the request/docs now record that current moment dependencies are the focused moment JSON, `assets/data/moments_index.json`, and catalogue search entries built from that index. Runtime refresh behavior is still unchanged for now; this only extends the explicit dependency contract.
+
+**Affected files/docs:**
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Added the first catalogue lookup invalidation registry foundation
 
 **Status:** implemented
