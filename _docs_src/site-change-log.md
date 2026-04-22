@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Landed the first live incremental catalogue lookup refresh path
+
+**Status:** implemented
+
+**Area:** catalogue write server / catalogue lookup
+
+**Summary:**
+Implemented the first live incremental lookup-refresh path so `POST /catalogue/work/save` now rewrites only the focused `works/<work_id>.json` lookup payload when the changed work fields stay inside the locked first-pass `single-record` set.
+
+**Reason:**
+The registry, dependency mapping, and first-phase scope were already locked. The next pragmatic step was to ship the narrowest trustworthy runtime behavior instead of leaving the whole feature in planning state.
+
+**Effect:**
+Simple work-source edits such as `notes`, dimensions, storage, and related work-only metadata no longer trigger a full lookup rewrite. Broader work changes and all other save kinds still fall back to full lookup refresh. The work-save response and logs now also expose the chosen lookup refresh mode.
+
+**Affected files/docs:**
+- `scripts/catalogue_lookup.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Locked the first live incremental scope for catalogue lookup invalidation
 
 **Status:** implemented

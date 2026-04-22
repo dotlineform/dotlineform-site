@@ -78,7 +78,12 @@ from catalogue_source import (  # noqa: E402
     validate_source_records,
 )
 from catalogue_activity import append_catalogue_activity  # noqa: E402
-from catalogue_lookup import DEFAULT_LOOKUP_DIR, build_and_write_catalogue_lookup  # noqa: E402
+from catalogue_lookup import (  # noqa: E402
+    DEFAULT_LOOKUP_DIR,
+    build_and_write_catalogue_lookup,
+    build_work_lookup_payload,
+    write_work_lookup_payload,
+)
 from catalogue_json_build import (  # noqa: E402
     build_local_media_plan,
     build_scope_for_moment,
@@ -616,6 +621,26 @@ def series_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dic
 
 def moment_lookup_invalidation_for_fields(changed_field_names: list[str]) -> Dict[str, Any]:
     return lookup_invalidation_for_fields(changed_field_names, MOMENT_LOOKUP_INVALIDATION_REGISTRY)
+
+
+def locked_first_pass_work_fields() -> set[str]:
+    return {
+        "published_date",
+        "project_folder",
+        "project_filename",
+        "year",
+        "medium_type",
+        "medium_caption",
+        "duration",
+        "height_cm",
+        "width_cm",
+        "depth_cm",
+        "storage_location",
+        "work_prose_file",
+        "notes",
+        "provenance",
+        "artist",
+    }
 
 
 def extract_build_request(body: Mapping[str, Any]) -> tuple[str, list[str], bool]:
@@ -1670,6 +1695,21 @@ class Handler(BaseHTTPRequestHandler):
             "record_hash": record_hash(updated_record),
             "record": updated_record,
         }
+        lookup_refresh_payload: Dict[str, Any] = {}
+        if changed:
+            invalidation = work_lookup_invalidation_for_fields(fields_changed)
+            locked_fields = locked_first_pass_work_fields()
+            use_single_record_lookup_refresh = (
+                invalidation["class"] == LOOKUP_INVALIDATION_SINGLE_RECORD
+                and set(fields_changed).issubset(locked_fields)
+            )
+            lookup_refresh_payload = {
+                "mode": "single-record" if use_single_record_lookup_refresh else "full",
+                "invalidation_class": invalidation["class"],
+                "artifacts": invalidation["artifacts"],
+                "unknown_fields": invalidation["unknown_fields"],
+            }
+            response_payload["lookup_refresh"] = lookup_refresh_payload
         if self.server.dry_run:
             response_payload["dry_run"] = True
             response_payload["would_write"] = changed
@@ -1684,11 +1724,19 @@ class Handler(BaseHTTPRequestHandler):
                 "work_id": work_id,
                 "changed": changed,
                 "changed_fields": fields_changed,
+                "lookup_refresh_mode": lookup_refresh_payload.get("mode") if changed else "none",
                 "dry_run": self.server.dry_run,
             },
         )
         if changed and not self.server.dry_run:
-            self._refresh_lookup_payloads()
+            if lookup_refresh_payload.get("mode") == "single-record":
+                refresh_result = self._refresh_lookup_payload_for_work(work_id)
+            else:
+                refresh_result = self._refresh_lookup_payloads()
+            response_payload["lookup_refresh"] = {
+                **lookup_refresh_payload,
+                "written_count": refresh_result["written_count"],
+            }
             now_utc = utc_now()
             self.server.append_activity(
                 {
@@ -3564,15 +3612,46 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt: str, *args) -> None:  # noqa: A003
         print(f"[catalogue_write_server] {self.address_string()} - {fmt % args}")
 
-    def _refresh_lookup_payloads(self) -> None:
-        written = build_and_write_catalogue_lookup(self.server.source_dir, self.server.lookup_dir)
+    def _refresh_lookup_payload_for_work(self, work_id: str) -> Dict[str, Any]:
+        source_records = records_from_json_source(self.server.source_dir)
+        payload = build_work_lookup_payload(source_records, work_id)
+        written_path = write_work_lookup_payload(self.server.lookup_dir, work_id, payload)
+        result = {
+            "mode": "single-record",
+            "artifacts": ["work_record"],
+            "written_count": 1,
+            "written_paths": [self.server.rel_path(written_path)],
+        }
         self.server.log_event(
             "catalogue_lookup_refresh",
             {
                 "lookup_dir": self.server.rel_path(self.server.lookup_dir),
-                "written_count": len(written),
+                "mode": result["mode"],
+                "work_id": work_id,
+                "artifacts": result["artifacts"],
+                "written_count": result["written_count"],
             },
         )
+        return result
+
+    def _refresh_lookup_payloads(self) -> Dict[str, Any]:
+        written = build_and_write_catalogue_lookup(self.server.source_dir, self.server.lookup_dir)
+        result = {
+            "mode": "full",
+            "artifacts": ["full_lookup_refresh"],
+            "written_count": len(written),
+            "written_paths": [self.server.rel_path(path) for path in written],
+        }
+        self.server.log_event(
+            "catalogue_lookup_refresh",
+            {
+                "lookup_dir": self.server.rel_path(self.server.lookup_dir),
+                "mode": result["mode"],
+                "artifacts": result["artifacts"],
+                "written_count": result["written_count"],
+            },
+        )
+        return result
 
 
 def parse_args() -> argparse.Namespace:

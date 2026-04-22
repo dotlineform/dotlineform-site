@@ -295,7 +295,7 @@ Why this scope is locked:
 
 Status:
 
-- planned
+- in progress
 
 Extend the lookup build/write layer so it can write:
 
@@ -309,11 +309,16 @@ Reason:
 
 - the invalidation model needs concrete writer targets, not just field classification
 
+Current Task 4 progress:
+
+- the lookup layer can now build and write one focused work lookup record without rewriting the full corpus
+- focused search-payload and focused series-record writers are still later work
+
 ### Task 5. Route Work Save Through Invalidation Rules
 
 Status:
 
-- planned
+- in progress
 
 Update `POST /catalogue/work/save` so it chooses:
 
@@ -326,6 +331,12 @@ from the changed work field set through the explicit registry rather than ad hoc
 Reason:
 
 - work save is the clearest source of quick wins and the easiest place to validate the model
+
+Current Task 5 progress:
+
+- `POST /catalogue/work/save` now uses the work invalidation registry for the first live pass
+- `single-record` work-field saves use focused `works/<work_id>.json` refresh
+- broader work invalidation classes still fall back to `full` for now
 
 ### Task 6. Add Invalidation Logging
 
@@ -342,6 +353,11 @@ Local logs should report:
 Reason:
 
 - local operators need to understand why one save caused a narrow or broad refresh
+
+Current Task 6 progress:
+
+- `catalogue_work_save` logs now include the chosen lookup refresh mode
+- changed work-save responses now include a `lookup_refresh` object with mode and targeted artifacts
 
 ### Task 7. Verify Representative Field Edits
 

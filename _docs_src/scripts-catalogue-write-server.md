@@ -157,6 +157,7 @@ Successful responses include:
 - `changed_fields`
 - `record_hash`
 - `record`
+- `lookup_refresh` when the request changed the record
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
@@ -165,8 +166,9 @@ Successful responses include:
 Current behavior after successful canonical writes:
 
 - the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
-- current implementation always runs a full lookup refresh
-- this is intentionally conservative and keeps lookup/search payloads aligned without needing per-field dependency logic
+- `POST /catalogue/work/save` now uses the invalidation registry for the first live incremental slice
+- when the changed work fields stay within the locked `single-record` first-pass set, the server rewrites only `works/<work_id>.json`
+- other writes still use a full lookup refresh
 
 Why the current refresh is broad:
 
@@ -202,6 +204,7 @@ Follow-on direction:
   - allow incremental writes only for work fields currently classified as `single-record`
   - keep work `title`, `year_display`, `status`, and `series_ids` on `full` fallback for the first live pass
   - keep detail, file, link, series, and moment writes on `full` fallback until later tasks
+- changed work-save responses now include `lookup_refresh.mode` so the UI and local operators can tell whether the server used `single-record` or `full`
 - track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
 
 Likely full-refresh fallback cases for the first incremental phase:
