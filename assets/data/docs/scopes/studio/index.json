@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-22T19:24:48Z",
+  "generated_at": "2026-04-22T20:21:43Z",
   "docs": [
     {
       "scope": "studio",
@@ -990,6 +990,17 @@
       "source_path": "site-request-docs-build-incremental.md",
       "viewer_url": "/docs/?scope=studio&doc=site-request-docs-build-incremental",
       "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-docs-build-incremental.json"
+    },
+    {
+      "scope": "studio",
+      "doc_id": "site-request-catalogue-lookup-invalidation",
+      "title": "Catalogue Lookup Invalidation Request",
+      "last_updated": "2026-04-22",
+      "parent_id": "site-docs",
+      "sort_order": 130,
+      "source_path": "site-request-catalogue-lookup-invalidation.md",
+      "viewer_url": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
+      "content_url": "/assets/data/docs/scopes/studio/by-id/site-request-catalogue-lookup-invalidation.json"
     },
     {
       "scope": "studio",

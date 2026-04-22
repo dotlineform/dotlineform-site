@@ -2,9 +2,9 @@
   "header": {
     "schema": "search_index_studio_v1",
     "scope": "studio",
-    "version": "blake2b-80804640e2a89b7bf4208a1267a3a39b",
-    "generated_at_utc": "2026-04-22T19:24:49Z",
-    "count": 118
+    "version": "blake2b-65019be50afb5ae4bb85397136513d2e",
+    "generated_at_utc": "2026-04-22T20:21:44Z",
+    "count": 119
   },
   "entries": [
     {
@@ -2081,6 +2081,32 @@
         "22"
       ],
       "search_text": "site-request-docs-build-incremental site request docs build incremental docs build incremental request site docs 2026-04-22 2026 04 22"
+    },
+    {
+      "id": "site-request-catalogue-lookup-invalidation",
+      "kind": "doc",
+      "title": "Catalogue Lookup Invalidation Request",
+      "href": "/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation",
+      "last_updated": "2026-04-22",
+      "parent_id": "site-docs",
+      "parent_title": "Site Docs",
+      "display_meta": "2026-04-22 • Site Docs",
+      "search_terms": [
+        "site-request-catalogue-lookup-invalidation",
+        "site",
+        "request",
+        "catalogue",
+        "lookup",
+        "invalidation",
+        "catalogue lookup invalidation request",
+        "site docs",
+        "docs",
+        "2026-04-22",
+        "2026",
+        "04",
+        "22"
+      ],
+      "search_text": "site-request-catalogue-lookup-invalidation site request catalogue lookup invalidation catalogue lookup invalidation request site docs docs 2026-04-22 2026 04 22"
     },
     {
       "id": "catalogue-work-file-editor",

@@ -160,6 +160,41 @@ Successful responses include:
 - `saved_at_utc` when a non-dry-run write changed the source file
 - `backups` when a non-dry-run write changed the source file
 
+## Derived Lookup Refresh
+
+Current behavior after successful canonical writes:
+
+- the server refreshes the derived Studio lookup payloads under `assets/studio/data/catalogue_lookup/`
+- current implementation always runs a full lookup refresh
+- this is intentionally conservative and keeps lookup/search payloads aligned without needing per-field dependency logic
+
+Why the current refresh is broad:
+
+- a single source edit can affect more than one derived lookup family
+- work saves can affect:
+  - the focused work lookup record
+  - work search
+  - series member summaries
+  - detail/file/link work summaries
+- series saves can affect:
+  - the focused series lookup record
+  - series search
+  - member-work summaries across related work records
+
+Follow-on direction:
+
+- keep full lookup refresh as the fallback for complex cases
+- add field-based invalidation for obvious quick wins where only one record or a small known dependency set changes
+- track that work in [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
+Likely full-refresh fallback cases for the first incremental phase:
+
+- `POST /catalogue/bulk-save`
+- `POST /catalogue/delete-apply`
+- `POST /catalogue/import-apply`
+- create flows that introduce new ids or new parent/child membership
+- mixed-field writes where dependency scope is not yet explicitly implemented
+
 `POST /catalogue/work/create` expects:
 
 ```json
