@@ -241,6 +241,50 @@ def build_work_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]
     }
 
 
+def build_series_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
+    items = []
+    for series_id, record in records.series.items():
+        items.append(
+            {
+                "series_id": series_id,
+                "title": normalize_text(record.get("title")),
+                "status": normalize_text(record.get("status")),
+                "primary_work_id": normalize_text(record.get("primary_work_id")),
+                "record_hash": record_hash(record),
+            }
+        )
+    items.sort(key=lambda item: item["series_id"])
+    return {
+        "header": {
+            "schema": SCHEMAS["series_search"],
+            "count": len(items),
+        },
+        "items": items,
+    }
+
+
+def build_work_detail_search_payload(records: CatalogueSourceRecords) -> Dict[str, Any]:
+    items = []
+    for detail_uid, record in records.work_details.items():
+        items.append(
+            {
+                "detail_uid": detail_uid,
+                "work_id": normalize_text(record.get("work_id")),
+                "detail_id": normalize_text(record.get("detail_id")),
+                "title": normalize_text(record.get("title")),
+                "status": normalize_text(record.get("status")),
+            }
+        )
+    items.sort(key=lambda item: item["detail_uid"])
+    return {
+        "header": {
+            "schema": SCHEMAS["work_detail_search"],
+            "count": len(items),
+        },
+        "items": items,
+    }
+
+
 def build_catalogue_lookup_payloads(records: CatalogueSourceRecords) -> Dict[str, Any]:
     work_search_items = []
     series_search_items = []

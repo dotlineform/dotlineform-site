@@ -1,0 +1,40 @@
+{
+  "header": {
+    "schema": "catalogue_source_work_files_v1",
+    "count": 4
+  },
+  "work_files": {
+    "00008:nerve": {
+      "file_uid": "00008:nerve",
+      "work_id": "00008",
+      "filename": "nerve.pdf",
+      "label": "nerve.pdf smoke",
+      "status": "published",
+      "published_date": "2026-04-01"
+    },
+    "00160:mouse-story": {
+      "file_uid": "00160:mouse-story",
+      "work_id": "00160",
+      "filename": "mouse story.pdf",
+      "label": "mouse story.pdf",
+      "status": "published",
+      "published_date": "2026-04-01"
+    },
+    "00161:mouse-story-extended-version": {
+      "file_uid": "00161:mouse-story-extended-version",
+      "work_id": "00161",
+      "filename": "mouse story (extended version).pdf",
+      "label": "mouse story (extended version).pdf",
+      "status": "published",
+      "published_date": "2026-04-01"
+    },
+    "00163:nerve-abattoir": {
+      "file_uid": "00163:nerve-abattoir",
+      "work_id": "00163",
+      "filename": "nerve (abattoir).pdf",
+      "label": "nerve (abattoir).pdf",
+      "status": "published",
+      "published_date": "2026-04-01"
+    }
+  }
+}

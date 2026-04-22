@@ -431,7 +431,7 @@ Implemented outcome:
 
 Status:
 
-- planned
+- implemented
 
 After work-save invalidation is stable, decide whether to:
 
@@ -441,6 +441,32 @@ After work-save invalidation is stable, decide whether to:
 Reason:
 
 - the project should not pay for more invalidation complexity than the actual workflow needs
+
+Implemented outcome:
+
+- extended incremental invalidation to:
+  - `POST /catalogue/work-detail/save`
+  - `POST /catalogue/work-file/save`
+  - `POST /catalogue/work-link/save`
+  - `POST /catalogue/series/save`
+- current targeted behavior now covers:
+  - detail record plus `work_detail_search.json` plus parent work lookup
+  - file record plus parent work lookup
+  - link record plus parent work lookup
+  - series record plus `series_search.json` plus related work lookups when series title changes
+- parent/id move-style cases still stay on `full` for this pass:
+  - work-file `work_id` change
+  - work-link `work_id` change
+  - series save requests that also update member work records
+- detail moves remain effectively blocked by the `detail_uid` contract, so there is no separate incremental move path for details
+
+Verification notes:
+
+- verified live detail title save on `00001-001` used `targeted-multi-record`
+- verified live file label save on `00008:nerve` used `targeted-multi-record`
+- verified live link label save on `00457:bandcamp` used `targeted-multi-record`
+- verified live series title save on `104` used `targeted-multi-record`
+- verified live work-file `work_id` change still used `full`, then restored the original parent work id
 
 ### Task 9. Reassess Code Registry vs JSON Config
 

@@ -7,6 +7,27 @@ sort_order: 270
 ---
 # Site Change Log
 
+## [2026-04-22] Extended targeted lookup refresh to detail, file, link, and series saves
+
+**Status:** implemented
+
+**Area:** catalogue write server / catalogue lookup
+
+**Summary:**
+Extended the incremental lookup-refresh rollout beyond work saves so detail, file, link, and series save handlers now use focused targeted refresh paths where their dependency sets are explicit.
+
+**Reason:**
+These record families turned out to be simpler than the initial work dependency graph. Detail, file, and link saves only affect their own lookup payload plus a small parent-work surface, and series saves have no parent chain, so the next extension pass was low-risk and high-yield.
+
+**Effect:**
+`POST /catalogue/work-detail/save`, `POST /catalogue/work-file/save`, `POST /catalogue/work-link/save`, and `POST /catalogue/series/save` now return `lookup_refresh` metadata and avoid full lookup refresh for the straightforward targeted cases. Parent/id move-style cases such as `work_file.work_id` changes still fall back to `full`.
+
+**Affected files/docs:**
+- `scripts/catalogue_lookup.py`
+- `scripts/studio/catalogue_write_server.py`
+- [Catalogue Write Server](/docs/?scope=studio&doc=scripts-catalogue-write-server)
+- [Catalogue Lookup Invalidation Request](/docs/?scope=studio&doc=site-request-catalogue-lookup-invalidation)
+
 ## [2026-04-22] Expanded the live work-save lookup refresh path to targeted multi-record updates
 
 **Status:** implemented
