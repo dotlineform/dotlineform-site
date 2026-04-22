@@ -29,6 +29,7 @@ The desired end state is:
 
 - simple record edits refresh only the affected lookup outputs
 - cross-record dependencies are handled by a small explicit invalidation model
+- invalidation rules live in one explicit registry/config contract rather than only in prose docs
 - complex operations still use full lookup refresh
 - the chosen invalidation mode is visible in local logs
 
@@ -80,6 +81,8 @@ This request does not assume a `no refresh` class. The first optimization pass s
 ## Field Scoping Hypothesis
 
 This section is only a starting hypothesis for Task 1. It is not yet the locked implementation contract.
+
+The eventual source of truth should be an explicit invalidation registry in code or config, not this prose list alone.
 
 ### Work Save Fields Likely To Stay Below Full Refresh
 
@@ -140,17 +143,21 @@ Reason:
 
 ## Task List
 
-### Task 1. Scope Fields By Invalidation Class
+### Task 1. Define The Invalidation Registry
 
 Status:
 
 - planned
 
-For each saveable record family, classify changed fields into:
+Define one explicit invalidation registry that the write server can use as the canonical contract.
+
+For each saveable record family, map changed fields to:
 
 - `single-record`
 - `targeted-multi-record`
 - `full`
+
+The registry should be explicit enough to survive future search/lookup expansion.
 
 Start with:
 
@@ -162,16 +169,17 @@ Start with:
 
 Required output:
 
-- one explicit field-to-invalidation table
+- one explicit field-to-invalidation registry
+- one clear ownership point for that registry in code or config
 - one explicit list of operations that still default to `full`
 
-### Task 2. Map Lookup Payload Dependencies
+### Task 2. Map Lookup/Search Dependencies Into The Registry
 
 Status:
 
 - planned
 
-Document which source fields appear in which lookup payloads.
+Document which source fields appear in which lookup or search payloads and use that mapping to populate the registry.
 
 Minimum payload families:
 
@@ -187,6 +195,7 @@ Minimum payload families:
 Reason:
 
 - incremental invalidation should be based on actual payload dependencies, not intuition alone
+- fields that do not currently affect search may do so later, so dependency expansion should update the registry rather than rely on remembered prose rules
 
 ### Task 3. Define First-Phase Incremental Scope
 
@@ -236,7 +245,7 @@ Update `POST /catalogue/work/save` so it chooses:
 - `targeted-multi-record`
 - `full`
 
-from the changed work field set.
+from the changed work field set through the explicit registry rather than ad hoc endpoint logic.
 
 Reason:
 
@@ -295,7 +304,7 @@ Reason:
 
 This request is complete when:
 
-- changed fields are explicitly scoped by invalidation class
+- changed fields are explicitly scoped by invalidation class in one canonical registry/config contract
 - work-save invalidation no longer defaults to full refresh for obvious single-record edits
 - full refresh remains available for complex cases
 - logs make the chosen invalidation mode visible

@@ -107,6 +107,7 @@ Flags:
 - `--scope NAME`
   limit the build to a named docs scope
   current values: `studio`, `library`
+  if omitted, the builder runs for all configured scopes
 - `--source PATH`
   override docs source directory for a single selected scope
 - `--output PATH`
@@ -125,6 +126,7 @@ Flags:
 - manual `./scripts/build_docs.rb --scope <scope> --write` remains a low-level docs-payload rebuild only
 - live docs-management actions chain same-scope docs search through the docs-management service rather than through `build_docs.rb` itself
 - changing only the docs data does not require any separate asset pipeline
+- manual `./scripts/build_docs.rb --write` with no `--scope` rebuilds all configured docs scopes, currently `studio` and `library`
 - current write behavior is incremental within the rebuilt scope:
   - unchanged `index.json` or `by-id/<doc_id>.json` payloads are not rewritten
   - stale `by-id/<doc_id>.json` payloads are removed when the rebuilt scope no longer publishes that doc
